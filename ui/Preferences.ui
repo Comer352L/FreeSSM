@@ -1,0 +1,249 @@
+<ui version="4.0" >
+ <class>Preferences_Dialog</class>
+ <widget class="QDialog" name="Preferences_Dialog" >
+  <property name="windowModality" >
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>268</width>
+    <height>199</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+    <horstretch>230</horstretch>
+    <verstretch>199</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>268</width>
+    <height>199</height>
+   </size>
+  </property>
+  <property name="maximumSize" >
+   <size>
+    <width>268</width>
+    <height>199</height>
+   </size>
+  </property>
+  <property name="font" >
+   <font>
+    <family>Liberation Sans</family>
+   </font>
+  </property>
+  <property name="windowTitle" >
+   <string>Preferences</string>
+  </property>
+  <widget class="QLabel" name="title_label" >
+   <property name="geometry" >
+    <rect>
+     <x>40</x>
+     <y>7</y>
+     <width>200</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>22</pointsize>
+    </font>
+   </property>
+   <property name="text" >
+    <string>Preferences</string>
+   </property>
+   <property name="scaledContents" >
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ok_pushButton" >
+   <property name="geometry" >
+    <rect>
+     <x>25</x>
+     <y>160</y>
+     <width>100</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancel_pushButton" >
+   <property name="geometry" >
+    <rect>
+     <x>144</x>
+     <y>160</y>
+     <width>100</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="testinterface_pushButton" >
+   <property name="geometry" >
+    <rect>
+     <x>25</x>
+     <y>113</y>
+     <width>219</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>      Test Diagnostic Interface       </string>
+   </property>
+   <property name="icon" >
+    <iconset resource="../resources/FreeSSM.qrc" >
+     <normaloff>:/icons/chrystal/32x32/input_devices_settings.png</normaloff>:/icons/chrystal/32x32/input_devices_settings.png</iconset>
+   </property>
+   <property name="iconSize" >
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="serialport_comboBox" >
+   <property name="geometry" >
+    <rect>
+     <x>133</x>
+     <y>81</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="language_comboBox" >
+   <property name="geometry" >
+    <rect>
+     <x>133</x>
+     <y>49</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text" >
+     <string>English</string>
+    </property>
+   </item>
+   <item>
+    <property name="text" >
+     <string>German</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="language_label" >
+   <property name="geometry" >
+    <rect>
+     <x>53</x>
+     <y>52</y>
+     <width>75</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Language:</string>
+   </property>
+   <property name="scaledContents" >
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="serialport_label" >
+   <property name="geometry" >
+    <rect>
+     <x>53</x>
+     <y>84</y>
+     <width>75</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Serial Port:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>10</x>
+     <y>13</y>
+     <width>24</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="pixmap" >
+    <pixmap>:/icons/preferences24.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2" >
+   <property name="geometry" >
+    <rect>
+     <x>25</x>
+     <y>48</y>
+     <width>22</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="pixmap" >
+    <pixmap resource="../resources/FreeSSM.qrc" >:/icons/oxygen/22x22/preferences-desktop-locale.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3" >
+   <property name="geometry" >
+    <rect>
+     <x>25</x>
+     <y>80</y>
+     <width>22</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="pixmap" >
+    <pixmap resource="../resources/FreeSSM.qrc" >:/icons/chrystal/22x22/hardware.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4" >
+   <property name="geometry" >
+    <rect>
+     <x>9</x>
+     <y>10</y>
+     <width>26</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="pixmap" >
+    <pixmap resource="../resources/FreeSSM.qrc" >:/icons/oxygen/32x32/preferences-system.png</pixmap>
+   </property>
+   <property name="scaledContents" >
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>language_comboBox</tabstop>
+  <tabstop>serialport_comboBox</tabstop>
+  <tabstop>testinterface_pushButton</tabstop>
+  <tabstop>ok_pushButton</tabstop>
+  <tabstop>cancel_pushButton</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../resources/FreeSSM.qrc" />
+ </resources>
+ <connections/>
+</ui>

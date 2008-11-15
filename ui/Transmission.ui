@@ -1,0 +1,783 @@
+<ui version="4.0" >
+ <class>Transmission_Window</class>
+ <widget class="QMainWindow" name="Transmission_Window" >
+  <property name="windowModality" >
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>801</width>
+    <height>598</height>
+   </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>801</width>
+    <height>598</height>
+   </size>
+  </property>
+  <property name="maximumSize" >
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="font" >
+   <font>
+    <family>Liberation Sans</family>
+   </font>
+  </property>
+  <property name="windowTitle" >
+   <string>Transmission Control Unit</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="0" column="0" colspan="2" >
+     <widget class="QLabel" name="title_label" >
+      <property name="minimumSize" >
+       <size>
+        <width>411</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>411</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="text" >
+       <string>Transmission Control Unit</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" >
+     <widget class="QGroupBox" name="information_groupBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>191</width>
+        <height>259</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>191</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title" >
+       <string>Information:</string>
+      </property>
+      <widget class="QLabel" name="transmissiontypetitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>150</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Transmission Type:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="nrofmbsswstitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>100</y>
+         <width>150</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Measuring Blocks:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="OBDsupportedtitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>150</y>
+         <width>125</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="text" >
+        <string>OBD2 Support:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="nrofdatambstitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>36</x>
+         <y>120</y>
+         <width>35</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Data:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="nrofswitchestitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>103</x>
+         <y>120</y>
+         <width>53</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Switches:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="nrofdatambs_label" >
+       <property name="geometry" >
+        <rect>
+         <x>76</x>
+         <y>120</y>
+         <width>21</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>118</red>
+             <green>116</green>
+             <blue>108</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="nrofswitches_label" >
+       <property name="geometry" >
+        <rect>
+         <x>163</x>
+         <y>120</y>
+         <width>21</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>118</red>
+             <green>116</green>
+             <blue>108</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="obd2compliant_label" >
+       <property name="geometry" >
+        <rect>
+         <x>157</x>
+         <y>148</y>
+         <width>18</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>118</red>
+             <green>116</green>
+             <blue>108</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="transmissiontype_label" >
+       <property name="geometry" >
+        <rect>
+         <x>36</x>
+         <y>40</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>118</red>
+             <green>116</green>
+             <blue>108</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="romIDtitle_label" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>70</y>
+         <width>61</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="text" >
+        <string>ROM-ID:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="romID_label" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>150</red>
+             <green>0</green>
+             <blue>110</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>150</red>
+             <green>0</green>
+             <blue>110</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>118</red>
+             <green>116</green>
+             <blue>108</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item rowspan="3" row="1" column="1" >
+     <widget class="QGroupBox" name="content_groupBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>581</width>
+        <height>541</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title" >
+       <string>ContentTitle:</string>
+      </property>
+      <layout class="QGridLayout" name="content_gridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>11</number>
+       </property>
+       <property name="verticalSpacing" >
+        <number>11</number>
+       </property>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0" >
+     <widget class="QGroupBox" name="selection_groupBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>191</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>191</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title" >
+       <string>Selection:</string>
+      </property>
+      <widget class="QPushButton" name="DTCs_pushButton" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>21</y>
+         <width>151</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>  Diagnostic Codes </string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../resources/FreeSSM.qrc" >
+         <normaloff>:/icons/chrystal/22x22/messagebox_warning.png</normaloff>:/icons/chrystal/22x22/messagebox_warning.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="checkable" >
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="measuringblocks_pushButton" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>62</y>
+         <width>151</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string> Measuring Blocks </string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../resources/FreeSSM.qrc" >
+         <normaloff>:/icons/oxygen/22x22/applications-utilities.png</normaloff>:/icons/oxygen/22x22/applications-utilities.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="checkable" >
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="adjustments_pushButton" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>103</y>
+         <width>151</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>     Adjustments     </string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../resources/FreeSSM.qrc" >
+         <normaloff>:/icons/chrystal/22x22/configure.png</normaloff>:/icons/chrystal/22x22/configure.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="checkable" >
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="clearMemory_pushButton" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>144</y>
+         <width>151</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>    Clear Memory    </string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../resources/FreeSSM.qrc" >
+         <normaloff>:/icons/chrystal/22x22/eraser.png</normaloff>:/icons/chrystal/22x22/eraser.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="clearMemory2_pushButton" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>185</y>
+         <width>151</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>   Clear Memory 2  </string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../resources/FreeSSM.qrc" >
+         <normaloff>:/icons/chrystal/22x22/eraser.png</normaloff>:/icons/chrystal/22x22/eraser.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="3" column="0" >
+     <widget class="QPushButton" name="exit_pushButton" >
+      <property name="minimumSize" >
+       <size>
+        <width>191</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>191</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text" >
+       <string>       Exit Control Unit        </string>
+      </property>
+      <property name="icon" >
+       <iconset resource="../resources/FreeSSM.qrc" >
+        <normaloff>:/icons/oxygen/32x32/system-shutdown.png</normaloff>:/icons/oxygen/32x32/system-shutdown.png</iconset>
+      </property>
+      <property name="iconSize" >
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <property name="horizontalSpacing" >
+     <number>11</number>
+    </property>
+    <property name="verticalSpacing" >
+     <number>11</number>
+    </property>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../resources/FreeSSM.qrc" />
+ </resources>
+ <connections/>
+</ui>

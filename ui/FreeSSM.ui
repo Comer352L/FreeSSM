@@ -1,0 +1,271 @@
+<ui version="4.0" >
+ <class>FreeSSM_MainWindow</class>
+ <widget class="QMainWindow" name="FreeSSM_MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>283</height>
+   </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>550</width>
+    <height>283</height>
+   </size>
+  </property>
+  <property name="maximumSize" >
+   <size>
+    <width>550</width>
+    <height>283</height>
+   </size>
+  </property>
+  <property name="font" >
+   <font>
+    <family>Liberation Sans</family>
+   </font>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <widget class="QPushButton" name="exit_pushButton" >
+    <property name="geometry" >
+     <rect>
+      <x>200</x>
+      <y>230</y>
+      <width>150</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font" >
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text" >
+     <string>        Exit            </string>
+    </property>
+    <property name="icon" >
+     <iconset resource="../resources/FreeSSM.qrc" >
+      <normaloff>:/icons/oxygen/32x32/system-shutdown.png</normaloff>:/icons/oxygen/32x32/system-shutdown.png</iconset>
+    </property>
+    <property name="iconSize" >
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="controlunits_groupBox" >
+    <property name="geometry" >
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>510</width>
+      <height>75</height>
+     </rect>
+    </property>
+    <property name="font" >
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title" >
+     <string>Control Units:</string>
+    </property>
+    <widget class="QPushButton" name="engine_pushButton" >
+     <property name="geometry" >
+      <rect>
+       <x>17</x>
+       <y>22</y>
+       <width>150</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>      Engine       </string>
+     </property>
+     <property name="icon" >
+      <iconset resource="../resources/FreeSSM.qrc" >
+       <normaloff>:/icons/Engine.png</normaloff>:/icons/Engine.png</iconset>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="transmission_pushButton" >
+     <property name="geometry" >
+      <rect>
+       <x>180</x>
+       <y>22</y>
+       <width>150</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Transmission </string>
+     </property>
+     <property name="icon" >
+      <iconset resource="../resources/FreeSSM.qrc" >
+       <normaloff>:/icons/Transmission.png</normaloff>:/icons/Transmission.png</iconset>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="program_groupBox" >
+    <property name="geometry" >
+     <rect>
+      <x>20</x>
+      <y>142</y>
+      <width>510</width>
+      <height>75</height>
+     </rect>
+    </property>
+    <property name="font" >
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title" >
+     <string>Program:</string>
+    </property>
+    <widget class="QPushButton" name="help_pushButton" >
+     <property name="geometry" >
+      <rect>
+       <x>180</x>
+       <y>22</y>
+       <width>150</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>       Help           </string>
+     </property>
+     <property name="icon" >
+      <iconset resource="../resources/FreeSSM.qrc" >
+       <normaloff>:/icons/oxygen/32x32/help-browser.png</normaloff>:/icons/oxygen/32x32/help-browser.png</iconset>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="about_pushButton" >
+     <property name="geometry" >
+      <rect>
+       <x>343</x>
+       <y>22</y>
+       <width>150</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>       About         </string>
+     </property>
+     <property name="icon" >
+      <iconset resource="../resources/FreeSSM.qrc" >
+       <normaloff>:/icons/oxygen/32x32/help-about.png</normaloff>:/icons/oxygen/32x32/help-about.png</iconset>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="preferences_pushButton" >
+     <property name="geometry" >
+      <rect>
+       <x>17</x>
+       <y>22</y>
+       <width>150</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>  Preferences  </string>
+     </property>
+     <property name="icon" >
+      <iconset resource="../resources/FreeSSM.qrc" >
+       <normaloff>:/icons/oxygen/32x32/preferences-system.png</normaloff>:/icons/oxygen/32x32/preferences-system.png</iconset>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="background_label" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>550</width>
+      <height>283</height>
+     </rect>
+    </property>
+    <property name="scaledContents" >
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>background_label</zorder>
+   <zorder>exit_pushButton</zorder>
+   <zorder>controlunits_groupBox</zorder>
+   <zorder>program_groupBox</zorder>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>engine_pushButton</tabstop>
+  <tabstop>transmission_pushButton</tabstop>
+  <tabstop>preferences_pushButton</tabstop>
+  <tabstop>help_pushButton</tabstop>
+  <tabstop>about_pushButton</tabstop>
+  <tabstop>exit_pushButton</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../resources/FreeSSM.qrc" />
+ </resources>
+ <connections/>
+</ui>
