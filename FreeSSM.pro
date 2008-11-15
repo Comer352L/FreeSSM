@@ -89,4 +89,5 @@ win32 {
        INCLUDEPATH += src/windows
        HEADERS += src/windows/serialCOM.h
        SOURCES += src/windows/serialCOM.cpp
+       RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
