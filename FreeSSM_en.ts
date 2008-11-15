@@ -3,67 +3,67 @@
 <context>
     <name>ActuatorTestDlg</name>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="17"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="36"/>
         <source>Checking engine status...</source>
         <translation type="unfinished">Checking engine status...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="25"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="44"/>
         <source>Engine is running</source>
         <translation type="unfinished">Engine is running</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="25"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="44"/>
         <source>Please turn engine off and switch ignition on.</source>
         <translation type="unfinished">Please turn engine off and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="26"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="45"/>
         <source>Continue</source>
         <translation type="unfinished">Continue</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="27"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="46"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="70"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="89"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="47"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="66"/>
         <source>Please ensure that ignition is switched ON.</source>
         <translation type="unfinished">Please ensure that ignition is switched ON.</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="48"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="67"/>
         <source>Retry</source>
         <translation type="unfinished">Retry</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="49"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="68"/>
         <source>Exit Control Unit</source>
         <translation type="unfinished">Exit Control Unit</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="66"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="85"/>
         <source>Starting test...</source>
         <translation type="unfinished">Starting test...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="82"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="101"/>
         <source>Test is running...</source>
         <translation type="unfinished">Test is running...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="92"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="111"/>
         <source>Stopping test...</source>
         <translation type="unfinished">Stopping test...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="70"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="89"/>
         <source>Communication Error:
 Actuator Test couldn&apos;t be started.</source>
         <translation type="unfinished">Communication Error:
@@ -499,22 +499,22 @@ The Control Unit didn&apos;t accept the new value !</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="627"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="624"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="618"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="615"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block transfer rate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="731"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="731"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Communication Error:
@@ -534,68 +534,58 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_sysTests</name>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="110"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="100"/>
         <source>Checking test mode connector... Please wait !   </source>
         <translation type="unfinished">Checking test mode connector... Please wait !      </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="128"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="118"/>
         <source>Actuator Test</source>
         <translation type="unfinished">Actuator Test</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="154"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="144"/>
         <source>Testing Immobilizer Communication Line... Please wait !   </source>
         <translation type="unfinished">Testing Immobilizer Communication Line... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="181"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="171"/>
         <source>Immobilizer Test</source>
         <translation type="unfinished">Immobilizer Test</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="199"/>
-        <source>Dealer Check Mode Procedure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="166"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="156"/>
         <source>The Immobilizer Communication Line is not shorted.</source>
         <translation type="unfinished">The Immobilizer Communication Line is not shorted.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="172"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="162"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to ground !</source>
         <translation type="unfinished">The Immobilizer Communication Line seems
 to be shorted to ground !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="234"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="212"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="234"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="212"/>
         <source>Communication Error:
 - No or invalid answer from TCU -</source>
         <translation type="unfinished">Communication Error:
 - No or invalid answer from TCU -</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="178"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="168"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to battery (+) !</source>
         <translation type="unfinished">The Immobilizer Communication Line seems
 to be shorted to battery (+) !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="199"/>
-        <source>The &apos;&apos;Dealer Check Mode Procedure&apos;&apos; is supported by this vehicle, but it is not yet implemented in FreeSSM.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="128"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="118"/>
         <source>Actuator Test couldn&apos;t be started:
 =&gt; Test mode connector is not connected !
 
@@ -898,29 +888,29 @@ Control Unit&apos;s memory</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="332"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="332"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Couldn&apos;t apply the necessary serial port settings !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="321"/>
+        <location filename="src/FreeSSM.cpp" line="315"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="308"/>
+        <location filename="src/FreeSSM.cpp" line="302"/>
         <source>No serial port available !</source>
         <translation type="unfinished">No serial port available !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="154"/>
+        <location filename="src/FreeSSM.cpp" line="152"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
@@ -1137,7 +1127,7 @@ to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/SSMprotocol_ID.cpp" line="79"/>
+        <location filename="src/SSMprotocol_ID.cpp" line="55"/>
         <source>Center Differential</source>
         <translation type="unfinished">Center Differential</translation>
     </message>
@@ -1145,7 +1135,7 @@ to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&
 <context>
     <name>SSMprotocol</name>
     <message>
-        <location filename="src/SSMprotocol.cpp" line="1551"/>
+        <location filename="src/SSMprotocol.cpp" line="1483"/>
         <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
         <translation type="unfinished">----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</translation>
     </message>
@@ -1593,7 +1583,7 @@ You should have received a copy of the GNU General Public License along with thi
 <context>
     <name>sysTestsContent_Form</name>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="243"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="187"/>
         <source>Actuators:</source>
         <translation type="unfinished">Actuators:</translation>
     </message>
@@ -1614,7 +1604,7 @@ For corresponding information, please read the manufacturers repair manual.</tra
         <translation type="unfinished">&gt;&gt; &gt;&gt;</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="219"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="107"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
@@ -1627,11 +1617,6 @@ For corresponding information, please read the manufacturers repair manual.</tra
         <location filename="ui/CUcontent_sysTests.ui" line="163"/>
         <source>Check</source>
         <translation type="unfinished">Check</translation>
-    </message>
-    <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="200"/>
-        <source>Dealer Check Mode Procedure:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ui/CUcontent_sysTests.ui" line="24"/>

@@ -3,67 +3,67 @@
 <context>
     <name>ActuatorTestDlg</name>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="17"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="36"/>
         <source>Checking engine status...</source>
         <translation type="unfinished">Prüfe Motor-Status...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="25"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="44"/>
         <source>Engine is running</source>
         <translation type="unfinished">Motor läuft</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="25"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="44"/>
         <source>Please turn engine off and switch ignition on.</source>
         <translation type="unfinished">Bitte Motor abstellen und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="26"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="45"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="27"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="46"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="70"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="89"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="47"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="66"/>
         <source>Please ensure that ignition is switched ON.</source>
         <translation type="unfinished">Bitte stellen Sie sicher, dass die Zündung eingeschaltet ist.</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="48"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="67"/>
         <source>Retry</source>
         <translation type="unfinished">Erneut versuchen</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="49"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="68"/>
         <source>Exit Control Unit</source>
         <translation type="unfinished">Steuergerät verlassen</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="66"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="85"/>
         <source>Starting test...</source>
         <translation type="unfinished">Test wird gestartet...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="82"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="101"/>
         <source>Test is running...</source>
         <translation type="unfinished">Test läuft...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="92"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="111"/>
         <source>Stopping test...</source>
         <translation type="unfinished">Test wird beendet...</translation>
     </message>
     <message>
-        <location filename="src/ActuatorTestDlg.cpp" line="70"/>
+        <location filename="src/ActuatorTestDlg.cpp" line="89"/>
         <source>Communication Error:
 Actuator Test couldn&apos;t be started.</source>
         <translation type="unfinished">Kommunikationsfehler:￼
@@ -500,22 +500,22 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="627"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="624"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Aktualisierungsdauer:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="618"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="615"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="731"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="731"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Kommunikationsfehler:
@@ -535,68 +535,58 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_sysTests</name>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="110"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="100"/>
         <source>Checking test mode connector... Please wait !   </source>
         <translation type="unfinished">Prüfe Testmodus-Stecker... Bitte warten !      </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="128"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="118"/>
         <source>Actuator Test</source>
         <translation type="unfinished">Stellglied-Diagnose</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="154"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="144"/>
         <source>Testing Immobilizer Communication Line... Please wait !   </source>
         <translation type="unfinished">Teste Wegfahrsperren-Kommunikationsleitung... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="181"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="171"/>
         <source>Immobilizer Test</source>
         <translation type="unfinished">Wegfahrsperren-Test</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="199"/>
-        <source>Dealer Check Mode Procedure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="166"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="156"/>
         <source>The Immobilizer Communication Line is not shorted.</source>
         <translation type="unfinished">Die Wegfahrsperren-Kommunikationsleitung ist nicht kurzgeschlossen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="172"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="162"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to ground !</source>
         <translation type="unfinished">Die Wegfahrsperren-Kommunikationsleitung
 ist offenbar (nach Masse) kurzgeschlossen !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="234"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="212"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="234"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="212"/>
         <source>Communication Error:
 - No or invalid answer from TCU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="178"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="168"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to battery (+) !</source>
         <translation type="unfinished">Die Wegfahrsperren-Kommunikationsleitung 
 ist offenbar (nach +) kurzgeschlossen !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="199"/>
-        <source>The &apos;&apos;Dealer Check Mode Procedure&apos;&apos; is supported by this vehicle, but it is not yet implemented in FreeSSM.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="128"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="118"/>
         <source>Actuator Test couldn&apos;t be started:
 =&gt; Test mode connector is not connected !
 
@@ -900,29 +890,29 @@ wirklich gelöscht werden</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="332"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="332"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Die notwendigen Einstellungen am seriellen Port konnten nicht durchgeführt werden !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="321"/>
+        <location filename="src/FreeSSM.cpp" line="315"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="308"/>
+        <location filename="src/FreeSSM.cpp" line="302"/>
         <source>No serial port available !</source>
         <translation type="unfinished">Kein serieller Port verfügbar !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="154"/>
+        <location filename="src/FreeSSM.cpp" line="152"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
@@ -1139,7 +1129,7 @@ Schreib-Zugriff auf das &apos;&apos;FreeSSM&apos;&apos;-Verzeichnis sowie die Da
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/SSMprotocol_ID.cpp" line="79"/>
+        <location filename="src/SSMprotocol_ID.cpp" line="55"/>
         <source>Center Differential</source>
         <translation type="unfinished">Zentraldifferential</translation>
     </message>
@@ -1147,7 +1137,7 @@ Schreib-Zugriff auf das &apos;&apos;FreeSSM&apos;&apos;-Verzeichnis sowie die Da
 <context>
     <name>SSMprotocol</name>
     <message>
-        <location filename="src/SSMprotocol.cpp" line="1551"/>
+        <location filename="src/SSMprotocol.cpp" line="1483"/>
         <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
         <translation type="unfinished">----- SYSTEMPRÜFUNG IST NOCH NICHT ABGESCHLOSSEN ! -----</translation>
     </message>
@@ -1596,7 +1586,7 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
 <context>
     <name>sysTestsContent_Form</name>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="243"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="187"/>
         <source>Actuators:</source>
         <translation type="unfinished">Stellglieder:</translation>
     </message>
@@ -1617,7 +1607,7 @@ Entsprechende Informationen entnehmen Sie bitte dem Werkstatthandbuch.</translat
         <translation type="unfinished">&gt;&gt; &gt;&gt;</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="219"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="107"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
@@ -1630,11 +1620,6 @@ Entsprechende Informationen entnehmen Sie bitte dem Werkstatthandbuch.</translat
         <location filename="ui/CUcontent_sysTests.ui" line="163"/>
         <source>Check</source>
         <translation type="unfinished">Prüfen</translation>
-    </message>
-    <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="200"/>
-        <source>Dealer Check Mode Procedure:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ui/CUcontent_sysTests.ui" line="24"/>
