@@ -188,6 +188,7 @@ void Preferences::switchLanguage(int langindex)
 void Preferences::interfacetest()
 {
 	QMessageBox *msgbox;
+	FSSM_WaitMsgBox *waitmsgbox = NULL;
 	QFont msgboxfont;
 	// PREPARE SERIAL INTERCAE:
 	serialCOM *serialport = new serialCOM;
@@ -228,7 +229,7 @@ void Preferences::interfacetest()
 		delete serialport;
 		return;
 	}
-	// BUILT SSMPcommunication object:
+	// SETUP SSMPcommunication object:
 	SSMPcommunication *SSMPcom = new SSMPcommunication(serialport, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
@@ -251,20 +252,15 @@ void Preferences::interfacetest()
 		while ((retry==true) & (icresult==false))	// TEST LOOP
 		{
 			// OUTPUT WAIT MESSAGE:
-			msgbox = new QMessageBox( QMessageBox::NoIcon, tr("Please wait..."), tr("Testing Interface... Please wait !     "), QMessageBox::NoButton, this);
-			msgbox->setStandardButtons(QMessageBox::NoButton);
-			msgboxfont = msgbox->font();
-			msgboxfont.setPixelSize(13); // 10pts
-			msgboxfont.setBold(true);
-			msgbox->setFont( msgboxfont );
-			msgbox->show();
+			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing Interface... Please wait !     "));
+			waitmsgbox->show();
 			// QUERY ANY ECU ADDRESS:
 			unsigned int adr = 0x61;
 			char data = 0;
 			icresult = SSMPcom->readMultipleDatabytes('\x0', &adr, 1, &data);
 			// CLOSE WAIT MESSAGE:
-			msgbox->close();
-			delete msgbox;
+			waitmsgbox->close();
+			delete waitmsgbox;
 			// OUTPUT TEST RESULT:
 			if (icresult == false)	// IF TEST FAILED
 			{

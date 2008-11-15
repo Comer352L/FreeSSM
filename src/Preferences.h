@@ -31,6 +31,7 @@
 #endif
 #include <QtGui>
 #include "SSMPcommunication.h"
+#include "FSSMdialogs.h"
 #include "ui_Preferences.h"
 
 
