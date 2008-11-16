@@ -1,0 +1,537 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<meta name="generator" content="Bluefish 1.0.7">
+	<META NAME="CREATED" CONTENT="20081014;13250500">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+	-->
+	</STYLE>
+</HEAD>
+
+<body lang=DE link=blue vlink=blue style='tab-interval:35.4pt' background="bg.jpg">
+
+<div class=Section1>
+
+<p><span class=SpellE><b><u><span style='font-size:24.0pt;font-family:Arial'>FreeSSM</span></u></b></span><b><u><span
+style='font-size:24.0pt;font-family:Arial'> v0.97.0 - Dokumentation/Hilfe</span></u></b></p>
+
+<p><b><span style='font-size:18.0pt;font-family:Arial'>Inhaltsverzeichnis</span></b></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>A.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#A">Allgemeines</a></span></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>B.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#B">Häufig gestellte Fragen (FAQ)</a></span></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>C.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#C">Abkürzungen</a></span></p>
+
+<div align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=A></a><b><span style='font-size:
+18.0pt;font-family:Arial'>A.) Allgemeines</span></b></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Die Verwendung der Software
+erfolgt grundsätzlich auf eigenes Risiko. Es kann und wird keinerlei Haftung
+für Schäden oder Fehlfunktion übernommen, die direkt oder indirekt mit dem
+Einsatz der Software in Verbindung stehen. Beides hängt auch von der verwendeten
+Hardware (Interface) ab. <br>
+<br>
+Während der Fahrt darf das System NIEMALS VOM FAHRER SELBST bedient werden ! 
+Auch ist stets auf eine sichere Kabelführung zu achten, die die Fahrzeugführung 
+in keiner Weise behindert oder gefährdet !</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=B></a><b><span style='font-size:
+18.0pt;font-family:Arial'>B.) Häufig gestellte Fragen (FAQ)</span></b></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>1.) <a href="#1">Welches Interface wird
+benötigt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>2.) <a href="#2">Welche
+Fahrzeuge werden unterstützt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3.) <a href="#3">Welche
+Steuergeräte werden unterstützt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3a.) <a href="#3a">Warum
+bekomme ich eine Verbindung zum Motor-Steuergerät, nicht jedoch zum Getriebe-Steuergerät ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3b.) <a href="#3b">Warum
+werden die anderen Steuergeräte/Fahrzeuge nicht unterstützt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>4.) <a href="#4">Warum gibt 
+FreeSSM keine Steuergeräte-Teilenummer und/oder Informationen zum Softwarestand aus ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>5.) <a href="#5">
+Warum verfügt das Motorsteuergerät meines Fahrzeugs über OBD2-Unterstützung, das Getriebe-Steuergerät jedoch nicht ?
+</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>6.) <a href="#6">Warum wird
+im Motor-Steuergerät die Geschwindigkeits-Regelanlage nicht erkannt, obwohl
+mein Fahrzeug über eine Solche verfügt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>7.) <a href="#7">Warum werden zu 
+einigen Fehlercodes teilweise unterschiedliche Bedeutungen/Beschreibungen ausgegeben ?
+</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>8.) <a href="#8">Was
+bedeutet &quot;nicht-permanent&quot; in Bezug auf die Einstellwerte ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">Warum
+funktioniert die Stellglieddiagnose bei einigen Bauteilen nicht ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>10.) <a href="#10">Was
+geschieht beim Löschen des Steuergeräte-Speichers ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>11.) <a href="#11">Worin
+besteht beim Getriebe-Steuergerät der Unterschied zwischen &quot;Speicher
+Löschen&quot; und &quot;Speicher Löschen 2&quot; ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>12.) <a href="#12">Warum
+lässt sich der Fehlerspeicher des Steuergeräts manchmal nicht löschen ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>13.) <a href="#13">Unterstützt
+die Software den CAN-Bus ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">Wird die
+Software weiterentwickelt ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><o:p>&nbsp;</o:p></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=1></a><strong>1.)
+Welches Interface wird benötigt ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Die Software arbeitet mit
+sämtlichen ISO-9141-2-/ISO-14230-1-konformen (K/L bzw. KK/L) Interfaces zusammen, die als
+einfache Pegelwandler fungieren (&quot;Dump&quot;-Interface)
+oder über einen Pass-Through-Modus verfügen (z.B. AGVxxxx) und über eine 
+serielle Schnittstelle ansteuerbar sind. Dies beinhaltet auch USB-Interfaces, deren 
+Treiber einen virtuellen COM-Port zur Verfügung stellen (z.B. Interfaces mit FTDI-USB-Chip).<br>
+Nicht geeignet sind sämtliche Interfaces mit ELM-Chipsatz, da diese über einen festen 
+AT-Befehlssatz verfügen, der mit dem SUBARU®-spezifischen Protokoll nicht kompatibel ist !</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=2></a><strong>2.)
+Welche Fahrzeuge werden unterstützt ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Unterstützt werden die
+Modelle Legacy®/Liberty®/Outback®/Baja®, Impreza® (inkl. WRX + STi), Forester® und Tribeca® 
+ab frühesten Modelljahr 1999.<br>
+Fahrzeuge bis einschließlich Modelljahr 1998 sowie die Modelle SVX®, Justy®, Libero® and Vivio® 
+werden grundsätzlich nicht unterstützt.<br>
+Die Modelljahre 1999+2000 sind als Übergangszeitraum zu betrachten. Nach
+bisherigen Beobachtungen (EU-Modelle) werden die Motorsteuergeräte beim 
+Legacy®/Liberty®/Outback®/Baja® alle ab einschließlich MJ1999, beim Impreza® größtenteils
+ab MJ2000 und beim Forester® in der Regel erst ab MJ2001 unterstützt.<br>
+Getriebesteuergeräte werden frühestens ab MJ2000, die Meisten jedoch erst ab MJ2001 unterstützt.<br>
+Hilfreich ist hier ein Blick auf die Pin-Belegung der OBD-Buchse:
+ist Pin 7 vorhanden, so wird zumindest das Motorsteuergerät unterstützt.<br>
+Ab Modelljahr 2001 werden grundsätzlich beide
+Steuergeräte unterstützt.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3></a><strong>3.)
+Welche Steuergeräte werden unterstützt ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Es werden zur
+Zeit ausschließlich Motor- und Getriebe-Steuergeräte unterstützt. </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3a></a><strong>3a.)
+Warum bekomme ich eine Verbindung zum Motor-Steuergerät, nicht jedoch zum
+Getriebe-Steuergerät ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Je nach Modelljahr und
+Modell kann es vorkommen, dass das Motorsteuergerät bereits das neue (von der
+Software unterstützte) Protokoll, das Getriebesteuergerät jedoch noch das alte
+(nicht unterstützte) Protokoll verwendet.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3b></a><strong>3b.)
+Warum werden die anderen Steuergeräte/Fahrzeuge nicht unterstützt
+?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Weil diese andere Protokolle
+verwenden und die Kommunikation teilweise über andere Diagnose-Leitungen mit
+anderen elektrischen Eigenschaften läuft.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=4></a><strong>4.)
+Warum gibt FreeSSM keine Steuergeräte-Teilenummer
+und/oder Informationen zum Softwarestand aus ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Das SUBARU®-Diagnose-Protokoll sieht als 
+einzige Identifizierungsmöglichkeit eine sogannte ROM-ID vor, welche von FreeSSM auch angezeigt wird.<br>
+Die Zuordnung zwischen ROM-ID und Teilenummern bzw. Software-Versionen ist jedoch nicht eindeutig.
+Steuergeräte mit identischer ROM-ID können durchaus mehreren Teilenummern und Softwareständen zugeordnet werden.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=5></a><strong>5.)
+Warum verfügt das Motorsteuergerät meines Fahrzeugs über OBD2-Unterstützung, das 
+Getriebe-Steuergerät jedoch nicht ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>OBD2 ist ein
+&quot;funktionales&quot; System, dass auf Informationen mehrerer Steuergeräte
+zurückgreift und keinem Steuergerät fest zuzuordnen ist. Die Angabe der
+OBD2-Unterstützung in FreeSSM bezieht sich immer auf
+das jeweilige Steuergerät bzw. ob dieses in das OBD2-System integriert ist. Bei
+älteren Fahrzeugen war dies nur bei den Motor-Steuergeräten der Fall, die
+Getriebe-Steuergeräte sind erst seit jüngeren Modelljahren einbezogen.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=6></a><strong>6.)
+Warum wird im Motor-Steuergerät die Geschwindigkeits-Regelanlage nicht erkannt,
+obwohl mein Fahrzeug über eine Solche verfügt ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Bei älteren Fahrzeugen (mit
+Gaszug) ist die GRA ein separates System und wird von einem eigenen Steuergerät
+gesteuert.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=7></a><strong>7.)
+Warum werden zu einigen Fehlercodes teilweise unterschiedliche Bedeutungen/Beschreibungen 
+ausgegeben ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Einige der alten 2-stelligen SUBARU®-Fehlercodes 
+(Steuergeräte ohne OBD) sind mehrfach belegt bzw. haben verschiedene Bedeutungen.<br>
+FreeSSM ist in der Lage diese zu unterscheiden bzw. korrekt zuzuordnen.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=8></a><strong>8.)
+Was bedeutet &quot;nicht-permanent&quot; in Bezug auf die Einstellwerte ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>&quot;Nicht-permanent&quot;
+bedeutet, dass diese Werte beim (längerem) Abklemmen der Versorgungsspannung
+sowie beim Löschen des Steuergerätespeichers in den Auslieferungszustand
+zurückgesetzt werden.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=9></a><strong>9.)
+Warum funktioniert die Stellglieddiagnose bei einigen Bauteilen nicht ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Nicht alle der zur Auswahl
+stehenden Stellglieder sind auch wirklich im Fahrzeug verbaut und/oder testbar !<br>
+Das SUBARU®-Diagnose-Protokoll stellt lediglich die Information 
+bereit, ob die Stellglieddiagnose untertützt wird, nicht jedoch 
+welche Bauteile verbaut bzw. prüfbar sind.<br>
+FreeSSM bietet daher grundsätzlich alle Stellglieder zum Testen an.<br>
+Wird der Test mit einem Bauteil durchgeführt, welches nicht verbaut oder unterstützt wird, 
+dann geschieht einfach nichts.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=10></a><strong>10.)
+Was geschieht beim Löschen des Steuergeräte-Speichers ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'> Es werden sämtliche Fehlerspeicher 
+gelöscht (siehe auch <a href="#12">Frage 12</a> !) sowie alle Einstellwerte zurückgesetzt.<br>
+Bei neueren Motor-Steuergeräten mit elektronischer Drosselklappensteuerung (E-Gas) werden 
+außerdem auch deren Lernwerte zurückgesetzt.<br>
+Dies kann dazu führen, dass sich der Motor die erste Zeit nach dem Löschvorgang ungewohnt verhält.<br>
+Der Steuergerätespeicher sollte daher nicht unbedacht gelöscht werden.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=11></a><strong>11.)
+Worin besteht beim Getriebe-Steuergerät der Unterschied zwischen &quot;Speicher
+Löschen&quot; und &quot;Speicher Löschen 2&quot; ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>&quot;Speicher Löschen
+2&quot; beinhaltet &quot;Speicher Löschen&quot; und löscht zusätzlich Lernwerte der 
+Getriebe-Steuerung.<br>Dies kann dazu führen, dass sich das Getriebe
+die erste Zeit nach dem Löschvorgang ungewohnt verhält.<br>
+Diese Funktion sollte daher nur verwendet werden, wenn ein Rücksetzen der Lernwerte
+bewusst herbeigeführt werden soll !</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=12></a><strong>12.)
+Warum lässt sich der Fehlerspeicher des Steuergeräts manchmal nicht löschen ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Dafür gibt es zwei mögliche
+Ursachen:<br>
+a.) der Fehler, der zum Fehlerspeichereintrag führte besteht immer noch (der
+Fehler wird unmittelbar nach dem Löschen erneut erkannt) <br>
+b.) bei neueren Fahrzeugen können einige (abgasrelevante) Fehlercodes nicht auf
+Hersteller-Ebene gelöscht werden. Hier muss der Fehlerspeicher auf OBD-Ebene 
+gelöscht werden, wozu ein zusätzliches OBD-Scantool erforderlich ist.<br>
+<strong>ACHTUNG: FreeSSM ist KEIN OBD2-Scantool !</strong></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=13></a><strong>13.)
+Unterstützt die Software den CAN-Bus ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Nein, dies ist auch im
+Augenblick nicht notwendig. Zwar sind die (neueren) Fahrzeuge mit einem CAN-Bussystem 
+ausgestattet, dieses wird jedoch nicht für die Diagnose auf Hersteller-Ebene bzw. die Kommunikation 
+zwischen Motor-/Getriebe-Steuergerät und dem Tester verwendet.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=14></a><strong>14.)
+Wird die Software weiterentwickelt ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Es ist zumindest geplant.
+Die neueste Version gibt es immer auf <a href="http://FreeSSM.berlios.de/">
+<span style=" text-decoration: underline; color:#0000ff;">http://FreeSSM.berlios.de</span></a>.</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=C></a><b><span lang=EN-GB
+style='font-size:18.0pt;font-family:Arial;mso-ansi-language:EN-GB'>C.) Abkürzungen</span></b></p>
+<br>
+<table class=MsoNormalTable border=1 cellspacing=3 cellpadding=0 width="100%"
+ style='width:100.0%;mso-cellspacing:2.2pt;mso-padding-alt:3.0pt 3.0pt 3.0pt 3.0pt'>
+ <COL WIDTH=18*><COL WIDTH=238*>
+ <tr style='mso-yfti-irow:0'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AAI</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Luftunterstütztes Einspritzventil (<b>A</b>ir <b>A</b>ssist <b>I</b>njector)</p>
+  </td>
+ </tr>
+<tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ADA</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Aktive Fahr-Hilfe (<b>A</b>ctive <b>D</b>riving <b>A</b>ssist)</p>
+  </td>
+ </tr> 
+ <tr style='mso-yfti-irow:1'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AET</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Automatikgetriebe-Motor-Drehmomentanforderung (<b>A</b>T <b>E</b>ngine <b>T</b>orque request)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:2'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ASV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Saugluftventil (<b>A</b>ir <b>S</b>uction <b>V</b>alve)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:3'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ATF</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Automatikgetriebe-Öl (<b>A</b>utomatic <b>T</b>ransmission <b>F</b>luid)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:4'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AWD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Allradantrieb (<b>A</b>ll <b>W</b>heel <b>D</b>rive)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:5'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>CPC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Tankentlüftungs-Steuerung (<b>C</b>anister <b>P</b>urge <b>C</b>ontrol)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:6'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>CVT</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Getriebe mit variablem kontinuierlich verstellbarem Übersetzungsverhältnis
+  (<b>C</b>ontinuous <b>V</b>ariable <b>T</b>ransmission)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:7'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>DCCD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Einstellbares Zentraldifferential (<b>D</b>rivers <b>C</b>ontrol <b>C</b>enter <b>D</b>ifferential)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:8'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>DTC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Fehlercode (<b>D</b>iagnostic <b>T</b>rouble <b>C</b>ode)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:9'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>EAM</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Motor Automatikgetriebe Masking Flag (<b>E</b>ngine <b>A</b>T <b>M</b>asking flag)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:10'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ECM</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Elektronisches Steuermodul/Steuergerät (<b>E</b>lectronic <b>C</b>ontrol <b>M</b>odule)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:11'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>EGR</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Abgas-Rückführung (<b>E</b>xhaust <b>G</b>as <b>R</b>ecirculation)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:12'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ETC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Elektronische Drosselklappensteuerung (<b>E</b>lectronic <b>T</b>hrottle <b>C</b>ontrol)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:13'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>FICD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Leerlaufanhebungs-Vorrichtung (<b>F</b>ast <b>I</b>dle <b>C</b>ontrol <b>D</b>evice)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:14'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>FWD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Vorderradantrieb (<b>F</b>ront <b>W</b>heel <b>D</b>rive)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:15'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ISC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Leerlauf-Regelventil (<b>I</b>dle <b>S</b>peed <b>C</b>ontrol)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:16'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>MIL</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Störungs-Kontrollleuchte (<b>M</b>alfunction <b>I</b>ndicator <b>L</b>ight)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:17'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>OCV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Ölfluss-Steuer(magnet-)ventil (<b>O</b>il flow <b>C</b>ontrol solenoid <b>V</b>alve)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:18'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>OSV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Öldruck-Schaltmagnetventil (<b>O</b>il <b>S</b>witching solenoid <b>V</b>alve)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>PCU</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Antriebsstrang-Steuergerät (<b>P</b>owertrain <b>C</b>ontrol <b>U</b>nit)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:19'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>PCV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Kurbelgehäuse-Entlüftungsventil (<b>P</b>ositive <span
+  class=SpellE><b>C</b>rankshaft</span> <b>V</b>entilation)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:20'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TCM</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Getriebe-Steuergerät (<b>T</b>ransmission <b>C</b>ontrol <b>M</b>odule)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:21'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TCS</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Traktionskontrolle (<b>T</b>raction <b>C</b>ontrol <b>S</b>ystem)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:22'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TGV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Tumble-Ventil (<b>T</b>umble <b>G</b>enerator <b>V</b>alve)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:23'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VDC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Fahrdynamik-Regelung = ESP (<b>V</b>ehicle <b>D</b>ynamics <b>C</b>ontrol)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:24'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VVL</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Variabler Ventilhub (<b>V</b>ariable <b>V</b>alve <b>L</b>ift)</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VVT</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p>Variable Ventilsteuerung (<b>V</b>ariable <b>V</b>alve <b>T</b>iming)</p>
+  </td>
+ </tr>
+</table>
+
+<br>
+<p align=center>Copyright (C) 2008 Comer352l<br>Alle Handelsmarken sind Eigentum 
+von Fuji Heavy Industries Ltd. oder ihrer jeweiligen Besitzer.</p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<meta name="generator" content="Bluefish 1.0.7">
+	<META NAME="CREATED" CONTENT="20081014;13250500">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+	-->
+	</STYLE>
+</HEAD>
+
+<body lang=DE link=blue vlink=blue style='tab-interval:35.4pt' background="bg.jpg">
+
+<div class=Section1>
+
+<p><span class=SpellE><b><u><span style='font-size:24.0pt;font-family:Arial'>FreeSSM</span></u></b></span><b><u><span
+style='font-size:24.0pt;font-family:Arial'> v0.97.0 - Documentation/Help</span></u></b></p>
+
+<p><b><span style='font-size:18.0pt;font-family:Arial'>Contents</span></b></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>A.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#A">Preface</a></span></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>B.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#B">Frequently Asked Questions (FAQ)</a></span></p>
+
+<p style='margin-left:54.0pt;text-indent:-36.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 54.0pt'><![if !supportLists]><span style='font-size:16.0pt;
+font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-weight:bold'><span
+style='mso-list:Ignore'>C.)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-size:16.0pt;font-family:Arial;
+mso-bidi-font-weight:bold'><a href="#C">Abbreviations</a></span></p>
+
+<div align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=A></a><b><span style='font-size:
+18.0pt;font-family:Arial'>A.) Preface</span></b></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The use of this software is at your own risk.
+The author is not liable for any malfunctions or damages that may be caused directly or 
+indirectly by usage of this software. Both depend on the used hardware (interface), too.<br>
+<br>
+While driving the car, the software should NEVER BE OPERATED BY THE DRIVER !
+Always ensure that the interface cable does not affect/compromise the vehicle operation !
+</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=B></a><b><span style='font-size:
+18.0pt;font-family:Arial'>B.) Frequently Asked Questions (FAQ)</span></b></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>1.) <a href="#1">What kind of interface do I need ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>2.) <a href="#2">Which vehicle models are supported ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3.) <a href="#3">Which control units are supported ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3a.) <a href="#3a">Why can I connect to the engine's 
+control unit but not to the transmission's control unit ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>3b.) <a href="#3b">Why are the other control units 
+not supported ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>4.) <a href="#4">Why does FreeSSM not show the 
+control unit spare part number or informations about the software version ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>5.) <a href="#5">
+Why does the engine control unit support OBD2, but the transmission control unit doesn't ?
+</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>6.) <a href="#6">Why does the 
+engine control unit not detect the Cruise Control although my car is equipped with one ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>7.) <a href="#7">Why does FreeSSM 
+display different titles/descriptions for some Data Trouble Codes ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>8.) <a href="#8">What does 
+"non-permanent" mean in reference to the Adjustment Values ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">Why does 
+the Actuator test not work for some components ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>10.) <a href="#10">What happens 
+when clearing the control unit's memory ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>11.) <a href="#11">What's the 
+difference between &quot;Clear Memory&quot; and &quot;Clear Memory 2&quot; 
+for the transmission control unit ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>12.) <a href="#12">Why does 
+&quot;Clear Memory&quot; not clear all Diagnostic Codes in some cases ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>13.) <a href="#13">Does FreeSSM 
+use/support the CAN-Bus ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">Will development 
+of FreeSSM go on ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><o:p>&nbsp;</o:p></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=1></a><strong>1.)
+What kind of interface do I need ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software works with all 
+ISO-9141-2-/ISO-14230-1-compliant (K/L- and KK/L-) interfaces, that serve as 
+simple voltage level converters ("Dump"-interface) or have a pass-trough-mode 
+(e.g. AGVxxxx). The interface must be selectable through a 
+serial port, which also includes USB-interfaces whose driver provides a virtual 
+serial port (e.g. interfaces with FTDI-USB-chip).<br>
+Interfaces with ELM-chip are unsuitable, because they use a fixed AT-command-set 
+which is not compatible with the SUBARU®-specific protocol.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=2></a><strong>2.)
+Which vehicle models are supported ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software supports the 
+models Legacy®/Liberty®/Outback®/Baja®, Impreza® (incl. WRX + STi), Forester® and Tribeca® 
+starting with model year 1999.<br>
+Vehicles up tp model year 1998 as well as the models SVX®, Justy®, Libero® and Vivio® 
+are not supported.<br>
+The model years 1999+2000 must be regarded as transition period. According to present 
+obersvations (european models), access to the engine control unit of the models 
+Legacy®/Liberty®/Outback®/Baja® is already possible since model year 1999, while most
+of the Impreza®-models and a few of the Foresters® are supported from model year 2000 on.<br>
+Transmission control units are not supported before model year 2000, in most cases 
+support starts with model year 2001.<br>
+It is useful to take a look at the diagnostic connector: if pin 7 is available, at 
+least the engine control unit should be available.<br>
+From model year 2001 on, both control units are supported in any case.
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3></a><strong>3.)
+Which control units are supported ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software currently 
+provides access to the engine and transmission control units.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3a></a><strong>3a.)
+Why can I connect to the engine's control unit but not to the transmission's control unit ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Depending on model and model 
+year, it is possible that the engine controller already uses the new (supported) 
+protocol while the transmission control unit still uses the old (unsupported) 
+protocol.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3b></a><strong>3b.)
+Why are the other control units not supported ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Because they use different 
+communication protocols and are also connected through other diagnostic lines 
+with different electric attributes.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=4></a><strong>4.)
+Why does FreeSSM not show the control unit spare part number or informations 
+about the software version ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The only identification information provided by the 
+SUBARU®-diagnostic-protocol is the ROM-ID, which is displayed by FreeSSM.<br>
+The correlation between the ROM-ID and part numbers or software versions is ambigous. Control units with identical ROM-IDs 
+can have different part numbers and may be equipped with different software versions.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=5></a><strong>5.)
+Why does the engine control unit support OBD2, but the transmission control unit doesn't ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>OBD2 is a &quot;functional&quot; system 
+that incorporates informations and functionalites from different control units.
+The FreeSSM &quot;OBD2-support&quot;-information only states, that the corresponding 
+control unit takes part in this system.
+In older vehicles, only the engine controller is involved in the OBD2-system.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=6></a><strong>6.)
+Why does the engine control unit not detect the Cruise Control although my 
+car is equipped with one ?</strong></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>In older vehicles (without 
+electronic throttle control), the Cruise Control is a separate system that is 
+controlled by it's own control unit.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=7></a><strong>7.)
+Why does FreeSSM display different titles/descriptions for some Data Trouble Codes ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Some of the old 
+2-digit-SUBARU®-DTCs (control units without OBD2-support) are used 
+multiple times with different meanings.<br>
+FreeSSM can distinguish them and diplays the right title/description.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=8></a><strong>8.)
+What does &quot;non-permanent&quot; mean in reference to the Adjustment Values ?
+</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>
+&quot;Non-permanent&quot; means, that all values are reset to default when 
+disconnecting from power supply or clearing the control unit's memory.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=9></a><strong>9.)
+Why does the Actuator test not work for some components ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Not all of the selectable 
+actuators are available in every vehicle.
+The SUBARU®-diagnostic-protocol only provides the information, if actuatuator 
+tests are supported or not, but it doesn't provide any information about the 
+available/testable actuators.<br>
+That's why FreeSSM always lists all known actuators.<br>
+If the selected actuator is not available, simply nothing will happen during the test.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=10></a><strong>10.)
+What happens when clearing the control unit's memory ?</strong>
+</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>All diagnostic codes are cleared 
+(also see <a href="#12">question 12</a> !) and all adaption values are reset to default.<br>
+For newer engine control units with electronic throttle control, the corresponding 
+learning values are reset, too. This can result in unusual engine behavior for the 
+first time after clearing the memory.<br>
+Therefore, it should not be done without a reason.
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=11></a><strong>11.)
+What's the difference between &quot;Clear Memory&quot; and &quot;Clear Memory 2&quot; 
+for the transmission control unit ?</strong></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>&quot;Clear Memory 2&quot; 
+includes &quot;Clear Memory&quot; and also clears all learning values of the 
+transmission control.<br>
+This can result in unusual behavior of the transmission for the first time after clearing the memory.<br>
+Therefore, it should only be applied if a reset of the learning values is the goal !</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=12></a><strong>12.)
+Why does &quot;Clear Memory&quot; not clear all Diagnostic Codes in some cases ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>There are two possible reasons:<br>
+a.) the problem/malfunction that caused the diagnostic code to be stored still exists 
+(immediate redetection)<br>
+b.) on newer vehicles, some (emmission related) diagnostic codes can not be cleared at 
+manufacturer level. They have to be cleared in the OBD2-system, for which an additional 
+OBD2-Scantool is needed.<br>
+<strong>PLEASE NOTE: FreeSSM IS NO OBD2-Scantool !</strong></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=13></a><strong>13.)
+Does FreeSSM use/support the CAN-Bus ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>No, because it's not necessary. 
+Of course, the newer vehicles are working with a CAN-Bus system, but it is not 
+used for diagnostic purposes at manufacturer level or rather the communication 
+between engine/transmission control unit and the diagnostic equipment.</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=14></a><strong>14.)
+Will development of FreeSSM go on ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>That's the plan.
+The latest version is always available at <a href="http://FreeSSM.berlios.de/">
+<span style=" text-decoration: underline; color:#0000ff;">http://FreeSSM.berlios.de</span></a>.</p>
+</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=C></a><b><span lang=EN-GB
+style='font-size:18.0pt;font-family:Arial;mso-ansi-language:EN-GB'>C.) Abbreviations</span></b></p>
+<br>
+<table class=MsoNormalTable border=1 cellspacing=3 cellpadding=0 width="100%"
+ style='width:100.0%;mso-cellspacing:2.2pt;mso-padding-alt:3.0pt 3.0pt 3.0pt 3.0pt'>
+ <COL WIDTH=18*><COL WIDTH=238*>
+ <tr style='mso-yfti-irow:0'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AAI</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>ir <b>A</b>ssist <b>I</b>njector</p>
+  </td>
+ </tr>
+<tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ADA</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>ctive <b>D</b>riving <b>A</b>ssist</p>
+  </td>
+ </tr> 
+ <tr style='mso-yfti-irow:1'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AET</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>T <b>E</b>ngine <b>T</b>orque request</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:2'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ASV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>ir <b>S</b>uction <b>V</b>alve</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:3'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ATF</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>utomatic <b>T</b>ransmission <b>F</b>luid</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:4'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>AWD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>A</b>ll <b>W</b>heel <b>D</b>rive</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:5'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>CPC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>C</b>anister <b>P</b>urge <b>C</b>ontrol</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:6'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>CVT</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>C</b>ontinuous <b>V</b>ariable <b>T</b>ransmission</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:7'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>DCCD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>D</b>rivers <b>C</b>ontrol <b>C</b>enter <b>D</b>ifferential</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:8'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>DTC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>D</b>iagnostic <b>T</b>rouble <b>C</b>ode</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:9'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>EAM</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>E</b>ngine <b>A</b>T <b>M</b>asking</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:10'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ECM</b><o:p></o:p></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>E</b>lectronic <b>C</b>ontrol <b>M</b>odule</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:11'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>EGR</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>E</b>xhaust <b>G</b>as <b>R</b>ecirculation</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:12'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ETC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>E</b>lectronic <b>T</b>hrottle <b>C</b>ontrol</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:13'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>FICD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>F</b>ast <b>I</b>dle <b>C</b>ontrol <b>D</b>evice</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:14'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>FWD</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>F</b>ront <b>W</b>heel <b>D</b>rive</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:15'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>ISC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>I</b>dle <b>S</b>peed <b>C</b>ontrol</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:16'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>MIL</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>M</b>alfunction <b>I</b>ndicator <b>L</b>ight</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:17'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>OCV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>O</b>il flow <b>C</b>ontrol solenoid <b>V</b>alve</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:18'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>OSV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>O</b>il <b>S</b>witching solenoid <b>V</b>alve</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>PCU</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>P</b>owertrain <b>C</b>ontrol <b>U</b>nit</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:19'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>PCV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>P</b>ositive <b>C</b>rankshaft <b>V</b>entilation</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:20'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TCM</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>T</b>ransmission <b>C</b>ontrol <b>M</b>odule</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:21'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TCS</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>T</b>raction <b>C</b>ontrol <b>S</b>ystem</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:22'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>TGV</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>T</b>umble <b>G</b>enerator <b>V</b>alve</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:23'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VDC</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>V</b>ehicle <b>D</b>ynamics <b>C</b>ontrol</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:24'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VVL</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>V</b>ariable <b>V</b>alve <b>L</b>ift</p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:25;mso-yfti-lastrow:yes'>
+  <td width="7%" valign=top style='width:7.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p align=center style='text-align:center'><b>VVT</b></p>
+  </td>
+  <td width="93%" valign=top style='width:93.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p><b>V</b>ariable <b>V</b>alve <b>T</b>iming</span></p>
+  </td>
+ </tr>
+</table>
+
+<br>
+<p align=center>Copyright (C) 2008 Comer352l<br>All trademarks are property of 
+Fuji Heavy Industries Ltd. or their respective owners.</p>
+
+</div>
+
+</body>
+
+</html>
