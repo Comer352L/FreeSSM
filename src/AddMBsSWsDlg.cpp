@@ -97,6 +97,7 @@ void AddMBsSWsDlg::add()
 {
 	int index = 0;
 	int k = 0;
+	disconnect(add_pushButton, SIGNAL( pressed() ), this, SLOT( add() )); // bugfix !
 	QItemSelectionModel *selModel = MBsSWs_listWidget->selectionModel();
 	QModelIndexList MIlist = selModel->selectedRows();
 	qSort(MIlist.begin(), MIlist.end(), rowIndexLessThan);	// since Qt 4.4.1, we have to sort the the QModelIndexes...
