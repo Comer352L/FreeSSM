@@ -596,10 +596,7 @@ void CUcontent_MBsSWs::updateMWSWqueryListContent()
 		if (static_cast<unsigned int>(_lastvalues.size()) > k)	// size() = last index + 1
 		{
 			tableelement = new QTableWidgetItem( _lastvalues.at(k) );
-			if (_MBSWmetaList[k].blockType == 0)
-				tableelement->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-			else
-				tableelement->setTextAlignment(Qt::AlignCenter);
+			tableelement->setTextAlignment(Qt::AlignCenter);
 			selectedMBsSWs_tableWidget->setItem(k, 1, tableelement);
 		}
 	}
