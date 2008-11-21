@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 	if (!ok) return -1;
 	// Set Window Icon:
 	app.setWindowIcon( QIcon(":/icons/FreeSSM.png") );
+	// Use Unicode UTF-8:
+	QTextCodec::setCodecForCStrings( QTextCodec::codecForName("UTF-8") );
 	// Get installed (system) fonts:
 	QFontDatabase fdb;
 	QStringList fontfamilies = fdb.families ( QFontDatabase::Any );
