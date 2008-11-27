@@ -2185,32 +2185,43 @@ bool SSMprotocol::stopAllPermanentOperations()
 
 
 
-bool SSMprotocol::waitForDisconnect()
+bool SSMprotocol::waitForIgnitionOff()
 {
-	QEventLoop el;
-	unsigned int dataadr = 0x62;
-	if (_state == needSetup)
-	{
+	if (_state != normal)
 		return false;
-	}
-	else if (_state == normal)
+	unsigned int dataadr = 0x62;
+	_state = waitingForDisconnect;
+	_SSMPcom->setRetriesOnError(1);
+	if (_flagbytes[12] == (_flagbytes[12] | 0x08))	// MB "ignition switch"
 	{
-		_state = waitingForDisconnect;
+		bool ignstate = true;
+		char data = 0x00;
+		do
+		{
+			if(!_SSMPcom->readMultipleDatabytes('\x0', &dataadr, 1, &data))
+				ignstate = false;
+			else
+				ignstate = (data == (data | 0x08));
+		} while (ignstate);
+	}
+	else
+	{
+		QEventLoop el;
 		disconnect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		_SSMPcom->setRetriesOnError(0);
 		if(!_SSMPcom->readMultipleDatabytes_permanent('\x0', &dataadr, 1))
 		{
 			resetCUdata();
 			return false;
 		}
+		connect(_SSMPcom, SIGNAL( commError() ), &el, SLOT( quit() ));
+		el.exec();
+		disconnect(_SSMPcom, SIGNAL( commError() ), &el, SLOT( quit() ));
 	}
-	connect(_SSMPcom, SIGNAL( commError() ), &el, SLOT( quit() ));
-	el.exec();
 	_SSMPcom->setRetriesOnError(2);
 	resetCUdata();
 	return true;
-/* NOTE: this is a temporary solution. It will become obsolete when idle-mode is implemented for SSMPcommunication */
+/* NOTE: temporary solution, will become obsolete with new SSMPcommunication */
 }
 
 

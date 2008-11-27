@@ -152,7 +152,7 @@ public:
 	bool restartActuatorTest();
 	bool stopActuatorTesting();
 	bool stopAllPermanentOperations();
-	bool waitForDisconnect();
+	bool waitForIgnitionOff();
 
 private:
 	serialCOM *_port;
