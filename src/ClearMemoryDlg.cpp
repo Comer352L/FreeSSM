@@ -88,7 +88,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		return ClearMemoryDlg::communicationError;
 	// Request user to switch ignition off and wait for communication error:
 	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
-	ok = _SSMPdev->waitForDisconnect();
+	ok = _SSMPdev->waitForIgnitionOff();
 	// Close wait-message box:
 	waitmsgbox.close();
 	if (!ok)
