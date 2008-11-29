@@ -27,8 +27,15 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	// Ensure that only one instance of FreeSSM is started:
 	QSharedMemory fssm_lock("FreeSSM_smo-key_1234567890ABCDEFGHIJKLMNOPQRSTUVW");
-	bool ok = fssm_lock.create(1, QSharedMemory::ReadOnly);
-	if (!ok) return -1;
+	if ( fssm_lock.attach() )
+	{
+		/* NOTE: With the current implementation of QSharedMemory, shared memory objects
+		 * survive on UNIX-systems if the attached process is killed (or crashed) !    */
+		fssm_lock.detach();	// trick: this also detaches all dead processes (why ?!) !
+		if ( fssm_lock.attach() ) // another instance of FreeSSM is still running
+			return -1;
+	}
+	fssm_lock.create(1, QSharedMemory::ReadOnly);
 	// Set Window Icon:
 	app.setWindowIcon( QIcon(":/icons/FreeSSM.png") );
 	// Use Unicode UTF-8:
