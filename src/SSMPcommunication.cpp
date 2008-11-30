@@ -154,9 +154,7 @@ void SSMPcommunication::run()
 			if (permanent && (rindex == 1))
 			{
 				// CONVERT/PREPARE DATA FOR RETURNING
-				rawdata.clear();
-				for (k=0; k<datalen; k++)
-					rawdata.append( rec_buf[k] );
+				rawdata = QByteArray::fromRawData ( rec_buf, datalen );
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
