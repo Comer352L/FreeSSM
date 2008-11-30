@@ -1413,7 +1413,7 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 		_ignoreDCheckStateOnDCreading = ignoreDCheckState;
 		// Connect signals and slots:
 		connect( _SSMPcom, SIGNAL( recievedData(QByteArray, int) ),
-			this, SLOT( processDCsRawdata(QByteArray, int) ) );
+			this, SLOT( processDCsRawdata(QByteArray, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
