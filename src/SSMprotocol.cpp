@@ -1439,7 +1439,7 @@ bool SSMprotocol::stopDCreading()
 		if (_SSMPcom->stopCommunication())
 		{
 			disconnect( _SSMPcom, SIGNAL( recievedData(QByteArray, int) ),
-				    this, SLOT( processMBSWrawData(QByteArray, int) ) );
+				    this, SLOT( processDCsRawdata(QByteArray, int) ) );
 			_state = normal;
 			emit stoppedDCreading();
 			return true;
