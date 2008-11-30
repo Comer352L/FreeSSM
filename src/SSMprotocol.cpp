@@ -1534,8 +1534,7 @@ void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, 
 {
 	unsigned char setbits[8] = {0,};
 	unsigned char setbitslen = 0;
-	QString dtcdefline;
-	QString tmpstr;
+	QStringList tmpdefparts;
 	unsigned int tmpcurrentdtcadr = 0;
 	unsigned int tmphistoricdtcadr = 0;
 	unsigned int tmpbitadr = 0;
@@ -1561,26 +1560,19 @@ void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, 
 	{
 		/* NOTE:	- unknown/reserved DTCs have a definition with description "UNKNOWN ..."
 				- DTCs with missing definitions are ignored				*/
-		dtcdefline = _DC_rawDefs.at(k);
-		tmpstr = dtcdefline.section(';', 0, 0);		// extract 1. data segment (current/latest DTCs memory address)
-		tmpcurrentdtcadr = tmpstr.toUInt(&ok, 16);
-		if (ok)
-		{
-			tmpstr = dtcdefline.section(';', 1, 1);	// extract 2. data segment (historic/memorized DTCs memory address)
-			tmphistoricdtcadr = tmpstr.toUInt(&ok, 16);
-		}
-        	// NOTE: Check of OK shouldn't be becessary, because toInt() sets return value to 0 if it fails
+		tmpdefparts = _DC_rawDefs.at(k).split(';');
+		tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DTCs memory address
+		tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DTCs memory address
 		if ((ok) && ((tmpcurrentdtcadr == DTCbyteadr) || (tmphistoricdtcadr == DTCbyteadr)))
 		{
-			tmpstr = dtcdefline.section(';', 2, 2);	// extract 3. data segment
-			tmpbitadr = tmpstr.toUInt();
+			tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
 			for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
 			{
 				// Check if definition belongs to current DTC:
 				if (tmpbitadr == setbits[setbitsindex])
 				{
-					DTC->push_back(dtcdefline.section(';', 3, 3));			// extract 4. data segment (DTC code)
-					DTCdescription->push_back(dtcdefline.section(';', 4, 4));	// extract 5. data segment (DTC description)
+					DTC->push_back(tmpdefparts.at(3));		// DTC
+					DTCdescription->push_back(tmpdefparts.at(4));	// DTC description
 				}
 			}
 		}
@@ -1593,7 +1585,7 @@ void SSMprotocol::evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata, Q
 {
 	unsigned char setbits[8] = {0,};
 	unsigned char setbitslen = 0;
-	QString ccdefline;
+	QStringList tmpdefparts;
 	QString tmpstr;
 	unsigned int tmpcurrentdtcadr;
 	unsigned int tmphistoricdtcadr;
@@ -1604,7 +1596,7 @@ void SSMprotocol::evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata, Q
 
 	CC->clear();
 	CCdescription->clear();
-	if (CCrawdata == 0) return;	// immediatly return success if no DTC is set
+	if (CCrawdata == 0) return;	// immediatly return success if no CC is set
 	// Create list of set flagbits:
 	unsigned char flagbit = 0;
 	for (flagbit=1; flagbit<9; flagbit++)
@@ -1618,23 +1610,19 @@ void SSMprotocol::evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata, Q
 	// *** Search for matching DTC definition ***:
 	for (k=0; k<_CC_rawDefs.size(); k++)
 	{
-		ccdefline = _CC_rawDefs.at(k);
-		tmpstr = ccdefline.section(';', 0, 0);		// extract 1. data segment (latest CCs memory address)
-		tmpcurrentdtcadr = tmpstr.toUInt(&ok, 16);
-		tmpstr = ccdefline.section(';', 1, 1);		// extract 2. data segment (memorized CCs memory address)
-		tmphistoricdtcadr = tmpstr.toUInt(&ok, 16);
-        	// NOTE: Check of OK shouldn't be becessary, because toInt() sets return value to 0 if it fails
+		tmpdefparts = _CC_rawDefs.at(k).split(';');
+		tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // latest CCs memory address
+		tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // memorized CCs memory address
 		if ((tmpcurrentdtcadr == CCbyteadr) || (tmphistoricdtcadr == CCbyteadr))
 		{
-			tmpstr = ccdefline.section(';', 2, 2);	// extract 3. data segment
-			tmpbitadr = tmpstr.toUInt();
+			tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
 			for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
 			{
 				// Check if definition belongs to current CC:
-				if (tmpbitadr == setbits[setbitsindex])	// wenn passende DTC-Definition gefunden wurde
+				if (tmpbitadr == setbits[setbitsindex])
 				{
-					CC->push_back(ccdefline.section(';', 3, 3));		// extract 4. data segment (cancel code)
-					CCdescription->push_back(ccdefline.section(';', 4, 4));	// extract 5. data segment (CC description)
+					CC->push_back(tmpdefparts.at(3));		// Cancel Code
+					CCdescription->push_back(tmpdefparts.at(4));	// Cancel Code description
 				}
 			}
 		}
