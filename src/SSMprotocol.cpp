@@ -1561,18 +1561,21 @@ void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, 
 		/* NOTE:	- unknown/reserved DTCs have a definition with description "UNKNOWN ..."
 				- DTCs with missing definitions are ignored				*/
 		tmpdefparts = _DC_rawDefs.at(k).split(';');
-		tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DTCs memory address
-		tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DTCs memory address
-		if ((ok) && ((tmpcurrentdtcadr == DTCbyteadr) || (tmphistoricdtcadr == DTCbyteadr)))
+		if (tmpdefparts.size() == 5)
 		{
-			tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
-			for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
+			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DTCs memory address
+			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DTCs memory address
+			if ((ok) && ((tmpcurrentdtcadr == DTCbyteadr) || (tmphistoricdtcadr == DTCbyteadr)))
 			{
-				// Check if definition belongs to current DTC:
-				if (tmpbitadr == setbits[setbitsindex])
+				tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
+				for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
 				{
-					DTC->push_back(tmpdefparts.at(3));		// DTC
-					DTCdescription->push_back(tmpdefparts.at(4));	// DTC description
+					// Check if definition belongs to current DTC:
+					if (tmpbitadr == setbits[setbitsindex])
+					{
+						DTC->push_back(tmpdefparts.at(3));		// DTC
+						DTCdescription->push_back(tmpdefparts.at(4));	// DTC description
+					}
 				}
 			}
 		}
@@ -1611,18 +1614,21 @@ void SSMprotocol::evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata, Q
 	for (k=0; k<_CC_rawDefs.size(); k++)
 	{
 		tmpdefparts = _CC_rawDefs.at(k).split(';');
-		tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // latest CCs memory address
-		tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // memorized CCs memory address
-		if ((tmpcurrentdtcadr == CCbyteadr) || (tmphistoricdtcadr == CCbyteadr))
+		if (tmpdefparts.size() == 5)
 		{
-			tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
-			for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
+			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // latest CCs memory address
+			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // memorized CCs memory address
+			if ((tmpcurrentdtcadr == CCbyteadr) || (tmphistoricdtcadr == CCbyteadr))
 			{
-				// Check if definition belongs to current CC:
-				if (tmpbitadr == setbits[setbitsindex])
+				tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
+				for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
 				{
-					CC->push_back(tmpdefparts.at(3));		// Cancel Code
-					CCdescription->push_back(tmpdefparts.at(4));	// Cancel Code description
+					// Check if definition belongs to current CC:
+					if (tmpbitadr == setbits[setbitsindex])
+					{
+						CC->push_back(tmpdefparts.at(3));		// Cancel Code
+						CCdescription->push_back(tmpdefparts.at(4));	// Cancel Code description
+					}
 				}
 			}
 		}
