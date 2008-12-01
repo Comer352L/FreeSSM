@@ -1,1 +1,9 @@
-Bisher noch kein Release !
+v0.97.1 (1.12.2008):
+
+ Erstes Release:
+  - Zugriff auf ECUs und TCUs für Modelle MJ1999+
+  - Lesen von Fehlercodes und GRA-Abbruchcodes
+  - Messwertblock-Lesen
+  - Einstellwerte
+  - Stellglieddiagnose, Wegfahrsperrentest
+  - Speicher-Löschprozeduren

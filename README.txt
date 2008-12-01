@@ -71,7 +71,7 @@ Preparation:
 $ qmake
 
 Compilation:
-$ make release
+$ make
 
 Translation files:
 $ make translation

@@ -1,1 +1,9 @@
-No release yet !
+v0.97.1 (1.12.2008):
+
+ First release:
+  - Access to ECUs and TCUs of models MY1999+
+  - Data Trouble Codes and Cruise Control Cancel Codes Reading
+  - Measuring Blocks Reading
+  - Adjustment Values
+  - Actuator Tests, Immobilizer Test
+  - Clear Memory Procedures
