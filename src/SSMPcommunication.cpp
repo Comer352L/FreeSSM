@@ -24,7 +24,6 @@
 SSMPcommunication::SSMPcommunication(serialCOM *port, char cuaddress, unsigned char errRetries) : QThread(), SSMPcommunication_core(port)
 {
 	_cuaddress = cuaddress;
-	_port = port;
 
 	unsigned int k = 0;
 	_CommOperation = noCom;
