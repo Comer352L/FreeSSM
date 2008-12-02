@@ -81,13 +81,30 @@ unix {
        INCLUDEPATH += src/linux
        HEADERS += src/linux/serialCOM.h
        SOURCES += src/linux/serialCOM.cpp
+
+       # Installation
+       HOMEDIR = $$system(echo ~)
+       apptarget.path = $$HOMEDIR/FreeSSM
+       apptarget.files = FreeSSM background.jpg *.qm LiberationSans*.ttf resources/icons/FreeSSM.png
+       doctarget.path = $$HOMEDIR/FreeSSM/doc
+       doctarget.files = doc/*
 }
 
 win32 {
-       # CONFIG += console
+       #CONFIG += console
        DEPENDPATH += src/windows
        INCLUDEPATH += src/windows
        HEADERS += src/windows/serialCOM.h
        SOURCES += src/windows/serialCOM.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
+
+       # Installation
+       PROGRAMSDIR = $$system(echo %programfiles%)
+       apptarget.path = $$PROGRAMSDIR/FreeSSM
+       apptarget.files = FreeSSM.exe background.jpg *.qm LiberationSans*.ttf resources/icons/FreeSSM.png
+       doctarget.path = $$PROGRAMSDIR/FreeSSM/doc
+       doctarget.files = doc/*
 }
+
+INSTALLS += doctarget apptarget
+

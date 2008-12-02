@@ -22,7 +22,8 @@ owners.
    2. Supported Platforms
    3. Requirements
    4. Compilation
-   5. Starting FreeSSM
+   5. Installation
+   6. Starting FreeSSM
 
 --------------------------------------------------------------------------------
 
@@ -78,7 +79,23 @@ $ make translation
 
 --------------------------------------------------------------------------------
 
-5. STARTING FreeSSM:
+5. INSTALLATION:
+
+$ make install
+
+=> the application will be installed to 
+	- Linux:	the users home-directory (/home/userXYZ/FreeSSM)
+	- Windows:	the "Program files"-folder (C:\Program files\FreeSSM)
+
+Un-installation:
+
+$ make uninstall
+
+--------------------------------------------------------------------------------
+
+6. STARTING FreeSSM:
+
+First, switch to the installation folder (see 5.).
 
 Linux:
 $ ./FreeSSM
