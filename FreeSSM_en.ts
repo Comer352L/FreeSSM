@@ -499,22 +499,22 @@ The Control Unit didn&apos;t accept the new value !</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="624"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="621"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="615"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="612"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block transfer rate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="725"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="725"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Communication Error:
@@ -996,50 +996,41 @@ Maybe port is already in use by another application...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
+        <location filename="src/Preferences.cpp" line="328"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="220"/>
+        <location filename="src/Preferences.cpp" line="221"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="235"/>
+        <location filename="src/Preferences.cpp" line="236"/>
         <source>Please connect diagnostic interface to the vehicles
 OBD-Connector and switch ignition on.</source>
         <translation type="unfinished">Please connect diagnostic interface to the vehicles
 OBD-Connector and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
-        <source>Couldn&apos;t save preferences to file !
-To prevent this failure in the future, ensure write access
-to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&apos;&apos;.</source>
-        <translation type="unfinished">Couldn&apos;t save preferences to file !
-To prevent this failure in the future, ensure write access
-to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&apos;&apos;.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="236"/>
+        <location filename="src/Preferences.cpp" line="237"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="274"/>
+        <location filename="src/Preferences.cpp" line="270"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="273"/>
+        <location filename="src/Preferences.cpp" line="269"/>
         <source>Retry</source>
         <translation type="unfinished">Retry</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="304"/>
+        <location filename="src/Preferences.cpp" line="300"/>
         <source>Error while closing serial port !</source>
         <translation type="unfinished">Error while closing serial port !</translation>
     </message>
@@ -1051,34 +1042,38 @@ to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&
 - Language file missing or damaged -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="205"/>
+        <location filename="src/Preferences.cpp" line="206"/>
         <source>Couldn&apos;t configure serial port !</source>
         <translation type="unfinished">Couldn&apos;t configure serial port !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="288"/>
+        <location filename="src/Preferences.cpp" line="284"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="254"/>
-        <source>Please wait...</source>
-        <translation type="unfinished">Please wait...</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="254"/>
+        <location filename="src/Preferences.cpp" line="255"/>
         <source>Testing Interface... Please wait !     </source>
         <translation type="unfinished">Testing Interface... Please wait !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="272"/>
+        <location filename="src/Preferences.cpp" line="268"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface test failed !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="288"/>
+        <location filename="src/Preferences.cpp" line="284"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface test successful !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="328"/>
+        <source>Couldn&apos;t save preferences to file !
+To prevent this failure in the future, ensure write access
+to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
+        <translation type="unfinished">Couldn&apos;t save preferences to file !
+To prevent this failure in the future, ensure write access
+to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translation>
     </message>
 </context>
 <context>

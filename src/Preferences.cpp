@@ -315,8 +315,7 @@ void Preferences::ok()
 	// RETURN CURRENT PORTNAME:
 	*r_portname = newportname;
 	// SAVE PREFERENCES TO FILE:
-	QString AppsPath( QCoreApplication::applicationDirPath() );
-	QFile prefsfile(AppsPath + "/prefs.dat");
+	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
 	{
 		// rewrite file completly:
@@ -326,7 +325,7 @@ void Preferences::ok()
 	}
 	else
 	{
-		QMessageBox msg( QMessageBox::Warning, tr("Error"), tr("Couldn't save preferences to file !\nTo prevent this failure in the future, ensure write access\nto the ''FreeSSM'' directory and file ''prefs.dat''."), QMessageBox::Ok, this);
+		QMessageBox msg( QMessageBox::Warning, tr("Error"), tr("Couldn't save preferences to file !\nTo prevent this failure in the future, ensure write access\nto your home directory and file ''FreeSSM.prefs''."), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
 		msgfont.setPixelSize(12); // 9pts
 		msg.setFont( msgfont );

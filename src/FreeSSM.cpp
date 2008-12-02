@@ -68,7 +68,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	// LOAD PREFERENCES FROM FILE:
 	QString savedportname = "";
 	QString savedlanguage = "";
-	QFile prefsfile(appsPath + "/prefs.dat");
+	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		QByteArray line;

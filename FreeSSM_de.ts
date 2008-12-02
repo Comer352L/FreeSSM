@@ -500,22 +500,22 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="624"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="621"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Aktualisierungsdauer:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="615"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="612"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="725"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="728"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="725"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Kommunikationsfehler:
@@ -998,50 +998,41 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
+        <location filename="src/Preferences.cpp" line="328"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="220"/>
+        <location filename="src/Preferences.cpp" line="221"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="235"/>
+        <location filename="src/Preferences.cpp" line="236"/>
         <source>Please connect diagnostic interface to the vehicles
 OBD-Connector and switch ignition on.</source>
         <translation type="unfinished">Diagnose-Interface mit der OBD-Buchse des Fahrzeugs
 verbinden und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
-        <source>Couldn&apos;t save preferences to file !
-To prevent this failure in the future, ensure write access
-to the &apos;&apos;FreeSSM&apos;&apos; directory and file &apos;&apos;prefs.dat&apos;&apos;.</source>
-        <translation type="unfinished">Die Programm-Einstellungen konnten nicht gespeichert werden !
-Um diesen Fehler künftig zu vermeiden sollten Sie sicherstellen, dass
-Schreib-Zugriff auf das &apos;&apos;FreeSSM&apos;&apos;-Verzeichnis sowie die Datei &apos;&apos;prefs.dat&apos;&apos; besteht.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="236"/>
+        <location filename="src/Preferences.cpp" line="237"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="274"/>
+        <location filename="src/Preferences.cpp" line="270"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="273"/>
+        <location filename="src/Preferences.cpp" line="269"/>
         <source>Retry</source>
         <translation type="unfinished">Wiederholen</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="304"/>
+        <location filename="src/Preferences.cpp" line="300"/>
         <source>Error while closing serial port !</source>
         <translation type="unfinished">Fehler beim Schließen des seriellen Ports !</translation>
     </message>
@@ -1053,34 +1044,38 @@ Schreib-Zugriff auf das &apos;&apos;FreeSSM&apos;&apos;-Verzeichnis sowie die Da
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="205"/>
+        <location filename="src/Preferences.cpp" line="206"/>
         <source>Couldn&apos;t configure serial port !</source>
         <translation type="unfinished">Serieller Port konnte nicht konfiguriert werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="288"/>
+        <location filename="src/Preferences.cpp" line="284"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="254"/>
-        <source>Please wait...</source>
-        <translation type="unfinished">Bitte warten...</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="254"/>
+        <location filename="src/Preferences.cpp" line="255"/>
         <source>Testing Interface... Please wait !     </source>
         <translation type="unfinished">Teste Interface... Bitte warten !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="272"/>
+        <location filename="src/Preferences.cpp" line="268"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="288"/>
+        <location filename="src/Preferences.cpp" line="284"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface-Test erfolgreich !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="328"/>
+        <source>Couldn&apos;t save preferences to file !
+To prevent this failure in the future, ensure write access
+to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
+        <translation type="unfinished">Die Programm-Einstellungen konnten nicht gespeichert werden !
+Um diesen Fehler künftig zu vermeiden sollten Sie sicherstellen, dass
+Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei &apos;&apos;FreeSSM.prefs&apos;&apos; besteht.</translation>
     </message>
 </context>
 <context>
