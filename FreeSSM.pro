@@ -71,8 +71,22 @@ RESOURCES += resources/FreeSSM.qrc
 TRANSLATIONS = FreeSSM_en.ts \
                FreeSSM_de.ts
 
-translation.commands = lrelease FreeSSM.pro
+translation.commands = lrelease FreeSSM.pro & qmake
 QMAKE_EXTRA_TARGETS += translation
+
+
+
+# Installation
+unix:INSTALLDIR = $$system(echo ~)/FreeSSM
+win32:INSTALLDIR = $$system(echo %programfiles%)/FreeSSM
+target.path = $$INSTALLDIR
+filestarget.path = $$INSTALLDIR
+filestarget.files = background.jpg LiberationSans*.ttf resources/icons/FreeSSM.png *.qm
+doctarget.path = $$INSTALLDIR/doc
+doctarget.files = doc/*
+INSTALLS += target doctarget filestarget
+
+
 
 
 # OS-specific options
@@ -81,13 +95,6 @@ unix {
        INCLUDEPATH += src/linux
        HEADERS += src/linux/serialCOM.h
        SOURCES += src/linux/serialCOM.cpp
-
-       # Installation
-       HOMEDIR = $$system(echo ~)
-       apptarget.path = $$HOMEDIR/FreeSSM
-       apptarget.files = FreeSSM background.jpg *.qm LiberationSans*.ttf resources/icons/FreeSSM.png
-       doctarget.path = $$HOMEDIR/FreeSSM/doc
-       doctarget.files = doc/*
 }
 
 win32 {
@@ -97,14 +104,6 @@ win32 {
        HEADERS += src/windows/serialCOM.h
        SOURCES += src/windows/serialCOM.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
-
-       # Installation
-       PROGRAMSDIR = $$system(echo %programfiles%)
-       apptarget.path = $$PROGRAMSDIR/FreeSSM
-       apptarget.files = FreeSSM.exe background.jpg *.qm LiberationSans*.ttf resources/icons/FreeSSM.png
-       doctarget.path = $$PROGRAMSDIR/FreeSSM/doc
-       doctarget.files = doc/*
 }
 
-INSTALLS += doctarget apptarget
 
