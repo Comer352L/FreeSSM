@@ -22,7 +22,7 @@
 
 
 
-#define FSSM_VERSION "v0.97.1"
+#define FSSM_VERSION "v0.97.2"
 
 
 

@@ -1,3 +1,8 @@
+v0.97.2 (4.12.2008):
+
+ Minor modifications, most of them related to the installation process.
+
+
 v0.97.1 (1.12.2008):
 
  First release:
