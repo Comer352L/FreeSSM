@@ -734,6 +734,11 @@ You should have received a copy of the GNU General Public License along with thi
        <height>325</height>
       </rect>
      </property>
+     <property name="font" >
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="lineWrapColumnOrWidth" >
       <number>0</number>
      </property>
