@@ -42,13 +42,13 @@ class Preferences : public QDialog, private Ui::Preferences_Dialog
 	Q_OBJECT
 
 private:
-	QMainWindow *FreeSSM_MainWindow;
-	QString *r_portname;
-	QString newportname;
-	QString language_old;
-	QString language_current;
-	int lastlangindex;
-	bool confirmed;
+	QMainWindow *_FreeSSM_MainWindow;
+	QString *_r_portname;
+	QString _newportname;
+	QString _language_old;
+	QString _language_current;
+	int _lastlangindex;
+	bool _confirmed;
 
 	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);

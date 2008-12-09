@@ -23,11 +23,11 @@
 
 Preferences::Preferences(QMainWindow *parent, QString *portname, QString language)
 {
-	newportname = *portname;
-	r_portname = portname;
-	language_current = language;
-	language_old = language;
-	confirmed = false;
+	_newportname = *portname;
+	_r_portname = portname;
+	_language_current = language;
+	_language_old = language;
+	_confirmed = false;
 	// SET UP GUI:
 	setupUi(this);
 	setupUiFonts();
@@ -64,14 +64,14 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 		if (qtportlist.size() > 0)	// if min. 1 port is available
 		{
 			// select first available port:
-			newportname = static_cast<QString>(qtportlist[0]);
-			*r_portname = static_cast<QString>(qtportlist[0]);
+			_newportname = static_cast<QString>(qtportlist[0]);
+			*_r_portname = static_cast<QString>(qtportlist[0]);
 			plindex = 0;
 		}
 		else	// if no port is availbale
 		{
-			newportname = "";	// clear port name
-			*r_portname = "";	// clear port name (return value)
+			_newportname = "";	// clear port name
+			*_r_portname = "";	// clear port name (return value)
 			serialport_comboBox->setEnabled(false);		// deactivate port selection box
 			testinterface_pushButton->setEnabled(false);	// deactivate "Test Interface"-Button
 		}
@@ -80,65 +80,65 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	serialport_comboBox->insertItems(0, qtportlist);
 	serialport_comboBox->setCurrentIndex(plindex);
 	// OUTPUT LANGUAGES:
-	if (language_current == "en")
+	if (_language_current == "en")
 	{
-		lastlangindex = 0;
+		_lastlangindex = 0;
 	}
-	else if (language_current == "de")
+	else if (_language_current == "de")
 	{
-		lastlangindex = 1;
+		_lastlangindex = 1;
 	}
 	else	// if currently selected language is invalid
 	{
 		// TRY TO GET SYSTEM LANGUAGE SETTING:
 		if ((QLocale::system().language() == QLocale::English))
 		{
-			language_current = "en";
+			_language_current = "en";
 			switchLanguage(0);
-			lastlangindex = 0;
+			_lastlangindex = 0;
 		}
 		else if ((QLocale::system().language() == QLocale::German))
 		{
-			language_current = "de";
+			_language_current = "de";
 			switchLanguage(1);
-			lastlangindex = 1;
+			_lastlangindex = 1;
 		}
 		else	// if system language settings are not available/supported
 		{
-			language_current = "en";
+			_language_current = "en";
 			switchLanguage(0);
-			lastlangindex = 0;
+			_lastlangindex = 0;
 		}
 	}
-	language_comboBox->setCurrentIndex(lastlangindex);
+	language_comboBox->setCurrentIndex(_lastlangindex);
 	// CONNECT SIGNALS AND SLOTS:
-	connect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) ); 
-	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) ); 
-	connect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) ); 
-	connect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) ); 
-	connect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) ); 
+	connect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) );
+	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
+	connect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
+	connect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
+	connect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
 }
 
 
 Preferences::~Preferences()
 {
-	disconnect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) ); 
-	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) ); 
-	disconnect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) ); 
-	disconnect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) ); 
-	disconnect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) ); 
+	disconnect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) );
+	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
+	disconnect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
+	disconnect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
+	disconnect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
 }
 
 
 void Preferences::serialport()
 {
-	newportname = serialport_comboBox->currentText();
+	_newportname = serialport_comboBox->currentText();
 }
 
 
 void Preferences::switchLanguage(int langindex)
 {
-	if (langindex == lastlangindex) return;
+	if (langindex == _lastlangindex) return;
 	// SET UP NEW TRANSLATOR
 	QTranslator *translator_new = new QTranslator;
 	// LOAD LANGUAGE:
@@ -147,14 +147,14 @@ void Preferences::switchLanguage(int langindex)
 	if (langindex == 0)		// english
 	{
 		if ( translator_new->load("FreeSSM_en.qm", AppsPath) )
-			language_current = "en";
+			_language_current = "en";
 		else
 			langfileerror = true;
 	}
 	else if (langindex == 1)	// german
 	{
 		if ( translator_new->load("FreeSSM_de.qm", AppsPath) )
-			language_current = "de";
+			_language_current = "de";
 		else
 			langfileerror = true;
 	}
@@ -162,7 +162,7 @@ void Preferences::switchLanguage(int langindex)
 	{
 		// DELETE NEW TRANSLATOR AND USE OLD LANGUAGE AGAIN:
 		delete translator_new;	
-		language_comboBox->setCurrentIndex(lastlangindex);
+		language_comboBox->setCurrentIndex(_lastlangindex);
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
 		msgfont.setPixelSize(12); // 9pts
@@ -174,9 +174,9 @@ void Preferences::switchLanguage(int langindex)
 	}
 	else	 // IF NEW LANGUAGE HAS BEEN LOADED SUCCESSFULLY:
 	{
-		lastlangindex=langindex;
+		_lastlangindex = langindex;
 		// Send new language settings to FreeSSM and retranslate FreeSSM-Window:
-		emit languageSelChanged(language_current, translator_new);
+		emit languageSelChanged(_language_current, translator_new);
 		// Retranslate window content:
 		language_comboBox->clear();	// NECESSARY SINCE Qt 4.4.0 (WORKAROUND)
 		retranslateUi(this);
@@ -193,7 +193,7 @@ void Preferences::interfacetest()
 	// PREPARE SERIAL INTERCAE:
 	serialCOM *serialport = new serialCOM;
 	// Open port:
-	if (serialport->OpenPort(newportname.toStdString()))
+	if (serialport->OpenPort(_newportname.toStdString()))
 	{
 		// Configure port:
 		serialCOM::dt_portsettings newportsettings;
@@ -255,9 +255,9 @@ void Preferences::interfacetest()
 			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing Interface... Please wait !     "));
 			waitmsgbox->show();
 			// QUERY ANY ECU ADDRESS:
-			unsigned int adr = 0x61;
+			unsigned int addr = 0x61;
 			char data = 0;
-			icresult = SSMPcom->readMultipleDatabytes('\x0', &adr, 1, &data);
+			icresult = SSMPcom->readMultipleDatabytes('\x0', &addr, 1, &data);
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();
 			delete waitmsgbox;
@@ -313,14 +313,14 @@ void Preferences::interfacetest()
 void Preferences::ok()
 {
 	// RETURN CURRENT PORTNAME:
-	*r_portname = newportname;
+	*_r_portname = _newportname;
 	// SAVE PREFERENCES TO FILE:
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
 	{
 		// rewrite file completly:
-		prefsfile.write(newportname.toAscii()+"\n", newportname.length()+1);		// save portname
-		prefsfile.write(language_current.toAscii()+"\n", language_current.length()+1);	// save language
+		prefsfile.write(_newportname.toAscii()+"\n", _newportname.length()+1);			// save portname
+		prefsfile.write(_language_current.toAscii()+"\n", _language_current.length()+1);	// save language
 		prefsfile.close();	// close file
 	}
 	else
@@ -333,27 +333,27 @@ void Preferences::ok()
 		msg.exec();
 		msg.close();
 	}
-	confirmed = true;	// IMPORTANT: prevents undo of all chnges in destructor
+	_confirmed = true;	// IMPORTANT: prevents undo of all chnges in destructor
 	close();		// close window (delete is called automaticly)
 }
 
 
 void Preferences::cancel()
 {
-	confirmed = false;	// IMPORTANT: cause destructor to undo all changes
+	_confirmed = false;	// IMPORTANT: cause destructor to undo all changes
 	close();		// close window (delete is called automaticly)
 }
 
 
 void Preferences::closeEvent(QCloseEvent *event)
 {
-	if (!confirmed)
+	if (!_confirmed)
 	{
-		if (language_old == "en")
+		if (_language_old == "en")
 		{
 			switchLanguage(0);
 		}
-		else if (language_old == "de")
+		else if (_language_old == "de")
 		{
 			switchLanguage(1);
 		}
