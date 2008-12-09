@@ -24,7 +24,7 @@
 	{
 
 		// Measuring Blocks (data):
-		MB_defs_en
+		_MB_defs_en
 		<< "1;1;1;1;00000F;00000E;Engine Speed;rpm;/4;0"
 		<< "1;2;1;0;00000D;;Manifold Absolute Pressure;kPa;*1;0"
 		<< "1;3;1;0;00000C;;Air/Fuel Learning #2;%;-128/128*100;1"
@@ -185,7 +185,7 @@
 
 
 		// Switches:
-		SW_defs_en
+		_SW_defs_en
 		<< "12;1;1;0;000061;Clear Memory Terminal;Off/On"
 		<< "12;2;1;0;000061;Delivery Mode (Test Mode) Connector;Off/On"
 		<< "12;3;1;0;000061;D-Check Require Flag;Off/On"
@@ -344,7 +344,7 @@
 
 
 		// SUBARU-Trouble Codes:
-		DTC_SUBARU_defs_en
+		_DTC_SUBARU_defs_en
 		<< "00008E;0000A4;1;24;Idle Control System Malfunction"
 		<< "00008E;0000A4;2;23;Mass Air Flow Sensor"
 		<< "00008E;0000A4;3;22;Knock Sensor"
@@ -437,7 +437,7 @@
 
 
 		// OBD Trouble Codes:
-		DTC_OBD_defs_en
+		_DTC_OBD_defs_en
 		<< "00008E;0000AE;1;P0335;Crankshaft Position Sensor A Circuit Malfunction"
 		<< "00008E;0000AE;2;P????;UNKNOWN (Address 8E/AE Bit 2)"
 		<< "00008E;0000AE;3;P0336;Crankshaft Position Sensor A Range/Performance Problem"
@@ -928,7 +928,7 @@
 
 
 		// Cancel codes of the integrated Cruise Control:
-		CC_defs_en
+		_CC_defs_en
 		<< "000133;000137;1;22;Abnormality of Change in Vehicle Speed"
 		<< "000133;000137;2;21;Abnormality of Switches when Ignition Switch ON"
 		<< "000133;000137;3;16;Ignition Switch"
@@ -965,7 +965,7 @@
 
 
 		// Actuators:
-		actuator_defs_en
+		_actuator_defs_en
 		<< ";;000089;8;Fuel Pump Relay"
 		<< ";;000089;7;Canister Purge Control (CPC) Solenoid Valve"
 		<< ";;000089;6;Radiator Fan Relay"
@@ -991,7 +991,7 @@
 
 
 		// Adjustments:
-		adjustment_defs_en
+		_adjustment_defs_en
 		<< "26-5;0;6F;;Ignition Timing Correction;deg;0;5;0;*-1;0"
 		<< "26-4;0;70;;Idle Speed Correction (AC off);rpm;124;140;128;-128*25;0"
 		<< "26-3;0;71;;Idle Speed Correction (AC on);rpm;124;140;128;-128*25;0"
@@ -1019,42 +1019,42 @@
 
 	const QStringList SSMprotocol_def_en::MBrawDefs()
 	{
-		return MB_defs_en;
+		return _MB_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::SWrawDefs()
 	{
-		return SW_defs_en;
+		return _SW_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::SUBDTCrawDefs()
 	{
-		return DTC_SUBARU_defs_en;
+		return _DTC_SUBARU_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::OBDDTCrawDefs()
 	{
-		return DTC_OBD_defs_en;
+		return _DTC_OBD_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::CCCCrawDefs()
 	{
-		return CC_defs_en;
+		return _CC_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::ActuatorRawDefs()
 	{
-		return actuator_defs_en;
+		return _actuator_defs_en;
 	}
 
 
 	const QStringList SSMprotocol_def_en::AdjustmentRawDefs()
 	{
-		return adjustment_defs_en;
+		return _adjustment_defs_en;
 	}
 

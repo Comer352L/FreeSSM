@@ -29,13 +29,13 @@ class SSMprotocol_def_de
 {
 
 private:
-	QStringList MB_defs_de;
-	QStringList SW_defs_de;
-	QStringList DTC_SUBARU_defs_de;
-	QStringList DTC_OBD_defs_de;
-	QStringList CC_defs_de;
-	QStringList actuator_defs_de;
-	QStringList adjustment_defs_de;
+	QStringList _MB_defs_de;
+	QStringList _SW_defs_de;
+	QStringList _DTC_SUBARU_defs_de;
+	QStringList _DTC_OBD_defs_de;
+	QStringList _CC_defs_de;
+	QStringList _actuator_defs_de;
+	QStringList _adjustment_defs_de;
 
 public:
 	SSMprotocol_def_de();
