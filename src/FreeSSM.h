@@ -50,15 +50,15 @@ class FreeSSM : public QMainWindow, private Ui::FreeSSM_MainWindow
 	Q_OBJECT
 
 private:
-	QString progversion;
-	QString portname;
-	QString language;
-	QTranslator *qt_translator;
-	QTranslator *translator;
-	serialCOM *port;
-	SSMprotocol *SSMPdev;
-	QLabel *progtitle_label;
-	bool dumping;
+	QString _progversion;
+	QString _portname;
+	QString _language;
+	QTranslator *_qt_translator;
+	QTranslator *_translator;
+	serialCOM *_port;
+	SSMprotocol *_SSMPdev;
+	QLabel *_progtitle_label;
+	bool _dumping;
 
 	void setupUiFonts();
 	bool initPort(unsigned int baudrate, serialCOM *port);

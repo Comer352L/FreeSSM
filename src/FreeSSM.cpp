@@ -23,14 +23,14 @@
 
 FreeSSM::FreeSSM(QApplication *app)
 {
-	progversion = FSSM_VERSION;
-	qt_translator = NULL;
-	translator = NULL;
-	port = NULL;
-	SSMPdev = NULL;
-	portname = "";
-	language = "";
-	dumping = false;
+	_progversion = FSSM_VERSION;
+	_qt_translator = NULL;
+	_translator = NULL;
+	_port = NULL;
+	_SSMPdev = NULL;
+	_portname = "";
+	_language = "";
+	_dumping = false;
 	QString appsPath( QCoreApplication::applicationDirPath() );
 	// SETUP GUI:
 	setupUi(this);
@@ -41,11 +41,11 @@ FreeSSM::FreeSSM(QApplication *app)
 	QFont titlefont = this->font();
 	titlefont.setPixelSize(27); // 20pts
 	titlefont.setBold(true);
-	progtitle_label = new QLabel(this);
-	progtitle_label->setGeometry( 20, 17, 315, 34);
-	progtitle_label->setFont( titlefont );
-	progtitle_label->setText("FreeSSM " + progversion);
-	this->setWindowTitle("FreeSSM " + progversion);
+	_progtitle_label = new QLabel(this);
+	_progtitle_label->setGeometry( 20, 17, 315, 34);
+	_progtitle_label->setFont( titlefont );
+	_progtitle_label->setText("FreeSSM " + _progversion);
+	this->setWindowTitle("FreeSSM " + _progversion);
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
 	QDesktopWidget desktop;
 	int screenWidth, width;
@@ -102,53 +102,53 @@ FreeSSM::FreeSSM(QApplication *app)
 		}
 	}
 	if (pnvalid == true)
-		portname = savedportname;
+		_portname = savedportname;
 	else
 	{
 		if (portlist.size()>0)
-			portname = (QString)portlist[0].c_str();
+			_portname = (QString)portlist[0].c_str();
 		// otherwise portname remains empty
 	}
 	// CHECK SAVED LANGUAGE AND CORRECT IF NECESSARY:
 	if ((savedlanguage == "en") | (savedlanguage == "de"))
-		language = savedlanguage;
+		_language = savedlanguage;
 	else
 	{
 		// TRY TO GET SYSTEM LANGUAGE:
 		if ((QLocale::system().language() == QLocale::English))
 		{
-			language = "en";
+			_language = "en";
 		}
 		else if ((QLocale::system().language() == QLocale::German))
 		{
-			language = "de";
+			_language = "de";
 		}
 		else	// if system language is not available/supported
 		{
-			language = "en";
+			_language = "en";
 		}
 	}
 	// SET TRANSLATOR AND RETRANSLATE:
-	translator = new QTranslator;
+	_translator = new QTranslator;
 	bool langfileerror = false;
-	if (language == "de")
+	if (_language == "de")
 	{
-		langfileerror = !translator->load("FreeSSM_de.qm", appsPath);
+		langfileerror = !_translator->load("FreeSSM_de.qm", appsPath);
 	}
-	if ((language == "en") | (langfileerror))
+	if ((_language == "en") | (langfileerror))
 	{
-		language = "en";
-		langfileerror = !translator->load("FreeSSM_en.qm", appsPath);
+		_language = "en";
+		langfileerror = !_translator->load("FreeSSM_en.qm", appsPath);
 	}
 	if (!langfileerror)
 	{
-		app->installTranslator(translator);
+		app->installTranslator(_translator);
 		retranslateUi(this);
 	}
 	else
 	{
-		delete translator;
-		translator = NULL;
+		delete _translator;
+		_translator = NULL;
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
 		msgfont.setPixelSize(12); // 9pts
@@ -159,15 +159,15 @@ FreeSSM::FreeSSM(QApplication *app)
 	}
 	// SET Qt-TRANSLATOR (if necessary and available):
 	QString translationpath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-	if (language == "de")
+	if (_language == "de")
 	{
-		qt_translator = new QTranslator;
-		if (qt_translator->load("qt_de_DE", translationpath))
-			app->installTranslator(qt_translator);
+		_qt_translator = new QTranslator;
+		if (_qt_translator->load("qt_de_DE", translationpath))
+			app->installTranslator(_qt_translator);
 		else
 		{
-			delete qt_translator;
-			qt_translator = NULL;
+			delete _qt_translator;
+			_qt_translator = NULL;
 		}
 	}
 	// CREATE ACTION FOR DUMPING CONTROL UNID ID-DATA TO FILE:
@@ -181,7 +181,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	connect( help_pushButton, SIGNAL( pressed() ), this, SLOT( help() ) );
 	connect( about_pushButton, SIGNAL( pressed() ), this, SLOT( about() ) );
 	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
-	connect(dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()));
+	connect( dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
 }
 
 
@@ -193,59 +193,59 @@ FreeSSM::~FreeSSM()
 	disconnect( help_pushButton, SIGNAL( pressed() ), this, SLOT( help() ) ); 
 	disconnect( about_pushButton, SIGNAL( pressed() ), this, SLOT( about() ) ); 
 	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
-	delete progtitle_label;
-	if (port != NULL) delete port;
-	if (SSMPdev != NULL) delete SSMPdev;
-	if (translator != NULL)
+	delete _progtitle_label;
+	if (_port != NULL) delete _port;
+	if (_SSMPdev != NULL) delete _SSMPdev;
+	if (_translator != NULL)
 	{
-		QApplication::removeTranslator(translator);
-		delete translator;
+		QApplication::removeTranslator(_translator);
+		delete _translator;
 	}
-	if (qt_translator != NULL)
+	if (_qt_translator != NULL)
 	{
-		QApplication::removeTranslator(qt_translator);
-		delete qt_translator;
+		QApplication::removeTranslator(_qt_translator);
+		delete _qt_translator;
 	}
 }
 
 
 void FreeSSM::engine()
 {
-	port = new serialCOM;
-	if (initPort(4800, port))
+	_port = new serialCOM;
+	if (initPort(4800, _port))
 	{
-		SSMPdev = new SSMprotocol(port, SSMprotocol::ECU, language);
-		Engine *enginewindow = new Engine(SSMPdev, progversion);
+		_SSMPdev = new SSMprotocol(_port, SSMprotocol::ECU, _language);
+		Engine *enginewindow = new Engine(_SSMPdev, _progversion);
 		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}
 	else
 	{
-		delete port;
-		port = NULL;
+		delete _port;
+		_port = NULL;
 	}
 }
 
 
 void FreeSSM::transmission()
 {
-	port = new serialCOM;
-	if (initPort(4800, port))
+	_port = new serialCOM;
+	if (initPort(4800, _port))
 	{
-		SSMPdev = new SSMprotocol(port, SSMprotocol::TCU, language);
-		Transmission *transmissionwindow = new Transmission(SSMPdev, progversion);
+		_SSMPdev = new SSMprotocol(_port, SSMprotocol::TCU, _language);
+		Transmission *transmissionwindow = new Transmission(_SSMPdev, _progversion);
 		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}
 	else
 	{
-		delete port;
-		port = NULL;
+		delete _port;
+		_port = NULL;
 	}
 }
 
 
 void FreeSSM::preferences()
 {
-	Preferences *preferencesdlg = new Preferences(this, &portname, language);
+	Preferences *preferencesdlg = new Preferences(this, &_portname, _language);
 	preferencesdlg->show();
 	connect(preferencesdlg , SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
@@ -259,7 +259,7 @@ void FreeSSM::help()
 	// Get working directory:
 	QString helpurlstr( QCoreApplication::applicationDirPath() );
 	// Select help file:
-	if (language == "de")
+	if (_language == "de")
 		helpurlstr += "/doc/help_de.html";
 	else
 		helpurlstr += "/doc/help_en.html";
@@ -270,7 +270,7 @@ void FreeSSM::help()
 
 void FreeSSM::about()
 {
-	About *aboutdlg = new About(this, progversion, language);
+	About *aboutdlg = new About(this, _progversion, _language);
 	aboutdlg->show();
 	aboutdlg->exec();
 	delete aboutdlg;
@@ -279,10 +279,10 @@ void FreeSSM::about()
 
 void FreeSSM::SSMPdevCleanup()
 {
-	delete SSMPdev;
-	SSMPdev = NULL;
-	delete port;	// port will be closed in destructor of serialCOM
-	port = NULL;
+	delete _SSMPdev;
+	_SSMPdev = NULL;
+	delete _port;	// port will be closed in destructor of serialCOM
+	_port = NULL;
 	disconnect(this, SLOT( SSMPdevCleanup() ));
 }
 
@@ -290,13 +290,13 @@ void FreeSSM::SSMPdevCleanup()
 bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 {
 	// IF NO PORT IS SELECTED YET: SELECT FIRST AVAILABLE PORT
-	if (portname == "")
+	if (_portname == "")
 	{
 		// Get available ports:
 		std::vector<std::string> portlist;
 		portlist = serialCOM::GetAvailablePorts();
 		if (portlist.size() > 0)
-			portname = (QString)portlist[0].c_str();
+			_portname = (QString)portlist[0].c_str();
 		else
 		{
 			QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("No serial port available !"), QMessageBox::Ok, this);
@@ -310,7 +310,7 @@ bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 		}
 	}
 	// Open port:
-	if (!port->OpenPort(portname.toStdString()))
+	if (!port->OpenPort(_portname.toStdString()))
 	{
 		QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
@@ -327,7 +327,7 @@ bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 	newportsettings.databits = 8;
 	newportsettings.parity = 'N';
 	newportsettings.stopbits = 1;
-	if(!port->SetPortSettings(newportsettings))
+	if(!_port->SetPortSettings(newportsettings))
 	{
 		QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't apply the necessary serial port settings !"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
@@ -336,7 +336,7 @@ bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 		msg.show();
 		msg.exec();
 		msg.close();
-		port->ClosePort();
+		_port->ClosePort();
 		return false;
 	}
 	return true;
@@ -346,30 +346,30 @@ bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 {
 	// Uninstall and delete current translator:
-	if (translator != NULL)
+	if (_translator != NULL)
 	{ 
-		QApplication::removeTranslator(translator);
-		delete translator; 
-		translator = NULL;
+		QApplication::removeTranslator(_translator);
+		delete _translator; 
+		_translator = NULL;
 	}
 	// Save new language settings:
-	language = newlanguage;
-	translator = newtranslator;
+	_language = newlanguage;
+	_translator = newtranslator;
 	// Install new translator and retranslate:
-	QApplication::installTranslator(translator);
+	QApplication::installTranslator(_translator);
 	retranslateUi(this);
 	// Change translator for Qt-dialogs:
-	if (qt_translator != NULL)
+	if (_qt_translator != NULL)
 	{
-		QApplication::removeTranslator(qt_translator);
-		delete qt_translator;
-		qt_translator = NULL;
+		QApplication::removeTranslator(_qt_translator);
+		delete _qt_translator;
+		_qt_translator = NULL;
 	}
 	if (newlanguage=="de")
 	{
-		qt_translator = new QTranslator();
-		if ( qt_translator->load("qt_de_DE", QLibraryInfo::location(QLibraryInfo::TranslationsPath)) )
-			QApplication::installTranslator(qt_translator);
+		_qt_translator = new QTranslator();
+		if ( _qt_translator->load("qt_de_DE", QLibraryInfo::location(QLibraryInfo::TranslationsPath)) )
+			QApplication::installTranslator(_qt_translator);
 		else
 		{}	// Error
 	}
@@ -389,24 +389,24 @@ void FreeSSM::dumpCUdata()
 	char data[18] = {0};
 	QString VIN = "";
 
-	dumping = true;
+	_dumping = true;
 	disconnect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
-	if (port != NULL) std::cout << "Memory leak detected in FreeSSM::dumpCUdata() : port";
-	port = new serialCOM;
+	if (_port != NULL) std::cout << "Memory leak detected in FreeSSM::dumpCUdata() : port";
+	_port = new serialCOM;
 	// Initialize serial port:
-	if (!initPort(4800, port))
+	if (!initPort(4800, _port))
 	{
-		delete port;	// port will be closed in destructor of serialCOM
-		port = NULL;
+		delete _port;	// port will be closed in destructor of serialCOM
+		_port = NULL;
 		connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
 		connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
 		connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
-		dumping = false;
+		_dumping = false;
 	}
 	// Create SSMP-Communication-object:
-	SSMPcommunication SSMPcom(port, '\x10', 0);
+	SSMPcommunication SSMPcom(_port, '\x10', 0);
 	// *************** ECU ***************
 	// Read ECU data:
 	if (SSMPcom.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
@@ -484,12 +484,12 @@ void FreeSSM::dumpCUdata()
 	}
 end:
 	dumpfile.close();
-	delete port;	// port will be closed in destructor of serialCOM
-	port = NULL;
+	delete _port;	// port will be closed in destructor of serialCOM
+	_port = NULL;
 	connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
 	connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
 	connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
-	dumping = false;
+	_dumping = false;
 }
 
 
@@ -533,7 +533,7 @@ void FreeSSM::keyPressEvent(QKeyEvent *event)
 
 void FreeSSM::closeEvent(QCloseEvent *event)
 {
-	if (!dumping)
+	if (!_dumping)
 		event->accept();
 	else
 		event->ignore();
