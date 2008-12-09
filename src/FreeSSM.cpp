@@ -390,9 +390,9 @@ void FreeSSM::dumpCUdata()
 	QString VIN = "";
 
 	_dumping = true;
-	disconnect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
-	disconnect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
-	disconnect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
+	disconnect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) );
+	disconnect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) );
+	disconnect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) );
 	if (_port != NULL) std::cout << "Memory leak detected in FreeSSM::dumpCUdata() : port";
 	_port = new serialCOM;
 	// Initialize serial port:
@@ -400,10 +400,11 @@ void FreeSSM::dumpCUdata()
 	{
 		delete _port;	// port will be closed in destructor of serialCOM
 		_port = NULL;
-		connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
-		connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
-		connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
+		connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) );
+		connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) );
+		connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) );
 		_dumping = false;
+		return;
 	}
 	// Create SSMP-Communication-object:
 	SSMPcommunication SSMPcom(_port, '\x10', 0);
