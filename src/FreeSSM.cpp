@@ -279,11 +279,17 @@ void FreeSSM::about()
 
 void FreeSSM::SSMPdevCleanup()
 {
-	delete _SSMPdev;
-	_SSMPdev = NULL;
-	delete _port;	// port will be closed in destructor of serialCOM
-	_port = NULL;
 	disconnect(this, SLOT( SSMPdevCleanup() ));
+	if (_SSMPdev)
+	{
+		delete _SSMPdev;
+		_SSMPdev = NULL;
+	}
+	if (_port)
+	{
+		delete _port;	// port will be closed in destructor of serialCOM
+		_port = NULL;
+	}
 }
 
 
