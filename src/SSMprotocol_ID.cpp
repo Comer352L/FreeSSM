@@ -22,7 +22,7 @@
 
 SSMprotocol_ID::SSMprotocol_ID()
 {
-	engine_sysDefs
+	_engine_sysDefs
 	<< "01;2.5L SOHC"
 	<< "02;2.5L SOHC"
 	<< "03;2.2L SOHC"
@@ -45,7 +45,7 @@ SSMprotocol_ID::SSMprotocol_ID()
 	<< "14;2.0L DOHC Turbo Diesel"
 	<< "15;3.6L DOHC";
 
-	transmission_sysDefs
+	_transmission_sysDefs
 	<< "20;E-4AT"
 	<< "21;E-4AT"
 	<< "22;E-5AT"
@@ -56,17 +56,25 @@ SSMprotocol_ID::SSMprotocol_ID()
 }
 
 
-bool SSMprotocol_ID::getSysDescriptionBySysID(char system, char *sysID, QString *sysDescription)
+bool SSMprotocol_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription)
 {
 	QStringList *sysDefs = NULL;
 	unsigned char k = 0;
 	bool ok = false;
 
 	sysDescription->clear();
-	if (system == 1)
-		sysDefs = &engine_sysDefs;
-	else if (system == 2)
-		sysDefs = &transmission_sysDefs;
+	if (sysIDtype == ECU_sysID)
+	{
+		sysDefs = &_engine_sysDefs;
+	}
+	else if (sysIDtype == TCU_sysID)
+	{
+		sysDefs = &_transmission_sysDefs;
+	}
+	else
+	{
+		return false;
+	}
 	if (sysID[1]=='\x10')
 	{
 		for (k=0; k<sysDefs->size(); k++)

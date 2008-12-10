@@ -29,12 +29,13 @@ class SSMprotocol_ID
 {
 
 private:
-	QStringList engine_sysDefs;
-	QStringList transmission_sysDefs;
+	QStringList _engine_sysDefs;
+	QStringList _transmission_sysDefs;
 
 public:
+	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
 	SSMprotocol_ID();
-	bool getSysDescriptionBySysID(char system, char *sysID, QString *sysDescription);
+	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription);
 
 };
 

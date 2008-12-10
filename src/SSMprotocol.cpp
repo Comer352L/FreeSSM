@@ -271,7 +271,15 @@ bool SSMprotocol::getROMID(QString *ROM_ID)
 bool SSMprotocol::getSystemDescription(QString *sysdescription)
 {
 	if (_state == needSetup) return false;
-	return getSysDescriptionBySysID(_CU, _SYS_ID, sysdescription);
+	if (_CU == ECU)
+	{
+		return getSysDescriptionBySysID( SSMprotocol_ID::ECU_sysID, _SYS_ID, sysdescription );
+	}
+	else if (_CU == TCU)
+	{
+		return getSysDescriptionBySysID( SSMprotocol_ID::TCU_sysID, _SYS_ID, sysdescription );
+	}
+	return false;
 }
 
 
