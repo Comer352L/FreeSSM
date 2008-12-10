@@ -213,7 +213,7 @@ bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MB
 
 void CUcontent_MBsSWs::startstopMBsSWsButtonPressed()
 {
-	if (_SSMPdev->state() == SSMprotocol::MBSWreading)
+	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
 		callStop();
 	else
 		callStart();
@@ -236,14 +236,14 @@ void CUcontent_MBsSWs::callStop()
 
 bool CUcontent_MBsSWs::startMBSWreading()
 {
-	SSMprotocol::state_dt state = SSMprotocol::needSetup;
+	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	MBSWmetadata_dt usedMBSWmetaList[SSMP_MAX_MBSW];
 	unsigned int usedMBSWmetaList_len = 0;
 	unsigned int k = 0;
 	bool consistent = true;
 	// Check premises:
 	state = _SSMPdev->state();
-	if (state == SSMprotocol::normal)
+	if (state == SSMprotocol::state_normal)
 	{
 		if (_MBSWmetaList_len < 1) return false;
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
@@ -254,7 +254,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 			return false;
 		}
 	}
-	else if (state == SSMprotocol::MBSWreading)
+	else if (state == SSMprotocol::state_MBSWreading)
 	{
 		// Verify consistency:
 		if (!_SSMPdev->getLastMBSWselection(usedMBSWmetaList, &usedMBSWmetaList_len))
@@ -518,7 +518,7 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 
 void CUcontent_MBsSWs::setManipulateMBSWItemsButtonsStatus()
 {
-	if (_SSMPdev->state() == SSMprotocol::MBSWreading) return;
+	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading) return;
 	QList<QTableWidgetItem*> selitemslist;
 	selitemslist = selectedMBsSWs_tableWidget->selectedItems();
 	// NOTE: this retruns the nr. of selected cells, NOT THE NR OF ROWS ! Empty cells are not included ! 

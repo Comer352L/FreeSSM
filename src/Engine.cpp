@@ -380,7 +380,7 @@ void Engine::clearMemory()
 	// Reconnect to "communication error"-signal:
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
-	if ((result == ClearMemoryDlg::success) && (_mode == Adaptions_mode))
+	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
 	{
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !   "));
 		waitmsgbox.show();
@@ -389,11 +389,11 @@ void Engine::clearMemory()
 		if (!ok)
 			communicationError();
 	}
-	else if (result == ClearMemoryDlg::communicationError)
+	else if (result == ClearMemoryDlg::CMresult_communicationError)
 	{
 		communicationError();
 	}
-	else if ((result == ClearMemoryDlg::reconnectAborted) || (result == ClearMemoryDlg::reconnectFailed))
+	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit engine control unit dialog
 	}

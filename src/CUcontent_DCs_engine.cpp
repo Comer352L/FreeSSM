@@ -212,14 +212,14 @@ void CUcontent_DCs_engine::callStop()
 
 bool CUcontent_DCs_engine::startDCreading()
 {
-	SSMprotocol::state_dt state = SSMprotocol::needSetup;
+	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	int selDCgroups = 0;
 	// Check if DC-group(s) selected:
 	if (_supportedDCgroups == SSMprotocol::noDCs_DCgroup)
 		return false;
 	// Check if DC-reading is startable or already in progress:
 	state = _SSMPdev->state();
-	if (state == SSMprotocol::normal)
+	if (state == SSMprotocol::state_normal)
 	{
 		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 		// Start DC-reading:
@@ -229,7 +229,7 @@ bool CUcontent_DCs_engine::startDCreading()
 			return false;
 		}
 	}
-	else if (state == SSMprotocol::DCreading)
+	else if (state == SSMprotocol::state_DCreading)
 	{
 		// Verify consistency:
 		if (!_SSMPdev->getLastDCgroupsSelection(&selDCgroups))
@@ -276,7 +276,7 @@ bool CUcontent_DCs_engine::startDCreading()
 bool CUcontent_DCs_engine::stopDCreading()
 {
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMPdev->stopDCreading() !
-	if (_SSMPdev->state() == SSMprotocol::DCreading)
+	if (_SSMPdev->state() == SSMprotocol::state_DCreading)
 	{
 		if (!_SSMPdev->stopDCreading())
 		{

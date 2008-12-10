@@ -26,7 +26,7 @@ SSMPcommunication::SSMPcommunication(serialCOM *port, char cuaddress, unsigned c
 	_cuaddress = cuaddress;
 
 	unsigned int k = 0;
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	_result = false;
 	_abort = false;
 	_errRetries = errRetries;
@@ -74,7 +74,7 @@ void SSMPcommunication::run()
 	bool permanent = false;
 	bool op_success = false;
 	bool abort;
-	com_op_dt operation;
+	comOp_dt operation;
 	char cuaddress;
 	char padadr = '\x0';
 	unsigned char datalen = 0;
@@ -98,7 +98,7 @@ void SSMPcommunication::run()
 	_abort = false;
 	_mutex.unlock();
 	// Preparation:
-	if ( operation==readBlock_p || operation==readMulti_p || operation==writeBlock_p || operation==writeSingle_p )
+	if ( operation==comOp_readBlock_p || operation==comOp_readMulti_p || operation==comOp_writeBlock_p || operation==comOp_writeSingle_p )
 	{
 		permanent = true;
 		timer.start();
@@ -109,16 +109,16 @@ void SSMPcommunication::run()
 		// Call SSMP-core-function:
 		switch (operation)
 		{
-			case readCUdata:// GetECUData(...)
+			case comOp_readCUdata:// GetECUData(...)
 				op_success = GetCUdata(cuaddress, rec_buf, rec_buf+3, rec_buf+8, &datalen);
 				if (op_success) datalen += 8;
 				break;
-			case readBlock:
-			case readBlock_p:// ReadDataBlock_permanent(...)
+			case comOp_readBlock:
+			case comOp_readBlock_p:// ReadDataBlock_permanent(...)
 				op_success = ReadDataBlock(cuaddress, padadr, dataadr[0], datalen, rec_buf);
 				break;
-			case readMulti:
-			case readMulti_p:// ReadMultipleDatabytes_permanent(...)
+			case comOp_readMulti:
+			case comOp_readMulti_p:// ReadMultipleDatabytes_permanent(...)
 				// CALCULATE NR OF ADDRESSES FOR NEXT READ:
 				if (33*(rindex) <= datalen)
 					nrofReadAddr = 33;
@@ -127,12 +127,12 @@ void SSMPcommunication::run()
 				// READ NEXT ADDRESSES:
 				op_success = ReadMultipleDatabytes(cuaddress, padadr, dataadr+((rindex-1)*33), nrofReadAddr, rec_buf+((rindex-1)*33));
 				break;
-			case writeBlock:
-			case writeBlock_p:// WriteDataBlock_permanent(...)
+			case comOp_writeBlock:
+			case comOp_writeBlock_p:// WriteDataBlock_permanent(...)
 				op_success = WriteDataBlock(cuaddress, dataadr[0], snd_buf, datalen, rec_buf);
 				break;
-			case writeSingle:
-			case writeSingle_p:// WriteDatabyte_permanent(...)
+			case comOp_writeSingle:
+			case comOp_writeSingle_p:// WriteDatabyte_permanent(...)
 				op_success = WriteDatabyte(cuaddress, dataadr[0], snd_buf[0], rec_buf);
 				break;
 			default:
@@ -145,7 +145,7 @@ void SSMPcommunication::run()
 			if (errcount > 0)
 				errcount--;
 			// Set query-index:
-			if ((operation == readMulti_p) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
+			if ((operation == comOp_readMulti_p) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
 				rindex++;
 			else
 				rindex=1;
@@ -197,8 +197,8 @@ bool SSMPcommunication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, u
 {
 	bool ok = false;
 	int k = 0;
-	if ((_CommOperation != noCom) || (_cuaddress == 0)) return false;
-	_CommOperation = readCUdata;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0)) return false;
+	_CommOperation = comOp_readCUdata;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
@@ -215,7 +215,7 @@ bool SSMPcommunication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, u
 			flagbytes[k] = _rec_buf[8+k];
 		*nrofflagbytes = _datalen - 8;
 	}
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	return ok;
 }
 
@@ -226,8 +226,8 @@ bool SSMPcommunication::readDataBlock(char padadr, unsigned int dataadr, unsigne
 	bool ok = false;
 	unsigned int k = 0;
 	if (nrofbytes > 254) return false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = readBlock;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_readBlock;
 	// Prepare buffers:
 	_padadr = padadr;
 	_dataadr[0] = dataadr;
@@ -240,7 +240,7 @@ bool SSMPcommunication::readDataBlock(char padadr, unsigned int dataadr, unsigne
 		for (k=0; k<nrofbytes; k++)
 			data[k] = _rec_buf[k];
 	}
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	return ok;
 }
 
@@ -251,8 +251,8 @@ bool SSMPcommunication::readMultipleDatabytes(char padadr, unsigned int dataadr[
 	bool ok = false;
 	unsigned int k = 0;
 	if (datalen > 256) return false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = readMulti;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_readMulti;
 	// Prepare buffers:
 	_padadr = padadr;
 	for (k=0; k<datalen; k++) _dataadr[k] = dataadr[k];
@@ -265,7 +265,7 @@ bool SSMPcommunication::readMultipleDatabytes(char padadr, unsigned int dataadr[
 		for (k=0; k<datalen; k++)
 			data[k] = _rec_buf[k];
 	}
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	return ok;
 }
 
@@ -276,8 +276,8 @@ bool SSMPcommunication::writeDataBlock(unsigned int dataadr, char *data, unsigne
 	bool ok = false;
 	unsigned int k = 0;
 	if (datalen > 251) return false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = writeBlock;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_writeBlock;
 	// Prepare buffers:
 	_dataadr[0] = dataadr;
 	for (k=0; k<datalen; k++) _snd_buf[k] = data[k];
@@ -306,7 +306,7 @@ bool SSMPcommunication::writeDataBlock(unsigned int dataadr, char *data, unsigne
 				datawritten[k] = _rec_buf[k];
 		}
 	}
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	return ok;
 }
 
@@ -315,8 +315,8 @@ bool SSMPcommunication::writeDataBlock(unsigned int dataadr, char *data, unsigne
 bool SSMPcommunication::writeDatabyte(unsigned int dataadr, char databyte, char *databytewritten)
 {
 	bool ok = false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = writeSingle;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_writeSingle;
 	// Prepare buffers:
 	_dataadr[0] = dataadr;
 	_snd_buf[0] = databyte;
@@ -337,7 +337,7 @@ bool SSMPcommunication::writeDatabyte(unsigned int dataadr, char databyte, char 
 			databytewritten[0] = _rec_buf[0];
 		}
 	}
-	_CommOperation = noCom;
+	_CommOperation = comOp_noCom;
 	return ok;
 }
 
@@ -357,8 +357,8 @@ bool SSMPcommunication::doSingleCommOperation()
 bool SSMPcommunication::readDataBlock_permanent(char padadr, unsigned int dataadr, unsigned int nrofbytes, int delay)
 {
 	if (nrofbytes > 254) return false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = readBlock_p;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_readBlock_p;
 	// Prepare buffers:
 	_padadr = padadr;
 	_dataadr[0] = dataadr;
@@ -375,8 +375,8 @@ bool SSMPcommunication::readMultipleDatabytes_permanent(char padadr, unsigned in
 {
 	unsigned int k = 0;
 	if (datalen > 256) return false;
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = readMulti_p;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_readMulti_p;
 	// Prepare buffers:
 	_padadr = padadr;
 	for (k=0; k<datalen; k++) _dataadr[k] = dataadr[k];
@@ -393,8 +393,8 @@ bool SSMPcommunication::writeDataBlock_permanent(unsigned int dataadr, char *dat
 {
 	unsigned int k = 0;
 	if (datalen > 251) return false;	// currently max. 251 bytes per write possible
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = writeBlock_p;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_writeBlock_p;
 	// Prepare buffers:
 	_dataadr[0] = dataadr;
 	for (k=0; k<datalen; k++) _snd_buf[k] = data[k];
@@ -409,8 +409,8 @@ bool SSMPcommunication::writeDataBlock_permanent(unsigned int dataadr, char *dat
 
 bool SSMPcommunication::writeDatabyte_permanent(unsigned int dataadr, char databyte, int delay)
 {
-	if ((_CommOperation != noCom) || (_cuaddress == 0) || isRunning()) return false;
-	_CommOperation = writeSingle_p;
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	_CommOperation = comOp_writeSingle_p;
 	// Prepare buffers:
 	_dataadr[0] = dataadr;
 	_snd_buf[0] = databyte;
@@ -423,7 +423,7 @@ bool SSMPcommunication::writeDatabyte_permanent(unsigned int dataadr, char datab
 
 
 
-SSMPcommunication::com_op_dt SSMPcommunication::getCurrentCommOperation()
+SSMPcommunication::comOp_dt SSMPcommunication::getCurrentCommOperation()
 {
 	return _CommOperation;
 }
@@ -432,7 +432,7 @@ SSMPcommunication::com_op_dt SSMPcommunication::getCurrentCommOperation()
 
 bool SSMPcommunication::stopCommunication()
 {
-	if (_CommOperation == noCom)
+	if (_CommOperation == comOp_noCom)
 		return true;
 	else
 	{
@@ -454,7 +454,7 @@ bool SSMPcommunication::stopCommunication()
 			stopped = wait(5000);
 		}
 		if (stopped)
-			_CommOperation = noCom;
+			_CommOperation = comOp_noCom;
 		return stopped;
 	}
 }

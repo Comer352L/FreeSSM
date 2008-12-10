@@ -210,7 +210,7 @@ void About::setupUiFonts()
 	licence_textBrowser->setFont(font);
 	font = changelog_textBrowser->font();
 	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
+	font.setPixelSize(13);	// 10pts
 	changelog_textBrowser->setFont(font);
 	font = close_pushButton->font();
 	font.setFamily(appfont.family());

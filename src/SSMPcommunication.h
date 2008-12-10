@@ -38,7 +38,7 @@ class SSMPcommunication : protected QThread, private SSMPcommunication_core
 	Q_OBJECT
 
 public:
-	enum com_op_dt {noCom, readCUdata, readBlock, readMulti, writeBlock, writeSingle, readBlock_p, readMulti_p, writeBlock_p, writeSingle_p};
+	enum comOp_dt {comOp_noCom, comOp_readCUdata, comOp_readBlock, comOp_readMulti, comOp_writeBlock, comOp_writeSingle, comOp_readBlock_p, comOp_readMulti_p, comOp_writeBlock_p, comOp_writeSingle_p};
 
 	SSMPcommunication(serialCOM *port, char cuaddress = '\x0', unsigned char errRetries = 2);
 	~SSMPcommunication();
@@ -56,13 +56,13 @@ public:
 	bool writeDataBlock_permanent(unsigned int dataadr, char *data, unsigned int datalen, int delay=0);
 	bool writeDatabyte_permanent(unsigned int dataadr, char databyte, int delay=0);
 
-	com_op_dt getCurrentCommOperation();
+	comOp_dt getCurrentCommOperation();
 
 	bool stopCommunication();
 
 private:
 	char _cuaddress;
-	com_op_dt _CommOperation;
+	comOp_dt _CommOperation;
 	QMutex _mutex;
 	QEventLoop _el;
 	bool _result;

@@ -50,7 +50,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	unsigned int oldMBSWmetaList_len = 0;
 	// Let the user confirm the Clear Memory procedure:
 	if (!confirmClearMemory())
-		return ClearMemoryDlg::aborted;
+		return ClearMemoryDlg::CMresult_aborted;
 	// Wait-messagebox:
 	QString waitstr = tr("Clearing memory");
 	if (_level)
@@ -60,77 +60,77 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	waitmsgbox.show();
 	// Save CU-state, prepare for Clear Memory:
 	CUstate_old = _SSMPdev->state();
-	if (CUstate_old == SSMprotocol::DCreading)
+	if (CUstate_old == SSMprotocol::state_DCreading)
 	{
 		if (!_SSMPdev->getLastDCgroupsSelection(&oldDCgroups))
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 		if (!_SSMPdev->stopDCreading())
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 	}
-	else if (CUstate_old == SSMprotocol::MBSWreading)
+	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
 		if (!_SSMPdev->getLastMBSWselection(oldMBSWmetaList, &oldMBSWmetaList_len))
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 		if (!_SSMPdev->stopMBSWreading())
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// NOTE: it's currently not possible to call this function while actuator-test is in progress, so we don't need to care about running actuator-tests
 	if (!_SSMPdev->getSysID(&SYS_ID_old))
-		return ClearMemoryDlg::communicationError;
+		return ClearMemoryDlg::CMresult_communicationError;
 	if (!_SSMPdev->getROMID(&ROM_ID_old))
-		return ClearMemoryDlg::communicationError;
+		return ClearMemoryDlg::CMresult_communicationError;
 	// Clear Memory:
 	if (_level)	// Clear Memory 2
 		ok = _SSMPdev->ClearMemory2(&CMsuccess);
 	else		// Clear Memory
 		ok = _SSMPdev->ClearMemory(&CMsuccess);
 	if (!ok || !CMsuccess)
-		return ClearMemoryDlg::communicationError;
+		return ClearMemoryDlg::CMresult_communicationError;
 	// Request user to switch ignition off and wait for communication error:
 	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
 	ok = _SSMPdev->waitForIgnitionOff();
 	// Close wait-message box:
 	waitmsgbox.close();
 	if (!ok)
-		return ClearMemoryDlg::communicationError;
+		return ClearMemoryDlg::CMresult_communicationError;
 	// Request user to switch ignition on and ensure that CU is still the same:
 	reconnect_result = reconnect(SYS_ID_old, ROM_ID_old);
-	if (reconnect_result != ClearMemoryDlg::success)
+	if (reconnect_result != ClearMemoryDlg::CMresult_success)
 		return reconnect_result;
 	// Stop all actuators if CU is in tes-mode:
 	if (!_SSMPdev->hasTestMode(&tm))
-		return ClearMemoryDlg::communicationError;
+		return ClearMemoryDlg::CMresult_communicationError;
 	if (tm)
 	{
 		// Query test mode connector status:
 		if (!_SSMPdev->isInTestMode(&tm))
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 		if (tm)
 		{
 			// Check that engine is not running:
 			if (!_SSMPdev->isEngineRunning(&enginerunning))
-				return ClearMemoryDlg::communicationError;
+				return ClearMemoryDlg::CMresult_communicationError;
 			if (!enginerunning)
 			{
 				// Stop all actuator tests:
 				if (!_SSMPdev->stopAllActuators())
-					return ClearMemoryDlg::communicationError;
+					return ClearMemoryDlg::CMresult_communicationError;
 			}
 		}
 	}
 	// Restore last CU-state:
-	if (CUstate_old == SSMprotocol::DCreading)
+	if (CUstate_old == SSMprotocol::state_DCreading)
 	{
 		if (!_SSMPdev->startDCreading(oldDCgroups))
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 	}
-	else if (CUstate_old == SSMprotocol::MBSWreading)
+	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
 		if (!_SSMPdev->startMBSWreading(oldMBSWmetaList, oldMBSWmetaList_len))
-			return ClearMemoryDlg::communicationError;
+			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// Return success:
-	return ClearMemoryDlg::success;
+	return ClearMemoryDlg::CMresult_success;
 }
 
 
@@ -190,7 +190,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(QString SYS_ID_old, QStrin
 		uc = ignonmsgbox.exec();
 		ignonmsgbox.hide();
 		if (uc == QMessageBox::RejectRole)
-			return ClearMemoryDlg::reconnectAborted;
+			return ClearMemoryDlg::CMresult_reconnectAborted;
 		// Validate CU idetification:
 		waitmsgbox.show();
 		ok = _SSMPdev->setupCUdata();
@@ -208,16 +208,16 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(QString SYS_ID_old, QStrin
 				}
 				// Check for communication error:
 				if (!ok)
-					return ClearMemoryDlg::communicationError;
+					return ClearMemoryDlg::CMresult_communicationError;
 				// Check if CU is still the same:
 				if (!equal)
-					return ClearMemoryDlg::reconnectFailed;	// Leave CU without error message (for now)
+					return ClearMemoryDlg::CMresult_reconnectFailed;	// Leave CU without error message (for now)
 			}
 		}
 		waitmsgbox.hide();
 	}
 	// Return success:
-	return ClearMemoryDlg::success;
+	return ClearMemoryDlg::CMresult_success;
 }
 
 

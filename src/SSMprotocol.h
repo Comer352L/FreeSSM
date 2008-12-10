@@ -102,7 +102,7 @@ class SSMprotocol : public QObject, private SSMprotocol_ID
 
 public:
 	enum CUtype_dt {ECU=1, TCU=2};
-	enum state_dt {needSetup=0, normal=1, DCreading=2, MBSWreading=3, ActTesting=4, waitingForDisconnect=5};
+	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
 	enum DCgroups_dt {noDCs_DCgroup=0, temporaryDTCs_DCgroup=1, memorizedDTCs_DCgroup=2, CClatestCCs_DCgroup=4, CCmemorizedCCs_DCgroup=8, allDCs_DCgroup=15};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
