@@ -166,7 +166,7 @@ void SSMprotocol::resetCUdata()
 	_selMBsSWsAddrLen = 0;
 	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
 	// *** Reset Diagnostic Code Definitions ***:
-	_DC_rawDefs.clear();
+	_DTC_rawDefs.clear();
 	_CC_rawDefs.clear();
 }
 
@@ -212,7 +212,7 @@ bool SSMprotocol::setupCUdata()
 		if (obdDTCs)
 			allOBDDTCrawDefs = rawdefs_de.OBDDTCrawDefs();
 		else
-			_DC_rawDefs = rawdefs_de.SUBDTCrawDefs();
+			_DTC_rawDefs = rawdefs_de.SUBDTCrawDefs();
 		if (CCsup)
 			_CC_rawDefs = rawdefs_de.CCCCrawDefs();
 	}
@@ -222,7 +222,7 @@ bool SSMprotocol::setupCUdata()
 		if (obdDTCs)
 			allOBDDTCrawDefs = rawdefs_en.OBDDTCrawDefs();
 		else
-			_DC_rawDefs = rawdefs_en.SUBDTCrawDefs();
+			_DTC_rawDefs = rawdefs_en.SUBDTCrawDefs();
 		if (CCsup)
 			_CC_rawDefs = rawdefs_en.CCCCrawDefs();
 	}
@@ -231,7 +231,7 @@ bool SSMprotocol::setupCUdata()
 		for (int m=0; m<allOBDDTCrawDefs.size(); m++)
 		{
 			if (_temporaryDTCsAddr[k] == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
-				_DC_rawDefs.append( allOBDDTCrawDefs.at(m) );
+				_DTC_rawDefs.append( allOBDDTCrawDefs.at(m) );
 		}
 	}
 	// Get supported MBs and SWs:
@@ -1478,7 +1478,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 			// Evaluate current/latest data trouble codes:
 			for (DCsAddrIndex=0; DCsAddrIndex<_nrofDTCsAddr; DCsAddrIndex++)
 			{
-				evaluateDTCDataByte(_temporaryDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), &tmpDTCs, &tmpDTCsDescriptions);
+				evaluateDCdataByte(_temporaryDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 				DCs += tmpDTCs;
 				DCdescriptions += tmpDTCsDescriptions;
 			}
@@ -1498,7 +1498,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		// Evaluate historic/memorized data trouble codes:
 		for (DCsAddrIndex=0; DCsAddrIndex<_nrofDTCsAddr; DCsAddrIndex++)
 		{
-			evaluateDTCDataByte(_memorizedDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_memorizedDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
@@ -1512,7 +1512,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		// Evaluate latest CC cancel codes:
 		for (DCsAddrIndex=0; DCsAddrIndex<_nrofLatestCCCCsAddr; DCsAddrIndex++)
 		{
-			evaluateCCCCDataByte(_latestCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_latestCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
@@ -1526,7 +1526,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		// Evaluate memorized CC cancel codes:
 		for (DCsAddrIndex=0; DCsAddrIndex<_nrofMemorizedCCCCsAddr; DCsAddrIndex++)
 		{
-			evaluateCCCCDataByte(_memorizedCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_memorizedCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
@@ -1536,7 +1536,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 
 
 
-void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, QStringList *DTC, QStringList *DTCdescription)
+void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs, QStringList *DC, QStringList *DCdescription)
 {
 	unsigned char setbits[8] = {0,};
 	unsigned char setbitslen = 0;
@@ -1548,39 +1548,39 @@ void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, 
 	unsigned char setbitsindex = 0;
 	bool ok = false;
 
-	DTC->clear();
-	DTCdescription->clear();
-	if (DTCrawdata == 0) return;
+	DC->clear();
+	DCdescription->clear();
+	if (DCrawdata == 0) return;
 	// Create list of set flagbits:
 	unsigned char flagbit = 0;
 	for (flagbit=1; flagbit<9; flagbit++)
 	{
-		if (DTCrawdata == (DTCrawdata | static_cast<char>(pow(2, (flagbit-1)))))
+		if (DCrawdata == (DCrawdata | static_cast<char>(pow(2, (flagbit-1)))))
 		{
 			setbits[setbitslen] = flagbit;
 			setbitslen++;
 		}
 	}
-	// *** Search for matching DTC definition ***:
-	for (k=0; k<_DC_rawDefs.size(); k++)      // work through all DTC definition raw data
+	// *** Search for matching DC definition ***:
+	for (k=0; k<DC_rawDefs.size(); k++)      // work through all DC definition raw data
 	{
-		/* NOTE:	- unknown/reserved DTCs have a definition with description "UNKNOWN ..."
-				- DTCs with missing definitions are ignored				*/
-		tmpdefparts = _DC_rawDefs.at(k).split(';');
+		/* NOTE:	- unknown/reserved DCs have a definition with description "UNKNOWN ..."
+				- DCs with missing definitions are ignored				*/
+		tmpdefparts = DC_rawDefs.at(k).split(';');
 		if (tmpdefparts.size() == 5)
 		{
-			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DTCs memory address
-			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DTCs memory address
-			if ((ok) && ((tmpcurrentdtcadr == DTCbyteadr) || (tmphistoricdtcadr == DTCbyteadr)))
+			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DCs memory address
+			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DCs memory address
+			if ((ok) && ((tmpcurrentdtcadr == DCbyteadr) || (tmphistoricdtcadr == DCbyteadr)))
 			{
 				tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
 				for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
 				{
-					// Check if definition belongs to current DTC:
+					// Check if definition belongs to current DC:
 					if (tmpbitadr == setbits[setbitsindex])
 					{
-						DTC->push_back(tmpdefparts.at(3));		// DTC
-						DTCdescription->push_back(tmpdefparts.at(4));	// DTC description
+						DC->push_back(tmpdefparts.at(3));		// DC
+						DCdescription->push_back(tmpdefparts.at(4));	// DC description
 					}
 				}
 			}
@@ -1588,58 +1588,6 @@ void SSMprotocol::evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata, 
 	}
 }
 
-
-
-void SSMprotocol::evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata, QStringList *CC, QStringList *CCdescription)
-{
-	unsigned char setbits[8] = {0,};
-	unsigned char setbitslen = 0;
-	QStringList tmpdefparts;
-	QString tmpstr;
-	unsigned int tmpcurrentdtcadr;
-	unsigned int tmphistoricdtcadr;
-	unsigned int tmpbitadr;
-	int k = 0;
-	unsigned char setbitsindex = 0;
-	bool ok = false;
-
-	CC->clear();
-	CCdescription->clear();
-	if (CCrawdata == 0) return;	// immediatly return success if no CC is set
-	// Create list of set flagbits:
-	unsigned char flagbit = 0;
-	for (flagbit=1; flagbit<9; flagbit++)
-	{
-		if (CCrawdata == (CCrawdata | static_cast<char>(pow(2, (flagbit-1)))))
-		{
-			setbits[setbitslen] = flagbit;
-			setbitslen++;
-		}
-	}
-	// *** Search for matching DTC definition ***:
-	for (k=0; k<_CC_rawDefs.size(); k++)
-	{
-		tmpdefparts = _CC_rawDefs.at(k).split(';');
-		if (tmpdefparts.size() == 5)
-		{
-			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // latest CCs memory address
-			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // memorized CCs memory address
-			if ((tmpcurrentdtcadr == CCbyteadr) || (tmphistoricdtcadr == CCbyteadr))
-			{
-				tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
-				for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
-				{
-					// Check if definition belongs to current CC:
-					if (tmpbitadr == setbits[setbitsindex])
-					{
-						CC->push_back(tmpdefparts.at(3));		// Cancel Code
-						CCdescription->push_back(tmpdefparts.at(4));	// Cancel Code description
-					}
-				}
-			}
-		}
-	}
-}
 
 
 

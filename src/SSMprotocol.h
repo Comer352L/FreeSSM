@@ -170,7 +170,7 @@ private:
 	unsigned int _temporaryDTCsAddr[SSMP_MAX_DTCADDR];
 	unsigned int _memorizedDTCsAddr[SSMP_MAX_DTCADDR];
 	unsigned char _nrofDTCsAddr;
-	QStringList _DC_rawDefs;
+	QStringList _DTC_rawDefs;
 	// Cruise Control Cancel Codes:
 	unsigned int _latestCCCCsAddr[SSMP_MAX_CCCCADDR];
 	unsigned char _nrofLatestCCCCsAddr;
@@ -215,10 +215,9 @@ private:
 	void setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators,
 				   unsigned int *allActByteAddr, unsigned char *nrofAllActByteAddr);
 	// PREPARATION AND EVALUATION FUNCTIONS:
-	void evaluateDTCDataByte(unsigned int DTCbyteadr, char DTCrawdata,
-				 QStringList *DTC, QStringList *DTCdescription);
-	void evaluateCCCCDataByte(unsigned int CCbyteadr, char CCrawdata,
-				  QStringList *CC, QStringList *CCdescription);
+	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
+				 QStringList *DC, QStringList *DCdescription);
+
 	bool setupMBSWQueryAddrList(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len, 
 				    mb_intl_dt supportedMBs[SSMP_MAX_MB], unsigned int nrofsupportedMBs,
 				    sw_intl_dt supportedSWs[SSMP_MAX_SW], unsigned int nrofsupportedSWs,
