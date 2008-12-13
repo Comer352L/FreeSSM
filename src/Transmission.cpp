@@ -63,11 +63,11 @@ Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
 Transmission::~Transmission()
 {
 	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	disconnect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) ); 
-	disconnect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) ); 
-	disconnect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) ); 
-	disconnect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) ); 
-	disconnect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) ); 
+	disconnect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) );
+	disconnect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
+	disconnect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
+	disconnect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
+	disconnect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) );
 	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
 	clearContent();
 }
@@ -138,11 +138,11 @@ void Transmission::setup()
 	else // CU-connection could not be established
 		goto commError;
 	// Connect signals/slots:
-	connect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) ); 
-	connect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) ); 
-	connect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) ); 
-	connect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) ); 
-	connect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) ); 
+	connect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) );
+	connect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
+	connect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
+	connect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
+	connect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) );
 	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Start Diagnostic Codes reading:
@@ -272,19 +272,19 @@ void Transmission::adjustments()
 
 void Transmission::clearMemory()
 {
-	runClearMemory(0);
+	runClearMemory(SSMprotocol::CMlevel_1);
 }
 
 
 
 void Transmission::clearMemory2()
 {
-	runClearMemory(1);
+	runClearMemory(SSMprotocol::CMlevel_2);
 }
 
 
 
-void Transmission::runClearMemory(bool level)
+void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
 {
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;

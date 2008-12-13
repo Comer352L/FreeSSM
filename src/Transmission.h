@@ -58,7 +58,7 @@ private:
 	mode_dt _mode;
 
 	void setup();
-	void runClearMemory(bool level);
+	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void setupUiFonts();
 	void clearContent();
 	void closeEvent(QCloseEvent *event);

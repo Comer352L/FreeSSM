@@ -21,7 +21,7 @@
 
 
 
-ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, bool level)
+ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level)
 {
 	_parent = parent;
 	_SSMPdev = SSMPdev;
@@ -80,10 +80,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	if (!_SSMPdev->getROMID(&ROM_ID_old))
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Clear Memory:
-	if (_level)	// Clear Memory 2
-		ok = _SSMPdev->ClearMemory2(&CMsuccess);
-	else		// Clear Memory
-		ok = _SSMPdev->ClearMemory(&CMsuccess);
+	ok = _SSMPdev->ClearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Request user to switch ignition off and wait for communication error:

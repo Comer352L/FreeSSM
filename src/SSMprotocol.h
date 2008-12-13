@@ -104,6 +104,7 @@ public:
 	enum CUtype_dt {ECU=1, TCU=2};
 	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
 	enum DCgroups_dt {noDCs_DCgroup=0, temporaryDTCs_DCgroup=1, memorizedDTCs_DCgroup=2, CClatestCCs_DCgroup=4, CCmemorizedCCs_DCgroup=8, allDCs_DCgroup=15};
+	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
 	SSMprotocol(serialCOM *port, CUtype_dt CU, QString language="en");
@@ -138,8 +139,7 @@ public:
 	bool getAllAdjustmentValues(unsigned int * rawValues);
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	bool ClearMemory(bool *success);
-	bool ClearMemory2(bool *success);
+	bool ClearMemory(CMlevel_dt level, bool *success);
 	bool TestImmobilizerCommLine(immoTestResult_dt *result);
 	bool stopAllActuators();
 	bool startDCreading(int DCgroups, bool ignoreDCheckState = false);

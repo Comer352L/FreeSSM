@@ -846,6 +846,7 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 }
 
 
+
 void SSMprotocol::setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators, unsigned int *allActByteAddr, unsigned char *nrofAllActByteAddr)
 {
 	QString tmpstr = "";
@@ -1275,39 +1276,36 @@ bool SSMprotocol::isInTestMode(bool *testmode)
 
 
 
-bool SSMprotocol::ClearMemory(bool *success)
+bool SSMprotocol::ClearMemory(CMlevel_dt level, bool *success)
 {
-	char bytewritten = 0;
-	if (_state != state_normal) return false;
-	*success = false;
-	if (!_SSMPcom->writeDatabyte(0x000060, 0x40, &bytewritten))
-	{
-		resetCUdata();
-		return false;
-	}
-	if (bytewritten == 0x40)
-		*success = true;
-	return true;
-}
-
-
-
-bool SSMprotocol::ClearMemory2(bool *success)
-{
+	char val = 0;
 	char bytewritten = 0;
 	bool CM2sup = false;
 	if (_state != state_normal) return false;
-	if (!hasClearMemory2(&CM2sup) || CM2sup==false) return false;
+	if (level == CMlevel_1)
+	{
+		val = 0x40;
+	}
+	else if (level == CMlevel_2)
+	{
+		if (!hasClearMemory2(&CM2sup) || CM2sup==false) return false;
+		val = 0x20;
+	}
+	else
+	{
+		return false;
+	}
 	*success = false;
-	if (!_SSMPcom->writeDatabyte(0x000060, 0x20, &bytewritten))
+	if (!_SSMPcom->writeDatabyte(0x000060, val, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (bytewritten == 0x20)
+	if (bytewritten == val)
 		*success = true;
 	return true;
 }
+
 
 
 

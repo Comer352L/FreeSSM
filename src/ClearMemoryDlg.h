@@ -34,13 +34,13 @@ class ClearMemoryDlg : public QObject
 public:
 	enum CMresult_dt {CMresult_aborted, CMresult_communicationError, CMresult_success, CMresult_reconnectAborted, CMresult_reconnectFailed};
 
-	ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, bool level);
+	ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level);
 	CMresult_dt run();
 
 private:
 	QMainWindow *_parent;
 	SSMprotocol *_SSMPdev;
-	bool _level;
+	SSMprotocol::CMlevel_dt _level;
 
 	bool confirmClearMemory();
 	CMresult_dt reconnect(QString SYS_ID_old, QString ROM_ID_old);

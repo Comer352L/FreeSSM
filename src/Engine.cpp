@@ -64,12 +64,12 @@ Engine::Engine(SSMprotocol *ssmpdev, QString progversion)
 Engine::~Engine()
 {
 	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	disconnect( DCs_pushButton, SIGNAL( pressed() ), this, SLOT( DCs() ) ); 
-	disconnect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) ); 
-	disconnect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) ); 
-	disconnect( systemoperationtests_pushButton, SIGNAL( pressed() ), this, SLOT( systemoperationtests() ) ); 
-	disconnect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) ); 
-	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) ); 
+	disconnect( DCs_pushButton, SIGNAL( pressed() ), this, SLOT( DCs() ) );
+	disconnect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
+	disconnect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
+	disconnect( systemoperationtests_pushButton, SIGNAL( pressed() ), this, SLOT( systemoperationtests() ) );
+	disconnect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
+	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
 	clearContent();
 }
 
@@ -207,12 +207,12 @@ void Engine::setup()
 	else // CU-connection could not be established
 		goto commError;
 	// Connect signals/slots:
-	connect( DCs_pushButton, SIGNAL( pressed() ), this, SLOT( DCs() ) ); 
-	connect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) ); 
-	connect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) ); 
-	connect( systemoperationtests_pushButton, SIGNAL( pressed() ), this, SLOT( systemoperationtests() ) ); 
-	connect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) ); 
-	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) ); 
+	connect( DCs_pushButton, SIGNAL( pressed() ), this, SLOT( DCs() ) );
+	connect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
+	connect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
+	connect( systemoperationtests_pushButton, SIGNAL( pressed() ), this, SLOT( systemoperationtests() ) );
+	connect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
+	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Start Diagnostic Codes reading:
 	if (!_content_DCs->setup())
@@ -372,7 +372,7 @@ void Engine::clearMemory()
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
 	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, 0);
+	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
 	// Temporary disconnect from "communication error"-signal:
 	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Run "Clear Memory"-procedure:
