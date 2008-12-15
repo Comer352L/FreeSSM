@@ -1,3 +1,22 @@
+/*
+ * SSMprotocol.h - Application Layer for the new Subaru SSM protocol
+ *
+ * Copyright © 2008 Comer352l
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef SSMPROTOCOL_H
 #define SSMPROTOCOL_H
 
@@ -128,8 +147,8 @@ public:
 	bool getSupportedDCgroups(int *DCgroups);
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(unsigned int *nrofsupportedMBs, mbsw_dt *supportedMBs = NULL);
-	bool getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int *MBSWmetaList_len);
 	bool getSupportedSWs(unsigned int *nrofsupportedSWs, mbsw_dt *supportedSWs = NULL);
+	bool getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int *MBSWmetaList_len);
 	bool getSupportedAdjustments(adjustment_dt *supportedAdjustments, unsigned char *nrofsupportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
