@@ -29,7 +29,8 @@
 #else
     #error "Operating system not supported !"
 #endif
-#include "math.h"
+#include <vector>
+#include <math.h>
 #include "SSMPcommunication.h"
 #include "SSMprotocol_ID.h"
 #include "SSMprotocol_def_en.h"
@@ -149,7 +150,7 @@ public:
 	bool getSupportedMBs(unsigned int *nrofsupportedMBs, mbsw_dt *supportedMBs = NULL);
 	bool getSupportedSWs(unsigned int *nrofsupportedSWs, mbsw_dt *supportedSWs = NULL);
 	bool getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int *MBSWmetaList_len);
-	bool getSupportedAdjustments(adjustment_dt *supportedAdjustments, unsigned char *nrofsupportedAdjustments);
+	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
 	bool isEngineRunning(bool *isrunning);
@@ -202,8 +203,7 @@ private:
 	unsigned int _nrofsupportedMBs;
 	unsigned int _nrofsupportedSWs;
 	// Adjustment Values:
-	adjustment_intl_dt _adjustments[SSMP_MAX_ADJUSTMENTS];
-	unsigned char _nrofAdjustments;
+	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:
 	actuator_dt _actuators[SSMP_MAX_ACTTESTS];
 	unsigned char _nrofActuators;
@@ -230,13 +230,12 @@ private:
 	void setupSupportedSWs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
 				sw_intl_dt *supportedSWs, unsigned int *nrofsupportedSWs);
 	void setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				adjustment_intl_dt *adjustments, unsigned char *nrofAdjustments);
+				  std::vector<adjustment_intl_dt> *adjustments);
 	void setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators,
 				   unsigned int *allActByteAddr, unsigned char *nrofAllActByteAddr);
 	// PREPARATION AND EVALUATION FUNCTIONS:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				 QStringList *DC, QStringList *DCdescription);
-
 	bool setupMBSWQueryAddrList(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len, 
 				    mb_intl_dt supportedMBs[SSMP_MAX_MB], unsigned int nrofsupportedMBs,
 				    sw_intl_dt supportedSWs[SSMP_MAX_SW], unsigned int nrofsupportedSWs,

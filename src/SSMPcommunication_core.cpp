@@ -130,7 +130,7 @@ bool SSMPcommunication_core::WriteDataBlock(char ecuadr, unsigned int dataadr, c
 			{
 				if (datawritten == NULL)
 				{
-					// CHECK IF ACTUALLY WRITTEN DATA IS EUQLA TO THE DATA SENT OUT:
+					// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
 					for (k=0; k<datalen; k++)
 					{
 						if (data[k] != indata[1+k])
@@ -178,7 +178,7 @@ bool SSMPcommunication_core::WriteDatabyte(char ecuadr, unsigned int dataadr, ch
 			{
 				if (databytewritten == NULL)
 				{
-					// CHECK IF ACTUALLY WRITTEN DATA IS EUQLA TO THE DATA SENT OUT:
+					// CHECK IF ACTUALLY WRITTEN DATA IS EQAUL TO THE DATA SENT OUT:
 					if (indata[1] == databyte)
 						return true;
 					else
@@ -393,17 +393,4 @@ bool SSMPcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsig
 	}
 	return true;
 }
-
-
-
-
-/* ToDo:
- - SndRcvMessage: Funktion auch ohne Echo sicherstellen
- - 2 neue Methoden ? Beschränkung auf die beide verwendeten Methoden ?
- - datalen von unsigned int nach unsigned char aendern ?
- - ReadMultipleDatabytes: auf 33 Adressen beschraenken ? (erfolgt momentan in den Communication Threads)
- - Momentan: pro Funktionsaufruf je eine ausgehende und eine eingehende Nachricht
- - _port->GetNrOfBaytesAvailable: strengere Pruefung ? (momentan: fail silent)
-*/
-
 

@@ -273,7 +273,7 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
 		if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
 			currentportsettings->parity='N';
-		else    	// wenn Parity-Flag gesetzt ist
+		else    	// if parity-flag is set
 		{
 			if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
 			{

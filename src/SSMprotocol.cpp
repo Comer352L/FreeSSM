@@ -149,19 +149,7 @@ void SSMprotocol::resetCUdata()
 	_nrofsupportedMBs = 0;
 	_nrofsupportedSWs = 0;
 	// Reset adjustments-data:
-	for (k=0; k<SSMP_MAX_ADJUSTMENTS; k++)
-	{
-		_adjustments[k].title = "";
-		_adjustments[k].unit = "";
-		_adjustments[k].formula = "";
-		_adjustments[k].rawMin = 0;
-		_adjustments[k].rawMax = 0;
-		_adjustments[k].rawDefault = 0;
-		_adjustments[k].precision = 0;
-		_adjustments[k].AddrLow = 0;
-		_adjustments[k].AddrHigh = 0;
-	}
-	_nrofAdjustments = 0;
+	_adjustments.clear();
 	// Reset actuator-test-data:
 	for (k=0; k<SSMP_MAX_ACTTESTS; k++)
 	{
@@ -257,7 +245,7 @@ bool SSMprotocol::setupCUdata()
 	setupSupportedMBs(_CU, _language, _flagbytes, _nrofflagbytes, _supportedMBs, &_nrofsupportedMBs);
 	setupSupportedSWs(_CU, _language, _flagbytes, _nrofflagbytes, _supportedSWs, &_nrofsupportedSWs);
 	// Get supported Adaptions:
-	setupAdjustmentsData(_CU, _language, _flagbytes, _nrofflagbytes, _adjustments, &_nrofAdjustments);
+	setupAdjustmentsData(_CU, _language, _flagbytes, _nrofflagbytes, &_adjustments);
 	// Get actuator test data:
 	hasActuatorTests(&ATsup);
 	if (ATsup)
@@ -738,7 +726,7 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 
 
 
-void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes, adjustment_intl_dt *adjustments, unsigned char *nrofAdjustments)
+void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes, std::vector<adjustment_intl_dt> *adjustments)
 {
 	QString defline = "";
 	QString tmphelpstr = "";
@@ -746,21 +734,13 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 	unsigned int tmpflagbit = 0;
 	unsigned int tmpsidbval = 0;
 	unsigned int tmpCU = 0;
-	unsigned int tmpaddrlow = 0;
-	unsigned int tmpaddrhigh = 0;
-	QString tmptitle = "";
-	QString tmpunit = "";
-	unsigned int tmpminrawvalue = 0;
-	unsigned int tmpmaxrawvalue = 0;
-	unsigned int tmpdefaultrawvalue = 0;
-	char tmpprecision = 0;
-	QString tmpformula = "";
+	adjustment_intl_dt tmpadjustment;
 	int k = 0;
 	bool ok = false;
 	bool supported = false;
 	QStringList adjustmentsrawdata;
 
-	*nrofAdjustments = 0;
+	adjustments->clear();
 	if (language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
@@ -810,48 +790,37 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 			{
 				if ( ((CU == ECU) && (tmpCU == 0)) || ((CU == TCU) && (tmpCU == 1)) )
 				{
-					tmpaddrlow = defline.section(';', 2, 2).toUInt(&ok, 16);
-					if (ok && (tmpaddrlow > 0))
+					tmpadjustment.AddrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
+					if (ok && (tmpadjustment.AddrLow > 0))
 					{
-						tmpaddrhigh = defline.section(';', 3, 3).toUInt(&ok, 16);
-						if (!ok || (tmpaddrhigh < 1))
-							tmpaddrhigh = 0;
-						tmptitle = defline.section(';', 4, 4);
-						if (tmptitle.length() > 0)
+						tmpadjustment.AddrHigh = defline.section(';', 3, 3).toUInt(&ok, 16);
+						if (!ok || (tmpadjustment.AddrHigh < 1))
+							tmpadjustment.AddrHigh = 0;
+						tmpadjustment.title = defline.section(';', 4, 4);
+						if (tmpadjustment.title.length() > 0)
 						{
-							tmpunit = defline.section(';', 5, 5);	// may be empty
+							tmpadjustment.unit = defline.section(';', 5, 5);	// may be empty
 							tmphelpstr = defline.section(';', 6, 6);
-							tmpminrawvalue = tmphelpstr.toUInt(&ok, 10);
+							tmpadjustment.rawMin = tmphelpstr.toUInt(&ok, 10);
 							if (ok)
 							{
 								tmphelpstr = defline.section(';', 7, 7);
-								tmpmaxrawvalue = tmphelpstr.toUInt(&ok, 10);
+								tmpadjustment.rawMax = tmphelpstr.toUInt(&ok, 10);
 								if (ok)
 								{
 									tmphelpstr = defline.section(';', 8, 8);
-									tmpdefaultrawvalue = tmphelpstr.toUInt(&ok, 10);
+									tmpadjustment.rawDefault = tmphelpstr.toUInt(&ok, 10);
 									if (ok)
 									{
-										tmpformula = defline.section(';', 9, 9);
-										if (tmpformula.length() > 0)
+										tmpadjustment.formula = defline.section(';', 9, 9);
+										if (tmpadjustment.formula.length() > 0)
 										{
 											tmphelpstr = defline.section(';', 10, 10);
 											if (tmphelpstr.length() == 0)
 												tmphelpstr = "0";
-											tmpprecision = tmphelpstr.toInt(&ok, 10);
-											if (ok && (tmpprecision<=10) && (tmpprecision>=-10))
-											{
-												adjustments[*nrofAdjustments].title = tmptitle;
-												adjustments[*nrofAdjustments].unit = tmpunit;
-												adjustments[*nrofAdjustments].formula = tmpformula;
-												adjustments[*nrofAdjustments].rawMin = tmpminrawvalue;
-												adjustments[*nrofAdjustments].rawMax = tmpmaxrawvalue;
-												adjustments[*nrofAdjustments].rawDefault = tmpdefaultrawvalue;
-												adjustments[*nrofAdjustments].AddrLow = tmpaddrlow;
-												adjustments[*nrofAdjustments].AddrHigh = tmpaddrhigh;
-												adjustments[*nrofAdjustments].precision = tmpprecision;
-												(*nrofAdjustments)++;
-											}
+											tmpadjustment.precision = tmphelpstr.toInt(&ok, 10);
+											if (ok && (tmpadjustment.precision<=10) && (tmpadjustment.precision>=-10))
+												adjustments->push_back(tmpadjustment);
 										}
 									}
 								}
@@ -1047,15 +1016,12 @@ bool SSMprotocol::getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBS
 
 
 
-bool SSMprotocol::getSupportedAdjustments(adjustment_dt *supportedAdjustments, unsigned char *nrofsupportedAdjustments)
+bool SSMprotocol::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
-	unsigned char k = 0;
 	if (_state == state_needSetup) return false;
-	for (k=0; k<_nrofAdjustments; k++)
-	{
-		supportedAdjustments[k] = _adjustments[k];
-	}
-	*nrofsupportedAdjustments = _nrofAdjustments;
+	supportedAdjustments->clear();
+	for (unsigned int k=0; k<_adjustments.size(); k++)
+		supportedAdjustments->push_back( _adjustments.at(k) );
 	return true;
 }
 
@@ -1099,7 +1065,6 @@ bool SSMprotocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 
 
 
-
 bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
 {
 	unsigned int dataaddr[2] = {0,0};
@@ -1107,13 +1072,13 @@ bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue
 	char data[2] = {0,0};
 	if (_state != state_normal) return false;
 	// Validate adjustment value selection:
-	if ((_nrofAdjustments < 1) || (index >= _nrofAdjustments)) return false;
+	if (_adjustments.empty() || (index >= _adjustments.size())) return false;
 	// Convert memory address into two byte addresses:
-	dataaddr[0] = _adjustments[index].AddrLow;
+	dataaddr[0] = _adjustments.at(index).AddrLow;
 	datalen = 1;
-	if (_adjustments[index].AddrHigh > 0)
+	if (_adjustments.at(index).AddrHigh > 0)
 	{
-		dataaddr[1] = _adjustments[index].AddrLow;
+		dataaddr[1] = _adjustments.at(index).AddrLow;
 		datalen++;
 	}
 	// Read data from control unit:
@@ -1124,7 +1089,7 @@ bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue
 	}
 	// Calculate raw value:
 	*rawValue = static_cast<unsigned char>(data[0]);
-	if (_adjustments[index].AddrHigh > 0)
+	if (_adjustments.at(index).AddrHigh > 0)
 		*rawValue += 256*static_cast<unsigned char>(data[1]);
 	return true;
 }
@@ -1138,15 +1103,15 @@ bool SSMprotocol::getAllAdjustmentValues(unsigned int * rawValues)
 	char data[2*SSMP_MAX_ADJUSTMENTS] = {0,};
 	unsigned char k = 0;
 	unsigned int addrindex = 0;
-	if ((_state != state_normal) || (_nrofAdjustments < 1)) return false;
+	if ((_state != state_normal) || _adjustments.empty()) return false;
 	// Setup address list:
-	for (k=0; k<_nrofAdjustments; k++)
+	for (k=0; k<_adjustments.size(); k++)
 	{
-		dataaddr[datalen] = _adjustments[k].AddrLow;
+		dataaddr[datalen] = _adjustments.at(k).AddrLow;
 		datalen++;
-		if (_adjustments[k].AddrHigh > 0)
+		if (_adjustments.at(k).AddrHigh > 0)
 		{
-			dataaddr[datalen] = _adjustments[k].AddrHigh;
+			dataaddr[datalen] = _adjustments.at(k).AddrHigh;
 			datalen++;
 		}
 	}
@@ -1157,11 +1122,11 @@ bool SSMprotocol::getAllAdjustmentValues(unsigned int * rawValues)
 		return false;
 	}
 	// Calculate raw value:
-	for (k=0; k<_nrofAdjustments; k++)
+	for (k=0; k<_adjustments.size(); k++)
 	{
 		rawValues[k] = static_cast<unsigned char>(data[addrindex]);
 		addrindex++;
-		if (_adjustments[k].AddrHigh > 0)
+		if (_adjustments.at(k).AddrHigh > 0)
 		{
 			rawValues[k] += 256*static_cast<unsigned char>(data[addrindex]);
 			addrindex++;
@@ -1178,12 +1143,12 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 	char highdatabyte = 0;
 	if (_state != state_normal) return false;
 	// Validate adjustment value selection:
-	if (index >= _nrofAdjustments) return false;
-	if (((_adjustments[index].rawMin < _adjustments[index].rawMax) && (rawValue < _adjustments[index].rawMin)) || ((rawValue > _adjustments[index].rawMax)))
+	if (index >= _adjustments.size()) return false;
+	if (((_adjustments.at(index).rawMin < _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin)) || ((rawValue > _adjustments.at(index).rawMax)))
 		return false;
-	if ((_adjustments[index].rawMin > _adjustments[index].rawMax) && (rawValue < _adjustments[index].rawMin) && (rawValue > _adjustments[index].rawMax))
+	if ((_adjustments.at(index).rawMin > _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin) && (rawValue > _adjustments.at(index).rawMax))
 		return false;
-	if ((_adjustments[index].AddrHigh > 0) && (rawValue > 65535))
+	if ((_adjustments.at(index).AddrHigh > 0) && (rawValue > 65535))
 	{
 		return false;
 	}
@@ -1193,24 +1158,25 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 	}
 	// Convert raw value to 2 byte values:
 	lowdatabyte = static_cast<char>(rawValue & 0xff);
-	if (_adjustments[index].AddrHigh > 0)
+	if (_adjustments.at(index).AddrHigh > 0)
 		highdatabyte = static_cast<char>((rawValue & 0xffff) >> 8);
 	// Write value to control unit:
-	if (_adjustments[index].AddrHigh > 0)
+	if (_adjustments.at(index).AddrHigh > 0)
 	{
-		if (!_SSMPcom->writeDatabyte(_adjustments[index].AddrHigh, highdatabyte))
+		if (!_SSMPcom->writeDatabyte(_adjustments.at(index).AddrHigh, highdatabyte))
 		{
 			resetCUdata();
 			return false;
 		}
 	}
-	if (!_SSMPcom->writeDatabyte(_adjustments[index].AddrLow, lowdatabyte))
+	if (!_SSMPcom->writeDatabyte(_adjustments.at(index).AddrLow, lowdatabyte))
 	{
 		resetCUdata();
 		return false;
 	}
 	return true;
 }
+
 
 
 
@@ -1324,7 +1290,6 @@ bool SSMprotocol::ClearMemory(CMlevel_dt level, bool *success)
 		*success = true;
 	return true;
 }
-
 
 
 

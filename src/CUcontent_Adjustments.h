@@ -23,6 +23,7 @@
 
 
 #include <QWidget>
+#include <vector>
 #include "ui_CUcontent_Adjustments.h"
 #include "SSMprotocol.h"
 #include "FSSMdialogs.h"
@@ -93,15 +94,14 @@ public:
 
 private:
 	SSMprotocol *_SSMPdev;
-	adjustment_dt _supportedAdjustments[SSMP_MAX_ADJUSTMENTS];
-	unsigned char _nrofsupportedAdjustments;
-	bool _newValueSelWidgetType[SSMP_MAX_ADJUSTMENTS];
+	std::vector<adjustment_dt> _supportedAdjustments;
+	std::vector<bool> _newValueSelWidgetType;
 	unsigned int _maxrowsvisible;
 
 	void setupUiFonts();
 	void setupAdjustmentsTable();
 	void displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit);
-	void detNewValueSelWidgetTypes();
+	void setupNewValueSelWidgetTypes();
 	void getSelectableScaledValueStrings(QString formulaStr, QStringList *selectableScaledValueStr);
 	bool raw2scaled(unsigned int rawValue, QString scaleformula, char precision, QString *scaledValueStr);
 	bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);
