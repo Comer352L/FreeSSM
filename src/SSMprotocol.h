@@ -147,8 +147,8 @@ public:
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getSupportedDCgroups(int *DCgroups);
 	bool getLastDCgroupsSelection(int *DCgroups);
-	bool getSupportedMBs(unsigned int *nrofsupportedMBs, mbsw_dt *supportedMBs = NULL);
-	bool getSupportedSWs(unsigned int *nrofsupportedSWs, mbsw_dt *supportedSWs = NULL);
+	bool getSupportedMBs(std::vector<mbsw_dt> *supportedMBs);
+	bool getSupportedSWs(std::vector<mbsw_dt> *supportedSWs);
 	bool getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int *MBSWmetaList_len);
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
@@ -198,10 +198,8 @@ private:
 	unsigned char _nrofMemorizedCCCCsAddr;
 	QStringList _CC_rawDefs;
 	// Measuring Blocks and Switches:
-	mb_intl_dt _supportedMBs[SSMP_MAX_MB];
-	sw_intl_dt _supportedSWs[SSMP_MAX_SW];
-	unsigned int _nrofsupportedMBs;
-	unsigned int _nrofsupportedSWs;
+	std::vector<mb_intl_dt> _supportedMBs;
+	std::vector<sw_intl_dt> _supportedSWs;
 	// Adjustment Values:
 	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:
@@ -226,9 +224,9 @@ private:
 	void setupCCCCaddresses(unsigned int *latestCCCCsAddr, unsigned char *nrofLatestCCCCsAddr,
 				unsigned int *memorizedCCCCsAddr, unsigned char *nrofMemorizedCCCCsAddr);
 	void setupSupportedMBs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				mb_intl_dt *supportedMBs, unsigned int *nrofsupportedMBs);
+				std::vector<mb_intl_dt> *supportedMBs);
 	void setupSupportedSWs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				sw_intl_dt *supportedSWs, unsigned int *nrofsupportedSWs);
+				std::vector<sw_intl_dt> *supportedSWs);
 	void setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
 				  std::vector<adjustment_intl_dt> *adjustments);
 	void setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators,
@@ -237,16 +235,15 @@ private:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				 QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len, 
-				    mb_intl_dt supportedMBs[SSMP_MAX_MB], unsigned int nrofsupportedMBs,
-				    sw_intl_dt supportedSWs[SSMP_MAX_SW], unsigned int nrofsupportedSWs,
+				    std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
 				    unsigned int *mbswaddr, unsigned int *mbswaddrlen);
 	void assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SSMP_MAX_MBSW], unsigned char mbswaddrlen,
 				MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len,
-				mb_intl_dt supportedMBs[SSMP_MAX_MB], sw_intl_dt supportedSWs[SSMP_MAX_SW],
+				std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs,
 				unsigned int * mbswrawvalues);
 	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW],
 				  MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len,
-				  mb_intl_dt supportedMBs[SSMP_MAX_MB], sw_intl_dt supportedSWs[SSMP_MAX_SW],
+				  std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs,
 				  QStringList *valueStrList, QStringList *unitStrList);
 	bool scaleMB(unsigned int rawvalue, QString scaleformula, double *scaledvalue);
 	bool validateVIN(char VIN[17]);

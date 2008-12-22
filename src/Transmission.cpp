@@ -80,8 +80,7 @@ void Transmission::setup()
 	QString sysdescription = "";
 	QString ROM_ID = "";
 	bool supported = false;
-	unsigned int nrofsupportedMBs = 0;
-	unsigned int nrofsupportedSWs = 0;
+	std::vector<mbsw_dt> supportedMBsSWs;
 	int supDCgroups = 0;
 	QPixmap sup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/ok.png"));
 	QPixmap nsup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/editdelete.png"));
@@ -112,14 +111,13 @@ void Transmission::setup()
 			goto commError;
 		// Output ROM-ID:
 		romID_label->setText(ROM_ID);
-		// Get number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&nrofsupportedMBs))
+		// Number of supported MBs / SWs:
+		if (!_SSMPdev->getSupportedMBs(&supportedMBsSWs))
 			goto commError;
-		if (!_SSMPdev->getSupportedSWs(&nrofsupportedSWs))
+		nrofdatambs_label->setText( QString::number(supportedMBsSWs.size(), 10) );
+		if (!_SSMPdev->getSupportedSWs(&supportedMBsSWs))
 			goto commError;
-		// Output number of supported MBs / SWs:
-		nrofdatambs_label->setText( QString::number(nrofsupportedMBs, 10) );
-		nrofswitches_label->setText( QString::number(nrofsupportedSWs, 10) );
+		nrofswitches_label->setText( QString::number(supportedMBsSWs.size(), 10) );
 		// OBD2-Support:
 		if (!_SSMPdev->hasOBD2(&supported))
 			goto commError;

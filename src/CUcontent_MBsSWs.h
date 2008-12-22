@@ -45,10 +45,8 @@ public:
 
 private:
 	SSMprotocol *_SSMPdev;
-	mbsw_dt _supportedMBs[SSMP_MAX_MB];
-	unsigned int _nrofsupportedMBs;
-	mbsw_dt _supportedSWs[SSMP_MAX_SW];
-	unsigned int _nrofsupportedSWs;
+	std::vector<mbsw_dt> _supportedMBs;
+	std::vector<mbsw_dt> _supportedSWs;
 	MBSWmetadata_dt _MBSWmetaList[SSMP_MAX_MBSW];
 	unsigned int _MBSWmetaList_len;
 	bool _timemode;

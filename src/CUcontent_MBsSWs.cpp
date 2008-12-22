@@ -27,18 +27,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol *SSMPdev, bool t
 	unsigned int k = 0;
 	QHeaderView *headerview;
 	_SSMPdev = SSMPdev;
-	for (k=0; k<SSMP_MAX_MB; k++)
-	{
-		_supportedMBs[k].title = "";
-		_supportedMBs[k].unit = "";
-	}
-	_nrofsupportedMBs = 0;
-	for (k=0; k<SSMP_MAX_SW; k++)
-	{
-		_supportedSWs[k].title = "";
-		_supportedSWs[k].unit = "";
-	}
-	_nrofsupportedSWs = 0;
+	_supportedMBs.clear();
+	_supportedSWs.clear();
 	for (k=0; k<SSMP_MAX_MBSW; k++)
 	{
 		_MBSWmetaList[k].blockType = 0;
@@ -112,24 +102,14 @@ bool CUcontent_MBsSWs::setup()
 	bool ok;
 	unsigned int k = 0;
 	// Get supported MBs/SWs:
-	ok = _SSMPdev->getSupportedMBs(&_nrofsupportedMBs, _supportedMBs);
+	ok = _SSMPdev->getSupportedMBs(&_supportedMBs);
 	if (ok)
-		ok = _SSMPdev->getSupportedSWs(&_nrofsupportedSWs, _supportedSWs);
+		ok = _SSMPdev->getSupportedSWs(&_supportedSWs);
 	if (!ok)
 	{
 		// Reset CU-data:
-		for (k=0; k<SSMP_MAX_MB; k++)
-		{
-			_supportedMBs[k].title = "";
-			_supportedMBs[k].unit = "";
-		}
-		_nrofsupportedMBs = 0;
-		for (k=0; k<SSMP_MAX_SW; k++)
-		{
-			_supportedSWs[k].title = "";
-			_supportedSWs[k].unit = "";
-		}
-		_nrofsupportedSWs = 0;
+		_supportedMBs.clear();
+		_supportedSWs.clear();
 	}
 	for (k=0; k<SSMP_MAX_MBSW; k++)
 	{
@@ -153,7 +133,7 @@ bool CUcontent_MBsSWs::setup()
 	// Time mode push-button:
 	timemode_pushButton->setEnabled( ok );
 	// Disable "Add"-button, if all supported MBs/SWs are already selected:
-	if (_MBSWmetaList_len >= (_nrofsupportedMBs+_nrofsupportedSWs))
+	if (_MBSWmetaList_len >= (_supportedMBs.size()+_supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);
 	else
 		mbswadd_pushButton->setEnabled(true);
@@ -170,19 +150,19 @@ bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MB
 {
 	unsigned int k = 0;
 	// Check if MBSW-reading (and monitoring !) is in progress:
-	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList_len < (_nrofsupportedMBs + _nrofsupportedSWs)))
+	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size())))
 		return false;
 	// Check if the selected MBs/SWs are available:
 	for (k=0; k<MBSWmetaList_len; k++)
 	{
 		if (MBSWmetaList[k].blockType == 0)
 		{
-			if (MBSWmetaList[k].nativeIndex > (_nrofsupportedMBs-1))
+			if (MBSWmetaList[k].nativeIndex > (_supportedMBs.size()-1))
 				return false;
 		}
 		else
 		{
-			if (MBSWmetaList[k].nativeIndex > (_nrofsupportedSWs-1))
+			if (MBSWmetaList[k].nativeIndex > (_supportedSWs.size()-1))
 				return false;
 		}
 	}
@@ -205,7 +185,7 @@ bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MB
 	}
 	else
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
-	if (_MBSWmetaList_len >= (_nrofsupportedMBs + _nrofsupportedSWs))
+	if (_MBSWmetaList_len >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
 }
@@ -315,7 +295,7 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
 	// Enable item manipulation buttons (depending on list content and selection):
 	setManipulateMBSWItemsButtonsStatus();
-	if (_MBSWmetaList_len < (_nrofsupportedMBs + _nrofsupportedSWs))
+	if (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
 	return true;
 }
@@ -341,7 +321,7 @@ void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList un
 		unittableelement = new QTableWidgetItem( unitStrList.at(k) );
 		selectedMBsSWs_tableWidget->setItem(k, 2, unittableelement);
 	}
-	// save current value strings:
+	// Save current value strings:
 	_lastvalues = valueStrList;
 	// Output refresh duration:
 	secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
@@ -360,7 +340,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 {
 	unsigned int MBSWmetaList_len_old = _MBSWmetaList_len;
 	// Open selection dialog:
-	AddMBsSWsDlg *dlg = new AddMBsSWsDlg(this, _supportedMBs, _nrofsupportedMBs, _supportedSWs, _nrofsupportedSWs, _MBSWmetaList, &_MBSWmetaList_len);
+	AddMBsSWsDlg *dlg = new AddMBsSWsDlg(this, _supportedMBs, _supportedSWs, _MBSWmetaList, &_MBSWmetaList_len);
 	dlg->exec();
 	delete dlg;
 	// Update table:
@@ -386,7 +366,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		mbswdelete_pushButton->setEnabled(true);
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
-	if (_MBSWmetaList_len >= (_nrofsupportedMBs + _nrofsupportedSWs))
+	if (_MBSWmetaList_len >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 }
 
@@ -428,7 +408,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 		mbswdelete_pushButton->setEnabled(false);
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
-	if (_MBSWmetaList_len < (_nrofsupportedMBs + _nrofsupportedSWs))	// if not all MBs/SWs are selected
+	if (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
 }
 
@@ -580,16 +560,16 @@ void CUcontent_MBsSWs::updateMWSWqueryListContent()
 		if (_MBSWmetaList[k].blockType == 0)		// MB
 		{
 			// Output title:
-			tableelement = new QTableWidgetItem( _supportedMBs[_MBSWmetaList[k].nativeIndex].title );
+			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList[k].nativeIndex).title );
 			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
 			// Output unit:
-			tableelement = new QTableWidgetItem( _supportedMBs[_MBSWmetaList[k].nativeIndex].unit );
+			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList[k].nativeIndex).unit );
 			selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
 		}
 		else if (_MBSWmetaList[k].blockType == 1)	// SW
 		{
 			// Output title:
-			tableelement = new QTableWidgetItem( _supportedSWs[_MBSWmetaList[k].nativeIndex].title );
+			tableelement = new QTableWidgetItem( _supportedSWs.at(_MBSWmetaList[k].nativeIndex).title );
 			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
 		}
 		// Output last value string:

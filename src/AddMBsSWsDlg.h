@@ -42,8 +42,7 @@ private:
 	void setupUiFonts();
 
 public:
-	AddMBsSWsDlg(QWidget *parent, mbsw_dt supportedMBs[768], unsigned int nrofsupportedMBs,
-		     mbsw_dt supportedSWs[768], unsigned int nrofsupportedSWs,
+	AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, std::vector<mbsw_dt> supportedSWs, 
 		     MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len);
 	~AddMBsSWsDlg();
 

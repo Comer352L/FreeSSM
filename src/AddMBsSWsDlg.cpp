@@ -21,7 +21,7 @@
 
 
 
-AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, mbsw_dt supportedMBs[768], unsigned int nrofsupportedMBs, mbsw_dt supportedSWs[768], unsigned int nrofsupportedSWs,
+AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, std::vector<mbsw_dt> supportedSWs,
                            MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len) : QDialog(parent)
 {
 	unsigned int k=0;
@@ -37,7 +37,7 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, mbsw_dt supportedMBs[768], unsigned 
 	setupUi(this);
 	setupUiFonts();
 	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs/SWs:
-	for (k=0; k<nrofsupportedMBs; k++)
+	for (k=0; k<supportedMBs.size(); k++)
 	{
 		unselected = true;
 		for (m=0; m<(*_MBSWmetaList_len); m++)
@@ -48,17 +48,17 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, mbsw_dt supportedMBs[768], unsigned 
 		if (unselected)
 		{
 			// Output MB:
-			if (supportedMBs[k].unit == "")
-				MBsSWs_listWidget->addItem(supportedMBs[k].title);
+			if (supportedMBs.at(k).unit.isEmpty())
+				MBsSWs_listWidget->addItem(supportedMBs.at(k).title);
 			else
-				MBsSWs_listWidget->addItem(supportedMBs[k].title+"   ["+ supportedMBs[k].unit+"]");
+				MBsSWs_listWidget->addItem(supportedMBs.at(k).title+"   ["+ supportedMBs.at(k).unit+"]");
 			// Put MB to the list of unselected MBs/SWs:
 			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].blockType = 0;
 			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].nativeIndex = k;
 			_unselectedMBsSWs_metaList_len++;
 		}
 	}
-	for (k=0; k<nrofsupportedSWs; k++)
+	for (k=0; k<supportedSWs.size(); k++)
 	{
 		unselected = true;
 		for (m=0; m<(*_MBSWmetaList_len); m++)
@@ -69,7 +69,7 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, mbsw_dt supportedMBs[768], unsigned 
 		if (unselected)
 		{
 			// Output SW:
-			MBsSWs_listWidget->addItem(supportedSWs[k].title+"   ["+ supportedSWs[k].unit+"]");
+			MBsSWs_listWidget->addItem(supportedSWs.at(k).title+"   ["+ supportedSWs.at(k).unit+"]");
 			// Put SW to the list of unselected MBs/SWs:
 			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].blockType = 1;
 			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].nativeIndex = k;
