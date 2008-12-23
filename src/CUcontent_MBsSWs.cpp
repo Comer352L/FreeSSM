@@ -24,17 +24,11 @@
 
 CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol *SSMPdev, bool timemode) : QWidget(parent)
 {
-	unsigned int k = 0;
 	QHeaderView *headerview;
 	_SSMPdev = SSMPdev;
 	_supportedMBs.clear();
 	_supportedSWs.clear();
-	for (k=0; k<SSMP_MAX_MBSW; k++)
-	{
-		_MBSWmetaList[k].blockType = 0;
-		_MBSWmetaList[k].nativeIndex = 0;
-	}
-	_MBSWmetaList_len = 0;
+	_MBSWmetaList.clear();
 	_timemode = timemode;
 	_lastrefreshduration_ms = 0;
 	_maxrowsvisible = 0;
@@ -100,7 +94,6 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 bool CUcontent_MBsSWs::setup()
 {
 	bool ok;
-	unsigned int k = 0;
 	// Get supported MBs/SWs:
 	ok = _SSMPdev->getSupportedMBs(&_supportedMBs);
 	if (ok)
@@ -111,12 +104,7 @@ bool CUcontent_MBsSWs::setup()
 		_supportedMBs.clear();
 		_supportedSWs.clear();
 	}
-	for (k=0; k<SSMP_MAX_MBSW; k++)
-	{
-		_MBSWmetaList[k].blockType = 0;
-		_MBSWmetaList[k].nativeIndex = 0;
-	}
-	_MBSWmetaList_len = 0;
+	_MBSWmetaList.clear();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
 	MBSWrefreshTimeValue_label->setText("---      ");
@@ -133,7 +121,7 @@ bool CUcontent_MBsSWs::setup()
 	// Time mode push-button:
 	timemode_pushButton->setEnabled( ok );
 	// Disable "Add"-button, if all supported MBs/SWs are already selected:
-	if (_MBSWmetaList_len >= (_supportedMBs.size()+_supportedSWs.size()))
+	if (_MBSWmetaList.size() >= (_supportedMBs.size()+_supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);
 	else
 		mbswadd_pushButton->setEnabled(true);
@@ -146,30 +134,28 @@ bool CUcontent_MBsSWs::setup()
 }
 
 
-bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len)
+bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList)
 {
 	unsigned int k = 0;
 	// Check if MBSW-reading (and monitoring !) is in progress:
-	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size())))
+	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size())))
 		return false;
 	// Check if the selected MBs/SWs are available:
-	for (k=0; k<MBSWmetaList_len; k++)
+	for (k=0; k<MBSWmetaList.size(); k++)
 	{
-		if (MBSWmetaList[k].blockType == 0)
+		if (MBSWmetaList.at(k).blockType == 0)
 		{
-			if (MBSWmetaList[k].nativeIndex > (_supportedMBs.size()-1))
+			if (MBSWmetaList.at(k).nativeIndex > (_supportedMBs.size()-1))
 				return false;
 		}
 		else
 		{
-			if (MBSWmetaList[k].nativeIndex > (_supportedSWs.size()-1))
+			if (MBSWmetaList.at(k).nativeIndex > (_supportedSWs.size()-1))
 				return false;
 		}
 	}
 	// Save MB/SW-list:
-	for (k=0; k<MBSWmetaList_len; k++)
-		_MBSWmetaList[k] = MBSWmetaList[k];
-	_MBSWmetaList_len = MBSWmetaList_len;
+	_MBSWmetaList = MBSWmetaList;
 	// Clear last recieved values:
 	_lastvalues.clear();
 	// Update MB/SW table content:
@@ -177,7 +163,7 @@ bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MB
 	// Clear time information:
 	MBSWrefreshTimeValue_label->setText("---      ");
 	// Activate/deactivate buttons:
-	if (_MBSWmetaList_len > 0)
+	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
@@ -185,7 +171,7 @@ bool CUcontent_MBsSWs::setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MB
 	}
 	else
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
-	if (_MBSWmetaList_len >= (_supportedMBs.size() + _supportedSWs.size()))
+	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
 }
@@ -217,18 +203,17 @@ void CUcontent_MBsSWs::callStop()
 bool CUcontent_MBsSWs::startMBSWreading()
 {
 	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
-	MBSWmetadata_dt usedMBSWmetaList[SSMP_MAX_MBSW];
-	unsigned int usedMBSWmetaList_len = 0;
+	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
 	unsigned int k = 0;
 	bool consistent = true;
 	// Check premises:
 	state = _SSMPdev->state();
 	if (state == SSMprotocol::state_normal)
 	{
-		if (_MBSWmetaList_len < 1) return false;
+		if (_MBSWmetaList.empty()) return false;
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 		// Start MB/SW-reading:
-		if (!_SSMPdev->startMBSWreading(_MBSWmetaList, _MBSWmetaList_len))
+		if (!_SSMPdev->startMBSWreading(_MBSWmetaList))
 		{
 			connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 			return false;
@@ -237,13 +222,13 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	else if (state == SSMprotocol::state_MBSWreading)
 	{
 		// Verify consistency:
-		if (!_SSMPdev->getLastMBSWselection(usedMBSWmetaList, &usedMBSWmetaList_len))
+		if (!_SSMPdev->getLastMBSWselection(&usedMBSWmetaList))
 			return false;
-		if (_MBSWmetaList_len == usedMBSWmetaList_len)
+		if (_MBSWmetaList.size() == usedMBSWmetaList.size())
 		{
-			for (k=0; k<_MBSWmetaList_len; k++)
+			for (k=0; k<_MBSWmetaList.size(); k++)
 			{
-				if ((_MBSWmetaList[k].blockType != usedMBSWmetaList[k].blockType) || (_MBSWmetaList[k].nativeIndex != usedMBSWmetaList[k].nativeIndex))
+				if ((_MBSWmetaList.at(k).blockType != usedMBSWmetaList.at(k).blockType) || (_MBSWmetaList.at(k).nativeIndex != usedMBSWmetaList.at(k).nativeIndex))
 				{
 					consistent = false;
 					break;
@@ -295,7 +280,7 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
 	// Enable item manipulation buttons (depending on list content and selection):
 	setManipulateMBSWItemsButtonsStatus();
-	if (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size()))
+	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
 	return true;
 }
@@ -321,7 +306,7 @@ void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList un
 		unittableelement = new QTableWidgetItem( unitStrList.at(k) );
 		selectedMBsSWs_tableWidget->setItem(k, 2, unittableelement);
 	}
-	// Save current value strings:
+	// save current value strings:
 	_lastvalues = valueStrList;
 	// Output refresh duration:
 	secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
@@ -338,13 +323,13 @@ void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList un
 
 void CUcontent_MBsSWs::addMBsSWs()
 {
-	unsigned int MBSWmetaList_len_old = _MBSWmetaList_len;
+	unsigned int MBSWmetaList_len_old = _MBSWmetaList.size();
 	// Open selection dialog:
-	AddMBsSWsDlg *dlg = new AddMBsSWsDlg(this, _supportedMBs, _supportedSWs, _MBSWmetaList, &_MBSWmetaList_len);
+	AddMBsSWsDlg *dlg = new AddMBsSWsDlg(this, _supportedMBs, _supportedSWs, &_MBSWmetaList);
 	dlg->exec();
 	delete dlg;
 	// Update table:
-	if (_MBSWmetaList_len != MBSWmetaList_len_old)
+	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
 	{
 		// Clear last recieved values:
 		_lastvalues.clear();
@@ -353,20 +338,20 @@ void CUcontent_MBsSWs::addMBsSWs()
 		// Clear time information:
 		MBSWrefreshTimeValue_label->setText("---      ");
 		// Select new MBs/SWs:
-		QTableWidgetSelectionRange selrange((MBSWmetaList_len_old), 0, (_MBSWmetaList_len-1), 2);
+		QTableWidgetSelectionRange selrange((MBSWmetaList_len_old), 0, (_MBSWmetaList.size()-1), 2);
 		selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
-		if (_MBSWmetaList_len >=_maxrowsvisible)
+		if (_MBSWmetaList.size() >= _maxrowsvisible)
 			// Scroll to end of the table:
 			selectedMBsSWs_tableWidget->scrollToBottom();
 	}
 	// Activate/deactivate buttons:
-	if (_MBSWmetaList_len > 0)
+	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
-	if (_MBSWmetaList_len >= (_supportedMBs.size() + _supportedSWs.size()))
+	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 }
 
@@ -378,37 +363,31 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	unsigned int nrofselectedRows = 0;
 	unsigned int startindex = 0;
 	unsigned int endindex = 0;
-	unsigned int nrofindexes = 0;
 
 	// GET INDEXES OF SELECTED ROWS:
 	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
 	if (nrofselectedRows < 1) return;
 	// CHECK AND CORRECT START AND END INDEXES:
 	startindex = selectedRowsIndexes[0];
-	if (startindex > (_MBSWmetaList_len-1)) return; // Cancel, if only empty table lines are selected
+	if (startindex > (_MBSWmetaList.size()-1)) return; // Cancel, if only empty table lines are selected
 	endindex = selectedRowsIndexes[nrofselectedRows-1];
-	if (endindex > (_MBSWmetaList_len-1))
-		endindex = (_MBSWmetaList_len-1); // correct last index, if section exceeds end of list
+	if (endindex > (_MBSWmetaList.size()-1))
+		endindex = (_MBSWmetaList.size()-1); // correct last index, if section exceeds end of list
 	// DELETE MB/SWs FROM SELECTION LIST (METALIST):
-	nrofindexes = endindex - startindex + 1;
-	for (k=startindex; k<_MBSWmetaList_len; k++)
-	{
-		_MBSWmetaList[k] = _MBSWmetaList[k + nrofindexes];
-	}
-	_MBSWmetaList_len -= nrofindexes;
+	_MBSWmetaList.erase(_MBSWmetaList.begin()+startindex, _MBSWmetaList.begin()+endindex+1);
 	// DELETE LAST RECIEVED VALUE(S):
 	for (k=0; k<nrofselectedRows; k++)
 		_lastvalues.removeAt(startindex + k);
 	// UPDATE MB/SW TABLE CONTENT:
 	updateMWSWqueryListContent();
 	// ACTIVATE/DEACTIVATE BUTTONS:
-	if (_MBSWmetaList_len == 0)
+	if (_MBSWmetaList.empty())
 	{
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
-	if (_MBSWmetaList_len < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
+	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
 }
 
@@ -425,21 +404,19 @@ void CUcontent_MBsSWs::moveupMBsSWs()
 	// GET SELECTED ROWS:
 	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
 	// CHECK AND CORRECT SELECTED ROWS:
-	if ((nrofselectedRows < 1) || (selectedRowsIndexes[0] < 1) || (1 + selectedRowsIndexes[0] > _MBSWmetaList_len))
+	if ((nrofselectedRows < 1) || (selectedRowsIndexes[0] < 1) || (1 + selectedRowsIndexes[0] > _MBSWmetaList.size()))
 		return;	// Cancel, if moving up is not possible
-	if ((selectedRowsIndexes[0] + nrofselectedRows) > _MBSWmetaList_len) // if selection exceed the end of the list
-		nrofselectedRows = _MBSWmetaList_len - selectedRowsIndexes[0];
+	if ((selectedRowsIndexes[0] + nrofselectedRows) > _MBSWmetaList.size()) // if selection exceed the end of the list
+		nrofselectedRows = _MBSWmetaList.size() - selectedRowsIndexes[0];
 	// NOTE: IN FACT WE ARE MOVING 1 ROW DOWN... 
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
 	rowToMoveDownIndex = selectedRowsIndexes[0]-1;	
 	rowToMoveDownTargetIndex = selectedRowsIndexes[nrofselectedRows-1];
 	// MOVE MBs/SWs AT SELECTION LIST (METALIST):
-	datablockToMoveDown = _MBSWmetaList[rowToMoveDownIndex];
+	datablockToMoveDown = _MBSWmetaList.at(rowToMoveDownIndex);
 	for (k=1; k<=nrofselectedRows; k++)
-	{
-		_MBSWmetaList[rowToMoveDownIndex + (k-1)] = _MBSWmetaList[rowToMoveDownIndex + k];
-	}
-	_MBSWmetaList[rowToMoveDownTargetIndex] = datablockToMoveDown;
+		_MBSWmetaList.at(rowToMoveDownIndex + (k-1)) = _MBSWmetaList.at(rowToMoveDownIndex + k);
+	_MBSWmetaList.at(rowToMoveDownTargetIndex) = datablockToMoveDown;
 	// MOVE LAST RECIEVED VALUE:
 	if (_lastvalues.size() > rowToMoveDownTargetIndex)
 		_lastvalues.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
@@ -468,19 +445,17 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 	// GET SELECTED ROWS:
 	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
 	// CHECK AND CORRECT SELECTED ROWS:
-	if ((nrofselectedRows < 1) | (selectedRowsIndexes[nrofselectedRows-1]+1 >= _MBSWmetaList_len))
+	if ((nrofselectedRows < 1) | (selectedRowsIndexes[nrofselectedRows-1]+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible
 	// NOTE: IN FACT WE ARE MOVING 1 ROW UP... 
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
 	rowToMoveUpIndex = selectedRowsIndexes[nrofselectedRows-1]+1;
 	rowToMoveUpTargetIndex = selectedRowsIndexes[0];
 	// MOVE MBs/SWs AT SELECTION LIST (METALIST):
-	datablockToMoveUp = _MBSWmetaList[rowToMoveUpIndex];
+	datablockToMoveUp = _MBSWmetaList.at(rowToMoveUpIndex);
 	for (k=1; k<=nrofselectedRows; k++)
-	{
-		_MBSWmetaList[rowToMoveUpIndex - (k-1)] = _MBSWmetaList[rowToMoveUpIndex - k];
-	}
-	_MBSWmetaList[rowToMoveUpTargetIndex] = datablockToMoveUp;
+		_MBSWmetaList.at(rowToMoveUpIndex - (k-1)) = _MBSWmetaList.at(rowToMoveUpIndex - k);
+	_MBSWmetaList.at(rowToMoveUpTargetIndex) = datablockToMoveUp;
 	// MOVE LAST RECIEVED VALUE:
 	if (_lastvalues.size() > rowToMoveUpIndex)
 		_lastvalues.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
@@ -510,7 +485,7 @@ void CUcontent_MBsSWs::setManipulateMBSWItemsButtonsStatus()
 	}
 	else
 	{
-		if (_MBSWmetaList_len < 2)
+		if (_MBSWmetaList.size() < 2)
 		{
 			mbswmoveup_pushButton->setEnabled(false);
 			mbswmovedown_pushButton->setEnabled(false);
@@ -535,13 +510,13 @@ void CUcontent_MBsSWs::updateMWSWqueryListContent()
 	// Delete table content:
 	selectedMBsSWs_tableWidget->clearContents();
 	// Set number of rows and vertical scroll bar policy:
-	if (_MBSWmetaList_len >= _maxrowsvisible)
+	if (_MBSWmetaList.size() >= _maxrowsvisible)
 	{
-		selectedMBsSWs_tableWidget->setRowCount(_MBSWmetaList_len);
+		selectedMBsSWs_tableWidget->setRowCount(_MBSWmetaList.size());
 		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
 		// Check if get white space area at the bottom of the table:
 		firstrowvisibleindex = selectedMBsSWs_tableWidget->rowAt(0);
-		if (firstrowvisibleindex+_maxrowsvisible > _MBSWmetaList_len)
+		if (firstrowvisibleindex+_maxrowsvisible > _MBSWmetaList.size())
 		{
 			selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 			selectedMBsSWs_tableWidget->scrollToBottom();
@@ -555,21 +530,21 @@ void CUcontent_MBsSWs::updateMWSWqueryListContent()
 		selectedMBsSWs_tableWidget->scrollToTop();						// only necessary for delete
 	}
 	// Fill table:
-	for (k=0; k<_MBSWmetaList_len; k++)
+	for (k=0; k<_MBSWmetaList.size(); k++)
 	{
-		if (_MBSWmetaList[k].blockType == 0)		// MB
+		if (_MBSWmetaList.at(k).blockType == 0)		// MB
 		{
 			// Output title:
-			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList[k].nativeIndex).title );
+			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
 			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
 			// Output unit:
-			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList[k].nativeIndex).unit );
+			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
 			selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
 		}
-		else if (_MBSWmetaList[k].blockType == 1)	// SW
+		else	// SW
 		{
 			// Output title:
-			tableelement = new QTableWidgetItem( _supportedSWs.at(_MBSWmetaList[k].nativeIndex).title );
+			tableelement = new QTableWidgetItem( _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
 			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
 		}
 		// Output last value string:
@@ -592,7 +567,7 @@ void CUcontent_MBsSWs::switchTimeMode()
 		MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
 		if (_lastrefreshduration_ms > 0)
 		{
-			double datarate = static_cast<double>(1000 * _MBSWmetaList_len) / _lastrefreshduration_ms;
+			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
 			timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 		}
 	}
@@ -631,12 +606,9 @@ void CUcontent_MBsSWs::getSelectedTableWidgetRows(QTableWidget *tablewidget, uns
 }
 
 
-void CUcontent_MBsSWs::getCurrentMBSWselection(MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len)
+void CUcontent_MBsSWs::getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
 {
-	unsigned int k = 0;
-	for (k=0; k<_MBSWmetaList_len; k++)
-		MBSWmetaList[k] = _MBSWmetaList[k];
-	*MBSWmetaList_len = _MBSWmetaList_len;
+	*MBSWmetaList = _MBSWmetaList;
 }
 
 
@@ -664,13 +636,13 @@ void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
 	_maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (_maxrowsvisible < _MBSWmetaList_len)
-		minnrofrows = _MBSWmetaList_len;
+	if (_maxrowsvisible < _MBSWmetaList.size())
+		minnrofrows = _MBSWmetaList.size();
 	else
 		minnrofrows = _maxrowsvisible;
 	selectedMBsSWs_tableWidget->setRowCount(minnrofrows);
 	// Set vertical scroll bar policy:
-	if (minnrofrows > _MBSWmetaList_len)
+	if (minnrofrows > _MBSWmetaList.size())
 		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	else
 		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );

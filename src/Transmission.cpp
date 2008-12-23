@@ -28,12 +28,7 @@ Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
-	for (int k=0; k<SSMP_MAX_MBSW; k++)
-	{
-		_lastMBSWmetaList[k].blockType = 0;
-		_lastMBSWmetaList[k].nativeIndex = 0;
-	}
-	_lastMBSWmetaList_len = 0;
+	_lastMBSWmetaList.clear();
 	_MBSWtimemode = 0;	// refresh duration [ms]
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// *** Setup window/GUI:
@@ -226,7 +221,7 @@ void Transmission::measuringblocks()
 	_content_MBsSWs->show();
 	ok = _content_MBsSWs->setup();
 	if (ok)
-		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList, _lastMBSWmetaList_len);
+		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
@@ -328,7 +323,7 @@ void Transmission::clearContent()
 	if (_content_MBsSWs != NULL)
 	{
 		disconnect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-		_content_MBsSWs->getCurrentMBSWselection(_lastMBSWmetaList, &_lastMBSWmetaList_len);
+		_content_MBsSWs->getCurrentMBSWselection(&_lastMBSWmetaList);
 		_content_MBsSWs->getCurrentTimeMode(&_MBSWtimemode);
 		delete _content_MBsSWs;
 		_content_MBsSWs = NULL;

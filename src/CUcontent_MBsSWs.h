@@ -39,16 +39,15 @@ public:
 	bool setup();
 	bool startMBSWreading();
 	bool stopMBSWreading();
-	bool setMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW] = NULL, unsigned int MBSWmetaList_len = 0);
-	void getCurrentMBSWselection(MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len);
+	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
+	void getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	void getCurrentTimeMode(bool *timemode);
 
 private:
 	SSMprotocol *_SSMPdev;
 	std::vector<mbsw_dt> _supportedMBs;
 	std::vector<mbsw_dt> _supportedSWs;
-	MBSWmetadata_dt _MBSWmetaList[SSMP_MAX_MBSW];
-	unsigned int _MBSWmetaList_len;
+	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;
 	unsigned int _maxrowsvisible;

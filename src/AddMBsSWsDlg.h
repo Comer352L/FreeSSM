@@ -33,17 +33,15 @@ class AddMBsSWsDlg : public QDialog, private Ui::AddMBsSWs_Dialog
 	Q_OBJECT
 
 private:
-	MBSWmetadata_dt *_MBSWmetaList;
-	unsigned int *_MBSWmetaList_len;
-	MBSWmetadata_dt _unselectedMBsSWs_metaList[1536];
-	int _unselectedMBsSWs_metaList_len;
+	std::vector<MBSWmetadata_dt> *_MBSWmetaList;
+	std::vector<MBSWmetadata_dt> _unselectedMBsSWs_metaList;
 
 	static bool rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B);
 	void setupUiFonts();
 
 public:
 	AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, std::vector<mbsw_dt> supportedSWs, 
-		     MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len);
+		     std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	~AddMBsSWsDlg();
 
 private slots:

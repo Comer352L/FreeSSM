@@ -22,27 +22,26 @@
 
 
 AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, std::vector<mbsw_dt> supportedSWs,
-                           MBSWmetadata_dt *MBSWmetaList, unsigned int *MBSWmetaList_len) : QDialog(parent)
+                           std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
 {
 	unsigned int k=0;
 	unsigned int m=0;
 	bool unselected = false;
+	MBSWmetadata_dt tmpMBSWmd;
 
 	_MBSWmetaList = MBSWmetaList;
-	_MBSWmetaList_len = MBSWmetaList_len;
-	MBSWmetadata_dt zero_mde = {0,0};
-	for (k=0; k<1536; k++) _unselectedMBsSWs_metaList[k] = zero_mde;
-	_unselectedMBsSWs_metaList_len = 0;
+	_unselectedMBsSWs_metaList.clear();
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();
-	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs/SWs:
+	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs:
+	tmpMBSWmd.blockType = 0;
 	for (k=0; k<supportedMBs.size(); k++)
 	{
 		unselected = true;
-		for (m=0; m<(*_MBSWmetaList_len); m++)
+		for (m=0; m<(_MBSWmetaList->size()); m++)
 		{
-			if ((_MBSWmetaList[m].blockType == 0) && (_MBSWmetaList[m].nativeIndex == k))
+			if ((_MBSWmetaList->at(m).blockType == 0) && (_MBSWmetaList->at(m).nativeIndex == k))
 				unselected = false;
 		}
 		if (unselected)
@@ -53,17 +52,18 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, s
 			else
 				MBsSWs_listWidget->addItem(supportedMBs.at(k).title+"   ["+ supportedMBs.at(k).unit+"]");
 			// Put MB to the list of unselected MBs/SWs:
-			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].blockType = 0;
-			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].nativeIndex = k;
-			_unselectedMBsSWs_metaList_len++;
+			tmpMBSWmd.nativeIndex = k;
+			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
 		}
 	}
+	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) SWs:
+	tmpMBSWmd.blockType = 1;
 	for (k=0; k<supportedSWs.size(); k++)
 	{
 		unselected = true;
-		for (m=0; m<(*_MBSWmetaList_len); m++)
+		for (m=0; m<(_MBSWmetaList->size()); m++)
 		{
-			if ((_MBSWmetaList[m].blockType == 1) && (_MBSWmetaList[m].nativeIndex == k))
+			if ((_MBSWmetaList->at(m).blockType == 1) && (_MBSWmetaList->at(m).nativeIndex == k))
 				unselected = false;
 		}
 		if (unselected)
@@ -71,9 +71,8 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, s
 			// Output SW:
 			MBsSWs_listWidget->addItem(supportedSWs.at(k).title+"   ["+ supportedSWs.at(k).unit+"]");
 			// Put SW to the list of unselected MBs/SWs:
-			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].blockType = 1;
-			_unselectedMBsSWs_metaList[_unselectedMBsSWs_metaList_len].nativeIndex = k;
-			_unselectedMBsSWs_metaList_len++;
+			tmpMBSWmd.nativeIndex = k;
+			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
 		}
 	}
 	// Enable/disable "Add" button:
@@ -104,8 +103,7 @@ void AddMBsSWsDlg::add()
 	for (k=0; k<MIlist.size(); k++)
 	{
 		index = MIlist.at(k).row();
-		_MBSWmetaList[*_MBSWmetaList_len] = _unselectedMBsSWs_metaList[index];
-		(*_MBSWmetaList_len)++;
+		_MBSWmetaList->push_back( _unselectedMBsSWs_metaList.at(index) );
 	}
 	close();
 }

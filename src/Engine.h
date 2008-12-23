@@ -48,8 +48,7 @@ private:
 	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	// Content backup parameters:
-	MBSWmetadata_dt _lastMBSWmetaList[SSMP_MAX_MBSW];
-	unsigned int _lastMBSWmetaList_len;
+	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	bool _MBSWtimemode;
 	// Pointer to content-widges:
 	CUcontent_DCs_engine *_content_DCs;

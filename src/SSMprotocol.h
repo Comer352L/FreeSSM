@@ -149,7 +149,7 @@ public:
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(std::vector<mbsw_dt> *supportedMBs);
 	bool getSupportedSWs(std::vector<mbsw_dt> *supportedSWs);
-	bool getLastMBSWselection(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int *MBSWmetaList_len);
+	bool getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
@@ -165,7 +165,7 @@ public:
 	bool startDCreading(int DCgroups, bool ignoreDCheckState = false);
 	bool restartDCreading();
 	bool stopDCreading();
-	bool startMBSWreading(MBSWmetadata_dt mbswmetaList[SSMP_MAX_MBSW], unsigned int mbswmetaList_len);
+	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
 	bool restartMBSWreading();
 	bool stopMBSWreading();
 	bool startActuatorTest(unsigned char actuatorTestIndex);
@@ -210,8 +210,7 @@ private:
 	// *** Selection data ***:
 	int _selectedDCgroups;
 	bool _ignoreDCheckStateOnDCreading;
-	MBSWmetadata_dt _MBSWmetaList[SSMP_MAX_MBSW];
-	unsigned int _MBSWmetaList_len;
+	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	unsigned char _selectedActuatorTestIndex;
 	// *** Temporary (operation related) data ***:
 	unsigned int _selMBsSWaAddr[SSMP_MAX_MBSW];
@@ -234,16 +233,14 @@ private:
 	// PREPARATION AND EVALUATION FUNCTIONS:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				 QStringList *DC, QStringList *DCdescription);
-	bool setupMBSWQueryAddrList(MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len, 
+	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList, 
 				    std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
 				    unsigned int *mbswaddr, unsigned int *mbswaddrlen);
 	void assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SSMP_MAX_MBSW], unsigned char mbswaddrlen,
-				MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len,
-				std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs,
-				unsigned int * mbswrawvalues);
-	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW],
-				  MBSWmetadata_dt MBSWmetaList[SSMP_MAX_MBSW], unsigned int MBSWmetaList_len,
-				  std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs,
+				std::vector<MBSWmetadata_dt> MBSWmetaList, std::vector<mb_intl_dt> supportedMBs, 
+				std::vector<sw_intl_dt> supportedSWs, unsigned int * mbswrawvalues);
+	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], std::vector<MBSWmetadata_dt> MBSWmetaList, 
+				  std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
 				  QStringList *valueStrList, QStringList *unitStrList);
 	bool scaleMB(unsigned int rawvalue, QString scaleformula, double *scaledvalue);
 	bool validateVIN(char VIN[17]);

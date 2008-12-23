@@ -37,17 +37,11 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	QString ROM_ID_old;
 	SSMprotocol::state_dt CUstate_old;
 	int oldDCgroups = 0;
-	MBSWmetadata_dt oldMBSWmetaList[SSMP_MAX_MBSW];
+	std::vector<MBSWmetadata_dt> oldMBSWmetaList;
 	ClearMemoryDlg::CMresult_dt reconnect_result;
 	bool tm = false;
 	bool enginerunning = false;
 
-	for (int k=0; k<SSMP_MAX_MBSW; k++)
-	{
-		oldMBSWmetaList[k].blockType = 0;
-		oldMBSWmetaList[k].nativeIndex = 0;
-	}
-	unsigned int oldMBSWmetaList_len = 0;
 	// Let the user confirm the Clear Memory procedure:
 	if (!confirmClearMemory())
 		return ClearMemoryDlg::CMresult_aborted;
@@ -69,7 +63,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	}
 	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
-		if (!_SSMPdev->getLastMBSWselection(oldMBSWmetaList, &oldMBSWmetaList_len))
+		if (!_SSMPdev->getLastMBSWselection(&oldMBSWmetaList))
 			return ClearMemoryDlg::CMresult_communicationError;
 		if (!_SSMPdev->stopMBSWreading())
 			return ClearMemoryDlg::CMresult_communicationError;
@@ -123,7 +117,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	}
 	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
-		if (!_SSMPdev->startMBSWreading(oldMBSWmetaList, oldMBSWmetaList_len))
+		if (!_SSMPdev->startMBSWreading(oldMBSWmetaList))
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// Return success:
