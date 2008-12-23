@@ -47,7 +47,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		return ClearMemoryDlg::CMresult_aborted;
 	// Wait-messagebox:
 	QString waitstr = tr("Clearing memory");
-	if (_level)
+	if (_level == SSMprotocol::CMlevel_2)
 		waitstr += tr(" (level 2)");
 	waitstr += tr("... Please wait !   ");
 	FSSM_WaitMsgBox waitmsgbox(_parent, waitstr);
@@ -132,7 +132,7 @@ bool ClearMemoryDlg::confirmClearMemory()
 	// Create dialog
 	QString winTitle = tr("Clear Memory");
 	QString confirmStr = tr("Do you really want to clear the\nControl Unit's memory");
-	if (_level)
+	if (_level == SSMprotocol::CMlevel_2)
 	{
 		winTitle.append( " 2" );
 		confirmStr.append( tr(" (level 2)") );
@@ -165,7 +165,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(QString SYS_ID_old, QStrin
 	bool equal = false;
 	// Messagebox: Tell user to switch ignition on (or leave CU):
 	QString winTitle = tr("Clear Memory");
-	if (_level)
+	if (_level == SSMprotocol::CMlevel_2)
 		winTitle.append( " 2" );
 	QMessageBox ignonmsgbox( QMessageBox::Information, winTitle, tr("Please switch ignition ON again."), QMessageBox::NoButton, _parent);
 	ignonmsgbox.addButton(tr("Continue"), QMessageBox::AcceptRole);
