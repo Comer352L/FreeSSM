@@ -180,6 +180,14 @@ void About::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(13);	// 10pts
 	languages_label->setFont(font);
+	font = supportedOStitle_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(13);	// 10pts
+	supportedOStitle_label->setFont(font);
+	font = supportedOS_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(13);	// 10pts
+	supportedOS_label->setFont(font);
 	font = infoobd2_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(16);	// 12pts

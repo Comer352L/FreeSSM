@@ -505,6 +505,45 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <string>English, German</string>
      </property>
     </widget>
+    <widget class="QLabel" name="supportedOStitle_label" >
+     <property name="geometry" >
+      <rect>
+       <x>20</x>
+       <y>256</y>
+       <width>161</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Operating Systems:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="supportedOS_label" >
+     <property name="geometry" >
+      <rect>
+       <x>195</x>
+       <y>256</y>
+       <width>281</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Linux/X11, Windows</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="credits_tab" >
     <attribute name="title" >
