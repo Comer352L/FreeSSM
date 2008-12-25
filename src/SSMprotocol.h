@@ -45,8 +45,6 @@
 #define SSMP_MAX_DTCADDR		100				/* currently 61/61	<256 ! */
 #define SSMP_MAX_CCCCADDR		10				/* currently 4/4	<256 ! */
 #define SSMP_MAX_ADJUSTMENTS		30				/* currently 24		<256 ! */
-#define SSMP_MAX_ACTTESTS		30				/* currently 21		<256 ! */
-#define SSMP_MAX_ACTBYTEADDR		10				/* currently 3		<256 ! */
 
 
 
@@ -203,10 +201,8 @@ private:
 	// Adjustment Values:
 	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:
-	actuator_dt _actuators[SSMP_MAX_ACTTESTS];
-	unsigned char _nrofActuators;
-	unsigned int _allActByteAddr[SSMP_MAX_ACTBYTEADDR];
-	unsigned char _nrofAllActByteAddr;
+	std::vector<actuator_dt> _actuators;
+	std::vector<unsigned int> _allActByteAddr;
 	// *** Selection data ***:
 	int _selectedDCgroups;
 	bool _ignoreDCheckStateOnDCreading;
@@ -228,8 +224,7 @@ private:
 				std::vector<sw_intl_dt> *supportedSWs);
 	void setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
 				  std::vector<adjustment_intl_dt> *adjustments);
-	void setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators,
-				   unsigned int *allActByteAddr, unsigned char *nrofAllActByteAddr);
+	void setupActuatorTestData(QString language, std::vector<actuator_dt> *actuators, std::vector<unsigned int> *allActByteAddr);
 	// PREPARATION AND EVALUATION FUNCTIONS:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				 QStringList *DC, QStringList *DCdescription);

@@ -82,9 +82,9 @@ void SSMprotocol::resetCUdata()
 				if (currentdatabyte == (currentdatabyte | 0x20))
 				{
 					// Stop all actuator tests:
-					for (k=0; k<_nrofAllActByteAddr; k++)
+					for (k=0; k<_allActByteAddr.size(); k++)
 					{
-						ok =_SSMPcom->writeDatabyte(_allActByteAddr[k], 0x00);
+						ok =_SSMPcom->writeDatabyte(_allActByteAddr.at(k), 0x00);
 						if (!ok) break;
 					}
 					_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
@@ -135,15 +135,8 @@ void SSMprotocol::resetCUdata()
 	// Reset adjustments-data:
 	_adjustments.clear();
 	// Reset actuator-test-data:
-	for (k=0; k<SSMP_MAX_ACTTESTS; k++)
-	{
-		_actuators[k].title = "";
-		_actuators[k].byteadr = 0;
-		_actuators[k].bitadr = 0;
-	}
-	_nrofActuators = 0;
-	for (k=0; k<SSMP_MAX_ACTBYTEADDR; k++) _allActByteAddr[k] = 0;
-	_nrofAllActByteAddr = 0;
+	_actuators.clear();
+	_allActByteAddr.clear();
 	// *** Reset selection data ***:
 	_selectedDCgroups = noDCs_DCgroup;
 	_ignoreDCheckStateOnDCreading = false;
@@ -228,7 +221,7 @@ bool SSMprotocol::setupCUdata()
 	// Get actuator test data:
 	hasActuatorTests(&ATsup);
 	if (ATsup)
-		setupActuatorTestData(_language, _actuators, &_nrofActuators, _allActByteAddr, &_nrofAllActByteAddr);
+		setupActuatorTestData(_language, &_actuators, &_allActByteAddr);
 	return true;
 }
 
@@ -805,24 +798,22 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 
 
 
-void SSMprotocol::setupActuatorTestData(QString language, actuator_dt *actuators, unsigned char *nrofActuators, unsigned int *allActByteAddr, unsigned char *nrofAllActByteAddr)
+void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_dt> *actuators, std::vector<unsigned int> *allActByteAddr)
 {
 	QString tmpstr = "";
 	unsigned int tmpflagbyte = 0;
 	unsigned int tmpflagbit = 0;
-	QString tmptitle = "";
-	unsigned int tmpbyteadr = 0;
+	actuator_dt tmpactuator;
 	unsigned char tmpbitadr = 0;
 	bool fbvalid = true;
 	bool ok = false;
 	bool aol = false;
 	int k = 0;
-	int m = 0;
+	unsigned int m = 0;
 	QStringList actuatorsrawdata;
 
-	*nrofActuators = 0;
-	*allActByteAddr = 0;
-	*nrofAllActByteAddr = 0;
+	actuators->clear();
+	allActByteAddr->clear();
 	if (language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
@@ -865,23 +856,21 @@ void SSMprotocol::setupActuatorTestData(QString language, actuator_dt *actuators
 		}
 		if (fbvalid)
 		{
-			tmpbyteadr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
-			if (ok && (tmpbyteadr > 0))
+			tmpactuator.byteadr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
+			if (ok && (tmpactuator.byteadr > 0))
 			{
 				tmpbitadr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt(&ok, 10);
 				if (ok && (tmpbitadr > 0) && (tmpbitadr < 9))
 				{
-					tmptitle = actuatorsrawdata.at(k).section(';', 4, 4);
-					if (tmptitle.length() > 0)
+					tmpactuator.title = actuatorsrawdata.at(k).section(';', 4, 4);
+					if (tmpactuator.title.length() > 0)
 					{
-						actuators[*nrofActuators].title = tmptitle;
-						actuators[*nrofActuators].byteadr = tmpbyteadr;
-						actuators[*nrofActuators].bitadr = tmpbitadr;
-						(*nrofActuators)++;
+						tmpactuator.bitadr = tmpbitadr;
+						actuators->push_back( tmpactuator );
 						// Check if byte address is already on the list:
-						for (m=0; m<*nrofAllActByteAddr; m++)
+						for (m=0; m<allActByteAddr->size(); m++)
 						{
-							if (allActByteAddr[m] == tmpbyteadr)
+							if (allActByteAddr->at(m) == tmpactuator.byteadr)
 							{
 								aol = true;
 								break;
@@ -889,10 +878,7 @@ void SSMprotocol::setupActuatorTestData(QString language, actuator_dt *actuators
 						}
 						// Put address on addresses list (if not duplicate):
 						if (!aol)
-						{
-							allActByteAddr[*nrofAllActByteAddr] = tmpbyteadr;
-							(*nrofAllActByteAddr)++;
-						}
+							allActByteAddr->push_back( tmpactuator.byteadr );
 						else
 							aol = false;
 					}
@@ -995,8 +981,8 @@ bool SSMprotocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 		if (ATsup)
 		{
 			actuatorTestTitles->clear();
-			for (k=0; k<_nrofActuators; k++)
-				actuatorTestTitles->append(_actuators[k].title);
+			for (k=0; k<_actuators.size(); k++)
+				actuatorTestTitles->append(_actuators.at(k).title);
 			return true;
 		}
 	}
@@ -1935,7 +1921,7 @@ bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
 	if (_state != state_normal) return false;
 	// Validate selected test:
 	ok = hasActuatorTests(&ATsup);
-	if (!ok || (ATsup == false) || (actuatorTestIndex >= _nrofActuators))
+	if (!ok || (ATsup == false) || (actuatorTestIndex >= _actuators.size()))
 		return false;
 	// Check if control unit is in test mode:
 	ok = isInTestMode(&testmode);
@@ -1948,12 +1934,12 @@ bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	unsigned int dataaddr = _actuators[actuatorTestIndex].byteadr;
-	char databyte = static_cast<char>(pow(2, _actuators[actuatorTestIndex].bitadr - 1));
+	unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
+	char databyte = static_cast<char>(pow(2, _actuators.at(actuatorTestIndex).bitadr - 1));
 	// Stop all actuator tests:
-	for (k=0; k<_nrofAllActByteAddr; k++)
+	for (k=0; k<_allActByteAddr.size(); k++)
 	{
-		if (!_SSMPcom->writeDatabyte(_allActByteAddr[k], 0x00))
+		if (!_SSMPcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{
 			_state = state_normal; // this avoids that resetCUdata() will try to stop all actuators again
 			resetCUdata();
@@ -1993,9 +1979,9 @@ bool SSMprotocol::stopActuatorTesting()
 		if (_SSMPcom->stopCommunication())
 		{
 			// Stop all actuator tests:
-			for (k=0; k<_nrofAllActByteAddr; k++)
+			for (k=0; k<_allActByteAddr.size(); k++)
 			{
-				if (!_SSMPcom->writeDatabyte(_allActByteAddr[k], 0x00))
+				if (!_SSMPcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
 				{
 					resetCUdata();
 					return false;
@@ -2037,9 +2023,9 @@ bool SSMprotocol::stopAllActuators()
 	if (!ok || enginerunning)
 		return false;
 	// Stop all actuator tests:
-	for (k=0; k<_nrofAllActByteAddr; k++)
+	for (k=0; k<_allActByteAddr.size(); k++)
 	{
-		if (!_SSMPcom->writeDatabyte(_allActByteAddr[k], 0x00))
+		if (!_SSMPcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{
 			resetCUdata();
 			return false;
