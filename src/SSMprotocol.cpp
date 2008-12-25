@@ -176,10 +176,10 @@ bool SSMprotocol::setupCUdata()
 	connect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	// Get memory addresses of diagnostic codes:
-	setupDTCaddresses(_flagbytes, _nrofflagbytes, &_temporaryDTCsAddr, &_memorizedDTCsAddr);
+	setupDTCaddresses();
 	hasIntegratedCC(&CCsup);
 	if ( CCsup )	// not necessary, because function checks this, too...
-		setupCCCCaddresses(&_latestCCCCsAddr, &_memorizedCCCCsAddr);
+		setupCCCCaddresses();
 	// Get and save the DC-definitions we need for the used DC addresses:
 	obdDTCs = (_flagbytes[29] != (_flagbytes[29] | 0x80));
 	if (_language == "de")
@@ -211,14 +211,14 @@ bool SSMprotocol::setupCUdata()
 		}
 	}
 	// Get supported MBs and SWs:
-	setupSupportedMBs(_CU, _language, _flagbytes, _nrofflagbytes, &_supportedMBs);
-	setupSupportedSWs(_CU, _language, _flagbytes, _nrofflagbytes, &_supportedSWs);
+	setupSupportedMBs();
+	setupSupportedSWs();
 	// Get supported Adaptions:
-	setupAdjustmentsData(_CU, _language, _flagbytes, _nrofflagbytes, &_adjustments);
+	setupAdjustmentsData();
 	// Get actuator test data:
 	hasActuatorTests(&ATsup);
 	if (ATsup)
-		setupActuatorTestData(_language, &_actuators, &_allActByteAddr);
+		setupActuatorTestData();
 	return true;
 }
 
@@ -389,68 +389,68 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 
 
 
-void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagbytes, std::vector<unsigned int> *temporaryDTCsAddr, std::vector<unsigned int> *memorizedDTCsAddr)
+void SSMprotocol::setupDTCaddresses()
 {
-	temporaryDTCsAddr->clear();
-	memorizedDTCsAddr->clear();
+	_temporaryDTCsAddr.clear();
+	_memorizedDTCsAddr.clear();
 	unsigned int addr = 0;
-	if (flagbytes[29] == (flagbytes[29] | 0x80))
+	if (_flagbytes[29] == (_flagbytes[29] | 0x80))
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 		{
-			temporaryDTCsAddr->push_back( addr );
-			memorizedDTCsAddr->push_back( addr + 22 );
+			_temporaryDTCsAddr.push_back( addr );
+			_memorizedDTCsAddr.push_back( addr + 22 );
 		}
 		return;
 	}
-	else if ((flagbytes[29] == (flagbytes[29] | 0x10)) || (flagbytes[29] == (flagbytes[29] | 0x40)))
+	else if ((_flagbytes[29] == (_flagbytes[29] | 0x10)) || (_flagbytes[29] == (_flagbytes[29] | 0x40)))
 	{
 		for (addr=0x8E; addr<=0xAD; addr++)
 		{
-			temporaryDTCsAddr->push_back( addr );
-			memorizedDTCsAddr->push_back( addr + 32 );
+			_temporaryDTCsAddr.push_back( addr );
+			_memorizedDTCsAddr.push_back( addr + 32 );
 		}
 	}
-	if (flagbytes[28] == (flagbytes[28] | 0x01))
+	if (_flagbytes[28] == (_flagbytes[28] | 0x01))
 	{
 		for (addr=0xF0; addr<=0xF3; addr++)
 		{
-			temporaryDTCsAddr->push_back( addr );
-			memorizedDTCsAddr->push_back( addr + 4 );
+			_temporaryDTCsAddr.push_back( addr );
+			_memorizedDTCsAddr.push_back( addr + 4 );
 		}
 	}
-	if (nrofflagbytes > 32)
+	if (_nrofflagbytes > 32)
 	{
-		if (flagbytes[39] == (flagbytes[39] | 0x80))
+		if (_flagbytes[39] == (_flagbytes[39] | 0x80))
 		{
 			for (addr=0x123; addr<=0x12A; addr++)
 			{
-				temporaryDTCsAddr->push_back( addr );
-				memorizedDTCsAddr->push_back( addr + 8 );
+				_temporaryDTCsAddr.push_back( addr );
+				_memorizedDTCsAddr.push_back( addr + 8 );
 			}
 		}
-		if (flagbytes[39] == (flagbytes[39] | 0x40))
+		if (_flagbytes[39] == (_flagbytes[39] | 0x40))
 		{
 			for (addr=0x150; addr<=0x154; addr++)
 			{
-				temporaryDTCsAddr->push_back( addr );
-				memorizedDTCsAddr->push_back( addr + 5 );
+				_temporaryDTCsAddr.push_back( addr );
+				_memorizedDTCsAddr.push_back( addr + 5 );
 			}
 		}
-		if (flagbytes[39] == (flagbytes[39] | 0x20))
+		if (_flagbytes[39] == (_flagbytes[39] | 0x20))
 		{
 			for (addr=0x160; addr<=0x164; addr++)
 			{
-				temporaryDTCsAddr->push_back( addr );
-				memorizedDTCsAddr->push_back( addr + 5 );
+				_temporaryDTCsAddr.push_back( addr );
+				_memorizedDTCsAddr.push_back( addr + 5 );
 			}
 		}
-		if (flagbytes[39] == (flagbytes[39] | 0x10))
+		if (_flagbytes[39] == (_flagbytes[39] | 0x10))
 		{
 			for (addr=0x174; addr<=0x17A; addr++)
 			{
-				temporaryDTCsAddr->push_back( addr );
-				memorizedDTCsAddr->push_back( addr + 7 );
+				_temporaryDTCsAddr.push_back( addr );
+				_memorizedDTCsAddr.push_back( addr + 7 );
 			}
 		}
 	}
@@ -458,31 +458,31 @@ void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagby
 
 
 
-void SSMprotocol::setupCCCCaddresses(std::vector<unsigned int> *latestCCCCsAddr, std::vector<unsigned int> *memorizedCCCCsAddr)
+void SSMprotocol::setupCCCCaddresses()
 {
 	bool supported = false;
-	latestCCCCsAddr->clear();
-	memorizedCCCCsAddr->clear();
+	_latestCCCCsAddr.clear();
+	_memorizedCCCCsAddr.clear();
 	unsigned int addr = 0;
 	// Check if CU is equipped with CC:
 	hasIntegratedCC(&supported);
 	if (!supported) return;
 	// Put addresses on the list:
 	for (addr=0x133; addr<=0x136; addr++)
-		latestCCCCsAddr->push_back( addr );
+		_latestCCCCsAddr.push_back( addr );
 	// Check if CC supports memorized Codes:
 	hasIntegratedCCmemorizedCodes(&supported);
 	if (supported)
 	{
 		// Put addresses of memorized codes on the list:
 		for (addr=0x137; addr<=0x13A; addr++)
-			memorizedCCCCsAddr->push_back( addr );
+			_memorizedCCCCsAddr.push_back( addr );
 	}
 }
 
 
 
-void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes, std::vector<mb_intl_dt> *supportedMBs)
+void SSMprotocol::setupSupportedMBs()
 {
 	QString mbdefline;
 	QString tmpstr;
@@ -494,10 +494,10 @@ void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbyt
 	bool ok;
 	int k;
 
-	supportedMBs->clear();
+	_supportedMBs.clear();
 	// Select definitions depending on language:
 	QStringList mbrawdata;
-	if (language == "de")
+	if (_language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
 		mbrawdata = rawdefs_de.MBrawDefs();
@@ -515,7 +515,7 @@ void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbyt
 		tmpstr = mbdefline.section(';', 0, 0);
 		tmpbytenr = tmpstr.toInt(&ok, 10);
 		// Check if flagbyte address is defined for our CU:
-		if (ok && (tmpbytenr <= nrofflagbytes))
+		if (ok && (tmpbytenr <= _nrofflagbytes))
 		{
 			// Get flagbit definition:
 			tmpstr = mbdefline.section(';', 1, 1);
@@ -523,16 +523,16 @@ void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbyt
 			// Check if CU supports this MB (if flagbit is set):
 			if ((tmpbitnr < 1) || (tmpbitnr > 8))
 				ok = false;
-			if ((ok) && (flagbytes[tmpbytenr-1] == (flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1))))))
+			if ((ok) && (_flagbytes[tmpbytenr-1] == (_flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1))))))
 			{
 				// Check if MB is intended for this CU type:
 				tmpCUsupported = 0;
-				if (CU == (CU | ECU))	// if MB is intended for ECUs
+				if (_CU == (_CU | ECU))	// if MB is intended for ECUs
 				{
 					tmpstr = mbdefline.section(';', 2, 2);
 					tmpCUsupported = tmpstr.toInt();
 				}
-				if ((!(tmpCUsupported == 1)) && (CU == (CU | TCU)))	// if MB is intended for TCUs (and not for ECUs)
+				if ((!(tmpCUsupported == 1)) && (_CU == (_CU | TCU)))	// if MB is intended for TCUs (and not for ECUs)
 				{
 					tmpstr = mbdefline.section(';', 3, 3);
 					tmpCUsupported = tmpstr.toInt();
@@ -575,7 +575,7 @@ void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbyt
 									tmpMB.unit = mbdefline.section(';', 7, 7);
 									// ***** MB IS SUPPORTED BY CU AND DEFINITION IS VALID *****
 									// Put MB data on the list:
-									supportedMBs->push_back(tmpMB);
+									_supportedMBs.push_back(tmpMB);
 								}
 							}
 						}
@@ -588,7 +588,7 @@ void SSMprotocol::setupSupportedMBs(CUtype_dt CU, QString language, char flagbyt
 
 
 
-void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes, std::vector<sw_intl_dt> *supportedSWs)
+void SSMprotocol::setupSupportedSWs()
 {
 	QString swdefline;
 	QString tmpstr;
@@ -599,10 +599,10 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 	bool ok;
 	int k;
 
-	supportedSWs->clear();
+	_supportedSWs.clear();
 	// Select definitions depending on language:
 	QStringList swrawdata;
-	if (language == "de")
+	if (_language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
 		swrawdata = rawdefs_de.SWrawDefs();
@@ -620,7 +620,7 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 		tmpstr = swdefline.section(';', 0, 0);
 		tmpbytenr = tmpstr.toInt(&ok, 10);
 		// Check if flagbyte address is defined for our CU:
-		if (ok && (tmpbytenr <= nrofflagbytes))
+		if (ok && (tmpbytenr <= _nrofflagbytes))
 		{
 			// Get flagbit definition:
 			tmpstr = swdefline.section(';', 1, 1);
@@ -628,16 +628,16 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 			// Check if CU supports this switch (if flagbit is set):
 			if ((tmpbitnr < 1) || (tmpbitnr > 8))
 				ok = false;
-			if ((ok) && (flagbytes[tmpbytenr-1] == (flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1)) ))))
+			if ((ok) && (_flagbytes[tmpbytenr-1] == (_flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1)) ))))
 			{
 				// Check if switch is intended for this CU type:
 				tmpCUsupported = 0;
-				if (CU == (CU | ECU))
+				if (_CU == (_CU | ECU))
 				{
 					tmpstr = swdefline.section(';', 2, 2);
 					tmpCUsupported = tmpstr.toInt();
 				}
-				if ((tmpCUsupported != 1) && (CU == (CU | TCU)))	// if switch is intended for TCUs (and not for ECUs)
+				if ((tmpCUsupported != 1) && (_CU == (_CU | TCU)))	// if switch is intended for TCUs (and not for ECUs)
 				{
 					tmpstr = swdefline.section(';', 3, 3);
 					tmpCUsupported = tmpstr.toInt();
@@ -662,7 +662,7 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 								// ***** SWITCH IS SUPPORTED BY CU AND DEFINITION IS VALID *****
 								// Put switch data on the list:
 								tmpSW.bitadr = static_cast<unsigned char>(tmpbitnr);
-								supportedSWs->push_back(tmpSW);
+								_supportedSWs.push_back(tmpSW);
 							}
 						}
 					}
@@ -674,7 +674,7 @@ void SSMprotocol::setupSupportedSWs(CUtype_dt CU, QString language, char flagbyt
 
 
 
-void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes, std::vector<adjustment_intl_dt> *adjustments)
+void SSMprotocol::setupAdjustmentsData()
 {
 	QString defline = "";
 	QString tmphelpstr = "";
@@ -688,8 +688,8 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 	bool supported = false;
 	QStringList adjustmentsrawdata;
 
-	adjustments->clear();
-	if (language == "de")
+	_adjustments.clear();
+	if (_language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
 		adjustmentsrawdata = rawdefs_de.AdjustmentRawDefs();
@@ -707,12 +707,12 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 		if (tmphelpstr.count('-') == 1)
 		{
 			tmpflagbyte = tmphelpstr.section('-', 0, 0).toUInt(&ok, 10);
-			if (ok && (tmpflagbyte > 0) && (tmpflagbyte < nrofflagbytes))
+			if (ok && (tmpflagbyte > 0) && (tmpflagbyte < _nrofflagbytes))
 			{
 				tmpflagbit = tmphelpstr.section('-', 1, 1).toUInt(&ok, 10);
 				if (ok && (tmpflagbit > 0) && (tmpflagbit < 9))
 				{
-					if (flagbytes[tmpflagbyte-1] == (flagbytes[tmpflagbyte-1] | static_cast<unsigned char>(pow(2,(tmpflagbit-1)))))
+					if (_flagbytes[tmpflagbyte-1] == (_flagbytes[tmpflagbyte-1] | static_cast<unsigned char>(pow(2,(tmpflagbit-1)))))
 						supported = true;
 				}
 			}
@@ -736,7 +736,7 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 			tmpCU = defline.section(';', 1, 1).toUInt(&ok, 10);
 			if (ok)
 			{
-				if ( ((CU == ECU) && (tmpCU == 0)) || ((CU == TCU) && (tmpCU == 1)) )
+				if ( ((_CU == ECU) && (tmpCU == 0)) || ((_CU == TCU) && (tmpCU == 1)) )
 				{
 					tmpadjustment.AddrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
 					if (ok && (tmpadjustment.AddrLow > 0))
@@ -768,7 +768,7 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 												tmphelpstr = "0";
 											tmpadjustment.precision = tmphelpstr.toInt(&ok, 10);
 											if (ok && (tmpadjustment.precision<=10) && (tmpadjustment.precision>=-10))
-												adjustments->push_back(tmpadjustment);
+												_adjustments.push_back(tmpadjustment);
 										}
 									}
 								}
@@ -783,7 +783,7 @@ void SSMprotocol::setupAdjustmentsData(CUtype_dt CU, QString language, char flag
 
 
 
-void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_dt> *actuators, std::vector<unsigned int> *allActByteAddr)
+void SSMprotocol::setupActuatorTestData()
 {
 	QString tmpstr = "";
 	unsigned int tmpflagbyte = 0;
@@ -797,9 +797,9 @@ void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_d
 	unsigned int m = 0;
 	QStringList actuatorsrawdata;
 
-	actuators->clear();
-	allActByteAddr->clear();
-	if (language == "de")
+	_actuators.clear();
+	_allActByteAddr.clear();
+	if (_language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
 		actuatorsrawdata = rawdefs_de.ActuatorRawDefs();
@@ -815,21 +815,21 @@ void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_d
 		tmpstr = actuatorsrawdata.at(k).section(';', 0, 0);
 		if (tmpstr.size() > 0)
 		{
-			tmpflagbyte = tmpstr.toUInt(&ok, 10);
-			if (!ok || (tmpflagbyte < 1) || (tmpflagbyte > _nrofflagbytes))
+			tmpflagbyte = tmpstr.toUInt();
+			if ((tmpflagbyte < 1) || (tmpflagbyte > _nrofflagbytes))
 				fbvalid = false;
 		}
 		if (fbvalid)
 		{
 			tmpstr = actuatorsrawdata.at(k).section(';', 1, 1);
-			if ((tmpstr.size() > 0) == (tmpflagbyte == 0))
+			if ((tmpstr.size() > 0) == (tmpflagbyte == 0))//Flagbit definition existiert UND zulässige Flagbytedefinition existiert
 			{
 				fbvalid = false;
 			}
 			else if (tmpstr.size() > 0)
 			{
-				tmpflagbit = tmpstr.toUInt(&ok, 10);
-				if (!ok || (tmpflagbit > 8))
+				tmpflagbit = tmpstr.toUInt();
+				if ((tmpflagbit < 1) || (tmpflagbit > 8))
 					fbvalid = false;
 				else
 				{
@@ -844,18 +844,18 @@ void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_d
 			tmpactuator.byteadr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
 			if (ok && (tmpactuator.byteadr > 0))
 			{
-				tmpbitadr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt(&ok, 10);
-				if (ok && (tmpbitadr > 0) && (tmpbitadr < 9))
+				tmpbitadr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt();
+				if ((tmpbitadr > 0) && (tmpbitadr < 9))
 				{
 					tmpactuator.title = actuatorsrawdata.at(k).section(';', 4, 4);
 					if (tmpactuator.title.length() > 0)
 					{
 						tmpactuator.bitadr = tmpbitadr;
-						actuators->push_back( tmpactuator );
+						_actuators.push_back( tmpactuator );
 						// Check if byte address is already on the list:
-						for (m=0; m<allActByteAddr->size(); m++)
+						for (m=0; m<_allActByteAddr.size(); m++)
 						{
-							if (allActByteAddr->at(m) == tmpactuator.byteadr)
+							if (_allActByteAddr.at(m) == tmpactuator.byteadr)
 							{
 								aol = true;
 								break;
@@ -863,7 +863,7 @@ void SSMprotocol::setupActuatorTestData(QString language, std::vector<actuator_d
 						}
 						// Put address on addresses list (if not duplicate):
 						if (!aol)
-							allActByteAddr->push_back( tmpactuator.byteadr );
+							_allActByteAddr.push_back( tmpactuator.byteadr );
 						else
 							aol = false;
 					}
@@ -1513,7 +1513,7 @@ bool SSMprotocol::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 	bool started = false;
 	if (_state != state_normal) return false;
 	// Setup list of MB/SW-addresses for SSMPcommunication:
-	if (!setupMBSWQueryAddrList(mbswmetaList, _supportedMBs, _supportedSWs, _selMBsSWaAddr, &_selMBsSWsAddrLen))
+	if (!setupMBSWQueryAddrList(mbswmetaList))
 		return false;
  	// Start MB/SW-reading:
 	started = _SSMPcom->readMultipleDatabytes_permanent('\x0', _selMBsSWaAddr, _selMBsSWsAddrLen);
@@ -1563,12 +1563,10 @@ bool SSMprotocol::stopMBSWreading()
 
 
 
-bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList, 
-					 std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
-					 unsigned int *mbswadr, unsigned int *mbswadrlen)
+bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList)
 {
 	// ***** SETUP (BYTE-) ADDRESS LIST FOR QUERYS *****
-	*mbswadrlen = 0;
+	_selMBsSWsAddrLen = 0;
 	unsigned int k = 0, m = 0;
 	bool newadr = true;
 	if (MBSWmetaList.size() == 0) return false;
@@ -1576,17 +1574,17 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 	{
 		newadr = true;
 		// CHECK IF ADDRESS IS ALREADY ON THE QUERY-LIST:
-		if (*mbswadrlen > 0)
+		if (_selMBsSWsAddrLen > 0)
 		{
 			// CHECK IF ADDRESS IS ALREADY ON THE LIST:
-			for (m=0; (m<(*mbswadrlen)); m++)
+			for (m=0; (m<_selMBsSWsAddrLen); m++)
 			{
 				if (MBSWmetaList.at(k).blockType == 0)
 				{
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
-					if (MBSWmetaList.at(k).nativeIndex > supportedMBs.size()) return false;
+					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
 					// COMPARE ADDRESS:
-					if (mbswadr[m] == (supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low))
+					if (_selMBsSWaAddr[m] == (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low))
 					{
 						newadr = false;
 						break;
@@ -1595,9 +1593,9 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 				else
 				{
 					// CHECK IF CURRENT SW IS VALID/EXISTS:
-					if (MBSWmetaList.at(k).nativeIndex > supportedSWs.size()) return false;
+					if (MBSWmetaList.at(k).nativeIndex > _supportedSWs.size()) return false;
 					// COMPARE ADDRESS:
-					if (mbswadr[m] == (supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr))
+					if (_selMBsSWaAddr[m] == (_supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr))
 					{
 						newadr = false;
 						break;
@@ -1611,19 +1609,19 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 			if (MBSWmetaList.at(k).blockType == 0)
 			{
 				// ADD ADDRESS(ES) OF CURRENT MB TO LIST:
-				mbswadr[*mbswadrlen] = supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low;
-				(*mbswadrlen)++;
-				if (supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high > 0)
+				_selMBsSWaAddr[_selMBsSWsAddrLen] = _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low;
+				_selMBsSWsAddrLen++;
+				if (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high > 0)
 				{
-					mbswadr[*mbswadrlen] = supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high;
-					(*mbswadrlen)++;
+					_selMBsSWaAddr[_selMBsSWsAddrLen] = _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high;
+					_selMBsSWsAddrLen++;
 				}
 			}
 			else
 			{
 				// ADD ADDRESS OF CURRENT SW TO LIST:
-				mbswadr[*mbswadrlen] = supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr;
-				(*mbswadrlen)++;
+				_selMBsSWaAddr[_selMBsSWsAddrLen] = _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr;
+				_selMBsSWsAddrLen++;
 			}
 		}
 	}
@@ -1637,33 +1635,31 @@ void SSMprotocol::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
 	unsigned int rawValues[SSMP_MAX_MBSW] = {0};
 	QStringList valueStrList;
 	QStringList unitStrList;
-	assignMBSWRawData( MBSWrawdata, _selMBsSWaAddr, _selMBsSWsAddrLen, _MBSWmetaList, _supportedMBs, _supportedSWs, rawValues );
-	processMBSWRawValues( rawValues, _MBSWmetaList, _supportedMBs, _supportedSWs, &valueStrList, &unitStrList );
+	assignMBSWRawData( MBSWrawdata, rawValues );
+	processMBSWRawValues( rawValues, &valueStrList, &unitStrList );
 	emit newMBSWvalues( valueStrList, unitStrList, duration_ms );
 }
 
 
 
-void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SSMP_MAX_MBSW], unsigned char mbswaddrlen,
-				    std::vector<MBSWmetadata_dt> MBSWmetaList, std::vector<mb_intl_dt> supportedMBs, 
-				    std::vector<sw_intl_dt> supportedSWs, unsigned int * mbswrawvalues)
+void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues)
 {
 	// ***** ASSIGN RAW DATA *****:
 	unsigned int k = 0, m = 0;
-	for (k=0; k<MBSWmetaList.size(); k++) mbswrawvalues[k]=0;
-	for (m=0; m<mbswaddrlen; m++)	// ADDRESS LOOP
+	for (k=0; k<_MBSWmetaList.size(); k++) mbswrawvalues[k]=0;
+	for (m=0; m<_selMBsSWsAddrLen; m++)	// ADDRESS LOOP
 	{
-		for (k=0; k<MBSWmetaList.size(); k++)	// MB/SW LOOP
+		for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 		{
-			if (MBSWmetaList.at(k).blockType == 0)
+			if (_MBSWmetaList.at(k).blockType == 0)
 			{
 				// COMPARE ADDRESSES:
-				if (mbswaddr[m] == supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low)
+				if (_selMBsSWaAddr[m] == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
 					mbswrawvalues[k] += static_cast<unsigned char>(rawdata.at(m));
 				}
-				else if (mbswaddr[m] == supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high)
+				else if (_selMBsSWaAddr[m] == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
 					mbswrawvalues[k] += static_cast<unsigned char>(rawdata.at(m)) * 256;
@@ -1671,10 +1667,10 @@ void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SS
 			}
 			else
 			{
-				if (mbswaddr[m] == supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr)
+				if (_selMBsSWaAddr[m] == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteadr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) == (rawdata.at(m) | static_cast<char>(pow(2, (supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) )) )	// IF ADDRESS BIT IS SET
+					if ( rawdata.at(m) == (rawdata.at(m) | static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) )) )	// IF ADDRESS BIT IS SET
 						mbswrawvalues[k] = 1;
 					else	// IF ADDRESS BIT IS NOT SET
 						mbswrawvalues[k] = 0;
@@ -1686,9 +1682,7 @@ void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SS
 
 
 
-void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], std::vector<MBSWmetadata_dt> MBSWmetaList,
-					std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs,
-					QStringList *valueStrList, QStringList *unitStrList)
+void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList)
 {
 	double tmpscaledmbvalue = 0;
 	unsigned int nrofDAs = 0;
@@ -1699,24 +1693,24 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 	// RESET LISTS OF PROCESSED DATA:
 	valueStrList->clear();
 	unitStrList->clear();
-	for (k=0; k<MBSWmetaList.size(); k++)
+	for (k=0; k<_MBSWmetaList.size(); k++)
 	{
 		valueStrList->append("");
 		unitStrList->append("");
 	}
 	// SCALE ALL MBs AND SWs:
-	for (k=0; k<MBSWmetaList.size(); k++)	// MB/SW LOOP
+	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
-		if (MBSWmetaList.at(k).blockType == 0)
+		if (_MBSWmetaList.at(k).blockType == 0)
 		{
-			if (supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).scaleformula.contains('='))	// IF SCALE FORMULA CONTAINS SCALED VALUES (DIRECT ALLOCATION)
+			if (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.contains('='))	// IF SCALE FORMULA CONTAINS SCALED VALUES (DIRECT ALLOCATION)
 			{
 				da_success = false;
-				nrofDAs = 1 + (supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).scaleformula.count(','));
+				nrofDAs = 1 + (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.count(','));
 				for (m=0; m<nrofDAs; m++)
 				{
 					// GET NEXT ALLOCATION STRING:
-					defstr = supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).scaleformula.section(',',m,m);
+					defstr = _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.section(',',m,m);
 					// GET RAW VALUE OF ALLOCATION STRING:
 					rvstr = defstr.section('=',0,0);
 					// CHECK IF RAW VALUE MATCHES ALLOCATION:
@@ -1730,7 +1724,7 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 				}
 				if (da_success)	// IF RAW VALUE HAS BEEN SUCCESFULLY ALLOCATED DIRECTLY
 					// GET UNIT:
-					unitStrList->replace(k, supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).unit);
+					unitStrList->replace(k, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
 				else	// IF DIRECT ALLOCATION OF RAW VALUE FAILED
 				{
 					// USE RAW VALUE:
@@ -1738,10 +1732,10 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 					unitStrList->replace(k, "[RAW]");
 				}
 			}
-			else if ( scaleMB( mbswrawvalues[k], supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).scaleformula, &tmpscaledmbvalue ) )	// TRY TO CALCULATE SCALED VALUE USING THE FORMULA
+			else if ( scaleMB( mbswrawvalues[k], _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, &tmpscaledmbvalue ) )	// TRY TO CALCULATE SCALED VALUE USING THE FORMULA
 			{
 				// GET PRECISION AND ROUND:
-				switch (supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).precision)
+				switch (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision)
 				{
 					case 0:
 						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 0));
@@ -1759,7 +1753,7 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 1));
 				}
 				// GET UNIT
-				unitStrList->replace(k, supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).unit);
+				unitStrList->replace(k, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
 			}
 			else	// IF NO SCALE FORMULA AVAILABLE
 			{
@@ -1773,11 +1767,11 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 			// GET UNIT OF THE SWITCH:
 			if (mbswrawvalues[k] == 0)
 			{
-				valueStrList->replace(k, supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
+				valueStrList->replace(k, _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
 			}
 			else if (mbswrawvalues[k] == 1)
 			{
-				valueStrList->replace(k, supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
+				valueStrList->replace(k, _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
 			}
 		}
 	}

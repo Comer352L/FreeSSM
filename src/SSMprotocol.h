@@ -210,28 +210,18 @@ private:
 	unsigned int _selMBsSWsAddrLen;
 
 	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCaddresses(char flagbytes[96], unsigned char nrofflagbytes,
-				std::vector<unsigned int> *temporaryDTCsAddr, std::vector<unsigned int> *memorizedDTCsAddr);
-	void setupCCCCaddresses(std::vector<unsigned int> *latestCCCCsAddr, std::vector<unsigned int> *memorizedCCCCsAddr);
-	void setupSupportedMBs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				std::vector<mb_intl_dt> *supportedMBs);
-	void setupSupportedSWs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				std::vector<sw_intl_dt> *supportedSWs);
-	void setupAdjustmentsData(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
-				  std::vector<adjustment_intl_dt> *adjustments);
-	void setupActuatorTestData(QString language, std::vector<actuator_dt> *actuators, std::vector<unsigned int> *allActByteAddr);
+	void setupDTCaddresses();
+	void setupCCCCaddresses();
+	void setupSupportedMBs();
+	void setupSupportedSWs();
+	void setupAdjustmentsData();
+	void setupActuatorTestData();
 	// PREPARATION AND EVALUATION FUNCTIONS:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				 QStringList *DC, QStringList *DCdescription);
-	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList, 
-				    std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
-				    unsigned int *mbswaddr, unsigned int *mbswaddrlen);
-	void assignMBSWRawData(QByteArray rawdata, unsigned int mbswaddr[SSMP_MAX_MBSW], unsigned char mbswaddrlen,
-				std::vector<MBSWmetadata_dt> MBSWmetaList, std::vector<mb_intl_dt> supportedMBs, 
-				std::vector<sw_intl_dt> supportedSWs, unsigned int * mbswrawvalues);
-	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], std::vector<MBSWmetadata_dt> MBSWmetaList, 
-				  std::vector<mb_intl_dt> supportedMBs, std::vector<sw_intl_dt> supportedSWs, 
-				  QStringList *valueStrList, QStringList *unitStrList);
+	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
+	void assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues);
+	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList);
 	bool scaleMB(unsigned int rawvalue, QString scaleformula, double *scaledvalue);
 	bool validateVIN(char VIN[17]);
 	void StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr);
