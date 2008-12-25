@@ -122,13 +122,10 @@ void SSMprotocol::resetCUdata()
 	_nrofflagbytes = 0;
 	// *** RESET BASIC DATA ***:
 	// Reset DC-data:
-	for (k=0; k<SSMP_MAX_DTCADDR; k++) _temporaryDTCsAddr[k] = 0;
-	for (k=0; k<SSMP_MAX_DTCADDR; k++) _memorizedDTCsAddr[k] = 0;
-	_nrofDTCsAddr = 0;
-	for (k=0; k<SSMP_MAX_CCCCADDR; k++) _latestCCCCsAddr[k] = 0;
-	_nrofLatestCCCCsAddr = 0;
-	for (k=0; k<SSMP_MAX_CCCCADDR; k++) _memorizedCCCCsAddr[k] = 0;
-	_nrofMemorizedCCCCsAddr = 0;
+	_temporaryDTCsAddr.clear();
+	_memorizedDTCsAddr.clear();
+	_latestCCCCsAddr.clear();
+	_memorizedCCCCsAddr.clear();
 	// Reset MB/SW-data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
@@ -179,10 +176,10 @@ bool SSMprotocol::setupCUdata()
 	connect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	// Get memory addresses of diagnostic codes:
-	setupDTCaddresses(_flagbytes, _nrofflagbytes, _temporaryDTCsAddr, _memorizedDTCsAddr, &_nrofDTCsAddr);
+	setupDTCaddresses(_flagbytes, _nrofflagbytes, &_temporaryDTCsAddr, &_memorizedDTCsAddr);
 	hasIntegratedCC(&CCsup);
 	if ( CCsup )	// not necessary, because function checks this, too...
-		setupCCCCaddresses(_latestCCCCsAddr, &_nrofLatestCCCCsAddr, _memorizedCCCCsAddr, &_nrofMemorizedCCCCsAddr);
+		setupCCCCaddresses(&_latestCCCCsAddr, &_memorizedCCCCsAddr);
 	// Get and save the DC-definitions we need for the used DC addresses:
 	obdDTCs = (_flagbytes[29] != (_flagbytes[29] | 0x80));
 	if (_language == "de")
@@ -205,11 +202,11 @@ bool SSMprotocol::setupCUdata()
 		if (CCsup)
 			_CC_rawDefs = rawdefs_en.CCCCrawDefs();
 	}
-	for (unsigned int k=0; k<_nrofDTCsAddr; k++)
+	for (unsigned int k=0; k<_temporaryDTCsAddr.size(); k++)
 	{
 		for (int m=0; m<allOBDDTCrawDefs.size(); m++)
 		{
-			if (_temporaryDTCsAddr[k] == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
+			if (_temporaryDTCsAddr.at(k) == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
 				_DTC_rawDefs.append( allOBDDTCrawDefs.at(m) );
 		}
 	}
@@ -392,17 +389,17 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 
 
 
-void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagbytes, unsigned int *temporaryDTCsAddr, unsigned int *memorizedDTCsAddr, unsigned char *nrofDTCsAddr)
+void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagbytes, std::vector<unsigned int> *temporaryDTCsAddr, std::vector<unsigned int> *memorizedDTCsAddr)
 {
-	*nrofDTCsAddr = 0;
+	temporaryDTCsAddr->clear();
+	memorizedDTCsAddr->clear();
 	unsigned int addr = 0;
 	if (flagbytes[29] == (flagbytes[29] | 0x80))
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 		{
-			temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-			memorizedDTCsAddr[*nrofDTCsAddr] = addr + 22;
-			(*nrofDTCsAddr)++;
+			temporaryDTCsAddr->push_back( addr );
+			memorizedDTCsAddr->push_back( addr + 22 );
 		}
 		return;
 	}
@@ -410,18 +407,16 @@ void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagby
 	{
 		for (addr=0x8E; addr<=0xAD; addr++)
 		{
-			temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-			memorizedDTCsAddr[*nrofDTCsAddr] = addr + 32;
-			(*nrofDTCsAddr)++;
+			temporaryDTCsAddr->push_back( addr );
+			memorizedDTCsAddr->push_back( addr + 32 );
 		}
 	}
 	if (flagbytes[28] == (flagbytes[28] | 0x01))
 	{
 		for (addr=0xF0; addr<=0xF3; addr++)
 		{
-			temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-			memorizedDTCsAddr[*nrofDTCsAddr] = addr + 4;
-			(*nrofDTCsAddr)++;
+			temporaryDTCsAddr->push_back( addr );
+			memorizedDTCsAddr->push_back( addr + 4 );
 		}
 	}
 	if (nrofflagbytes > 32)
@@ -430,36 +425,32 @@ void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagby
 		{
 			for (addr=0x123; addr<=0x12A; addr++)
 			{
-				temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-				memorizedDTCsAddr[*nrofDTCsAddr] = addr + 8;
-				(*nrofDTCsAddr)++;
+				temporaryDTCsAddr->push_back( addr );
+				memorizedDTCsAddr->push_back( addr + 8 );
 			}
 		}
 		if (flagbytes[39] == (flagbytes[39] | 0x40))
 		{
 			for (addr=0x150; addr<=0x154; addr++)
 			{
-				temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-				memorizedDTCsAddr[*nrofDTCsAddr] = addr + 5;
-				(*nrofDTCsAddr)++;
+				temporaryDTCsAddr->push_back( addr );
+				memorizedDTCsAddr->push_back( addr + 5 );
 			}
 		}
 		if (flagbytes[39] == (flagbytes[39] | 0x20))
 		{
 			for (addr=0x160; addr<=0x164; addr++)
 			{
-				temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-				memorizedDTCsAddr[*nrofDTCsAddr] = addr + 5;
-				(*nrofDTCsAddr)++;
+				temporaryDTCsAddr->push_back( addr );
+				memorizedDTCsAddr->push_back( addr + 5 );
 			}
 		}
 		if (flagbytes[39] == (flagbytes[39] | 0x10))
 		{
 			for (addr=0x174; addr<=0x17A; addr++)
 			{
-				temporaryDTCsAddr[*nrofDTCsAddr] = addr;
-				memorizedDTCsAddr[*nrofDTCsAddr] = addr + 7;
-				(*nrofDTCsAddr)++;
+				temporaryDTCsAddr->push_back( addr );
+				memorizedDTCsAddr->push_back( addr + 7 );
 			}
 		}
 	}
@@ -467,31 +458,25 @@ void SSMprotocol::setupDTCaddresses(char flagbytes[96], unsigned char nrofflagby
 
 
 
-void SSMprotocol::setupCCCCaddresses(unsigned int *latestCCCCsAddr, unsigned char *nrofLatestCCCCsAddr, unsigned int *memorizedCCCCsAddr, unsigned char *nrofMemorizedCCCCsAddr)
+void SSMprotocol::setupCCCCaddresses(std::vector<unsigned int> *latestCCCCsAddr, std::vector<unsigned int> *memorizedCCCCsAddr)
 {
 	bool supported = false;
-	*nrofLatestCCCCsAddr = 0;
-	*nrofMemorizedCCCCsAddr = 0;
+	latestCCCCsAddr->clear();
+	memorizedCCCCsAddr->clear();
 	unsigned int addr = 0;
 	// Check if CU is equipped with CC:
 	hasIntegratedCC(&supported);
 	if (!supported) return;
 	// Put addresses on the list:
 	for (addr=0x133; addr<=0x136; addr++)
-	{
-		latestCCCCsAddr[*nrofLatestCCCCsAddr] = addr;
-		(*nrofLatestCCCCsAddr)++;
-	}
+		latestCCCCsAddr->push_back( addr );
 	// Check if CC supports memorized Codes:
 	hasIntegratedCCmemorizedCodes(&supported);
 	if (supported)
 	{
 		// Put addresses of memorized codes on the list:
 		for (addr=0x137; addr<=0x13A; addr++)
-		{
-			memorizedCCCCsAddr[*nrofMemorizedCCCCsAddr] = addr;
-			(*nrofMemorizedCCCCsAddr)++;
-		}
+			memorizedCCCCsAddr->push_back( addr );
 	}
 }
 
@@ -895,8 +880,10 @@ bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 	bool supported = false;
 	if (_state == state_needSetup) return false;
 	*DCgroups = 0;
-	if (_nrofDTCsAddr > 0)
-		(*DCgroups) += (temporaryDTCs_DCgroup + memorizedDTCs_DCgroup);
+	if (!_temporaryDTCsAddr.empty())
+		(*DCgroups) += temporaryDTCs_DCgroup;
+	if (!_memorizedDTCsAddr.empty())
+		(*DCgroups) += memorizedDTCs_DCgroup;
 	if (!hasIntegratedCC(&supported))
 		return false;
 	if (supported)
@@ -1301,17 +1288,17 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 			DCqueryAddrList[DCqueryAddrListLen] = 0x000061;
 			DCqueryAddrListLen++;
 		}
-		for (k=0; k<_nrofDTCsAddr; k++)
+		for (k=0; k<_temporaryDTCsAddr.size(); k++)
 		{
-			DCqueryAddrList[DCqueryAddrListLen] = _temporaryDTCsAddr[k];
+			DCqueryAddrList[DCqueryAddrListLen] = _temporaryDTCsAddr.at(k);
 			DCqueryAddrListLen++;
 		}
 	}
 	if (DCgroups == (DCgroups | memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
-		for (k=0; k<_nrofDTCsAddr; k++)
+		for (k=0; k<_memorizedDTCsAddr.size(); k++)
 		{
-			DCqueryAddrList[DCqueryAddrListLen] = _memorizedDTCsAddr[k];
+			DCqueryAddrList[DCqueryAddrListLen] = _memorizedDTCsAddr.at(k);
 			DCqueryAddrListLen++;
 		}
 	}
@@ -1319,17 +1306,17 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 	{
 		if (DCgroups == (DCgroups | CClatestCCs_DCgroup))	// CC latest cancel codes
 		{
-			for (k=0; k<_nrofLatestCCCCsAddr; k++)
+			for (k=0; k<_latestCCCCsAddr.size(); k++)
 			{
-				DCqueryAddrList[DCqueryAddrListLen] = _latestCCCCsAddr[k];
+				DCqueryAddrList[DCqueryAddrListLen] = _latestCCCCsAddr.at(k);
 				DCqueryAddrListLen++;
 			}
 		}
 		if ((DCgroups == (DCgroups | CCmemorizedCCs_DCgroup)) && CCmemSup)	// CC memorized cancel codes
 		{
-			for (k=0; k<_nrofMemorizedCCCCsAddr; k++)
+			for (k=0; k<_memorizedCCCCsAddr.size(); k++)
 			{
-				DCqueryAddrList[DCqueryAddrListLen] = _memorizedCCCCsAddr[k];
+				DCqueryAddrList[DCqueryAddrListLen] = _memorizedCCCCsAddr.at(k);
 				DCqueryAddrListLen++;
 			}
 		}
@@ -1404,9 +1391,9 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		if ((_CU != ECU) || _ignoreDCheckStateOnDCreading || (DCrawdata.at(0) != (DCrawdata.at(0) | 0x80)))
 		{
 			// Evaluate current/latest data trouble codes:
-			for (DCsAddrIndex=0; DCsAddrIndex<_nrofDTCsAddr; DCsAddrIndex++)
+			for (DCsAddrIndex=0; DCsAddrIndex<_temporaryDTCsAddr.size(); DCsAddrIndex++)
 			{
-				evaluateDCdataByte(_temporaryDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+				evaluateDCdataByte(_temporaryDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 				DCs += tmpDTCs;
 				DCdescriptions += tmpDTCsDescriptions;
 			}
@@ -1416,7 +1403,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 			DCs += "";
 			DCdescriptions += tr("----- SYSTEM CHECK IS NOT YET COMPLETED ! -----");
 		}
-		DCsAddrIndexOffset += _nrofDTCsAddr;
+		DCsAddrIndexOffset += _temporaryDTCsAddr.size();
 		emit temporaryDTCs(DCs, DCdescriptions);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | memorizedDTCs_DCgroup))
@@ -1424,13 +1411,13 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate historic/memorized data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_nrofDTCsAddr; DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_memorizedDTCsAddr.size(); DCsAddrIndex++)
 		{
-			evaluateDCdataByte(_memorizedDTCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_memorizedDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _nrofDTCsAddr;
+		DCsAddrIndexOffset += _memorizedDTCsAddr.size();
 		emit memorizedDTCs(DCs, DCdescriptions);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
@@ -1438,13 +1425,13 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate latest CC cancel codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_nrofLatestCCCCsAddr; DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_latestCCCCsAddr.size(); DCsAddrIndex++)
 		{
-			evaluateDCdataByte(_latestCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_latestCCCCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _nrofLatestCCCCsAddr;
+		DCsAddrIndexOffset += _latestCCCCsAddr.size();
 		emit latestCCCCs(DCs, DCdescriptions);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | CCmemorizedCCs_DCgroup))
@@ -1452,9 +1439,9 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate memorized CC cancel codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_nrofMemorizedCCCCsAddr; DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_memorizedCCCCsAddr.size(); DCsAddrIndex++)
 		{
-			evaluateDCdataByte(_memorizedCCCCsAddr[DCsAddrIndex], DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_memorizedCCCCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}

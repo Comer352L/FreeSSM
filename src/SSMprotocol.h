@@ -185,15 +185,12 @@ private:
 	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
-	unsigned int _temporaryDTCsAddr[SSMP_MAX_DTCADDR];
-	unsigned int _memorizedDTCsAddr[SSMP_MAX_DTCADDR];
-	unsigned char _nrofDTCsAddr;
+	std::vector<unsigned int> _temporaryDTCsAddr;
+	std::vector<unsigned int> _memorizedDTCsAddr;
 	QStringList _DTC_rawDefs;
 	// Cruise Control Cancel Codes:
-	unsigned int _latestCCCCsAddr[SSMP_MAX_CCCCADDR];
-	unsigned char _nrofLatestCCCCsAddr;
-	unsigned int _memorizedCCCCsAddr[SSMP_MAX_CCCCADDR];
-	unsigned char _nrofMemorizedCCCCsAddr;
+	std::vector<unsigned int> _latestCCCCsAddr;
+	std::vector<unsigned int> _memorizedCCCCsAddr;
 	QStringList _CC_rawDefs;
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
@@ -214,10 +211,8 @@ private:
 
 	// CU-FEATURES SETUP FUNCTIONS:
 	void setupDTCaddresses(char flagbytes[96], unsigned char nrofflagbytes,
-				unsigned int *temporaryDTCsAddr, unsigned int *memorizedDTCsAddr,
-				unsigned char *nrofDTCsAddr);
-	void setupCCCCaddresses(unsigned int *latestCCCCsAddr, unsigned char *nrofLatestCCCCsAddr,
-				unsigned int *memorizedCCCCsAddr, unsigned char *nrofMemorizedCCCCsAddr);
+				std::vector<unsigned int> *temporaryDTCsAddr, std::vector<unsigned int> *memorizedDTCsAddr);
+	void setupCCCCaddresses(std::vector<unsigned int> *latestCCCCsAddr, std::vector<unsigned int> *memorizedCCCCsAddr);
 	void setupSupportedMBs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
 				std::vector<mb_intl_dt> *supportedMBs);
 	void setupSupportedSWs(CUtype_dt CU, QString language, char flagbytes[96], unsigned char nrofflagbytes,
