@@ -158,11 +158,13 @@ FreeSSM::FreeSSM(QApplication *app)
 		msg.close();
 	}
 	// SET Qt-TRANSLATOR (if necessary and available):
-	QString translationpath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	if (qt_ts_path.isEmpty())
+		qt_ts_path = QCoreApplication::applicationDirPath();
 	if (_language == "de")
 	{
 		_qt_translator = new QTranslator;
-		if (_qt_translator->load("qt_de_DE", translationpath))
+		if (_qt_translator->load("qt_de_DE", qt_ts_path))
 			app->installTranslator(_qt_translator);
 		else
 		{
@@ -371,20 +373,26 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 		delete _qt_translator;
 		_qt_translator = NULL;
 	}
+	QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	if (qt_ts_path.isEmpty())
+		qt_ts_path = QCoreApplication::applicationDirPath();
 	if (newlanguage=="de")
 	{
-		_qt_translator = new QTranslator();
-		if ( _qt_translator->load("qt_de_DE", QLibraryInfo::location(QLibraryInfo::TranslationsPath)) )
+		_qt_translator = new QTranslator;
+		if (_qt_translator->load("qt_de_DE", qt_ts_path))
 			QApplication::installTranslator(_qt_translator);
 		else
-		{}	// Error
+		{
+			delete _qt_translator;
+			_qt_translator = NULL;
+		}
 	}
 }
 
 
 void FreeSSM::dumpCUdata()
 {
-	QFile dumpfile(QCoreApplication::applicationDirPath() + "/dump.dat");
+	QFile dumpfile(QDir::homePath() + "/dump.dat");
 	char SYS_ID[3] = {0};
 	char ROM_ID[5] = {0};
 	char flagbytes[96] = {0};
