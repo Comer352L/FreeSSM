@@ -543,14 +543,14 @@ void SSMprotocol::setupSupportedMBs()
 					tmpstr = mbdefline.section(';', 4, 4);
 					tmpMB.adr_low = tmpstr.toUInt(&ok, 16);
 					// Check if memory address (low) is valid:
-					if (ok)
+					if (ok && (tmpMB.adr_low > 0))
 					{
 						// Get memory address (high) definition:
 						tmpstr = mbdefline.section(';', 5, 5);
 						if (!tmpstr.isEmpty())
 							tmpMB.adr_high = tmpstr.toUInt(&ok, 16);
 						// Check if memory address (high) is unused OR valid (only 16bit MBs):
-						if ((tmpstr.isEmpty()) || (ok))	// if valid or no high byte memory address available
+						if ((tmpstr.isEmpty()) || (ok && (tmpMB.adr_high > 0)))	// if valid or no high byte memory address available
 						{
 							if (tmpstr.isEmpty())
 								tmpMB.adr_high = 0;
@@ -568,7 +568,7 @@ void SSMprotocol::setupSupportedMBs()
 									tmpstr = mbdefline.section(';', 9, 9);
 									tmpprecision = tmpstr.toInt(&ok, 10);
 									if ((ok) && (tmpprecision < 4) && (tmpprecision > -4))
-										tmpMB.precision = static_cast<char>(tmpprecision);
+										tmpMB.precision = tmpprecision;
 									else
 										tmpMB.precision = 1;
 									// Get unit:
@@ -648,7 +648,7 @@ void SSMprotocol::setupSupportedSWs()
 					tmpstr = swdefline.section(';', 4, 4);
 					tmpSW.byteadr = tmpstr.toInt(&ok, 16);
 					// Check if memory address is valid:
-					if (ok)
+					if (ok && (tmpSW.byteadr > 0))
 					{
 						// Get title definition:
 						tmpSW.title = swdefline.section(';', 5, 5);
