@@ -103,23 +103,26 @@ einigen Fehlercodes teilweise unterschiedliche Bedeutungen/Beschreibungen ausgeg
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>8.) <a href="#8">Was
 bedeutet &quot;nicht-permanent&quot; in Bezug auf die Einstellwerte ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">Warum
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">Was 
+ist der "Testmodusstecker" und wo befindet er sich ?</a></p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>10.) <a href="#10">Warum
 funktioniert die Stellglieddiagnose bei einigen Bauteilen nicht ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>10.) <a href="#10">Was
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>11.) <a href="#11">Was
 geschieht beim Löschen des Steuergeräte-Speichers ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>11.) <a href="#11">Worin
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>12.) <a href="#12">Worin
 besteht beim Getriebe-Steuergerät der Unterschied zwischen &quot;Speicher
 Löschen&quot; und &quot;Speicher Löschen 2&quot; ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>12.) <a href="#12">Warum
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>13.) <a href="#13">Warum
 lässt sich der Fehlerspeicher des Steuergeräts manchmal nicht löschen ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>13.) <a href="#13">Unterstützt
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">Unterstützt
 die Software den CAN-Bus ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">Wird die
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>15.) <a href="#15">Wird die
 Software weiterentwickelt ?</a></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><o:p>&nbsp;</o:p></p>
@@ -130,9 +133,18 @@ Welches Interface wird benötigt ?</strong> </p>
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Die Software arbeitet mit
 sämtlichen ISO-9141-2-/ISO-14230-1-konformen (K/L bzw. KK/L) Interfaces zusammen, die als
 einfache Pegelwandler fungieren (&quot;Dump&quot;-Interface)
-oder über einen Pass-Through-Modus verfügen (z.B. AGVxxxx) und über eine 
+oder über einen "Pass-Through"-Modus verfügen und über eine 
 serielle Schnittstelle ansteuerbar sind. Dies beinhaltet auch USB-Interfaces, deren 
 Treiber einen virtuellen COM-Port zur Verfügung stellen (z.B. Interfaces mit FTDI-USB-Chip).<br>
+<br>
+Hier ist eine Liste mit Interfaces (unvollständig), die mit FreeSSM funktionieren sollten (keine Garantie !):<br>
+- alle Interfaces die mit VW-Tool und VAG-COM bis Version 311.3 (409) funktionieren<br>
+- openPort-Interface 1.2/1.3/2.0<br>
+- Interfaces mit AGV2055, AGV3000, AGV3001, AGV3100, AGV4000, AGV4500 Chipsatz, die mit einer Umschaltmöglichkeit
+  in den "Transit-Modus" ausgestattet sind (z.B. OBD-Diag®-Interfaces)<br>
+- "Jeff Noxons" Interface (-design)<br>
+- "Andy Whitakkers" Interface (-design)<br>
+<br>
 Nicht geeignet sind sämtliche Interfaces mit ELM-Chipsatz, da diese über einen festen 
 AT-Befehlssatz verfügen, der mit dem SUBARU®-spezifischen Protokoll nicht kompatibel ist !</p>
 
@@ -224,6 +236,39 @@ sowie beim Löschen des Steuergerätespeichers in den Auslieferungszustand
 zurückgesetzt werden.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=9></a><strong>9.)
+Was ist der "Testmodusstecker" und wo befindet er sich ?</strong> </p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Der Testmodusstecker ist ein 2-poliges 
+grünes Steckerpaar, dass im normalen Betrieb nicht verbunden ist. Werden die Stecker verbunden, 
+so geht das Motorsteuergerät in einen speziellen Betriebsmodus (Testmodus), indem einige 
+automatische Testroutinen ablaufen und weitere spezielle Tests (wie z.B. die Stellglieddiagnose) 
+durchgeführt werden können.<br>
+Außerdem wird der Motor mit anderen Parametern betrieben und i.d.R. sind Teile der Bordelektronik 
+(z.B. Zentralverriegelung) stillgelegt. Der Testmodusstecker ist daher auch als Stecker für den 
+"Auslieferungsmodus" bekannt.<br>
+Er is grundsätzlich im Bereich des vorderen Fußraums bzw. unter dem Armaturenbrett zu finden, 
+die genaue Position ist vom Modell abhängig.<br>
+<br>
+Die folgenden Positionsangabe beziehen sich auf Linkslenker-Modelle:<br>
+<br>
+<table border=0 cellspacing=10>
+<colgroup>
+<col width=30 span=1><col span=1><col width=100 span=1>
+<tr><th></th></th><th>Modell (Typ):</th><th>Modelljahr:</th><th>Position:</th></tr>
+<tr><td></td><td>Legacy/Liberty/Outback/Baja (BE/BH)</td><td><p align=center style='text-align:center'>1999-2003</p></td></td><td>am unteren Rand der Instrumententafel (Fahrerseite), neben der Mittelkonsolenbox</td></tr>
+<tr><td></td><td>Legacy/Liberty/Outback (BL/BP)</td><td><p align=center style='text-align:center'>2004-2009</p></td><td>unter dem Handschuhfach bzw. Fußraum Beifahrerseite</td></tr>
+<tr><td></td><td>Impreza (GC/GF)</td><td><p align=center style='text-align:center'>1993-2000</p></td><td>unter dem Armaturenbrett Fahrerseite, oben</td></tr>
+<tr><td></td><td>Impreza (GD/GG)</td><td><p align=center style='text-align:center'>2001-2007</p></td><td>unter dem Armaturenbrett Fahrerseite, oben</td></tr>
+<tr><td></td><td>Impreza (GH)</td><td><p align=center style='text-align:center'>2008+</p></td><td>unter dem Handschuhfach bzw. Fußraum Beifahrerseite</td></tr>
+<tr><td></td><td>Forester (SF)</td><td><p align=center style='text-align:center'>1998-2002</p></td><td>unter dem Armaturenbrett Fahrerseite, oben</td></tr>
+<tr><td></td><td>Forester (SG)</td><td><p align=center style='text-align:center'>2003-2008</p></td><td>unter dem Armaturenbrett Fahrerseite, oben</td></tr>
+<tr><td></td><td>Forester (SH)</td><td><p align=center style='text-align:center'>2009+</p></td><td>unter dem Handschuhfach bzw. Fußraum Beifahrerseite</td></tr>
+<tr><td></td><td>Tribeca (WX)</td><td><p align=center style='text-align:center'>2007+</p></td><td>unter dem Handschuhfach bzw. Fußraum Beifahrerseite</td></tr>
+</table>
+<br>
+ACHTUNG: den Testmodusstecker nur bei ausgeschalteter Zündung verbinden oder trennen !</p>
+
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=10></a><strong>10.)
 Warum funktioniert die Stellglieddiagnose bei einigen Bauteilen nicht ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Nicht alle der zur Auswahl
@@ -235,18 +280,18 @@ FreeSSM bietet daher grundsätzlich alle Stellglieder zum Testen an.<br>
 Wird der Test mit einem Bauteil durchgeführt, welches nicht verbaut oder unterstützt wird, 
 dann geschieht einfach nichts.</p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=10></a><strong>10.)
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=11></a><strong>11.)
 Was geschieht beim Löschen des Steuergeräte-Speichers ?</strong>
 </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'> Es werden sämtliche Fehlerspeicher 
-gelöscht (siehe auch <a href="#12">Frage 12</a> !) sowie alle Einstellwerte zurückgesetzt.<br>
+gelöscht (siehe auch <a href="#13">Frage 13</a> !) sowie alle Einstellwerte zurückgesetzt.<br>
 Bei neueren Motor-Steuergeräten mit elektronischer Drosselklappensteuerung (E-Gas) werden 
 außerdem auch deren Lernwerte zurückgesetzt.<br>
 Dies kann dazu führen, dass sich der Motor die erste Zeit nach dem Löschvorgang ungewohnt verhält.<br>
 Der Steuergerätespeicher sollte daher nicht unbedacht gelöscht werden.</p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=11></a><strong>11.)
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=12></a><strong>12.)
 Worin besteht beim Getriebe-Steuergerät der Unterschied zwischen &quot;Speicher
 Löschen&quot; und &quot;Speicher Löschen 2&quot; ?</strong>
 </p>
@@ -258,7 +303,7 @@ die erste Zeit nach dem Löschvorgang ungewohnt verhält.<br>
 Diese Funktion sollte daher nur verwendet werden, wenn ein Rücksetzen der Lernwerte
 bewusst herbeigeführt werden soll !</p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=12></a><strong>12.)
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=13></a><strong>13.)
 Warum lässt sich der Fehlerspeicher des Steuergeräts manchmal nicht löschen ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Dafür gibt es zwei mögliche
@@ -270,7 +315,7 @@ Hersteller-Ebene gelöscht werden. Hier muss der Fehlerspeicher auf OBD-Ebene
 gelöscht werden, wozu ein zusätzliches OBD-Scantool erforderlich ist.<br>
 <strong>ACHTUNG: FreeSSM ist KEIN OBD2-Scantool !</strong></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=13></a><strong>13.)
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=14></a><strong>14.)
 Unterstützt die Software den CAN-Bus ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Nein, dies ist auch im
@@ -278,12 +323,12 @@ Augenblick nicht notwendig. Zwar sind die (neueren) Fahrzeuge mit einem CAN-Buss
 ausgestattet, dieses wird jedoch nicht für die Diagnose auf Hersteller-Ebene bzw. die Kommunikation 
 zwischen Motor-/Getriebe-Steuergerät und dem Tester verwendet.</p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=14></a><strong>14.)
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=15></a><strong>15.)
 Wird die Software weiterentwickelt ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Es ist zumindest geplant.
-Die neueste Version gibt es immer auf <a href="http://FreeSSM.berlios.de/">
-<span style=" text-decoration: underline; color:#0000ff;">http://FreeSSM.berlios.de</span></a>.</p>
+Die neueste Version gibt es immer auf <a href="http://freessm.berlios.de/">
+<span style=" text-decoration: underline; color:#0000ff;">http://freessm.berlios.de</span></a>.</p>
 
 <div class=MsoNormal align=center style='text-align:center'>
 
@@ -526,8 +571,8 @@ style='font-size:18.0pt;font-family:Arial;mso-ansi-language:EN-GB'>C.) Abkürzun
 </table>
 
 <br>
-<p align=center>Copyright (C) 2008 Comer352l<br>Alle Handelsmarken sind Eigentum 
-von Fuji Heavy Industries Ltd. oder ihrer jeweiligen Besitzer.</p>
+<p align=center>Copyright (C) 2008 Comer352l<br>OBD-Diag ist eine Handelsmarke von Folker Stange<br>
+Alle anderen Handelsmarken sind Eigentum von Fuji Heavy Industries Ltd. oder ihrer jeweiligen Besitzer.</p>
 
 </div>
 
