@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
 		{
 			// Load font "Liberation Sans" (no installation !)
 			QString AppsPath( QCoreApplication::applicationDirPath() );
-			QFontDatabase::addApplicationFont (AppsPath + "LiberationSans-Regular.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "LiberationSans-Bold.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "LiberationSans-Italic.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "LiberationSans-BoldItalic.ttf");
+			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Regular.ttf");
+			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Bold.ttf");
+			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Italic.ttf");
+			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-BoldItalic.ttf");
 		}
 		appfont.setFamily("Liberation Sans");
 	}
