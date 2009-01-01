@@ -891,29 +891,29 @@ wirklich gelöscht werden</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="365"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="338"/>
+        <location filename="src/FreeSSM.cpp" line="365"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Die notwendigen Einstellungen am seriellen Port konnten nicht durchgeführt werden !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="321"/>
+        <location filename="src/FreeSSM.cpp" line="348"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="308"/>
+        <location filename="src/FreeSSM.cpp" line="335"/>
         <source>No serial port available !</source>
         <translation type="unfinished">Kein serieller Port verfügbar !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="152"/>
+        <location filename="src/FreeSSM.cpp" line="156"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
@@ -999,78 +999,78 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="328"/>
+        <location filename="src/Preferences.cpp" line="355"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="221"/>
+        <location filename="src/Preferences.cpp" line="246"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="236"/>
+        <location filename="src/Preferences.cpp" line="261"/>
         <source>Please connect diagnostic interface to the vehicles
 OBD-Connector and switch ignition on.</source>
         <translation type="unfinished">Diagnose-Interface mit der OBD-Buchse des Fahrzeugs
 verbinden und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="237"/>
+        <location filename="src/Preferences.cpp" line="262"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="270"/>
+        <location filename="src/Preferences.cpp" line="295"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="269"/>
+        <location filename="src/Preferences.cpp" line="294"/>
         <source>Retry</source>
         <translation type="unfinished">Wiederholen</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="300"/>
+        <location filename="src/Preferences.cpp" line="325"/>
         <source>Error while closing serial port !</source>
         <translation type="unfinished">Fehler beim Schließen des seriellen Ports !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="166"/>
+        <location filename="src/Preferences.cpp" line="173"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="206"/>
+        <location filename="src/Preferences.cpp" line="231"/>
         <source>Couldn&apos;t configure serial port !</source>
         <translation type="unfinished">Serieller Port konnte nicht konfiguriert werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="284"/>
+        <location filename="src/Preferences.cpp" line="309"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="255"/>
+        <location filename="src/Preferences.cpp" line="280"/>
         <source>Testing Interface... Please wait !     </source>
         <translation type="unfinished">Teste Interface... Bitte warten !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="268"/>
+        <location filename="src/Preferences.cpp" line="293"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="284"/>
+        <location filename="src/Preferences.cpp" line="309"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="328"/>
+        <location filename="src/Preferences.cpp" line="355"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1120,6 +1120,11 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
         <location filename="ui/Preferences.ui" line="98"/>
         <source>      Test Diagnostic Interface       </source>
         <translation type="unfinished">     Diagnose-Interface testen      </translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="257"/>
+        <source>GUI-Style:</source>
+        <translation type="unfinished">GUI-Style:</translation>
     </message>
 </context>
 <context>

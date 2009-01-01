@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>268</width>
-    <height>199</height>
+    <height>231</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -21,13 +21,13 @@
   <property name="minimumSize" >
    <size>
     <width>268</width>
-    <height>199</height>
+    <height>231</height>
    </size>
   </property>
   <property name="maximumSize" >
    <size>
     <width>268</width>
-    <height>199</height>
+    <height>231</height>
    </size>
   </property>
   <property name="font" >
@@ -63,7 +63,7 @@
    <property name="geometry" >
     <rect>
      <x>25</x>
-     <y>160</y>
+     <y>192</y>
      <width>100</width>
      <height>28</height>
     </rect>
@@ -76,7 +76,7 @@
    <property name="geometry" >
     <rect>
      <x>144</x>
-     <y>160</y>
+     <y>192</y>
      <width>100</width>
      <height>28</height>
     </rect>
@@ -89,7 +89,7 @@
    <property name="geometry" >
     <rect>
      <x>25</x>
-     <y>113</y>
+     <y>145</y>
      <width>219</width>
      <height>32</height>
     </rect>
@@ -112,7 +112,7 @@
    <property name="geometry" >
     <rect>
      <x>133</x>
-     <y>81</y>
+     <y>113</y>
      <width>111</width>
      <height>22</height>
     </rect>
@@ -158,7 +158,7 @@
    <property name="geometry" >
     <rect>
      <x>53</x>
-     <y>84</y>
+     <y>116</y>
      <width>75</width>
      <height>16</height>
     </rect>
@@ -203,7 +203,7 @@
    <property name="geometry" >
     <rect>
      <x>25</x>
-     <y>80</y>
+     <y>112</y>
      <width>22</width>
      <height>22</height>
     </rect>
@@ -232,6 +232,45 @@
    </property>
    <property name="scaledContents" >
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="guistyle_comboBox" >
+   <property name="geometry" >
+    <rect>
+     <x>133</x>
+     <y>81</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="guistyle_label" >
+   <property name="geometry" >
+    <rect>
+     <x>53</x>
+     <y>84</y>
+     <width>75</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>GUI-Style:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5" >
+   <property name="geometry" >
+    <rect>
+     <x>25</x>
+     <y>80</y>
+     <width>22</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="pixmap" >
+    <pixmap resource="../resources/FreeSSM.qrc" >:/icons/oxygen/22x22/preferences-desktop-theme.png</pixmap>
    </property>
   </widget>
  </widget>

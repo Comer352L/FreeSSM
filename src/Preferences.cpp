@@ -44,6 +44,49 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	y = ( FreeSSM_MW_Ypos  + 40);
 	// move window to desired coordinates
 	move ( x, y );
+	// OUTPUT LANGUAGES:
+	if (_language_current == "en")
+	{
+		_lastlangindex = 0;
+	}
+	else if (_language_current == "de")
+	{
+		_lastlangindex = 1;
+	}
+	else	// if currently selected language is invalid
+	{
+		// TRY TO GET SYSTEM LANGUAGE SETTING:
+		if ((QLocale::system().language() == QLocale::English))
+		{
+			_language_current = "en";
+			switchLanguage(0);
+			_lastlangindex = 0;
+		}
+		else if ((QLocale::system().language() == QLocale::German))
+		{
+			_language_current = "de";
+			switchLanguage(1);
+			_lastlangindex = 1;
+		}
+		else	// if system language settings are not available/supported
+		{
+			_language_current = "en";
+			switchLanguage(0);
+			_lastlangindex = 0;
+		}
+	}
+	language_comboBox->setCurrentIndex(_lastlangindex);
+	// GUI-STYLES:
+	_style_old = QApplication::style()->objectName();
+	QStringList supStyles = QStyleFactory::keys();
+	if (supStyles.size())
+	{
+		int styleindex = supStyles.indexOf( QRegExp( _style_old, Qt::CaseInsensitive ) );
+		guistyle_comboBox->insertItems(0, supStyles);
+		guistyle_comboBox->setCurrentIndex( styleindex );
+	}
+	else
+		guistyle_comboBox->setEnabled( false );
 	// GET AVAILABLE PORTS:
 	std::vector<std::string> portlist;
 	portlist = serialCOM::GetAvailablePorts();
@@ -79,41 +122,10 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	// OUTPUT PORTS:
 	serialport_comboBox->insertItems(0, qtportlist);
 	serialport_comboBox->setCurrentIndex(plindex);
-	// OUTPUT LANGUAGES:
-	if (_language_current == "en")
-	{
-		_lastlangindex = 0;
-	}
-	else if (_language_current == "de")
-	{
-		_lastlangindex = 1;
-	}
-	else	// if currently selected language is invalid
-	{
-		// TRY TO GET SYSTEM LANGUAGE SETTING:
-		if ((QLocale::system().language() == QLocale::English))
-		{
-			_language_current = "en";
-			switchLanguage(0);
-			_lastlangindex = 0;
-		}
-		else if ((QLocale::system().language() == QLocale::German))
-		{
-			_language_current = "de";
-			switchLanguage(1);
-			_lastlangindex = 1;
-		}
-		else	// if system language settings are not available/supported
-		{
-			_language_current = "en";
-			switchLanguage(0);
-			_lastlangindex = 0;
-		}
-	}
-	language_comboBox->setCurrentIndex(_lastlangindex);
 	// CONNECT SIGNALS AND SLOTS:
-	connect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) );
 	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
+	connect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
+	connect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
 	connect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
 	connect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
 	connect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
@@ -122,17 +134,12 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 
 Preferences::~Preferences()
 {
-	disconnect( serialport_comboBox, SIGNAL( activated(int) ), this, SLOT( serialport() ) );
 	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
+	disconnect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
+	disconnect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
 	disconnect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
 	disconnect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
 	disconnect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
-}
-
-
-void Preferences::serialport()
-{
-	_newportname = serialport_comboBox->currentText();
 }
 
 
@@ -182,6 +189,24 @@ void Preferences::switchLanguage(int langindex)
 		retranslateUi(this);
 		language_comboBox->setCurrentIndex(langindex);
 	}
+}
+
+
+void Preferences::switchGUIstyle(QString style)
+{
+	QStyle *qstyle = NULL;
+	if (style.size())
+	{
+		qstyle = QStyleFactory::create( style );
+		if (qstyle)
+			QApplication::setStyle( qstyle );
+	}
+}
+
+
+void Preferences::selectSerialPort(QString portname)
+{
+	_newportname = portname;
 }
 
 
@@ -318,9 +343,11 @@ void Preferences::ok()
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
 	{
+		QString stylename = QApplication::style()->objectName();
 		// rewrite file completly:
 		prefsfile.write(_newportname.toAscii()+"\n", _newportname.length()+1);			// save portname
 		prefsfile.write(_language_current.toAscii()+"\n", _language_current.length()+1);	// save language
+		prefsfile.write(stylename.toAscii()+"\n", stylename.length()+1);	// save preferred GUI-style
 		prefsfile.close();	// close file
 	}
 	else
@@ -349,6 +376,7 @@ void Preferences::closeEvent(QCloseEvent *event)
 {
 	if (!_confirmed)
 	{
+		// Switch back to old translation:
 		if (_language_old == "en")
 		{
 			switchLanguage(0);
@@ -357,6 +385,8 @@ void Preferences::closeEvent(QCloseEvent *event)
 		{
 			switchLanguage(1);
 		}
+		// Switch back to old GUI-style:
+		switchGUIstyle( _style_old );
 	}
 	event->accept();
 }
@@ -394,11 +424,19 @@ void Preferences::setupUiFonts()
 	font = serialport_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
+	guistyle_label->setFont(font);
+	font = serialport_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(12);	// 9pts
 	serialport_label->setFont(font);
 	font = language_comboBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	language_comboBox->setFont(font);
+	font = guistyle_comboBox->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(12);	// 9pts
+	guistyle_comboBox->setFont(font);
 	font = serialport_comboBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts

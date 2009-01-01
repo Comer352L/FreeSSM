@@ -47,6 +47,7 @@ private:
 	QString _newportname;
 	QString _language_old;
 	QString _language_current;
+	QString _style_old;
 	int _lastlangindex;
 	bool _confirmed;
 
@@ -58,8 +59,9 @@ public:
 	~Preferences();
 
 public slots:
-	void serialport();
 	void switchLanguage(int langindex);
+	void switchGUIstyle(QString style);
+	void selectSerialPort(QString portname);
 	void interfacetest();
 	void ok();
 	void cancel();

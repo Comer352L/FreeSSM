@@ -68,6 +68,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	// LOAD PREFERENCES FROM FILE:
 	QString savedportname = "";
 	QString savedlanguage = "";
+	QString savedGUIstyle = "";
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
@@ -83,31 +84,24 @@ FreeSSM::FreeSSM(QApplication *app)
 		{
 			// Load language settings:
 			line = prefsfile.readLine();
-			line.truncate(line.length()-1);	// truncate newline-character
+			line.truncate(line.length()-1);
 			savedlanguage = static_cast<QString>(line);
+		}
+		if (!prefsfile.atEnd())
+		{
+			// Load language settings:
+			line = prefsfile.readLine();
+			line.truncate(line.length()-1);
+			savedGUIstyle = static_cast<QString>(line);
 		}
 		prefsfile.close();
 	}
-	// GET AVAILABLE PORTS:
-	std::vector<std::string> portlist;
-	portlist = serialCOM::GetAvailablePorts();
-	// CHECK SAVED PREFERENCES AND CORRECT IF NECESSARY:
-	bool pnvalid = false;
-	for (unsigned int k=0; k<portlist.size(); k++)
+	// SET PREFERRED GUI-Style:
+	if (savedGUIstyle.size())
 	{
-		if (savedportname == portlist[k].c_str())
-		{
-			pnvalid = true;
-			break;
-		}
-	}
-	if (pnvalid == true)
-		_portname = savedportname;
-	else
-	{
-		if (portlist.size()>0)
-			_portname = (QString)portlist[0].c_str();
-		// otherwise portname remains empty
+		QStyle *qstyle = QStyleFactory::create( savedGUIstyle );
+		if (qstyle)
+			QApplication::setStyle( qstyle );
 	}
 	// CHECK SAVED LANGUAGE AND CORRECT IF NECESSARY:
 	if ((savedlanguage == "en") | (savedlanguage == "de"))
@@ -171,6 +165,27 @@ FreeSSM::FreeSSM(QApplication *app)
 			delete _qt_translator;
 			_qt_translator = NULL;
 		}
+	}
+	// GET AVAILABLE PORTS:
+	std::vector<std::string> portlist;
+	portlist = serialCOM::GetAvailablePorts();
+	// CHECK SAVED PREFERENCES AND CORRECT IF NECESSARY:
+	bool pnvalid = false;
+	for (unsigned int k=0; k<portlist.size(); k++)
+	{
+		if (savedportname == portlist[k].c_str())
+		{
+			pnvalid = true;
+			break;
+		}
+	}
+	if (pnvalid == true)
+		_portname = savedportname;
+	else
+	{
+		if (portlist.size()>0)
+			_portname = (QString)portlist[0].c_str();
+		// otherwise portname remains empty
 	}
 	// CREATE ACTION FOR DUMPING CONTROL UNID ID-DATA TO FILE:
 	QAction *dump_action = new QAction(this);

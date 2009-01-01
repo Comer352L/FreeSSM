@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/" >
+    <file>icons/oxygen/22x22/preferences-desktop-theme.png</file>
     <file>icons/oxygen/22x22/go-first.png</file>
     <file>icons/oxygen/22x22/go-next.png</file>
     <file>icons/oxygen/22x22/drive-harddisk.png</file>
