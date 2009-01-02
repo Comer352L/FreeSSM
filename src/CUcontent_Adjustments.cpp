@@ -198,7 +198,7 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPd
 	setupUiFonts();
 	// Set column widths:
 	adjustments_tableWidget->setColumnWidth (1, 88);
-	adjustments_tableWidget->setColumnWidth (2, 105);
+	adjustments_tableWidget->setColumnWidth (2, 106);
 	adjustments_tableWidget->setColumnWidth (3, 70);
 	headerview = adjustments_tableWidget->horizontalHeader();
 	headerview->setResizeMode(0,QHeaderView::Stretch);

@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
+    <width>450</width>
     <height>489</height>
    </rect>
   </property>
@@ -73,21 +73,21 @@
         <widget class="QPushButton" name="add_pushButton" >
          <property name="minimumSize" >
           <size>
-           <width>120</width>
-           <height>30</height>
+           <width>122</width>
+           <height>32</height>
           </size>
          </property>
          <property name="maximumSize" >
           <size>
-           <width>120</width>
-           <height>30</height>
+           <width>122</width>
+           <height>32</height>
           </size>
          </property>
          <property name="text" >
           <string>       Add        </string>
          </property>
          <property name="icon" >
-          <iconset resource="../../FreeSSM_NEU/resources/FreeSSM.qrc" >
+          <iconset resource="../resources/FreeSSM.qrc" >
            <normaloff>:/icons/chrystal/32x32/add.png</normaloff>:/icons/chrystal/32x32/add.png</iconset>
          </property>
          <property name="iconSize" >
@@ -102,21 +102,21 @@
         <widget class="QPushButton" name="cancel_pushButton" >
          <property name="minimumSize" >
           <size>
-           <width>120</width>
-           <height>30</height>
+           <width>122</width>
+           <height>32</height>
           </size>
          </property>
          <property name="maximumSize" >
           <size>
-           <width>120</width>
-           <height>30</height>
+           <width>122</width>
+           <height>32</height>
           </size>
          </property>
          <property name="text" >
           <string>    Cancel       </string>
          </property>
          <property name="icon" >
-          <iconset resource="../../FreeSSM_NEU/resources/FreeSSM.qrc" >
+          <iconset resource="../resources/FreeSSM.qrc" >
            <normaloff>:/icons/chrystal/32x32/cancel.png</normaloff>:/icons/chrystal/32x32/cancel.png</iconset>
          </property>
          <property name="iconSize" >
@@ -160,7 +160,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../FreeSSM_NEU/resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc" />
  </resources>
  <connections/>
 </ui>

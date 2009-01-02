@@ -680,22 +680,22 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">noch nicht programmiert</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="249"/>
+        <location filename="src/Engine.cpp" line="254"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnosecodes:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="284"/>
+        <location filename="src/Engine.cpp" line="289"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="316"/>
+        <location filename="src/Engine.cpp" line="321"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="345"/>
+        <location filename="src/Engine.cpp" line="350"/>
         <source>System Operation Tests:</source>
         <translation type="unfinished">System-Funktionstests:</translation>
     </message>
@@ -705,12 +705,12 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">unbekannt (</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="434"/>
+        <location filename="src/Engine.cpp" line="439"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="279"/>
+        <location filename="src/Engine.cpp" line="284"/>
         <source>Switching to Measuring Blocks... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Messwertblöcken... Bitte warten !      </translation>
     </message>
@@ -740,39 +740,39 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">Verbindung herstellen...</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="244"/>
+        <location filename="src/Engine.cpp" line="249"/>
         <source>Switching to Diagnostic Codes... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Diagnosecodes... Bitte warten !      </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="222"/>
+        <location filename="src/Engine.cpp" line="227"/>
         <source>ECU-Initialisation successful !</source>
         <translation type="unfinished">ECU-Initialisierung erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="434"/>
+        <location filename="src/Engine.cpp" line="439"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="450"/>
+        <location filename="src/Engine.cpp" line="455"/>
         <source>Stopping Communication... Please wait !   </source>
         <translation type="unfinished">Trenne Verbindung zum Steuergerät... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="311"/>
+        <location filename="src/Engine.cpp" line="316"/>
         <source>Switching to Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Einstellungen... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="340"/>
+        <location filename="src/Engine.cpp" line="345"/>
         <source>Switching to System Tests... Please wait !   </source>
         <translation type="unfinished">Wechsele zu System-Funktionstests... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="378"/>
+        <location filename="src/Engine.cpp" line="383"/>
         <source>Reading Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Einstellungen werden gelesen... Bitte warten !   </translation>
     </message>
@@ -785,97 +785,97 @@ wirklich gelöscht werden</translation>
 <context>
     <name>Engine_Window</name>
     <message>
-        <location filename="ui/Engine.ui" line="57"/>
+        <location filename="ui/Engine.ui" line="63"/>
         <source>Engine Control Unit</source>
         <translation type="unfinished">Motor-Steuergerät</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="758"/>
+        <location filename="ui/Engine.ui" line="761"/>
         <source>Selection:</source>
         <translation type="unfinished">Auswahl:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="777"/>
+        <location filename="ui/Engine.ui" line="780"/>
         <source> Diagnostic Codes  </source>
         <translation type="unfinished">   Diagnosecodes    </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="813"/>
+        <location filename="ui/Engine.ui" line="816"/>
         <source> Measuring Blocks </source>
         <translation type="unfinished">  Messwertblöcke   </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="721"/>
+        <location filename="ui/Engine.ui" line="727"/>
         <source>ContentTitle:</source>
         <translation type="unfinished"> </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="83"/>
+        <location filename="ui/Engine.ui" line="89"/>
         <source>Information:</source>
         <translation type="unfinished">Informationen:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="124"/>
+        <location filename="ui/Engine.ui" line="130"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registrierte Fahrgest.-Nr.:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="145"/>
+        <location filename="ui/Engine.ui" line="151"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="166"/>
+        <location filename="ui/Engine.ui" line="172"/>
         <source>Integ. Cruise Control:</source>
         <translation type="unfinished">Integrierte GRA:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="187"/>
+        <location filename="ui/Engine.ui" line="193"/>
         <source>Immobilizer:</source>
         <translation type="unfinished">Wegfahrsperre:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="228"/>
+        <location filename="ui/Engine.ui" line="234"/>
         <source>Data:</source>
         <translation type="unfinished">Daten:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="248"/>
+        <location filename="ui/Engine.ui" line="254"/>
         <source>Switches:</source>
         <translation type="unfinished">Schalter:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="640"/>
+        <location filename="ui/Engine.ui" line="646"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="103"/>
+        <location filename="ui/Engine.ui" line="109"/>
         <source>Engine Type:</source>
         <translation type="unfinished">Motor-Typ:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="208"/>
+        <location filename="ui/Engine.ui" line="214"/>
         <source>OBD2 Support:</source>
         <translation type="unfinished">OBD2-Unterstützung:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="849"/>
+        <location filename="ui/Engine.ui" line="852"/>
         <source>     Adjustments     </source>
         <translation type="unfinished">    Einstellungen     </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="885"/>
+        <location filename="ui/Engine.ui" line="888"/>
         <source>    System Tests    </source>
         <translation type="unfinished">    System-Tests    </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="921"/>
+        <location filename="ui/Engine.ui" line="924"/>
         <source>    Clear Memory    </source>
         <translation type="unfinished"> Speicher Löschen </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="962"/>
+        <location filename="ui/Engine.ui" line="965"/>
         <source>       Exit Control Unit        </source>
         <translation type="unfinished">   Steuergerät verlassen    </translation>
     </message>
@@ -891,29 +891,29 @@ wirklich gelöscht werden</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="365"/>
+        <location filename="src/FreeSSM.cpp" line="355"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="365"/>
+        <location filename="src/FreeSSM.cpp" line="355"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Die notwendigen Einstellungen am seriellen Port konnten nicht durchgeführt werden !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="348"/>
+        <location filename="src/FreeSSM.cpp" line="338"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="335"/>
+        <location filename="src/FreeSSM.cpp" line="325"/>
         <source>No serial port available !</source>
         <translation type="unfinished">Kein serieller Port verfügbar !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="156"/>
+        <location filename="src/FreeSSM.cpp" line="146"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
@@ -954,13 +954,13 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="122"/>
-        <source>Transmission </source>
+        <source> Transmission</source>
         <translation type="unfinished">     Getriebe      </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="226"/>
         <source>  Preferences  </source>
-        <translation type="unfinished">Einstellungen </translation>
+        <translation type="unfinished"> Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -1226,82 +1226,82 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
 <context>
     <name>Transmission_Window</name>
     <message>
-        <location filename="ui/Transmission.ui" line="57"/>
+        <location filename="ui/Transmission.ui" line="63"/>
         <source>Transmission Control Unit</source>
         <translation type="unfinished">Getriebe-Steuergerät</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="561"/>
+        <location filename="ui/Transmission.ui" line="564"/>
         <source>Selection:</source>
         <translation type="unfinished">Auswahl:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="580"/>
+        <location filename="ui/Transmission.ui" line="583"/>
         <source>  Diagnostic Codes </source>
         <translation type="unfinished">   Diagnosecodes    </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="616"/>
+        <location filename="ui/Transmission.ui" line="619"/>
         <source> Measuring Blocks </source>
         <translation type="unfinished">  Messwertblöcke   </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="721"/>
+        <location filename="ui/Transmission.ui" line="724"/>
         <source>   Clear Memory 2  </source>
         <translation type="unfinished">Speicher Löschen 2</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="524"/>
+        <location filename="ui/Transmission.ui" line="530"/>
         <source>ContentTitle:</source>
         <translation type="unfinished"> </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="83"/>
+        <location filename="ui/Transmission.ui" line="89"/>
         <source>Information:</source>
         <translation type="unfinished">Informationen:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="124"/>
+        <location filename="ui/Transmission.ui" line="130"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="165"/>
+        <location filename="ui/Transmission.ui" line="171"/>
         <source>Data:</source>
         <translation type="unfinished">Daten:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="185"/>
+        <location filename="ui/Transmission.ui" line="191"/>
         <source>Switches:</source>
         <translation type="unfinished">Schalter:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="437"/>
+        <location filename="ui/Transmission.ui" line="443"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="103"/>
+        <location filename="ui/Transmission.ui" line="109"/>
         <source>Transmission Type:</source>
         <translation type="unfinished">Getriebe-Typ:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="145"/>
+        <location filename="ui/Transmission.ui" line="151"/>
         <source>OBD2 Support:</source>
         <translation type="unfinished">OBD2-Unterstützung:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="652"/>
+        <location filename="ui/Transmission.ui" line="655"/>
         <source>     Adjustments     </source>
         <translation type="unfinished">    Einstellungen     </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="688"/>
+        <location filename="ui/Transmission.ui" line="691"/>
         <source>    Clear Memory    </source>
         <translation type="unfinished"> Speicher Löschen </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="756"/>
+        <location filename="ui/Transmission.ui" line="759"/>
         <source>       Exit Control Unit        </source>
         <translation type="unfinished">   Steuergerät verlassen    </translation>
     </message>

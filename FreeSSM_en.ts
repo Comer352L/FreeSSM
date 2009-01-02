@@ -889,29 +889,29 @@ Control Unit&apos;s memory</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="365"/>
+        <location filename="src/FreeSSM.cpp" line="355"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="365"/>
+        <location filename="src/FreeSSM.cpp" line="355"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Couldn&apos;t apply the necessary serial port settings !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="348"/>
+        <location filename="src/FreeSSM.cpp" line="338"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="335"/>
+        <location filename="src/FreeSSM.cpp" line="325"/>
         <source>No serial port available !</source>
         <translation type="unfinished">No serial port available !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="156"/>
+        <location filename="src/FreeSSM.cpp" line="146"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
@@ -952,8 +952,8 @@ Maybe port is already in use by another application...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="122"/>
-        <source>Transmission </source>
-        <translation type="unfinished">Transmission </translation>
+        <source> Transmission</source>
+        <translation type="unfinished"> Transmission</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="226"/>
