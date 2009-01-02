@@ -100,8 +100,8 @@ void Engine::setup()
 		if (!_SSMPdev->getSystemDescription(&sysdescription))
 		{
 			QString SYS_ID = "";
-		if (!_SSMPdev->getSysID(&SYS_ID))
-			goto commError;
+			if (!_SSMPdev->getSysID(&SYS_ID))
+				goto commError;
 			sysdescription = tr("unknown (") + SYS_ID + ")";
 		}
 		// Output system description:

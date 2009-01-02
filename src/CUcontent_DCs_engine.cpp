@@ -121,7 +121,7 @@ bool CUcontent_DCs_engine::setup()
 	if (ok)
 	{
 		ok = _SSMPdev->hasTestMode(&TMsup);
-		if (ok)
+		if (ok && TMsup)
 			ok = _SSMPdev->isInTestMode(&testmode); // NOTE: CURRENTLY, THIS WILL FAIL IF DC-READING IS ALREADY IN PROGRESS
 	}
 	if (ok)
