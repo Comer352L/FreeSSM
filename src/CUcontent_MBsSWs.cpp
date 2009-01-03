@@ -380,6 +380,8 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 		_lastvalues.removeAt(startindex + k);
 	// UPDATE MB/SW TABLE CONTENT:
 	updateMWSWqueryListContent();
+	// Clear time information:
+	MBSWrefreshTimeValue_label->setText("---      ");
 	// ACTIVATE/DEACTIVATE BUTTONS:
 	if (_MBSWmetaList.empty())
 	{
