@@ -95,6 +95,7 @@ unix {
        INCLUDEPATH += src/linux
        HEADERS += src/linux/serialCOM.h
        SOURCES += src/linux/serialCOM.cpp
+       QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 }
 
 win32 {
