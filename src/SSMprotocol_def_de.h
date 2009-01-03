@@ -1,7 +1,7 @@
 /*
  * SSMprotocol_def_de.h - SSM-protocol-definitions
  *
- * Copyright © 2008 Comer352l
+ * Copyright © 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

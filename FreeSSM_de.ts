@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="de">
-<defaultcodec></defaultcodec>
 <context>
     <name>ActuatorTestDlg</name>
     <message>
@@ -501,22 +500,22 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="576"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="578"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Aktualisierungsdauer:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="567"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="569"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="677"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="679"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="677"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="679"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Kommunikationsfehler:
@@ -680,22 +679,22 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">noch nicht programmiert</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="254"/>
+        <location filename="src/Engine.cpp" line="249"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnosecodes:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="289"/>
+        <location filename="src/Engine.cpp" line="284"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="321"/>
+        <location filename="src/Engine.cpp" line="316"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="350"/>
+        <location filename="src/Engine.cpp" line="345"/>
         <source>System Operation Tests:</source>
         <translation type="unfinished">System-Funktionstests:</translation>
     </message>
@@ -705,12 +704,12 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">unbekannt (</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="439"/>
+        <location filename="src/Engine.cpp" line="434"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="284"/>
+        <location filename="src/Engine.cpp" line="279"/>
         <source>Switching to Measuring Blocks... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Messwertblöcken... Bitte warten !      </translation>
     </message>
@@ -740,39 +739,39 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">Verbindung herstellen...</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="249"/>
+        <location filename="src/Engine.cpp" line="244"/>
         <source>Switching to Diagnostic Codes... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Diagnosecodes... Bitte warten !      </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="227"/>
+        <location filename="src/Engine.cpp" line="222"/>
         <source>ECU-Initialisation successful !</source>
         <translation type="unfinished">ECU-Initialisierung erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="439"/>
+        <location filename="src/Engine.cpp" line="434"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="455"/>
+        <location filename="src/Engine.cpp" line="450"/>
         <source>Stopping Communication... Please wait !   </source>
         <translation type="unfinished">Trenne Verbindung zum Steuergerät... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="316"/>
+        <location filename="src/Engine.cpp" line="311"/>
         <source>Switching to Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Wechsele zu Einstellungen... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="345"/>
+        <location filename="src/Engine.cpp" line="340"/>
         <source>Switching to System Tests... Please wait !   </source>
         <translation type="unfinished">Wechsele zu System-Funktionstests... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="383"/>
+        <location filename="src/Engine.cpp" line="378"/>
         <source>Reading Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Einstellungen werden gelesen... Bitte warten !   </translation>
     </message>
@@ -1464,8 +1463,8 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="569"/>
-        <source>Written by Comer352l (Copyright © 2008)</source>
-        <translation type="unfinished">Geschrieben von Comer352l (Copyright © 2008)</translation>
+        <source>Written by Comer352l (Copyright © 2008-2009)</source>
+        <translation type="unfinished">Geschrieben von Comer352l (Copyright © 2008-2009)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="615"/>

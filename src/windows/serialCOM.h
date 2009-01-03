@@ -1,7 +1,7 @@
 /*
  * serialCOM.h - Serial port configuration and communication
  *
- * Copyright © 2008 Comer352l
+ * Copyright ï¿½ 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

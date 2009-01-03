@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
-<defaultcodec></defaultcodec>
 <context>
     <name>ActuatorTestDlg</name>
     <message>
@@ -500,22 +499,22 @@ The Control Unit didn&apos;t accept the new value !</translation>
         <translation type="unfinished"> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="576"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="578"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="567"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="569"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block transfer rate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="677"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="679"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="677"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="679"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Communication Error:
@@ -783,97 +782,97 @@ Control Unit&apos;s memory</translation>
 <context>
     <name>Engine_Window</name>
     <message>
-        <location filename="ui/Engine.ui" line="57"/>
+        <location filename="ui/Engine.ui" line="63"/>
         <source>Engine Control Unit</source>
         <translation type="unfinished">Engine Control Unit</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="758"/>
+        <location filename="ui/Engine.ui" line="761"/>
         <source>Selection:</source>
         <translation type="unfinished">Selection:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="777"/>
+        <location filename="ui/Engine.ui" line="780"/>
         <source> Diagnostic Codes  </source>
         <translation type="unfinished"> Diagnostic Codes  </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="813"/>
+        <location filename="ui/Engine.ui" line="816"/>
         <source> Measuring Blocks </source>
         <translation type="unfinished"> Measuring Blocks </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="721"/>
+        <location filename="ui/Engine.ui" line="727"/>
         <source>ContentTitle:</source>
         <translation type="unfinished"> </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="83"/>
+        <location filename="ui/Engine.ui" line="89"/>
         <source>Information:</source>
         <translation type="unfinished">Information:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="124"/>
+        <location filename="ui/Engine.ui" line="130"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registered VIN:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="145"/>
+        <location filename="ui/Engine.ui" line="151"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="166"/>
+        <location filename="ui/Engine.ui" line="172"/>
         <source>Integ. Cruise Control:</source>
         <translation type="unfinished">Integ. Cruise Control:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="187"/>
+        <location filename="ui/Engine.ui" line="193"/>
         <source>Immobilizer:</source>
         <translation type="unfinished">Immobilizer:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="228"/>
+        <location filename="ui/Engine.ui" line="234"/>
         <source>Data:</source>
         <translation type="unfinished">Data:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="248"/>
+        <location filename="ui/Engine.ui" line="254"/>
         <source>Switches:</source>
         <translation type="unfinished">Switches:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="640"/>
+        <location filename="ui/Engine.ui" line="646"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="103"/>
+        <location filename="ui/Engine.ui" line="109"/>
         <source>Engine Type:</source>
         <translation type="unfinished">Engine Type:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="208"/>
+        <location filename="ui/Engine.ui" line="214"/>
         <source>OBD2 Support:</source>
         <translation type="unfinished">OBD2 Support:</translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="849"/>
+        <location filename="ui/Engine.ui" line="852"/>
         <source>     Adjustments     </source>
         <translation type="unfinished">     Adjustments     </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="885"/>
+        <location filename="ui/Engine.ui" line="888"/>
         <source>    System Tests    </source>
         <translation type="unfinished">    System Tests    </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="921"/>
+        <location filename="ui/Engine.ui" line="924"/>
         <source>    Clear Memory    </source>
         <translation type="unfinished">    Clear Memory    </translation>
     </message>
     <message>
-        <location filename="ui/Engine.ui" line="962"/>
+        <location filename="ui/Engine.ui" line="965"/>
         <source>       Exit Control Unit        </source>
         <translation type="unfinished">       Exit Control Unit        </translation>
     </message>
@@ -1224,82 +1223,82 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
 <context>
     <name>Transmission_Window</name>
     <message>
-        <location filename="ui/Transmission.ui" line="57"/>
+        <location filename="ui/Transmission.ui" line="63"/>
         <source>Transmission Control Unit</source>
         <translation type="unfinished">Transmission Control Unit</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="561"/>
+        <location filename="ui/Transmission.ui" line="564"/>
         <source>Selection:</source>
         <translation type="unfinished">Selection:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="580"/>
+        <location filename="ui/Transmission.ui" line="583"/>
         <source>  Diagnostic Codes </source>
         <translation type="unfinished">  Diagnostic Codes </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="616"/>
+        <location filename="ui/Transmission.ui" line="619"/>
         <source> Measuring Blocks </source>
         <translation type="unfinished"> Measuring Blocks </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="721"/>
+        <location filename="ui/Transmission.ui" line="724"/>
         <source>   Clear Memory 2  </source>
         <translation type="unfinished">   Clear Memory 2  </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="524"/>
+        <location filename="ui/Transmission.ui" line="530"/>
         <source>ContentTitle:</source>
         <translation type="unfinished"> </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="83"/>
+        <location filename="ui/Transmission.ui" line="89"/>
         <source>Information:</source>
         <translation type="unfinished">Information:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="124"/>
+        <location filename="ui/Transmission.ui" line="130"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="165"/>
+        <location filename="ui/Transmission.ui" line="171"/>
         <source>Data:</source>
         <translation type="unfinished">Data:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="185"/>
+        <location filename="ui/Transmission.ui" line="191"/>
         <source>Switches:</source>
         <translation type="unfinished">Switches:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="437"/>
+        <location filename="ui/Transmission.ui" line="443"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="103"/>
+        <location filename="ui/Transmission.ui" line="109"/>
         <source>Transmission Type:</source>
         <translation type="unfinished">Transmission Type:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="145"/>
+        <location filename="ui/Transmission.ui" line="151"/>
         <source>OBD2 Support:</source>
         <translation type="unfinished">OBD2 Support:</translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="652"/>
+        <location filename="ui/Transmission.ui" line="655"/>
         <source>     Adjustments     </source>
         <translation type="unfinished">     Adjustments     </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="688"/>
+        <location filename="ui/Transmission.ui" line="691"/>
         <source>    Clear Memory    </source>
         <translation type="unfinished">    Clear Memory    </translation>
     </message>
     <message>
-        <location filename="ui/Transmission.ui" line="756"/>
+        <location filename="ui/Transmission.ui" line="759"/>
         <source>       Exit Control Unit        </source>
         <translation type="unfinished">       Exit Control Unit        </translation>
     </message>
@@ -1461,8 +1460,8 @@ You should have received a copy of the GNU General Public License along with thi
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="569"/>
-        <source>Written by Comer352l (Copyright © 2008)</source>
-        <translation type="unfinished">Written by Comer352l (Copyright © 2008)</translation>
+        <source>Written by Comer352l (Copyright © 2008-2009)</source>
+        <translation type="unfinished">Written by Comer352l (Copyright © 2008-2009)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="615"/>
