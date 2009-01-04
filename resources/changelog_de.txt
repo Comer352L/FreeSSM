@@ -1,11 +1,23 @@
-v0.97.2 (4.12.2008):
+v0.98.0 (04.01.2009):
+  - Erweiterte Dokumentation: Tesmodusstecker, Interface-Liste,
+    Rechtschreibfehler behoben
+  - Auswahlmöglichkeit für GUI-Stil implementiert
+  - Zahlreiche kleine GUI-Anpassungen für das KDE4-Oxygen-Design
+  - Dialog für das Hinzufügen vom Messwertblöcken:
+    geändertes Selektions-Verhalten der Auswahl-Liste
+  - Überabeiteter Code, mehrere kleinere Bugs behoben, Optimierungen
+  - Workaround für eine Regression in GCC-Compiler-Versionen >= 4.2
+    (riesige Binärdatei durch GCSE-Optimierung)
+  - Aktualisierte Copyright-Daten
+  - Linux: Pakete für xUbuntu und openSUSE 11.1 verfügbar
 
- Kleinere Änderungen, hauptsächlich in Bezug auf den Installations-Prozess.
+
+v0.97.2 (04.12.2008):
+  Kleinere Änderungen, hauptsächlich in Bezug auf den Installations-Prozess.
 
 
-v0.97.1 (1.12.2008):
-
- Erstes Release:
+v0.97.1 (01.12.2008):
+  Erstes Release:
   - Zugriff auf ECUs und TCUs für Modelle MJ1999+
   - Lesen von Fehlercodes und GRA-Abbruchcodes
   - Messwertblock-Lesen
