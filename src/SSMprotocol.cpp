@@ -453,6 +453,22 @@ void SSMprotocol::setupDTCaddresses()
 				_memorizedDTCsAddr.push_back( addr + 7 );
 			}
 		}
+		if (_nrofflagbytes > 48)
+		{
+			if (_flagbytes[50] == (_flagbytes[50] | 0x40))
+			{
+				for (addr=0x1C1; addr<=0x1C6; addr++)
+				{
+					_temporaryDTCsAddr.push_back( addr );
+					_memorizedDTCsAddr.push_back( addr + 6 );
+				}
+				for (addr=0x20A; addr<=0x20D; addr++)
+				{
+					_temporaryDTCsAddr.push_back( addr );
+					_memorizedDTCsAddr.push_back( addr + 4 );
+				}
+			}
+		}
 	}
 }
 

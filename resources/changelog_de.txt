@@ -1,5 +1,5 @@
 v0.98.0 (04.01.2009):
-  - Erweiterte Dokumentation: Tesmodusstecker, Interface-Liste,
+  - Erweiterte Dokumentation: Testmodusstecker, Interface-Liste,
     Rechtschreibfehler behoben
   - Auswahlmöglichkeit für GUI-Stil implementiert
   - Zahlreiche kleine GUI-Anpassungen für das KDE4-Oxygen-Design
