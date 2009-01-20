@@ -80,6 +80,10 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	// Request user to switch ignition off and wait for communication error:
 	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
 	ok = _SSMPdev->waitForIgnitionOff();
+	// Wait 5 seconds
+	QEventLoop el;
+	QTimer::singleShot(5000, &el, SLOT( quit() ));
+	el.exec();
 	// Close wait-message box:
 	waitmsgbox.close();
 	if (!ok)
