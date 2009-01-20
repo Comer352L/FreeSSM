@@ -180,7 +180,9 @@
 		<< "55;5;0;1;0001F4;;Drivers Control Center Differential (DCCD) Mode;;*1;0"
 		<< "55;6;0;1;0001F3;;Drivers Control Center Differential (DCCD) Torque Allocation;;*1;0"
 		<< "55;7;0;1;0001F2;;Lateral G;m/s²;MSB8:1.0862;2"
-		<< "55;8;0;1;0001F1;;Yaw Rate;deg/s;MSB8:0.19118;0";
+		<< "55;8;0;1;0001F1;;Yaw Rate;deg/s;MSB8:0.19118;0"
+		<< "65;7;1;0;000299;;Accumulated Count of Overspeed Instances (High RPM);Time;*1;0"
+		<< "65;8;1;0;000298;;Accumulated Count of Overspeed Instances (Very High RPM);Time;*1;0";
 
 
 

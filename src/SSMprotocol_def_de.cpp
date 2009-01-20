@@ -180,7 +180,9 @@
 		<< "55;5;0;1;0001F4;;Einstellbares Zentraldifferential (DCCD) Modus;;*1;0"
 		<< "55;6;0;1;0001F3;;Einstellbares Zentraldifferential (DCCD) Drehmomentverteilung;;*1;0"
 		<< "55;7;0;1;0001F2;;Längs-Beschleunigung;m/s²;MSB8:1.0862;2"
-		<< "55;8;0;1;0001F1;;Gier-Geschwindigkeit;Grad/s;MSB8:0.19118;0";
+		<< "55;8;0;1;0001F1;;Gier-Geschwindigkeit;Grad/s;MSB8:0.19118;0"
+		<< "65;7;1;0;000299;;Kumulativer Zählwert für Überdrehzahlen (hohe Drehzahlen);Mal;*1;0"
+		<< "65;8;1;0;000298;;Kumulativer Zählwert für Überdrehzahlen (sehr hohe Drehzahlen);Mal;*1;0";
 
 
 
