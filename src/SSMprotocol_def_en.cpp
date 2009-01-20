@@ -958,7 +958,7 @@
 		<< "0001C4;0001CA;6;P????;UNKNOWN (Address 1C4/1CA Bit 6)"
 		<< "0001C4;0001CA;7;P????;UNKNOWN (Address 1C4/1CA Bit 7)"
 		<< "0001C4;0001CA;8;P????;UNKNOWN (Address 1C4/1CA Bit 8)"
-		<< "0001C5;0001CB;1;P????;UNKNOWN (Address 1C5/1CB Bit 1)"
+		<< "0001C5;0001CB;1;P0201;Injector #1 Circuit Malfunction"
 		<< "0001C5;0001CB;2;P????;UNKNOWN (Address 1C5/1CB Bit 2)"
 		<< "0001C5;0001CB;3;P????;UNKNOWN (Address 1C5/1CB Bit 3)"
 		<< "0001C5;0001CB;4;P????;UNKNOWN (Address 1C5/1CB Bit 4)"
@@ -971,9 +971,9 @@
 		<< "0001C6;0001CC;3;P????;UNKNOWN (Address 1C6/1CC Bit 3)"
 		<< "0001C6;0001CC;4;P????;UNKNOWN (Address 1C6/1CC Bit 4)"
 		<< "0001C6;0001CC;5;P????;UNKNOWN (Address 1C6/1CC Bit 5)"
-		<< "0001C6;0001CC;6;P????;UNKNOWN (Address 1C6/1CC Bit 6)"
-		<< "0001C6;0001CC;7;P????;UNKNOWN (Address 1C6/1CC Bit 7)"
-		<< "0001C6;0001CC;8;P????;UNKNOWN (Address 1C6/1CC Bit 8)"
+		<< "0001C6;0001CC;6;P0204;Injector #4 Circuit Malfunction"
+		<< "0001C6;0001CC;7;P0203;Injector #3 Circuit Malfunction"
+		<< "0001C6;0001CC;8;P0202;Injector #2 Circuit Malfunction"
 		<< "00020A;00020E;1;P????;UNKNOWN (Address 20A/20E Bit 1)"
 		<< "00020A;00020E;2;P????;UNKNOWN (Address 20A/20E Bit 2)"
 		<< "00020A;00020E;3;P????;UNKNOWN (Address 20A/20E Bit 3)"
@@ -990,8 +990,8 @@
 		<< "00020B;00020F;6;P????;UNKNOWN (Address 20B/20F Bit 6)"
 		<< "00020B;00020F;7;P????;UNKNOWN (Address 20B/20F Bit 7)"
 		<< "00020B;00020F;8;P????;UNKNOWN (Address 20B/20F Bit 8)"
-		<< "00020C;000210;1;P????;UNKNOWN (Address 20C/210 Bit 1)"
-		<< "00020C;000210;2;P????;UNKNOWN (Address 20C/210 Bit 2)"
+		<< "00020C;000210;1;P1382;Glow Relay Circuit (High)"
+		<< "00020C;000210;2;P0219;Engine Overspeed Condition"
 		<< "00020C;000210;3;P????;UNKNOWN (Address 20C/210 Bit 3)"
 		<< "00020C;000210;4;P????;UNKNOWN (Address 20C/210 Bit 4)"
 		<< "00020C;000210;5;P????;UNKNOWN (Address 20C/210 Bit 5)"
@@ -1005,7 +1005,7 @@
 		<< "00020D;000211;5;P????;UNKNOWN (Address 20D/211 Bit 1)"
 		<< "00020D;000211;6;P????;UNKNOWN (Address 20D/211 Bit 1)"
 		<< "00020D;000211;7;P????;UNKNOWN (Address 20D/211 Bit 1)"
-		<< "00020D;000211;8;P????;UNKNOWN (Address 20D/211 Bit 1)";
+		<< "00020D;000211;8;P1380;Glow Relay Circuit (Low)";
 
 
 

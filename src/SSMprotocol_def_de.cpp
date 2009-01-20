@@ -958,7 +958,7 @@
 		<< "0001C4;0001CA;6;P????;UNBEKANNT (Adresse 1C4/1CA Bit 6)"
 		<< "0001C4;0001CA;7;P????;UNBEKANNT (Adresse 1C4/1CA Bit 7)"
 		<< "0001C4;0001CA;8;P????;UNBEKANNT (Adresse 1C4/1CA Bit 8)"
-		<< "0001C5;0001CB;1;P????;UNBEKANNT (Adresse 1C5/1CB Bit 1)"
+		<< "0001C5;0001CB;1;P0201;Fehler im Stromkreis von Einspritzventil #1"
 		<< "0001C5;0001CB;2;P????;UNBEKANNT (Adresse 1C5/1CB Bit 2)"
 		<< "0001C5;0001CB;3;P????;UNBEKANNT (Adresse 1C5/1CB Bit 3)"
 		<< "0001C5;0001CB;4;P????;UNBEKANNT (Adresse 1C5/1CB Bit 4)"
@@ -971,9 +971,9 @@
 		<< "0001C6;0001CC;3;P????;UNBEKANNT (Adresse 1C6/1CC Bit 3)"
 		<< "0001C6;0001CC;4;P????;UNBEKANNT (Adresse 1C6/1CC Bit 4)"
 		<< "0001C6;0001CC;5;P????;UNBEKANNT (Adresse 1C6/1CC Bit 5)"
-		<< "0001C6;0001CC;6;P????;UNBEKANNT (Adresse 1C6/1CC Bit 6)"
-		<< "0001C6;0001CC;7;P????;UNBEKANNT (Adresse 1C6/1CC Bit 7)"
-		<< "0001C6;0001CC;8;P????;UNBEKANNT (Adresse 1C6/1CC Bit 8)"
+		<< "0001C6;0001CC;6;P0204;Fehler im Stromkreis von Einspritzventil #4"
+		<< "0001C6;0001CC;7;P0203;Fehler im Stromkreis von Einspritzventil #3"
+		<< "0001C6;0001CC;8;P0202;Fehler im Stromkreis von Einspritzventil #2"
 		<< "00020A;00020E;1;P????;UNBEKANNT (Adresse 20A/20E Bit 1)"
 		<< "00020A;00020E;2;P????;UNBEKANNT (Adresse 20A/20E Bit 2)"
 		<< "00020A;00020E;3;P????;UNBEKANNT (Adresse 20A/20E Bit 3)"
@@ -990,8 +990,8 @@
 		<< "00020B;00020F;6;P????;UNBEKANNT (Adresse 20B/20F Bit 6)"
 		<< "00020B;00020F;7;P????;UNBEKANNT (Adresse 20B/20F Bit 7)"
 		<< "00020B;00020F;8;P????;UNBEKANNT (Adresse 20B/20F Bit 8)"
-		<< "00020C;000210;1;P????;UNBEKANNT (Adresse 20C/210 Bit 1)"
-		<< "00020C;000210;2;P????;UNBEKANNT (Adresse 20C/210 Bit 2)"
+		<< "00020C;000210;1;P1382;Glührelaisschaltkreis (Hoch)"
+		<< "00020C;000210;2;P0219;Motorüberdrehung"
 		<< "00020C;000210;3;P????;UNBEKANNT (Adresse 20C/210 Bit 3)"
 		<< "00020C;000210;4;P????;UNBEKANNT (Adresse 20C/210 Bit 4)"
 		<< "00020C;000210;5;P????;UNBEKANNT (Adresse 20C/210 Bit 5)"
@@ -1005,7 +1005,7 @@
 		<< "00020D;000211;5;P????;UNBEKANNT (Adresse 20D/211 Bit 5)"
 		<< "00020D;000211;6;P????;UNBEKANNT (Adresse 20D/211 Bit 6)"
 		<< "00020D;000211;7;P????;UNBEKANNT (Adresse 20D/211 Bit 7)"
-		<< "00020D;000211;8;P????;UNBEKANNT (Adresse 20D/211 Bit 8)";
+		<< "00020D;000211;8;P1380;Glührelaisschaltkreis (Niedrig)";
 
 
 
