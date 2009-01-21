@@ -341,7 +341,17 @@
 		<< "47;5;1;0;0000D7;Sekundärluft-Kombiventil Relais 2;Aus/Ein"
 		<< "47;7;1;0;0000D7;Karosseriemodul Zähler;Ein/Aus"
 		<< "47;8;1;0;0000D7;Karosseriemodul Wert;Ein/Aus"
-		<< "49;8;1;0;000196;Flag ''Störungsleuchte an'';Aus/Ein";
+		<< "49;8;1;0;000196;Flag ''Störungsleuchte an'';Aus/Ein"
+		<< "50;1;1;0;000197;Einspritzventillernen;Nicht Abgeschlossen/Abgeschlossen"
+		<< "50;2;1;0;000197;Kraftstoffpumpenlernen;Nicht Abgeschlossen/Abgeschlossen"
+		<< "50;4;1;0;000197;Hilfskraftstoffpumpenrelais;Aus/Ein"
+		<< "50;6;1;0;000197;Vorglührelais;Aus/Ein"
+		<< "50;7;1;0;000197;Abgasrückführung (AGR) Steuermodus;Offen/Rückführung"
+		<< "50;8;1;0;000197;Ladedrucksteuermodus;Offen/Rückführung"
+		<< "62;5;1;0;0001CE;Kupplungsschalter für Smart-System;Aus/Ein"
+		<< "62;6;1;0;0001CE;Kraftstoffpumpenmodus;Offen/Rückführung"
+		<< "62;7;1;0;0001CE;Kraftstoffabsperrung;Nicht Angefordert/Angefordert"
+		<< "62;8;1;0;0001CE;Abgasrückführung (AGR) Lernprozess;Nicht Abgeschlossen/Abgeschlossen";
 
 
 
