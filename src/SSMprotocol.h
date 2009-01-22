@@ -160,7 +160,7 @@ public:
 	bool ClearMemory(CMlevel_dt level, bool *success);
 	bool TestImmobilizerCommLine(immoTestResult_dt *result);
 	bool stopAllActuators();
-	bool startDCreading(int DCgroups, bool ignoreDCheckState = false);
+	bool startDCreading(int DCgroups);
 	bool restartDCreading();
 	bool stopDCreading();
 	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
@@ -202,7 +202,6 @@ private:
 	std::vector<unsigned int> _allActByteAddr;
 	// *** Selection data ***:
 	int _selectedDCgroups;
-	bool _ignoreDCheckStateOnDCreading;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	unsigned char _selectedActuatorTestIndex;
 	// *** Temporary (operation related) data ***:
@@ -227,7 +226,7 @@ private:
 	void StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr);
 
 signals:
-	void temporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions);
+	void temporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool DCheckActive);
 	void memorizedDTCs(QStringList historicDTCs, QStringList historicDTCsDescriptions);
 	void latestCCCCs(QStringList currentCCCCs, QStringList currentCCCCsDescriptions);
 	void memorizedCCCCs(QStringList historicCCCCs, QStringList historicCCCCsDescriptions);

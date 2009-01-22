@@ -66,7 +66,7 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 }
 
@@ -185,7 +185,7 @@ bool CUcontent_DCs_transmission::startDCreading()
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
 		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
@@ -211,7 +211,7 @@ bool CUcontent_DCs_transmission::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	return true;
 }
@@ -591,29 +591,3 @@ void CUcontent_DCs_transmission::setupUiFonts()
 	printDClist_pushButton->setFont(contentfont);
 }
 
-/* NOTE: we don't handle the SSMprotocol::commError()-signal, the parent object has to be connected to it directly
-         (if there is a commError(), CU-connection is reset automatically and we get the SSMprotocol::stoppedDCreading()-signal) */
-
-/* TODO:
-*/
-
-/* FUTURE:
-	- merge with CUcontent_DCs_engine
-*/
-
-/* IMPROVE:
-	- behavior, when DC-reading is in progress when calling constructor or setup():
-		- setup(): possible cations:
-			a) join automaticly
-			b) ask user what to do ?
-			c) stopDCreading()
-			d) nothing, synchronmization will take place when start...() is called	=> current implementatiton
-		- Constructor: stop DC-reading ?
-		- start...(): if DC-reading is already in progress with other parameters (groups): stop and then restart with own parameters ?
-
-*/
-
-/* NON-PRIORITY:
-	- theoretical bug: when starting to print before all Memories have been read once, "----- Reading data... Please wait ! -----" will be printed as DC
-		=> at the moment, the print-button is deactivated until the first Memory has been read; Memories should be refreshed always at the same time, but that's not 100% sure...
-*/

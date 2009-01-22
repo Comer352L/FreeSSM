@@ -136,7 +136,6 @@ void SSMprotocol::resetCUdata()
 	_allActByteAddr.clear();
 	// *** Reset selection data ***:
 	_selectedDCgroups = noDCs_DCgroup;
-	_ignoreDCheckStateOnDCreading = false;
 	_MBSWmetaList.clear();
 	for (k=0; k<(SSMP_MAX_MBSW); k++) _selMBsSWaAddr[k] = 0;
 	_selMBsSWsAddrLen = 0;
@@ -1275,7 +1274,7 @@ bool SSMprotocol::TestImmobilizerCommLine(immoTestResult_dt *result)
 
 
 
-bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
+bool SSMprotocol::startDCreading(int DCgroups)
 {
 	unsigned int DCqueryAddrList[(2*SSMP_MAX_DTCADDR)+(2*SSMP_MAX_CCCCADDR)] = {0};
 	unsigned int DCqueryAddrListLen = 0;
@@ -1299,7 +1298,7 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 	// Setup diagnostic codes addresses list:
 	if (DCgroups == (DCgroups | temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
-		if ((_CU == ECU) && !ignoreDCheckState)
+		if (_CU == ECU)
 		{
 			DCqueryAddrList[DCqueryAddrListLen] = 0x000061;
 			DCqueryAddrListLen++;
@@ -1347,7 +1346,6 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 		_state = state_DCreading;
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
-		_ignoreDCheckStateOnDCreading = ignoreDCheckState;
 		// Connect signals and slots:
 		connect( _SSMPcom, SIGNAL( recievedData(QByteArray, int) ),
 			this, SLOT( processDCsRawdata(QByteArray, int) ), Qt::BlockingQueuedConnection );
@@ -1363,7 +1361,7 @@ bool SSMprotocol::startDCreading(int DCgroups, bool ignoreDCheckState)
 
 bool SSMprotocol::restartDCreading()
 {
-	return startDCreading(_selectedDCgroups, _ignoreDCheckStateOnDCreading);
+	return startDCreading(_selectedDCgroups);
 }
 
 
@@ -1395,32 +1393,31 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
 	QStringList tmpDTCsDescriptions;
+	bool DCheckActive = false;
 	unsigned int DCsAddrIndex = 0;
 	unsigned int DCsAddrIndexOffset = 0;
 	duration_ms = 0; // to avoid compiler error
 	if (_selectedDCgroups == (_selectedDCgroups | temporaryDTCs_DCgroup))
 	{
-		if ((_CU == ECU) && !_ignoreDCheckStateOnDCreading)
-			DCsAddrIndexOffset = 1;
-		DCs.clear();
-		DCdescriptions.clear();
-		if ((_CU != ECU) || _ignoreDCheckStateOnDCreading || (DCrawdata.at(0) != (DCrawdata.at(0) | 0x80)))
+		if (_CU == ECU)
 		{
-			// Evaluate current/latest data trouble codes:
-			for (DCsAddrIndex=0; DCsAddrIndex<_temporaryDTCsAddr.size(); DCsAddrIndex++)
-			{
-				evaluateDCdataByte(_temporaryDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
-				DCs += tmpDTCs;
-				DCdescriptions += tmpDTCsDescriptions;
-			}
+			DCsAddrIndexOffset = 1;
+			if (DCrawdata.at(0) == (DCrawdata.at(0) | 0x80))
+				DCheckActive = true;
 		}
 		else
+			DCheckActive = false;
+		DCs.clear();
+		DCdescriptions.clear();
+		// Evaluate current/latest data trouble codes:
+		for (DCsAddrIndex=0; DCsAddrIndex<_temporaryDTCsAddr.size(); DCsAddrIndex++)
 		{
-			DCs += "";
-			DCdescriptions += tr("----- SYSTEM CHECK IS NOT YET COMPLETED ! -----");
+			evaluateDCdataByte(_temporaryDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCs += tmpDTCs;
+			DCdescriptions += tmpDTCsDescriptions;
 		}
 		DCsAddrIndexOffset += _temporaryDTCsAddr.size();
-		emit temporaryDTCs(DCs, DCdescriptions);
+		emit temporaryDTCs(DCs, DCdescriptions, DCheckActive);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | memorizedDTCs_DCgroup))
 	{

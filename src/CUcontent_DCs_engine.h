@@ -44,6 +44,7 @@ private:
 	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	int _supportedDCgroups;
+	bool _DCheckActive;
 	QStringList _temporaryDTCs;
 	QStringList _temporaryDTCdescriptions;
 	QStringList _memorizedDTCs;
@@ -65,7 +66,7 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions);
+	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool DCheckActive);
 	void updateMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
 	void updateCClatestCCsContent(QStringList latestCCCCs, QStringList latestCCCCdescriptions);
 	void updateCCmemorizedCCsContent(QStringList memorizedCCCCs, QStringList memorizedCCCCdescriptions);

@@ -243,145 +243,150 @@ Das Steuergerät hat den neuen Wert nicht akzeptiert !</translation>
 <context>
     <name>CUcontent_DCs_engine</name>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="137"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="138"/>
         <source>System-Check Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Systemprüfungs-Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="141"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="142"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Kurzzeitige Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="145"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="146"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="149"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="150"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Gespeicherte Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="151"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="152"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historische Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="266"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="267"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation type="unfinished">----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="173"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="174"/>
         <source>----- Not supported by ECU -----</source>
         <translation type="unfinished">----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="474"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="481"/>
         <source>Printing...</source>
         <translation type="unfinished">Drucke...</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="474"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="481"/>
         <source>Printing... Please wait !    </source>
         <translation type="unfinished">Drucke... Bitte warten !    </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="485"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="492"/>
         <source>Engine</source>
         <translation type="unfinished">Motor</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="604"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="611"/>
         <source>Control Unit:</source>
         <translation type="unfinished">Steuergerät:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="614"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="621"/>
         <source>System Type:</source>
         <translation type="unfinished">System-Typ:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="624"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="631"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="634"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="641"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registr. Fahrgest.-Nr.:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="663"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="670"/>
         <source>----- No Trouble Codes -----</source>
         <translation type="unfinished">----- Keine Fehlercodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="685"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="692"/>
         <source>----- No Cancel Codes -----</source>
         <translation type="unfinished">----- Keine Abbruchcodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="810"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="817"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="810"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="817"/>
         <source>Communication Error:</source>
         <translation type="unfinished">Kommunikationsfehler:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="202"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="203"/>
         <source>Couldn&apos;t start Diagnostic Codes Reading.</source>
         <translation type="unfinished">Das Lesen der Diagnose-Codes konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="530"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="537"/>
         <source>Couldn&apos;t stop Diagnostic Codes Reading.</source>
         <translation type="unfinished">Das Lesen der Diagnose-Codes konnte nicht beendet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="494"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="501"/>
         <source>Query of the System-ID failed.</source>
         <translation type="unfinished">Die Abfrage der System-ID ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="539"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="546"/>
         <source>Query of the ROM-ID failed.</source>
         <translation type="unfinished">Die Abfrage der ROM-ID ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="536"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="543"/>
         <source>Couldn&apos;t determine if VIN-registration is supported.</source>
         <translation type="unfinished">Es konnte nicht festgestellt werden, ob das Steuergerät
 die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="492"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="499"/>
         <source>Unknown (</source>
         <translation type="unfinished">Unbekannt (</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="518"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="525"/>
         <source>not programmed yet</source>
         <translation type="unfinished">noch nicht programmiert</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="533"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="540"/>
         <source>not supported by ECU</source>
         <translation type="unfinished">nicht unterstützt</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="527"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="534"/>
         <source>Query of the VIN failed.</source>
         <translation type="unfinished">Die Abfrage der Fahrgestellnummer ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="524"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="531"/>
         <source>Couldn&apos;t restart Diagnostic Codes Reading.</source>
         <translation type="unfinished">Das Lesen der Diagnose-Codes konnte nicht wieder gestartet werden.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="304"/>
+        <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
+        <translation type="unfinished">----- SYSTEMPRÜFUNG IST NOCH NICHT ABGESCHLOSSEN ! -----</translation>
     </message>
 </context>
 <context>
@@ -604,44 +609,44 @@ ZÜNDUNG verbinden/trennen !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="167"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="171"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="134"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="138"/>
         <source>Do you really want to clear the
 Control Unit&apos;s memory</source>
         <translation type="unfinished">Soll der Steuergeräte-Speicher
 wirklich gelöscht werden</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="143"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="147"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="144"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="148"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="170"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="174"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Bitte schalten Sie die Zündung wieder EIN.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="171"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="175"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="172"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Steuergerät verlassen </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="138"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="142"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (Stufe 2)</translation>
     </message>
@@ -656,7 +661,7 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">Bitte Zündung ausschalten und warten...   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="177"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="181"/>
         <source>Reconnecting... Please wait !   </source>
         <translation type="unfinished">Verbindung wird wieder hergestellt... Bitte warten !   </translation>
     </message>
@@ -1132,14 +1137,6 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
         <location filename="src/SSMprotocol_ID.cpp" line="55"/>
         <source>Center Differential</source>
         <translation type="unfinished">Zentraldifferential</translation>
-    </message>
-</context>
-<context>
-    <name>SSMprotocol</name>
-    <message>
-        <location filename="src/SSMprotocol.cpp" line="1404"/>
-        <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
-        <translation type="unfinished">----- SYSTEMPRÜFUNG IST NOCH NICHT ABGESCHLOSSEN ! -----</translation>
     </message>
 </context>
 <context>

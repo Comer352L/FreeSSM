@@ -25,6 +25,7 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	_SSMPdev = SSMPdev;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
+	_DCheckActive = false;
 	_temporaryDTCs.clear();
 	_temporaryDTCdescriptions.clear();
 	_memorizedDTCs.clear();
@@ -85,7 +86,7 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
@@ -248,8 +249,8 @@ bool CUcontent_DCs_engine::startDCreading()
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
-		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), false);
+		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
@@ -285,7 +286,7 @@ bool CUcontent_DCs_engine::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
@@ -293,10 +294,15 @@ bool CUcontent_DCs_engine::stopDCreading()
 }
 
 
-void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions)
+void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool DCheckActive)
 {
-	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions))
+	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions) || (DCheckActive != _DCheckActive))
 	{
+		if (DCheckActive)
+		{
+			temporaryDTCs = QStringList("");
+			temporaryDTCdescriptions = QStringList( tr("----- SYSTEM CHECK IS NOT YET COMPLETED ! -----") );
+		}
 		// Save Trouble Codes:
 		_temporaryDTCs = temporaryDTCs;
 		_temporaryDTCdescriptions = temporaryDTCdescriptions;
@@ -311,6 +317,7 @@ void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs,
 		printDClist_pushButton->setEnabled(true);
 	}
 }
+
 
 
 void CUcontent_DCs_engine::updateMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
@@ -852,31 +859,3 @@ void CUcontent_DCs_engine::setupUiFonts()
 	printDClist_pushButton->setFont(contentfont);
 }
 
-
-/* NOTE: we don't handle the SSMprotocol::commError()-signal, the parent object has to be connected to it directly
-         (if there is a commError(), CU-connection is reset automatically and we get the SSMprotocol::stoppedDCreading()-signal) */
-
-/* TODO:
-*/
-
-/* FUTURE:
-	- merge with CUcontent_DCs_transmission
-*/
-
-/* IMPROVE:
-	- behavior, when DC-reading is in progress when calling constructor or setup():
-		- setup(): possible cations:
-			a) join automaticly
-			b) ask user what to do ?
-			c) stopDCreading()
-			d) nothing, synchronmization will take place when start...() is called	=> current implementatiton
-		- Constructor: stop DC-reading ?
-		- start...(): if DC-reading is already in progress with other parameters (groups): stop and then restart with own parameters ?
-	- setup(): isInTestmode(currently fails if DC-reading is already in progress) !
-	- printDCprotocol(): DC-reading currently needs to be stopped and restarted for getVIN()
-*/
-
-/* NON-PRIORITY:
-	- theoretical bug: when starting to print before all Memories have been read once, "----- Reading data... Please wait ! -----" will be printed as DC
-		=> at the moment, the print-button is deactivated until the first Memory has been read; Memories should be refreshed always at the same time, but that's not 100% sure...
-*/
