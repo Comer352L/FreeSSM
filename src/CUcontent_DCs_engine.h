@@ -44,6 +44,8 @@ private:
 	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	int _supportedDCgroups;
+	bool _obd2;
+	bool _testMode;
 	bool _DCheckActive;
 	QStringList _temporaryDTCs;
 	QStringList _temporaryDTCdescriptions;
@@ -59,6 +61,7 @@ private:
 	void setNrOfTableRows(QTableWidget *tablewidget, unsigned int nrofUsedRows);
 	void setNrOfRowsOfAllTableWidgets();
 	void insertDCtable(QTextCursor cursor, QString title, QStringList codes, QStringList descriptions);
+	void setTitleOfFirstDTCtable(bool obd2, bool testMode);
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void communicationError(QString errstr);
@@ -66,7 +69,7 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool DCheckActive);
+	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool testMode, bool DCheckActive);
 	void updateMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
 	void updateCClatestCCsContent(QStringList latestCCCCs, QStringList latestCCCCdescriptions);
 	void updateCCmemorizedCCsContent(QStringList memorizedCCCCs, QStringList memorizedCCCCdescriptions);

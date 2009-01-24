@@ -1393,6 +1393,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
 	QStringList tmpDTCsDescriptions;
+	bool TestMode = false;
 	bool DCheckActive = false;
 	unsigned int DCsAddrIndex = 0;
 	unsigned int DCsAddrIndexOffset = 0;
@@ -1402,6 +1403,11 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		if (_CU == ECU)
 		{
 			DCsAddrIndexOffset = 1;
+			if (_flagbytes[11] == (_flagbytes[11] | 0x20))	// Test mode supported
+			{
+				if (DCrawdata.at(0) == (DCrawdata.at(0) | 0x20))
+					TestMode = true;
+			}
 			if (DCrawdata.at(0) == (DCrawdata.at(0) | 0x80))
 				DCheckActive = true;
 		}
@@ -1417,7 +1423,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 			DCdescriptions += tmpDTCsDescriptions;
 		}
 		DCsAddrIndexOffset += _temporaryDTCsAddr.size();
-		emit temporaryDTCs(DCs, DCdescriptions, DCheckActive);
+		emit temporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | memorizedDTCs_DCgroup))
 	{

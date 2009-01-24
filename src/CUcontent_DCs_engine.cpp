@@ -25,6 +25,8 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	_SSMPdev = SSMPdev;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
+	_obd2 = true;
+	_testMode = false;
 	_DCheckActive = false;
 	_temporaryDTCs.clear();
 	_temporaryDTCdescriptions.clear();
@@ -86,7 +88,7 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
@@ -96,9 +98,7 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 bool CUcontent_DCs_engine::setup()
 {
 	bool ok = false;
-	bool obd2 = true;
 	bool TMsup = false;
-	bool testmode = false;
 	bool tempDTCs_sup = false;
 	bool memDTCs_sup = false;
 	bool latestCCCCs_sup = false;
@@ -106,6 +106,9 @@ bool CUcontent_DCs_engine::setup()
 	QString title;
 
 	// Reset data:
+	_obd2 = true;
+	_testMode = false;
+	_DCheckActive = false;
 	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
 	_temporaryDTCs.clear();
 	_temporaryDTCdescriptions.clear();
@@ -118,12 +121,12 @@ bool CUcontent_DCs_engine::setup()
 	// Get CU information:
 	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
-		ok =_SSMPdev->hasOBD2(&obd2);
+		ok =_SSMPdev->hasOBD2(&_obd2);
 	if (ok)
 	{
 		ok = _SSMPdev->hasTestMode(&TMsup);
 		if (ok && TMsup)
-			ok = _SSMPdev->isInTestMode(&testmode); // NOTE: CURRENTLY, THIS WILL FAIL IF DC-READING IS ALREADY IN PROGRESS
+			ok = _SSMPdev->isInTestMode(&_testMode); // NOTE: CURRENTLY, THIS WILL FAIL IF DC-READING IS ALREADY IN PROGRESS
 	}
 	if (ok)
 	{
@@ -133,20 +136,8 @@ bool CUcontent_DCs_engine::setup()
 		memCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup));
 	}
 	// Set titles of the DTC-tables
-	if (testmode)
-	{
-		title = tr("System-Check Diagnostic Trouble Code(s):");
-	}
-	else if ( obd2 )
-	{
-		title = tr("Temporary Diagnostic Trouble Code(s):");
-	}
-	else
-	{
-		title = tr("Current Diagnostic Trouble Code(s):");
-	}
-	temporaryDTCsTitle_label->setText( title );
-	if ( obd2 )
+	setTitleOfFirstDTCtable(_obd2, _testMode);
+	if ( _obd2 )
 		title = tr("Memorized Diagnostic Trouble Code(s):");
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");
@@ -249,8 +240,8 @@ bool CUcontent_DCs_engine::startDCreading()
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
-		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), false);
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
+		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
+		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
@@ -286,7 +277,7 @@ bool CUcontent_DCs_engine::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
@@ -294,8 +285,15 @@ bool CUcontent_DCs_engine::stopDCreading()
 }
 
 
-void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool DCheckActive)
+void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool testMode, bool DCheckActive)
 {
+	// DTC-table title:
+	if (testMode != _testMode)
+	{
+		_testMode = testMode;
+		setTitleOfFirstDTCtable(_obd2, _testMode);
+	}
+	// DTCs (table content):
 	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions) || (DCheckActive != _DCheckActive))
 	{
 		if (DCheckActive)
@@ -399,6 +397,25 @@ void CUcontent_DCs_engine::setDCtableContent(QTableWidget *tableWidget, QStringL
 		tableelement = new QTableWidgetItem(DCdescriptions.at(k));
 		tableWidget->setItem(k, 1, tableelement);
 	}
+}
+
+
+void CUcontent_DCs_engine::setTitleOfFirstDTCtable(bool obd2, bool testMode)
+{
+	QString title;
+	if ( testMode )
+	{
+		title = tr("System-Check Diagnostic Trouble Code(s):");
+	}
+	else if ( obd2 )
+	{
+		title = tr("Temporary Diagnostic Trouble Code(s):");
+	}
+	else
+	{
+		title = tr("Current Diagnostic Trouble Code(s):");
+	}
+	temporaryDTCsTitle_label->setText( title );
 }
 
 

@@ -226,7 +226,7 @@ private:
 	void StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr);
 
 signals:
-	void temporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool DCheckActive);
+	void temporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
 	void memorizedDTCs(QStringList historicDTCs, QStringList historicDTCsDescriptions);
 	void latestCCCCs(QStringList currentCCCCs, QStringList currentCCCCsDescriptions);
 	void memorizedCCCCs(QStringList historicCCCCs, QStringList historicCCCCsDescriptions);

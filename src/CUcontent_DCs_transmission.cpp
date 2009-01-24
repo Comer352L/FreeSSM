@@ -66,7 +66,7 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 }
 
@@ -185,7 +185,7 @@ bool CUcontent_DCs_transmission::startDCreading()
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
 		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
@@ -211,7 +211,7 @@ bool CUcontent_DCs_transmission::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
 	return true;
 }

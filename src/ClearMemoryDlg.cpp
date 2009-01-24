@@ -92,7 +92,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	reconnect_result = reconnect(SYS_ID_old, ROM_ID_old);
 	if (reconnect_result != ClearMemoryDlg::CMresult_success)
 		return reconnect_result;
-	// Stop all actuators if CU is in tes-mode:
+	// Stop all actuators if CU is in test-mode:
 	if (!_SSMPdev->hasTestMode(&tm))
 		return ClearMemoryDlg::CMresult_communicationError;
 	if (tm)
