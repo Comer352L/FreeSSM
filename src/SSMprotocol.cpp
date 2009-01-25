@@ -201,12 +201,15 @@ bool SSMprotocol::setupCUdata()
 		if (CCsup)
 			_CC_rawDefs = rawdefs_en.CCCCrawDefs();
 	}
-	for (unsigned int k=0; k<_temporaryDTCsAddr.size(); k++)
+	if (obdDTCs)
 	{
-		for (int m=0; m<allOBDDTCrawDefs.size(); m++)
+		for (unsigned int k=0; k<_temporaryDTCsAddr.size(); k++)
 		{
-			if (_temporaryDTCsAddr.at(k) == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
-				_DTC_rawDefs.append( allOBDDTCrawDefs.at(m) );
+			for (int m=0; m<allOBDDTCrawDefs.size(); m++)
+			{
+				if (_temporaryDTCsAddr.at(k) == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
+					_DTC_rawDefs.append( allOBDDTCrawDefs.at(m) );
+			}
 		}
 	}
 	// Get supported MBs and SWs:
