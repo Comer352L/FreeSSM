@@ -1475,6 +1475,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 
 void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs, QStringList *DC, QStringList *DCdescription)
 {
+	bool DCsAssigned[8] = {false,};
 	unsigned char setbits[8] = {0,};
 	unsigned char setbitslen = 0;
 	QStringList tmpdefparts;
@@ -1484,6 +1485,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 	int k = 0;
 	unsigned char setbitsindex = 0;
 	bool ok = false;
+	QString ukdctitle;
 
 	DC->clear();
 	DCdescription->clear();
@@ -1506,7 +1508,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 		tmpdefparts = DC_rawDefs.at(k).split(';');
 		if (tmpdefparts.size() == 5)
 		{
-			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/latest DCs memory address
+			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary DCs memory address
 			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DCs memory address
 			if ((ok) && ((tmpcurrentdtcadr == DCbyteadr) || (tmphistoricdtcadr == DCbyteadr)))
 			{
@@ -1516,11 +1518,32 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 					// Check if definition belongs to current DC:
 					if (tmpbitadr == setbits[setbitsindex])
 					{
-						DC->push_back(tmpdefparts.at(3));		// DC
-						DCdescription->push_back(tmpdefparts.at(4));	// DC description
+						// Check if DC is to be ignored:
+						if (!(tmpdefparts.at(3).isEmpty() && tmpdefparts.at(4).isEmpty()))
+						{
+							DC->push_back(tmpdefparts.at(3));		// DC
+							DCdescription->push_back(tmpdefparts.at(4));	// DC description
+						}
+						DCsAssigned[setbitsindex] = true;
 					}
 				}
 			}
+		}
+		// else
+			// INVALID DC-DEFINITION
+	}
+	// *** Add DCs without matching definition:
+	for (k=0; k<setbitslen; k++)
+	{
+		if (!DCsAssigned[k])
+		{
+			if (_language == "de")
+				ukdctitle = "UNBEKANNT (Adresse 0x";
+			else
+				ukdctitle = "UNKNOWN (Address 0x";
+			ukdctitle += QString::number(DCbyteadr,16).toUpper() + " Bit " + QString::number(setbits[k]) + ")";
+			DC->push_back("???");			// DC
+			DCdescription->push_back(ukdctitle);	// DC description
 		}
 	}
 }
