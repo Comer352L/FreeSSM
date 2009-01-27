@@ -449,7 +449,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 
 	// ##### DTC-tables #####
 	// Current/Temporary DTCs:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup) )
+	if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup))
 	{
 		if (_currOrTempDTCdescriptions.size() == 0)
 		{
@@ -460,7 +460,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 		insertDCtable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup) )
+	if ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup))
 	{
 		if (_histOrMemDTCdescriptions.size() == 0)
 		{

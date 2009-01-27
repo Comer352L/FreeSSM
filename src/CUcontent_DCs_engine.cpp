@@ -667,7 +667,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 
 	// ##### DTC- and CC-tables #####
 	// Current/Temporary DTCs:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup) )
+	if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup))
 	{
 		if (currOrTempDTCdescriptions.size() == 0)
 		{
@@ -678,7 +678,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 		insertDCtable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup) )
+	if ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup))
 	{
 		if (histOrMemDTCdescriptions.size() == 0)
 		{
@@ -689,7 +689,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 		insertDCtable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
 	// Latest Cancel Codes:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup) )
+	if (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup)
 	{
 		if (latestCCCCdescriptions.size() == 0)
 		{
@@ -700,7 +700,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 		insertDCtable(cursor, latestCCCCsTitle_label->text(), latestCCCCcodes, latestCCCCdescriptions);
 	}
 	// Memorized Cancel Codes:
-	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup) )
+	if (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup)
 	{
 		if (memorizedCCCCdescriptions.size() == 0)
 		{
