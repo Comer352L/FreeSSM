@@ -122,8 +122,8 @@ void SSMprotocol::resetCUdata()
 	_nrofflagbytes = 0;
 	// *** RESET BASIC DATA ***:
 	// Reset DC-data:
-	_temporaryDTCsAddr.clear();
-	_memorizedDTCsAddr.clear();
+	_currOrTempDTCsAddr.clear();
+	_histOrMemDTCsAddr.clear();
 	_latestCCCCsAddr.clear();
 	_memorizedCCCCsAddr.clear();
 	// Reset MB/SW-data:
@@ -203,11 +203,11 @@ bool SSMprotocol::setupCUdata()
 	}
 	if (obdDTCs)
 	{
-		for (unsigned int k=0; k<_temporaryDTCsAddr.size(); k++)
+		for (unsigned int k=0; k<_currOrTempDTCsAddr.size(); k++)
 		{
 			for (int m=0; m<allOBDDTCrawDefs.size(); m++)
 			{
-				if (_temporaryDTCsAddr.at(k) == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
+				if (_currOrTempDTCsAddr.at(k) == allOBDDTCrawDefs.at(m).section(';', 0, 0).toUInt(&ok, 16))
 					_DTC_rawDefs.append( allOBDDTCrawDefs.at(m) );
 			}
 		}
@@ -393,15 +393,15 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 
 void SSMprotocol::setupDTCaddresses()
 {
-	_temporaryDTCsAddr.clear();
-	_memorizedDTCsAddr.clear();
+	_currOrTempDTCsAddr.clear();
+	_histOrMemDTCsAddr.clear();
 	unsigned int addr = 0;
 	if (_flagbytes[29] == (_flagbytes[29] | 0x80))
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 		{
-			_temporaryDTCsAddr.push_back( addr );
-			_memorizedDTCsAddr.push_back( addr + 22 );
+			_currOrTempDTCsAddr.push_back( addr );
+			_histOrMemDTCsAddr.push_back( addr + 22 );
 		}
 		return;
 	}
@@ -409,16 +409,16 @@ void SSMprotocol::setupDTCaddresses()
 	{
 		for (addr=0x8E; addr<=0xAD; addr++)
 		{
-			_temporaryDTCsAddr.push_back( addr );
-			_memorizedDTCsAddr.push_back( addr + 32 );
+			_currOrTempDTCsAddr.push_back( addr );
+			_histOrMemDTCsAddr.push_back( addr + 32 );
 		}
 	}
 	if (_flagbytes[28] == (_flagbytes[28] | 0x01))
 	{
 		for (addr=0xF0; addr<=0xF3; addr++)
 		{
-			_temporaryDTCsAddr.push_back( addr );
-			_memorizedDTCsAddr.push_back( addr + 4 );
+			_currOrTempDTCsAddr.push_back( addr );
+			_histOrMemDTCsAddr.push_back( addr + 4 );
 		}
 	}
 	if (_nrofflagbytes > 32)
@@ -427,32 +427,32 @@ void SSMprotocol::setupDTCaddresses()
 		{
 			for (addr=0x123; addr<=0x12A; addr++)
 			{
-				_temporaryDTCsAddr.push_back( addr );
-				_memorizedDTCsAddr.push_back( addr + 8 );
+				_currOrTempDTCsAddr.push_back( addr );
+				_histOrMemDTCsAddr.push_back( addr + 8 );
 			}
 		}
 		if (_flagbytes[39] == (_flagbytes[39] | 0x40))
 		{
 			for (addr=0x150; addr<=0x154; addr++)
 			{
-				_temporaryDTCsAddr.push_back( addr );
-				_memorizedDTCsAddr.push_back( addr + 5 );
+				_currOrTempDTCsAddr.push_back( addr );
+				_histOrMemDTCsAddr.push_back( addr + 5 );
 			}
 		}
 		if (_flagbytes[39] == (_flagbytes[39] | 0x20))
 		{
 			for (addr=0x160; addr<=0x164; addr++)
 			{
-				_temporaryDTCsAddr.push_back( addr );
-				_memorizedDTCsAddr.push_back( addr + 5 );
+				_currOrTempDTCsAddr.push_back( addr );
+				_histOrMemDTCsAddr.push_back( addr + 5 );
 			}
 		}
 		if (_flagbytes[39] == (_flagbytes[39] | 0x10))
 		{
 			for (addr=0x174; addr<=0x17A; addr++)
 			{
-				_temporaryDTCsAddr.push_back( addr );
-				_memorizedDTCsAddr.push_back( addr + 7 );
+				_currOrTempDTCsAddr.push_back( addr );
+				_histOrMemDTCsAddr.push_back( addr + 7 );
 			}
 		}
 		if (_nrofflagbytes > 48)
@@ -461,13 +461,13 @@ void SSMprotocol::setupDTCaddresses()
 			{
 				for (addr=0x1C1; addr<=0x1C6; addr++)
 				{
-					_temporaryDTCsAddr.push_back( addr );
-					_memorizedDTCsAddr.push_back( addr + 6 );
+					_currOrTempDTCsAddr.push_back( addr );
+					_histOrMemDTCsAddr.push_back( addr + 6 );
 				}
 				for (addr=0x20A; addr<=0x20D; addr++)
 				{
-					_temporaryDTCsAddr.push_back( addr );
-					_memorizedDTCsAddr.push_back( addr + 4 );
+					_currOrTempDTCsAddr.push_back( addr );
+					_histOrMemDTCsAddr.push_back( addr + 4 );
 				}
 			}
 		}
@@ -895,23 +895,34 @@ void SSMprotocol::setupActuatorTestData()
 
 bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 {
+	int retDCgroups = 0;
 	bool supported = false;
 	if (_state == state_needSetup) return false;
-	*DCgroups = 0;
-	if (!_temporaryDTCsAddr.empty())
-		(*DCgroups) += temporaryDTCs_DCgroup;
-	if (!_memorizedDTCsAddr.empty())
-		(*DCgroups) += memorizedDTCs_DCgroup;
+	if (_flagbytes[29] == (_flagbytes[29] | 0x80))
+	{
+		if (!_currOrTempDTCsAddr.empty())
+			retDCgroups += currentDTCs_DCgroup;
+		if (!_histOrMemDTCsAddr.empty())
+			retDCgroups += historicDTCs_DCgroup;
+	}
+	else
+	{
+		if (!_currOrTempDTCsAddr.empty())
+			retDCgroups += temporaryDTCs_DCgroup;
+		if (!_histOrMemDTCsAddr.empty())
+			retDCgroups += memorizedDTCs_DCgroup;
+	}
 	if (!hasIntegratedCC(&supported))
 		return false;
 	if (supported)
 	{
-		(*DCgroups) += CClatestCCs_DCgroup;
+		retDCgroups += CClatestCCs_DCgroup;
 		if (!hasIntegratedCCmemorizedCodes(&supported))
 			return false;
 		if (supported)
-			(*DCgroups) += CCmemorizedCCs_DCgroup;
+			retDCgroups += CCmemorizedCCs_DCgroup;
 	}
+	*DCgroups = retDCgroups;
 	return true;
 }
 
@@ -1287,36 +1298,39 @@ bool SSMprotocol::startDCreading(int DCgroups)
 	bool started;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
-	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (!hasIntegratedCC(&CCsup) || !hasIntegratedCCmemorizedCodes(&CCmemSup)) return false;
 	// Check argument:
-	if (DCgroups < 1 || DCgroups > 15) return false;
-	if (DCgroups > 3)
+	if (DCgroups < 1 || DCgroups > 63) return false;
+	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
+		return false;
+	if (DCgroups > 15)
 	{
 		if (!CCsup)
 			return false;
-		if ( (DCgroups > 7) && (!CCmemSup) )
+		if ( (DCgroups > 31) && (!CCmemSup) )
 			return false;
 	}
+	// Try to determine the supported Cruise Control Cancel Code groups:
+	if (!hasIntegratedCC(&CCsup)) return false;
+	if (!hasIntegratedCCmemorizedCodes(&CCmemSup)) return false;
 	// Setup diagnostic codes addresses list:
-	if (DCgroups == (DCgroups | temporaryDTCs_DCgroup))	// current/temporary DTCs
+	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
 		if (_CU == ECU)
 		{
 			DCqueryAddrList[DCqueryAddrListLen] = 0x000061;
 			DCqueryAddrListLen++;
 		}
-		for (k=0; k<_temporaryDTCsAddr.size(); k++)
+		for (k=0; k<_currOrTempDTCsAddr.size(); k++)
 		{
-			DCqueryAddrList[DCqueryAddrListLen] = _temporaryDTCsAddr.at(k);
+			DCqueryAddrList[DCqueryAddrListLen] = _currOrTempDTCsAddr.at(k);
 			DCqueryAddrListLen++;
 		}
 	}
-	if (DCgroups == (DCgroups | memorizedDTCs_DCgroup))	// historic/memorized DTCs
+	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
-		for (k=0; k<_memorizedDTCsAddr.size(); k++)
+		for (k=0; k<_histOrMemDTCsAddr.size(); k++)
 		{
-			DCqueryAddrList[DCqueryAddrListLen] = _memorizedDTCsAddr.at(k);
+			DCqueryAddrList[DCqueryAddrListLen] = _histOrMemDTCsAddr.at(k);
 			DCqueryAddrListLen++;
 		}
 	}
@@ -1401,7 +1415,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 	unsigned int DCsAddrIndex = 0;
 	unsigned int DCsAddrIndexOffset = 0;
 	duration_ms = 0; // to avoid compiler error
-	if (_selectedDCgroups == (_selectedDCgroups | temporaryDTCs_DCgroup))
+	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
 		if (_CU == ECU)
 		{
@@ -1419,27 +1433,27 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate current/latest data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_temporaryDTCsAddr.size(); DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_currOrTempDTCsAddr.size(); DCsAddrIndex++)
 		{
-			evaluateDCdataByte(_temporaryDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_currOrTempDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _temporaryDTCsAddr.size();
+		DCsAddrIndexOffset += _currOrTempDTCsAddr.size();
 		emit currentOrTemporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
 	}
-	if (_selectedDCgroups == (_selectedDCgroups | memorizedDTCs_DCgroup))
+	if ((_selectedDCgroups & historicDTCs_DCgroup) || (_selectedDCgroups & memorizedDTCs_DCgroup))
 	{
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate historic/memorized data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_memorizedDTCsAddr.size(); DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_histOrMemDTCsAddr.size(); DCsAddrIndex++)
 		{
-			evaluateDCdataByte(_memorizedDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_histOrMemDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _memorizedDTCsAddr.size();
+		DCsAddrIndexOffset += _histOrMemDTCsAddr.size();
 		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
@@ -1479,8 +1493,8 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 	unsigned char setbits[8] = {0,};
 	unsigned char setbitslen = 0;
 	QStringList tmpdefparts;
-	unsigned int tmpcurrentdtcadr = 0;
-	unsigned int tmphistoricdtcadr = 0;
+	unsigned int tmpdtcadr_1 = 0;
+	unsigned int tmpdtcadr_2 = 0;
 	unsigned int tmpbitadr = 0;
 	int k = 0;
 	unsigned char setbitsindex = 0;
@@ -1508,9 +1522,9 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 		tmpdefparts = DC_rawDefs.at(k).split(';');
 		if (tmpdefparts.size() == 5)
 		{
-			tmpcurrentdtcadr = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary DCs memory address
-			tmphistoricdtcadr = tmpdefparts.at(1).toUInt(&ok, 16); // historic/memorized DCs memory address
-			if ((ok) && ((tmpcurrentdtcadr == DCbyteadr) || (tmphistoricdtcadr == DCbyteadr)))
+			tmpdtcadr_1 = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary/latest/D-Check DCs memory address
+			tmpdtcadr_2 = tmpdefparts.at(1).toUInt(&ok, 16);  // historic/memorized DCs memory address
+			if ((ok) && ((tmpdtcadr_1 == DCbyteadr) || (tmpdtcadr_2 == DCbyteadr)))
 			{
 				tmpbitadr = tmpdefparts.at(2).toUInt(); // flagbit
 				for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)

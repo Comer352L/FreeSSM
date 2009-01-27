@@ -121,7 +121,8 @@ class SSMprotocol : public QObject, private SSMprotocol_ID
 public:
 	enum CUtype_dt {ECU=1, TCU=2};
 	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
-	enum DCgroups_dt {noDCs_DCgroup=0, temporaryDTCs_DCgroup=1, memorizedDTCs_DCgroup=2, CClatestCCs_DCgroup=4, CCmemorizedCCs_DCgroup=8, allDCs_DCgroup=15};
+	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
+			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32, allDCs_DCgroup=63};
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
@@ -185,8 +186,8 @@ private:
 	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
-	std::vector<unsigned int> _temporaryDTCsAddr;
-	std::vector<unsigned int> _memorizedDTCsAddr;
+	std::vector<unsigned int> _currOrTempDTCsAddr;
+	std::vector<unsigned int> _histOrMemDTCsAddr;
 	QStringList _DTC_rawDefs;
 	// Cruise Control Cancel Codes:
 	std::vector<unsigned int> _latestCCCCsAddr;
@@ -217,7 +218,7 @@ private:
 	void setupActuatorTestData();
 	// PREPARATION AND EVALUATION FUNCTIONS:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
-				 QStringList *DC, QStringList *DCdescription);
+				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	void assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues);
 	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList);
