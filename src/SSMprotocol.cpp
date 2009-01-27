@@ -1298,6 +1298,9 @@ bool SSMprotocol::startDCreading(int DCgroups)
 	bool started;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
+	// Try to determine the supported Cruise Control Cancel Code groups:
+	if (!hasIntegratedCC(&CCsup)) return false;
+	if (!hasIntegratedCCmemorizedCodes(&CCmemSup)) return false;
 	// Check argument:
 	if (DCgroups < 1 || DCgroups > 63) return false;
 	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
@@ -1309,9 +1312,6 @@ bool SSMprotocol::startDCreading(int DCgroups)
 		if ( (DCgroups > 31) && (!CCmemSup) )
 			return false;
 	}
-	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (!hasIntegratedCC(&CCsup)) return false;
-	if (!hasIntegratedCCmemorizedCodes(&CCmemSup)) return false;
 	// Setup diagnostic codes addresses list:
 	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
