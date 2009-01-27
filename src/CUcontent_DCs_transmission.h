@@ -59,8 +59,8 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions);
-	void updateMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
+	void updateCurrentOrTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions);
+	void updateHistoricOrMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
 	void printDCprotocol();
 
 signals:

@@ -69,8 +69,8 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool testMode, bool DCheckActive);
-	void updateMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
+	void updateCurrentOrTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool testMode, bool DCheckActive);
+	void updateHistoricOrMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
 	void updateCClatestCCsContent(QStringList latestCCCCs, QStringList latestCCCCdescriptions);
 	void updateCCmemorizedCCsContent(QStringList memorizedCCCCs, QStringList memorizedCCCCdescriptions);
 	void printDCprotocol();

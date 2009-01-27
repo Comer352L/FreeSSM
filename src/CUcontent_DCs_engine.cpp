@@ -88,8 +88,8 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
-	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
+	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
 }
@@ -240,13 +240,13 @@ bool CUcontent_DCs_engine::startDCreading()
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
-		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
+		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
+		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
-		updateMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
+		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup))
 	{
@@ -277,15 +277,15 @@ bool CUcontent_DCs_engine::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
-	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
+	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
 	return true;
 }
 
 
-void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool testMode, bool DCheckActive)
+void CUcontent_DCs_engine::updateCurrentOrTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool testMode, bool DCheckActive)
 {
 	// DTC-table title:
 	if (testMode != _testMode)
@@ -317,8 +317,7 @@ void CUcontent_DCs_engine::updateTemporaryDTCsContent(QStringList temporaryDTCs,
 }
 
 
-
-void CUcontent_DCs_engine::updateMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
+void CUcontent_DCs_engine::updateHistoricOrMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
 {
 	if ((memorizedDTCs != _memorizedDTCs) || (memorizedDTCdescriptions != _memorizedDTCdescriptions))
 	{

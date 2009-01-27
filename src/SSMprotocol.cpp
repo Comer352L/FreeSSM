@@ -1426,7 +1426,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 			DCdescriptions += tmpDTCsDescriptions;
 		}
 		DCsAddrIndexOffset += _temporaryDTCsAddr.size();
-		emit temporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
+		emit currentOrTemporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | memorizedDTCs_DCgroup))
 	{
@@ -1440,7 +1440,7 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 			DCdescriptions += tmpDTCsDescriptions;
 		}
 		DCsAddrIndexOffset += _memorizedDTCsAddr.size();
-		emit memorizedDTCs(DCs, DCdescriptions);
+		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
 	}
 	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
 	{

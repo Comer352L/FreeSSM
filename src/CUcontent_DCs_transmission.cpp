@@ -66,8 +66,8 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 }
 
 
@@ -184,13 +184,13 @@ bool CUcontent_DCs_transmission::startDCreading()
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
 	{
-		updateTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
+		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
+		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	}
 	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
 	{
-		updateMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
+		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
@@ -211,13 +211,13 @@ bool CUcontent_DCs_transmission::stopDCreading()
 		}
 	}
 	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( temporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateTemporaryDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSMPdev, SIGNAL( memorizedDTCs(QStringList, QStringList) ), this, SLOT( updateMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	return true;
 }
 
 
-void CUcontent_DCs_transmission::updateTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions)
+void CUcontent_DCs_transmission::updateCurrentOrTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions)
 {
 	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions))
 	{
@@ -237,7 +237,7 @@ void CUcontent_DCs_transmission::updateTemporaryDTCsContent(QStringList temporar
 }
 
 
-void CUcontent_DCs_transmission::updateMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
+void CUcontent_DCs_transmission::updateHistoricOrMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
 {
 	if ((memorizedDTCs != _memorizedDTCs) || (memorizedDTCdescriptions != _memorizedDTCdescriptions))
 	{
