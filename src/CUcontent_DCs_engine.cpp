@@ -28,10 +28,10 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	_obd2DTCformat = true;
 	_testMode = false;
 	_DCheckActive = false;
-	_temporaryDTCs.clear();
-	_temporaryDTCdescriptions.clear();
-	_memorizedDTCs.clear();
-	_memorizedDTCdescriptions.clear();
+	_currOrTempDTCs.clear();
+	_currOrTempDTCdescriptions.clear();
+	_histOrMemDTCs.clear();
+	_histOrMemDTCdescriptions.clear();
 	_latestCCCCs.clear();
 	_latestCCCCdescriptions.clear();
 	_memorizedCCCCs.clear();
@@ -41,12 +41,12 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	setupUiFonts();
 	// Set column widths:
 	QHeaderView *headerview;
-	temporaryDTCs_tableWidget->setColumnWidth (0, 70);
-	headerview = temporaryDTCs_tableWidget->horizontalHeader();
+	currOrTempDTCs_tableWidget->setColumnWidth (0, 70);
+	headerview = currOrTempDTCs_tableWidget->horizontalHeader();
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
-	memorizedDTCs_tableWidget->setColumnWidth (0, 70);
-	headerview = memorizedDTCs_tableWidget->horizontalHeader();
+	histOrMemDTCs_tableWidget->setColumnWidth (0, 70);
+	headerview = histOrMemDTCs_tableWidget->horizontalHeader();
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
 	latestCCCCs_tableWidget->setColumnWidth (0, 70);
@@ -58,19 +58,19 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
 	// Install event-filter for DC-tables:
-	temporaryDTCs_tableWidget->viewport()->installEventFilter(this);
-	memorizedDTCs_tableWidget->viewport()->installEventFilter(this);
+	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);
+	histOrMemDTCs_tableWidget->viewport()->installEventFilter(this);
 	latestCCCCs_tableWidget->viewport()->installEventFilter(this);
 	memorizedCCCCs_tableWidget->viewport()->installEventFilter(this);
 	// *** Set initial content ***:
 	// Set provisional titles:
-	temporaryDTCsTitle_label->setText( tr("Temporary Diagnostic Trouble Code(s):") );
-	memorizedDTCsTitle_label->setText( tr("Memorized Diagnostic Trouble Code(s):") );
+	currOrTempDTCsTitle_label->setText( tr("Temporary Diagnostic Trouble Code(s):") );
+	histOrMemDTCsTitle_label->setText( tr("Memorized Diagnostic Trouble Code(s):") );
 	// Disable tables and their titles:
-	temporaryDTCsTitle_label->setEnabled( false );
-	temporaryDTCs_tableWidget->setEnabled( false );
-	memorizedDTCsTitle_label->setEnabled( false );
-	memorizedDTCs_tableWidget->setEnabled( false );
+	currOrTempDTCsTitle_label->setEnabled( false );
+	currOrTempDTCs_tableWidget->setEnabled( false );
+	histOrMemDTCsTitle_label->setEnabled( false );
+	histOrMemDTCs_tableWidget->setEnabled( false );
 	latestCCCCsTitle_label->setEnabled( false );
 	latestCCCCs_tableWidget->setEnabled( false );
 	memorizedCCCCsTitle_label->setEnabled( false );
@@ -99,8 +99,8 @@ bool CUcontent_DCs_engine::setup()
 {
 	bool ok = false;
 	bool TMsup = false;
-	bool tempDTCs_sup = false;
-	bool memDTCs_sup = false;
+	bool currOrTempDTCs_sup = false;
+	bool histOrMemDTCs_sup = false;
 	bool latestCCCCs_sup = false;
 	bool memCCCCs_sup = false;
 	QString title;
@@ -110,10 +110,10 @@ bool CUcontent_DCs_engine::setup()
 	_testMode = false;
 	_DCheckActive = false;
 	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
-	_temporaryDTCs.clear();
-	_temporaryDTCdescriptions.clear();
-	_memorizedDTCs.clear();
-	_memorizedDTCdescriptions.clear();
+	_currOrTempDTCs.clear();
+	_currOrTempDTCdescriptions.clear();
+	_histOrMemDTCs.clear();
+	_histOrMemDTCdescriptions.clear();
 	_latestCCCCs.clear();
 	_latestCCCCdescriptions.clear();
 	_memorizedCCCCs.clear();
@@ -130,8 +130,8 @@ bool CUcontent_DCs_engine::setup()
 	{
 		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
 			_obd2DTCformat = false;
-		tempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
-		memDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
+		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
+		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
 		latestCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup));
 		memCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup));
 	}
@@ -141,20 +141,20 @@ bool CUcontent_DCs_engine::setup()
 		title = tr("Memorized Diagnostic Trouble Code(s):");
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");
-	memorizedDTCsTitle_label->setText( title );
+	histOrMemDTCsTitle_label->setText( title );
 	// DC-tables and titles:
-	if (ok && !tempDTCs_sup)
-		setDCtableContent(temporaryDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
+	if (ok && !currOrTempDTCs_sup)
+		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
-		setDCtableContent(temporaryDTCs_tableWidget, QStringList(""), QStringList(""));
-	temporaryDTCsTitle_label->setEnabled(tempDTCs_sup);
-	temporaryDTCs_tableWidget->setEnabled(tempDTCs_sup);
-	if (ok && !memDTCs_sup)
-		setDCtableContent(memorizedDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
+		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(""));
+	currOrTempDTCsTitle_label->setEnabled(currOrTempDTCs_sup);
+	currOrTempDTCs_tableWidget->setEnabled(currOrTempDTCs_sup);
+	if (ok && !histOrMemDTCs_sup)
+		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
-		setDCtableContent(memorizedDTCs_tableWidget, QStringList(""), QStringList(""));
-	memorizedDTCsTitle_label->setEnabled(memDTCs_sup);
-	memorizedDTCs_tableWidget->setEnabled(memDTCs_sup);
+		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(""));
+	histOrMemDTCsTitle_label->setEnabled(histOrMemDTCs_sup);
+	histOrMemDTCs_tableWidget->setEnabled(histOrMemDTCs_sup);
 	if (ok && !latestCCCCs_sup)
 		setDCtableContent(latestCCCCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
@@ -285,7 +285,7 @@ bool CUcontent_DCs_engine::stopDCreading()
 }
 
 
-void CUcontent_DCs_engine::updateCurrentOrTemporaryDTCsContent(QStringList temporaryDTCs, QStringList temporaryDTCdescriptions, bool testMode, bool DCheckActive)
+void CUcontent_DCs_engine::updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions, bool testMode, bool DCheckActive)
 {
 	// DTC-table title:
 	if (testMode != _testMode)
@@ -294,43 +294,43 @@ void CUcontent_DCs_engine::updateCurrentOrTemporaryDTCsContent(QStringList tempo
 		setTitleOfFirstDTCtable(_obd2DTCformat, _testMode);
 	}
 	// DTCs (table content):
-	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions) || (DCheckActive != _DCheckActive))
+	if ((currOrTempDTCs != _currOrTempDTCs) || (currOrTempDTCdescriptions != _currOrTempDTCdescriptions) || (DCheckActive != _DCheckActive))
 	{
 		if (DCheckActive)
 		{
-			temporaryDTCs = QStringList("");
-			temporaryDTCdescriptions = QStringList( tr("----- SYSTEM CHECK IS NOT YET COMPLETED ! -----") );
+			currOrTempDTCs = QStringList("");
+			currOrTempDTCdescriptions = QStringList( tr("----- SYSTEM CHECK IS NOT YET COMPLETED ! -----") );
 		}
 		// Save Trouble Codes:
-		_temporaryDTCs = temporaryDTCs;
-		_temporaryDTCdescriptions = temporaryDTCdescriptions;
+		_currOrTempDTCs = currOrTempDTCs;
+		_currOrTempDTCdescriptions = currOrTempDTCdescriptions;
 		// Output Trouble Codes:
-		if ((temporaryDTCs.size() == 0) && (temporaryDTCdescriptions.size() == 0))
+		if ((currOrTempDTCs.size() == 0) && (currOrTempDTCdescriptions.size() == 0))
 		{
-			temporaryDTCs << "";
-			temporaryDTCdescriptions << tr("----- No Trouble Codes -----");
+			currOrTempDTCs << "";
+			currOrTempDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
-		setDCtableContent(temporaryDTCs_tableWidget, temporaryDTCs, temporaryDTCdescriptions);
+		setDCtableContent(currOrTempDTCs_tableWidget, currOrTempDTCs, currOrTempDTCdescriptions);
 		// Activate "Print" button:
 		printDClist_pushButton->setEnabled(true);
 	}
 }
 
 
-void CUcontent_DCs_engine::updateHistoricOrMemorizedDTCsContent(QStringList memorizedDTCs, QStringList memorizedDTCdescriptions)
+void CUcontent_DCs_engine::updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions)
 {
-	if ((memorizedDTCs != _memorizedDTCs) || (memorizedDTCdescriptions != _memorizedDTCdescriptions))
+	if ((histOrMemDTCs != _histOrMemDTCs) || (histOrMemDTCdescriptions != _histOrMemDTCdescriptions))
 	{
 		// Save Trouble Codes:
-		_memorizedDTCs = memorizedDTCs;
-		_memorizedDTCdescriptions = memorizedDTCdescriptions;
+		_histOrMemDTCs = histOrMemDTCs;
+		_histOrMemDTCdescriptions = histOrMemDTCdescriptions;
 		// Output Trouble Codes:
-		if ((memorizedDTCs.size() == 0) && (memorizedDTCdescriptions.size() == 0))
+		if ((histOrMemDTCs.size() == 0) && (histOrMemDTCdescriptions.size() == 0))
 		{
-			memorizedDTCs << "";
-			memorizedDTCdescriptions << tr("----- No Trouble Codes -----");
+			histOrMemDTCs << "";
+			histOrMemDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
-		setDCtableContent(memorizedDTCs_tableWidget, memorizedDTCs, memorizedDTCdescriptions);
+		setDCtableContent(histOrMemDTCs_tableWidget, histOrMemDTCs, histOrMemDTCdescriptions);
 		// Activate "Print" button:
 		printDClist_pushButton->setEnabled(true);
 	}
@@ -359,7 +359,7 @@ void CUcontent_DCs_engine::updateCClatestCCsContent(QStringList latestCCCCs, QSt
 
 void CUcontent_DCs_engine::updateCCmemorizedCCsContent(QStringList memorizedCCCCs, QStringList memorizedCCCCdescriptions)
 {
-	if ((memorizedCCCCs != _memorizedCCCCs) || (memorizedCCCCdescriptions != _memorizedDTCdescriptions))
+	if ((memorizedCCCCs != _memorizedCCCCs) || (memorizedCCCCdescriptions != _histOrMemDTCdescriptions))
 	{
 		// Save Trouble Codes:
 		_memorizedCCCCs = memorizedCCCCs;
@@ -414,7 +414,7 @@ void CUcontent_DCs_engine::setTitleOfFirstDTCtable(bool obd2, bool testMode)
 	{
 		title = tr("Current Diagnostic Trouble Code(s):");
 	}
-	temporaryDTCsTitle_label->setText( title );
+	currOrTempDTCsTitle_label->setText( title );
 }
 
 
@@ -455,8 +455,8 @@ void CUcontent_DCs_engine::setNrOfRowsOfAllTableWidgets()
 	int currentindex = DCgroups_tabWidget->currentIndex();
 	// Calculate and set number of table rows:
 	DCgroups_tabWidget->setCurrentIndex(0);
-	setNrOfTableRows(temporaryDTCs_tableWidget, _temporaryDTCs.size() );
-	setNrOfTableRows(memorizedDTCs_tableWidget, _memorizedDTCs.size() );
+	setNrOfTableRows(currOrTempDTCs_tableWidget, _currOrTempDTCs.size() );
+	setNrOfTableRows(histOrMemDTCs_tableWidget, _histOrMemDTCs.size() );
 	DCgroups_tabWidget->setCurrentIndex(1);
 	setNrOfTableRows(latestCCCCs_tableWidget, _latestCCCCs.size() );
 	setNrOfTableRows(memorizedCCCCs_tableWidget, _memorizedCCCCs.size() );
@@ -475,10 +475,10 @@ void CUcontent_DCs_engine::printDCprotocol()
 	QString systype;
 	QString ROM_ID;
 	QString VIN;
-	QStringList temporaryDTCcodes = _temporaryDTCs;
-	QStringList temporaryDTCdescriptions = _temporaryDTCdescriptions;
-	QStringList memorizedDTCcodes = _memorizedDTCs;
-	QStringList memorizedDTCdescriptions = _memorizedDTCdescriptions;
+	QStringList currOrTempDTCcodes = _currOrTempDTCs;
+	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
+	QStringList histOrMemDTCcodes = _histOrMemDTCs;
+	QStringList histOrMemDTCdescriptions = _histOrMemDTCdescriptions;
 	QStringList latestCCCCcodes = _latestCCCCs;
 	QStringList latestCCCCdescriptions = _latestCCCCdescriptions;
 	QStringList memorizedCCCCcodes = _memorizedCCCCs;
@@ -669,24 +669,24 @@ void CUcontent_DCs_engine::printDCprotocol()
 	// Current/Temporary DTCs:
 	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup) )
 	{
-		if (temporaryDTCdescriptions.size() == 0)
+		if (currOrTempDTCdescriptions.size() == 0)
 		{
-			temporaryDTCcodes << "";
-			temporaryDTCdescriptions << tr("----- No Trouble Codes -----");
+			currOrTempDTCcodes << "";
+			currOrTempDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		// Insert table with current/temporary DTCs into text document:
-		insertDCtable(cursor, temporaryDTCsTitle_label->text(), temporaryDTCcodes, temporaryDTCdescriptions);
+		insertDCtable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
 	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup) )
 	{
-		if (memorizedDTCdescriptions.size() == 0)
+		if (histOrMemDTCdescriptions.size() == 0)
 		{
-			memorizedDTCcodes << "";
-			memorizedDTCdescriptions << tr("----- No Trouble Codes -----");
+			histOrMemDTCcodes << "";
+			histOrMemDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		// Insert table with historic/memorized DTCs into text document:
-		insertDCtable(cursor, memorizedDTCsTitle_label->text(), memorizedDTCcodes, memorizedDTCdescriptions);
+		insertDCtable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
 	// Latest Cancel Codes:
 	if ( _supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup) )
@@ -779,16 +779,16 @@ bool CUcontent_DCs_engine::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Wheel)
 	{
-		if (obj == temporaryDTCs_tableWidget->viewport())
+		if (obj == currOrTempDTCs_tableWidget->viewport())
 		{
-			if (temporaryDTCs_tableWidget->verticalScrollBarPolicy() ==  Qt::ScrollBarAlwaysOff)
+			if (currOrTempDTCs_tableWidget->verticalScrollBarPolicy() ==  Qt::ScrollBarAlwaysOff)
 				return true;	// filter out
 			else
 				return false;
 		}
-		else if (obj == memorizedDTCs_tableWidget->viewport())
+		else if (obj == histOrMemDTCs_tableWidget->viewport())
 		{
-			if (memorizedDTCs_tableWidget->verticalScrollBarPolicy() ==  Qt::ScrollBarAlwaysOff)
+			if (histOrMemDTCs_tableWidget->verticalScrollBarPolicy() ==  Qt::ScrollBarAlwaysOff)
 				return true;	// filter out
 			else
 				return false;
@@ -860,13 +860,13 @@ void CUcontent_DCs_engine::setupUiFonts()
 	// Table titles:
 	QFont tabletitlefont = contentfont;
 	tabletitlefont.setUnderline(true);
-	temporaryDTCsTitle_label->setFont(tabletitlefont);
-	memorizedDTCsTitle_label->setFont(tabletitlefont);
+	currOrTempDTCsTitle_label->setFont(tabletitlefont);
+	histOrMemDTCsTitle_label->setFont(tabletitlefont);
 	latestCCCCsTitle_label->setFont(tabletitlefont);
 	memorizedCCCCsTitle_label->setFont(tabletitlefont);
 	// Tables:
-	temporaryDTCs_tableWidget->setFont(contentfont);
-	memorizedDTCs_tableWidget->setFont(contentfont);
+	currOrTempDTCs_tableWidget->setFont(contentfont);
+	histOrMemDTCs_tableWidget->setFont(contentfont);
 	latestCCCCs_tableWidget->setFont(contentfont);
 	memorizedCCCCs_tableWidget->setFont(contentfont);
 	// Info about DC-Clearing:

@@ -71,7 +71,7 @@
         <number>17</number>
        </property>
        <item>
-        <widget class="QLabel" name="temporaryDTCsTitle_label" >
+        <widget class="QLabel" name="currOrTempDTCsTitle_label" >
          <property name="minimumSize" >
           <size>
            <width>280</width>
@@ -98,7 +98,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="temporaryDTCs_tableWidget" >
+        <widget class="QTableWidget" name="currOrTempDTCs_tableWidget" >
          <property name="minimumSize" >
           <size>
            <width>360</width>
@@ -127,7 +127,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="memorizedDTCsTitle_label" >
+        <widget class="QLabel" name="histOrMemDTCsTitle_label" >
          <property name="minimumSize" >
           <size>
            <width>280</width>
@@ -154,7 +154,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="memorizedDTCs_tableWidget" >
+        <widget class="QTableWidget" name="histOrMemDTCs_tableWidget" >
          <property name="minimumSize" >
           <size>
            <width>360</width>
@@ -366,8 +366,8 @@
  </widget>
  <tabstops>
   <tabstop>DCgroups_tabWidget</tabstop>
-  <tabstop>temporaryDTCs_tableWidget</tabstop>
-  <tabstop>memorizedDTCs_tableWidget</tabstop>
+  <tabstop>currOrTempDTCs_tableWidget</tabstop>
+  <tabstop>histOrMemDTCs_tableWidget</tabstop>
   <tabstop>printDClist_pushButton</tabstop>
   <tabstop>latestCCCCs_tableWidget</tabstop>
   <tabstop>memorizedCCCCs_tableWidget</tabstop>

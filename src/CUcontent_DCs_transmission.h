@@ -43,10 +43,10 @@ private:
 	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	int _supportedDCgroups;
-	QStringList _temporaryDTCs;
-	QStringList _temporaryDTCdescriptions;
-	QStringList _memorizedDTCs;
-	QStringList _memorizedDTCdescriptions;
+	QStringList _currOrTempDTCs;
+	QStringList _currOrTempDTCdescriptions;
+	QStringList _histOrMemDTCs;
+	QStringList _histOrMemDTCdescriptions;
 
 	void setupUiFonts();
 	void setDCtableContent(QTableWidget *tableWidget, QStringList DCs, QStringList DCdescriptions);
@@ -59,8 +59,8 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateCurrentOrTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions);
-	void updateHistoricOrMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
+	void updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions);
+	void updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions);
 	void printDCprotocol();
 
 signals:

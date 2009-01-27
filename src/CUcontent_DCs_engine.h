@@ -47,10 +47,10 @@ private:
 	bool _obd2DTCformat;
 	bool _testMode;
 	bool _DCheckActive;
-	QStringList _temporaryDTCs;
-	QStringList _temporaryDTCdescriptions;
-	QStringList _memorizedDTCs;
-	QStringList _memorizedDTCdescriptions;
+	QStringList _currOrTempDTCs;
+	QStringList _currOrTempDTCdescriptions;
+	QStringList _histOrMemDTCs;
+	QStringList _histOrMemDTCdescriptions;
 	QStringList _latestCCCCs;
 	QStringList _latestCCCCdescriptions;
 	QStringList _memorizedCCCCs;
@@ -69,8 +69,8 @@ private:
 private slots:
 	void callStart();
 	void callStop();
-	void updateCurrentOrTemporaryDTCsContent(QStringList currentDTCs, QStringList currentDTCdescriptions, bool testMode, bool DCheckActive);
-	void updateHistoricOrMemorizedDTCsContent(QStringList historicDTCs, QStringList historicDTCdescriptions);
+	void updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions, bool testMode, bool DCheckActive);
+	void updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions);
 	void updateCClatestCCsContent(QStringList latestCCCCs, QStringList latestCCCCdescriptions);
 	void updateCCmemorizedCCsContent(QStringList memorizedCCCCs, QStringList memorizedCCCCdescriptions);
 	void printDCprotocol();
