@@ -25,7 +25,7 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev
 	_SSMPdev = SSMPdev;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
-	_obd2 = true;
+	_obd2DTCformat = true;
 	_testMode = false;
 	_DCheckActive = false;
 	_temporaryDTCs.clear();
@@ -106,7 +106,7 @@ bool CUcontent_DCs_engine::setup()
 	QString title;
 
 	// Reset data:
-	_obd2 = true;
+	_obd2DTCformat = true;
 	_testMode = false;
 	_DCheckActive = false;
 	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
@@ -121,8 +121,6 @@ bool CUcontent_DCs_engine::setup()
 	// Get CU information:
 	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
-		ok =_SSMPdev->hasOBD2(&_obd2);
-	if (ok)
 	{
 		ok = _SSMPdev->hasTestMode(&TMsup);
 		if (ok && TMsup)
@@ -130,14 +128,16 @@ bool CUcontent_DCs_engine::setup()
 	}
 	if (ok)
 	{
-		tempDTCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup));
-		memDTCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup));
+		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
+			_obd2DTCformat = false;
+		tempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
+		memDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
 		latestCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup));
 		memCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup));
 	}
 	// Set titles of the DTC-tables
-	setTitleOfFirstDTCtable(_obd2, _testMode);
-	if ( _obd2 )
+	setTitleOfFirstDTCtable(_obd2DTCformat, _testMode);
+	if ( _obd2DTCformat )
 		title = tr("Memorized Diagnostic Trouble Code(s):");
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");
@@ -291,7 +291,7 @@ void CUcontent_DCs_engine::updateCurrentOrTemporaryDTCsContent(QStringList tempo
 	if (testMode != _testMode)
 	{
 		_testMode = testMode;
-		setTitleOfFirstDTCtable(_obd2, _testMode);
+		setTitleOfFirstDTCtable(_obd2DTCformat, _testMode);
 	}
 	// DTCs (table content):
 	if ((temporaryDTCs != _temporaryDTCs) || (temporaryDTCdescriptions != _temporaryDTCdescriptions) || (DCheckActive != _DCheckActive))

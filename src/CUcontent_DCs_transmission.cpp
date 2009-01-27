@@ -74,7 +74,7 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 bool CUcontent_DCs_transmission::setup()
 {
 	bool ok = false;
-	bool obd2 = true;
+	bool obd2DTCformat = true;
 	bool tempDTCs_sup = false;
 	bool memDTCs_sup = false;
 	QString title;
@@ -88,19 +88,19 @@ bool CUcontent_DCs_transmission::setup()
 	// Get CU information:
 	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
-		ok =_SSMPdev->hasOBD2(&obd2);
-	if (ok)
 	{
-		tempDTCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup));
-		memDTCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup));
+		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
+			obd2DTCformat = false;
+		tempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
+		memDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
 	}
 	// Set titles of the DTC-tables
-	if ( obd2 )
+	if ( obd2DTCformat )
 		title = tr("Temporary Diagnostic Trouble Code(s):");
 	else
 		title = tr("Current Diagnostic Trouble Code(s):");
 	temporaryDTCsTitle_label->setText( title );
-	if ( obd2 )
+	if ( obd2DTCformat )
 		title = tr("Memorized Diagnostic Trouble Code(s):");
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");

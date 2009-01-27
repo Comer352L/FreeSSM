@@ -44,7 +44,7 @@ private:
 	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	int _supportedDCgroups;
-	bool _obd2;
+	bool _obd2DTCformat;
 	bool _testMode;
 	bool _DCheckActive;
 	QStringList _temporaryDTCs;
