@@ -79,7 +79,7 @@ void SSMprotocol::resetCUdata()
 			if (ok)
 			{
 				// Check if test mode is active:
-				if (currentdatabyte == (currentdatabyte | 0x20))
+				if (currentdatabyte & 0x20)
 				{
 					// Stop all actuator tests:
 					for (k=0; k<_allActByteAddr.size(); k++)
@@ -180,7 +180,7 @@ bool SSMprotocol::setupCUdata()
 	if ( CCsup )	// not necessary, because function checks this, too...
 		setupCCCCaddresses();
 	// Get and save the DC-definitions we need for the used DC addresses:
-	obdDTCs = (_flagbytes[29] != (_flagbytes[29] | 0x80));
+	obdDTCs = !(_flagbytes[29] & 0x80);
 	if (_language == "de")
 	{
 		SSMprotocol_def_de rawdefs_de;
@@ -265,7 +265,7 @@ bool SSMprotocol::getSystemDescription(QString *sysdescription)
 bool SSMprotocol::hasOBD2system(bool *OBD2)
 {
 	if (_state == state_needSetup) return false;
-	if ((_flagbytes[29] != (_flagbytes[29] | 0x80)) && (_flagbytes[28] != (_flagbytes[28] | 0x02)))
+	if (!(_flagbytes[29] & 0x80) && !(_flagbytes[28] & 0x02))
 		*OBD2 = true;
 	else
 		*OBD2 = false;
@@ -279,7 +279,7 @@ bool SSMprotocol::hasVINsupport(bool *VINsup)
 	if (_state == state_needSetup) return false;
 	if ((_CU==ECU) && (_nrofflagbytes > 32))
 	{
-		if (_flagbytes[36] == (_flagbytes[36] | 0x01))
+		if (_flagbytes[36] & 0x01)
 			*VINsup = true;
 		else
 			*VINsup = false;
@@ -294,9 +294,9 @@ bool SSMprotocol::hasVINsupport(bool *VINsup)
 bool SSMprotocol::hasImmobilizer(bool *ImmoSup)
 {
 	if (_state == state_needSetup) return false;
-	if (_CU==ECU && (_flagbytes[11] == (_flagbytes[11] | 0x20)))
+	if (_CU==ECU && (_flagbytes[11] & 0x20))
 	{
-		if (_flagbytes[28] == (_flagbytes[28] | 0x10))
+		if (_flagbytes[28] & 0x10)
 			*ImmoSup = true;
 		else
 			*ImmoSup = false;
@@ -314,7 +314,7 @@ bool SSMprotocol::hasIntegratedCC(bool *CCsup)
 	if (_state == state_needSetup) return false;
 	if ((_CU==ECU) && (_nrofflagbytes > 32))
 	{
-		if (_flagbytes[39] == (_flagbytes[39] | 0x01))
+		if (_flagbytes[39] & 0x01)
 			*CCsup = true;
 		else
 			*CCsup = false;
@@ -331,7 +331,7 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 	if (_state == state_needSetup) return false;
 	if ((_CU==TCU) && (_nrofflagbytes > 32))
 	{
-		if (_flagbytes[39] == (_flagbytes[39] | 0x02))
+		if (_flagbytes[39] & 0x02)
 			*CM2sup = true;
 		else
 			*CM2sup = false;
@@ -346,7 +346,7 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 bool SSMprotocol::hasTestMode(bool *TMsup)
 {
 	if (_state == state_needSetup) return false;
-	if ((_CU==ECU) && (_flagbytes[11] == (_flagbytes[11] | 0x20)))
+	if ((_CU==ECU) && (_flagbytes[11] & 0x20))
 		*TMsup = true;
 	else 
 		*TMsup = false;
@@ -363,9 +363,9 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 	*ATsup = false;
 	if ((_CU==ECU) && TMsup)
 	{
-		if (_flagbytes[28] == (_flagbytes[28] | 0x40))
+		if (_flagbytes[28] & 0x40)
 		{
-			if (_flagbytes[0] == (_flagbytes[0] | 0x01))
+			if (_flagbytes[0] & 0x01)
 				*ATsup = true;
 		}
 	}
@@ -379,7 +379,7 @@ void SSMprotocol::setupDTCaddresses()
 	_currOrTempDTCsAddr.clear();
 	_histOrMemDTCsAddr.clear();
 	unsigned int addr = 0;
-	if (_flagbytes[29] == (_flagbytes[29] | 0x80))
+	if (_flagbytes[29] & 0x80)
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 		{
@@ -388,7 +388,7 @@ void SSMprotocol::setupDTCaddresses()
 		}
 		return;
 	}
-	else if ((_flagbytes[29] == (_flagbytes[29] | 0x10)) || (_flagbytes[29] == (_flagbytes[29] | 0x40)))
+	else if ((_flagbytes[29] & 0x10) || (_flagbytes[29] & 0x40))
 	{
 		for (addr=0x8E; addr<=0xAD; addr++)
 		{
@@ -396,7 +396,7 @@ void SSMprotocol::setupDTCaddresses()
 			_histOrMemDTCsAddr.push_back( addr + 32 );
 		}
 	}
-	if (_flagbytes[28] == (_flagbytes[28] | 0x01))
+	if (_flagbytes[28] & 0x01)
 	{
 		for (addr=0xF0; addr<=0xF3; addr++)
 		{
@@ -406,7 +406,7 @@ void SSMprotocol::setupDTCaddresses()
 	}
 	if (_nrofflagbytes > 32)
 	{
-		if (_flagbytes[39] == (_flagbytes[39] | 0x80))
+		if (_flagbytes[39] & 0x80)
 		{
 			for (addr=0x123; addr<=0x12A; addr++)
 			{
@@ -414,7 +414,7 @@ void SSMprotocol::setupDTCaddresses()
 				_histOrMemDTCsAddr.push_back( addr + 8 );
 			}
 		}
-		if (_flagbytes[39] == (_flagbytes[39] | 0x40))
+		if (_flagbytes[39] & 0x40)
 		{
 			for (addr=0x150; addr<=0x154; addr++)
 			{
@@ -422,7 +422,7 @@ void SSMprotocol::setupDTCaddresses()
 				_histOrMemDTCsAddr.push_back( addr + 5 );
 			}
 		}
-		if (_flagbytes[39] == (_flagbytes[39] | 0x20))
+		if (_flagbytes[39] & 0x20)
 		{
 			for (addr=0x160; addr<=0x164; addr++)
 			{
@@ -430,7 +430,7 @@ void SSMprotocol::setupDTCaddresses()
 				_histOrMemDTCsAddr.push_back( addr + 5 );
 			}
 		}
-		if (_flagbytes[39] == (_flagbytes[39] | 0x10))
+		if (_flagbytes[39] & 0x10)
 		{
 			for (addr=0x174; addr<=0x17A; addr++)
 			{
@@ -440,7 +440,7 @@ void SSMprotocol::setupDTCaddresses()
 		}
 		if (_nrofflagbytes > 48)
 		{
-			if (_flagbytes[50] == (_flagbytes[50] | 0x40))
+			if (_flagbytes[50] & 0x40)
 			{
 				for (addr=0x1C1; addr<=0x1C6; addr++)
 				{
@@ -523,7 +523,7 @@ void SSMprotocol::setupSupportedMBs()
 			// Check if CU supports this MB (if flagbit is set):
 			if ((tmpbitnr < 1) || (tmpbitnr > 8))
 				ok = false;
-			if ((ok) && (_flagbytes[tmpbytenr-1] == (_flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1))))))
+			if ((ok) && (_flagbytes[tmpbytenr-1] & static_cast<unsigned char>(pow(2, (tmpbitnr-1)))))
 			{
 				// Check if MB is intended for this CU type:
 				tmpCUsupported = 0;
@@ -628,7 +628,7 @@ void SSMprotocol::setupSupportedSWs()
 			// Check if CU supports this switch (if flagbit is set):
 			if ((tmpbitnr < 1) || (tmpbitnr > 8))
 				ok = false;
-			if ((ok) && (_flagbytes[tmpbytenr-1] == (_flagbytes[tmpbytenr-1] | static_cast<unsigned char>(pow(2, (tmpbitnr-1)) ))))
+			if ((ok) && (_flagbytes[tmpbytenr-1] & static_cast<unsigned char>(pow(2, (tmpbitnr-1)) )))
 			{
 				// Check if switch is intended for this CU type:
 				tmpCUsupported = 0;
@@ -712,7 +712,7 @@ void SSMprotocol::setupAdjustmentsData()
 				tmpflagbit = tmphelpstr.section('-', 1, 1).toUInt(&ok, 10);
 				if (ok && (tmpflagbit > 0) && (tmpflagbit < 9))
 				{
-					if (_flagbytes[tmpflagbyte-1] == (_flagbytes[tmpflagbyte-1] | static_cast<unsigned char>(pow(2,(tmpflagbit-1)))))
+					if (_flagbytes[tmpflagbyte-1] & static_cast<unsigned char>(pow(2,(tmpflagbit-1))))
 						supported = true;
 				}
 			}
@@ -834,7 +834,7 @@ void SSMprotocol::setupActuatorTestData()
 				else
 				{
 					// Check if flagbyte is set:
-					if (_flagbytes[tmpflagbyte-1] != (_flagbytes[tmpflagbyte-1] | static_cast<unsigned char>(pow(2, tmpflagbit-1))))
+					if (!(_flagbytes[tmpflagbyte-1] & static_cast<unsigned char>(pow(2, tmpflagbit-1))))
 						fbvalid = false;
 				}
 			}
@@ -880,7 +880,7 @@ bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 	int retDCgroups = 0;
 	bool supported = false;
 	if (_state == state_needSetup) return false;
-	if (_flagbytes[29] == (_flagbytes[29] | 0x80))
+	if (_flagbytes[29] & 0x80)
 	{
 		if (!_currOrTempDTCsAddr.empty())
 			retDCgroups += currentDTCs_DCgroup;
@@ -1165,7 +1165,7 @@ bool SSMprotocol::isEngineRunning(bool *isrunning)
 	unsigned int dataadr = 0x0e;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
-	if (_flagbytes[0] != (_flagbytes[0] | 0x01)) return false;
+	if (!(_flagbytes[0] & 0x01)) return false;
 	if (!_SSMPcom->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
 	{
 		resetCUdata();
@@ -1192,7 +1192,7 @@ bool SSMprotocol::isInTestMode(bool *testmode)
 		resetCUdata();
 		return false;
 	}
-	if (currentdatabyte == (currentdatabyte | 0x20))
+	if (currentdatabyte & 0x20)
 		*testmode = true;
 	else
 		*testmode = false;
@@ -1318,7 +1318,7 @@ bool SSMprotocol::startDCreading(int DCgroups)
 	}
 	if (CCsup)
 	{
-		if (DCgroups == (DCgroups | CClatestCCs_DCgroup))	// CC latest cancel codes
+		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
 		{
 			for (k=0; k<_latestCCCCsAddr.size(); k++)
 			{
@@ -1326,7 +1326,7 @@ bool SSMprotocol::startDCreading(int DCgroups)
 				DCqueryAddrListLen++;
 			}
 		}
-		if ((DCgroups == (DCgroups | CCmemorizedCCs_DCgroup)) && CCmemSup)	// CC memorized cancel codes
+		if ((DCgroups & CCmemorizedCCs_DCgroup) && CCmemSup)	// CC memorized cancel codes
 		{
 			for (k=0; k<_memorizedCCCCsAddr.size(); k++)
 			{
@@ -1402,12 +1402,12 @@ void SSMprotocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		if (_CU == ECU)
 		{
 			DCsAddrIndexOffset = 1;
-			if (_flagbytes[11] == (_flagbytes[11] | 0x20))	// Test mode supported
+			if (_flagbytes[11] & 0x20)	// Test mode supported
 			{
-				if (DCrawdata.at(0) == (DCrawdata.at(0) | 0x20))
+				if (DCrawdata.at(0) & 0x20)
 					TestMode = true;
 			}
-			if (DCrawdata.at(0) == (DCrawdata.at(0) | 0x80))
+			if (DCrawdata.at(0) & 0x80)
 				DCheckActive = true;
 		}
 		else
@@ -1490,7 +1490,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QSt
 	unsigned char flagbit = 0;
 	for (flagbit=1; flagbit<9; flagbit++)
 	{
-		if (DCrawdata == (DCrawdata | static_cast<char>(pow(2, (flagbit-1)))))
+		if (DCrawdata & static_cast<char>(pow(2, (flagbit-1))))
 		{
 			setbits[setbitslen] = flagbit;
 			setbitslen++;
@@ -1711,7 +1711,7 @@ void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawva
 				if (_selMBsSWaAddr[m] == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteadr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) == (rawdata.at(m) | static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) )) )	// IF ADDRESS BIT IS SET
+					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) ) )	// IF ADDRESS BIT IS SET
 						mbswrawvalues[k] = 1;
 					else	// IF ADDRESS BIT IS NOT SET
 						mbswrawvalues[k] = 0;
@@ -2089,7 +2089,7 @@ bool SSMprotocol::waitForIgnitionOff()
 	unsigned int dataadr = 0x62;
 	_state = state_waitingForIgnOff;
 	_SSMPcom->setRetriesOnError(1);
-	if (_flagbytes[12] == (_flagbytes[12] | 0x08))	// MB "ignition switch"
+	if (_flagbytes[12] & 0x08)	// MB "ignition switch"
 	{
 		bool ignstate = true;
 		char data = 0x00;
@@ -2098,7 +2098,7 @@ bool SSMprotocol::waitForIgnitionOff()
 			if(!_SSMPcom->readMultipleDatabytes('\x0', &dataadr, 1, &data))
 				ignstate = false;
 			else
-				ignstate = (data == (data | 0x08));
+				ignstate = (data & 0x08);
 		} while (ignstate);
 	}
 	else

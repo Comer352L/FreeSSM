@@ -182,12 +182,12 @@ bool CUcontent_DCs_transmission::startDCreading()
 	// Enable notification about external DC-reading-stops:
 	connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup)
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));

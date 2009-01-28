@@ -132,8 +132,8 @@ bool CUcontent_DCs_engine::setup()
 			_obd2DTCformat = false;
 		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
 		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
-		latestCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup));
-		memCCCCs_sup = (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup));
+		latestCCCCs_sup = (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup);
+		memCCCCs_sup = (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup);
 	}
 	// Set titles of the DTC-tables
 	setTitleOfFirstDTCtable(_obd2DTCformat, _testMode);
@@ -238,22 +238,22 @@ bool CUcontent_DCs_engine::startDCreading()
 	// Enable notification about external DC-reading-stops:
 	connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::temporaryDTCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
 		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	}
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::memorizedDTCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup)
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CClatestCCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup)
 	{
 		updateCClatestCCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups == (_supportedDCgroups | SSMprotocol::CCmemorizedCCs_DCgroup))
+	if (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup)
 	{
 		updateCCmemorizedCCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
