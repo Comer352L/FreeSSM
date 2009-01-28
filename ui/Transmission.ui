@@ -130,7 +130,7 @@
         <string>Measuring Blocks:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="OBDsupportedtitle_label" >
+      <widget class="QLabel" name="obd2systemTitle_label" >
        <property name="geometry" >
         <rect>
          <x>20</x>
@@ -148,7 +148,7 @@
         </font>
        </property>
        <property name="text" >
-        <string>OBD2 Support:</string>
+        <string>OBD2-System:</string>
        </property>
       </widget>
       <widget class="QLabel" name="nrofdatambstitle_label" >
@@ -305,7 +305,7 @@
         <string/>
        </property>
       </widget>
-      <widget class="QLabel" name="obd2compliant_label" >
+      <widget class="QLabel" name="obd2system_label" >
        <property name="geometry" >
         <rect>
          <x>157</x>

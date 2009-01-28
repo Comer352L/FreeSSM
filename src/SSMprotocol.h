@@ -135,7 +135,7 @@ public:
 	bool getSysID(QString *SYS_ID);
 	bool getROMID(QString *ROM_ID);
 	bool getSystemDescription(QString *sysdescription);
-	bool hasOBD2(bool *OBD2);
+	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);
 	bool hasIntegratedCC(bool *CCsup);

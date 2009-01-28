@@ -243,147 +243,147 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_DCs_engine</name>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="138"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="407"/>
         <source>System-Check Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">System-Check Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="142"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="411"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Temporary Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="146"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="415"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Current Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="150"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="141"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Memorized Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="152"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="143"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historic Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="267"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="258"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation type="unfinished">----- Reading data... Please wait ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="174"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="165"/>
         <source>----- Not supported by ECU -----</source>
         <translation type="unfinished">----- Not supported by ECU -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="481"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="497"/>
         <source>Printing...</source>
         <translation type="unfinished">Printing...</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="481"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="497"/>
         <source>Printing... Please wait !    </source>
         <translation type="unfinished">Printing... Please wait !    </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="492"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="508"/>
         <source>Engine</source>
         <translation type="unfinished">Engine</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="611"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="627"/>
         <source>Control Unit:</source>
         <translation type="unfinished">Control Unit:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="621"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="637"/>
         <source>System Type:</source>
         <translation type="unfinished">System Type:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="631"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="647"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="641"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="657"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registered VIN:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="670"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="686"/>
         <source>----- No Trouble Codes -----</source>
         <translation type="unfinished">----- No Trouble Codes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="692"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="708"/>
         <source>----- No Cancel Codes -----</source>
         <translation type="unfinished">----- No Cancel Codes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="817"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="833"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="817"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="833"/>
         <source>Communication Error:</source>
         <translation type="unfinished">Communication Error:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="203"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="194"/>
         <source>Couldn&apos;t start Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t start Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="537"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="553"/>
         <source>Couldn&apos;t stop Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t stop Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="501"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="517"/>
         <source>Query of the System-ID failed.</source>
         <translation type="unfinished">Query of the System-ID failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="546"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="562"/>
         <source>Query of the ROM-ID failed.</source>
         <translation type="unfinished">Query of the ROM-ID failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="543"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="559"/>
         <source>Couldn&apos;t determine if VIN-registration is supported.</source>
         <translation type="unfinished">Couldn&apos;t determine if VIN-registration is supported.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="499"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="515"/>
         <source>Unknown (</source>
         <translation type="unfinished">Unknown (</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="525"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="541"/>
         <source>not programmed yet</source>
         <translation type="unfinished">not programmed yet</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="540"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="556"/>
         <source>not supported by ECU</source>
         <translation type="unfinished">not supported by ECU</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="534"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="550"/>
         <source>Query of the VIN failed.</source>
         <translation type="unfinished">Query of the VIN failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="531"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="547"/>
         <source>Couldn&apos;t restart Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t restart Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="304"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="302"/>
         <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
         <translation type="unfinished">----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</translation>
     </message>
@@ -858,8 +858,8 @@ Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="214"/>
-        <source>OBD2 Support:</source>
-        <translation type="unfinished">OBD2 Support:</translation>
+        <source>OBD2-System:</source>
+        <translation type="unfinished">OBD2-System:</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="852"/>
@@ -1281,8 +1281,8 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="151"/>
-        <source>OBD2 Support:</source>
-        <translation type="unfinished">OBD2 Support:</translation>
+        <source>OBD2-System:</source>
+        <translation type="unfinished">OBD2-System:</translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="655"/>

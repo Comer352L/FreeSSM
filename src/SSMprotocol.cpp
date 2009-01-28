@@ -262,7 +262,7 @@ bool SSMprotocol::getSystemDescription(QString *sysdescription)
 
 
 
-bool SSMprotocol::hasOBD2(bool *OBD2)
+bool SSMprotocol::hasOBD2system(bool *OBD2)
 {
 	if (_state == state_needSetup) return false;
 	if ((_flagbytes[29] != (_flagbytes[29] | 0x80)) && (_flagbytes[28] != (_flagbytes[28] | 0x02)))

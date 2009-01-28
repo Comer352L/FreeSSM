@@ -114,12 +114,12 @@ void Transmission::setup()
 			goto commError;
 		nrofswitches_label->setText( QString::number(supportedMBsSWs.size(), 10) );
 		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2(&supported))
+		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
 		if (supported)
-			obd2compliant_label->setPixmap(sup_pixmap);
+			obd2system_label->setPixmap(sup_pixmap);
 		else
-			obd2compliant_label->setPixmap(nsup_pixmap);
+			obd2system_label->setPixmap(nsup_pixmap);
 		// "Clear Memory 2"-support:
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
@@ -426,10 +426,10 @@ void Transmission::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	nrofswitches_label->setFont(font);
-	font = OBDsupportedtitle_label->font();
+	font = obd2systemTitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	OBDsupportedtitle_label->setFont(font);
+	obd2systemTitle_label->setFont(font);
 	font = selection_groupBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(15);	// 11-12pts
