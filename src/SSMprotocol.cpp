@@ -326,23 +326,6 @@ bool SSMprotocol::hasIntegratedCC(bool *CCsup)
 
 
 
-bool SSMprotocol::hasIntegratedCCmemorizedCodes(bool *CCmemCCsup)
-{
-	if (_state == state_needSetup) return false;
-	if ((_CU==ECU) && (_nrofflagbytes > 32))
-	{
-		if ((_flagbytes[41] == (_flagbytes[41] | 0x04)) && (_flagbytes[39] == (_flagbytes[39] | 0x01)))
-			*CCmemCCsup = true;
-		else
-			*CCmemCCsup = false;
-	}
-	else
-		*CCmemCCsup = false;
-	return true;
-}
-
-
-
 bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
@@ -489,8 +472,7 @@ void SSMprotocol::setupCCCCaddresses()
 	for (addr=0x133; addr<=0x136; addr++)
 		_latestCCCCsAddr.push_back( addr );
 	// Check if CC supports memorized Codes:
-	hasIntegratedCCmemorizedCodes(&supported);
-	if (supported)
+	if (_flagbytes[41] & 0x04)
 	{
 		// Put addresses of memorized codes on the list:
 		for (addr=0x137; addr<=0x13A; addr++)
@@ -917,9 +899,7 @@ bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 	if (supported)
 	{
 		retDCgroups += CClatestCCs_DCgroup;
-		if (!hasIntegratedCCmemorizedCodes(&supported))
-			return false;
-		if (supported)
+		if (_flagbytes[41] & 0x04)
 			retDCgroups += CCmemorizedCCs_DCgroup;
 	}
 	*DCgroups = retDCgroups;
@@ -1299,8 +1279,10 @@ bool SSMprotocol::startDCreading(int DCgroups)
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (!hasIntegratedCC(&CCsup)) return false;
-	if (!hasIntegratedCCmemorizedCodes(&CCmemSup)) return false;
+	if (hasIntegratedCC(&CCsup))
+		CCmemSup = (_flagbytes[41] & 0x04);
+	else
+		return false;
 	// Check argument:
 	if (DCgroups < 1 || DCgroups > 63) return false;
 	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
