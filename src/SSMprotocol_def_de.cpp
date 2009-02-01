@@ -929,11 +929,21 @@
 		<< "00017A;000181;7;P0019;Versagen des Kurbelwellen- und Nockenwellen-Steuerungssystems B (Bank 2)"
 		<< "00017A;000181;8;P0017;Versagen des Kurbelwellen- und Nockenwellen-Steuerungssystems B (Bank 1)"
 		<< "0001C5;0001CB;1;P0201;Fehler im Stromkreis von Einspritzventil #1"
+		<< "0001C5;0001CB;8;P0116;Bereich/Funktion des Kühlmitteltemperatursensors"
+		<< "0001C6;0001CC;1;P0088;Kraftstoff-Raildruck abnorm (zu hoch)"
+		<< "0001C6;0001CC;2;P0191;Bereich/Funktion des Kraftstoff-Raildrucksensor-Schaltkreises"
 		<< "0001C6;0001CC;6;P0204;Fehler im Stromkreis von Einspritzventil #4"
 		<< "0001C6;0001CC;7;P0203;Fehler im Stromkreis von Einspritzventil #3"
 		<< "0001C6;0001CC;8;P0202;Fehler im Stromkreis von Einspritzventil #2"
+		<< "00020A;00020E;1;P0093;Kraftstoffsystem undicht (großes Leck)"
+		<< "00020A;00020E;4;P1232;Kraftstoffpumpen-Fehlfunktion"
+		<< "00020A;00020E;8;P0089;Funktion/Leistung des Kraftstoffdruckreglers (Öffnungsproblem des Druckbegrenzungsventils)"
+		<< "00020B;00020F;3;P0299;Ladedruck zu gering (Unterladung)"
+		<< "00020B;00020F;4;P0234;Ladedruck zu hoch (Überladung)"
 		<< "00020C;000210;1;P1382;Glührelaisschaltkreis (Hoch)"
 		<< "00020C;000210;2;P0219;Motorüberdrehung"
+		<< "00020C;000210;3;P0046;Bereich/Leistung des Ladedruck-Steuermagnetventilschaltkreises"
+		<< "00020D;000211;2;P2413;Hängenbleiben des Abgasrückführungsventils"
 		<< "00020D;000211;8;P1380;Glührelaisschaltkreis (Niedrig)";
 
 

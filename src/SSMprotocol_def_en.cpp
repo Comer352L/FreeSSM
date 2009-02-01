@@ -929,11 +929,21 @@
 		<< "00017A;000181;7;P0019;Crank and Cam Timing B System Failure (Bank 2)"
 		<< "00017A;000181;8;P0017;Crank and Cam Timing B System Failure (Bank 1)"
 		<< "0001C5;0001CB;1;P0201;Injector #1 Circuit Malfunction"
+		<< "0001C5;0001CB;8;P0116;Engine Coolant Temperature Sensor Circuit Range/Performance"
+		<< "0001C6;0001CC;1;P0088;Fuel Rail Pressure Abnormal (Too High)"
+		<< "0001C6;0001CC;2;P0191;Fuel Rail Pressure Sensor Circuit Range/Performance"
 		<< "0001C6;0001CC;6;P0204;Injector #4 Circuit Malfunction"
 		<< "0001C6;0001CC;7;P0203;Injector #3 Circuit Malfunction"
 		<< "0001C6;0001CC;8;P0202;Injector #2 Circuit Malfunction"
+		<< "00020A;00020E;1;P0093;Fuel System Leak Detected (Large Leak)"
+		<< "00020A;00020E;4;P1232;Fuel Pump Malfunction"
+		<< "00020A;00020E;8;P0089;Fuel Pressure Regulator Performance (Limiter Valve Opening Problem)"
+		<< "00020B;00020F;3;P0299;Boost Pressure Abnormal (Under-Boost)"
+		<< "00020B;00020F;4;P0234;Boost Pressure Abnormal (Over-Boost)"
 		<< "00020C;000210;1;P1382;Glow Relay Circuit (High)"
 		<< "00020C;000210;2;P0219;Engine Overspeed Condition"
+		<< "00020C;000210;3;P0046;Turbocharger Boost Control Solenoid Valve Circuit Range/Performance"
+		<< "00020D;000211;2;P2413;Exhaust Gas Recirculation (EGR) Valve Sticking"
 		<< "00020D;000211;8;P1380;Glow Relay Circuit (Low)";
 
 
