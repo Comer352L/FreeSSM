@@ -1,3 +1,12 @@
+v0.99.0 (01.02.2009):
+  - Added new DTC-address-block and -definitions used by the 2008+ Diesel ECUs
+  - Added new Measuring Blocks (Data+Switches) for 2008+ Diesel engines
+  - Longer "ignition off"-period during "Clear Memory"-procedure
+  - Features-Info: Changed determination of the number of supported Diagnostic-Codes
+  - Optimized memory usage for DTC-definition data
+  - Fixed 2 bugs that could have caused wrong titles for the DTC-memories/-tables in special cases
+
+
 v0.98.0 (04.01.2009):
   - Extended documentation: test mode connector, list of interfaces,
     some spelling fixes
