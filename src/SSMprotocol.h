@@ -131,7 +131,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	SSMprotocol::CUtype_dt CUtype();
 	SSMprotocol::state_dt state();
-	bool setupCUdata();
+	bool setupCUdata(bool ignoreIgnitionOFF=false);
 	bool getSysID(QString *SYS_ID);
 	bool getROMID(QString *ROM_ID);
 	bool getSystemDescription(QString *sysdescription);

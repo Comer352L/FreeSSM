@@ -147,7 +147,7 @@ void SSMprotocol::resetCUdata()
 
 
 
-bool SSMprotocol::setupCUdata()
+bool SSMprotocol::setupCUdata(bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
 	bool ATsup = false;
@@ -170,6 +170,15 @@ bool SSMprotocol::setupCUdata()
 	// Get control unit data:
 	if (!_SSMPcom->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		 return false;
+	// Ensure that ignition switch is ON:
+	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
+	{
+		unsigned int dataaddr = 0x62;
+		char data = 0x00;
+		if (!_SSMPcom->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+			return false;
+		if (!(data & 0x08)) return false;
+	}
 	_state = state_normal;
 	// Connect communication error signals from SSMPcommunication:
 	connect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
@@ -2086,7 +2095,7 @@ bool SSMprotocol::waitForIgnitionOff()
 {
 	if (_state != state_normal)
 		return false;
-	unsigned int dataadr = 0x62;
+	unsigned int dataaddr = 0x62;
 	_state = state_waitingForIgnOff;
 	_SSMPcom->setRetriesOnError(1);
 	if (_flagbytes[12] & 0x08)	// MB "ignition switch"
@@ -2095,7 +2104,7 @@ bool SSMprotocol::waitForIgnitionOff()
 		char data = 0x00;
 		do
 		{
-			if(!_SSMPcom->readMultipleDatabytes('\x0', &dataadr, 1, &data))
+			if (!_SSMPcom->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
 				ignstate = false;
 			else
 				ignstate = (data & 0x08);
@@ -2106,7 +2115,7 @@ bool SSMprotocol::waitForIgnitionOff()
 		QEventLoop el;
 		disconnect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		if(!_SSMPcom->readMultipleDatabytes_permanent('\x0', &dataadr, 1))
+		if(!_SSMPcom->readMultipleDatabytes_permanent('\x0', &dataaddr, 1))
 		{
 			resetCUdata();
 			return false;
