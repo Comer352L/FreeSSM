@@ -41,6 +41,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	ClearMemoryDlg::CMresult_dt reconnect_result;
 	bool tm = false;
 	bool enginerunning = false;
+	QEventLoop el;
 
 	// Let the user confirm the Clear Memory procedure:
 	if (!confirmClearMemory())
@@ -77,11 +78,12 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	ok = _SSMPdev->ClearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
 		return ClearMemoryDlg::CMresult_communicationError;
+	QTimer::singleShot(800, &el, SLOT( quit() ));
+	el.exec();
 	// Request user to switch ignition off and wait for communication error:
 	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
 	ok = _SSMPdev->waitForIgnitionOff();
 	// Wait 5 seconds
-	QEventLoop el;
 	QTimer::singleShot(5000, &el, SLOT( quit() ));
 	el.exec();
 	// Close wait-message box:
