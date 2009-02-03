@@ -150,7 +150,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text" >
-      <string>LEGACY® / LIBERTY®, IMPREZA®, FORESTER®, TRIBECA®, OUTBACK®, BAJA®</string>
+      <string>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

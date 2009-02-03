@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name>ActuatorTestDlg</name>
     <message>
@@ -1334,8 +1335,8 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="153"/>
-        <source>LEGACY® / LIBERTY®, IMPREZA®, FORESTER®, TRIBECA®, OUTBACK®, BAJA®</source>
-        <translation type="unfinished">LEGACY® / LIBERTY®, IMPREZA®, FORESTER®, TRIBECA®, OUTBACK®, BAJA®</translation>
+        <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</source>
+        <translation type="unfinished">LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="198"/>
