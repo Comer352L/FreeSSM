@@ -286,14 +286,12 @@ void CUcontent_DCs_transmission::setNrOfTableRows(QTableWidget *tablewidget, uns
 	int vspace = 0;
 	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
-	const char vspace_offset = -4;	// experimental value
-
 	// Get available vertical space (for rows) and height per row:
 	if (tablewidget->rowCount() < 1)
 		tablewidget->setRowCount(1); // temporary create a row to get the row hight
 	rowheight = tablewidget->rowHeight(0);
 	headerview = tablewidget->horizontalHeader();
-	vspace = tablewidget->height() - headerview->height() + vspace_offset;
+	vspace = tablewidget->viewport()->height();
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	tablewidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:

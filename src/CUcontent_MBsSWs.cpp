@@ -626,14 +626,12 @@ void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 	int vspace = 0;
 	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
-	const char vspace_offset = -4;	// experimental value
-
 	// Get available vertical space (for rows) and height per row:
 	if (selectedMBsSWs_tableWidget->rowCount() < 1)
 		selectedMBsSWs_tableWidget->setRowCount(1); // Temporary create a row to get the row hight
 	rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	vspace = selectedMBsSWs_tableWidget->height() - headerview->height() + vspace_offset;
+	vspace = selectedMBsSWs_tableWidget->viewport()->height();
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
