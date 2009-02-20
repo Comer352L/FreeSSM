@@ -462,6 +462,14 @@ void SSMprotocol::setupDTCaddresses()
 					_histOrMemDTCsAddr.push_back( addr + 4 );
 				}
 			}
+			if (_flagbytes[50] & 0x20)
+			{
+				for (addr=0x263; addr<=0x267; addr++)
+				{
+					_currOrTempDTCsAddr.push_back( addr );
+					_histOrMemDTCsAddr.push_back( addr + 5 );
+				}
+			}
 		}
 	}
 }
