@@ -26,6 +26,7 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 {
 	_allow_close = false;
 	_parent = parent;
+	setFixedSize( geometry().size() );
 	setAutoClose( false );
 	setAutoReset( false );
 	setModal( true );
