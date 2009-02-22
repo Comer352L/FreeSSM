@@ -46,6 +46,19 @@ SSMprotocol_ID::SSMprotocol_ID()
 	<< "15;3.6L DOHC";
 
 	_transmission_sysDefs
+	<< "01;E-4AT"
+	<< "02;E-4AT"
+	<< "03;E-4AT"
+	<< "04;E-4AT"
+	<< "05;E-4AT"
+	<< "06;E-4AT"
+	<< "07;E-4AT"
+	<< "08;E-4AT"
+	<< "09;E-4AT"
+	<< "10;E-4AT"
+	<< "11;E-4AT"
+	<< "12;E-4AT"
+	<< "13;E-4AT"
 	<< "20;E-4AT"
 	<< "21;E-4AT"
 	<< "22;E-5AT"
