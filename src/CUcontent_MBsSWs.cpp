@@ -65,12 +65,13 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol *SSMPdev, bool t
 	// Install event-filter for MB/SW-table:
 	selectedMBsSWs_tableWidget->viewport()->installEventFilter(this);
 	// Connect signals and slots:
-	connect(startstopmbreading_pushButton , SIGNAL( pressed() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
-	connect(mbswadd_pushButton , SIGNAL( pressed() ), this, SLOT( addMBsSWs() ) );
-	connect(mbswdelete_pushButton , SIGNAL( pressed() ), this, SLOT( deleteMBsSWs() ) );
-	connect(mbswmoveup_pushButton , SIGNAL( pressed() ), this, SLOT( moveupMBsSWs() ) );
-	connect(mbswmovedown_pushButton , SIGNAL( pressed() ), this, SLOT( movedownMBsSWs() ) );
-	connect(timemode_pushButton , SIGNAL( pressed() ), this, SLOT( switchTimeMode() ) );
+	connect(startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	connect(mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
+	connect(mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
+	connect(mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
+	connect(mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
+	connect(timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	connect(selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
 }
 
@@ -79,12 +80,12 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 {
 	_SSMPdev->stopMBSWreading();
 	disconnect(_SSMPdev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
-	disconnect(startstopmbreading_pushButton , SIGNAL( pressed() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
-	disconnect(mbswadd_pushButton , SIGNAL( pressed() ), this, SLOT( addMBsSWs() ) );
-	disconnect(mbswdelete_pushButton , SIGNAL( pressed() ), this, SLOT( deleteMBsSWs() ) );
-	disconnect(mbswmoveup_pushButton , SIGNAL( pressed() ), this, SLOT( moveupMBsSWs() ) );
-	disconnect(mbswmovedown_pushButton , SIGNAL( pressed() ), this, SLOT( movedownMBsSWs() ) );
-	disconnect(timemode_pushButton , SIGNAL( pressed() ), this, SLOT( switchTimeMode() ) );
+	disconnect(startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	disconnect(mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
+	disconnect(mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
+	disconnect(mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
+	disconnect(mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
+	disconnect(timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
 	disconnect(selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
 	disconnect(_SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 	disconnect(_SSMPdev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );

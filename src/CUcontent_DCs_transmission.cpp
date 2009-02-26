@@ -65,7 +65,7 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 	stopDCreading();
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
+	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 }
@@ -120,7 +120,7 @@ bool CUcontent_DCs_transmission::setup()
 	histOrMemDTCs_tableWidget->setEnabled(histOrMemDTCs_sup);
 	// Deactivate and disconnect "Print"-button:
 	printDClist_pushButton->setEnabled(false);
-	disconnect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
+	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// Connect start-slot:
 	if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
 		connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
@@ -194,7 +194,8 @@ bool CUcontent_DCs_transmission::startDCreading()
 	}
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
-	connect(printDClist_pushButton, SIGNAL( pressed() ), this, SLOT( printDCprotocol() ));
+	connect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	return true;
 }
 

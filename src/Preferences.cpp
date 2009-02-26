@@ -126,9 +126,10 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
 	connect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
 	connect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
-	connect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
-	connect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
-	connect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
+	connect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
+	connect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
+	connect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
 
 
@@ -137,9 +138,9 @@ Preferences::~Preferences()
 	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
 	disconnect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
 	disconnect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
-	disconnect( testinterface_pushButton, SIGNAL( pressed() ), this, SLOT( interfacetest() ) );
-	disconnect( ok_pushButton, SIGNAL( pressed() ), this, SLOT( ok() ) );
-	disconnect( cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ) );
+	disconnect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
+	disconnect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
+	disconnect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
 }
 
 

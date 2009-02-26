@@ -58,12 +58,12 @@ Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
 Transmission::~Transmission()
 {
 	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	disconnect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) );
-	disconnect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
-	disconnect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
-	disconnect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
-	disconnect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) );
-	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
+	disconnect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
+	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
+	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
+	disconnect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
+	disconnect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
+	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	clearContent();
 }
 
@@ -131,13 +131,14 @@ void Transmission::setup()
 	else // CU-connection could not be established
 		goto commError;
 	// Connect signals/slots:
-	connect( DTCs_pushButton, SIGNAL( pressed() ), this, SLOT( DTCs() ) );
-	connect( measuringblocks_pushButton, SIGNAL( pressed() ), this, SLOT( measuringblocks() ) );
-	connect( adjustments_pushButton, SIGNAL( pressed() ), this, SLOT( adjustments() ) );
-	connect( clearMemory_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory() ) );
-	connect( clearMemory2_pushButton, SIGNAL( pressed() ), this, SLOT( clearMemory2() ) );
-	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	connect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
+	connect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
+	connect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
+	connect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
+	connect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
+	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
+	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
 	if (!_content_DCs->setup())
 		goto commError;

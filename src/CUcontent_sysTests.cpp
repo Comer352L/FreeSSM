@@ -36,16 +36,17 @@ CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSMprotocol *SSMPdev) : 
 	testImmoLine_pushButton->setEnabled(false);
 	testImmoLineTitel_label->setEnabled(false);
 	// Connect signals and slots:
-	connect( startActuatorTest_pushButton, SIGNAL( pressed() ), this, SLOT( startActuatorTest() ) ); 
-	connect( testImmoLine_pushButton, SIGNAL( pressed() ), this, SLOT( testImmobilizerLine() ) ); 
+	connect( startActuatorTest_pushButton, SIGNAL( released() ), this, SLOT( startActuatorTest() ) );
+	connect( testImmoLine_pushButton, SIGNAL( released() ), this, SLOT( testImmobilizerLine() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
 
 
 CUcontent_sysTests::~CUcontent_sysTests()
 {
 	_SSMPdev->stopActuatorTesting();	// ActuatorTestDlg already stops test on delete...
-	disconnect( startActuatorTest_pushButton, SIGNAL( pressed() ), this, SLOT( startActuatorTest() ) ); 
-	disconnect( testImmoLine_pushButton, SIGNAL( pressed() ), this, SLOT( testImmobilizerLine() ) ); 
+	disconnect( startActuatorTest_pushButton, SIGNAL( released() ), this, SLOT( startActuatorTest() ) );
+	disconnect( testImmoLine_pushButton, SIGNAL( released() ), this, SLOT( testImmobilizerLine() ) );
 }
 
 

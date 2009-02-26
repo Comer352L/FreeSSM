@@ -78,16 +78,16 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, s
 	// Enable/disable "Add" button:
 	setAddButtonEnableStatus();
 	// CONNECT BUTTONS AND LIST WIDGET WITH SLOTS:
-	connect(add_pushButton, SIGNAL( pressed() ), this, SLOT( add() ));
-	connect(cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ));
+	connect(add_pushButton, SIGNAL( released() ), this, SLOT( add() ));
+	connect(cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ));
 	connect(MBsSWs_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
 }
 
 
 AddMBsSWsDlg::~AddMBsSWsDlg()
 {
-	disconnect(add_pushButton, SIGNAL( pressed() ), this, SLOT( add() ));
-	disconnect(cancel_pushButton, SIGNAL( pressed() ), this, SLOT( cancel() ));
+	disconnect(add_pushButton, SIGNAL( released() ), this, SLOT( add() ));
+	disconnect(cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ));
 	disconnect(MBsSWs_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
 }
 

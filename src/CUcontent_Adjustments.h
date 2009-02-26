@@ -76,9 +76,11 @@ private:
 
 private slots:
 	void emitPressed();
+	void emitReleased();
 
 signals:
 	void pressed(unsigned int indentifier);
+	void released(unsigned int indentifier);
 };
 
 

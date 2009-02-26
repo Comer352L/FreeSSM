@@ -192,24 +192,25 @@ FreeSSM::FreeSSM(QApplication *app)
 	dump_action->setShortcut( QKeySequence("Ctrl+Alt+Return") );
 	this->addAction(dump_action);
 	// CONNECT SIGNALS/SLOTS:
-	connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) );
-	connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) );
-	connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) );
-	connect( help_pushButton, SIGNAL( pressed() ), this, SLOT( help() ) );
-	connect( about_pushButton, SIGNAL( pressed() ), this, SLOT( about() ) );
-	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
+	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
+	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
+	connect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
+	connect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
+	connect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
+	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	connect( dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
 }
 
 
 FreeSSM::~FreeSSM()
 {
-	disconnect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
-	disconnect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
-	disconnect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
-	disconnect( help_pushButton, SIGNAL( pressed() ), this, SLOT( help() ) ); 
-	disconnect( about_pushButton, SIGNAL( pressed() ), this, SLOT( about() ) ); 
-	disconnect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
+	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
+	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
+	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
+	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
+	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) ); 
+	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	delete _progtitle_label;
 	if (_port != NULL) delete _port;
 	if (_SSMPdev != NULL) delete _SSMPdev;

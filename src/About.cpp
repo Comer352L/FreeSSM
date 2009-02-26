@@ -79,7 +79,7 @@ About::About(QWidget *parent, QString progversion,  QString language) : QDialog(
 	QString systestsstr = QString::number( nrofSysTests ) + " / 1";
 	nrofActuatortests_label->setText(systestsstr);
 	// Connect "Close"-button:
-	connect( close_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) ); 
+	connect( close_pushButton, SIGNAL( released() ), this, SLOT( close() ) ); 
 }
 
 

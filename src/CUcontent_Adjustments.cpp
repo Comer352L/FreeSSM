@@ -172,7 +172,8 @@ QIdPushButton::QIdPushButton(const QString text, unsigned int indentifier, QWidg
 {
 	_indentifier = indentifier;
 	connect (this, SIGNAL( pressed() ), this, SLOT( emitPressed() ));
-};
+	connect (this, SIGNAL( released() ), this, SLOT( emitReleased() ));
+}
 
 
 void QIdPushButton::emitPressed()
@@ -180,6 +181,11 @@ void QIdPushButton::emitPressed()
 	emit pressed(_indentifier);
 }
 
+
+void QIdPushButton::emitReleased()
+{
+	emit released(_indentifier);
+}
 
 
 
@@ -439,7 +445,7 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 		saveButton = new QIdPushButton("", k, adjustments_tableWidget);
 		saveButton->setIcon(saveButton_icon);
 		saveButton->setIconSize( QSize(54,22) );
-		connect (saveButton, SIGNAL( pressed(unsigned int) ), this, SLOT( saveAdjustmentValue(unsigned int) ));
+		connect (saveButton, SIGNAL( released(unsigned int) ), this, SLOT( saveAdjustmentValue(unsigned int) ));
 		adjustments_tableWidget->setCellWidget ( k, 3, saveButton );	
 	}
 	// Setup "Reset all"-elements:
@@ -453,12 +459,13 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 		resetButton = new QPushButton(adjustments_tableWidget);
 		resetButton->setIcon( resetButton_icon );
 		resetButton->setIconSize( QSize(54, 22) );
-		connect (resetButton, SIGNAL( pressed() ), this, SLOT( resetAllAdjustmentValues() ));
+		connect (resetButton, SIGNAL( released() ), this, SLOT( resetAllAdjustmentValues() ));
 		adjustments_tableWidget->setCellWidget ( _supportedAdjustments.size()+1, 3, resetButton );	
 	}
 	// Check for calculation error(s):
 	if (calcerror)
 		calculationError(tr("One or more values will not be adjustable to prevent\nwrong data being written to the Control Unit."));
+	// NOTE: using released() instead of pressed() for buttons as workaround for a Qt-Bug occuring under MS Windows
 }
 
 

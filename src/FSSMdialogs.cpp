@@ -26,7 +26,6 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 {
 	_allow_close = false;
 	_parent = parent;
-	setFixedSize( geometry().size() );
 	setAutoClose( false );
 	setAutoReset( false );
 	setModal( true );
@@ -47,6 +46,7 @@ FSSM_InitStatusMsgBox::~FSSM_InitStatusMsgBox()
 void FSSM_InitStatusMsgBox::show()
 {
 	QProgressDialog::show();
+	setFixedSize( geometry().size() );
 	_parent->setCursor(Qt::WaitCursor);
 	setCursor(Qt::WaitCursor);
 }

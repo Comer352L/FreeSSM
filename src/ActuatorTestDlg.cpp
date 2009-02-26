@@ -99,7 +99,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 	}
 	else
 		status_label->setText(tr("Test is running..."));
-	connect( exit_pushButton, SIGNAL( pressed() ), this, SLOT( close() ) );
+	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	exit_pushButton->setEnabled(true);
 }
 
