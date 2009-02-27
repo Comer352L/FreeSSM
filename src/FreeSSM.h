@@ -58,6 +58,7 @@ private:
 	serialCOM *_port;
 	SSMprotocol *_SSMPdev;
 	QLabel *_progtitle_label;
+	QAction *_dump_action;
 	bool _dumping;
 
 	void setupUiFonts();

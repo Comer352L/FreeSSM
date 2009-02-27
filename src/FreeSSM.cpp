@@ -188,9 +188,9 @@ FreeSSM::FreeSSM(QApplication *app)
 		// otherwise portname remains empty
 	}
 	// CREATE ACTION FOR DUMPING CONTROL UNID ID-DATA TO FILE:
-	QAction *dump_action = new QAction(this);
-	dump_action->setShortcut( QKeySequence("Ctrl+Alt+Return") );
-	this->addAction(dump_action);
+	_dump_action = new QAction(this);
+	_dump_action->setShortcut( QKeySequence("Ctrl+Alt+Return") );
+	this->addAction(_dump_action);
 	// CONNECT SIGNALS/SLOTS:
 	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
@@ -199,18 +199,20 @@ FreeSSM::FreeSSM(QApplication *app)
 	connect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	connect( dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
+	connect( _dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
 }
 
 
 FreeSSM::~FreeSSM()
 {
+	disconnect( _dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
 	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
 	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) ); 
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
+	delete _dump_action;
 	delete _progtitle_label;
 	if (_port != NULL) delete _port;
 	if (_SSMPdev != NULL) delete _SSMPdev;
@@ -229,6 +231,7 @@ FreeSSM::~FreeSSM()
 
 void FreeSSM::engine()
 {
+	if (_dumping) return;
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
@@ -246,6 +249,7 @@ void FreeSSM::engine()
 
 void FreeSSM::transmission()
 {
+	if (_dumping) return;
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
@@ -263,6 +267,7 @@ void FreeSSM::transmission()
 
 void FreeSSM::preferences()
 {
+	if (_dumping) return;
 	Preferences *preferencesdlg = new Preferences(this, &_portname, _language);
 	preferencesdlg->show();
 	connect(preferencesdlg , SIGNAL( languageSelChanged(QString, QTranslator*) ),
@@ -419,10 +424,8 @@ void FreeSSM::dumpCUdata()
 	char data[18] = {0};
 	QString VIN = "";
 
+	if (_dumping) return;
 	_dumping = true;
-	disconnect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) );
-	disconnect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) );
-	disconnect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) );
 	if (_port != NULL) std::cout << "Memory leak detected in FreeSSM::dumpCUdata() : port";
 	_port = new serialCOM;
 	// Initialize serial port:
@@ -430,9 +433,6 @@ void FreeSSM::dumpCUdata()
 	{
 		delete _port;	// port will be closed in destructor of serialCOM
 		_port = NULL;
-		connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) );
-		connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) );
-		connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) );
 		_dumping = false;
 		return;
 	}
@@ -517,9 +517,6 @@ end:
 	dumpfile.close();
 	delete _port;	// port will be closed in destructor of serialCOM
 	_port = NULL;
-	connect( engine_pushButton, SIGNAL( pressed() ), this, SLOT( engine() ) ); 
-	connect( transmission_pushButton, SIGNAL( pressed() ), this, SLOT( transmission() ) ); 
-	connect( preferences_pushButton, SIGNAL( pressed() ), this, SLOT( preferences() ) ); 
 	_dumping = false;
 }
 
