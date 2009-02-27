@@ -21,7 +21,7 @@
 
 
 
-Preferences::Preferences(QMainWindow *parent, QString *portname, QString language)
+Preferences::Preferences(QMainWindow *parent, QString *portname, QString language) : QDialog(parent)
 {
 	_newportname = *portname;
 	_r_portname = portname;
