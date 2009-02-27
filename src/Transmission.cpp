@@ -151,7 +151,7 @@ void Transmission::setup()
 	}
 	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
 	// Update and close status info:
-	initstatusmsgbox.setLabelText(tr("TCU-Initialisation successful !"));
+	initstatusmsgbox.setLabelText(tr("TCU-initialisation successful !"));
 	initstatusmsgbox.setValue(100);
 	QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 	initstatusmsgbox.exec();

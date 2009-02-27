@@ -140,21 +140,21 @@ void Engine::setup()
 		else
 			immobilizer_label->setPixmap(nsup_pixmap);
 		// // Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Reading vehicle identification number... Please wait !"));
+		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
 		initstatusmsgbox.setValue(55);
 		// Query and output VIN, if supported:
 		if (!_SSMPdev->hasVINsupport(&supported))
 			goto commError;
 		if (supported)
 		{
-			if (!_SSMPdev->getVIN(&VIN))	 // wenn Fahrgestellnummer ermittelt werden konnte
+			if (!_SSMPdev->getVIN(&VIN))
 				goto commError;
-			if (VIN.size() == 0)	 // wenn keine Fahrgestellnummer gespeichert ist
+			if (VIN.size() == 0)
 			{
 				VIN_label->setText(tr("not programmed yet"));
 				VINcolor.setRgb( 255, 170, 0, 255);	// r,g,b,alpha: orange
 			}
-			else	// wenn eine Fahrgestellnummer ermittelt werden konnte
+			else
 			{
 				VIN_label->setText(VIN);
 				VINcolor.setRgb( 0, 170, 0, 255);	// r,g,b,alpha: green
@@ -178,7 +178,7 @@ void Engine::setup()
 			initstatusmsgbox.setLabelText(tr("Checking system status... Please wait !"));
 			initstatusmsgbox.setValue(70);
 			// Query test mode connector status:
-			if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode available, too...
+			if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
 				goto commError;
 			if (testmode)	// wenn ECU im Testmodus
 			{
@@ -220,7 +220,7 @@ void Engine::setup()
 	}
 	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
 	// Update and close status info:
-	initstatusmsgbox.setLabelText(tr("ECU-Initialisation successful !"));
+	initstatusmsgbox.setLabelText(tr("ECU-initialisation successful !"));
 	initstatusmsgbox.setValue(100);
 	QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 	initstatusmsgbox.exec();

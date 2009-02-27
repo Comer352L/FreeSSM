@@ -33,6 +33,7 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 	newfont.setPixelSize(13); // 10pts
 	newfont.setBold( true );
 	setFont( newfont );
+	setFixedSize( 350, 70 );
 }
 
 
@@ -46,7 +47,6 @@ FSSM_InitStatusMsgBox::~FSSM_InitStatusMsgBox()
 void FSSM_InitStatusMsgBox::show()
 {
 	QProgressDialog::show();
-	setFixedSize( geometry().size() );
 	_parent->setCursor(Qt::WaitCursor);
 	setCursor(Qt::WaitCursor);
 }
