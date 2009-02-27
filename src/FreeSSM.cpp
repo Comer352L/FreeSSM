@@ -270,7 +270,7 @@ void FreeSSM::preferences()
 	if (_dumping) return;
 	Preferences *preferencesdlg = new Preferences(this, &_portname, _language);
 	preferencesdlg->show();
-	connect(preferencesdlg , SIGNAL( languageSelChanged(QString, QTranslator*) ),
+	connect(preferencesdlg, SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
 	preferencesdlg->exec();
 	delete preferencesdlg;
@@ -421,8 +421,7 @@ void FreeSSM::dumpCUdata()
 	QString hexstr = "";
 	unsigned char k = 0;
 	unsigned int dataaddr[17] = {0};
-	char data[18] = {0};
-	QString VIN = "";
+	char data[17] = {0};
 
 	if (_dumping) return;
 	_dumping = true;
@@ -479,9 +478,8 @@ void FreeSSM::dumpCUdata()
 				dataaddr[k] = dataaddr[0]+k;
 			if (!SSMPcom.readMultipleDatabytes(0x0, dataaddr, 17, data))
 				goto end;
-			data[17] = '\x0';
-			VIN = static_cast<QString>(data);
-			dumpfile.write(VIN.toAscii()+"\n", 18);
+			StrToHexstr(data, 17, &hexstr);
+			dumpfile.write(hexstr.toAscii() + "\n", hexstr.size()+1);
 		}
 	}
 	// *************** TCU ***************
