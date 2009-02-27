@@ -258,21 +258,38 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	outmsg[4+outdatalen] = calcchecksum(outmsg, 4+outdatalen);
 	// Message length:
 	outmsglen = 4 + outdatalen + 1;
+#ifdef __FSSM_DEBUG__
+	// DEBUG-OUTPUT:
+	std::cout << "SSMPcore::SndRcvMessage(...):   Sending message:\n";
+	for (unsigned int k=0; k<=(outmsglen/16); k++)
+	{
+		if (16*(k+1) <= outmsglen)
+			std::cout << "   " << StrToHexstr(outmsg+(k*16), 16) << '\n';
+		else if (outmsglen%16)
+			std::cout << "   " << StrToHexstr(outmsg+(k*16), (outmsglen%16)) << '\n';
+	}
+#endif
 	// CLEAR PORT BUFFERS:
 	if (!_port->ClearSendBuffer())
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   ClearSendBuffer() failed\n";
+#endif
 		return false;
 	}
 	if (!_port->ClearRecieveBuffer())
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   ClearRecieveBuffer() failed\n";
+#endif
 		return false;
 	}
 	// SEND MESSAGE:
 	if (!_port->Write(outmsg, outmsglen))
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Write failed\n";
+#endif
 		return false;
 	}
 	// PREPARE FOR ANSWER:
@@ -293,14 +310,18 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	// CHECK IF TIMEOUT:
 	if (nabytes < (outmsglen + 4))
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 1\n";
+#endif
 		return false;
 	}
 	nabytes = 0;
 	// READ AVAILABLE DATA (ANSWER MAY BE INCOMPLETE)
 	if (!_port->Read(readdata, &nrofbytesread))
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
+#endif
 		return false;
 	}
 	// ELIMINATE ECHO:
@@ -309,7 +330,9 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	// CHECK IF PROTOCOL HEADER IS CORRECT:
 	if ((readdatatotal[0]!='\x80') | (readdatatotal[1]!='\xF0') | (readdatatotal[2]!=ecuadr))
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Invalid Protocol Header\n";
+#endif
 		return false;
 	}
 	// CALCULATE LENGTH OF COMPLETE ANSWER MESSAGE (using length byte of header):
@@ -330,14 +353,18 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 		{
 			if (!_port->Read(readdata, &nrofbytesread))
 			{
+#ifdef __FSSM_DEBUG__
 				std::cout << "SSMPcore::SndRcvMessage(...):   Read 2 failed\n";
+#endif
 				return false;
 			}
 		}
 		// CHECK IF MESSAGE COMPLETE:
 		if ((nrofbytesreadtotal + nabytes) != inmsglen)
 		{
+#ifdef __FSSM_DEBUG__
 			std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 2\n";
+#endif
 			return false;
 		}
 		charcat(readdatatotal, readdata, nrofbytesreadtotal, nrofbytesread);
@@ -345,19 +372,34 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	}
 	else if (nrofbytesreadtotal > inmsglen)	// CHECK IF ANSWER IS TOO LONG
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Too many bytes read\n";
+#endif
 		return false;
 	}
 	// CHECK CHECKSUM:
 	if (readdatatotal[nrofbytesreadtotal-1] != calcchecksum(readdatatotal, (nrofbytesreadtotal-1)))
 	{
+#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Checksum Error\n";
+#endif
 		return false;
 	}
 	// EXTRACT AND RETURN DATA:
 	*indatalen = inmsglen - 4 - 1;
 	for (k=0; k<*indatalen; k++)
 		indata[k] = readdatatotal[4+k];
+#ifdef __FSSM_DEBUG__
+	// DEBUG-OUTPUT:
+	std::cout << "SSMPcore::SndRcvMessage(...):   Recieved message:\n";
+	for (unsigned int k=0; k<=(inmsglen/16); k++)
+	{
+		if (16*(k+1) <= inmsglen)
+			std::cout << "   " << StrToHexstr(readdatatotal+(k*16), 16) << '\n';
+		else if (inmsglen%16)
+			std::cout << "   " << StrToHexstr(readdatatotal+(k*16), (inmsglen%16)) << '\n';
+	}
+#endif
 	return true;
 }
 
@@ -393,4 +435,25 @@ bool SSMPcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsig
 	}
 	return true;
 }
+
+
+#ifdef __FSSM_DEBUG__
+std::string SSMPcommunication_core::StrToHexstr(char *inputstr, unsigned int nrbytes)
+{
+	std::string hexstr = "";
+	unsigned short int charval = 0;
+	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	unsigned int bc = 1;
+	for (bc=0; bc<nrbytes; bc++)
+	{
+		charval = static_cast<unsigned char>(inputstr[bc]);
+		hexstr.push_back(hexsigns[charval/16]);
+		hexstr.push_back(hexsigns[charval % 16]);
+		if (bc != nrbytes - 1)
+			hexstr.push_back(' ');
+	}
+	hexstr.push_back('\0');
+	return hexstr;
+}
+#endif
 

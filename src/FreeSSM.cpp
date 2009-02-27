@@ -425,7 +425,6 @@ void FreeSSM::dumpCUdata()
 
 	if (_dumping) return;
 	_dumping = true;
-	if (_port != NULL) std::cout << "Memory leak detected in FreeSSM::dumpCUdata() : port";
 	_port = new serialCOM;
 	// Initialize serial port:
 	if (!initPort(4800, _port))

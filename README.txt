@@ -72,7 +72,9 @@ Preparation:
 $ qmake
 
 Compilation:
-$ make
+$ make release
+or
+$ make debug
 
 Translation files:
 $ make translation

@@ -97,6 +97,46 @@ void SSMPcommunication::run()
 	_result = false;
 	_abort = false;
 	_mutex.unlock();
+#ifdef __FSSM_DEBUG__
+	// Debug-output:
+	std::string op_str = "SSMPcommunication::run():   operation: ";
+	switch (operation)
+	{
+		case comOp_noCom:
+			op_str += "noCom";
+			break;
+		case comOp_readCUdata:
+			op_str += "readCUdata";
+			break;
+		case comOp_readBlock:
+			op_str += "readBlock";
+			break;
+		case comOp_readMulti:
+			op_str += "readMulti";
+			break;
+		case comOp_readBlock_p:
+			op_str += "readBlock_p";
+			break;
+		case comOp_readMulti_p:
+			op_str += "readMulti_p";
+			break;
+		case comOp_writeBlock:
+			op_str += "writeBlock";
+			break;
+		case comOp_writeSingle:
+			op_str += "writeSingle";
+			break;
+		case comOp_writeBlock_p:
+			op_str += "writeBlock_p";
+			break;
+		case comOp_writeSingle_p:
+			op_str += "writeSingle_p";
+			break;
+		default:
+			op_str += "INVALID/UNKNOWN: " + QString::number(operation).toStdString();
+	}
+	std::cout << op_str << '\n';
+#endif
 	// Preparation:
 	if ( operation==comOp_readBlock_p || operation==comOp_readMulti_p || operation==comOp_writeBlock_p || operation==comOp_writeSingle_p )
 	{
@@ -165,7 +205,9 @@ void SSMPcommunication::run()
 		else
 		{
 			errcount++;
-			std::cout << "SSMPcommunication::run(...): communication operation error counter=" << (int)(errcount) << '\n';
+#ifdef __FSSM_DEBUG__
+			std::cout << "SSMPcommunication::run():   communication operation error counter=" << (int)(errcount) << '\n';
+#endif
 		}
 		// GET ABORT STATUS::
 		_mutex.lock();
@@ -190,6 +232,9 @@ void SSMPcommunication::run()
 	{
 		msleep(10);
 	}
+#ifdef __FSSM_DEBUG__
+	std::cout << "SSMPcommunication::run():   communication operation finished." << '\n';
+#endif
 }
 
 
