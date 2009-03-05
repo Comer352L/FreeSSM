@@ -95,7 +95,7 @@
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
-       <normaloff>:/icons/Engine.png</normaloff>:/icons/Engine.png</iconset>
+       <normaloff>:/icons/freessm/64x64/Engine.png</normaloff>:/icons/freessm/64x64/Engine.png</iconset>
      </property>
      <property name="iconSize" >
       <size>
@@ -123,7 +123,7 @@
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
-       <normaloff>:/icons/Transmission.png</normaloff>:/icons/Transmission.png</iconset>
+       <normaloff>:/icons/freessm/64x64/Transmission.png</normaloff>:/icons/freessm/64x64/Transmission.png</iconset>
      </property>
      <property name="iconSize" >
       <size>

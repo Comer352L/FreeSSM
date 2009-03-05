@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	}
 	fssm_lock.create(1, QSharedMemory::ReadOnly);
 	// Set Window Icon:
-	app.setWindowIcon( QIcon(":/icons/FreeSSM.png") );
+	app.setWindowIcon( QIcon(":/icons/freessm/32x32/FreeSSM.png") );
 	// Use Unicode UTF-8:
 	QTextCodec::setCodecForCStrings( QTextCodec::codecForName("UTF-8") );
 	// Get installed (system) fonts:

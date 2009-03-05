@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/" >
+    <file>icons/freessm/32x32/FreeSSM.png</file>
     <file>icons/oxygen/22x22/preferences-desktop-theme.png</file>
     <file>icons/oxygen/22x22/go-first.png</file>
     <file>icons/oxygen/22x22/go-next.png</file>
@@ -7,7 +8,6 @@
     <file>icons/oxygen/22x22/view-history.png</file>
     <file>icons/oxygen/16x16/chronometer.png</file>
     <file>icons/chrystal/32x32/edit_remove.png</file>
-    <file>icons/FreeSSM.png</file>
     <file>licence_de.html</file>
     <file>licence_en.html</file>
     <file>changelog_de.txt</file>
@@ -34,7 +34,7 @@
     <file>icons/oxygen/32x32/help-browser.png</file>
     <file>icons/oxygen/32x32/preferences-system.png</file>
     <file>icons/oxygen/32x32/system-shutdown.png</file>
-    <file>icons/Engine.png</file>
-    <file>icons/Transmission.png</file>
+    <file>icons/freessm/64x64/Engine.png</file>
+    <file>icons/freessm/64x64/Transmission.png</file>
   </qresource>
 </RCC>
