@@ -185,6 +185,9 @@
 		<< "53;6;1;0;0001E4;;Anzahl der Einspritzungen;;*1;0"
 		<< "53;7;1;0;0001E3;0001E2;Endeinspritzmenge;mm³;/256;4"
 		<< "53;8;1;0;0001E1;;Haupteinspritzungszeitraum;°CA;/5-15;1"
+		<< "54;1;1;0;0001F7;0001F6;Ziel-Kraftstoffpumpenstrom;mA;*1;0"
+		<< "54;2;1;0;0001F5;;Elektrische Servolenkung Strom;A;*1;0"
+		<< "54;3;1;0;0001F0;;Ladedruck-Rückkopplung;%;-128;0"
 		<< "54;4;1;0;0001EF;0001EE;Motor-Zieldrehzahl;U/Min;/4;0"
 		<< "54;5;1;0;0001ED;;Ansauglufttemperatur;°C;-40;0"
 		<< "54;6;1;0;0001EC;;Common-Rail-Druck;MPa;*1;0"
@@ -198,6 +201,10 @@
 		<< "56;2;1;0;00025F;;Mengenkorrektur Zylinder #3;ms;-100/100,2"
 		<< "56;3;1;0;00025E;;Mengenkorrektur Zylinder #2;ms;-100/100,2"
 		<< "56;4;1;0;00025D;;Mengenkorrektur Zylinder #1;ms;-100/100,2"
+		<< "56;5;1;0;000270;;Innenraumheizung;Stufe;*1;0"
+		<< "56;6;1;0;000205;000204;Kilometerstand nach Injektor-Auswechselung;km;*5;0"
+		<< "56;7;1;0;0001FB;0001FA;Kilometerstand nach Injektor-Lernen;km;*5;0"
+		<< "56;8;1;0;0001F9;0001F8;Tatsächlicher Kraftstoffpumpenstrom;mA;*1;0"
 		<< "65;7;1;0;000299;;Kumulativer Zählwert für Überdrehzahlen (hohe Drehzahlen);Mal;*1;0"
 		<< "65;8;1;0;000298;;Kumulativer Zählwert für Überdrehzahlen (sehr hohe Drehzahlen);Mal;*1;0";
 

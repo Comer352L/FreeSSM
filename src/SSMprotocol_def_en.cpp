@@ -185,6 +185,9 @@
 		<< "53;6;1;0;0001E4;;Number of Times Injected;;*1;0"
 		<< "53;7;1;0;0001E3;0001E2;Final Injection Amount;mm³;/256;4"
 		<< "53;8;1;0;0001E1;;Main Injection Period;°KW;/5-15;1"
+		<< "54;1;1;0;0001F7;0001F6;Target Fuel Pump Current;mA;*1;0"
+		<< "54;2;1;0;0001F5;;Electric Power Steering Current;A;*1;0"
+		<< "54;3;1;0;0001F0;;Boost Pressure Feedback;%;-128;0"
 		<< "54;4;1;0;0001EF;0001EE;Target Engine Speed;rpm;/4;0"
 		<< "54;5;1;0;0001ED;;Intake Air Temperature;°C;-40;0"
 		<< "54;6;1;0;0001EC;;Common Rail Pressure;MPa;*1;0"
@@ -198,6 +201,10 @@
 		<< "56;2;1;0;00025F;;Quantity Correction Cylinder #3;ms;-100/100,2"
 		<< "56;3;1;0;00025E;;Quantity Correction Cylinder #2;ms;-100/100,2"
 		<< "56;4;1;0;00025D;;Quantity Correction Cylinder #1;ms;-100/100,2"
+		<< "56;5;1;0;000270;;Interior Heater;Steps;*1;0"
+		<< "56;6;1;0;000205;000204;Mileage after Injector Replacement;km;*5;0"
+		<< "56;7;1;0;0001FB;0001FA;Mileage after Injector Learning;km;*5;0"
+		<< "56;8;1;0;0001F9;0001F8;Actual Fuel Pump Current;mA;*1;0"
 		<< "65;7;1;0;000299;;Accumulated Count of Overspeed Instances (High RPM);Time;*1;0"
 		<< "65;8;1;0;000298;;Accumulated Count of Overspeed Instances (Very High RPM);Time;*1;0";
 
