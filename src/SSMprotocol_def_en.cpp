@@ -984,7 +984,9 @@
 		<< "00020C;000210;7;P0405;Exhaust Gas Recirculation (EGR) Position Sensor Circuit (Low)"
 		<< "00020C;000210;8;P0406;Exhaust Gas Recirculation (EGR) Position Sensor Circuit (High)"
 		<< "00020D;000211;2;P2413;Exhaust Gas Recirculation (EGR) Valve Sticking"
+		<< "00020D;000211;3;P1009;Swirl Control Valve Circuit (Low)"
 		<< "00020D;000211;5;P2147;Injector Driver (Short-Circuit to Ground)"
+		<< "00020D;000211;6;P2010;Swirl Control Valve Circuit (High)"
 		<< "00020D;000211;8;P1380;Glow Relay Circuit (Low)";
 
 

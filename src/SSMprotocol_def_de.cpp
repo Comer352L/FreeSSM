@@ -984,7 +984,9 @@
 		<< "00020C;000210;7;P0405;Abgasrückführung (AGR) Positionssensorschaltkreis (niedrig)"
 		<< "00020C;000210;8;P0406;Abgasrückführung (AGR) Positionssensorschaltkreis (hoch)"
 		<< "00020D;000211;2;P2413;Hängenbleiben des Abgasrückführungsventils"
+		<< "00020D;000211;3;P1009;Wirbelsteuerventilschaltkreis (niedrig)"
 		<< "00020D;000211;5;P2147;Einspritzventiltreiber (Kurzschluss nach Masse)"
+		<< "00020D;000211;6;P2010;Wirbelsteuerventilschaltkreis (hoch)"
 		<< "00020D;000211;8;P1380;Glührelaisschaltkreis (Niedrig)";
 
 
