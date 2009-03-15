@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="de">
+<defaultcodec></defaultcodec>
 <context>
     <name>ActuatorTestDlg</name>
     <message>
@@ -1216,7 +1217,7 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     <message>
         <location filename="src/Transmission.cpp" line="154"/>
         <source>TCU-initialisation successful !</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">TCU-Initialisierung erfolgreich !</translation>
     </message>
 </context>
 <context>

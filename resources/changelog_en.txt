@@ -1,12 +1,30 @@
+v1.0.0 (15.3.2009):
+  - Added support for Powertrain Control Units (PCM)
+  - Added 15 new Measuring Blocks:
+    => support up to model year 2008 is now complete
+  - Added 28 new Diagnostic Trouble Codes:
+    => support up to model year 2008 is now complete
+  - Improved/extended Diagnostic Code titles
+  - Added detection support (no plaintext) for new Diagnostic Trouble Codes
+    of model years 2009+
+  - Connections to Control Units can now only be established, if ignition
+    is switched on
+  - Fixed a bug that could have caused duplicate dialog-openings under
+    MS Windows
+  - New debug-mode with extended debug informations
+  - Improved program icon
+  - Several small modifications and optimizations
+
+
 v0.99.0 (01.02.2009):
-  - Added new DTC-address-block and -definitions used by the 2008+ 
+  - Added new DTC-address-block and -definitions used by the 2008+
     Diesel ECUs
   - Added new Measuring Blocks (Data+Switches) for 2008+ Diesel engines
   - Longer "ignition off"-period during "Clear Memory"-procedure
-  - Features-Info: Changed determination of the number of supported 
+  - Features-Info: Changed determination of the number of supported
     Diagnostic-Codes
   - Optimized memory usage for DTC-definition data
-  - Fixed 2 bugs that could have caused wrong titles for the 
+  - Fixed 2 bugs that could have caused wrong titles for the
     DTC-memories/-tables in special cases
 
 
@@ -24,7 +42,7 @@ v0.98.0 (04.01.2009):
 
 
 v0.97.2 (04.12.2008):
-  Minor modifications, most of them related to the installation process.
+  Minor modifications, most of them related to the installation process
 
 
 v0.97.1 (01.12.2008):
