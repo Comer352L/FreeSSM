@@ -223,7 +223,7 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPd
 
 bool CUcontent_Adjustments::setup()
 {
-	unsigned int rawValues[SSMP_MAX_ADJUSTMENTS] = {0,};
+	std::vector<unsigned int> rawValues;
 	unsigned char k = 0;
 	bool ok = false;
 	bool calcerror = false;
@@ -240,19 +240,19 @@ bool CUcontent_Adjustments::setup()
 		// Setup adjustments table (without current values):
 		setupAdjustmentsTable();
 		// Query current adjustment values from CU:
-		ok = _SSMPdev->getAllAdjustmentValues(rawValues);
+		ok = _SSMPdev->getAllAdjustmentValues(&rawValues);
 		if (ok)
 		{
 			// Scale raw values:
 			QString scaledValueString = "";
 			for (k=0; k<_supportedAdjustments.size(); k++)
 			{
-				if (raw2scaled(rawValues[k], _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
+				if (raw2scaled(rawValues.at(k), _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
 					displayCurrentValue(k, scaledValueString, _supportedAdjustments.at(k).unit);
 				else
 				{
 					calcerror = true;
-					displayCurrentValue(k, QString::number(rawValues[k]), tr("[RAW]"));
+					displayCurrentValue(k, QString::number(rawValues.at(k)), tr("[RAW]"));
 				}
 			}
 		}

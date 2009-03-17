@@ -1053,7 +1053,7 @@ bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue
 
 
 
-bool SSMprotocol::getAllAdjustmentValues(unsigned int * rawValues)
+bool SSMprotocol::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 {
 	unsigned int dataaddr[2*SSMP_MAX_ADJUSTMENTS] = {0,};
 	unsigned int datalen = 0;
@@ -1078,14 +1078,15 @@ bool SSMprotocol::getAllAdjustmentValues(unsigned int * rawValues)
 		resetCUdata();
 		return false;
 	}
-	// Calculate raw value:
+	// Calculate and return raw values:
+	rawValues->clear();
 	for (k=0; k<_adjustments.size(); k++)
 	{
-		rawValues[k] = static_cast<unsigned char>(data[addrindex]);
+		rawValues->push_back( static_cast<unsigned char>(data[addrindex]) );
 		addrindex++;
 		if (_adjustments.at(k).AddrHigh > 0)
 		{
-			rawValues[k] += 256*static_cast<unsigned char>(data[addrindex]);
+			rawValues->at(k) += 256*static_cast<unsigned char>(data[addrindex]);
 			addrindex++;
 		}
 	}

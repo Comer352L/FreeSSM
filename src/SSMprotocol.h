@@ -154,7 +154,7 @@ public:
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
 	bool getVIN(QString *VIN);
-	bool getAllAdjustmentValues(unsigned int * rawValues);
+	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	bool ClearMemory(CMlevel_dt level, bool *success);
