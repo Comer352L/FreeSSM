@@ -1185,7 +1185,7 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     <message>
         <location filename="src/Transmission.cpp" line="85"/>
         <source>Connecting to TCU...</source>
-        <translation type="unfinished">Verbindungsauf herstellen...</translation>
+        <translation type="unfinished">Verbindung herstellen...</translation>
     </message>
     <message>
         <location filename="src/Transmission.cpp" line="176"/>
