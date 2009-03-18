@@ -1102,7 +1102,7 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 	if (_state != state_normal) return false;
 	// Validate adjustment value selection:
 	if (index >= _adjustments.size()) return false;
-	if (((_adjustments.at(index).rawMin < _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin)) || ((rawValue > _adjustments.at(index).rawMax)))
+	if ((_adjustments.at(index).rawMin <= _adjustments.at(index).rawMax) && ((rawValue < _adjustments.at(index).rawMin) || ((rawValue > _adjustments.at(index).rawMax))))
 		return false;
 	if ((_adjustments.at(index).rawMin > _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin) && (rawValue > _adjustments.at(index).rawMax))
 		return false;
