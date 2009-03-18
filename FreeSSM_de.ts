@@ -1418,13 +1418,13 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/About.ui" line="70"/>
-        <source>Close</source>
-        <translation type="unfinished">Schließen</translation>
+        <source>Clos&amp;e</source>
+        <translation type="unfinished">&amp;Schließen</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="101"/>
-        <source>About</source>
-        <translation type="unfinished">Über</translation>
+        <source>&amp;About</source>
+        <translation type="unfinished">&amp;Über</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="118"/>
@@ -1445,8 +1445,8 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
     </message>
     <message>
         <location filename="ui/About.ui" line="550"/>
-        <source>Credits</source>
-        <translation type="unfinished">Credits</translation>
+        <source>&amp;Credits</source>
+        <translation type="unfinished">&amp;Credits</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="589"/>
@@ -1467,13 +1467,13 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
     </message>
     <message>
         <location filename="ui/About.ui" line="747"/>
-        <source>Licence</source>
-        <translation type="unfinished">Lizenz</translation>
+        <source>&amp;Licence</source>
+        <translation type="unfinished">&amp;Lizenz</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="136"/>
-        <source>Features</source>
-        <translation type="unfinished">Funktionsumfang</translation>
+        <source>&amp;Features</source>
+        <translation type="unfinished">&amp;Funktionsumfang</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="180"/>
@@ -1497,8 +1497,8 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
     </message>
     <message>
         <location filename="ui/About.ui" line="765"/>
-        <source>Changelog</source>
-        <translation type="unfinished">Änderungsprotokoll</translation>
+        <source>Change&amp;log</source>
+        <translation type="unfinished">&amp;Änderungsprotokoll</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="569"/>

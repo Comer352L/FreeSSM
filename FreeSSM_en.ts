@@ -1416,13 +1416,13 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/About.ui" line="70"/>
-        <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <source>Clos&amp;e</source>
+        <translation type="unfinished">Clos&amp;e</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="101"/>
-        <source>About</source>
-        <translation type="unfinished">About</translation>
+        <source>&amp;About</source>
+        <translation type="unfinished">&amp;About</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="118"/>
@@ -1443,8 +1443,8 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     </message>
     <message>
         <location filename="ui/About.ui" line="550"/>
-        <source>Credits</source>
-        <translation type="unfinished">Credits</translation>
+        <source>&amp;Credits</source>
+        <translation type="unfinished">&amp;Credits</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="589"/>
@@ -1464,13 +1464,13 @@ You should have received a copy of the GNU General Public License along with thi
     </message>
     <message>
         <location filename="ui/About.ui" line="747"/>
-        <source>Licence</source>
-        <translation type="unfinished">Licence</translation>
+        <source>&amp;Licence</source>
+        <translation type="unfinished">&amp;Licence</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="136"/>
-        <source>Features</source>
-        <translation type="unfinished">Features</translation>
+        <source>&amp;Features</source>
+        <translation type="unfinished">&amp;Features</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="180"/>
@@ -1494,8 +1494,8 @@ You should have received a copy of the GNU General Public License along with thi
     </message>
     <message>
         <location filename="ui/About.ui" line="765"/>
-        <source>Changelog</source>
-        <translation type="unfinished">Changelog</translation>
+        <source>Change&amp;log</source>
+        <translation type="unfinished">Change&amp;log</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="ui/About.ui" line="569"/>

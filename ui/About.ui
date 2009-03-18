@@ -67,7 +67,7 @@
     </font>
    </property>
    <property name="text" >
-    <string>Close</string>
+    <string>Clos&amp;e</string>
    </property>
   </widget>
   <widget class="QTabWidget" name="main_tabWidget" >
@@ -98,7 +98,7 @@
    </property>
    <widget class="QWidget" name="about_tab" >
     <attribute name="title" >
-     <string>About</string>
+     <string>&amp;About</string>
     </attribute>
     <widget class="QLabel" name="aboutcontent_label" >
      <property name="geometry" >
@@ -133,7 +133,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
    </widget>
    <widget class="QWidget" name="features_tab" >
     <attribute name="title" >
-     <string>Features</string>
+     <string>&amp;Features</string>
     </attribute>
     <widget class="QLabel" name="models_label" >
      <property name="geometry" >
@@ -547,7 +547,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
    </widget>
    <widget class="QWidget" name="credits_tab" >
     <attribute name="title" >
-     <string>Credits</string>
+     <string>&amp;Credits</string>
     </attribute>
     <widget class="QLabel" name="author_label" >
      <property name="geometry" >
@@ -744,7 +744,7 @@ You should have received a copy of the GNU General Public License along with thi
    </widget>
    <widget class="QWidget" name="licence_tab" >
     <attribute name="title" >
-     <string>Licence</string>
+     <string>&amp;Licence</string>
     </attribute>
     <widget class="QTextBrowser" name="licence_textBrowser" >
      <property name="geometry" >
@@ -762,7 +762,7 @@ You should have received a copy of the GNU General Public License along with thi
    </widget>
    <widget class="QWidget" name="changelog_tab" >
     <attribute name="title" >
-     <string>Changelog</string>
+     <string>Change&amp;log</string>
     </attribute>
     <widget class="QTextBrowser" name="changelog_textBrowser" >
      <property name="geometry" >
