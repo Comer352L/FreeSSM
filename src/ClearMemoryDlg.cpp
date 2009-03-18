@@ -31,6 +31,7 @@ ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMpro
 
 ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 {
+	CMresult_dt result = CMresult_success;
 	bool ok = false;
 	bool CMsuccess = false;
 	QString SYS_ID_old;
@@ -38,9 +39,10 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	SSMprotocol::state_dt CUstate_old;
 	int oldDCgroups = 0;
 	std::vector<MBSWmetadata_dt> oldMBSWmetaList;
-	ClearMemoryDlg::CMresult_dt reconnect_result;
+	std::vector<unsigned int> oldAdjVal;
 	bool tm = false;
 	bool enginerunning = false;
+	std::vector<adjustment_dt> supAdj;
 	QEventLoop el;
 
 	// Let the user confirm the Clear Memory procedure:
@@ -74,6 +76,8 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		return ClearMemoryDlg::CMresult_communicationError;
 	if (!_SSMPdev->getROMID(&ROM_ID_old))
 		return ClearMemoryDlg::CMresult_communicationError;
+	if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
+		return ClearMemoryDlg::CMresult_communicationError;
 	// Clear Memory:
 	ok = _SSMPdev->ClearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
@@ -91,9 +95,9 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	if (!ok)
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Request user to switch ignition on and ensure that CU is still the same:
-	reconnect_result = reconnect(SYS_ID_old, ROM_ID_old);
-	if (reconnect_result != ClearMemoryDlg::CMresult_success)
-		return reconnect_result;
+	result = reconnect(SYS_ID_old, ROM_ID_old);
+	if (result != ClearMemoryDlg::CMresult_success)
+		return result;
 	// Stop all actuators if CU is in test-mode:
 	if (!_SSMPdev->hasTestMode(&tm))
 		return ClearMemoryDlg::CMresult_communicationError;
@@ -115,6 +119,38 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 			}
 		}
 	}
+	// Check if it makes sense to restore the adjustment values:
+	if (!_SSMPdev->getSupportedAdjustments( &supAdj ))
+		return ClearMemoryDlg::CMresult_communicationError;
+	ok = false;
+	for (unsigned char k=0; k<supAdj.size(); k++)
+	{
+		// Check if old value was valid
+		if ((supAdj.at(k).rawMin <= supAdj.at(k).rawMax) && ((oldAdjVal.at(k) < supAdj.at(k).rawMin) || ((oldAdjVal.at(k) > supAdj.at(k).rawMax))))
+		{
+			ok = false;
+			break;
+		}
+		if ((supAdj.at(k).rawMin > supAdj.at(k).rawMax) && (oldAdjVal.at(k) < supAdj.at(k).rawMin) && (oldAdjVal.at(k) > supAdj.at(k).rawMax))
+		{
+			ok = false;
+			break;
+		}
+		// Check if we have custom adjustment values:
+		if (supAdj.at(k).rawDefault != oldAdjVal.at(k))
+			ok = true;
+	}
+	// Restore adjustment values:
+	if (ok)
+	{
+		// Let the user confirm the restoration:
+		if (confirmAdjustmentValuesRestoration())
+		{
+			result = restoreAdjustmentValues(oldAdjVal);
+			if ( result == CMresult_communicationError )
+				return ClearMemoryDlg::CMresult_communicationError;
+		}
+	}
 	// Restore last CU-state:
 	if (CUstate_old == SSMprotocol::state_DCreading)
 	{
@@ -126,10 +162,9 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		if (!_SSMPdev->startMBSWreading(oldMBSWmetaList))
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
-	// Return success:
-	return ClearMemoryDlg::CMresult_success;
+	// Return result:
+	return result;
 }
-
 
 
 bool ClearMemoryDlg::confirmClearMemory()
@@ -160,6 +195,70 @@ bool ClearMemoryDlg::confirmClearMemory()
 		return false;
 	else
 		return true;
+}
+
+
+bool ClearMemoryDlg::confirmAdjustmentValuesRestoration()
+{
+	int uc = 0;
+	// Create dialog
+	QString winTitle = tr("Restore Adjustment Values ?");
+	QString confirmStr = tr("Shall the last Adjustment Values be restored ?");
+	// Show dialog:
+	QMessageBox ccmmsg( QMessageBox::Warning, winTitle, confirmStr, QMessageBox::NoButton, _parent);
+	ccmmsg.addButton(tr("Restore"), QMessageBox::AcceptRole);
+	ccmmsg.addButton(tr("Keep default values"), QMessageBox::RejectRole);
+	QFont ccmmsgfont = ccmmsg.font();
+	ccmmsgfont.setPixelSize(12);	// 9pts
+	ccmmsg.setFont( ccmmsgfont );
+	ccmmsg.show();
+	// Wait for user choice:
+	uc = ccmmsg.exec();
+	// Close dialog and return result:
+	ccmmsg.close();
+	if (uc == QMessageBox::RejectRole)
+		return false;
+	else
+		return true;
+}
+
+
+ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<unsigned int> oldAdjVal)
+{
+	std::vector<unsigned int> currentAdjVal;
+	bool ok = false;
+	// Restore all adjustment values:
+	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Restoring Adjustment Values... Please wait !   "));
+	waitmsgbox.show();
+	for (unsigned char m=0; m<oldAdjVal.size(); m++)
+	{
+		if (!_SSMPdev->setAdjustmentValue(m, oldAdjVal.at(m)))
+		{
+			waitmsgbox.close();
+			return CMresult_communicationError;
+			/* NOTE: we don't know if we really have a communication error... */
+		}
+	}
+	// To be sure: read and verify value again
+	ok = _SSMPdev->getAllAdjustmentValues(&currentAdjVal);
+	waitmsgbox.close();
+	if (ok)
+	{
+		if (currentAdjVal != oldAdjVal)
+		{
+			QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Adjustment Value restoration failed:\nThe Control Unit didn't accept some of the values !\n\nPlease check current values !"), QMessageBox::Ok, _parent);
+			QFont msgfont = msg.font();
+			msgfont.setPixelSize(12); // 9pts
+			msg.setFont( msgfont );
+			msg.show();
+			msg.exec();
+			msg.close();
+			return CMresult_adjValRestorationFailed;
+		}
+	}
+	else
+		return CMresult_communicationError;
+	return CMresult_success;
 }
 
 

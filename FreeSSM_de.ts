@@ -610,66 +610,107 @@ ZÜNDUNG verbinden/trennen !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="173"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="273"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="140"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
         <source>Do you really want to clear the
 Control Unit&apos;s memory</source>
         <translation type="unfinished">Soll der Steuergeräte-Speicher
 wirklich gelöscht werden</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="149"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="150"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Bitte schalten Sie die Zündung wieder EIN.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="177"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="178"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="278"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Steuergerät verlassen </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="144"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (Stufe 2)</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="50"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="52"/>
         <source>Clearing memory</source>
         <translation type="unfinished">Lösche Speicher</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="84"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="88"/>
         <source>Please switch ignition OFF and be patient...   </source>
         <translation type="unfinished">Bitte Zündung ausschalten und warten...   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="183"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="283"/>
         <source>Reconnecting... Please wait !   </source>
         <translation type="unfinished">Verbindung wird wieder hergestellt... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="53"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="55"/>
         <source>... Please wait !   </source>
         <translation type="unfinished">... Bitte warten !   </translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="232"/>
+        <source>Restoring Adjustment Values... Please wait !   </source>
+        <translation type="unfinished">Einstellwerte werden wiederhersgestellt... Bitte warten !</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
+        <source>Restore Adjustment Values ?</source>
+        <translation type="unfinished">Einstellwerte wiederherstellen ?</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="207"/>
+        <source>Shall the last Adjustment Values be restored ?</source>
+        <translation type="unfinished">Sollen die letzten Einstellwerte wiederhergestellt werden ?</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
+        <source>Restore</source>
+        <translation type="unfinished">Wiederherstellen</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="211"/>
+        <source>Keep default values</source>
+        <translation type="unfinished">Standardwerte behalten</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <source>Error</source>
+        <translation type="unfinished">Fehler</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <source>Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !
+
+Please check current values !</source>
+        <translation type="unfinished">Wiederherstellung der Einstellwerte fehlgeschlagen:
+Das Steuergerät hat einige Werte nicht akzeptiert !
+
+Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
 </context>
 <context>
@@ -896,24 +937,24 @@ wirklich gelöscht werden</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="356"/>
+        <location filename="src/FreeSSM.cpp" line="361"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="356"/>
+        <location filename="src/FreeSSM.cpp" line="361"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Die notwendigen Einstellungen am seriellen Port konnten nicht durchgeführt werden !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="339"/>
+        <location filename="src/FreeSSM.cpp" line="344"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
 Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="326"/>
+        <location filename="src/FreeSSM.cpp" line="331"/>
         <source>No serial port available !</source>
         <translation type="unfinished">Kein serieller Port verfügbar !</translation>
     </message>

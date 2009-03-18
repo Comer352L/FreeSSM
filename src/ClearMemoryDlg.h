@@ -32,7 +32,7 @@ class ClearMemoryDlg : public QObject
 	Q_OBJECT
 
 public:
-	enum CMresult_dt {CMresult_aborted, CMresult_communicationError, CMresult_success, CMresult_reconnectAborted, CMresult_reconnectFailed};
+	enum CMresult_dt {CMresult_aborted, CMresult_communicationError, CMresult_success, CMresult_adjValRestorationFailed, CMresult_reconnectAborted, CMresult_reconnectFailed};
 
 	ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level);
 	CMresult_dt run();
@@ -43,6 +43,8 @@ private:
 	SSMprotocol::CMlevel_dt _level;
 
 	bool confirmClearMemory();
+	bool confirmAdjustmentValuesRestoration();
+	CMresult_dt restoreAdjustmentValues(std::vector<unsigned int> oldAdjVal);
 	CMresult_dt reconnect(QString SYS_ID_old, QString ROM_ID_old);
 
 };

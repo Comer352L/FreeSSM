@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name>ActuatorTestDlg</name>
     <message>
@@ -607,66 +608,107 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="173"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="273"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="140"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
         <source>Do you really want to clear the
 Control Unit&apos;s memory</source>
         <translation type="unfinished">Do you really want to clear the
 Control Unit&apos;s memory</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="149"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="150"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Please switch ignition ON again.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="177"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
         <source>Continue</source>
         <translation type="unfinished">Continue</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="178"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="278"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Leave Control Unit </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="144"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (level 2)</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="50"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="52"/>
         <source>Clearing memory</source>
         <translation type="unfinished">Clearing memory</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="84"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="88"/>
         <source>Please switch ignition OFF and be patient...   </source>
         <translation type="unfinished">Please switch ignition OFF and be patient...   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="183"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="283"/>
         <source>Reconnecting... Please wait !   </source>
         <translation type="unfinished">Reconnecting... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="53"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="55"/>
         <source>... Please wait !   </source>
         <translation type="unfinished">... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="232"/>
+        <source>Restoring Adjustment Values... Please wait !   </source>
+        <translation type="unfinished">Restoring Adjustment Values... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
+        <source>Restore Adjustment Values ?</source>
+        <translation type="unfinished">Restore Adjustment Values ?</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="207"/>
+        <source>Shall the last Adjustment Values be restored ?</source>
+        <translation type="unfinished">Shall the last Adjustment Values be restored ?</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
+        <source>Restore</source>
+        <translation type="unfinished">Restore</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="211"/>
+        <source>Keep default values</source>
+        <translation type="unfinished">Keep default values</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <source>Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !
+
+Please check current values !</source>
+        <translation type="unfinished">Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !
+
+Please check current values !</translation>
     </message>
 </context>
 <context>
@@ -893,24 +935,24 @@ Control Unit&apos;s memory</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="356"/>
+        <location filename="src/FreeSSM.cpp" line="361"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="356"/>
+        <location filename="src/FreeSSM.cpp" line="361"/>
         <source>Couldn&apos;t apply the necessary serial port settings !</source>
         <translation type="unfinished">Couldn&apos;t apply the necessary serial port settings !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="339"/>
+        <location filename="src/FreeSSM.cpp" line="344"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="326"/>
+        <location filename="src/FreeSSM.cpp" line="331"/>
         <source>No serial port available !</source>
         <translation type="unfinished">No serial port available !</translation>
     </message>
