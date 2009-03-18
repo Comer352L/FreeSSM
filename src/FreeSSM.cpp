@@ -34,6 +34,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	QString appsPath( QCoreApplication::applicationDirPath() );
 	// SETUP GUI:
 	setupUi(this);
+	setWindowFlags( windowFlags() & ~Qt::WindowMaximizeButtonHint );	// only necessary for MS Windows
 	setupUiFonts();
 	// LOAD BACKGROUND PICTURE:
 	background_label->setPixmap(appsPath + "/background.jpg");
