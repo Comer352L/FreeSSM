@@ -610,44 +610,44 @@ ZÜNDUNG verbinden/trennen !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="273"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="272"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="175"/>
         <source>Do you really want to clear the
 Control Unit&apos;s memory</source>
         <translation type="unfinished">Soll der Steuergeräte-Speicher
 wirklich gelöscht werden</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="275"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Bitte schalten Sie die Zündung wieder EIN.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="278"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Steuergerät verlassen </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="179"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (Stufe 2)</translation>
     </message>
@@ -662,7 +662,7 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">Bitte Zündung ausschalten und warten...   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="283"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="282"/>
         <source>Reconnecting... Please wait !   </source>
         <translation type="unfinished">Verbindung wird wieder hergestellt... Bitte warten !   </translation>
     </message>
@@ -672,37 +672,37 @@ wirklich gelöscht werden</translation>
         <translation type="unfinished">... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="232"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="231"/>
         <source>Restoring Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Einstellwerte werden wiederhersgestellt... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="205"/>
         <source>Restore Adjustment Values ?</source>
         <translation type="unfinished">Einstellwerte wiederherstellen ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="207"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
         <source>Shall the last Adjustment Values be restored ?</source>
         <translation type="unfinished">Sollen die letzten Einstellwerte wiederhergestellt werden ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="209"/>
         <source>Restore</source>
         <translation type="unfinished">Wiederherstellen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="211"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
         <source>Keep default values</source>
         <translation type="unfinished">Standardwerte behalten</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="249"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="249"/>
         <source>Adjustment Value restoration failed:
 The Control Unit didn&apos;t accept some of the values !
 
@@ -842,13 +842,13 @@ Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="780"/>
-        <source> Diagnostic Codes  </source>
-        <translation type="unfinished">   Diagnosecodes    </translation>
+        <source> &amp;Diagnostic Codes  </source>
+        <translation type="unfinished">   &amp;Diagnosecodes    </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="816"/>
-        <source> Measuring Blocks </source>
-        <translation type="unfinished">  Messwertblöcke   </translation>
+        <source> &amp;Measuring Blocks </source>
+        <translation type="unfinished">  &amp;Messwertblöcke   </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="727"/>
@@ -907,13 +907,13 @@ Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="852"/>
-        <source>     Adjustments     </source>
-        <translation type="unfinished">    Einstellungen     </translation>
+        <source>     &amp;Adjustments     </source>
+        <translation type="unfinished">    &amp;Einstellungen     </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="888"/>
-        <source>    System Tests    </source>
-        <translation type="unfinished">    System-Tests    </translation>
+        <source>    System &amp;Tests    </source>
+        <translation type="unfinished">    System-&amp;Tests    </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="924"/>
@@ -922,8 +922,8 @@ Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="965"/>
-        <source>       Exit Control Unit        </source>
-        <translation type="unfinished">   Steuergerät verlassen    </translation>
+        <source>       &amp;Exit Control Unit        </source>
+        <translation type="unfinished">   Steuergerät &amp;verlassen    </translation>
     </message>
 </context>
 <context>
@@ -975,8 +975,8 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="94"/>
-        <source>      Engine       </source>
-        <translation type="unfinished">        Motor        </translation>
+        <source>      &amp;Engine       </source>
+        <translation type="unfinished">        &amp;Motor        </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="77"/>
@@ -985,28 +985,28 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="47"/>
-        <source>        Exit            </source>
-        <translation type="unfinished">    Beenden      </translation>
+        <source>        E&amp;xit            </source>
+        <translation type="unfinished">    &amp;Beenden      </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="170"/>
-        <source>       Help           </source>
-        <translation type="unfinished">        Hilfe           </translation>
+        <source>       &amp;Help           </source>
+        <translation type="unfinished">        &amp;Hilfe           </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="198"/>
-        <source>       About         </source>
-        <translation type="unfinished">         Info           </translation>
+        <source>       &amp;About         </source>
+        <translation type="unfinished">         &amp;Info           </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="122"/>
-        <source> Transmission</source>
-        <translation type="unfinished">     Getriebe      </translation>
+        <source> &amp;Transmission</source>
+        <translation type="unfinished">     &amp;Getriebe      </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="226"/>
-        <source>  Preferences  </source>
-        <translation type="unfinished"> Einstellungen</translation>
+        <source>  &amp;Preferences  </source>
+        <translation type="unfinished"> &amp;Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -1134,13 +1134,13 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="72"/>
-        <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <source>&amp;OK</source>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="85"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Abbruch</translation>
+        <source>&amp;Cancel</source>
+        <translation type="unfinished">&amp;Abbruch</translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="151"/>
@@ -1164,8 +1164,8 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="98"/>
-        <source>      Test Diagnostic Interface       </source>
-        <translation type="unfinished">     Diagnose-Interface testen      </translation>
+        <source>      &amp;Test Diagnostic Interface       </source>
+        <translation type="unfinished">     Diagnose-Interface &amp;testen      </translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="257"/>
@@ -1275,13 +1275,13 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="583"/>
-        <source>  Diagnostic Codes </source>
-        <translation type="unfinished">   Diagnosecodes    </translation>
+        <source>  &amp;Diagnostic Codes </source>
+        <translation type="unfinished">   &amp;Diagnosecodes    </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="619"/>
-        <source> Measuring Blocks </source>
-        <translation type="unfinished">  Messwertblöcke   </translation>
+        <source> &amp;Measuring Blocks </source>
+        <translation type="unfinished">  &amp;Messwertblöcke   </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="724"/>
@@ -1330,8 +1330,8 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="655"/>
-        <source>     Adjustments     </source>
-        <translation type="unfinished">    Einstellungen     </translation>
+        <source>     &amp;Adjustments     </source>
+        <translation type="unfinished">    &amp;Einstellungen     </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="691"/>
@@ -1340,8 +1340,8 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="759"/>
-        <source>       Exit Control Unit        </source>
-        <translation type="unfinished">   Steuergerät verlassen    </translation>
+        <source>       &amp;Exit Control Unit        </source>
+        <translation type="unfinished">   Steuergerät &amp;verlassen    </translation>
     </message>
 </context>
 <context>

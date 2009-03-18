@@ -777,7 +777,7 @@
         </font>
        </property>
        <property name="text" >
-        <string> Diagnostic Codes  </string>
+        <string> &amp;Diagnostic Codes  </string>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
@@ -813,7 +813,7 @@
         </font>
        </property>
        <property name="text" >
-        <string> Measuring Blocks </string>
+        <string> &amp;Measuring Blocks </string>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
@@ -849,7 +849,7 @@
         </font>
        </property>
        <property name="text" >
-        <string>     Adjustments     </string>
+        <string>     &amp;Adjustments     </string>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
@@ -885,7 +885,7 @@
         </font>
        </property>
        <property name="text" >
-        <string>    System Tests    </string>
+        <string>    System &amp;Tests    </string>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
@@ -962,7 +962,7 @@
        </font>
       </property>
       <property name="text" >
-       <string>       Exit Control Unit        </string>
+       <string>       &amp;Exit Control Unit        </string>
       </property>
       <property name="icon" >
        <iconset resource="../resources/FreeSSM.qrc" >

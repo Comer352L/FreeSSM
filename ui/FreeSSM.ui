@@ -44,7 +44,7 @@
      </font>
     </property>
     <property name="text" >
-     <string>        Exit            </string>
+     <string>        E&amp;xit            </string>
     </property>
     <property name="icon" >
      <iconset resource="../resources/FreeSSM.qrc" >
@@ -91,7 +91,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>      Engine       </string>
+      <string>      &amp;Engine       </string>
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
@@ -119,7 +119,7 @@
       </font>
      </property>
      <property name="text" >
-      <string> Transmission</string>
+      <string> &amp;Transmission</string>
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
@@ -167,7 +167,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>       Help           </string>
+      <string>       &amp;Help           </string>
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
@@ -195,7 +195,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>       About         </string>
+      <string>       &amp;About         </string>
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >
@@ -223,7 +223,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>  Preferences  </string>
+      <string>  &amp;Preferences  </string>
      </property>
      <property name="icon" >
       <iconset resource="../resources/FreeSSM.qrc" >

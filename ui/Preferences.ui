@@ -69,7 +69,7 @@
     </rect>
    </property>
    <property name="text" >
-    <string>OK</string>
+    <string>&amp;OK</string>
    </property>
   </widget>
   <widget class="QPushButton" name="cancel_pushButton" >
@@ -82,7 +82,7 @@
     </rect>
    </property>
    <property name="text" >
-    <string>Cancel</string>
+    <string>&amp;Cancel</string>
    </property>
   </widget>
   <widget class="QPushButton" name="testinterface_pushButton" >
@@ -95,7 +95,7 @@
     </rect>
    </property>
    <property name="text" >
-    <string>      Test Diagnostic Interface       </string>
+    <string>      &amp;Test Diagnostic Interface       </string>
    </property>
    <property name="icon" >
     <iconset resource="../resources/FreeSSM.qrc" >

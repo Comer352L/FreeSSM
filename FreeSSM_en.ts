@@ -608,44 +608,44 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="273"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="272"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="176"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="175"/>
         <source>Do you really want to clear the
 Control Unit&apos;s memory</source>
         <translation type="unfinished">Do you really want to clear the
 Control Unit&apos;s memory</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="275"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Please switch ignition ON again.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="276"/>
         <source>Continue</source>
         <translation type="unfinished">Continue</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="278"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="277"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Leave Control Unit </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="179"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (level 2)</translation>
     </message>
@@ -660,7 +660,7 @@ Control Unit&apos;s memory</translation>
         <translation type="unfinished">Please switch ignition OFF and be patient...   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="283"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="282"/>
         <source>Reconnecting... Please wait !   </source>
         <translation type="unfinished">Reconnecting... Please wait !   </translation>
     </message>
@@ -670,37 +670,37 @@ Control Unit&apos;s memory</translation>
         <translation type="unfinished">... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="232"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="231"/>
         <source>Restoring Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Restoring Adjustment Values... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="205"/>
         <source>Restore Adjustment Values ?</source>
         <translation type="unfinished">Restore Adjustment Values ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="207"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="206"/>
         <source>Shall the last Adjustment Values be restored ?</source>
         <translation type="unfinished">Shall the last Adjustment Values be restored ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="209"/>
         <source>Restore</source>
         <translation type="unfinished">Restore</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="211"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="210"/>
         <source>Keep default values</source>
         <translation type="unfinished">Keep default values</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="249"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="250"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="249"/>
         <source>Adjustment Value restoration failed:
 The Control Unit didn&apos;t accept some of the values !
 
@@ -840,13 +840,13 @@ Please check current values !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="780"/>
-        <source> Diagnostic Codes  </source>
-        <translation type="unfinished"> Diagnostic Codes  </translation>
+        <source> &amp;Diagnostic Codes  </source>
+        <translation type="unfinished"> &amp;Diagnostic Codes  </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="816"/>
-        <source> Measuring Blocks </source>
-        <translation type="unfinished"> Measuring Blocks </translation>
+        <source> &amp;Measuring Blocks </source>
+        <translation type="unfinished"> &amp;Measuring Blocks </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="727"/>
@@ -905,13 +905,13 @@ Please check current values !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="852"/>
-        <source>     Adjustments     </source>
-        <translation type="unfinished">     Adjustments     </translation>
+        <source>     &amp;Adjustments     </source>
+        <translation type="unfinished">     &amp;Adjustments     </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="888"/>
-        <source>    System Tests    </source>
-        <translation type="unfinished">    System Tests    </translation>
+        <source>    System &amp;Tests    </source>
+        <translation type="unfinished">    System &amp;Tests    </translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="924"/>
@@ -920,8 +920,8 @@ Please check current values !</translation>
     </message>
     <message>
         <location filename="ui/Engine.ui" line="965"/>
-        <source>       Exit Control Unit        </source>
-        <translation type="unfinished">       Exit Control Unit        </translation>
+        <source>       &amp;Exit Control Unit        </source>
+        <translation type="unfinished">       &amp;Exit Control Unit        </translation>
     </message>
 </context>
 <context>
@@ -973,8 +973,8 @@ Maybe port is already in use by another application...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="94"/>
-        <source>      Engine       </source>
-        <translation type="unfinished">      Engine       </translation>
+        <source>      &amp;Engine       </source>
+        <translation type="unfinished">      &amp;Engine       </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="77"/>
@@ -983,28 +983,28 @@ Maybe port is already in use by another application...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="47"/>
-        <source>        Exit            </source>
-        <translation type="unfinished">        Exit            </translation>
+        <source>        E&amp;xit            </source>
+        <translation type="unfinished">        E&amp;xit            </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="170"/>
-        <source>       Help           </source>
-        <translation type="unfinished">       Help           </translation>
+        <source>       &amp;Help           </source>
+        <translation type="unfinished">       &amp;Help           </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="198"/>
-        <source>       About         </source>
-        <translation type="unfinished">       About         </translation>
+        <source>       &amp;About         </source>
+        <translation type="unfinished">       &amp;About         </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="122"/>
-        <source> Transmission</source>
-        <translation type="unfinished"> Transmission</translation>
+        <source> &amp;Transmission</source>
+        <translation type="unfinished"> &amp;Transmission</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="226"/>
-        <source>  Preferences  </source>
-        <translation type="unfinished">  Preferences  </translation>
+        <source>  &amp;Preferences  </source>
+        <translation type="unfinished">  &amp;Preferences  </translation>
     </message>
 </context>
 <context>
@@ -1132,13 +1132,13 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="72"/>
-        <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <source>&amp;OK</source>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="85"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <source>&amp;Cancel</source>
+        <translation type="unfinished">&amp;Cancel</translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="151"/>
@@ -1162,8 +1162,8 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="98"/>
-        <source>      Test Diagnostic Interface       </source>
-        <translation type="unfinished">      Test Diagnostic Interface       </translation>
+        <source>      &amp;Test Diagnostic Interface       </source>
+        <translation type="unfinished">      &amp;Test Diagnostic Interface       </translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="257"/>
@@ -1273,13 +1273,13 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="583"/>
-        <source>  Diagnostic Codes </source>
-        <translation type="unfinished">  Diagnostic Codes </translation>
+        <source>  &amp;Diagnostic Codes </source>
+        <translation type="unfinished">  &amp;Diagnostic Codes </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="619"/>
-        <source> Measuring Blocks </source>
-        <translation type="unfinished"> Measuring Blocks </translation>
+        <source> &amp;Measuring Blocks </source>
+        <translation type="unfinished"> &amp;Measuring Blocks </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="724"/>
@@ -1328,8 +1328,8 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="655"/>
-        <source>     Adjustments     </source>
-        <translation type="unfinished">     Adjustments     </translation>
+        <source>     &amp;Adjustments     </source>
+        <translation type="unfinished">     &amp;Adjustments     </translation>
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="691"/>
@@ -1338,8 +1338,8 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="ui/Transmission.ui" line="759"/>
-        <source>       Exit Control Unit        </source>
-        <translation type="unfinished">       Exit Control Unit        </translation>
+        <source>       &amp;Exit Control Unit        </source>
+        <translation type="unfinished">       &amp;Exit Control Unit        </translation>
     </message>
 </context>
 <context>
