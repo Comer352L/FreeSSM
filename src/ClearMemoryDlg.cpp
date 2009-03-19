@@ -172,7 +172,14 @@ bool ClearMemoryDlg::confirmClearMemory()
 	int uc = 0;
 	// Create dialog
 	QString winTitle = tr("Clear Memory");
-	QString confirmStr = tr("Do you really want to clear the\nControl Unit's memory");
+	QString confirmStr = tr("The Clear Memory procedure");
+	if (_level == SSMprotocol::CMlevel_2)
+		confirmStr.append( tr(" (level 2)") );
+	confirmStr.append( tr("\n- clears the Diagnostic Codes") );
+	confirmStr.append( tr("\n- resets all non-permanent Adjustment Values") );
+	if ( _SSMPdev->CUtype() == SSMprotocol::ECU || ((_SSMPdev->CUtype() == SSMprotocol::TCU) && (_level == SSMprotocol::CMlevel_2)) )
+		confirmStr.append( tr("\n- resets the Control Units' learning values") );
+	confirmStr.append( tr("\n\nDo you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol::CMlevel_2)
 	{
 		winTitle.append( " 2" );
