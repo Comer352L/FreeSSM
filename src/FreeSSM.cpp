@@ -419,7 +419,7 @@ void FreeSSM::dumpCUdata()
 	char ROM_ID[5] = {0};
 	char flagbytes[96] = {0};
 	unsigned char nrofflagbytes = 0;
-	QString hexstr = "";
+	std::string hexstr = "";
 	unsigned char k = 0;
 	unsigned int dataaddr[17] = {0};
 	char data[17] = {0};
@@ -446,20 +446,23 @@ void FreeSSM::dumpCUdata()
 			goto end;
 		// *** Convert and write data to file:
 		// Sys-ID:
-		hexstr = StrToHexstr(SYS_ID, 3);
-		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
+		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
+		hexstr.push_back('\n');
+		dumpfile.write(hexstr.data(), hexstr.length());
 		// ROM-ID:
-		hexstr = StrToHexstr(ROM_ID, 5);
-		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
+		hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
+		hexstr.push_back('\n');
+		dumpfile.write(hexstr.data(), hexstr.length());
 		// Flagbytes:
 		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
 		{
 			hexstr.clear();
 			if (16*k <= nrofflagbytes)
-				hexstr = StrToHexstr(flagbytes+((k-1)*16), 16);
+				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), 16);
 			else
-				hexstr = StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
-			dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
+				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
+			hexstr.push_back('\n');
+			dumpfile.write(hexstr.data(), hexstr.length());
 		}
 		// VIN:
 		if (flagbytes[36] == (flagbytes[36] | 0x01))
@@ -469,8 +472,10 @@ void FreeSSM::dumpCUdata()
 			dataaddr[2] = 0xDC;
 			if (!SSMPcom.readMultipleDatabytes(0x0, dataaddr, 3, data))
 				goto end;
-			hexstr = StrToHexstr(data, 3);
-			dumpfile.write("\n"+hexstr.toAscii()+"\n", hexstr.length()+2);
+			hexstr = libFSSM::StrToHexstr(data, 3);
+			hexstr.insert(0, "\n");
+			hexstr.push_back('\n');
+			dumpfile.write(hexstr.data(), hexstr.length());
 			dataaddr[0] = (65536 * static_cast<unsigned char>(data[0]))
 					+ (256 * static_cast<unsigned char>(data[1]))
 					+ (static_cast<unsigned char>(data[2]));
@@ -478,8 +483,9 @@ void FreeSSM::dumpCUdata()
 				dataaddr[k] = dataaddr[0]+k;
 			if (!SSMPcom.readMultipleDatabytes(0x0, dataaddr, 17, data))
 				goto end;
-			hexstr = StrToHexstr(data, 17);
-			dumpfile.write(hexstr.toAscii() + "\n", hexstr.size()+1);
+			hexstr = libFSSM::StrToHexstr(data, 17);
+			hexstr.push_back('\n');
+			dumpfile.write(hexstr.data(), hexstr.size());
 		}
 	}
 	// *************** TCU ***************
@@ -495,20 +501,24 @@ void FreeSSM::dumpCUdata()
 		}
 		// *** Convert and write data to file:
 		// Sys-ID:
-		hexstr = StrToHexstr(SYS_ID, 3);
-		dumpfile.write("\n"+hexstr.toAscii()+"\n", hexstr.length()+2);
+		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
+		hexstr.insert(0, "\n");
+		hexstr.push_back('\n');
+		dumpfile.write(hexstr.data(), hexstr.length());
 		// ROM-ID:
-		hexstr = StrToHexstr(ROM_ID, 5);
-		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
+		hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
+		hexstr.push_back('\n');
+		dumpfile.write(hexstr.data(), hexstr.length());
 		// Flagbytes:
 		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
 		{
 			hexstr.clear();
 			if (16*k <= nrofflagbytes)
-				hexstr = StrToHexstr(flagbytes+((k-1)*16), 16);
+				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), 16);
 			else
-				hexstr = StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
-			dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
+				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
+			hexstr.push_back('\n');
+			dumpfile.write(hexstr.data(), hexstr.length());
 		}
 	}
 end:
@@ -516,25 +526,6 @@ end:
 	delete _port;	// port will be closed in destructor of serialCOM
 	_port = NULL;
 	_dumping = false;
-}
-
-
-QString FreeSSM::StrToHexstr(char *inputstr, unsigned int nrbytes)
-{
-	QString hexstr;
-	unsigned short int charval = 0;
-	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	unsigned int bc = 1;
-	for (bc=0; bc<nrbytes; bc++)
-	{
-		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr.append(hexsigns[charval/16]);
-		hexstr.append(hexsigns[charval % 16]);
-		if (bc != nrbytes - 1)
-			hexstr.append(' ');
-	}
-	hexstr.append('\0');
-	return hexstr;
 }
 
 

@@ -264,9 +264,9 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	for (unsigned int k=0; k<=(outmsglen/16); k++)
 	{
 		if (16*(k+1) <= outmsglen)
-			std::cout << "   " << StrToHexstr(outmsg+(k*16), 16) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(outmsg+(k*16), 16) << '\n';
 		else if (outmsglen%16)
-			std::cout << "   " << StrToHexstr(outmsg+(k*16), (outmsglen%16)) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(outmsg+(k*16), (outmsglen%16)) << '\n';
 	}
 #endif
 	// CLEAR PORT BUFFERS:
@@ -395,9 +395,9 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	for (unsigned int k=0; k<=(inmsglen/16); k++)
 	{
 		if (16*(k+1) <= inmsglen)
-			std::cout << "   " << StrToHexstr(readdatatotal+(k*16), 16) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(readdatatotal+(k*16), 16) << '\n';
 		else if (inmsglen%16)
-			std::cout << "   " << StrToHexstr(readdatatotal+(k*16), (inmsglen%16)) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(readdatatotal+(k*16), (inmsglen%16)) << '\n';
 	}
 #endif
 	return true;
@@ -435,25 +435,4 @@ bool SSMPcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsig
 	}
 	return true;
 }
-
-
-#ifdef __FSSM_DEBUG__
-std::string SSMPcommunication_core::StrToHexstr(char *inputstr, unsigned int nrbytes)
-{
-	std::string hexstr = "";
-	unsigned short int charval = 0;
-	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	unsigned int bc = 1;
-	for (bc=0; bc<nrbytes; bc++)
-	{
-		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr.push_back(hexsigns[charval/16]);
-		hexstr.push_back(hexsigns[charval % 16]);
-		if (bc != nrbytes - 1)
-			hexstr.push_back(' ');
-	}
-	hexstr.push_back('\0');
-	return hexstr;
-}
-#endif
 

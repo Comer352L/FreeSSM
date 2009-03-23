@@ -235,20 +235,18 @@ bool SSMprotocol::setupCUdata(bool ignoreIgnitionOFF)
 
 
 
-bool SSMprotocol::getSysID(QString *SYS_ID)
+std::string SSMprotocol::getSysID()
 {
 	if (_state == state_needSetup) return false;
-	*SYS_ID = StrToHexstr(_SYS_ID, 3);
-	return true;
+	return libFSSM::StrToHexstr(_SYS_ID, 3);
 }
 
 
 
-bool SSMprotocol::getROMID(QString *ROM_ID)
+std::string SSMprotocol::getROMID()
 {
 	if (_state == state_needSetup) return false;
-	*ROM_ID = StrToHexstr(_ROM_ID, 5);
-	return true;
+	return libFSSM::StrToHexstr(_ROM_ID, 5);
 }
 
 
@@ -1990,26 +1988,6 @@ bool SSMprotocol::validateVIN(char VIN[17])
 		}	
 	}
 	return true;
-}
-
-
-
-QString SSMprotocol::StrToHexstr(char *inputstr, unsigned int nrbytes)
-{
-	QString hexstr;
-	unsigned short int charval = 0;
-	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	unsigned int bc = 1;
-	for (bc=0; bc<nrbytes; bc++)
-	{
-		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr.append(hexsigns[charval/16]);
-		hexstr.append(hexsigns[charval % 16]);
-		if (bc != nrbytes - 1)
-			hexstr.append(' ');
-	}
-	hexstr.append('\0');
-	return hexstr;
 }
 
 

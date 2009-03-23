@@ -36,6 +36,7 @@
 #include <QtGui>
 #include "SSMprotocol.h"
 #include "SSMPcommunication.h"
+#include "libFSSM.h"
 #include "Engine.h"
 #include "Transmission.h"
 #include "Preferences.h"
@@ -63,7 +64,6 @@ private:
 
 	void setupUiFonts();
 	bool initPort(unsigned int baudrate, serialCOM *port);
-	QString StrToHexstr(char *inputstr, unsigned int nrbytes);
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 

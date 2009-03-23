@@ -472,7 +472,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 	QString datetime;
 	QString CU;
 	QString systype;
-	QString ROM_ID;
+	std::string ROM_ID;
 	QString VIN;
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
@@ -508,10 +508,11 @@ void CUcontent_DCs_engine::printDCprotocol()
 	ok = true;
 	if (!_SSMPdev->getSystemDescription(&systype))
 	{
-		QString SYS_ID = "";
-		ok = _SSMPdev->getSysID(&SYS_ID);
+		std::string SYS_ID = "";
+		SYS_ID = _SSMPdev->getSysID();
+		ok = SYS_ID.length();
 		if (ok)
-			systype = tr("Unknown (") + SYS_ID + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
+			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
 		else
 			errstr = tr("Query of the System-ID failed.");
 		/* TODO: IMPROVE: use other functions from libID to determine system type 
@@ -519,7 +520,8 @@ void CUcontent_DCs_engine::printDCprotocol()
 	}
 	if (ok)
 	{
-		ok = _SSMPdev->getROMID(&ROM_ID);		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+		ROM_ID = _SSMPdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+		ok = ROM_ID.length();
 		if (ok)
 		{
 			ok = _SSMPdev->hasVINsupport(&VINsup);
@@ -648,7 +650,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 	// Row 3 - Column 2:
 	charFormat.setFontWeight(QFont::Normal);
 	cursor.setCharFormat(charFormat);
-	cursor.insertText(ROM_ID);
+	cursor.insertText( QString::fromStdString(ROM_ID) );
 	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 	// Row 4 - Column 1:
 	charFormat.setFontWeight(QFont::Bold);

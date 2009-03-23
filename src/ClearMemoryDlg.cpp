@@ -34,8 +34,8 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	CMresult_dt result = CMresult_success;
 	bool ok = false;
 	bool CMsuccess = false;
-	QString SYS_ID_old;
-	QString ROM_ID_old;
+	std::string SYS_ID_old;
+	std::string ROM_ID_old;
 	SSMprotocol::state_dt CUstate_old;
 	int oldDCgroups = 0;
 	std::vector<MBSWmetadata_dt> oldMBSWmetaList;
@@ -72,9 +72,11 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// NOTE: it's currently not possible to call this function while actuator-test is in progress, so we don't need to care about running actuator-tests
-	if (!_SSMPdev->getSysID(&SYS_ID_old))
+	SYS_ID_old = _SSMPdev->getSysID();
+	if (!SYS_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
-	if (!_SSMPdev->getROMID(&ROM_ID_old))
+	ROM_ID_old = _SSMPdev->getROMID();
+	if (!ROM_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
 	if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
 		return ClearMemoryDlg::CMresult_communicationError;
@@ -269,9 +271,9 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 }
 
 
-ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(QString SYS_ID_old, QString ROM_ID_old)
+ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(std::string SYS_ID_old, std::string ROM_ID_old)
 {
-	QString ID_new;
+	std::string ID_new;
 	int uc = 0;
 	bool ok = false;
 	bool equal = false;
@@ -299,13 +301,15 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(QString SYS_ID_old, QStrin
 		ok = _SSMPdev->setupCUdata();
 		if (ok)
 		{
-			ok = _SSMPdev->getSysID(&ID_new);
+			ID_new = _SSMPdev->getSysID();
+			ok = ID_new.length();
 			if (ok)
 			{
 				equal = (ID_new == SYS_ID_old);
 				if (equal)
 				{
-					ok = _SSMPdev->getROMID(&ID_new);
+					ID_new = _SSMPdev->getROMID();
+					ok = ID_new.length();
 					if (ok)
 						equal = (ID_new == ROM_ID_old);
 				}

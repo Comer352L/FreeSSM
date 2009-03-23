@@ -22,6 +22,7 @@
 
 
 #include <QtGui>
+#include <string>
 #include "SSMprotocol.h"
 #include "FSSMdialogs.h"
 
@@ -45,7 +46,7 @@ private:
 	bool confirmClearMemory();
 	bool confirmAdjustmentValuesRestoration();
 	CMresult_dt restoreAdjustmentValues(std::vector<unsigned int> oldAdjVal);
-	CMresult_dt reconnect(QString SYS_ID_old, QString ROM_ID_old);
+	CMresult_dt reconnect(std::string SYS_ID_old, std::string ROM_ID_old);
 
 };
 

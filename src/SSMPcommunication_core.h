@@ -30,6 +30,9 @@
 #else
     #error "Operating system not supported !"
 #endif
+#ifdef __FSSM_DEBUG__
+    #include <iostream>
+#endif
 
 
 
@@ -50,9 +53,6 @@ private:
 	char calcchecksum(char *message, unsigned int nrofbytes);
 	void charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
-#ifdef __FSSM_DEBUG__
-	std::string StrToHexstr(char *inputstr, unsigned int nrbytes);
-#endif
 
 protected:
 	serialCOM *_port;

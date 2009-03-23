@@ -73,7 +73,7 @@ void Transmission::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
-	QString ROM_ID = "";
+	std::string ROM_ID = "";
 	bool supported = false;
 	std::vector<mbsw_dt> supportedMBsSWs;
 	int supDCgroups = 0;
@@ -94,18 +94,19 @@ void Transmission::setup()
 		// Query system description:
 		if (!_SSMPdev->getSystemDescription(&sysdescription))
 		{
-			QString SYS_ID = "";
-			if (!_SSMPdev->getSysID(&SYS_ID))
+			std::string SYS_ID = _SSMPdev->getSysID();
+			if (!SYS_ID.length())
 				goto commError;
-			sysdescription = tr("unknown (") + SYS_ID + ")";
+			sysdescription = tr("unknown (") + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
 		transmissiontype_label->setText(sysdescription);
 		// Query ROM-ID:
-		if (!_SSMPdev->getROMID(&ROM_ID))
+		ROM_ID = _SSMPdev->getROMID();
+		if (!ROM_ID.length())
 			goto commError;
 		// Output ROM-ID:
-		romID_label->setText(ROM_ID);
+		romID_label->setText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
 		if (!_SSMPdev->getSupportedMBs(&supportedMBsSWs))
 			goto commError;

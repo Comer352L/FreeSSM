@@ -281,3 +281,25 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 	return true;
 }
 
+
+std::string libFSSM::StrToHexstr(char *inputstr, unsigned int nrbytes)
+{
+	std::string hexstr = "";
+	unsigned short int charval = 0;
+	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	unsigned int bc = 1;
+	for (bc=0; bc<nrbytes; bc++)
+	{
+		charval = static_cast<unsigned char>(inputstr[bc]);
+		hexstr.push_back(hexsigns[charval/16]);
+		hexstr.push_back(hexsigns[charval % 16]);
+		if (bc != nrbytes - 1)
+			hexstr.push_back(' ');
+	}
+	hexstr.push_back('\0');
+	return hexstr;
+}
+
+
+
+

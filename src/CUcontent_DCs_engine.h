@@ -22,7 +22,8 @@
 
 
 
-#include <QWidget>
+#include <QtGui>
+#include <string>
 #include "ui_CUcontent_DCs_engine.h"
 #include "SSMprotocol.h"
 

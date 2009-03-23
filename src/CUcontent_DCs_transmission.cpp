@@ -315,7 +315,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 	QString datetime;
 	QString CU;
 	QString systype;
-	QString ROM_ID;
+	std::string ROM_ID;
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	QStringList histOrMemDTCcodes = _histOrMemDTCs;
@@ -341,18 +341,20 @@ void CUcontent_DCs_transmission::printDCprotocol()
 	CU = tr("Transmission");
 	if (!_SSMPdev->getSystemDescription(&systype))
 	{
-		QString SYS_ID = "";
-		if (!_SSMPdev->getSysID(&SYS_ID))
+		std::string SYS_ID = "";
+		SYS_ID = _SSMPdev->getSysID();
+		if (!SYS_ID.length())
 		{
 			printmbox.close();
 			communicationError(tr("Query of the System-ID failed."));
 			return;
 		}
-		systype = tr("Unknown (") + SYS_ID + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
+		systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
 		/* TODO: IMPROVE: use other functions from libID to determine system type 
 			 => maybe this should be done in SSMprotocol, too		*/
 	}
-	if (!_SSMPdev->getROMID(&ROM_ID))		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+	ROM_ID = _SSMPdev->getROMID();
+	if (!ROM_ID.length())		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
 	{
 		printmbox.close();
 		communicationError(tr("Query of the ROM-ID failed."));
@@ -439,7 +441,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 	// Row 3 - Column 2:
 	charFormat.setFontWeight(QFont::Normal);
 	cursor.setCharFormat(charFormat);
-	cursor.insertText(ROM_ID);
+	cursor.insertText( QString::fromStdString(ROM_ID) );
 	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 	// Move (out of the table) to the next block:
 	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);

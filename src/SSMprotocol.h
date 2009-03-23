@@ -133,8 +133,8 @@ public:
 	SSMprotocol::CUtype_dt CUtype();
 	SSMprotocol::state_dt state();
 	bool setupCUdata(bool ignoreIgnitionOFF=false);
-	bool getSysID(QString *SYS_ID);
-	bool getROMID(QString *ROM_ID);
+	std::string getSysID();
+	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
@@ -223,7 +223,6 @@ private:
 	void assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues);
 	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList);
 	bool validateVIN(char VIN[17]);
-	QString StrToHexstr(char *inputstr, unsigned int nrbytes);
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
