@@ -141,12 +141,16 @@ void CUcontent_sysTests::testImmobilizerLine()
 	QString resultInfo = "";
 	QMessageBox::Icon msgboxicon = QMessageBox::NoIcon;
 
-	// Show wait message:
+	// Run immobilizer communication line test:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !   "));
 	wmsgbox.show();
-	// Check immobilizer communication line:
 	ok = _SSMPdev->TestImmobilizerCommLine(&testresult);
-	// Close wait message:
+	if (ok)
+	{
+		QEventLoop el;
+		QTimer::singleShot(800, &el, SLOT( quit() ));
+		el.exec();
+	}
 	wmsgbox.hide(); // close() doesn't work
 	// Check test result:
 	if (ok)
