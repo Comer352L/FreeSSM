@@ -43,7 +43,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	titlefont.setPixelSize(27); // 20pts
 	titlefont.setBold(true);
 	_progtitle_label = new QLabel(this);
-	_progtitle_label->setGeometry( 20, 17, 315, 34);
+	_progtitle_label->setGeometry(20, 17, 315, 34);
 	_progtitle_label->setFont( titlefont );
 	_progtitle_label->setText("FreeSSM " + _progversion);
 	this->setWindowTitle("FreeSSM " + _progversion);
@@ -446,19 +446,19 @@ void FreeSSM::dumpCUdata()
 			goto end;
 		// *** Convert and write data to file:
 		// Sys-ID:
-		StrToHexstr(SYS_ID, 3, &hexstr);
+		hexstr = StrToHexstr(SYS_ID, 3);
 		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
 		// ROM-ID:
-		StrToHexstr(ROM_ID, 5, &hexstr);
+		hexstr = StrToHexstr(ROM_ID, 5);
 		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
 		// Flagbytes:
 		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
 		{
 			hexstr.clear();
 			if (16*k <= nrofflagbytes)
-				StrToHexstr(flagbytes+((k-1)*16), 16, &hexstr);
+				hexstr = StrToHexstr(flagbytes+((k-1)*16), 16);
 			else
-				StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16), &hexstr);
+				hexstr = StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
 			dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
 		}
 		// VIN:
@@ -469,7 +469,7 @@ void FreeSSM::dumpCUdata()
 			dataaddr[2] = 0xDC;
 			if (!SSMPcom.readMultipleDatabytes(0x0, dataaddr, 3, data))
 				goto end;
-			StrToHexstr(data, 3, &hexstr);
+			hexstr = StrToHexstr(data, 3);
 			dumpfile.write("\n"+hexstr.toAscii()+"\n", hexstr.length()+2);
 			dataaddr[0] = (65536 * static_cast<unsigned char>(data[0]))
 					+ (256 * static_cast<unsigned char>(data[1]))
@@ -478,7 +478,7 @@ void FreeSSM::dumpCUdata()
 				dataaddr[k] = dataaddr[0]+k;
 			if (!SSMPcom.readMultipleDatabytes(0x0, dataaddr, 17, data))
 				goto end;
-			StrToHexstr(data, 17, &hexstr);
+			hexstr = StrToHexstr(data, 17);
 			dumpfile.write(hexstr.toAscii() + "\n", hexstr.size()+1);
 		}
 	}
@@ -495,19 +495,19 @@ void FreeSSM::dumpCUdata()
 		}
 		// *** Convert and write data to file:
 		// Sys-ID:
-		StrToHexstr(SYS_ID, 3, &hexstr);
+		hexstr = StrToHexstr(SYS_ID, 3);
 		dumpfile.write("\n"+hexstr.toAscii()+"\n", hexstr.length()+2);
 		// ROM-ID:
-		StrToHexstr(ROM_ID, 5, &hexstr);
+		hexstr = StrToHexstr(ROM_ID, 5);
 		dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
 		// Flagbytes:
 		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
 		{
 			hexstr.clear();
 			if (16*k <= nrofflagbytes)
-				StrToHexstr(flagbytes+((k-1)*16), 16, &hexstr);
+				hexstr = StrToHexstr(flagbytes+((k-1)*16), 16);
 			else
-				StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16), &hexstr);
+				hexstr = StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
 			dumpfile.write(hexstr.toAscii()+"\n", hexstr.length()+1);
 		}
 	}
@@ -519,21 +519,22 @@ end:
 }
 
 
-void FreeSSM::StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr)
+QString FreeSSM::StrToHexstr(char *inputstr, unsigned int nrbytes)
 {
+	QString hexstr;
 	unsigned short int charval = 0;
 	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 	unsigned int bc = 1;
-	hexstr->clear();
 	for (bc=0; bc<nrbytes; bc++)
 	{
 		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr->append(hexsigns[charval/16]);
-		hexstr->append(hexsigns[charval % 16]);
+		hexstr.append(hexsigns[charval/16]);
+		hexstr.append(hexsigns[charval % 16]);
 		if (bc != nrbytes - 1)
-			hexstr->append(' ');
+			hexstr.append(' ');
 	}
-	hexstr->append('\0');
+	hexstr.append('\0');
+	return hexstr;
 }
 
 

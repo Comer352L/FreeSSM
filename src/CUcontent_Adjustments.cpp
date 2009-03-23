@@ -247,7 +247,7 @@ bool CUcontent_Adjustments::setup()
 			QString scaledValueString = "";
 			for (k=0; k<_supportedAdjustments.size(); k++)
 			{
-				if (raw2scaled(rawValues.at(k), _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
+				if (libFSSM::raw2scaled(rawValues.at(k), _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
 					displayCurrentValue(k, scaledValueString, _supportedAdjustments.at(k).unit);
 				else
 				{
@@ -397,15 +397,15 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 		else
 		{
 			// Calculate and set min/max:
-			ok = raw2scaled(_supportedAdjustments.at(k).rawMin, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
+			ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawMin, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
 			if (ok)
 				minScaledValue = helpScaledValueStr.toDouble(&ok);
 			if (ok)
-				ok = raw2scaled(_supportedAdjustments.at(k).rawMax, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
+				ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawMax, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
 			if (ok)
 				maxScaledValue = helpScaledValueStr.toDouble(&ok);
 			if (ok)
-				ok = raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
+				ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
 			if (ok)
 				defaultScaledValue = helpScaledValueStr.toDouble(&ok);
 			if (!ok)
@@ -534,24 +534,18 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 	{
 		combobox = dynamic_cast<QComboBox*>(cellWidget);
 		newvalue_scaledStr = combobox->currentText();
-		// Convert scaled value string to raw value:
-		if (!scaled2rawByDirectAssociation(newvalue_scaledStr, _supportedAdjustments.at(index).formula, &newvalue_raw))
-		{
-			calculationError(tr("The new adjustment value couldn't be scaled."));
-			return;
-		}
 	}
 	else	// Spinbox
 	{
 		spinbox = dynamic_cast<ModQDoubleSpinBox*>(cellWidget);
 		newvalue_scaledDouble = spinbox->value();
 		newvalue_scaledStr = QString::number(newvalue_scaledDouble, 'f', _supportedAdjustments.at(index).precision);
-		// Convert scaled value to raw value
-		if (!scaled2raw(newvalue_scaledStr, _supportedAdjustments.at(index).formula, &newvalue_raw))
-		{
-			calculationError(tr("The new adjustment value couldn't be scaled."));
-			return;
-		}
+	}
+	// Convert scaled value string to raw value:
+	if (!libFSSM::scaled2raw(newvalue_scaledStr, _supportedAdjustments.at(index).formula, &newvalue_raw))
+	{
+		calculationError(tr("The new adjustment value couldn't be scaled."));
+		return;
 	}
 	// Save new ajustment value to control unit:
 	ok = _SSMPdev->setAdjustmentValue(index, newvalue_raw);
@@ -564,7 +558,7 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 		return;
 	}
 	// Scale and display the current value:
-	ok = raw2scaled(controlValue_raw, _supportedAdjustments.at(index).formula, _supportedAdjustments.at(index).precision, &newvalue_scaledStr);
+	ok = libFSSM::raw2scaled(controlValue_raw, _supportedAdjustments.at(index).formula, _supportedAdjustments.at(index).precision, &newvalue_scaledStr);
 	if (ok)
 		displayCurrentValue(index, newvalue_scaledStr, _supportedAdjustments.at(index).unit);
 	else
@@ -615,7 +609,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	QString scaledValueString = "";
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
-		if (!raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
+		if (!libFSSM::raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
 			calcerror = true;
 		displayCurrentValue(k, scaledValueString, _supportedAdjustments.at(k).unit);
 	}
@@ -624,330 +618,6 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	// Check for calculation error(s):
 	if (calcerror)
 		calculationError(tr("One or more values couldn't be scaled."));
-}
-
-
-
-bool CUcontent_Adjustments::raw2scaled(unsigned int rawValue, QString scaleformula, char precision, QString *scaledValueStr)
-{
-	bool success = false;
-	double scaledValue = 0;
-	if ( scaleformula.contains('=') )
-	{
-		success = raw2scaledByDirectAssociation(rawValue, scaleformula, scaledValueStr);
-	}
-	else if ( raw2scaledByCalculation( rawValue, scaleformula, &scaledValue ) )
-	{
-		*scaledValueStr = QString::number(scaledValue, 'f', precision);
-		success = true;
-	}
-	else
-		return false;
-	return success;
-}
-
-
-
-bool CUcontent_Adjustments::raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue)
-{
-	if (scaleformula.size() < 1) return false;
-	*scaledValue = rawValue;
-	if (scaleformula.startsWith("MSB", Qt::CaseInsensitive))	// "special" calculation method...
-	{
-		// GET BASIC SCALE FACTOR:
-		double factor = scaleformula.section(':',1,1).toDouble();
-		// CHECK IF FACTOR IS VALID:
-		if (factor == 0) return false;
-		// GET DEFINDED MSB (Most Significant Bit):
-		 // step 1: get string on the left side of ':'
-		 // step 2: elimninate first three charcters ("MSB")
-		 // step 3: convert to integer
-		int msb = scaleformula.section(':',0,0).mid(3).toInt();
-		// CHECK IF MSB DEFINITION IS VALID:
-		if ((msb != 8) && (msb != 16)) return false;
-		// SCALE RAW VALUE:
-		if (rawValue > pow(2,msb-1) - 1)	// if MSB is set
-		{
-			*scaledValue = rawValue - pow(2, msb); // substract (half of range + 1)
-		}
-		*scaledValue = (*scaledValue) * factor;	// scale with basic factor
-	}
-	else	// "normal" formula
-	{
-		unsigned char tmpvaluestrlen = 0;
-		QString tmpvaluestr("");
-		double tmpvalue = 0;
-		char opchar = 0;
-		unsigned char operatorindex[10] = {0,};
-		unsigned char nrofoperators = 0;
-		unsigned char calcstep = 0;
-		unsigned char charindex = 0;
-		bool ok = false;
-		// CHECK FORMULA AND GET OPERATOR POSITIONS:
-		for (charindex=0; charindex<scaleformula.size(); charindex++)
-		{
-			if ((scaleformula.at(charindex) == '+') || (scaleformula.at(charindex) == '-') || (scaleformula.at(charindex) == '*') || (scaleformula.at(charindex) == '/'))
-			{
-				ok = true; // Ok for putting this operator on the list
-				if (nrofoperators > 0) // if this is not the first operator
-				{
-					// Check for consectuive operators
-					if (((charindex - operatorindex[nrofoperators-1]) < 2))
-						ok = false;
-					// The 2nd operator will be interpreted as prefix duricng conversion to double...
-				}
-				if (ok) // if operator should be put on the list
-				{
-					operatorindex[nrofoperators] = charindex;
-					nrofoperators++;
-				}
-				/* NOTE: No further checks necessary, conversion to double will fail
-				*       - if we have more then two consecutive operators
-				*       - or if the second operator is not a + or - (prefix)
-				*/
-			}
-			else if (charindex == 0)	// if 1st character is not an operator
-			{
-				return false;
-			}
-			else if (!scaleformula.at(charindex).isDigit())
-			{
-				return false;
-			}
-		}
-		// CALCULATION:
-		for (calcstep=0; calcstep<(nrofoperators); calcstep++)    // CALCULATION STEP LOOP
-		{
-			// EXTRACT NEXT OPERATOR:
-			opchar = scaleformula.at( (operatorindex[calcstep]) ).toAscii();
-			// GET LENGTH OF VALUE STRING:
-			if (calcstep == (nrofoperators -1))	// IF LAST OPERATION/OPERATOR
-				tmpvaluestrlen = scaleformula.size() - operatorindex[calcstep] -1;
-			else
-				tmpvaluestrlen = operatorindex[calcstep+1] - operatorindex[calcstep] -1;
-			// CHECK VALUE STRING LENGTH:
-			if (tmpvaluestrlen == 0) return false;
-			// EXTRACT VALUE STRING AND VONVERT TO DOUBLE:
-			tmpvaluestr = scaleformula.mid( operatorindex[calcstep]+1, tmpvaluestrlen );
-			tmpvalue = tmpvaluestr.toDouble( &ok );
-			if (!ok) return false;
-			if (tmpvalue != 0)	// makes no sense, but we tolerate it...
-			{
-				// DO CALCUALTION STEP:
-				switch (opchar)
-				{
-					case '+':
-						*scaledValue += tmpvalue;
-						break;
-					case '-':
-						*scaledValue -= tmpvalue;
-						break;
-					case '*':
-						*scaledValue *= tmpvalue;
-						break;
-					case '/':
-						*scaledValue /= tmpvalue;
-						break;
-					default:	// Error
-						*scaledValue = 0;
-						return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-
-
-bool CUcontent_Adjustments::raw2scaledByDirectAssociation(unsigned int rawValue, QString scaleformula, QString *scaledValueStr)
-{
-	unsigned int nrofDAs = 0;
-	QString defstr = "";
-	QString rvstr = "";
-	bool da_success = false;
-	unsigned int m = 0;
-
-	nrofDAs = 1 + (scaleformula.count(','));
-	for (m=0; m<nrofDAs; m++)
-	{
-		// Get next allocation string:
-		defstr = scaleformula.section(',',m,m);
-		// Get scaled value part of allocation string:
-		rvstr = defstr.section('=', 0, 0);
-		// Check if raw value matches allocation string:
-		if ( rawValue == rvstr.toUInt() )
-		{
-			// Get allocated value:
-			(*scaledValueStr) = defstr.section('=', 1, 1);
-			da_success = true;
-			break;
-		}
-	}
-	return da_success;
-}
-
-
-
-bool CUcontent_Adjustments::scaled2raw(QString scaledValueStr, QString scaleformula, unsigned int *rawValue)
-{
-	bool success = false;
-	double scaledValue = 0;
-	if ( scaleformula.contains('=') )
-	{
-		success = scaled2rawByDirectAssociation(scaledValueStr, scaleformula, rawValue);
-	}
-	else
-	{
-		scaledValue = scaledValueStr.toDouble(&success);
-		if (success)
-			success = scaled2rawByCalculation(scaledValue, scaleformula, rawValue);
-	}
-	return success;
-}
-
-
-
-bool CUcontent_Adjustments::scaled2rawByDirectAssociation(QString scaledValueStr, QString scaleformula, unsigned int *rawValue)
-{
-	unsigned int nrofDAs = 0;
-	QString defstr = "";
-	QString svstr = "";
-	bool ok = false;
-	unsigned int m = 0;
-
-	nrofDAs = 1 + (scaleformula.count(','));
-	for (m=0; m<nrofDAs; m++)
-	{
-		// Get next allocation string:
-		defstr = scaleformula.section(',',m,m);
-		// Get scaled value part of allocation string:
-		svstr = defstr.section('=', 1, 1);
-		// Check if raw value matches allocation string:
-		if ( scaledValueStr == svstr )
-		{
-			// Get allocated value:
-			(*rawValue) = defstr.section('=', 0, 0).toUInt(&ok, 10);
-			break;
-		}
-	}
-	return ok;
-}
-
-
-
-bool CUcontent_Adjustments::scaled2rawByCalculation(double scaledValue, QString scaleformula, unsigned int *rawValue)
-{
-	double wval = scaledValue;
-	if (scaleformula.size() < 1) return false;
-	if (scaleformula.startsWith("MSB", Qt::CaseInsensitive))	// "special" calculation method...
-	{
-		// GET BASIC SCALE FACTOR:
-		double factor = scaleformula.section(':',1,1).toDouble();
-		// CHECK IF FACTOR IS VALID:
-		if (factor == 0) return false;
-		// GET DEFINDED MSB (Most Significant Bit):
-		 // step 1: get string on the left side of ':'
-		 // step 2: elimninate first three charcters ("MSB")
-		 // step 3: convert to integer
-		int msb = scaleformula.section(':',0,0).mid(3).toInt();
-		// CHECK IF MSB DEFINITION IS VALID:
-		if ((msb != 8) && (msb != 16)) return false;
-		// CONVERT TO RAW VALUE:
-		wval = wval / factor;	// REVERSE SCALE WITH BASIC FACTOR
-		if (wval < 0)
-		{
-			wval += pow(2, msb);
-		}
-	}
-	else	// "normal" formula
-	{
-		unsigned char tmpvaluestrlen = 0;
-		QString tmpvaluestr("");
-		double tmpvalue = 0;
-		char opchar = 0;
-		unsigned char operatorindex[10] = {0,};
-		int nrofoperators = 0;
-		int calcstep = 0;
-		unsigned char charindex = 0;
-		bool ok = false;
-		// CHECK FORMULA AND GET OPERATOR POSITIONS:
-		for (charindex=0; charindex<scaleformula.size(); charindex++)
-		{
-			if ((scaleformula.at(charindex) == '+') || (scaleformula.at(charindex) == '-') || (scaleformula.at(charindex) == '*') || (scaleformula.at(charindex) == '/'))
-			{
-				ok = true; // Ok for putting this operator on the list
-				if (nrofoperators > 0) // if this is not the first operator
-				{
-					// Check for consectuive operators
-					if (((charindex - operatorindex[nrofoperators-1]) < 2))
-						ok = false;
-					// The 2nd operator will be interpreted as prefix during conversion to double...
-				}
-				if (ok) // if operator should be put on the list
-				{
-					operatorindex[nrofoperators] = charindex;
-					nrofoperators++;
-				}
-				/* NOTE: No further checks necessary, conversion to double will fail
-				*       - if we have more then two consecutive operators
-				*       - or if the second operator is not a + or - (prefix)
-				*/
-			}
-			else if (charindex == 0)	// if 1st character is not an operator
-			{
-				return false;
-			}
-			else if (!scaleformula.at(charindex).isDigit())
-			{
-				return false;
-			}
-		}
-		// CALCULATION:
-		for (calcstep=(nrofoperators-1); calcstep>=0; calcstep--)    // CALCULATION STEP LOOP
-		{
-			// EXTRACT NEXT OPERATOR:
-			opchar = scaleformula.at( (operatorindex[calcstep]) ).toAscii();
-			// GET LENGTH OF VALUE STRING:
-			if (calcstep >= (nrofoperators-1))	// IF LAST OPERATION/OPERATOR
-				tmpvaluestrlen = scaleformula.size() - operatorindex[calcstep] -1;
-			else
-				tmpvaluestrlen = operatorindex[calcstep+1] - operatorindex[calcstep] -1;
-			// CHECK VALUE STRING LENGTH:
-			if (tmpvaluestrlen == 0)
-				 return false;
-			// EXTRACT VALUE STRING AND VONVERT TO DOUBLE:
-			tmpvaluestr = scaleformula.mid( operatorindex[calcstep]+1, tmpvaluestrlen );
-			tmpvalue = tmpvaluestr.toDouble( &ok );
-			if (!ok) return false;
-			if (tmpvalue != 0)	// makes no sense, but we tolerate it...
-			{
-				// DO CALCUALTION STEP (USE INVERSE OPERATOR !!!):
-				switch (opchar)
-				{
-					case '+':
-						wval -= tmpvalue;
-						break;
-					case '-':
-						wval += tmpvalue;
-						break;
-					case '*':
-						wval /= tmpvalue;
-						break;
-					case '/':
-						wval *= tmpvalue;
-						break;
-					default:	// Error
-						return false;
-				}
-			}
-		}
-	}
-	wval = round(wval);
-	if ((wval < 0) || (wval > 65535))
-		return false;
-	*rawValue = static_cast<unsigned int>(wval);
-	return true;
 }
 
 

@@ -238,8 +238,7 @@ bool SSMprotocol::setupCUdata(bool ignoreIgnitionOFF)
 bool SSMprotocol::getSysID(QString *SYS_ID)
 {
 	if (_state == state_needSetup) return false;
-	SYS_ID->clear();
-	StrToHexstr(_SYS_ID, 3, SYS_ID);
+	*SYS_ID = StrToHexstr(_SYS_ID, 3);
 	return true;
 }
 
@@ -248,8 +247,7 @@ bool SSMprotocol::getSysID(QString *SYS_ID)
 bool SSMprotocol::getROMID(QString *ROM_ID)
 {
 	if (_state == state_needSetup) return false;
-	ROM_ID->clear();
-	StrToHexstr(_ROM_ID, 5, ROM_ID);
+	*ROM_ID = StrToHexstr(_ROM_ID, 5);
 	return true;
 }
 
@@ -1743,12 +1741,10 @@ void SSMprotocol::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawva
 
 void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList)
 {
-	double tmpscaledmbvalue = 0;
-	unsigned int nrofDAs = 0;
 	QString defstr;
 	QString rvstr;
-	bool da_success = false;
-	unsigned int k = 0, m = 0;
+	unsigned int k = 0;
+	QString scaledValueStr;
 	// RESET LISTS OF PROCESSED DATA:
 	valueStrList->clear();
 	unitStrList->clear();
@@ -1762,63 +1758,13 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 	{
 		if (_MBSWmetaList.at(k).blockType == 0)
 		{
-			if (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.contains('='))	// IF SCALE FORMULA CONTAINS SCALED VALUES (DIRECT ALLOCATION)
+			if (libFSSM::raw2scaled( mbswrawvalues[k], _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
+				valueStrList->replace(k, scaledValueStr);
+			else
 			{
-				da_success = false;
-				nrofDAs = 1 + (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.count(','));
-				for (m=0; m<nrofDAs; m++)
-				{
-					// GET NEXT ALLOCATION STRING:
-					defstr = _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula.section(',',m,m);
-					// GET RAW VALUE OF ALLOCATION STRING:
-					rvstr = defstr.section('=',0,0);
-					// CHECK IF RAW VALUE MATCHES ALLOCATION:
-					if ( mbswrawvalues[k] == (rvstr.toUInt()) )
-					{
-						// GET ALLOCATED VALUE:
-						valueStrList->replace(k, defstr.section('=',1,1) );
-						da_success = true;
-						break;
-					}
-				}
-				if (da_success)	// IF RAW VALUE HAS BEEN SUCCESFULLY ALLOCATED DIRECTLY
-					// GET UNIT:
-					unitStrList->replace(k, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
-				else	// IF DIRECT ALLOCATION OF RAW VALUE FAILED
-				{
-					// USE RAW VALUE:
-					valueStrList->replace(k, QString::number(mbswrawvalues[k],10) );
-					unitStrList->replace(k, "[RAW]");
-				}
-			}
-			else if ( scaleMB( mbswrawvalues[k], _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, &tmpscaledmbvalue ) )	// TRY TO CALCULATE SCALED VALUE USING THE FORMULA
-			{
-				// GET PRECISION AND ROUND:
-				switch (_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision)
-				{
-					case 0:
-						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 0));
-						break;
-					case 1:
-						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 1));
-						break;
-					case 2:
-						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 2));
-						break;
-					case 3:
-						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 3));
-						break;
-					default:
-						valueStrList->replace(k, QString::number(tmpscaledmbvalue, 'f', 1));
-				}
-				// GET UNIT
-				unitStrList->replace(k, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
-			}
-			else	// IF NO SCALE FORMULA AVAILABLE
-			{
-				// TAKE RAW VALUE:
-				valueStrList->replace(k, QString::number(mbswrawvalues[k],10) );
-				unitStrList->replace(k, "[unscaled]");
+				// USE RAW VALUE:
+				valueStrList->replace(k, QString::number(mbswrawvalues[k], 10));
+				unitStrList->replace(k, "[RAW]");
 			}
 		}
 		else
@@ -1835,117 +1781,6 @@ void SSMprotocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW]
 		}
 	}
 }
-
-
-
-bool SSMprotocol::scaleMB(unsigned int rawvalue, QString scaleformula, double *scaledvalue)
-{
-	if (scaleformula.size() < 1) return false;
-	*scaledvalue = rawvalue;
-	if (scaleformula.startsWith("MSB", Qt::CaseInsensitive))
-	{
-		// GET BASIC SCALE FACTOR:
-		double factor = scaleformula.section(':',1,1).toDouble();
-		// CHECK IF FACTOR IS VALID:
-		if (factor == 0) return false;
-		// GET DEFINDED MSB (Most Significant Bit):
-		int msb = scaleformula.section(':',0,0).mid(3).toInt();
-		// CHECK IF MSB DEFINITION IS VALID:
-		if ((msb != 8) && (msb != 16)) return false;
-		// SCALE RAW VALUE:
-		if (rawvalue > pow(2,msb-1) - 1)	// IF MSB IS SET
-		{
-			*scaledvalue = rawvalue - pow(2, msb);	// SUBSTRACT (HALF OF RANGE + 1)
-		}
-		*scaledvalue = (*scaledvalue) * factor;	// SCALE WITH BASIC FACTOR
-	}
-	else		// IF "NORMAL" FORMULA
-	{
-		unsigned char tmpvaluestrlen = 0;
-		QString tmpvaluestr("");
-		double tmpvalue = 0;
-		char opchar = 0;
-		unsigned char operatorindex[10] = {0,};
-		unsigned char nrofoperators = 0;
-		unsigned char calcstep = 0;
-		unsigned char charindex = 0;
-		bool ok = false;
-		// CHECK FORMULA AND GET OPERATOR POSITIONS:
-		for (charindex=0; charindex<scaleformula.size(); charindex++)
-		{
-			if ((scaleformula.at(charindex) == '+') || (scaleformula.at(charindex) == '-') || (scaleformula.at(charindex) == '*') || (scaleformula.at(charindex) == '/'))
-			{
-				ok = true;
-				if (nrofoperators > 0)
-				{
-					// check for consectuive operators
-					if (((charindex - operatorindex[nrofoperators-1]) < 2))
-						ok = false;
-					// the 2nd operator will be interpreted as prefix duricng conversion to double...
-				}
-				if (ok) // if operator should be put on the list
-				{
-					operatorindex[nrofoperators] = charindex;
-					nrofoperators++;
-				}
-				/* NOTE: no further checks necessary, conversion to double will fail
-				*       - if we have more then two consecutive operators
-				*       - or if the second operator is not a + or - (prefix)
-				*/
-			}
-			else if (charindex == 0) // IF FIRST CHARCTER IS NOT AN OPERATOR
-			{
-				return false;
-			}
-			else if (!scaleformula.at(charindex).isDigit())
-			{
-				return false;
-			}
-		}
-		// CALCULATION:
-		for (calcstep=0; calcstep<(nrofoperators); calcstep++)    // CALCULATION STEP LOOP
-		{
-			// EXTRACT NEXT OPERATOR:
-			opchar = scaleformula.at( (operatorindex[calcstep]) ).toAscii();
-			// GET LENGTH OF VALUE STRING:
-			if (calcstep == (nrofoperators -1))	// IF LAST OPERATION/OPERATOR
-				tmpvaluestrlen = scaleformula.size() - operatorindex[calcstep] -1;
-			else
-				tmpvaluestrlen = operatorindex[calcstep+1] - operatorindex[calcstep] -1;
-			// CHECK VALUE STRING LENGTH:
-			if (tmpvaluestrlen == 0) return false;
-			// EXTRACT VALUE STRING AND cONVERT TO DOUBLE:
-			tmpvaluestr = scaleformula.mid( operatorindex[calcstep]+1, tmpvaluestrlen );
-			tmpvalue = tmpvaluestr.toDouble( &ok );
-			if (!ok) return false;
-			if (tmpvalue != 0)
-			{
-				// DO CALCUALTION STEP:
-				switch (opchar)
-				{
-					case '+':
-						*scaledvalue += tmpvalue;
-						break;
-					case '-':
-						*scaledvalue -= tmpvalue;
-						break;
-					case '*':
-						*scaledvalue *= tmpvalue;
-						break;
-					case '/':
-						*scaledvalue /= tmpvalue;
-						break;
-					default:	// ERROR
-						*scaledvalue = 0;
-						return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-
 
 
 
@@ -2159,21 +1994,22 @@ bool SSMprotocol::validateVIN(char VIN[17])
 
 
 
-void SSMprotocol::StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr)
+QString SSMprotocol::StrToHexstr(char *inputstr, unsigned int nrbytes)
 {
+	QString hexstr;
 	unsigned short int charval = 0;
 	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 	unsigned int bc = 1;
-	hexstr->clear();
 	for (bc=0; bc<nrbytes; bc++)
 	{
 		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr->append(hexsigns[charval/16]);
-		hexstr->append(hexsigns[charval % 16]);
+		hexstr.append(hexsigns[charval/16]);
+		hexstr.append(hexsigns[charval % 16]);
 		if (bc != nrbytes - 1)
-			hexstr->append(' ');
+			hexstr.append(' ');
 	}
-	hexstr->append('\0');
+	hexstr.append('\0');
+	return hexstr;
 }
 
 

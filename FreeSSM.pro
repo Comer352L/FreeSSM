@@ -30,7 +30,8 @@ HEADERS += src/FreeSSM.h \
            src/SSMprotocol_ID.h \
            src/SSMprotocol_def_en.h \
            src/SSMprotocol_def_de.h \
-           src/ClearMemoryDlg.h
+           src/ClearMemoryDlg.h \
+           src/libFSSM.h
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
@@ -52,7 +53,8 @@ SOURCES += src/main.cpp \
            src/SSMprotocol_ID.cpp \
            src/SSMprotocol_def_en.cpp \
            src/SSMprotocol_def_de.cpp \
-           src/ClearMemoryDlg.cpp
+           src/ClearMemoryDlg.cpp \
+           src/libFSSM.cpp
 
 FORMS +=   ui/FreeSSM.ui \
            ui/Preferences.ui \

@@ -35,6 +35,7 @@
 #include "SSMprotocol_ID.h"
 #include "SSMprotocol_def_en.h"
 #include "SSMprotocol_def_de.h"
+#include "libFSSM.h"
 
 
 
@@ -221,9 +222,8 @@ private:
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	void assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues);
 	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList);
-	bool scaleMB(unsigned int rawvalue, QString scaleformula, double *scaledvalue);
 	bool validateVIN(char VIN[17]);
-	void StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr);
+	QString StrToHexstr(char *inputstr, unsigned int nrbytes);
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);

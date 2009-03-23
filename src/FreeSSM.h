@@ -63,7 +63,7 @@ private:
 
 	void setupUiFonts();
 	bool initPort(unsigned int baudrate, serialCOM *port);
-	void StrToHexstr(char *inputstr, unsigned int nrbytes, QString *hexstr);
+	QString StrToHexstr(char *inputstr, unsigned int nrbytes);
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 

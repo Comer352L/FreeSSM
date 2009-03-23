@@ -163,7 +163,7 @@
 		<< "44;8;0;1;000148;;H&LR/C-Magnetventil Druck;kPa;*10;0"
 		<< "45;1;0;1;000186;;Fwd/B-Magnetventil Zieldruck;kPa;*10;0"
 		<< "45;2;0;1;000185;;Fwd/B-Magnetventil Strom;A;/255;2"
-		<< "45;4;0;1;00015A;00008D;Lenkwinkelsensor;deg;MSB16:1;0"
+		<< "45;4;0;1;00015A;00008D;Lenkwinkelsensor;deg;s16*1;0"
 		<< "45;5;0;1;00013F;;Radgeschwindigkeit hinten links;km/h;*1;0"
 		<< "45;6;0;1;00013E;;Radgeschwindigkeit hinten rechts;km/h;*1;0"
 		<< "45;7;0;1;00013D;;Radgeschwindigkeit vorne links;km/h;*1;0"
@@ -195,8 +195,8 @@
 		<< "54;8;1;0;0001EA;;Abgasrückführung (AGR) Auslastung;%;*1;0"
 		<< "55;5;0;1;0001F4;;Einstellbares Zentraldifferential (DCCD) Modus;;*1;0"
 		<< "55;6;0;1;0001F3;;Einstellbares Zentraldifferential (DCCD) Drehmomentverteilung;;*1;0"
-		<< "55;7;0;1;0001F2;;Längs-Beschleunigung;m/s²;MSB8:1.0862;2"
-		<< "55;8;0;1;0001F1;;Gier-Geschwindigkeit;Grad/s;MSB8:0.19118;0"
+		<< "55;7;0;1;0001F2;;Längs-Beschleunigung;m/s²;s8*1.0862;2"
+		<< "55;8;0;1;0001F1;;Gier-Geschwindigkeit;Grad/s;s8*0.19118;0"
 		<< "56;1;1;0;000260;;Mengenkorrektur Zylinder #4;ms;-100/100,2"
 		<< "56;2;1;0;00025F;;Mengenkorrektur Zylinder #3;ms;-100/100,2"
 		<< "56;3;1;0;00025E;;Mengenkorrektur Zylinder #2;ms;-100/100,2"
@@ -1076,7 +1076,7 @@
 		<< "27-6;1;80;;Korrektur des Allrad-Lastverhältnisses;%;90;110;100;-100;0"
 		<< "27-5;1;81;;Bergabfahrt-Regelung;;0;1;0;0=Zugriff erlaubt,1=Kein Zugriff;"
 		<< "27-4;1;82;;Zentral-Differential;%;50;150;100;*1;0"
-		<< "27-3;1;171;170;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;MSB16:0.02;0";
+		<< "27-3;1;171;170;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0";
 
 	}
 

@@ -163,7 +163,7 @@
 		<< "44;8;0;1;000148;;H&LR/C Solenoid Valve Pressure;kPa;*10;0"
 		<< "45;1;0;1;000186;;Fwd/B Solenoid Valve Target Pressure;kPa;*10;0"
 		<< "45;2;0;1;000185;;Fwd/B Solenoid Valve Current;A;/255;2"
-		<< "45;4;0;1;00015A;00008D;Steering Angle Sensor;deg;MSB16:1;0"
+		<< "45;4;0;1;00015A;00008D;Steering Angle Sensor;deg;s16*1;0"
 		<< "45;5;0;1;00013F;;Wheel Speed Rear Left;km/h;*1;0"
 		<< "45;6;0;1;00013E;;Wheel Speed Rear Right;km/h;*1;0"
 		<< "45;7;0;1;00013D;;Wheel Speed Front Left;km/h;*1;0"
@@ -195,8 +195,8 @@
 		<< "54;8;1;0;0001EA;;Exhaust Gas Recirculation (EGR) Duty;%;*1;0"
 		<< "55;5;0;1;0001F4;;Drivers Control Center Differential (DCCD) Mode;;*1;0"
 		<< "55;6;0;1;0001F3;;Drivers Control Center Differential (DCCD) Torque Allocation;;*1;0"
-		<< "55;7;0;1;0001F2;;Lateral G;m/s²;MSB8:1.0862;2"
-		<< "55;8;0;1;0001F1;;Yaw Rate;deg/s;MSB8:0.19118;0"
+		<< "55;7;0;1;0001F2;;Lateral G;m/s²;s8*1.0862;2"
+		<< "55;8;0;1;0001F1;;Yaw Rate;deg/s;s8*0.19118;0"
 		<< "56;1;1;0;000260;;Quantity Correction Cylinder #4;ms;-100/100,2"
 		<< "56;2;1;0;00025F;;Quantity Correction Cylinder #3;ms;-100/100,2"
 		<< "56;3;1;0;00025E;;Quantity Correction Cylinder #2;ms;-100/100,2"
@@ -1076,7 +1076,7 @@
 		<< "27-6;1;80;;Correction of Transfer Duty Ratio;%;90;110;100;-100;0"
 		<< "27-5;1;81;;Slope Control;;0;1;0;0=Allowance,1=No Access;"
 		<< "27-4;1;82;;Center Differential;%;50;150;100;*1;0"
-		<< "27-3;1;171;170;Correction of AWD Clutch Torque;Nm;63535;2000;0;MSB16:0.02;0";
+		<< "27-3;1;171;170;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0";
 
 	}
 

@@ -26,6 +26,7 @@
 #include <vector>
 #include "ui_CUcontent_Adjustments.h"
 #include "SSMprotocol.h"
+#include "libFSSM.h"
 #include "FSSMdialogs.h"
 
 
@@ -105,12 +106,6 @@ private:
 	void displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit);
 	void setupNewValueSelWidgetTypes();
 	void getSelectableScaledValueStrings(QString formulaStr, QStringList *selectableScaledValueStr);
-	bool raw2scaled(unsigned int rawValue, QString scaleformula, char precision, QString *scaledValueStr);
-	bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);
-	bool raw2scaledByDirectAssociation(unsigned int rawValue, QString scaleformula, QString *scaledValueStr);
-	bool scaled2raw(QString scaledValueStr, QString scaleformula, unsigned int *rawValue);
-	bool scaled2rawByCalculation(double scaledValue, QString scaleformula, unsigned int *rawValue);
-	bool scaled2rawByDirectAssociation(QString scaledValueStr, QString scaleformula, unsigned int *rawValue);
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void communicationError(QString errstr);
