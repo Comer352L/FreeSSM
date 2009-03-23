@@ -296,7 +296,6 @@ std::string libFSSM::StrToHexstr(char *inputstr, unsigned int nrbytes)
 		if (bc != nrbytes - 1)
 			hexstr.push_back(' ');
 	}
-	hexstr.push_back('\0');
 	return hexstr;
 }
 
