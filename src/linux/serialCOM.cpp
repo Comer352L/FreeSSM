@@ -67,8 +67,10 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 		} while (fp != NULL);
 		closedir (dp);
 	}
+#ifdef __SERIALCOM_DEBUG__
 	else
-		std::cout << "serialCOM::GetAvailablePorts():   opendir(''/dev'') failed with error " << errno << "\n";
+		std::cout << "serialCOM::GetAvailablePorts():   opendir(''/dev'') failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	// SEARCH FOR USB2SERAIL-CONVERTERS:
 	dp = opendir ("/dev/usb");	// open directory /dev/usb:
 	if (dp != NULL)		// if directory is open
@@ -102,7 +104,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 
 bool serialCOM::IsOpen()
 {
-	if ((portisopen == true) && (fd >= 0))
+	if (portisopen && (fd >= 0))
 		return true;
 	else
 		return false;
@@ -129,7 +131,7 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 	currentportsettings->databits = 0;
 	currentportsettings->parity = 0;
 	currentportsettings->stopbits = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// Query current settings:
 	cvTGA = tcgetattr(fd, &currenttio);
 	if (cvTGA == 0)
@@ -215,14 +217,18 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 							else
 							{
 								settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 								std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
+#endif
 							}
 						}
 					}
 					else	// If driver settings are not available 
 					{
 						settingsvalid = false;
-						std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+						std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
 					}
 				}
 				else
@@ -239,13 +245,17 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 			else
 			{
 				settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
+#endif
 			}
 		}
 		else	// if different baudrate settings for input and output detected
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   WARNING:   different baud rates for transmitting and recieving detected\n";
+#endif
 		}
 		// DATABITS:
 		cleanedbitmask = (currenttio.c_cflag & ~CSIZE);
@@ -268,7 +278,9 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   error: unknown number of databits\n";
+#endif
 		}
 		// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
 		if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
@@ -311,10 +323,7 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		}
 	}
 	// RETURN VALUE (SUCCESS CONTROL):
-	if ((cvTGA == -1) | (settingsvalid == false))
-		return false;
-	else
-		return true;
+	return ((cvTGA != -1) && (settingsvalid));
 }
 
 
@@ -322,10 +331,10 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 {
 	short int cvTSA = -1;
 	bool settingsvalid = true;
-	speed_t newbaudrate=0;	// speed_t defined in termios.h
+	speed_t newbaudrate = 0;	// speed_t defined in termios.h
 	struct termios newtio;
 	memset(&newtio, 0, sizeof(termios));
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	struct serial_struct new_serdrvinfo;
 	memset(&new_serdrvinfo, 0, sizeof(serial_struct));
 	if (serdrvaccess)
@@ -343,15 +352,19 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	if (!(newportsettings.baudrate > 0))
 	{
 		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 		if (newportsettings.baudrate == 0)
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - 0 baud not possible\n";
 		else
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baud must be > 0\n";
+#endif
 	}
 	else if (newportsettings.baudrate > 115200)
 	{
 		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrates above 115200 are currently not supported\n";
+#endif
 	}
 	else
 	{
@@ -427,7 +440,9 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			break;
 		default:
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():  error: illegal number of databits\n";
+#endif
 			break;
 	}
 	// PARITY:
@@ -462,7 +477,9 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	else
 	{
 		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::SetPortSettings():  error: illegal parity option\n";
+#endif
 	}
 	// STOPBITS:
 	if (newportsettings.stopbits == 1)
@@ -476,7 +493,9 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():   error: invalid value for parameter 'stopbits': 1.5 stopbits only allowed in combination with 5 databits\n";
+#endif
 		}
 	}
 	else if (newportsettings.stopbits == 2)
@@ -486,13 +505,17 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():   error: invalid value for parameter 'stopbits': 2 stopbits not allowed in combination with 5 databits\n";
+#endif
 		}
 	}
 	else
 	{
 		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::SetPortSettings():   error: invalid value for parameter 'stopbits'" << '\n';
+#endif
 	}
    /*	CBAUD	Bit mask for baud rate
 	B0	0 baud (drop DTR)
@@ -634,10 +657,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			TCSAFLUSH	Flush input and output buffers and make the change	*/
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
-	if (cvTSA == 0)
-		return true;
-	else
-		return false;
+	return (cvTSA == 0);
 }
 
 
@@ -645,7 +665,7 @@ bool serialCOM::OpenPort(std::string portname)
 {
 	int confirm = -1;	// -1=error
 	struct serial_struct new_serdrvinfo;	// new driver settings
-	if (portisopen == true) return false;	// if port is already open => cancel and return "false"
+	if (portisopen) return false;	// if port is already open => cancel and return "false"
 	memset(&new_serdrvinfo, 0, sizeof(serial_struct));
 	memset(&oldtio, 0, sizeof(termios));
 	memset(&old_serdrvinfo, 0, sizeof(serial_struct));
@@ -659,21 +679,30 @@ bool serialCOM::OpenPort(std::string portname)
 		portisopen = true;
 		currentportname = portname;
 		confirm = ioctl(fd, TIOCEXCL, NULL);	// LOCK DEVICE
+#ifdef __SERIALCOM_DEBUG__
 		if (confirm == -1)
-			std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCEXCL, ...) failed with error " << errno << "\n";
+			std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCEXCL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		confirm = fcntl(fd, F_SETFL, FNDELAY);	// function "read" shall return "0" if no data available
 		if (confirm == -1)
 		{
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::OpenPort():   fcntl(...) failed with error " << errno << "\n";
-			if (!ClosePort())
-				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process" << errno << "\n";
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
+				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
 			return false;
 		}
 		// SAVE SETTINGS:
 		confirm = tcgetattr(fd, &oldtio);	// save current serial port settings for restore when closing port
 		if (confirm == -1)
 		{
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::OpenPort():   tcgetattr(...) failed with error " << errno << "\n";
+#endif
 			settingssaved = false;
 		}
 		else
@@ -689,8 +718,10 @@ bool serialCOM::OpenPort(std::string portname)
 			new_serdrvinfo = old_serdrvinfo;
 			new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;		// request low latency behaviour
 			confirm = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write driver settings
+#ifdef __SERIALCOM_DEBUG__
 			if (confirm == -1)
-				std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << "\n";
+				std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		}
 /*
 		// CLEAR BREAK (should not be necessary, because break is cancelled automatically after closing the device):
@@ -704,16 +735,23 @@ bool serialCOM::OpenPort(std::string portname)
 		confirm = tcflush(fd, TCIOFLUSH);
 		if (confirm == -1)
 		{
-			std::cout << "serialCOM::OpenPort():   tcflush(..., TCIOFLUSH) failed with error " << errno << "\n";
-			if (!ClosePort())
-				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process" << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::OpenPort():   tcflush(..., TCIOFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
+				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
 			return false;
 		}
 		return true;
 	}
 	else
 	{
-		std::cout << "serialCOM::OpenPort():   open(...) failed with error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::OpenPort():   open(...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -722,31 +760,41 @@ bool serialCOM::OpenPort(std::string portname)
 bool serialCOM::ClosePort()
 {
 	int confirm = -1;	// -1=error
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// CLEAR BREAK:
 	confirm = ioctl(fd, TIOCCBRK, 0);    // break OFF
 	if (confirm != -1)
 		breakset = false;
+#ifdef __SERIALCOM_DEBUG__
 	else
-		std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCCBRK, ...) failed with error " << errno << "\n";
+		std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	// CLEAR HARDWARE BUFFERS:
-	confirm = tcflush(fd, TCIOFLUSH);	        // clear buffers (input and output)
+	confirm = tcflush(fd, TCIOFLUSH);	// clear buffers (input and output)
+#ifdef __SERIALCOM_DEBUG__
 	if (confirm != 0)
 		std::cout << "serialCOM::ClosePort():   tcflush(...) failed with error " << errno << "\n";
+#endif
 	// RESTORE PORT SETTINGS:
 	if (serdrvaccess)
 	{
 		confirm = ioctl(fd, TIOCSSERIAL, &old_serdrvinfo);	// restore old driver settings
+#ifdef __SERIALCOM_DEBUG__
 		if (confirm == -1)
-			std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << "\n";
+			std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	}
 	if (settingssaved)
 		confirm = tcsetattr(fd, TCSANOW, &oldtio);	// restore the old port settings
+#ifdef __SERIALCOM_DEBUG__
 	if (confirm != 0)
-		std::cout << "serialCOM::ClosePort():   tcsetattr(...) failed with error " << errno << "\n";
+		std::cout << "serialCOM::ClosePort():   tcsetattr(...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	confirm = ioctl(fd, TIOCNXCL, NULL);	// unlock device
+#ifdef __SERIALCOM_DEBUG__
 	if (confirm == -1)
-		std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCNXCL, ...) failed with error " << errno << "\n";
+		std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCNXCL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	// CLOSE PORT:
 	confirm = close(fd);
 	// CLEAN UP, RETURN VALUE:
@@ -761,7 +809,9 @@ bool serialCOM::ClosePort()
 	}
 	else
 	{
-		std::cout << "serialCOM::ClosePort():   close(...) failed with error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::ClosePort():   close(...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -771,7 +821,7 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 {
 	int confirm = -1;
 	unsigned int nrofbyteswritten = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	if (breakset)
 	{
 		confirm = ioctl(fd, TIOCCBRK, 0);	// break OFF
@@ -779,7 +829,9 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 			breakset = false;
 		else
 		{
-			std::cout << "serialCOM::Write():   ioctl(..., TIOCCBRK, ...) failed with error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::Write():   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 			return false;
 		}
 	}
@@ -791,10 +843,12 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 		return true;
 	else
 	{
+#ifdef __SERIALCOM_DEBUG__
 		if (nrofbyteswritten != nrofbytestowrite)
-			std::cout << "serialCOM::Write():   write(..) failed with error " << errno << "\n";
+			std::cout << "serialCOM::Write():   write(..) failed with error " << errno << " " << strerror(errno) << "\n";
 		if (confirm != 0)
-			std::cout << "serialCOM::Write():   tcdrain(..) failed with error " << errno << "\n";
+			std::cout << "serialCOM::Write():   tcdrain(..) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -811,7 +865,9 @@ bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
 	if ((ret < 0) || (ret > 512))	// 512: important ! => possible if fd was not open !
 	{
 		*nrofbytesread = 0;
-		std::cout << "serialCOM::Read():   read(..) failed with error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::Read():   read(..) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 	else
@@ -825,13 +881,15 @@ bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
 bool serialCOM::ClearSendBuffer()
 {
 	int cvTF = -1;
-	if (portisopen == true)
+	if (portisopen)
 		cvTF = tcflush(fd, TCOFLUSH);
 	if (cvTF == 0)
 		return true;
 	else
 	{
-		std::cout << "serialCOM::ClearSendBuffer(...):   tcflush(..., TCOFLUSH) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::ClearSendBuffer(...):   tcflush(..., TCOFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -840,13 +898,15 @@ bool serialCOM::ClearSendBuffer()
 bool serialCOM::ClearRecieveBuffer()
 {
 	int cvTF = -1;
-	if (portisopen == true)
+	if (portisopen)
 		cvTF = tcflush(fd, TCIFLUSH);
 	if (cvTF == 0)
 		return true;
 	else
 	{
-		std::cout << "serialCOM::ClearRecieveBuffer(...):   tcflush(..., TCIFLUSH) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::ClearRecieveBuffer(...):   tcflush(..., TCIFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -855,7 +915,7 @@ bool serialCOM::ClearRecieveBuffer()
 bool serialCOM::SendBreak(unsigned int duration_ms)
 {
 	short int confirmTSB = -1;	// 0 or -1
-	if ((portisopen == false) || (duration_ms < 1) || (duration_ms >= 32767))
+	if ((!portisopen) || (duration_ms < 1) || (duration_ms >= 32767))
 		return false;
 	breakset = true;
 	confirmTSB = tcsendbreak(fd, static_cast<int>(duration_ms));
@@ -868,7 +928,9 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 		return true;
 	else
 	{
-		std::cout << "serialCOM::SendBreak(...):   tcsendbreak(...) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SendBreak(...):   tcsendbreak(...) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }
@@ -877,11 +939,13 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 bool serialCOM::SetBreak()
 {
 	short int confirmIOCTL = -1;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	confirmIOCTL = ioctl(fd, TIOCSBRK, 0);	// break ON
 	if (confirmIOCTL == -1)
 	{
-		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 	breakset = true;
@@ -892,11 +956,13 @@ bool serialCOM::SetBreak()
 bool serialCOM::ClearBreak()
 {
 	short int confirmIOCTL = -1;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	confirmIOCTL = ioctl(fd, TIOCCBRK, 0);    // break OFF
 	if (confirmIOCTL == -1)
 	{
-		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 	breakset = false;
@@ -913,7 +979,7 @@ bool serialCOM::BreakIsSet()
 bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 {
 	int bytes = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	if (ioctl(fd, FIONREAD, &bytes) != -1)
 	{
 		*nbytes = static_cast<unsigned int>(bytes);
@@ -922,7 +988,9 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 	else
 	{
 		*nbytes = 0;
-		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) returned error " << errno << "\n";
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) returned error " << errno << " " << strerror(errno) << "\n";
+#endif
 		return false;
 	}
 }

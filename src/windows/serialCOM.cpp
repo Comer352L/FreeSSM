@@ -25,7 +25,7 @@ serialCOM::serialCOM()
 {
 	hCom = 0;
 	portisopen = false;
-	breakset=false;
+	breakset = false;
 	currentportname = "";
 	memset(&olddcb, 0, sizeof(DCB));
 	olddcb.DCBlength = sizeof(DCB);
@@ -57,11 +57,15 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 		}
 		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm> (automaticly included, if <vector> is included)
 		cv = RegCloseKey(hKey);
+#ifdef __SERIALCOM_DEBUG__
 		if (cv != ERROR_SUCCESS)
 			std::cout << "serialCOM::GetAvailablePorts():   RegCloseKey(...) failed with error " << cv << "\n";
+#endif
 	}
+#ifdef __SERIALCOM_DEBUG__
 	else
 		std::cout << "serialCOM::GetAvailablePorts():   RegOpenKeyEx(...) failed with error " << cv << "\n";
+#endif
 	// RETURN VALUE:
 	return portlist;
 }
@@ -69,10 +73,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 
 bool serialCOM::IsOpen()
 {
-	if ((portisopen==true) & (hCom != INVALID_HANDLE_VALUE) & (hCom != NULL))
-		return true;
-	else
-		return false;
+	return (portisopen && (hCom != INVALID_HANDLE_VALUE) && (hCom != NULL));
 }
 
 
@@ -84,7 +85,7 @@ std::string serialCOM::GetPortname()
 
 bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 {
-	bool confirmGCS=false, cvGMbr = false;
+	bool confirmGCS=false, cvGMbr=false;
 	bool settingsvalid = true;
 	double maxbaudrate = 0;
 	unsigned long int divisor = 0;
@@ -96,16 +97,16 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 	currentportsettings->databits = 0;
 	currentportsettings->parity = 0;
 	currentportsettings->stopbits = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// REQUEST PORT SETTINGS FROM SYSTEM:
 	confirmGCS = GetCommState(hCom, &currentdcb);
-	if (confirmGCS==true)
+	if (confirmGCS)
 	{
 		// BAUDRATE SETTINGS:
 		if (currentdcb.BaudRate != 0)
 		{
 			cvGMbr = serialCOM::GetMaxbaudrate(&maxbaudrate);
-			if (cvGMbr == true)
+			if (cvGMbr)
 			{
 				divisor = static_cast<unsigned long int>(round(maxbaudrate / currentdcb.BaudRate));
 				currentportsettings->baudrate = maxbaudrate / divisor;
@@ -113,14 +114,18 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 			else
 			{
 				currentportsettings->baudrate = currentdcb.BaudRate;
+#ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::SetPortSettings:   unable to detect baudbase\n";
 				std::cout << "                              WARNING: reported baud rate may differ from real baudrate !\n";
+#endif
 			}
 		}
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   System reports baudrate=0\n";
+#endif
 		}
 		// DATABITS SETTINGS:
 		currentportsettings->databits = currentdcb.ByteSize;
@@ -148,7 +153,9 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   unknown parity settings\n";
+#endif
 		}
 		// STOPBITS SETTINGS:
 		if (currentdcb.StopBits == ONESTOPBIT)
@@ -166,64 +173,73 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		else
 		{
 			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   unknown stopbits settings\n";
+#endif
 		}
 	}
 	else
 	{
 		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::GetPortSettings():   GetCommState(...) failed\n";
+#endif
 	}
 	// RETURN SUCCESS:
-	if ((confirmGCS == false) | (settingsvalid == false))
-		return false;
-	else
-		return true;
+	return (confirmGCS && settingsvalid);
 }
 
 
 bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 {
-	bool confirmGCS=false, confirmSCS=false, nsvalid=true, cvGMbr = false;
+	bool confirmGCS=false, confirmSCS=false, nsvalid=true, cvGMbr=false;
 	double maxbaudrate = 0, exactbaudrate = 0;
 	unsigned int bauddivisor = 0;
 	DCB newdcb;
 	memset(&newdcb, 0, sizeof(DCB));
 	newdcb.DCBlength = sizeof(DCB);
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	confirmGCS = GetCommState(hCom, &newdcb);
-	if (confirmGCS=true)
+	if (confirmGCS)
 	{
 		// SET NEW PORT SETTINGS (not all will be changed):
 		// BAUDRATE:
 		if (!(newportsettings.baudrate > 0))
 		{
 			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			if (newportsettings.baudrate == 0)
 				std::cout << "serialCOM::SetPortSettings:   illegal baudrate - 0 baud not possible\n";
 			else
 				std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baud must be > 0\n";
+#endif
 		}
 		else if (newportsettings.baudrate > 115200)
 		{
 			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baudrates above 115200 are currently not supported\n";
+#endif
 		}
 		else
 		{
 			cvGMbr = serialCOM::GetMaxbaudrate(&maxbaudrate);	// get max. available baudrate
-			if (cvGMbr == false)
+			if (!cvGMbr)
 			{
 			newdcb.BaudRate = static_cast<DWORD>(round(newportsettings.baudrate));	// set baud rate directly
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings:   unable to detect baudbase\n";
 			std::cout << "                              WARNING: reported baud rate may differ from real baudrate !\n";
+#endif
 			}
 			else
 			{
 				if (newportsettings.baudrate > maxbaudrate)
 				{
 				nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::SetPortSettings:   baudrate exceeds capabilities of interface/driver\n";
+#endif
 				}
 				else
 				{
@@ -240,12 +256,14 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			}
 		}
 		// DATABITS SETTINGS:
-		if ((newportsettings.databits >= 5) & (newportsettings.databits <= 8))
+		if ((newportsettings.databits >= 5) && (newportsettings.databits <= 8))
 			newdcb.ByteSize = newportsettings.databits;
 		else 
 		{
-			nsvalid=false;
+			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'databits'\n";
+#endif
 		}
 		// PARITY SETTINGS:
 		if (newportsettings.parity == 'N')
@@ -270,8 +288,10 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		}
 		else
 		{
-			nsvalid=false;
+			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'parity'\n";
+#endif
 		}
 		// STOPBIT SETTINGS:      (=> The use of 5 data bits with 2 stop bits is an invalid combination, as is 6, 7, or 8 data bits with 1.5 stop bits)
 		if (newportsettings.stopbits == 1)
@@ -284,8 +304,10 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 				newdcb.StopBits = ONE5STOPBITS;	// 1.5 stop bits
 			else
 			{
-				nsvalid=false;
+				nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 1.5 stopbits only allowed in combination with 5 databits\n";
+#endif
 			}
 		}
 		else if (newportsettings.stopbits == 2)
@@ -294,14 +316,18 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 				newdcb.StopBits = TWOSTOPBITS;	// 2 stop bits
 			else
 			{
-				nsvalid=false;
+				nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 2 stopbits not allowed in combination with 5 databits\n";
+#endif
 			}
 		}
 		else
 		{
-			nsvalid=false;
+			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits'\n";
+#endif
 		}
 		// MORE OPTIONS:
 		newdcb.fBinary = true;	// binary mode (false is not supported by Windows)
@@ -329,18 +355,19 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// newdcb.EofChar;
 		// newdcb.EvtChar;
 		// APPLY NEW PORT SETTINGS:
-		if (nsvalid==true)
+		if (nsvalid)
 			confirmSCS = SetCommState(hCom, &newdcb);
-		if (confirmSCS == false)
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirmSCS)
 			std::cout << "serialCOM::SetPortSettings():   SetCommState(...) failed\n";
+#endif
 	}
+#ifdef __SERIALCOM_DEBUG__
 	else
 		std::cout << "serialCOM::SetPortSettings():   GetCommState(...) failed\n";
+#endif
 	// RETURN SUCCESS:
-	if ((confirmGCS == true) & (confirmSCS == true))
-		return true;
-	else
-		return false;
+	return (confirmGCS && confirmSCS);
 }
 
 
@@ -348,7 +375,7 @@ bool serialCOM::OpenPort(std::string portname)
 {
 	bool confirm;
 	DWORD error;
-	if (portisopen == true) return false;
+	if (portisopen) return false;
 	// OPEN PORT:
 	hCom = CreateFileA(portname.c_str(),			// name of port
 			   GENERIC_READ | GENERIC_WRITE,	// read/write access
@@ -361,8 +388,10 @@ bool serialCOM::OpenPort(std::string portname)
 	// CHECK IF OPENING PORT WAS SUCCESSFUL:
 	if ((hCom == INVALID_HANDLE_VALUE) | (hCom == NULL))	      // if error while opening port
 	{
+#ifdef __SERIALCOM_DEBUG__
 		error = GetLastError();
 		std::cout << "serialCOM::OpenPort():   CreateFileA(...) failed with error " << error << "\n";
+#endif
 		return false;
 	}
 	else	// port successfully opened
@@ -373,11 +402,13 @@ bool serialCOM::OpenPort(std::string portname)
 		memset(&olddcb, 0, sizeof(DCB));
 		olddcb.DCBlength = sizeof(DCB);
 		confirm = GetCommState(hCom, &olddcb);
-		if (confirm == false)
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirm)
 		{
 			error = GetLastError();
 			std::cout << "serialCOM::OpenPort():   GetCommState(...) failed with error " << error << "\n";
 		}
+#endif
 		settingssaved = confirm;
 		// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns recieved characters):
 		COMMTIMEOUTS timeouts = {0};
@@ -388,12 +419,17 @@ bool serialCOM::OpenPort(std::string portname)
 		timeouts.WriteTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to write 
 		// all values in [ms]; if one of these max. times is exceeded, Read / Write Operation is stoped and nr. of Read/WrittenBytes is given back
 		confirm = SetCommTimeouts(hCom, &timeouts);	// Apply new timeout settings
-		if (confirm == false)
+		if (!confirm)
 		{
+#ifdef __SERIALCOM_DEBUG__
 			error = GetLastError();
 			std::cout << "serialCOM::OpenPort():   SetCommTimeouts(...) failed with error " << error << "\n";
-			if (!ClosePort())
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
 				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
 			return false;
 		}
 /*
@@ -411,10 +447,15 @@ bool serialCOM::OpenPort(std::string portname)
 		confirm = PurgeComm(hCom, PURGE_RXABORT | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_TXCLEAR);   // clears output buffer (if the device driver has one)
 		if (!confirm)
 		{
+#ifdef __SERIALCOM_DEBUG__
 			error = GetLastError();
 			std::cout << "serialCOM::OpenPort():   PurgeComm(...) failed with error " << error << "\n";
-			if (!ClosePort())
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
 				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
 			return false;
 		}
 		return true;
@@ -424,38 +465,46 @@ bool serialCOM::OpenPort(std::string portname)
 
 bool serialCOM::ClosePort()
 {
-	bool confirm=false;
+	bool confirm = false;
 	DWORD error;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// CLEAR BREAK:
 	confirm = ClearCommBreak(hCom);
 	if (confirm)
-		breakset=false;
+		breakset = false;
+#ifdef __SERIALCOM_DEBUG__
 	else
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::ClosePort():   ClearCommBreak(...) failed with error " << error << "\n";
 	}
+#endif
 	// CLEAR HARDWARE BUFFERS:
 	confirm = PurgeComm(hCom, PURGE_RXABORT | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_TXCLEAR);   // clears output buffer (if the device driver has one)
+#ifdef __SERIALCOM_DEBUG__
 	if (!confirm)
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::ClosePort():   PurgeComm(...) failed with error " << error << "\n";
 	}
+#endif
 	// RESTORE OLD PORT SETTINGS:
 	confirm = SetCommState(hCom, &olddcb);
-	if (confirm==false)
+#ifdef __SERIALCOM_DEBUG__
+	if (!confirm)
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::ClosePort():   SetCommState(...) failed with error " << error << "\n";
 	}
+#endif
 	// CLOSE PORT:
 	confirm = CloseHandle(hCom);
-	if (confirm==false)
+	if (!confirm)
 	{
+#ifdef __SERIALCOM_DEBUG__
 		error = GetLastError();
 		std::cout << "serialCOM::ClosePort():   CloseHandle(...) failed with error " << error << "\n";
+#endif
 		return false;
 	}
 	else
@@ -472,8 +521,8 @@ bool serialCOM::ClosePort()
 bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 {
 	bool confirmWF=false, confirmCCB=false;
-	DWORD BytesWritten=0;
-	if (portisopen == false) return false;
+	DWORD BytesWritten = 0;
+	if (!portisopen) return false;
 	if (breakset)
 	{
 		confirmCCB = ClearCommBreak(hCom);
@@ -481,7 +530,9 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 			breakset = false;
 		else
 		{
+#ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::Write():   ClearCommBreak(...) failed\n";
+#endif
 			return false;
 		}
 	}
@@ -493,14 +544,16 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 			       NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 			      );
 	// RETURN VALUE:
-	if ((confirmWF == true) & (BytesWritten == static_cast<DWORD>(nrofbytestowrite)))
+	if (confirmWF && (BytesWritten == static_cast<DWORD>(nrofbytestowrite)))
 		return true;
 	else
 	{
-		if (confirmWF == false)
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirmWF)
 			std::cout << "serialCOM::Write():   WriteFile(...) failed\n";
 		if (BytesWritten != static_cast<DWORD>(nrofbytestowrite))
 			std::cout << "serialCOM::Write():   some bytes could not be written\n";
+#endif
 		return false;
 	}
 }
@@ -509,9 +562,9 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
 {
 	bool confirmRF = false;
-	DWORD nbr=0;
+	DWORD nbr = 0;
 	*nrofbytesread = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// READ RECIEVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
 			      readdata,		// Pointer to data to read
@@ -519,10 +572,12 @@ bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
 			      &nbr,		// Pointer to number of bytes read
 			      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 			     );
-	if (confirmRF == false)
-		std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
-	else
+	if (confirmRF)
 		*nrofbytesread = static_cast<unsigned int>(nbr);
+#ifdef __SERIALCOM_DEBUG__
+	else
+		std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+#endif
 	// RETURN SUCCESS:
 	return confirmRF;
 }
@@ -532,14 +587,16 @@ bool serialCOM::ClearSendBuffer()
 {
 	bool confirmPC = false;
 	DWORD error = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// confirmPC = PurgeComm(hCom, PURGE_TXABORT);   // terminates all outstanding overlapped write operations and returns immediately, even if the write operations have not been completed
 	confirmPC = PurgeComm(hCom, PURGE_TXCLEAR);   // clears output buffer (if the device driver has one)
+#ifdef __SERIALCOM_DEBUG__
 	if (!confirmPC)
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::ClearSendBuffer():   PurgeComm(...) failed with error " << error << "\n";
 	}
+#endif
 	return confirmPC;
 }
 
@@ -548,14 +605,16 @@ bool serialCOM::ClearRecieveBuffer()
 {
 	bool confirmPC = false;
 	DWORD error = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	// confirmPC = PurgeComm(hCom, PURGE_RXABORT);   // terminates all outstanding overlapped read operations and returns immediately, even if the read operations have not been completed
 	confirmPC = PurgeComm(hCom, PURGE_RXCLEAR);   // clears input buffer (if the device driver has one)
+#ifdef __SERIALCOM_DEBUG__
 	if (!confirmPC)
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::ClearRecieveBuffer():   PurgeComm(...) failed with error " << error << "\n";
 	}
+#endif
 	return confirmPC;
 }
 
@@ -564,45 +623,48 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 {
 	bool cvSCB=false, cvCCB=false;
 	DWORD error = 0;
-	if ((portisopen == false) | (duration_ms < 1) | (duration_ms >= 32767))
+	if ((!portisopen) || (duration_ms < 1) || (duration_ms >= 32767))
 		return false;
 	cvSCB = SetCommBreak(hCom);
-	if (!cvSCB)
+	if (cvSCB)
+		breakset = true;
+#ifdef __SERIALCOM_DEBUG__
+	else
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::SendBreak():   SetCommBreak(...) failed with error " << error << "\n";
 	}
-	else
-		breakset = true;
+#endif
 	Sleep((DWORD)duration_ms);	// TO BE REPLACED BY A HP-TIMER ! (very imprecise !)
 	cvCCB = ClearCommBreak(hCom);
-	if (!cvCCB)
+	if (cvCCB)
+		breakset = false;
+#ifdef __SERIALCOM_DEBUG__
+	else
 	{
 		error = GetLastError();
 		std::cout << "serialCOM::SendBreak():   ClearCommBreak(...) failed with error " << error << "\n";
 	}
-	else
-		breakset = false;
-	if ((cvSCB==true) & (cvCCB==true))
-		return true;
-	else
-		return false;
+#endif
+	return (cvSCB && cvCCB);
 }
 
 
 bool serialCOM::SetBreak()
 {
-	bool cvSCB=false;
+	bool cvSCB = false;
 	DWORD error = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	cvSCB = SetCommBreak(hCom);
 	breakset = cvSCB;
 	if (cvSCB==true)
 		return true;
 	else
 	{
+#ifdef __SERIALCOM_DEBUG__
 		error = GetLastError();
 		std::cout << "serialCOM::SetBreak():   SetCommBreak(...) failed with error " << error << "\n";
+#endif
 		return false;
 	}
 }
@@ -610,9 +672,9 @@ bool serialCOM::SetBreak()
 
 bool serialCOM::ClearBreak()
 {
-	bool cvCCB=false;
+	bool cvCCB = false;
 	DWORD error = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	cvCCB = ClearCommBreak(hCom);
 	if (cvCCB==true)
 	{
@@ -621,8 +683,10 @@ bool serialCOM::ClearBreak()
 	}
 	else
 	{
+#ifdef __SERIALCOM_DEBUG__
 		error = GetLastError();
 		std::cout << "serialCOM::ClearBreak():   ClearCommBreak(...) failed with error " << error << "\n";
+#endif
 		return false;
 	}
 }
@@ -639,7 +703,7 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 	COMSTAT comstat;
 	memset(&comstat, 0, sizeof(COMSTAT));
 	DWORD Errors = 0;
-	if (portisopen == false) return false;
+	if (!portisopen) return false;
 	if (ClearCommError(hCom, &Errors, &comstat) != 0)
 	{
 		*nbytes = static_cast<unsigned int>(comstat.cbInQue);
@@ -677,7 +741,9 @@ bool serialCOM::GetMaxbaudrate(double *maxbaudrate)
 	else if ((portproperties.dwSettableBaud & ~0x10000) != portproperties.dwSettableBaud)
 	{
 		*maxbaudrate = 128000;	// ???
+#ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::GetMaxbaudrate:   WARNING: unusual baudbase of 128kbps detected\n";
+#endif
 	}
 	else if ((portproperties.dwSettableBaud & ~0x20000) != portproperties.dwSettableBaud)
 	{

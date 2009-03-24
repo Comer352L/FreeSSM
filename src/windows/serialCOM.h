@@ -20,16 +20,27 @@
 #ifndef SERIALCOM_H
 #define SERIALCOM_H
 
-#include <string.h>
+
+//#define __SERIALCOM_DEBUG__
+
+
+#include <cstring>		// memset(), strcpy(), ...
+#include <cmath>		// round()
+extern "C"
+{
+    #include <windows.h>
+}
+#include <string>
 #include <vector>
-#include <windows.h>
-#include <math.h>	// for round()
-#include <iostream>	// for DEBUG-Output:
+#ifdef __SERIALCOM_DEBUG__
+    #include <iostream>
+#endif
 
 
 
 class serialCOM
 {
+
 private:
 	HANDLE hCom;		// handle to port
 	bool portisopen;

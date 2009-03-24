@@ -20,21 +20,33 @@
 #ifndef SERIALCOM_H
 #define SERIALCOM_H
 
-#include <string.h>
-#include <vector>
-#include <termios.h> 	     	// POSIX terminal control definitions
-#include <fcntl.h>           	// File control definitions => for fcntl() in fcn OpenPort()
-#include <dirent.h>          	// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
-#include <iostream>          	// for error/debug outputs
-#include <sys/ioctl.h>       	// ioctl => for access to serial port driver
-#include <linux/serial.h>    	// serial port driver
-#include <math.h>	     	// for round()
-#include <errno.h>
 
+//#define __SERIALCOM_DEBUG__
+
+
+#include <cstring>		// memset(), strcpy(), ...
+#include <cmath>		// for round()
+extern "C"
+{
+    #include <termios.h>	// POSIX terminal control definitions
+    #include <fcntl.h>		// File control definitions => for fcntl() in fcn OpenPort()
+    #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
+    #include <sys/ioctl.h>	// ioctl => for access to serial port driver
+    #include <linux/serial.h>	// serial port driver
+    #ifdef __SERIALCOM_DEBUG__
+        #include <errno.h>
+    #endif
+}
+#include <string>
+#include <vector>
+#ifdef __SERIALCOM_DEBUG__
+    #include <iostream>
+#endif
 
 
 class serialCOM
 {
+
 private:
 	int fd;                   // file descriptor for the port
 	bool portisopen;
