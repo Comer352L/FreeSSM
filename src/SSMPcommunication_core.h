@@ -32,6 +32,7 @@
 #endif
 #ifdef __FSSM_DEBUG__
     #include <iostream>
+    #include "libFSSM"
 #endif
 
 
