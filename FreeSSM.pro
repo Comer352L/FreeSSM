@@ -78,7 +78,7 @@ translation.commands = lrelease FreeSSM.pro & qmake
 QMAKE_EXTRA_TARGETS += translation
 
 # Add pre-processor-define if we compile as debug:
-CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__
+CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__
 
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
