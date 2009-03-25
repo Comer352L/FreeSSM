@@ -1,7 +1,7 @@
 /*
  * SSMPcommunication_core.h - Core functions (services) of the new SSM-protocol
  *
- * Copyright © 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 #endif
 #ifdef __FSSM_DEBUG__
     #include <iostream>
-    #include "libFSSM"
+    #include "libFSSM.h"
 #endif
 
 

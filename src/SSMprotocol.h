@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Application Layer for the new Subaru SSM protocol
  *
- * Copyright © 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #else
     #error "Operating system not supported !"
 #endif
+#include <string>
 #include <vector>
 #include <math.h>
 #include "SSMPcommunication.h"

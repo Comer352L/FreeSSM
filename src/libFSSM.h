@@ -1,7 +1,7 @@
 /*
  * libFSSM.h - function library for FreeSSM
  *
- * Copyright © 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 
 #include <QString>
+#include <string>
 #include <math.h>
 
 
@@ -31,7 +32,7 @@ class libFSSM
 public:
 	static bool raw2scaled(unsigned int rawValue, QString scaleformula, char precision, QString *scaledValueStr);
 	static bool scaled2raw(QString scaledValueStr, QString scaleformula, unsigned int *rawValue);
-	static std::string StrToHexstr(char *inputstr, unsigned int nrbytes);	// SSMPcommunication_core
+	static std::string StrToHexstr(char *inputstr, unsigned int nrbytes);
 
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);

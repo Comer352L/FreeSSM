@@ -1,7 +1,7 @@
 /*
  * FreeSSM.h - Program main window
  *
- * Copyright © 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
+#include <string>
 #include "SSMprotocol.h"
 #include "SSMPcommunication.h"
 #include "libFSSM.h"

@@ -1,7 +1,7 @@
 /*
  * CUcontent_sysTests.cpp - Widget for System Test Procedures
  *
- * Copyright © 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
