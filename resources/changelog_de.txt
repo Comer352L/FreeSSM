@@ -1,3 +1,11 @@
+v1.1.0 (25.3.2009):
+  - Erweiterte Informationen im "Speicher Löschen"-Dialog
+  - Automatisches Wiederherstellen der alten Einstellwerte nach dem Löschen
+    des Steuergeräte-Speichers
+  - Einführung einiger Tastatur-Abkürzungen
+  - Mehrere kleine GUI- und Übersetzungs-Korrekturen
+
+
 v1.0.0 (15.3.2009):
   - Unterstützung für Antriebsstrang-Steuergeräte hinzugefügt
   - 15 neue Messwertblöcke hinzugefügt:

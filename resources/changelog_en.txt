@@ -1,3 +1,10 @@
+v1.1.0 (25.3.2009):
+  - Extended informations in "Clear Memory"-dialog
+  - Automatic adjustment value restoration after "Clear Memory"
+  - Introduction of some keyboard-shortcuts
+  - Several small GUI- and translation-fixes
+
+
 v1.0.0 (15.3.2009):
   - Added support for Powertrain Control Units (PCM)
   - Added 15 new Measuring Blocks:
