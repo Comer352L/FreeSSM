@@ -49,22 +49,8 @@ FreeSSM::FreeSSM(QApplication *app)
 	this->setWindowTitle("FreeSSM " + _progversion);
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
 	QDesktopWidget desktop;
-	int screenWidth, width;
-	int screenHeight, height;
-	int x, y;
-	// Get desktop size:
-	QSize windowSize;
-	screenWidth = desktop.width();		// get screen width
-	screenHeight = desktop.height();	// get screen height
-	// Get window size:
-	windowSize = size(); // size of our application window
-	width = windowSize.width(); 
-	height = windowSize.height();
-	// Calculate new window cordinates
-	x = (screenWidth - width) / 2;
-	y = (screenHeight - height) / 2;
-	y -= 50;
-	// Move window to desired coordinates
+	int x = (desktop.width() - size().width()) / 2;
+	int y = (desktop.height() - size().height()) / 2 - 50;
 	this->move ( x, y );
 	// LOAD PREFERENCES FROM FILE:
 	QString savedportname = "";
