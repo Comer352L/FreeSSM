@@ -67,8 +67,8 @@ public:
 	std::string GetPortname();
 	bool GetPortSettings(serialCOM::dt_portsettings *currentportsettings);
 	bool SetPortSettings(dt_portsettings newportsettings);
-	bool OpenPort(std::string portname);	// bool returns success of operation, NOT PORT STATUS (open/closed)
-	bool ClosePort();			// bool returns success of operation, NOT PORT STATUS (open/closed)
+	bool OpenPort(std::string portname);	// returns success of operation, NOT PORT STATUS (open/closed)
+	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(char *outputstr, unsigned int nrofbytestowrite);
 	bool Read(char *readdata, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();

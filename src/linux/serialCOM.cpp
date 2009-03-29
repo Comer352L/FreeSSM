@@ -41,12 +41,12 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 	DIR *dp = NULL;
 	struct dirent *fp = NULL;
 	// CHECK DEVICE FILES:
-	dp = opendir ("/dev");	// open directory /dev:
-	if (dp != NULL)		// if directory is open
+	dp = opendir ("/dev");
+	if (dp != NULL)
 	{
 		do {
 			fp = readdir (dp);     // get next file in directory
-			if (fp != NULL)        // if file is available
+			if (fp != NULL)
 			{
 				if ((!strncmp(fp->d_name,"ttyS",4)) | (!strncmp(fp->d_name,"ttyUSB",6)))	// if filename starts with "ttyS" or "ttyUSB"
 				{
@@ -54,8 +54,8 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 					strcpy(ffn, "/dev/");		// (replaces old string)
 					strcat(ffn, fp->d_name);
 					testfd = -1;
-					testfd = open(ffn, O_RDWR | O_NOCTTY | O_NDELAY);	// open device file
-					if (!(testfd == -1))					// if device file is open
+					testfd = open(ffn, O_RDWR | O_NOCTTY | O_NDELAY);
+					if (!(testfd == -1))
 					{
 						// FIND OUT, IF FILE IS A TTY:
 						if (isatty(testfd))
@@ -71,13 +71,13 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 	else
 		std::cout << "serialCOM::GetAvailablePorts():   opendir(''/dev'') failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-	// SEARCH FOR USB2SERAIL-CONVERTERS:
-	dp = opendir ("/dev/usb");	// open directory /dev/usb:
-	if (dp != NULL)		// if directory is open
+	// SEARCH FOR USB-SERIAL-CONVERTERS:
+	dp = opendir ("/dev/usb");
+	if (dp != NULL)
 	{
 		do {
 			fp = readdir (dp);     // get next file in directory
-			if (fp != NULL)        // if file is available
+			if (fp != NULL)
 			{
 				if (!strncmp(fp->d_name,"ttyUSB",6))	// if filename starts with "ttyUSB"
 				{
@@ -85,8 +85,8 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 					strcpy(ffn, "/dev/usb/");		// (replaces old string)
 					strcat(ffn, fp->d_name);
 					testfd = -1;
-					testfd = open(ffn, O_RDWR | O_NOCTTY | O_NDELAY);	// open device file
-					if (!(testfd == -1))					// if device file is open
+					testfd = open(ffn, O_RDWR | O_NOCTTY | O_NDELAY);
+					if (!(testfd == -1))
 					{
 						// FIND OUT, IF FILE IS A TTY:
 						if (isatty(testfd))
@@ -329,7 +329,10 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 
 bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 {
-	short int cvTSA = -1;
+	int cIOCTL = -1;
+	int cCFSSI = -1;
+	int cCFSSO = -1;
+	int cTSA = -1;
 	bool settingsvalid = true;
 	speed_t newbaudrate = 0;	// speed_t defined in termios.h
 	struct termios newtio;
@@ -340,7 +343,11 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	if (serdrvaccess)
 	{
 		// Get current port settings:
-		ioctl(fd, TIOCGSERIAL, &new_serdrvinfo);	// read from driver
+		cIOCTL = ioctl(fd, TIOCGSERIAL, &new_serdrvinfo);	// read from driver
+#ifdef __SERIALCOM_DEBUG__
+		if (cIOCTL == -1)
+			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #1 failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
 		// Deactivate custom baudrate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
@@ -373,7 +380,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		cvGSDCBC = GetStdbaudrateDCBConst(newportsettings.baudrate, &DCBbaudconst);
 		if (cvGSDCBC==true)	// if it's a standard baud rate
 			newbaudrate = DCBbaudconst;
-		else if (serdrvaccess)	// if it's not a standard baud rate and access to serial driver
+		else if (serdrvaccess && (cIOCTL != -1))	// if it's not a standard baud rate and we have access to serial driver
 		{
 			int customdivisor = 0;
 			double custombaudrate = 0;
@@ -648,16 +655,35 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	// SET NEW PORT SETTING:
 	if (settingsvalid == true)	// only apply new settings only if they are all valid !
 	{
-		ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings
-		cfsetispeed(&newtio, newbaudrate);
-		cfsetospeed(&newtio, newbaudrate);
-		cvTSA = tcsetattr(fd, TCSANOW, &newtio );
+		if (serdrvaccess)
+		{
+			cIOCTL = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings	// -1 on error
+#ifdef __SERIALCOM_DEBUG__
+			if (cIOCTL == -1)
+				std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #2 failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
+		}
+		cCFSSI = cfsetispeed(&newtio, newbaudrate);		// 0 on success, check errno
+#ifdef __SERIALCOM_DEBUG__
+		if (cCFSSI != 0)
+			std::cout << "serialCOM::SetPortSettings():   cfsetispeed(...) failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
+		cCFSSO = cfsetospeed(&newtio, newbaudrate);		// 0 on success, check errno
+#ifdef __SERIALCOM_DEBUG__
+		if (cCFSSO != 0)
+			std::cout << "serialCOM::SetPortSettings():   cfsetospeed(...) failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
+		cTSA = tcsetattr(fd, TCSANOW, &newtio );	// 0 on success, check errno
 		/*	TCSANOW		Make changes now without waiting for data to complete
 			TCSADRAIN	Wait until everything has been transmitted
 			TCSAFLUSH	Flush input and output buffers and make the change	*/
+#ifdef __SERIALCOM_DEBUG__
+		if (cTSA != 0)
+			std::cout << "serialCOM::SetPortSettings():   tcsetattr(...) failed with error " << errno << " " << strerror(errno)<< "\n";
+#endif
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
-	return (cvTSA == 0);
+	return ((cIOCTL != -1) && (cCFSSI == 0) && (cCFSSO == 0) && (cTSA == 0));
 }
 
 

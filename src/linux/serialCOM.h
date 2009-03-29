@@ -25,11 +25,11 @@
 
 
 #include <cstring>		// memset(), strcpy(), ...
-#include <cmath>		// for round()
+#include <cmath>		// round()
 extern "C"
 {
     #include <termios.h>	// POSIX terminal control definitions
-    #include <fcntl.h>		// File control definitions => for fcntl() in fcn OpenPort()
+    #include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
     #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
     #include <linux/serial.h>	// serial port driver
@@ -75,8 +75,8 @@ public:
 	std::string GetPortname();
 	bool GetPortSettings(serialCOM::dt_portsettings *currentportsettings);
 	bool SetPortSettings(dt_portsettings newportsettings);
-	bool OpenPort(std::string portname);	// bool returns success of operation, NOT PORT STATUS (open/closed)
-	bool ClosePort();			// bool returns success of operation, NOT PORT STATUS (open/closed)
+	bool OpenPort(std::string portname);	// returns success of operation, NOT PORT STATUS (open/closed)
+	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(char *outputstr, unsigned int nrofbytestowrite);
 	bool Read(char *readdata, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();

@@ -54,13 +54,13 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			if (!strncmp((char*)Data,"COM",3))	// compares the first 3 characters
 			{
 				// CHECK IF PORT IS AVAILABLE (not in use):
-				hCom_t = CreateFileA((char*)Data,			// name of port
+				hCom_t = CreateFileA((char*)Data,				// name of port
 							   GENERIC_READ | GENERIC_WRITE,	// read/write access
 							   0,					// must be opened with exclusive-access
 							   NULL,				// default security attributes
 							   OPEN_EXISTING,			// must use OPEN_EXISTING
 							   0,					// not overlapped I/O
-							   NULL				// must be NULL for comm devices
+							   NULL					// must be NULL for comm devices
 							  );
 				if (hCom_t != INVALID_HANDLE_VALUE)
 				{
