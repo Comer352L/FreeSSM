@@ -144,7 +144,6 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	// COMMUNICATION BASED FUNCTIONS:
 	bool getSupportedDCgroups(int *DCgroups);
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(std::vector<mbsw_dt> *supportedMBs);
@@ -153,6 +152,7 @@ public:
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
+	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
 	bool getVIN(QString *VIN);
