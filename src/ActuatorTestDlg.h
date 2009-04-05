@@ -23,7 +23,7 @@
 
 #include <QtGui>
 #include "ui_ActuatorTestDlg.h"
-#include "SSMprotocol.h"
+#include "SSM2protocol.h"
 
 
 
@@ -32,10 +32,10 @@ class ActuatorTestDlg : public QDialog, private Ui::actuatortest_Dialog
 	Q_OBJECT
 
 public:
-	ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString actuatorTitle, unsigned char actuatorIndex);
+	ActuatorTestDlg(QWidget *parent, SSM2protocol *SSM2Pdev, QString actuatorTitle, unsigned char actuatorIndex);
 
 private:
-	SSMprotocol *_SSMPdev;
+	SSM2protocol *_SSM2Pdev;
 
 	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);

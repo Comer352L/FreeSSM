@@ -1,5 +1,5 @@
 /*
- * SSMprotocol_ID.cpp - Identification of vehicle and control unit details
+ * SSM2protocol_ID.cpp - Identification of vehicle and control unit details
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSMprotocol_ID.h"
+#include "SSM2protocol_ID.h"
 
 
-SSMprotocol_ID::SSMprotocol_ID()
+SSM2protocol_ID::SSM2protocol_ID()
 {
 	_engine_sysDefs
 	<< "01;2.5L SOHC"
@@ -69,7 +69,7 @@ SSMprotocol_ID::SSMprotocol_ID()
 }
 
 
-bool SSMprotocol_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription)
+bool SSM2protocol_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription)
 {
 	QStringList *sysDefs = NULL;
 	unsigned char k = 0;

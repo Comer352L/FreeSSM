@@ -20,10 +20,10 @@
 #include "Transmission.h"
 
 
-Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
+Transmission::Transmission(SSM2protocol *ssm2pdev, QString progversion)
 {
 	// *** Initialize global variables:
-	_SSMPdev = ssmpdev;
+	_SSM2Pdev = ssm2pdev;
 	_progversion = progversion;
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
@@ -44,7 +44,7 @@ Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DTCs_pushButton->setChecked(true);
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSM2Pdev, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -57,7 +57,7 @@ Transmission::Transmission(SSMprotocol *ssmpdev, QString progversion)
 
 Transmission::~Transmission()
 {
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	disconnect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	disconnect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
 	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
 	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
@@ -86,15 +86,15 @@ void Transmission::setup()
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( _SSMPdev->setupCUdata() )
+	if( _SSM2Pdev->setupCUdata() )
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
 		initstatusmsgbox.setValue(40);
 		// Query system description:
-		if (!_SSMPdev->getSystemDescription(&sysdescription))
+		if (!_SSM2Pdev->getSystemDescription(&sysdescription))
 		{
-			std::string SYS_ID = _SSMPdev->getSysID();
+			std::string SYS_ID = _SSM2Pdev->getSysID();
 			if (!SYS_ID.length())
 				goto commError;
 			sysdescription = tr("unknown (") + QString::fromStdString(SYS_ID) + ")";
@@ -102,27 +102,27 @@ void Transmission::setup()
 		// Output system description:
 		transmissiontype_label->setText(sysdescription);
 		// Query ROM-ID:
-		ROM_ID = _SSMPdev->getROMID();
+		ROM_ID = _SSM2Pdev->getROMID();
 		if (!ROM_ID.length())
 			goto commError;
 		// Output ROM-ID:
 		romID_label->setText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&supportedMBsSWs))
+		if (!_SSM2Pdev->getSupportedMBs(&supportedMBsSWs))
 			goto commError;
 		nrofdatambs_label->setText( QString::number(supportedMBsSWs.size(), 10) );
-		if (!_SSMPdev->getSupportedSWs(&supportedMBsSWs))
+		if (!_SSM2Pdev->getSupportedSWs(&supportedMBsSWs))
 			goto commError;
 		nrofswitches_label->setText( QString::number(supportedMBsSWs.size(), 10) );
 		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2system(&supported))
+		if (!_SSM2Pdev->hasOBD2system(&supported))
 			goto commError;
 		if (supported)
 			obd2system_label->setPixmap(sup_pixmap);
 		else
 			obd2system_label->setPixmap(nsup_pixmap);
 		// "Clear Memory 2"-support:
-		if (!_SSMPdev->hasClearMemory2(&supported))
+		if (!_SSM2Pdev->hasClearMemory2(&supported))
 			goto commError;
 		if (supported)
 			clearMemory2_pushButton->setEnabled(true);
@@ -139,13 +139,13 @@ void Transmission::setup()
 	connect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+	connect( _SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
 	if (!_content_DCs->setup())
 		goto commError;
-	if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
+	if (!_SSM2Pdev->getSupportedDCgroups(&supDCgroups))
 		goto commError;
-	if (supDCgroups != SSMprotocol::noDCs_DCgroup)
+	if (supDCgroups != SSM2protocol::noDCs_DCgroup)
 	{
 		if (!_content_DCs->startDCreading())
 			goto commError;
@@ -181,15 +181,15 @@ void Transmission::DTCs()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSM2Pdev, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup();
 	// Start DC-reading:
 	if (ok)
 	{
-		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
-		if (ok && DCgroups != SSMprotocol::noDCs_DCgroup)
+		ok = _SSM2Pdev->getSupportedDCgroups(&DCgroups);
+		if (ok && DCgroups != SSM2protocol::noDCs_DCgroup)
 			ok = _content_DCs->startDCreading();
 	}
 	// Get notification, if internal error occures:
@@ -218,7 +218,7 @@ void Transmission::measuringblocks()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMPdev, _MBSWtimemode);
+	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSM2Pdev, _MBSWtimemode);
 	content_gridLayout->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
 	ok = _content_MBsSWs->setup();
@@ -250,7 +250,7 @@ void Transmission::adjustments()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSMPdev);
+	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSM2Pdev);
 	content_gridLayout->addWidget(_content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup();
@@ -267,30 +267,30 @@ void Transmission::adjustments()
 
 void Transmission::clearMemory()
 {
-	runClearMemory(SSMprotocol::CMlevel_1);
+	runClearMemory(SSM2protocol::CMlevel_1);
 }
 
 
 
 void Transmission::clearMemory2()
 {
-	runClearMemory(SSMprotocol::CMlevel_2);
+	runClearMemory(SSM2protocol::CMlevel_2);
 }
 
 
 
-void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
+void Transmission::runClearMemory(SSM2protocol::CMlevel_dt level)
 {
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
 	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, level);
+	ClearMemoryDlg cmdlg(this, _SSM2Pdev, level);
 	// Temporary disconnect from "communication error"-signal:
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	disconnect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Run "Clear Memory"-procedure:
 	result = cmdlg.run();
 	// Reconnect to "communication error"-signal:
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	connect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
 	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
 	{
@@ -363,10 +363,10 @@ void Transmission::closeEvent(QCloseEvent *event)
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !   "));
 	waitmsgbox.show();
 	// Stop all permanent communication operations:
-	_SSMPdev->stopAllPermanentOperations();
+	_SSM2Pdev->stopAllPermanentOperations();
 	// Reset CU data:
-	_SSMPdev->resetCUdata();
-	// NOTE: we got _SSMPdev already initialized, so we do NOT delete it here !
+	_SSM2Pdev->resetCUdata();
+	// NOTE: we got _SSM2Pdev already initialized, so we do NOT delete it here !
 	event->accept();
 	// Close wait message box:
 	waitmsgbox.close();

@@ -25,7 +25,7 @@
 #include <QtGui>
 #include <string>
 #include "ui_CUcontent_DCs_transmission.h"
-#include "SSMprotocol.h"
+#include "SSM2protocol.h"
 
 
 
@@ -34,14 +34,14 @@ class CUcontent_DCs_transmission : public QWidget, private Ui::transmissionDCcon
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_transmission(QWidget *parent, SSMprotocol *SSMPdev, QString progversion);
+	CUcontent_DCs_transmission(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion);
 	~CUcontent_DCs_transmission();
 	bool setup();
 	bool startDCreading();
 	bool stopDCreading();
 
 private:
-	SSMprotocol *_SSMPdev;
+	SSM2protocol *_SSM2Pdev;
 	QString _progversion;
 	int _supportedDCgroups;
 	QStringList _currOrTempDTCs;

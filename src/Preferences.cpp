@@ -256,7 +256,7 @@ void Preferences::interfacetest()
 		return;
 	}
 	// SETUP SSMPcommunication object:
-	SSMPcommunication *SSMPcom = new SSMPcommunication(serialport, 0x10);
+	SSM2Pcommunication *SSM2Pcom = new SSM2Pcommunication(serialport, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
 	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles" "\n" "OBD-Connector and switch ignition on."), QMessageBox::NoButton, this);
@@ -283,7 +283,7 @@ void Preferences::interfacetest()
 			// QUERY ANY ECU ADDRESS:
 			unsigned int addr = 0x61;
 			char data = 0;
-			icresult = SSMPcom->readMultipleDatabytes('\x0', &addr, 1, &data);
+			icresult = SSM2Pcom->readMultipleDatabytes('\x0', &addr, 1, &data);
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();
 			delete waitmsgbox;
@@ -318,7 +318,7 @@ void Preferences::interfacetest()
 			}
 		}
 		// COMMUNICATION AND PORT OBJECT:
-		delete SSMPcom;
+		delete SSM2Pcom;
 	}
 	// CLOSE SERIAL PORT
 	if (!serialport->ClosePort())

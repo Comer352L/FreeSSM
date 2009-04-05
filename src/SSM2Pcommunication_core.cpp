@@ -1,5 +1,5 @@
 /*
- * SSMPcommunication_core.cpp - Core functions (services) of the new SSM-protocol
+ * SSM2Pcommunication_core.cpp - Core functions (services) of the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -18,35 +18,35 @@
  */
 
 
-#include "SSMPcommunication_core.h"
+#include "SSM2Pcommunication_core.h"
 
 
 
-SSMPcommunication_core::SSMPcommunication_core(serialCOM *port)
+SSM2Pcommunication_core::SSM2Pcommunication_core(serialCOM *port)
 {
 	_port = port;
 }
 
 
 
-bool SSMPcommunication_core::ReadDataBlock(char ecuadr, char padadr, unsigned int dataadr, unsigned char nrofbytes, char *data)
+bool SSM2Pcommunication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
 {
 	// Send: 80 (ECUADR) F0 06  A0  00  00 01 21  (n-1)  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  E0  data_1 data_2 ... data_n  (CS)
-	if ((dataadr > 0xffffff) || (nrofbytes > 254)) return false;	// protocol limit (length byte): max. 254 per reply message possible !
+	if ((dataaddr > 0xffffff) || (nrofbytes > 254)) return false;	// protocol limit (length byte): max. 254 per reply message possible !
 	char indata[255] = {0,};
 	unsigned char indatalen = 0;
 	char querymsg[6] = {0,};
 	unsigned int k;
 	// SETUP MESSAGE (without Header+Checksum):
 	querymsg[0] = '\xA0';
-	querymsg[1] = padadr;
-	querymsg[2] = (dataadr & 0xffffff) >> 16;
-	querymsg[3] = (dataadr & 0xffff) >> 8;
-	querymsg[4] = dataadr & 0xff;
+	querymsg[1] = padaddr;
+	querymsg[2] = (dataaddr & 0xffffff) >> 16;
+	querymsg[3] = (dataaddr & 0xffff) >> 8;
+	querymsg[4] = dataaddr & 0xff;
 	querymsg[5] = nrofbytes - 1;
 	// SEND MESSAGE + RECIEVE ANSWER:
-	if (SndRcvMessage(ecuadr, querymsg, 6, indata, &indatalen))
+	if (SndRcvMessage(ecuaddr, querymsg, 6, indata, &indatalen))
 	{
 		// CHECK DATA:
 		if (indatalen == (nrofbytes+1))
@@ -65,7 +65,7 @@ bool SSMPcommunication_core::ReadDataBlock(char ecuadr, char padadr, unsigned in
 
 
 
-bool SSMPcommunication_core::ReadMultipleDatabytes(char ecuadr, char padadr, unsigned int dataadr[256], unsigned char datalen, char *data)
+bool SSM2Pcommunication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
 {
 	// 80 (ECUADR) F0 (2+3*n)  A8  (PADADDR)  a1_b2 a1_b1 a1_b0  a2_b2 a2_b1 a2_b0 ... an_b2 an_b1 an_b0  (CS)
 	// 80 F0 (ECUADR) (1+n)   E8  data_1 data_2 ... data_n  (CS)
@@ -77,15 +77,15 @@ bool SSMPcommunication_core::ReadMultipleDatabytes(char ecuadr, char padadr, uns
 	unsigned int k = 0;
 	// SETUP MESSAGE:
 	querymsg[0] = '\xA8';
-	querymsg[1] = padadr;
+	querymsg[1] = padaddr;
 	for (k=0; k<datalen; k++)
 	{
-		querymsg[2+k*3] = (dataadr[k] & 0xffffff) >> 16;
-		querymsg[3+k*3] = (dataadr[k] & 0xffff) >> 8;
-		querymsg[4+k*3] = dataadr[k] & 0xff;
+		querymsg[2+k*3] = (dataaddr[k] & 0xffffff) >> 16;
+		querymsg[3+k*3] = (dataaddr[k] & 0xffff) >> 8;
+		querymsg[4+k*3] = dataaddr[k] & 0xff;
 	}
 	// SEND MESSAGE + RECIEVE ANSWER:
-	if (SndRcvMessage(ecuadr, querymsg, (2+3*datalen), indata, &indatalen))
+	if (SndRcvMessage(ecuaddr, querymsg, (2+3*datalen), indata, &indatalen))
 	{
 		// CHECK DATA:
 		if (indatalen == (datalen+1))
@@ -104,24 +104,24 @@ bool SSMPcommunication_core::ReadMultipleDatabytes(char ecuadr, char padadr, uns
 
 
 
-bool SSMPcommunication_core::WriteDataBlock(char ecuadr, unsigned int dataadr, char *data, unsigned char datalen, char *datawritten)
+bool SSM2Pcommunication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
 {
 	// Send: 80 (ECUADR) F0 (4+n)  B0  00 01 21  data_1 data_2 ... data_n  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  F0  data_1 data_2 ...  (CS)
-	if ((dataadr > 0xffffff) || (datalen > 251)) return false;	// protocol limit (lengthy byte): 255-4 = 251
+	if ((dataaddr > 0xffffff) || (datalen > 251)) return false;	// protocol limit (lengthy byte): 255-4 = 251
 	char indata[252] = {0,};
 	unsigned char indatalen = 0;
 	char writemsg[255] = {0,};
 	unsigned int k = 0;
 	// SETUP MESSAGE:
 	writemsg[0] = '\xB0';
-	writemsg[1] = (dataadr & 0xffffff) >> 16;
-	writemsg[2] = (dataadr & 0xffff) >> 8;
-	writemsg[3] = dataadr & 0xff;
+	writemsg[1] = (dataaddr & 0xffffff) >> 16;
+	writemsg[2] = (dataaddr & 0xffff) >> 8;
+	writemsg[3] = dataaddr & 0xff;
 	for (k=0; k<datalen; k++)
 		writemsg[4+k] = data[k];
 	// SEND MESSAGE + RECIEVE ANSWER:
-	if (SndRcvMessage(ecuadr, writemsg, (4+datalen), indata, &indatalen))
+	if (SndRcvMessage(ecuaddr, writemsg, (4+datalen), indata, &indatalen))
 	{
 		// CHECK DATA:
 		if (indatalen == (datalen+1))
@@ -154,22 +154,22 @@ bool SSMPcommunication_core::WriteDataBlock(char ecuadr, unsigned int dataadr, c
 
 
 
-bool SSMPcommunication_core::WriteDatabyte(char ecuadr, unsigned int dataadr, char databyte, char *databytewritten)
+bool SSM2Pcommunication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
 {
 	// Send: 80 (ECUADR) F0 (05)  B8  00 01 21  databyte  (CS)
 	// Rcv:  80 F0 (ECUADR) (02)  F8  databyte  (CS)
-	if (dataadr > 0xffffff) return false;
+	if (dataaddr > 0xffffff) return false;
 	char indata[2] = {0,};
 	unsigned char indatalen = 0;
 	char writemsg[5] = {0,};
 	// SETUP MESSAGE (without Header+Checksum):
 	writemsg[0] = '\xB8';
-	writemsg[1] = (dataadr & 0xffffff) >> 16;
-	writemsg[2] = (dataadr & 0xffff) >> 8;
-	writemsg[3] = dataadr & 0xff;
+	writemsg[1] = (dataaddr & 0xffffff) >> 16;
+	writemsg[2] = (dataaddr & 0xffff) >> 8;
+	writemsg[3] = dataaddr & 0xff;
 	writemsg[4] = databyte;
 	// SEND MESSAGE + RECIEVE ANSWER:
-	if (SndRcvMessage(ecuadr, writemsg, 5, indata, &indatalen))
+	if (SndRcvMessage(ecuaddr, writemsg, 5, indata, &indatalen))
 	{
 		// CHECK DATA:
 		if (indatalen == 2)
@@ -199,7 +199,7 @@ bool SSMPcommunication_core::WriteDatabyte(char ecuadr, unsigned int dataadr, ch
 
 
 
-bool SSMPcommunication_core::GetCUdata(char ecuadr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSM2Pcommunication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	// Send: 80 (ECUADR) F0 01 BF (CS)
 	// Rcv:  80 F0 (ECUADR) (9+n)  FF  sysID_1 sysID_2 sysID_3 romID_1 ... romID_5 flagbyte_1 flagbyte_2 ... flagbyte_n  CS
@@ -210,7 +210,7 @@ bool SSMPcommunication_core::GetCUdata(char ecuadr, char *SYS_ID, char *ROM_ID, 
 	char initmsg = '\xBF';
 	unsigned char k = 0;
 	// SEND MESSAGE + RECIEVE ANSWER:
-	if (SndRcvMessage(ecuadr, &initmsg, 1, indata, &indatalen))
+	if (SndRcvMessage(ecuaddr, &initmsg, 1, indata, &indatalen))
 	{
 		// CHECK MESSAGE LENGTH:
 		if ((indatalen == 41) || (indatalen == 57) || (indatalen == 105))
@@ -239,7 +239,7 @@ bool SSMPcommunication_core::GetCUdata(char ecuadr, char *SYS_ID, char *ROM_ID, 
 
 
 
-bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
+bool SSM2Pcommunication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
 	if (_port == NULL) return false;
 	if (outdatalen < 1) return false;
@@ -249,7 +249,7 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	// SETUP COMPLETE MESSAGE:
 	// Protocoll-header
 	outmsg[0] = '\x80';
-	outmsg[1] = ecuadr;
+	outmsg[1] = ecuaddr;
 	outmsg[2] = '\xF0';
 	outmsg[3] = static_cast<char>(outdatalen);
 	// Message:
@@ -328,7 +328,7 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 	charcat(readdatatotal, readdata+outmsglen, nrofbytesreadtotal, nrofbytesread-outmsglen);
 	nrofbytesreadtotal += (nrofbytesread-outmsglen);
 	// CHECK IF PROTOCOL HEADER IS CORRECT:
-	if ((readdatatotal[0]!='\x80') | (readdatatotal[1]!='\xF0') | (readdatatotal[2]!=ecuadr))
+	if ((readdatatotal[0]!='\x80') || (readdatatotal[1]!='\xF0') || (readdatatotal[2]!=ecuaddr))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Invalid Protocol Header\n";
@@ -405,7 +405,7 @@ bool SSMPcommunication_core::SndRcvMessage(char ecuadr, char *outdata, unsigned 
 
 
 
-char SSMPcommunication_core::calcchecksum(char *message, unsigned int nrofbytes)
+char SSM2Pcommunication_core::calcchecksum(char *message, unsigned int nrofbytes)
 {
 	unsigned short int cs = 0;
 	unsigned int k;
@@ -415,7 +415,7 @@ char SSMPcommunication_core::calcchecksum(char *message, unsigned int nrofbytes)
 }
 
 
-void SSMPcommunication_core::charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b)
+void SSM2Pcommunication_core::charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b)
 {
 	unsigned int k;
 	for (k=0; k<len_b; k++)
@@ -425,7 +425,7 @@ void SSMPcommunication_core::charcat(char *chararray_a, char *chararray_b, unsig
 }
 
 
-bool SSMPcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)
+bool SSM2Pcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)
 {
 	unsigned int k;
 	for (k=0; k<len; k++)

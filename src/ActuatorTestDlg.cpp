@@ -21,13 +21,13 @@
 
 
 
-ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString actuatorTitle, unsigned char actuatorIndex) : QDialog(parent)
+ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSM2protocol *SSM2Pdev, QString actuatorTitle, unsigned char actuatorIndex) : QDialog(parent)
 {
 	bool isrunning = false;
 	int dlgchoice = 0;
 	QFont msgfont;
 
-	_SSMPdev = SSMPdev;
+	_SSM2Pdev = SSM2Pdev;
 	setupUi(this);
 	setupUiFonts();
 	exit_pushButton->setEnabled(false);
@@ -37,7 +37,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 	// CHECK IF ENGINE IS RUNNING:
 	while (dlgchoice == 0)
 	{
-		if (_SSMPdev->isEngineRunning(&isrunning))
+		if (_SSM2Pdev->isEngineRunning(&isrunning))
 		{
 			if (isrunning)
 			{
@@ -83,7 +83,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 	}
 	// START ACTUATOR TEST:
 	status_label->setText(tr("Starting test..."));
-	if (!_SSMPdev->startActuatorTest(actuatorIndex))
+	if (!_SSM2Pdev->startActuatorTest(actuatorIndex))
 	{
 		// Show error message
 		QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\nActuator Test couldn't be started."), QMessageBox::Ok, this);
@@ -109,7 +109,7 @@ void ActuatorTestDlg::closeEvent(QCloseEvent *event)
 {
 	exit_pushButton->setEnabled(false);
 	status_label->setText(tr("Stopping test..."));
-	_SSMPdev->stopActuatorTesting();
+	_SSM2Pdev->stopActuatorTesting();
 	event->accept();
 }
 

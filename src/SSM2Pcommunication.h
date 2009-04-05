@@ -1,5 +1,5 @@
 /*
- * SSMPcommunication.h - Communication Thread for the new SSM-protocol
+ * SSM2Pcommunication.h - Communication Thread for the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSMPCOMMUNICATION_H
-#define SSMPCOMMUNICATION_H
+#ifndef SSM2PCOMMUNICATION_H
+#define SSM2PCOMMUNICATION_H
 
 
 #ifdef __WIN32__
@@ -29,19 +29,19 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
-#include "SSMPcommunication_core.h"
+#include "SSM2Pcommunication_core.h"
 
 
 
-class SSMPcommunication : protected QThread, private SSMPcommunication_core
+class SSM2Pcommunication : protected QThread, private SSM2Pcommunication_core
 {
 	Q_OBJECT
 
 public:
 	enum comOp_dt {comOp_noCom, comOp_readCUdata, comOp_readBlock, comOp_readMulti, comOp_writeBlock, comOp_writeSingle, comOp_readBlock_p, comOp_readMulti_p, comOp_writeBlock_p, comOp_writeSingle_p};
 
-	SSMPcommunication(serialCOM *port, char cuaddress = '\x0', unsigned char errRetries = 2);
-	~SSMPcommunication();
+	SSM2Pcommunication(serialCOM *port, char cuaddress = '\x0', unsigned char errRetries = 2);
+	~SSM2Pcommunication();
 	void setCUaddress(char cuaddress);
 	void setRetriesOnError(unsigned char retries);
 

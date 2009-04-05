@@ -20,9 +20,9 @@
 #include "CUcontent_DCs_transmission.h"
 
 
-CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSMprotocol *SSMPdev, QString progversion) : QWidget(parent)
+CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion) : QWidget(parent)
 {
-	_SSMPdev = SSMPdev;
+	_SSM2Pdev = SSM2Pdev;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
 	_currOrTempDTCs.clear();
@@ -63,11 +63,11 @@ CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSMproto
 CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 {
 	stopDCreading();
-	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+	disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	disconnect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 }
 
 
@@ -80,19 +80,19 @@ bool CUcontent_DCs_transmission::setup()
 	QString title;
 
 	// Reset data:
-	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
+	_supportedDCgroups = SSM2protocol::noDCs_DCgroup;
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
 	_histOrMemDTCs.clear();
 	_histOrMemDTCdescriptions.clear();
 	// Get CU information:
-	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
+	ok =_SSM2Pdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
 	{
-		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
+		if ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup))
 			obd2DTCformat = false;
-		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
-		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
+		currOrTempDTCs_sup = ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup));
+		histOrMemDTCs_sup = ((_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup));
 	}
 	// Set titles of the DTC-tables
 	if ( obd2DTCformat )
@@ -122,10 +122,10 @@ bool CUcontent_DCs_transmission::setup()
 	printDClist_pushButton->setEnabled(false);
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// Connect start-slot:
-	if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
-		connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	if (ok && (_supportedDCgroups != SSM2protocol::noDCs_DCgroup))
+		connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	else
-		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	// Return result;
 	return ok;
 }
@@ -147,28 +147,28 @@ void CUcontent_DCs_transmission::callStop()
 
 bool CUcontent_DCs_transmission::startDCreading()
 {
-	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
+	SSM2protocol::state_dt state = SSM2protocol::state_needSetup;
 	int selDCgroups = 0;
 
 	// Check if DC-group(s) selected:
-	if (_supportedDCgroups == SSMprotocol::noDCs_DCgroup)
+	if (_supportedDCgroups == SSM2protocol::noDCs_DCgroup)
 		return false;
 	// Check if DC-reading is startable or already in progress:
-	state = _SSMPdev->state();
-	if (state == SSMprotocol::state_normal)
+	state = _SSM2Pdev->state();
+	if (state == SSM2protocol::state_normal)
 	{
-		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 		// Start DC-reading:
-		if (!_SSMPdev->startDCreading( _supportedDCgroups ))
+		if (!_SSM2Pdev->startDCreading( _supportedDCgroups ))
 		{
-			connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+			connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 			return false;
 		}
 	}
-	else if (state == SSMprotocol::state_DCreading)
+	else if (state == SSM2protocol::state_DCreading)
 	{
 		// Verify consistency:
-		if (!_SSMPdev->getLastDCgroupsSelection(&selDCgroups))
+		if (!_SSM2Pdev->getLastDCgroupsSelection(&selDCgroups))
 			return false;
 		if (selDCgroups != _supportedDCgroups) // inconsistency detected !
 		{
@@ -180,17 +180,17 @@ bool CUcontent_DCs_transmission::startDCreading()
 	else
 		return false;
 	// Enable notification about external DC-reading-stops:
-	connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+	connect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
+	if (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup)
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+		connect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup)
+	if (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup)
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+		connect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
@@ -202,18 +202,18 @@ bool CUcontent_DCs_transmission::startDCreading()
 
 bool CUcontent_DCs_transmission::stopDCreading()
 {
-	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMPdev->stopDCreading() !
-	if (_SSMPdev->state() == SSMprotocol::state_DCreading)
+	disconnect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSM2Pdev->stopDCreading() !
+	if (_SSM2Pdev->state() == SSM2protocol::state_DCreading)
 	{
-		if (!_SSMPdev->stopDCreading())
+		if (!_SSM2Pdev->stopDCreading())
 		{
-			connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMPdev->stopDCreading() !
+			connect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSM2Pdev->stopDCreading() !
 			return false;
 		}
 	}
-	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+	connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	disconnect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	return true;
 }
 
@@ -339,10 +339,10 @@ void CUcontent_DCs_transmission::printDCprotocol()
 	// ##### GATHER CU-INFORMATIONS #####
 	datetime = QDateTime::currentDateTime().toString("dddd, dd. MMMM yyyy, h:mm") + ":";
 	CU = tr("Transmission");
-	if (!_SSMPdev->getSystemDescription(&systype))
+	if (!_SSM2Pdev->getSystemDescription(&systype))
 	{
 		std::string SYS_ID = "";
-		SYS_ID = _SSMPdev->getSysID();
+		SYS_ID = _SSM2Pdev->getSysID();
 		if (!SYS_ID.length())
 		{
 			printmbox.close();
@@ -353,7 +353,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 		/* TODO: IMPROVE: use other functions from libID to determine system type 
 			 => maybe this should be done in SSMprotocol, too		*/
 	}
-	ROM_ID = _SSMPdev->getROMID();
+	ROM_ID = _SSM2Pdev->getROMID();
 	if (!ROM_ID.length())		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
 	{
 		printmbox.close();
@@ -450,7 +450,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 
 	// ##### DTC-tables #####
 	// Current/Temporary DTCs:
-	if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup))
+	if ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup))
 	{
 		if (_currOrTempDTCdescriptions.size() == 0)
 		{
@@ -461,7 +461,7 @@ void CUcontent_DCs_transmission::printDCprotocol()
 		insertDCtable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
-	if ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup))
+	if ((_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup))
 	{
 		if (_histOrMemDTCdescriptions.size() == 0)
 		{

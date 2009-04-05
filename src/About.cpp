@@ -45,7 +45,7 @@ About::About(QWidget *parent, QString progversion,  QString language) : QDialog(
 	changelog_textBrowser->setText(changelog_content);
 	changelog_file.close();
 	// *** Definitions:
-	SSMprotocol_def_en ssmp_defs;
+	SSM2protocol_def_en ssmp_defs;
 	// Output number of supported DTCs:
 	int nrofDTCs_SUB = ssmp_defs.SUBDTCrawDefs().size();
 	int nrofDTCs_OBD = ssmp_defs.OBDDTCrawDefs().size();

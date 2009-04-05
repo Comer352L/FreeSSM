@@ -24,7 +24,7 @@
 
 #include <QtGui>
 #include "ui_About.h"
-#include "SSMprotocol_def_en.h"
+#include "SSM2protocol_def_en.h"
 
 
 

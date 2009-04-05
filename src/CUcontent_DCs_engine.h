@@ -25,7 +25,7 @@
 #include <QtGui>
 #include <string>
 #include "ui_CUcontent_DCs_engine.h"
-#include "SSMprotocol.h"
+#include "SSM2protocol.h"
 
 
 
@@ -34,7 +34,7 @@ class CUcontent_DCs_engine : public QWidget, private Ui::engineDCcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev, QString progversion);
+	CUcontent_DCs_engine(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion);
 	~CUcontent_DCs_engine();
 	void show();
 	bool setup();
@@ -42,7 +42,7 @@ public:
 	bool stopDCreading();
 
 private:
-	SSMprotocol *_SSMPdev;
+	SSM2protocol *_SSM2Pdev;
 	QString _progversion;
 	int _supportedDCgroups;
 	bool _obd2DTCformat;

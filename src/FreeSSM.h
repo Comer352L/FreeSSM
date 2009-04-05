@@ -35,8 +35,8 @@
 #endif
 #include <QtGui>
 #include <string>
-#include "SSMprotocol.h"
-#include "SSMPcommunication.h"
+#include "SSM2protocol.h"
+#include "SSM2Pcommunication.h"
 #include "libFSSM.h"
 #include "Engine.h"
 #include "Transmission.h"
@@ -58,7 +58,7 @@ private:
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
 	serialCOM *_port;
-	SSMprotocol *_SSMPdev;
+	SSM2protocol *_SSM2Pdev;
 	QLabel *_progtitle_label;
 	QAction *_dump_action;
 	bool _dumping;

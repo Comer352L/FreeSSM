@@ -1,5 +1,5 @@
 /*
- * SSMprotocol_ID.h - Identification of vehicle and control unit details
+ * SSM2protocol_def_en.h - SSM2-protocol-definitions
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,25 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSMPROTOCOL_ID_H
-#define SSMPROTOCOL_ID_H
+
+#ifndef SSM2PROTOCOL_DEF_EN_H
+#define SSM2PROTOCOL_DEF_EN_H
 
 
-#include <QObject>
 #include <QStringList>
 
 
-class SSMprotocol_ID
+class SSM2protocol_def_en
 {
 
 private:
-	QStringList _engine_sysDefs;
-	QStringList _transmission_sysDefs;
+	QStringList _MB_defs_en;
+	QStringList _SW_defs_en;
+	QStringList _DTC_SUBARU_defs_en;
+	QStringList _DTC_OBD_defs_en;
+	QStringList _CC_defs_en;
+	QStringList _actuator_defs_en;
+	QStringList _adjustment_defs_en;
 
 public:
-	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
-	SSMprotocol_ID();
-	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription);
+	SSM2protocol_def_en();
+	const QStringList MBrawDefs();
+	const QStringList SWrawDefs();
+	const QStringList SUBDTCrawDefs();
+	const QStringList OBDDTCrawDefs();
+	const QStringList CCCCrawDefs();
+	const QStringList ActuatorRawDefs();
+	const QStringList AdjustmentRawDefs();
 
 };
 

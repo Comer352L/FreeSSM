@@ -30,7 +30,7 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
-#include "SSMPcommunication.h"
+#include "SSM2Pcommunication.h"
 #include "FSSMdialogs.h"
 #include "ui_Preferences.h"
 

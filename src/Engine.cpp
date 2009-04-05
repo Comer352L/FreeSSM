@@ -20,10 +20,10 @@
 #include "Engine.h"
 
 
-Engine::Engine(SSMprotocol *ssmpdev, QString progversion)
+Engine::Engine(SSM2protocol *ssm2pdev, QString progversion)
 {
 	// *** Initialize global variables:
-	_SSMPdev = ssmpdev;
+	_SSM2Pdev = ssm2pdev;
 	_progversion = progversion;
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
@@ -45,7 +45,7 @@ Engine::Engine(SSMprotocol *ssmpdev, QString progversion)
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DCs_pushButton->setChecked(true);
-	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSM2Pdev, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -58,7 +58,7 @@ Engine::Engine(SSMprotocol *ssmpdev, QString progversion)
 
 Engine::~Engine()
 {
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	disconnect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	disconnect( DCs_pushButton, SIGNAL( released() ), this, SLOT( DCs() ) );
 	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
 	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
@@ -91,15 +91,15 @@ void Engine::setup()
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( _SSMPdev->setupCUdata() )
+	if( _SSM2Pdev->setupCUdata() )
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing ECU data... Please wait !"));
 		initstatusmsgbox.setValue(40);
 		// Query system description:
-		if (!_SSMPdev->getSystemDescription(&sysdescription))
+		if (!_SSM2Pdev->getSystemDescription(&sysdescription))
 		{
-			std::string SYS_ID = _SSMPdev->getSysID();
+			std::string SYS_ID = _SSM2Pdev->getSysID();
 			if (!SYS_ID.length())
 				goto commError;
 			sysdescription = tr("unknown (") + QString::fromStdString(SYS_ID) + ")";
@@ -107,34 +107,34 @@ void Engine::setup()
 		// Output system description:
 		enginetype_label->setText(sysdescription);
 		// Query ROM-ID:
-		ROM_ID = _SSMPdev->getROMID();
+		ROM_ID = _SSM2Pdev->getROMID();
 		if (!ROM_ID.length())
 			goto commError;
 		// Output ROM-ID:
 		romID_label->setText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&supportedMBsSWs))
+		if (!_SSM2Pdev->getSupportedMBs(&supportedMBsSWs))
 			goto commError;
 		nrofdatambs_label->setText( QString::number(supportedMBsSWs.size(), 10) );
-		if (!_SSMPdev->getSupportedSWs(&supportedMBsSWs))
+		if (!_SSM2Pdev->getSupportedSWs(&supportedMBsSWs))
 			goto commError;
 		nrofswitches_label->setText( QString::number(supportedMBsSWs.size(), 10) );
 		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2system(&supported))
+		if (!_SSM2Pdev->hasOBD2system(&supported))
 			goto commError;
 		if (supported)
 			obd2system_label->setPixmap(sup_pixmap);
 		else
 			obd2system_label->setPixmap(nsup_pixmap);
 		// Integrated Cruise Control:
-		if (!_SSMPdev->hasIntegratedCC(&supported))
+		if (!_SSM2Pdev->hasIntegratedCC(&supported))
 			goto commError;
 		if (supported)
 			ccintegrated_label->setPixmap(sup_pixmap);
 		else
 			ccintegrated_label->setPixmap(nsup_pixmap);
 		// Immobilizer:
-		if (!_SSMPdev->hasImmobilizer(&supported))
+		if (!_SSM2Pdev->hasImmobilizer(&supported))
 			goto commError;
 		if (supported)
 			immobilizer_label->setPixmap(sup_pixmap);
@@ -144,11 +144,11 @@ void Engine::setup()
 		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
 		initstatusmsgbox.setValue(55);
 		// Query and output VIN, if supported:
-		if (!_SSMPdev->hasVINsupport(&supported))
+		if (!_SSM2Pdev->hasVINsupport(&supported))
 			goto commError;
 		if (supported)
 		{
-			if (!_SSMPdev->getVIN(&VIN))
+			if (!_SSM2Pdev->getVIN(&VIN))
 				goto commError;
 			if (VIN.size() == 0)
 			{
@@ -171,7 +171,7 @@ void Engine::setup()
 		VINlabel_palette.setColor(QPalette::Inactive, QPalette::WindowText, VINcolor);
 		VIN_label->setPalette(VINlabel_palette);
 		// Check if we need to stop the automatic actuator test:
-		if (!_SSMPdev->hasActuatorTests(&supported))
+		if (!_SSM2Pdev->hasActuatorTests(&supported))
 			goto commError;
 		if (supported)
 		{
@@ -179,12 +179,12 @@ void Engine::setup()
 			initstatusmsgbox.setLabelText(tr("Checking system status... Please wait !"));
 			initstatusmsgbox.setValue(70);
 			// Query test mode connector status:
-			if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
+			if (!_SSM2Pdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
 				goto commError;
 			if (testmode)	// wenn ECU im Testmodus
 			{
 				// Check that engine is not running:
-				if (!_SSMPdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
+				if (!_SSM2Pdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
 					goto commError;
 				if (!enginerunning)
 				{
@@ -192,7 +192,7 @@ void Engine::setup()
 					initstatusmsgbox.setLabelText(tr("Stopping actuators... Please wait !"));
 					initstatusmsgbox.setValue(85);
 					// Stop all actuator tests:
-					if (!_SSMPdev->stopAllActuators())
+					if (!_SSM2Pdev->stopAllActuators())
 						goto commError;
 				}
 			}
@@ -208,13 +208,13 @@ void Engine::setup()
 	connect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+	connect( _SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
 	if (!_content_DCs->setup())
 		goto commError;
-	if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
+	if (!_SSM2Pdev->getSupportedDCgroups(&supDCgroups))
 		goto commError;
-	if (supDCgroups != SSMprotocol::noDCs_DCgroup)
+	if (supDCgroups != SSM2protocol::noDCs_DCgroup)
 	{
 		if (!_content_DCs->startDCreading())
 			goto commError;
@@ -250,14 +250,14 @@ void Engine::DCs()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSM2Pdev, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup();
 	// Start DC-reading:
 	if (ok)
-		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
-		if (ok && DCgroups != SSMprotocol::noDCs_DCgroup)
+		ok = _SSM2Pdev->getSupportedDCgroups(&DCgroups);
+		if (ok && DCgroups != SSM2protocol::noDCs_DCgroup)
 			ok = _content_DCs->startDCreading();
 	// Get notification, if internal error occures:
 	if (ok)
@@ -285,7 +285,7 @@ void Engine::measuringblocks()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMPdev, _MBSWtimemode);
+	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSM2Pdev, _MBSWtimemode);
 	content_gridLayout->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
 	ok = _content_MBsSWs->setup();
@@ -317,7 +317,7 @@ void Engine::adjustments()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSMPdev);
+	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSM2Pdev);
 	content_gridLayout->addWidget(_content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup();
@@ -346,7 +346,7 @@ void Engine::systemoperationtests()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("System Operation Tests:"));
 	// Create, setup and insert content-widget:
-	_content_SysTests = new CUcontent_sysTests(content_groupBox, _SSMPdev);
+	_content_SysTests = new CUcontent_sysTests(content_groupBox, _SSM2Pdev);
 	content_gridLayout->addWidget(_content_SysTests);
 	_content_SysTests->show();
 	ok = _content_SysTests->setup();
@@ -367,13 +367,13 @@ void Engine::clearMemory()
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
 	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
+	ClearMemoryDlg cmdlg(this, _SSM2Pdev, SSM2protocol::CMlevel_1);
 	// Temporary disconnect from "communication error"-signal:
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	disconnect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Run "Clear Memory"-procedure:
 	result = cmdlg.run();
 	// Reconnect to "communication error"-signal:
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	connect(_SSM2Pdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
 	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
 	{
@@ -452,10 +452,10 @@ void Engine::closeEvent(QCloseEvent *event)
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !   "));
 	waitmsgbox.show();
 	// Stop all permanent communication operations:
-	_SSMPdev->stopAllPermanentOperations();
+	_SSM2Pdev->stopAllPermanentOperations();
 	// Reset CU data:
-	_SSMPdev->resetCUdata();
-	// NOTE: we got _SSMPdev already initialized, so we do NOT delete it here !
+	_SSM2Pdev->resetCUdata();
+	// NOTE: we got _SSM2Pdev already initialized, so we do NOT delete it here !
 	event->accept();
 	// Close wait message box:
 	waitmsgbox.close();

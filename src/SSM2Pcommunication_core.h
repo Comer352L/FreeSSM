@@ -1,5 +1,5 @@
 /*
- * SSMPcommunication_core.h - Core functions (services) of the new SSM-protocol
+ * SSM2Pcommunication_core.h - Core functions (services) of the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSMPCORE_H
-#define SSMPCORE_H
+#ifndef SSM2PCORE_H
+#define SSM2PCORE_H
 
 
 #ifdef __WIN32__
@@ -37,20 +37,20 @@
 
 
 
-class SSMPcommunication_core
+class SSM2Pcommunication_core
 {
 
 public:
-	SSMPcommunication_core(serialCOM *port);
+	SSM2Pcommunication_core(serialCOM *port);
 
-	bool ReadDataBlock(char ecuadr, char padadr, unsigned int dataadr, unsigned char nrofbytes, char *data);
-	bool ReadMultipleDatabytes(char ecuadr, char padadr, unsigned int dataadr[256], unsigned char datalen, char *data);
-	bool WriteDataBlock(char ecuadr, unsigned int dataadr, char *data, unsigned char datalen, char *datawritten = NULL);
-	bool WriteDatabyte(char ecuadr, unsigned int dataadr, char databyte, char *databytewritten = NULL);
-	bool GetCUdata(char ecuadr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
+	bool ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data);
+	bool ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data);
+	bool WriteDataBlock(char ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten = NULL);
+	bool WriteDatabyte(char ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten = NULL);
+	bool GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 
 private:
-	bool SndRcvMessage(char ecuadr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
+	bool SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	char calcchecksum(char *message, unsigned int nrofbytes);
 	void charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);

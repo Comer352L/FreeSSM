@@ -24,7 +24,7 @@
 
 #include <QtGui>
 #include "ui_Transmission.h"
-#include "SSMprotocol.h"
+#include "SSM2protocol.h"
 #include "FSSMdialogs.h"
 #include "CUcontent_DCs_transmission.h"
 #include "CUcontent_MBsSWs.h"
@@ -38,13 +38,13 @@ class Transmission : public QMainWindow, private Ui::Transmission_Window
 	Q_OBJECT
 
 public:
-	Transmission(SSMprotocol *ssmpdev, QString progversion = "");
+	Transmission(SSM2protocol *ssm2pdev, QString progversion = "");
 	~Transmission();
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
 
-	SSMprotocol *_SSMPdev;
+	SSM2protocol *_SSM2Pdev;
 	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
@@ -57,7 +57,7 @@ private:
 	mode_dt _mode;
 
 	void setup();
-	void runClearMemory(SSMprotocol::CMlevel_dt level);
+	void runClearMemory(SSM2protocol::CMlevel_dt level);
 	void setupUiFonts();
 	void clearContent();
 	void closeEvent(QCloseEvent *event);

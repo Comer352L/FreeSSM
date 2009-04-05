@@ -192,10 +192,10 @@ void QIdPushButton::emitReleased()
 
 
 
-CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPdev) : QWidget(parent)
+CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSM2protocol *SSM2Pdev) : QWidget(parent)
 {
 	QHeaderView *headerview;
-	_SSMPdev = SSMPdev;
+	_SSM2Pdev = SSM2Pdev;
 	_maxrowsvisible = 0; // We don't need to calculate a value here, because we always get a resizeEvent before setting the table content
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
@@ -232,7 +232,7 @@ bool CUcontent_Adjustments::setup()
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
 	// Get supported adjustments:
-	ok = _SSMPdev->getSupportedAdjustments(&_supportedAdjustments);
+	ok = _SSM2Pdev->getSupportedAdjustments(&_supportedAdjustments);
 	if (ok && !_supportedAdjustments.empty())
 	{
 		// Determine the needed selection widget type for new values:
@@ -240,7 +240,7 @@ bool CUcontent_Adjustments::setup()
 		// Setup adjustments table (without current values):
 		setupAdjustmentsTable();
 		// Query current adjustment values from CU:
-		ok = _SSMPdev->getAllAdjustmentValues(&rawValues);
+		ok = _SSM2Pdev->getAllAdjustmentValues(&rawValues);
 		if (ok)
 		{
 			// Scale raw values:
@@ -548,10 +548,10 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 		return;
 	}
 	// Save new ajustment value to control unit:
-	ok = _SSMPdev->setAdjustmentValue(index, newvalue_raw);
+	ok = _SSM2Pdev->setAdjustmentValue(index, newvalue_raw);
 	// To be sure: read and verify value again
 	if (ok)
-		ok = _SSMPdev->getAdjustmentValue(index, &controlValue_raw);
+		ok = _SSM2Pdev->getAdjustmentValue(index, &controlValue_raw);
 	if (!ok)
 	{
 		communicationError(tr("No or invalid answer from Control Unit."));
@@ -599,7 +599,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	// Reset all adjustment values:
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
-		if (!_SSMPdev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
+		if (!_SSM2Pdev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
 		{
 			communicationError(tr("No or invalid answer from Control Unit."));
 			return;
