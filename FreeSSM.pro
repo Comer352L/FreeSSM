@@ -22,6 +22,7 @@ HEADERS += src/FreeSSM.h \
            src/SSM2Pcommunication_core.h \
            src/SSM2protocol.h \
            src/AddMBsSWsDlg.h \
+           src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
            src/CUcontent_DCs_transmission.h \
            src/CUcontent_MBsSWs.h \
@@ -45,6 +46,7 @@ SOURCES += src/main.cpp \
            src/SSM2Pcommunication_core.cpp \
            src/SSM2protocol.cpp \
            src/AddMBsSWsDlg.cpp \
+           src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
            src/CUcontent_DCs_transmission.cpp \
            src/CUcontent_MBsSWs.cpp \

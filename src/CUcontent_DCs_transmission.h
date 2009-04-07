@@ -21,15 +21,14 @@
 #define CUCONTENT_DCS_TRANSMISSION_H
 
 
-
 #include <QtGui>
 #include <string>
+#include "CUcontent_DCs_abstract.h"
 #include "ui_CUcontent_DCs_transmission.h"
 #include "SSM2protocol.h"
 
 
-
-class CUcontent_DCs_transmission : public QWidget, private Ui::transmissionDCcontent_Form
+class CUcontent_DCs_transmission : public CUcontent_DCs_abstract, private Ui::transmissionDCcontent_Form
 {
 	Q_OBJECT
 
@@ -37,38 +36,25 @@ public:
 	CUcontent_DCs_transmission(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion);
 	~CUcontent_DCs_transmission();
 	bool setup();
-	bool startDCreading();
-	bool stopDCreading();
 
 private:
-	SSM2protocol *_SSM2Pdev;
-	QString _progversion;
-	int _supportedDCgroups;
 	QStringList _currOrTempDTCs;
 	QStringList _currOrTempDTCdescriptions;
 	QStringList _histOrMemDTCs;
 	QStringList _histOrMemDTCdescriptions;
 
 	void setupUiFonts();
-	void setDCtableContent(QTableWidget *tableWidget, QStringList DCs, QStringList DCdescriptions);
-	void setNrOfTableRows(QTableWidget *tablewidget, unsigned int nrofUsedRows);
-	void insertDCtable(QTextCursor cursor, QString title, QStringList codes, QStringList descriptions);
+	void connectGUIelements();
+	void disconnectGUIelements();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
-	void communicationError(QString errstr);
+	void createDCprintTables(QTextCursor cursor);
 
 private slots:
-	void callStart();
-	void callStop();
 	void updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions);
 	void updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions);
-	void printDCprotocol();
-
-signals:
-	void error();
 
 };
-
 
 
 #endif

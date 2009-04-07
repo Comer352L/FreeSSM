@@ -20,11 +20,8 @@
 #include "CUcontent_DCs_engine.h"
 
 
-CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion) : QWidget(parent)
+CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion) : CUcontent_DCs_abstract(parent, SSM2Pdev, progversion)
 {
-	_SSM2Pdev = SSM2Pdev;
-	_progversion = progversion;
-	_supportedDCgroups = 0;
 	_obd2DTCformat = true;
 	_testMode = false;
 	_DCheckActive = false;
@@ -84,14 +81,8 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSM2protocol *SSM2Pd
 
 CUcontent_DCs_engine::~CUcontent_DCs_engine()
 {
-	stopDCreading();
-	disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
-	disconnect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
-	disconnect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSM2Pdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
-	disconnect(_SSM2Pdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
+	disconnectGUIelements();
 }
 
 
@@ -188,55 +179,8 @@ bool CUcontent_DCs_engine::setup()
 }
 
 
-void CUcontent_DCs_engine::callStart()
+void CUcontent_DCs_engine::connectGUIelements()
 {
-	if (!startDCreading())
-		communicationError(tr("Couldn't start Diagnostic Codes Reading."));
-}
-
-
-void CUcontent_DCs_engine::callStop()
-{
-	if (!stopDCreading())
-		communicationError(tr("Couldn't stop Diagnostic Codes Reading."));
-}
-
-
-bool CUcontent_DCs_engine::startDCreading()
-{
-	SSM2protocol::state_dt state = SSM2protocol::state_needSetup;
-	int selDCgroups = 0;
-	// Check if DC-group(s) selected:
-	if (_supportedDCgroups == SSM2protocol::noDCs_DCgroup)
-		return false;
-	// Check if DC-reading is startable or already in progress:
-	state = _SSM2Pdev->state();
-	if (state == SSM2protocol::state_normal)
-	{
-		disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-		// Start DC-reading:
-		if (!_SSM2Pdev->startDCreading( _supportedDCgroups ))
-		{
-			connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-			return false;
-		}
-	}
-	else if (state == SSM2protocol::state_DCreading)
-	{
-		// Verify consistency:
-		if (!_SSM2Pdev->getLastDCgroupsSelection(&selDCgroups))
-			return false;
-		if (selDCgroups != _supportedDCgroups)  // inconsistency detected !
-		{
-			// Stop DC-reading:
-			stopDCreading();
-			return false;
-		}
-	}
-	else
-		return false;
-	// Enable notification about external DC-reading-stops:
-	connect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup)
 	{
@@ -262,27 +206,15 @@ bool CUcontent_DCs_engine::startDCreading()
 	printDClist_pushButton->setDisabled(true);
 	connect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	return true;
 }
 
 
-bool CUcontent_DCs_engine::stopDCreading()
+void CUcontent_DCs_engine::disconnectGUIelements()
 {
-	disconnect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSM2Pdev->stopDCreading() !
-	if (_SSM2Pdev->state() == SSM2protocol::state_DCreading)
-	{
-		if (!_SSM2Pdev->stopDCreading())
-		{
-			connect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSM2Pdev->stopDCreading() !
-			return false;
-		}
-	}
-	connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	disconnect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSM2Pdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	disconnect(_SSM2Pdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
-	return true;
 }
 
 
@@ -378,28 +310,6 @@ void CUcontent_DCs_engine::updateCCmemorizedCCsContent(QStringList memorizedCCCC
 }
 
 
-void CUcontent_DCs_engine::setDCtableContent(QTableWidget *tableWidget, QStringList DCs, QStringList DCdescriptions)
-{
-	int k = 0;
-	QTableWidgetItem *tableelement;
-	// Delete table content:
-	tableWidget->clearContents();
-	// Set number of rows:
-	setNrOfTableRows(tableWidget, DCdescriptions.size());
-	// Fill Table:
-	for (k=0; k<DCs.size(); k++)
-	{
-		// Output DC:
-		tableelement = new QTableWidgetItem(DCs.at(k));
-		tableelement->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-		tableWidget->setItem(k, 0, tableelement);
-		// Output DC description:
-		tableelement = new QTableWidgetItem(DCdescriptions.at(k));
-		tableWidget->setItem(k, 1, tableelement);
-	}
-}
-
-
 void CUcontent_DCs_engine::setTitleOfFirstDTCtable(bool obd2, bool testMode)
 {
 	QString title;
@@ -416,36 +326,6 @@ void CUcontent_DCs_engine::setTitleOfFirstDTCtable(bool obd2, bool testMode)
 		title = tr("Current Diagnostic Trouble Code(s):");
 	}
 	currOrTempDTCsTitle_label->setText( title );
-}
-
-
-void CUcontent_DCs_engine::setNrOfTableRows(QTableWidget *tablewidget, unsigned int nrofUsedRows)
-{
-	// NOTE: this function doesn't change the table's content ! Min. 1 row !
-	int rowheight = 0;
-	int vspace = 0;
-	QHeaderView *headerview;
-	unsigned int minnrofrows = 0;
-	// Get available vertical space (for rows) and height per row:
-	if (tablewidget->rowCount() < 1)
-		tablewidget->setRowCount(1); // temporary create a row to get the row hight
-	rowheight = tablewidget->rowHeight(0);
-	headerview = tablewidget->horizontalHeader();
-	vspace = tablewidget->viewport()->height();
-	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
-	tablewidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-	// Calculate and set nr. of rows:
-	minnrofrows = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (minnrofrows < nrofUsedRows)
-		minnrofrows = nrofUsedRows;
-	tablewidget->setRowCount(minnrofrows);
-	// Set vertical scroll bar policy:
-	if (minnrofrows > nrofUsedRows)
-		tablewidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-	else
-		tablewidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-	// Switch back to "Scroll per Item"-mode:
-	tablewidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that here...
 }
 
 
@@ -467,13 +347,8 @@ void CUcontent_DCs_engine::setNrOfRowsOfAllTableWidgets()
 }
 
 
-void CUcontent_DCs_engine::printDCprotocol()
+void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 {
-	QString datetime;
-	QString CU;
-	QString systype;
-	std::string ROM_ID;
-	QString VIN;
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	QStringList histOrMemDTCcodes = _histOrMemDTCs;
@@ -482,191 +357,6 @@ void CUcontent_DCs_engine::printDCprotocol()
 	QStringList latestCCCCdescriptions = _latestCCCCdescriptions;
 	QStringList memorizedCCCCcodes = _memorizedCCCCs;
 	QStringList memorizedCCCCdescriptions = _memorizedCCCCdescriptions;
-	bool VINsup = false;
-	bool ok = false;
-	QString errstr = "";
-
-	// Create Printer:
-	QPrinter printer(QPrinter::ScreenResolution);
-	// Show print dialog:
-	QPrintDialog printDialog(&printer, this);
-	if (printDialog.exec() != QDialog::Accepted)
-		return;
-	// Show print status message:
-	QMessageBox printmbox( QMessageBox::NoIcon, tr("Printing..."), "\n" + tr("Printing... Please wait !    "), QMessageBox::NoButton, this);
-	printmbox.setStandardButtons(QMessageBox::NoButton);
-	QPixmap printicon(QString::fromUtf8(":/icons/chrystal/32x32/fileprint"));
-	printmbox.setIconPixmap(printicon);
-	QFont printmboxfont = printmbox.font();
-	printmboxfont.setPixelSize(13);	// 10pts
-	printmboxfont.setBold(true);
-	printmbox.setFont( printmboxfont );
-	printmbox.show();
-	// ##### GATHER CU-INFORMATIONS #####
-	datetime = QDateTime::currentDateTime().toString("dddd, dd. MMMM yyyy, h:mm") + ":";
-	CU = tr("Engine");
-	ok = true;
-	if (!_SSM2Pdev->getSystemDescription(&systype))
-	{
-		std::string SYS_ID = "";
-		SYS_ID = _SSM2Pdev->getSysID();
-		ok = SYS_ID.length();
-		if (ok)
-			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
-		else
-			errstr = tr("Query of the System-ID failed.");
-		/* TODO: IMPROVE: use other functions from libID to determine system type 
-			 => maybe this should be done in SSMprotocol, too		*/
-	}
-	if (ok)
-	{
-		ROM_ID = _SSM2Pdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
-		ok = ROM_ID.length();
-		if (ok)
-		{
-			ok = _SSM2Pdev->hasVINsupport(&VINsup);
-			if (ok)
-			{
-				if ( VINsup )
-				{
-					// Temporary stop DC-reading for VIN-Query:
-					disconnect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-					ok = _SSM2Pdev->stopDCreading();
-					if (ok)
-					{
-						// Query VIN:
-						ok = _SSM2Pdev->getVIN(&VIN);
-						if (ok)
-						{
-							if (VIN.size() == 0)
-								VIN = tr("not programmed yet");
-							// Restart DC-reading:
-							ok = _SSM2Pdev->restartDCreading();
-							if (ok)
-								connect(_SSM2Pdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-							else
-								errstr = tr("Couldn't restart Diagnostic Codes Reading.");
-						}
-						else
-							errstr = tr("Query of the VIN failed.");
-					}
-					else
-						errstr = tr("Couldn't stop Diagnostic Codes Reading.");
-				}
-				else
-					VIN = tr("not supported by ECU");
-			}
-			else
-				errstr = tr("Couldn't determine if VIN-registration is supported.");
-		}
-		else
-			errstr = tr("Query of the ROM-ID failed.");
-	}
-	// Check for communication error:
-	if (!ok)
-	{
-		printmbox.close();
-		communicationError(errstr);
-		return;
-	}
-	// ##### CREATE TEXT DOCUMENT #####
-	// Create text document and get cursor position:
-	QTextDocument textDocument;
-	QTextCursor cursor(&textDocument);
-	// Define formats:
-	QTextBlockFormat blockFormat;
-	QTextCharFormat charFormat;
-	QTextTableFormat tableFormat;
-	// --- TITLE ---
-	// Set title format:
-	blockFormat.setAlignment(Qt::AlignHCenter);
-	charFormat.setFontPointSize(18);
-	charFormat.setFontWeight(QFont::Normal);
-	charFormat.setFontUnderline(true);
-	// Put title into text document:
-	cursor.setBlockFormat(blockFormat);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText("FreeSSM " + _progversion);
-	cursor.insertBlock();
-	// --- DATE, TIME ---
-	// Format date + time:
-	blockFormat.setAlignment(Qt::AlignLeft);
-	blockFormat.setTopMargin(15);
-	charFormat.setFontPointSize(14);
-	charFormat.setFontWeight(QFont::Normal);
-	charFormat.setFontUnderline(false);
-	cursor.setBlockFormat(blockFormat);
-	cursor.setCharFormat(charFormat);
-	// Put date + time into the text document:
-	cursor.insertText(datetime);
-	// ----- CU-INFORMATIONS -----
-	// -- Create frame for CU-Informations:
-	QTextFrameFormat infoFrame;
-	infoFrame.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-	infoFrame.setBorder(1);
-	infoFrame.setBorderBrush(QBrush(QColor("black"), Qt::SolidPattern));
-	infoFrame.setTopMargin(10);
-	cursor.insertFrame(infoFrame);
-	// -- TABLE OF CU-INFORMATIONS:
-	// Set minimal columns widths:
-	QVector<QTextLength> widthconstraints(2);
-	widthconstraints[0] = QTextLength(QTextLength::PercentageLength, 50);
-	widthconstraints[1] = QTextLength(QTextLength::PercentageLength, 50);
-	// Set format:
-	tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_None);
-	tableFormat.setColumnWidthConstraints(widthconstraints);
-	tableFormat.setLeftMargin(20);
-	// Create and insert table:
-	cursor.insertTable(4, 2, tableFormat);
-	// Set font format:
-	charFormat.setFontPointSize(12);
-	charFormat.setFontUnderline(false);
-	// Fill table cells:
-	// Row 1 - Column 1:
-	charFormat.setFontWeight(QFont::Bold);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(tr("Control Unit:"));
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 1 - Column 2:
-	charFormat.setFontWeight(QFont::Normal);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(CU);
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 2 - Column 1:
-	charFormat.setFontWeight(QFont::Bold);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(tr("System Type:"));
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 2 - Column 2:
-	charFormat.setFontWeight(QFont::Normal);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(systype);
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 3 - Column 1:
-	charFormat.setFontWeight(QFont::Bold);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(tr("ROM-ID:"));
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 3 - Column 2:
-	charFormat.setFontWeight(QFont::Normal);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText( QString::fromStdString(ROM_ID) );
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 4 - Column 1:
-	charFormat.setFontWeight(QFont::Bold);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(tr("Registered VIN:"));
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Row 4 - Column 2:
-	charFormat.setFontWeight(QFont::Normal);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText(VIN);
-	// Move (out of the table) to the next block:
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-	// Move (out of the frame) to the next block:
-	cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-
-	// ##### DTC- and CC-tables #####
 	// Current/Temporary DTCs:
 	if ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup))
 	{
@@ -676,7 +366,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 			currOrTempDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		// Insert table with current/temporary DTCs into text document:
-		insertDCtable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
+		insertDCprintTable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
 	if ((_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup))
@@ -687,7 +377,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 			histOrMemDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		// Insert table with historic/memorized DTCs into text document:
-		insertDCtable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
+		insertDCprintTable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
 	// Latest Cancel Codes:
 	if (_supportedDCgroups & SSM2protocol::CClatestCCs_DCgroup)
@@ -698,7 +388,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 			latestCCCCdescriptions << tr("----- No Cancel Codes -----");
 		}
 		// Insert table with latest CCs into text document:
-		insertDCtable(cursor, latestCCCCsTitle_label->text(), latestCCCCcodes, latestCCCCdescriptions);
+		insertDCprintTable(cursor, latestCCCCsTitle_label->text(), latestCCCCcodes, latestCCCCdescriptions);
 	}
 	// Memorized Cancel Codes:
 	if (_supportedDCgroups & SSM2protocol::CCmemorizedCCs_DCgroup)
@@ -709,56 +399,7 @@ void CUcontent_DCs_engine::printDCprotocol()
 			memorizedCCCCdescriptions << tr("----- No Cancel Codes -----");
 		}
 		// Insert table with memorized CCs into text document:
-		insertDCtable(cursor, memorizedCCCCsTitle_label->text(), memorizedCCCCcodes, memorizedCCCCdescriptions);
-	}
-	// Print created text-document:
-	textDocument.print(&printer);
-	// Delete status message:
-	printmbox.close();
-}
-
-
-void CUcontent_DCs_engine::insertDCtable(QTextCursor cursor, QString title, QStringList codes, QStringList descriptions)
-{
-	QTextTableFormat tableFormat;
-	QTextCharFormat charFormat;
-	QVector<QTextLength> widthconstraints(2);
-	int k = 0;
-
-	// Insert space line:
-	cursor.insertBlock();
-	// Set minimal column widths:
-	widthconstraints.clear();
-	widthconstraints.resize(2);
-	widthconstraints[0] = QTextLength(QTextLength::PercentageLength,15);
-	widthconstraints[1] = QTextLength(QTextLength::PercentageLength,85);
-	// Set table format:
-	tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_None);
-	tableFormat.setColumnWidthConstraints(widthconstraints);
-	tableFormat.setLeftMargin(30);
-	// Set title:
-	charFormat.setFontPointSize(14);
-	charFormat.setFontWeight(QFont::Bold);
-	charFormat.setFontUnderline(false);
-	cursor.setCharFormat(charFormat);
-	cursor.insertText( title );
-	// Create and insert table:
-	cursor.insertTable(codes.size(), 2, tableFormat); // n rows, 2 columns
-	// Set font format for DCs:
-	charFormat.setFontPointSize(12);
-	charFormat.setFontWeight(QFont::Normal);
-	charFormat.setFontUnderline(false);
-	// Fill table cells:
-	for (k=0; k<codes.size(); k++)
-	{
-		//   Column 1: Code
-		cursor.setCharFormat(charFormat);
-		cursor.insertText( codes.at(k) );
-		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
-		//   Column 2: Description
-		cursor.setCharFormat(charFormat);
-		cursor.insertText( descriptions.at(k) );
-		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
+		insertDCprintTable(cursor, memorizedCCCCsTitle_label->text(), memorizedCCCCcodes, memorizedCCCCdescriptions);
 	}
 }
 
@@ -829,19 +470,6 @@ void CUcontent_DCs_engine::show()
 }
 
 
-void CUcontent_DCs_engine::communicationError(QString errstr)
-{
-	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:") + ('\n') + errstr, QMessageBox::Ok, this);
-	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
-	msg.setFont( msgfont );
-	msg.show();
-	msg.exec();
-	msg.close();
-	emit error();
-}
-
-
 void CUcontent_DCs_engine::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
@@ -875,4 +503,5 @@ void CUcontent_DCs_engine::setupUiFonts()
 	// Print-button:
 	printDClist_pushButton->setFont(contentfont);
 }
+
 
