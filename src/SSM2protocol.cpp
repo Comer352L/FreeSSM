@@ -1690,23 +1690,21 @@ void SSM2protocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW
 	// RESET LISTS OF PROCESSED DATA:
 	valueStrList->clear();
 	unitStrList->clear();
-	for (k=0; k<_MBSWmetaList.size(); k++)
-	{
-		valueStrList->append("");
-		unitStrList->append("");
-	}
 	// SCALE ALL MBs AND SWs:
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
 		if (_MBSWmetaList.at(k).blockType == 0)
 		{
 			if (libFSSM::raw2scaled( mbswrawvalues[k], _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
-				valueStrList->replace(k, scaledValueStr);
+			{
+				valueStrList->append(scaledValueStr);
+				unitStrList->append(_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
+			}
 			else
 			{
 				// USE RAW VALUE:
-				valueStrList->replace(k, QString::number(mbswrawvalues[k], 10));
-				unitStrList->replace(k, "[RAW]");
+				valueStrList->append(QString::number(mbswrawvalues[k], 10));
+				unitStrList->append("[RAW]");
 			}
 		}
 		else
@@ -1714,12 +1712,13 @@ void SSM2protocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW
 			// GET UNIT OF THE SWITCH:
 			if (mbswrawvalues[k] == 0)
 			{
-				valueStrList->replace(k, _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
+				valueStrList->append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
 			}
 			else if (mbswrawvalues[k] == 1)
 			{
-				valueStrList->replace(k, _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
+				valueStrList->append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
 			}
+			unitStrList->append("");
 		}
 	}
 }
