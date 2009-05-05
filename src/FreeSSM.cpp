@@ -400,7 +400,7 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 
 void FreeSSM::dumpCUdata()
 {
-	QFile dumpfile(QDir::homePath() + "/dump.dat");
+	QFile dumpfile;
 	char SYS_ID[3] = {0};
 	char ROM_ID[5] = {0};
 	char flagbytes[96] = {0};
@@ -412,8 +412,23 @@ void FreeSSM::dumpCUdata()
 
 	if (_dumping) return;
 	_dumping = true;
-	_port = new serialCOM;
+	// Set filename:
+	QString filename(QDir::homePath() + "/dump");
+	if (QFile::exists(filename + ".dat"))
+	{
+		for (unsigned int f=2; f<65535; f++)
+		{
+			if (!QFile::exists(filename + QString::number(f) + ".dat"))
+			{
+				filename.append(QString::number(f));
+				break;
+			}
+		}
+	}
+	filename.append(".dat");
+	dumpfile.setFileName(filename);
 	// Initialize serial port:
+	_port = new serialCOM;
 	if (!initPort(4800, _port))
 	{
 		delete _port;	// port will be closed in destructor of serialCOM
