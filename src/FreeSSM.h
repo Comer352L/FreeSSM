@@ -22,7 +22,7 @@
 
 
 
-#define FSSM_VERSION "v1.1.0"
+#define FSSM_VERSION "v1.1.1"
 
 
 
