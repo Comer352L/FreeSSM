@@ -8,19 +8,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
+    <width>571</width>
     <height>525</height>
    </rect>
   </property>
   <property name="minimumSize" >
    <size>
-    <width>559</width>
+    <width>571</width>
     <height>525</height>
    </size>
   </property>
   <property name="maximumSize" >
    <size>
-    <width>559</width>
+    <width>571</width>
     <height>525</height>
    </size>
   </property>
@@ -37,7 +37,7 @@
     <rect>
      <x>20</x>
      <y>7</y>
-     <width>350</width>
+     <width>400</width>
      <height>34</height>
     </rect>
    </property>
@@ -55,7 +55,7 @@
   <widget class="QPushButton" name="close_pushButton" >
    <property name="geometry" >
     <rect>
-     <x>210</x>
+     <x>216</x>
      <y>482</y>
      <width>141</width>
      <height>31</height>
@@ -75,7 +75,7 @@
     <rect>
      <x>30</x>
      <y>80</y>
-     <width>501</width>
+     <width>513</width>
      <height>374</height>
     </rect>
    </property>
@@ -103,7 +103,7 @@
     <widget class="QLabel" name="aboutcontent_label" >
      <property name="geometry" >
       <rect>
-       <x>10</x>
+       <x>14</x>
        <y>12</y>
        <width>477</width>
        <height>324</height>
@@ -185,7 +185,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>195</x>
        <y>64</y>
-       <width>281</width>
+       <width>291</width>
        <height>18</height>
       </rect>
      </property>
@@ -203,7 +203,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>288</x>
        <y>96</y>
-       <width>191</width>
+       <width>201</width>
        <height>18</height>
       </rect>
      </property>
@@ -257,7 +257,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>250</x>
        <y>192</y>
-       <width>231</width>
+       <width>241</width>
        <height>18</height>
       </rect>
      </property>
@@ -275,7 +275,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>250</x>
        <y>160</y>
-       <width>231</width>
+       <width>241</width>
        <height>18</height>
       </rect>
      </property>
@@ -395,7 +395,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>288</x>
        <y>128</y>
-       <width>191</width>
+       <width>201</width>
        <height>18</height>
       </rect>
      </property>
@@ -452,7 +452,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>20</x>
        <y>315</y>
-       <width>421</width>
+       <width>471</width>
        <height>20</height>
       </rect>
      </property>
@@ -492,7 +492,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>195</x>
        <y>224</y>
-       <width>281</width>
+       <width>291</width>
        <height>18</height>
       </rect>
      </property>
@@ -531,7 +531,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>195</x>
        <y>256</y>
-       <width>281</width>
+       <width>291</width>
        <height>18</height>
       </rect>
      </property>
@@ -554,7 +554,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>15</y>
-       <width>471</width>
+       <width>483</width>
        <height>20</height>
       </rect>
      </property>
@@ -574,7 +574,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>35</x>
        <y>40</y>
-       <width>421</width>
+       <width>431</width>
        <height>20</height>
       </rect>
      </property>
@@ -600,7 +600,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>170</x>
        <y>191</y>
-       <width>311</width>
+       <width>321</width>
        <height>20</height>
       </rect>
      </property>
@@ -626,7 +626,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>222</y>
-       <width>477</width>
+       <width>489</width>
        <height>111</height>
       </rect>
      </property>
@@ -670,7 +670,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>160</y>
-       <width>471</width>
+       <width>487</width>
        <height>16</height>
       </rect>
      </property>
@@ -689,7 +689,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>70</y>
-       <width>485</width>
+       <width>487</width>
        <height>16</height>
       </rect>
      </property>
@@ -708,7 +708,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>100</y>
-       <width>481</width>
+       <width>487</width>
        <height>16</height>
       </rect>
      </property>
@@ -727,7 +727,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>130</y>
-       <width>471</width>
+       <width>487</width>
        <height>16</height>
       </rect>
      </property>
@@ -751,7 +751,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>477</width>
+       <width>489</width>
        <height>324</height>
       </rect>
      </property>
@@ -769,7 +769,7 @@ You should have received a copy of the GNU General Public License along with thi
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>477</width>
+       <width>489</width>
        <height>325</height>
       </rect>
      </property>
@@ -798,7 +798,7 @@ You should have received a copy of the GNU General Public License along with thi
     <rect>
      <x>30</x>
      <y>48</y>
-     <width>491</width>
+     <width>511</width>
      <height>21</height>
     </rect>
    </property>
@@ -824,7 +824,7 @@ You should have received a copy of the GNU General Public License along with thi
     <rect>
      <x>30</x>
      <y>460</y>
-     <width>501</width>
+     <width>513</width>
      <height>16</height>
     </rect>
    </property>
