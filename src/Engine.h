@@ -24,7 +24,7 @@
 
 #include <QtGui>
 #include "ui_Engine.h"
-#include "SSM2protocol.h"
+#include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
 #include "CUcontent_DCs_engine.h"
 #include "CUcontent_MBsSWs.h"
@@ -39,13 +39,13 @@ class Engine : public QMainWindow, private Ui::Engine_Window
 	Q_OBJECT
 
 public:
-	Engine(SSM2protocol *ssm2pdev, QString progversion = "");
+	Engine(SSMprotocol2 *ssmp2dev, QString progversion = "");
 	~Engine();
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
 
-	SSM2protocol *_SSM2Pdev;
+	SSMprotocol2 *_SSMP2dev;
 	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;

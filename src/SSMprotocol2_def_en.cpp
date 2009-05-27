@@ -1,5 +1,5 @@
 /*
- * SSM2protocol_def_en.cpp - SSM2-protocol-definitions
+ * SSMprotocol2_def_en.cpp - SSM2-protocol-definitions
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSM2protocol_def_en.h"
+#include "SSMprotocol2_def_en.h"
 
 
-SSM2protocol_def_en::SSM2protocol_def_en()
+SSMprotocol2_def_en::SSMprotocol2_def_en()
 {
 
 	// Measuring Blocks (data):
@@ -1075,43 +1075,43 @@ SSM2protocol_def_en::SSM2protocol_def_en()
 }
 
 
-const QStringList SSM2protocol_def_en::MBrawDefs()
+const QStringList SSMprotocol2_def_en::MBrawDefs()
 {
 	return _MB_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::SWrawDefs()
+const QStringList SSMprotocol2_def_en::SWrawDefs()
 {
 	return _SW_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::SUBDTCrawDefs()
+const QStringList SSMprotocol2_def_en::SUBDTCrawDefs()
 {
 	return _DTC_SUBARU_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::OBDDTCrawDefs()
+const QStringList SSMprotocol2_def_en::OBDDTCrawDefs()
 {
 	return _DTC_OBD_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::CCCCrawDefs()
+const QStringList SSMprotocol2_def_en::CCCCrawDefs()
 {
 	return _CC_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::ActuatorRawDefs()
+const QStringList SSMprotocol2_def_en::ActuatorRawDefs()
 {
 	return _actuator_defs_en;
 }
 
 
-const QStringList SSM2protocol_def_en::AdjustmentRawDefs()
+const QStringList SSMprotocol2_def_en::AdjustmentRawDefs()
 {
 	return _adjustment_defs_en;
 }

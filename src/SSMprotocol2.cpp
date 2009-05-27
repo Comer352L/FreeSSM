@@ -1,5 +1,5 @@
 /*
- * SSM2protocol.cpp - Application Layer for the new Subaru SSM protocol
+ * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,61 +17,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSM2protocol.h"
+#include "SSMprotocol2.h"
 
 
 
-
-SSM2protocol::SSM2protocol(serialCOM *port, CUtype_dt CU, QString language)
+SSMprotocol2::SSMprotocol2(serialCOM *port, CUtype_dt CU, QString language)
 {
 	_port = port;
 	_CU = CU;
 	_language = language;
-	_SSM2Pcom = NULL;
+	_SSMP2com = NULL;
 	_state = state_needSetup;
 	resetCUdata();
 }
 
 
-SSM2protocol::~SSM2protocol()
+SSMprotocol2::~SSMprotocol2()
 {
 	resetCUdata();
 }
 
 
-SSM2protocol::CUtype_dt SSM2protocol::CUtype()
+SSMprotocol2::CUtype_dt SSMprotocol2::CUtype()
 {
 	return _CU;
 }
 
 
-SSM2protocol::state_dt SSM2protocol::state()
+SSMprotocol2::state_dt SSMprotocol2::state()
 {
 	return _state;
 }
 
 
-void SSM2protocol::resetCUdata()
+void SSMprotocol2::resetCUdata()
 {
 	unsigned int k = 0;
 	bool ok = false;
 	unsigned int dataadr = 0x61;
 	char currentdatabyte = '\x0';
 	// RESET COMMUNICATION:
-	if (_SSM2Pcom != NULL)
+	if (_SSMP2com != NULL)
 	{
 		// Disconnect communication error and data signals:
-		disconnect( _SSM2Pcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-		disconnect( _SSM2Pcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		disconnect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+		disconnect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+		disconnect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+		disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 			    this, SLOT( processDCsRawdata(QByteArray, int) ) );
-		disconnect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+		disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 			    this, SLOT( processMBSWrawData(QByteArray, int) ) );
 		// Try to stop active communication processes:
-		ok = _SSM2Pcom->stopCommunication();
+		ok = _SSMP2com->stopCommunication();
 		if (ok && (_state == state_ActTesting))
 		{
-			ok = _SSM2Pcom->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte);
+			ok = _SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte);
 			if (ok)
 			{
 				// Check if test mode is active:
@@ -80,7 +79,7 @@ void SSM2protocol::resetCUdata()
 					// Stop all actuator tests:
 					for (k=0; k<_allActByteAddr.size(); k++)
 					{
-						ok =_SSM2Pcom->writeDatabyte(_allActByteAddr.at(k), 0x00);
+						ok =_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00);
 						if (!ok) break;
 					}
 					_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
@@ -91,9 +90,9 @@ void SSM2protocol::resetCUdata()
 		}
 		// NOTE: DO NOT CALL stopCommOperation() or any other communicating functions here because of possible recursions !
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-		delete _SSM2Pcom;
-		_SSM2Pcom = NULL;
-		// Emit stoppedXXX()-signals (_SSM2Pcom has been deletet, so we are sure they have finished):
+		delete _SSMP2com;
+		_SSMP2com = NULL;
+		// Emit stoppedXXX()-signals (_SSMP2com has been deletet, so we are sure they have finished):
 		if (_state == state_MBSWreading)
 		{
 			emit stoppedMBSWreading();
@@ -142,7 +141,7 @@ void SSM2protocol::resetCUdata()
 }
 
 
-bool SSM2protocol::setupCUdata(bool ignoreIgnitionOFF)
+bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
 	bool ATsup = false;
@@ -161,23 +160,23 @@ bool SSM2protocol::setupCUdata(bool ignoreIgnitionOFF)
 	{
 		CUaddress = '\x18';
 	}
-	_SSM2Pcom = new SSM2Pcommunication(_port, CUaddress);
+	_SSMP2com = new SSMP2communication(_port, CUaddress);
 	// Get control unit data:
-	if (!_SSM2Pcom->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		 return false;
 	// Ensure that ignition switch is ON:
 	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
-		if (!_SSM2Pcom->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
 			return false;
 		if (!(data & 0x08)) return false;
 	}
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
-	connect( _SSM2Pcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-	connect( _SSM2Pcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	// Get memory addresses of diagnostic codes:
 	setupDTCaddresses();
 	hasIntegratedCC(&CCsup);
@@ -187,7 +186,7 @@ bool SSM2protocol::setupCUdata(bool ignoreIgnitionOFF)
 	obdDTCs = !(_flagbytes[29] & 0x80);
 	if (_language == "de")
 	{
-		SSM2protocol_def_de rawdefs_de;
+		SSMprotocol2_def_de rawdefs_de;
 		if (obdDTCs)
 			allOBDDTCrawDefs = rawdefs_de.OBDDTCrawDefs();
 		else
@@ -197,7 +196,7 @@ bool SSM2protocol::setupCUdata(bool ignoreIgnitionOFF)
 	}
 	else
 	{
-		SSM2protocol_def_en rawdefs_en;
+		SSMprotocol2_def_en rawdefs_en;
 		if (obdDTCs)
 			allOBDDTCrawDefs = rawdefs_en.OBDDTCrawDefs();
 		else
@@ -229,36 +228,36 @@ bool SSM2protocol::setupCUdata(bool ignoreIgnitionOFF)
 }
 
 
-std::string SSM2protocol::getSysID()
+std::string SSMprotocol2::getSysID()
 {
 	if (_state == state_needSetup) return false;
 	return libFSSM::StrToHexstr(_SYS_ID, 3);
 }
 
 
-std::string SSM2protocol::getROMID()
+std::string SSMprotocol2::getROMID()
 {
 	if (_state == state_needSetup) return false;
 	return libFSSM::StrToHexstr(_ROM_ID, 5);
 }
 
 
-bool SSM2protocol::getSystemDescription(QString *sysdescription)
+bool SSMprotocol2::getSystemDescription(QString *sysdescription)
 {
 	if (_state == state_needSetup) return false;
 	if (_CU == ECU)
 	{
-		return getSysDescriptionBySysID( SSM2protocol_ID::ECU_sysID, _SYS_ID, sysdescription );
+		return getSysDescriptionBySysID( SSMprotocol2_ID::ECU_sysID, _SYS_ID, sysdescription );
 	}
 	else if (_CU == TCU)
 	{
-		return getSysDescriptionBySysID( SSM2protocol_ID::TCU_sysID, _SYS_ID, sysdescription );
+		return getSysDescriptionBySysID( SSMprotocol2_ID::TCU_sysID, _SYS_ID, sysdescription );
 	}
 	return false;
 }
 
 
-bool SSM2protocol::hasOBD2system(bool *OBD2)
+bool SSMprotocol2::hasOBD2system(bool *OBD2)
 {
 	if (_state == state_needSetup) return false;
 	if (!(_flagbytes[29] & 0x80) && !(_flagbytes[28] & 0x02))
@@ -269,7 +268,7 @@ bool SSM2protocol::hasOBD2system(bool *OBD2)
 }
 
 
-bool SSM2protocol::hasVINsupport(bool *VINsup)
+bool SSMprotocol2::hasVINsupport(bool *VINsup)
 {
 	if (_state == state_needSetup) return false;
 	if ((_CU==ECU) && (_nrofflagbytes > 32))
@@ -285,7 +284,7 @@ bool SSM2protocol::hasVINsupport(bool *VINsup)
 }
 
 
-bool SSM2protocol::hasImmobilizer(bool *ImmoSup)
+bool SSMprotocol2::hasImmobilizer(bool *ImmoSup)
 {
 	if (_state == state_needSetup) return false;
 	if (_CU==ECU && (_flagbytes[11] & 0x20))
@@ -302,7 +301,7 @@ bool SSM2protocol::hasImmobilizer(bool *ImmoSup)
 }
 
 
-bool SSM2protocol::hasIntegratedCC(bool *CCsup)
+bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 {
 	if (_state == state_needSetup) return false;
 	if ((_CU==ECU) && (_nrofflagbytes > 32))
@@ -318,7 +317,7 @@ bool SSM2protocol::hasIntegratedCC(bool *CCsup)
 }
 
 
-bool SSM2protocol::hasClearMemory2(bool *CM2sup)
+bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
 	if ((_CU==TCU) && (_nrofflagbytes > 32))
@@ -334,7 +333,7 @@ bool SSM2protocol::hasClearMemory2(bool *CM2sup)
 }
 
 
-bool SSM2protocol::hasTestMode(bool *TMsup)
+bool SSMprotocol2::hasTestMode(bool *TMsup)
 {
 	if (_state == state_needSetup) return false;
 	if ((_CU==ECU) && (_flagbytes[11] & 0x20))
@@ -345,7 +344,7 @@ bool SSM2protocol::hasTestMode(bool *TMsup)
 }
 
 
-bool SSM2protocol::hasActuatorTests(bool *ATsup)
+bool SSMprotocol2::hasActuatorTests(bool *ATsup)
 {
 	bool TMsup = false;
 	if (!hasTestMode(&TMsup))	// includes check of status
@@ -363,7 +362,7 @@ bool SSM2protocol::hasActuatorTests(bool *ATsup)
 }
 
 
-void SSM2protocol::setupDTCaddresses()
+void SSMprotocol2::setupDTCaddresses()
 {
 	_currOrTempDTCsAddr.clear();
 	_histOrMemDTCsAddr.clear();
@@ -455,7 +454,7 @@ void SSM2protocol::setupDTCaddresses()
 }
 
 
-void SSM2protocol::setupCCCCaddresses()
+void SSMprotocol2::setupCCCCaddresses()
 {
 	bool supported = false;
 	_latestCCCCsAddr.clear();
@@ -477,7 +476,7 @@ void SSM2protocol::setupCCCCaddresses()
 }
 
 
-void SSM2protocol::setupSupportedMBs()
+void SSMprotocol2::setupSupportedMBs()
 {
 	QString mbdefline;
 	QString tmpstr;
@@ -494,12 +493,12 @@ void SSM2protocol::setupSupportedMBs()
 	QStringList mbrawdata;
 	if (_language == "de")
 	{
-		SSM2protocol_def_de rawdefs_de;
+		SSMprotocol2_def_de rawdefs_de;
 		mbrawdata = rawdefs_de.MBrawDefs();
 	}
 	else
 	{
-		SSM2protocol_def_en rawdefs_en;
+		SSMprotocol2_def_en rawdefs_en;
 		mbrawdata = rawdefs_en.MBrawDefs();
 	}
 	// Assort list of supported MBs:
@@ -582,7 +581,7 @@ void SSM2protocol::setupSupportedMBs()
 }
 
 
-void SSM2protocol::setupSupportedSWs()
+void SSMprotocol2::setupSupportedSWs()
 {
 	QString swdefline;
 	QString tmpstr;
@@ -598,12 +597,12 @@ void SSM2protocol::setupSupportedSWs()
 	QStringList swrawdata;
 	if (_language == "de")
 	{
-		SSM2protocol_def_de rawdefs_de;
+		SSMprotocol2_def_de rawdefs_de;
 		swrawdata = rawdefs_de.SWrawDefs();
 	}
 	else
 	{
-		SSM2protocol_def_en rawdefs_en;
+		SSMprotocol2_def_en rawdefs_en;
 		swrawdata = rawdefs_en.SWrawDefs();
 	}
 	// Assort list of supported switches:
@@ -667,7 +666,7 @@ void SSM2protocol::setupSupportedSWs()
 }
 
 
-void SSM2protocol::setupAdjustmentsData()
+void SSMprotocol2::setupAdjustmentsData()
 {
 	QString defline = "";
 	QString tmphelpstr = "";
@@ -684,12 +683,12 @@ void SSM2protocol::setupAdjustmentsData()
 	_adjustments.clear();
 	if (_language == "de")
 	{
-		SSM2protocol_def_de rawdefs_de;
+		SSMprotocol2_def_de rawdefs_de;
 		adjustmentsrawdata = rawdefs_de.AdjustmentRawDefs();
 	}
 	else
 	{
-		SSM2protocol_def_en rawdefs_en;
+		SSMprotocol2_def_en rawdefs_en;
 		adjustmentsrawdata = rawdefs_en.AdjustmentRawDefs();
 	}
 	for (k=0; k<adjustmentsrawdata.size(); k++)
@@ -775,7 +774,7 @@ void SSM2protocol::setupAdjustmentsData()
 }
 
 
-void SSM2protocol::setupActuatorTestData()
+void SSMprotocol2::setupActuatorTestData()
 {
 	QString tmpstr = "";
 	unsigned int tmpflagbyte = 0;
@@ -793,12 +792,12 @@ void SSM2protocol::setupActuatorTestData()
 	_allActByteAddr.clear();
 	if (_language == "de")
 	{
-		SSM2protocol_def_de rawdefs_de;
+		SSMprotocol2_def_de rawdefs_de;
 		actuatorsrawdata = rawdefs_de.ActuatorRawDefs();
 	}
 	else
 	{
-		SSM2protocol_def_en rawdefs_en;
+		SSMprotocol2_def_en rawdefs_en;
 		actuatorsrawdata = rawdefs_en.ActuatorRawDefs();
 	}
 	for (k=0; k<actuatorsrawdata.size(); k++)
@@ -866,7 +865,7 @@ void SSM2protocol::setupActuatorTestData()
 }
 
 
-bool SSM2protocol::getSupportedDCgroups(int *DCgroups)
+bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 {
 	int retDCgroups = 0;
 	bool supported = false;
@@ -898,7 +897,7 @@ bool SSM2protocol::getSupportedDCgroups(int *DCgroups)
 }
 
 
-bool SSM2protocol::getLastDCgroupsSelection(int *DCgroups)
+bool SSMprotocol2::getLastDCgroupsSelection(int *DCgroups)
 {
 	if (_state == state_needSetup) return false;
 	if (_selectedDCgroups != noDCs_DCgroup)
@@ -910,7 +909,7 @@ bool SSM2protocol::getLastDCgroupsSelection(int *DCgroups)
 }
 
 
-bool SSM2protocol::getSupportedMBs(std::vector<mbsw_dt> *supportedMBs)
+bool SSMprotocol2::getSupportedMBs(std::vector<mbsw_dt> *supportedMBs)
 {
 	if (_state == state_needSetup) return false;
 	supportedMBs->clear();
@@ -920,7 +919,7 @@ bool SSM2protocol::getSupportedMBs(std::vector<mbsw_dt> *supportedMBs)
 }
 
 
-bool SSM2protocol::getSupportedSWs(std::vector<mbsw_dt> *supportedSWs)
+bool SSMprotocol2::getSupportedSWs(std::vector<mbsw_dt> *supportedSWs)
 {
 	if (_state == state_needSetup) return false;
 	supportedSWs->clear();
@@ -930,7 +929,7 @@ bool SSM2protocol::getSupportedSWs(std::vector<mbsw_dt> *supportedSWs)
 }
 
 
-bool SSM2protocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
+bool SSMprotocol2::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
 {
 	if (_state == state_needSetup) return false;
 	if (!_MBSWmetaList.empty())
@@ -942,7 +941,7 @@ bool SSM2protocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLi
 }
 
 
-bool SSM2protocol::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
+bool SSMprotocol2::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
 	if (_state == state_needSetup) return false;
 	supportedAdjustments->clear();
@@ -952,7 +951,7 @@ bool SSM2protocol::getSupportedAdjustments(std::vector<adjustment_dt> *supported
 }
 
 
-bool SSM2protocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
+bool SSMprotocol2::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 {
 	unsigned char k = 0;
 	bool ATsup = false;
@@ -971,7 +970,7 @@ bool SSM2protocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 }
 
 
-bool SSM2protocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
+bool SSMprotocol2::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 {
 	bool ATsup = false;
 
@@ -987,7 +986,7 @@ bool SSM2protocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex
 }
 
 
-bool SSM2protocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
+bool SSMprotocol2::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
 {
 	unsigned int dataaddr[2] = {0,0};
 	unsigned int datalen = 0;
@@ -1004,7 +1003,7 @@ bool SSM2protocol::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 		datalen++;
 	}
 	// Read data from control unit:
-	if (!_SSM2Pcom->readMultipleDatabytes('\x0', dataaddr, datalen, data))
+	if (!_SSMP2com->readMultipleDatabytes('\x0', dataaddr, datalen, data))
 	{
 		resetCUdata();
 		return false;
@@ -1017,7 +1016,7 @@ bool SSM2protocol::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 }
 
 
-bool SSM2protocol::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
+bool SSMprotocol2::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 {
 	unsigned int dataaddr[2*SSMP_MAX_ADJUSTMENTS] = {0,};
 	unsigned int datalen = 0;
@@ -1037,7 +1036,7 @@ bool SSM2protocol::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 		}
 	}
 	// Read data from control unit:
-	if (!_SSM2Pcom->readMultipleDatabytes('\x0', dataaddr, datalen, data))
+	if (!_SSMP2com->readMultipleDatabytes('\x0', dataaddr, datalen, data))
 	{
 		resetCUdata();
 		return false;
@@ -1058,7 +1057,7 @@ bool SSM2protocol::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 }
 
 
-bool SSM2protocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
+bool SSMprotocol2::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 {
 	char lowdatabyte = 0;
 	char highdatabyte = 0;
@@ -1084,13 +1083,13 @@ bool SSM2protocol::setAdjustmentValue(unsigned char index, unsigned int rawValue
 	// Write value to control unit:
 	if (_adjustments.at(index).AddrHigh > 0)
 	{
-		if (!_SSM2Pcom->writeDatabyte(_adjustments.at(index).AddrHigh, highdatabyte))
+		if (!_SSMP2com->writeDatabyte(_adjustments.at(index).AddrHigh, highdatabyte))
 		{
 			resetCUdata();
 			return false;
 		}
 	}
-	if (!_SSM2Pcom->writeDatabyte(_adjustments.at(index).AddrLow, lowdatabyte))
+	if (!_SSMP2com->writeDatabyte(_adjustments.at(index).AddrLow, lowdatabyte))
 	{
 		resetCUdata();
 		return false;
@@ -1099,7 +1098,7 @@ bool SSM2protocol::setAdjustmentValue(unsigned char index, unsigned int rawValue
 }
 
 
-bool SSM2protocol::getVIN(QString *VIN)
+bool SSMprotocol2::getVIN(QString *VIN)
 {
 	bool VINsup = false;
 	char vin[18] = {0,};
@@ -1115,14 +1114,14 @@ bool SSM2protocol::getVIN(QString *VIN)
 		return false;
 	if (!VINsup) return false;
 	VIN->clear();
-	if (_SSM2Pcom->readMultipleDatabytes(0x0, dataaddr, 3, vinaddrdata))
+	if (_SSMP2com->readMultipleDatabytes(0x0, dataaddr, 3, vinaddrdata))
 	{
 		vinstartaddr = (65536 * static_cast<unsigned char>(vinaddrdata[0]))
 				+ (256 * static_cast<unsigned char>(vinaddrdata[1]))
 				+ (static_cast<unsigned char>(vinaddrdata[2]));
 		for (k=1; k<=17; k++)
 			vinaddr[k-1] = vinstartaddr+k-1;
-		if (_SSM2Pcom->readMultipleDatabytes(0x0, vinaddr, 17, vin))
+		if (_SSMP2com->readMultipleDatabytes(0x0, vinaddr, 17, vin))
 		{
 			if (validateVIN(vin))
 			{
@@ -1138,13 +1137,13 @@ bool SSM2protocol::getVIN(QString *VIN)
 }
 
 
-bool SSM2protocol::isEngineRunning(bool *isrunning)
+bool SSMprotocol2::isEngineRunning(bool *isrunning)
 {
 	unsigned int dataadr = 0x0e;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
 	if (!(_flagbytes[0] & 0x01)) return false;
-	if (!_SSM2Pcom->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
 	{
 		resetCUdata();
 		return false;
@@ -1157,14 +1156,14 @@ bool SSM2protocol::isEngineRunning(bool *isrunning)
 }
 
 
-bool SSM2protocol::isInTestMode(bool *testmode)
+bool SSMprotocol2::isInTestMode(bool *testmode)
 {
 	bool TMsup = false;
 	unsigned int dataadr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
 	if (!hasTestMode(&TMsup) || !TMsup) return false;
-	if (!_SSM2Pcom->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
 	{
 		resetCUdata();
 		return false;
@@ -1177,7 +1176,7 @@ bool SSM2protocol::isInTestMode(bool *testmode)
 }
 
 
-bool SSM2protocol::ClearMemory(CMlevel_dt level, bool *success)
+bool SSMprotocol2::ClearMemory(CMlevel_dt level, bool *success)
 {
 	char val = 0;
 	char bytewritten = 0;
@@ -1197,7 +1196,7 @@ bool SSM2protocol::ClearMemory(CMlevel_dt level, bool *success)
 		return false;
 	}
 	*success = false;
-	if (!_SSM2Pcom->writeDatabyte(0x000060, val, &bytewritten))
+	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
 	{
 		resetCUdata();
 		return false;
@@ -1208,7 +1207,7 @@ bool SSM2protocol::ClearMemory(CMlevel_dt level, bool *success)
 }
 
 
-bool SSM2protocol::TestImmobilizerCommLine(immoTestResult_dt *result)
+bool SSMprotocol2::TestImmobilizerCommLine(immoTestResult_dt *result)
 {
 	bool ImmoSup = false;
 	if (_state != state_normal) return false;
@@ -1216,9 +1215,9 @@ bool SSM2protocol::TestImmobilizerCommLine(immoTestResult_dt *result)
 	char readcheckvalue = 0;
 	unsigned int readcheckadr = 0x8B;
 	// Write test-pattern:
-	_SSM2Pcom->writeDatabyte(0xE0, '\xAA', NULL);
+	_SSMP2com->writeDatabyte(0xE0, '\xAA', NULL);
 	// Read result:
-	if (_SSM2Pcom->readMultipleDatabytes('\x0', &readcheckadr, 1, &readcheckvalue))
+	if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &readcheckvalue))
 	{
 		if (readcheckvalue == '\x01')
 		{
@@ -1240,7 +1239,7 @@ bool SSM2protocol::TestImmobilizerCommLine(immoTestResult_dt *result)
 }
 
 
-bool SSM2protocol::startDCreading(int DCgroups)
+bool SSMprotocol2::startDCreading(int DCgroups)
 {
 	unsigned int DCqueryAddrList[(2*SSMP_MAX_DTCADDR)+(2*SSMP_MAX_CCCCADDR)] = {0};
 	unsigned int DCqueryAddrListLen = 0;
@@ -1311,14 +1310,14 @@ bool SSM2protocol::startDCreading(int DCgroups)
 	if ((DCqueryAddrListLen < 1) || ((DCqueryAddrList[0] == 0x000061) && (DCqueryAddrListLen < 2)))
 		return false;
 	// Start diagostic code reading:
-	started = _SSM2Pcom->readMultipleDatabytes_permanent('\x0', DCqueryAddrList, DCqueryAddrListLen);
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', DCqueryAddrList, DCqueryAddrListLen);
 	if (started)
 	{
 		_state = state_DCreading;
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
-		connect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+		connect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 			this, SLOT( processDCsRawdata(QByteArray, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
@@ -1329,20 +1328,20 @@ bool SSM2protocol::startDCreading(int DCgroups)
 }
 
 
-bool SSM2protocol::restartDCreading()
+bool SSMprotocol2::restartDCreading()
 {
 	return startDCreading(_selectedDCgroups);
 }
 
 
-bool SSM2protocol::stopDCreading()
+bool SSMprotocol2::stopDCreading()
 {
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;
 	if (_state == state_DCreading)
 	{
-		if (_SSM2Pcom->stopCommunication())
+		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+			disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 				    this, SLOT( processDCsRawdata(QByteArray, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
@@ -1355,7 +1354,7 @@ bool SSM2protocol::stopDCreading()
 }
 
 
-void SSM2protocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
+void SSMprotocol2::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 {
 	QStringList DCs;
 	QStringList DCdescriptions;
@@ -1437,7 +1436,7 @@ void SSM2protocol::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 }
 
 
-void SSM2protocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs, QStringList *DC, QStringList *DCdescription)
+void SSMprotocol2::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs, QStringList *DC, QStringList *DCdescription)
 {
 	bool DCsAssigned[8] = {false,};
 	unsigned char setbits[8] = {0,};
@@ -1513,7 +1512,7 @@ void SSM2protocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QS
 }
 
 
-bool SSM2protocol::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
+bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 {
 	bool started = false;
 	if (_state != state_normal) return false;
@@ -1521,14 +1520,14 @@ bool SSM2protocol::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 	if (!setupMBSWQueryAddrList(mbswmetaList))
 		return false;
  	// Start MB/SW-reading:
-	started = _SSM2Pcom->readMultipleDatabytes_permanent('\x0', _selMBsSWaAddr, _selMBsSWsAddrLen);
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', _selMBsSWaAddr, _selMBsSWsAddrLen);
 	if (started)
 	{
 		_state = state_MBSWreading;
 		// Save MB/SW-selection (necessary for evaluation of raw data):
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
-		connect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+		connect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 			this, SLOT( processMBSWrawData(QByteArray, int) ) ); 
 		// Emit signal:
 		emit startedMBSWreading();
@@ -1539,20 +1538,20 @@ bool SSM2protocol::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 }
 
 
-bool SSM2protocol::restartMBSWreading()
+bool SSMprotocol2::restartMBSWreading()
 {
 	return startMBSWreading(_MBSWmetaList);
 }
 
 
-bool SSM2protocol::stopMBSWreading()
+bool SSMprotocol2::stopMBSWreading()
 {
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;
 	if (_state == state_MBSWreading)
 	{
-		if (_SSM2Pcom->stopCommunication())
+		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSM2Pcom, SIGNAL( recievedData(QByteArray, int) ),
+			disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
 				    this, SLOT( processMBSWrawData(QByteArray, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
@@ -1565,7 +1564,7 @@ bool SSM2protocol::stopMBSWreading()
 }
 
 
-bool SSM2protocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList)
+bool SSMprotocol2::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList)
 {
 	// ***** SETUP (BYTE-) ADDRESS LIST FOR QUERYS *****
 	_selMBsSWsAddrLen = 0;
@@ -1631,7 +1630,7 @@ bool SSM2protocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaL
 }
 
 
-void SSM2protocol::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
+void SSMprotocol2::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
 {
 	unsigned int rawValues[SSMP_MAX_MBSW] = {0};
 	QStringList valueStrList;
@@ -1642,7 +1641,7 @@ void SSM2protocol::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
 }
 
 
-void SSM2protocol::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues)
+void SSMprotocol2::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues)
 {
 	// ***** ASSIGN RAW DATA *****:
 	unsigned int k = 0, m = 0;
@@ -1681,7 +1680,7 @@ void SSM2protocol::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawv
 }
 
 
-void SSM2protocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList)
+void SSMprotocol2::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList)
 {
 	QString defstr;
 	QString rvstr;
@@ -1724,7 +1723,7 @@ void SSM2protocol::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW
 }
 
 
-bool SSM2protocol::startActuatorTest(unsigned char actuatorTestIndex)
+bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 {
 	bool ATsup = false;
 	bool ATstarted = false;
@@ -1754,7 +1753,7 @@ bool SSM2protocol::startActuatorTest(unsigned char actuatorTestIndex)
 	// Stop all actuator tests:
 	for (k=0; k<_allActByteAddr.size(); k++)
 	{
-		if (!_SSM2Pcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
+		if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{
 			_state = state_normal; // this avoids that resetCUdata() will try to stop all actuators again
 			resetCUdata();
@@ -1762,7 +1761,7 @@ bool SSM2protocol::startActuatorTest(unsigned char actuatorTestIndex)
 		}
 	}
 	// Start Actuator Test:
-	ATstarted = _SSM2Pcom->writeDatabyte_permanent(dataaddr, databyte, 100);
+	ATstarted = _SSMP2com->writeDatabyte_permanent(dataaddr, databyte, 100);
 	if (ATstarted)
 	{
 		_selectedActuatorTestIndex = actuatorTestIndex;
@@ -1777,24 +1776,24 @@ bool SSM2protocol::startActuatorTest(unsigned char actuatorTestIndex)
 }
 
 
-bool SSM2protocol::restartActuatorTest()
+bool SSMprotocol2::restartActuatorTest()
 {
 	return startActuatorTest(_selectedActuatorTestIndex);
 }
 
 
-bool SSM2protocol::stopActuatorTesting()
+bool SSMprotocol2::stopActuatorTesting()
 {
 	unsigned char k = 0;
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;
 	if (_state == state_ActTesting)
 	{
-		if (_SSM2Pcom->stopCommunication())
+		if (_SSMP2com->stopCommunication())
 		{
 			// Stop all actuator tests:
 			for (k=0; k<_allActByteAddr.size(); k++)
 			{
-				if (!_SSM2Pcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
+				if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 				{
 					resetCUdata();
 					return false;
@@ -1811,7 +1810,7 @@ bool SSM2protocol::stopActuatorTesting()
 }
 
 
-bool SSM2protocol::stopAllActuators()
+bool SSMprotocol2::stopAllActuators()
 {
 	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol
 	// => When switching the cars ignition on (with engine off) while test mode connector is connected,
@@ -1837,7 +1836,7 @@ bool SSM2protocol::stopAllActuators()
 	// Stop all actuator tests:
 	for (k=0; k<_allActByteAddr.size(); k++)
 	{
-		if (!_SSM2Pcom->writeDatabyte(_allActByteAddr.at(k), 0x00))
+		if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{
 			resetCUdata();
 			return false;
@@ -1847,7 +1846,7 @@ bool SSM2protocol::stopAllActuators()
 }
 
 
-bool SSM2protocol::stopAllPermanentOperations()
+bool SSMprotocol2::stopAllPermanentOperations()
 {
 	bool result = false;
 	if ((_state == state_needSetup) || (_state == state_normal))
@@ -1870,20 +1869,20 @@ bool SSM2protocol::stopAllPermanentOperations()
 }
 
 
-bool SSM2protocol::waitForIgnitionOff()
+bool SSMprotocol2::waitForIgnitionOff()
 {
 	if (_state != state_normal)
 		return false;
 	unsigned int dataaddr = 0x62;
 	_state = state_waitingForIgnOff;
-	_SSM2Pcom->setRetriesOnError(1);
+	_SSMP2com->setRetriesOnError(1);
 	if (_flagbytes[12] & 0x08)	// MB "ignition switch"
 	{
 		bool ignstate = true;
 		char data = 0x00;
 		do
 		{
-			if (!_SSM2Pcom->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+			if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
 				ignstate = false;
 			else
 				ignstate = (data & 0x08);
@@ -1892,25 +1891,25 @@ bool SSM2protocol::waitForIgnitionOff()
 	else
 	{
 		QEventLoop el;
-		disconnect( _SSM2Pcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-		disconnect( _SSM2Pcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		if(!_SSM2Pcom->readMultipleDatabytes_permanent('\x0', &dataaddr, 1))
+		disconnect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+		disconnect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+		if(!_SSMP2com->readMultipleDatabytes_permanent('\x0', &dataaddr, 1))
 		{
 			resetCUdata();
 			return false;
 		}
-		connect(_SSM2Pcom, SIGNAL( commError() ), &el, SLOT( quit() ));
+		connect(_SSMP2com, SIGNAL( commError() ), &el, SLOT( quit() ));
 		el.exec();
-		disconnect(_SSM2Pcom, SIGNAL( commError() ), &el, SLOT( quit() ));
+		disconnect(_SSMP2com, SIGNAL( commError() ), &el, SLOT( quit() ));
 	}
-	_SSM2Pcom->setRetriesOnError(2);
+	_SSMP2com->setRetriesOnError(2);
 	resetCUdata();
 	return true;
 /* NOTE: temporary solution, will become obsolete with new SSM2Pcommunication */
 }
 
 
-bool SSM2protocol::validateVIN(char VIN[17])
+bool SSMprotocol2::validateVIN(char VIN[17])
 {
 	unsigned char k = 0;
 	for (k=0; k<17; k++)

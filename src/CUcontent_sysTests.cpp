@@ -20,9 +20,9 @@
 #include "CUcontent_sysTests.h"
 
 
-CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSM2protocol *SSM2Pdev) : QWidget(parent)
+CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSMprotocol2 *SSMP2dev) : QWidget(parent)
 {
-	_SSM2Pdev = SSM2Pdev;
+	_SSMP2dev = SSMP2dev;
 	_actuatorTestTitles.clear();
 	// Setup GUI:
 	setupUi(this);
@@ -44,7 +44,7 @@ CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSM2protocol *SSM2Pdev) 
 
 CUcontent_sysTests::~CUcontent_sysTests()
 {
-	_SSM2Pdev->stopActuatorTesting();	// ActuatorTestDlg already stops test on delete...
+	_SSMP2dev->stopActuatorTesting();	// ActuatorTestDlg already stops test on delete...
 	disconnect( startActuatorTest_pushButton, SIGNAL( released() ), this, SLOT( startActuatorTest() ) );
 	disconnect( testImmoLine_pushButton, SIGNAL( released() ), this, SLOT( testImmobilizerLine() ) );
 }
@@ -59,11 +59,11 @@ bool CUcontent_sysTests::setup()
 
 	_actuatorTestTitles.clear();
 	// Get CU-informations:
-	ok = _SSM2Pdev->hasActuatorTests(&AT_sup);
+	ok = _SSMP2dev->hasActuatorTests(&AT_sup);
 	if (ok)
-		ok = _SSM2Pdev->getSupportedActuatorTests(&_actuatorTestTitles);
+		ok = _SSMP2dev->getSupportedActuatorTests(&_actuatorTestTitles);
 	if (ok)
-		ok = _SSM2Pdev->hasImmobilizer(&immo_sup);
+		ok = _SSMP2dev->hasImmobilizer(&immo_sup);
 	AT_sup = AT_sup && ok;
 	immo_sup = immo_sup && ok;
 	// Display actuator test list content:
@@ -101,14 +101,14 @@ void CUcontent_sysTests::startActuatorTest()
 	FSSM_WaitMsgBox wmsgbox(this, tr("Checking test mode connector... Please wait !   "));
 	wmsgbox.show();
 	// Check test mode connecotor status:
-	if (_SSM2Pdev->isInTestMode(&testmode))
+	if (_SSMP2dev->isInTestMode(&testmode))
 	{
 		wmsgbox.close();
 		if (testmode)
 		{
 			// Get selected actuator:
 			actuatorTestNr = static_cast<unsigned char>(actuators_listWidget->currentIndex().row());
-			ActuatorTestDlg AT_dlg(this, _SSM2Pdev, _actuatorTestTitles.at(actuatorTestNr), actuatorTestNr);
+			ActuatorTestDlg AT_dlg(this, _SSMP2dev, _actuatorTestTitles.at(actuatorTestNr), actuatorTestNr);
 			// Open test dialog and wait for test to finish:
 			if (AT_dlg.isVisible())	// if actuator test has not been aborted in the constructor
 				AT_dlg.exec();
@@ -136,7 +136,7 @@ void CUcontent_sysTests::startActuatorTest()
 void CUcontent_sysTests::testImmobilizerLine()
 {
 	bool ok = false;
-	SSM2protocol::immoTestResult_dt testresult = SSM2protocol::immoNotShorted;
+	SSMprotocol2::immoTestResult_dt testresult = SSMprotocol2::immoNotShorted;
 	QFont msgfont;
 	QString resultInfo = "";
 	QMessageBox::Icon msgboxicon = QMessageBox::NoIcon;
@@ -144,7 +144,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 	// Run immobilizer communication line test:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !   "));
 	wmsgbox.show();
-	ok = _SSM2Pdev->TestImmobilizerCommLine(&testresult);
+	ok = _SSMP2dev->TestImmobilizerCommLine(&testresult);
 	if (ok)
 	{
 		QEventLoop el;
@@ -155,19 +155,19 @@ void CUcontent_sysTests::testImmobilizerLine()
 	// Check test result:
 	if (ok)
 	{
-		if (testresult == SSM2protocol::immoNotShorted)
+		if (testresult == SSMprotocol2::immoNotShorted)
 		{
 			// "Success"-message:
 			resultInfo = tr("The Immobilizer Communication Line is not shorted.");
 			msgboxicon = QMessageBox::Information;
 		}
-		else if (testresult == SSM2protocol::immoShortedToGround)
+		else if (testresult == SSMprotocol2::immoShortedToGround)
 		{
 			// "Error" message:
 			resultInfo = tr("The Immobilizer Communication Line seems\nto be shorted to ground !");
 			msgboxicon = QMessageBox::Critical;
 		}
-		else if (testresult == SSM2protocol::immoShortedToBattery)
+		else if (testresult == SSMprotocol2::immoShortedToBattery)
 		{
 			// "Error" message:
 			resultInfo = tr("The Immobilizer Communication Line seems\nto be shorted to battery (+) !");

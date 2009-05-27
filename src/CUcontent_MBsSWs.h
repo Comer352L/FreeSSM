@@ -25,7 +25,7 @@
 #include <QtGui>
 #include "ui_CUcontent_MBsSWs.h"
 #include "AddMBsSWsDlg.h"
-#include "SSM2protocol.h"
+#include "SSMprotocol2.h"
 
 
 
@@ -34,7 +34,7 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(QWidget *parent, SSM2protocol *SSM2Pdev, bool timemode = 0);
+	CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool timemode = 0);
 	~CUcontent_MBsSWs();
 	bool setup();
 	bool startMBSWreading();
@@ -44,7 +44,7 @@ public:
 	void getCurrentTimeMode(bool *timemode);
 
 private:
-	SSM2protocol *_SSM2Pdev;
+	SSMprotocol2 *_SSMP2dev;
 	std::vector<mbsw_dt> _supportedMBs;
 	std::vector<mbsw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;

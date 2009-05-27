@@ -1,5 +1,5 @@
 /*
- * SSM2protocol_ID.h - Identification of vehicle and control unit details
+ * SSMprotocol2_ID.h - Identification of vehicle and control unit details
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSM2PROTOCOL_ID_H
-#define SSM2PROTOCOL_ID_H
+#ifndef SSMPROTOCOL2_ID_H
+#define SSMPROTOCOL2_ID_H
 
 
 #include <QObject>
 #include <QStringList>
 
 
-class SSM2protocol_ID
+class SSMprotocol2_ID
 {
 
 private:
@@ -34,7 +34,7 @@ private:
 
 public:
 	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
-	SSM2protocol_ID();
+	SSMprotocol2_ID();
 	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription);
 
 };

@@ -25,7 +25,7 @@
 #include <string>
 #include "CUcontent_DCs_abstract.h"
 #include "ui_CUcontent_DCs_engine.h"
-#include "SSM2protocol.h"
+#include "SSMprotocol2.h"
 
 
 class CUcontent_DCs_engine : public CUcontent_DCs_abstract, private Ui::engineDCcontent_Form
@@ -33,7 +33,7 @@ class CUcontent_DCs_engine : public CUcontent_DCs_abstract, private Ui::engineDC
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_engine(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion);
+	CUcontent_DCs_engine(QWidget *parent, SSMprotocol2 *SSMP2dev, QString progversion);
 	~CUcontent_DCs_engine();
 	void show();
 	bool setup();

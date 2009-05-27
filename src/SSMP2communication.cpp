@@ -1,5 +1,5 @@
 /*
- * SSM2Pcommunication.cpp - Communication Thread for the new SSM-protocol
+ * SSMP2communication.cpp - Communication Thread for the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -18,10 +18,10 @@
  */
 
 
-#include "SSM2Pcommunication.h"
+#include "SSMP2communication.h"
 
 
-SSM2Pcommunication::SSM2Pcommunication(serialCOM *port, char cuaddress, unsigned char errRetries) : QThread(), SSM2Pcommunication_core(port)
+SSMP2communication::SSMP2communication(serialCOM *port, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(port)
 {
 	_cuaddress = cuaddress;
 
@@ -40,7 +40,7 @@ SSM2Pcommunication::SSM2Pcommunication(serialCOM *port, char cuaddress, unsigned
 
 
 
-SSM2Pcommunication::~SSM2Pcommunication()
+SSMP2communication::~SSMP2communication()
 {
 	stopCommunication();
 	disconnect( this, SIGNAL( finished() ), 0, 0 );
@@ -48,21 +48,21 @@ SSM2Pcommunication::~SSM2Pcommunication()
 
 
 
-void SSM2Pcommunication::setCUaddress(char cuaddress)
+void SSMP2communication::setCUaddress(char cuaddress)
 {
 	_cuaddress = cuaddress;
 }
 
 
 
-void SSM2Pcommunication::setRetriesOnError(unsigned char retries)
+void SSMP2communication::setRetriesOnError(unsigned char retries)
 {
 	_errRetries = retries;
 }
 
 
 
-void SSM2Pcommunication::run()
+void SSMP2communication::run()
 {
 	QByteArray rawdata;
 	QTime timer;
@@ -236,7 +236,7 @@ void SSM2Pcommunication::run()
 }
 
 
-bool SSM2Pcommunication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	bool ok = false;
 	int k = 0;
@@ -264,7 +264,7 @@ bool SSM2Pcommunication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, 
 
 
 
-bool SSM2Pcommunication::readDataBlock(char padadr, unsigned int dataadr, unsigned int nrofbytes, char *data)
+bool SSMP2communication::readDataBlock(char padadr, unsigned int dataadr, unsigned int nrofbytes, char *data)
 {
 	bool ok = false;
 	unsigned int k = 0;
@@ -289,7 +289,7 @@ bool SSM2Pcommunication::readDataBlock(char padadr, unsigned int dataadr, unsign
 
 
 
-bool SSM2Pcommunication::readMultipleDatabytes(char padadr, unsigned int dataadr[256], unsigned int datalen, char *data)
+bool SSMP2communication::readMultipleDatabytes(char padadr, unsigned int dataadr[256], unsigned int datalen, char *data)
 {
 	bool ok = false;
 	unsigned int k = 0;
@@ -314,7 +314,7 @@ bool SSM2Pcommunication::readMultipleDatabytes(char padadr, unsigned int dataadr
 
 
 
-bool SSM2Pcommunication::writeDataBlock(unsigned int dataadr, char *data, unsigned int datalen, char *datawritten)
+bool SSMP2communication::writeDataBlock(unsigned int dataadr, char *data, unsigned int datalen, char *datawritten)
 {
 	bool ok = false;
 	unsigned int k = 0;
@@ -355,7 +355,7 @@ bool SSM2Pcommunication::writeDataBlock(unsigned int dataadr, char *data, unsign
 
 
 
-bool SSM2Pcommunication::writeDatabyte(unsigned int dataadr, char databyte, char *databytewritten)
+bool SSMP2communication::writeDatabyte(unsigned int dataadr, char databyte, char *databytewritten)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
@@ -386,7 +386,7 @@ bool SSM2Pcommunication::writeDatabyte(unsigned int dataadr, char databyte, char
 
 
 
-bool SSM2Pcommunication::doSingleCommOperation()
+bool SSMP2communication::doSingleCommOperation()
 {
 	connect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
 	start();
@@ -397,7 +397,7 @@ bool SSM2Pcommunication::doSingleCommOperation()
 
 
 
-bool SSM2Pcommunication::readDataBlock_permanent(char padadr, unsigned int dataadr, unsigned int nrofbytes, int delay)
+bool SSMP2communication::readDataBlock_permanent(char padadr, unsigned int dataadr, unsigned int nrofbytes, int delay)
 {
 	if (nrofbytes > 254) return false;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
@@ -414,7 +414,7 @@ bool SSM2Pcommunication::readDataBlock_permanent(char padadr, unsigned int dataa
 
 
 
-bool SSM2Pcommunication::readMultipleDatabytes_permanent(char padadr, unsigned int dataadr[256], unsigned int datalen, int delay)
+bool SSMP2communication::readMultipleDatabytes_permanent(char padadr, unsigned int dataadr[256], unsigned int datalen, int delay)
 {
 	unsigned int k = 0;
 	if (datalen > 256) return false;
@@ -432,7 +432,7 @@ bool SSM2Pcommunication::readMultipleDatabytes_permanent(char padadr, unsigned i
 
 
 
-bool SSM2Pcommunication::writeDataBlock_permanent(unsigned int dataadr, char *data, unsigned int datalen, int delay)
+bool SSMP2communication::writeDataBlock_permanent(unsigned int dataadr, char *data, unsigned int datalen, int delay)
 {
 	unsigned int k = 0;
 	if (datalen > 251) return false;	// currently max. 251 bytes per write possible
@@ -450,7 +450,7 @@ bool SSM2Pcommunication::writeDataBlock_permanent(unsigned int dataadr, char *da
 
 
 
-bool SSM2Pcommunication::writeDatabyte_permanent(unsigned int dataadr, char databyte, int delay)
+bool SSMP2communication::writeDatabyte_permanent(unsigned int dataadr, char databyte, int delay)
 {
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_writeSingle_p;
@@ -466,14 +466,14 @@ bool SSM2Pcommunication::writeDatabyte_permanent(unsigned int dataadr, char data
 
 
 
-SSM2Pcommunication::comOp_dt SSM2Pcommunication::getCurrentCommOperation()
+SSMP2communication::comOp_dt SSMP2communication::getCurrentCommOperation()
 {
 	return _CommOperation;
 }
 
 
 
-bool SSM2Pcommunication::stopCommunication()
+bool SSMP2communication::stopCommunication()
 {
 	if (_CommOperation == comOp_noCom)
 		return true;

@@ -21,7 +21,6 @@
 
 
 
-
 ModQDoubleSpinBox::ModQDoubleSpinBox(QWidget * parent) : QDoubleSpinBox(parent)
 {
 	_DVMbaseValue = 0;
@@ -192,10 +191,10 @@ void QIdPushButton::emitReleased()
 
 
 
-CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSM2protocol *SSM2Pdev) : QWidget(parent)
+CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP2dev) : QWidget(parent)
 {
 	QHeaderView *headerview;
-	_SSM2Pdev = SSM2Pdev;
+	_SSMP2dev = SSMP2dev;
 	_maxrowsvisible = 0; // We don't need to calculate a value here, because we always get a resizeEvent before setting the table content
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
@@ -232,7 +231,7 @@ bool CUcontent_Adjustments::setup()
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
 	// Get supported adjustments:
-	ok = _SSM2Pdev->getSupportedAdjustments(&_supportedAdjustments);
+	ok = _SSMP2dev->getSupportedAdjustments(&_supportedAdjustments);
 	if (ok && !_supportedAdjustments.empty())
 	{
 		// Determine the needed selection widget type for new values:
@@ -240,7 +239,7 @@ bool CUcontent_Adjustments::setup()
 		// Setup adjustments table (without current values):
 		setupAdjustmentsTable();
 		// Query current adjustment values from CU:
-		ok = _SSM2Pdev->getAllAdjustmentValues(&rawValues);
+		ok = _SSMP2dev->getAllAdjustmentValues(&rawValues);
 		if (ok)
 		{
 			// Scale raw values:
@@ -548,10 +547,10 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 		return;
 	}
 	// Save new ajustment value to control unit:
-	ok = _SSM2Pdev->setAdjustmentValue(index, newvalue_raw);
+	ok = _SSMP2dev->setAdjustmentValue(index, newvalue_raw);
 	// To be sure: read and verify value again
 	if (ok)
-		ok = _SSM2Pdev->getAdjustmentValue(index, &controlValue_raw);
+		ok = _SSMP2dev->getAdjustmentValue(index, &controlValue_raw);
 	if (!ok)
 	{
 		communicationError(tr("No or invalid answer from Control Unit."));
@@ -599,7 +598,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	// Reset all adjustment values:
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
-		if (!_SSM2Pdev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
+		if (!_SSMP2dev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
 		{
 			communicationError(tr("No or invalid answer from Control Unit."));
 			return;

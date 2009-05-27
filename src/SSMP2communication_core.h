@@ -1,5 +1,5 @@
 /*
- * SSM2Pcommunication_core.h - Core functions (services) of the new SSM-protocol
+ * SSMP2communication_core.h - Core functions (services) of the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSM2PCORE_H
-#define SSM2PCORE_H
+#ifndef SSMP2COMMUNICATIONCORE_H
+#define SSMP2COMMUNICATIONCORE_H
 
 
 #ifdef __WIN32__
@@ -37,11 +37,11 @@
 
 
 
-class SSM2Pcommunication_core
+class SSMP2communication_core
 {
 
 public:
-	SSM2Pcommunication_core(serialCOM *port);
+	SSMP2communication_core(serialCOM *port);
 
 	bool ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data);
 	bool ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data);

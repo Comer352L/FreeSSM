@@ -18,9 +18,9 @@ HEADERS += src/FreeSSM.h \
            src/About.h \
            src/FSSMdialogs.h \
            src/ActuatorTestDlg.h \
-           src/SSM2Pcommunication.h \
-           src/SSM2Pcommunication_core.h \
-           src/SSM2protocol.h \
+           src/SSMP2communication.h \
+           src/SSMP2communication_core.h \
+           src/SSMprotocol2.h \
            src/AddMBsSWsDlg.h \
            src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
@@ -28,9 +28,9 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_MBsSWs.h \
            src/CUcontent_Adjustments.h \
            src/CUcontent_sysTests.h \
-           src/SSM2protocol_ID.h \
-           src/SSM2protocol_def_en.h \
-           src/SSM2protocol_def_de.h \
+           src/SSMprotocol2_ID.h \
+           src/SSMprotocol2_def_en.h \
+           src/SSMprotocol2_def_de.h \
            src/ClearMemoryDlg.h \
            src/libFSSM.h
 
@@ -42,9 +42,9 @@ SOURCES += src/main.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
            src/ActuatorTestDlg.cpp \
-           src/SSM2Pcommunication.cpp \
-           src/SSM2Pcommunication_core.cpp \
-           src/SSM2protocol.cpp \
+           src/SSMP2communication.cpp \
+           src/SSMP2communication_core.cpp \
+           src/SSMprotocol2.cpp \
            src/AddMBsSWsDlg.cpp \
            src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
@@ -52,9 +52,9 @@ SOURCES += src/main.cpp \
            src/CUcontent_MBsSWs.cpp \
            src/CUcontent_Adjustments.cpp \
            src/CUcontent_sysTests.cpp \
-           src/SSM2protocol_ID.cpp \
-           src/SSM2protocol_def_en.cpp \
-           src/SSM2protocol_def_de.cpp \
+           src/SSMprotocol2_ID.cpp \
+           src/SSMprotocol2_def_en.cpp \
+           src/SSMprotocol2_def_de.cpp \
            src/ClearMemoryDlg.cpp \
            src/libFSSM.cpp
 

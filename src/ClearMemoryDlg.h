@@ -23,7 +23,7 @@
 
 #include <QtGui>
 #include <string>
-#include "SSM2protocol.h"
+#include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
 
 
@@ -35,13 +35,13 @@ class ClearMemoryDlg : public QObject
 public:
 	enum CMresult_dt {CMresult_aborted, CMresult_communicationError, CMresult_success, CMresult_adjValRestorationFailed, CMresult_reconnectAborted, CMresult_reconnectFailed};
 
-	ClearMemoryDlg(QMainWindow *parent, SSM2protocol *SSM2Pdev, SSM2protocol::CMlevel_dt level);
+	ClearMemoryDlg(QMainWindow *parent, SSMprotocol2 *SSMP2dev, SSMprotocol2::CMlevel_dt level);
 	CMresult_dt run();
 
 private:
 	QMainWindow *_parent;
-	SSM2protocol *_SSM2Pdev;
-	SSM2protocol::CMlevel_dt _level;
+	SSMprotocol2 *_SSMP2dev;
+	SSMprotocol2::CMlevel_dt _level;
 
 	bool confirmClearMemory();
 	bool confirmAdjustmentValuesRestoration();

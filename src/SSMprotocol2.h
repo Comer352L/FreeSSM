@@ -1,5 +1,5 @@
 /*
- * SSM2protocol.h - Application Layer for the new Subaru SSM protocol
+ * SSMprotocol2.h - Application Layer for the new Subaru SSM protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSM2PROTOCOL_H
-#define SSM2PROTOCOL_H
+#ifndef SSMPROTOCOL2_H
+#define SSMPROTOCOL2_H
 
 
 
@@ -32,10 +32,10 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include "SSM2Pcommunication.h"
-#include "SSM2protocol_ID.h"
-#include "SSM2protocol_def_en.h"
-#include "SSM2protocol_def_de.h"
+#include "SSMP2communication.h"
+#include "SSMprotocol2_ID.h"
+#include "SSMprotocol2_def_en.h"
+#include "SSMprotocol2_def_de.h"
 #include "libFSSM.h"
 
 
@@ -116,7 +116,7 @@ public:
 
 
 
-class SSM2protocol : public QObject, private SSM2protocol_ID
+class SSMprotocol2 : public QObject, private SSMprotocol2_ID
 {
 	Q_OBJECT
 
@@ -128,11 +128,11 @@ public:
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
-	SSM2protocol(serialCOM *port, CUtype_dt CU, QString language="en");
-	~SSM2protocol();
+	SSMprotocol2(serialCOM *port, CUtype_dt CU, QString language="en");
+	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
-	SSM2protocol::CUtype_dt CUtype();
-	SSM2protocol::state_dt state();
+	SSMprotocol2::CUtype_dt CUtype();
+	SSMprotocol2::state_dt state();
 	bool setupCUdata(bool ignoreIgnitionOFF=false);
 	std::string getSysID();
 	std::string getROMID();
@@ -176,7 +176,7 @@ public:
 
 private:
 	serialCOM *_port;
-	SSM2Pcommunication *_SSM2Pcom;
+	SSMP2communication *_SSMP2com;
 	CUtype_dt _CU;
 	QString _language;
 	state_dt _state;

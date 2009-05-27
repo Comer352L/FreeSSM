@@ -22,10 +22,10 @@
 
 
 
-CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSM2protocol *SSM2Pdev, bool timemode) : QWidget(parent)
+CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool timemode) : QWidget(parent)
 {
 	QHeaderView *headerview;
-	_SSM2Pdev = SSM2Pdev;
+	_SSMP2dev = SSMP2dev;
 	_supportedMBs.clear();
 	_supportedSWs.clear();
 	_MBSWmetaList.clear();
@@ -78,8 +78,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSM2protocol *SSM2Pdev, bool
 
 CUcontent_MBsSWs::~CUcontent_MBsSWs()
 {
-	_SSM2Pdev->stopMBSWreading();
-	disconnect(_SSM2Pdev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
+	_SSMP2dev->stopMBSWreading();
+	disconnect(_SSMP2dev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
 	disconnect(startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
 	disconnect(mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	disconnect(mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
@@ -87,8 +87,8 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	disconnect(mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
 	disconnect(timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
 	disconnect(selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
-	disconnect(_SSM2Pdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
-	disconnect(_SSM2Pdev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+	disconnect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
+	disconnect(_SSMP2dev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 }
 
 
@@ -96,9 +96,9 @@ bool CUcontent_MBsSWs::setup()
 {
 	bool ok;
 	// Get supported MBs/SWs:
-	ok = _SSM2Pdev->getSupportedMBs(&_supportedMBs);
+	ok = _SSMP2dev->getSupportedMBs(&_supportedMBs);
 	if (ok)
-		ok = _SSM2Pdev->getSupportedSWs(&_supportedSWs);
+		ok = _SSMP2dev->getSupportedSWs(&_supportedSWs);
 	if (!ok)
 	{
 		// Reset CU-data:
@@ -168,10 +168,10 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
-		connect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	else
-		disconnect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
@@ -180,7 +180,7 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 
 void CUcontent_MBsSWs::startstopMBsSWsButtonPressed()
 {
-	if (_SSM2Pdev->state() == SSM2protocol::state_MBSWreading)
+	if (_SSMP2dev->state() == SSMprotocol2::state_MBSWreading)
 		callStop();
 	else
 		callStart();
@@ -203,27 +203,27 @@ void CUcontent_MBsSWs::callStop()
 
 bool CUcontent_MBsSWs::startMBSWreading()
 {
-	SSM2protocol::state_dt state = SSM2protocol::state_needSetup;
+	SSMprotocol2::state_dt state = SSMprotocol2::state_needSetup;
 	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
 	unsigned int k = 0;
 	bool consistent = true;
 	// Check premises:
-	state = _SSM2Pdev->state();
-	if (state == SSM2protocol::state_normal)
+	state = _SSMP2dev->state();
+	if (state == SSMprotocol2::state_normal)
 	{
 		if (_MBSWmetaList.empty()) return false;
-		disconnect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 		// Start MB/SW-reading:
-		if (!_SSM2Pdev->startMBSWreading(_MBSWmetaList))
+		if (!_SSMP2dev->startMBSWreading(_MBSWmetaList))
 		{
-			connect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+			connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 			return false;
 		}
 	}
-	else if (state == SSM2protocol::state_MBSWreading)
+	else if (state == SSMprotocol2::state_MBSWreading)
 	{
 		// Verify consistency:
-		if (!_SSM2Pdev->getLastMBSWselection(&usedMBSWmetaList))
+		if (!_SSMP2dev->getLastMBSWselection(&usedMBSWmetaList))
 			return false;
 		if (_MBSWmetaList.size() == usedMBSWmetaList.size())
 		{
@@ -246,8 +246,8 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	else
 		return false;
 	// Connect signals and slots:
-	connect(_SSM2Pdev, SIGNAL( newMBSWvalues(QStringList, QStringList, int) ), this, SLOT( updateMBSWvalues(QStringList, QStringList, int) ));
-	connect(_SSM2Pdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
+	connect(_SSMP2dev, SIGNAL( newMBSWvalues(QStringList, QStringList, int) ), this, SLOT( updateMBSWvalues(QStringList, QStringList, int) ));
+	connect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 	// Disable item manipulation buttons:
 	mbswmoveup_pushButton->setEnabled(false);
 	mbswmovedown_pushButton->setEnabled(false);
@@ -265,14 +265,14 @@ bool CUcontent_MBsSWs::startMBSWreading()
 
 bool CUcontent_MBsSWs::stopMBSWreading()
 {
-	disconnect(_SSM2Pdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
-	if (!_SSM2Pdev->stopMBSWreading())
+	disconnect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+	if (!_SSMP2dev->stopMBSWreading())
 	{
-		connect(_SSM2Pdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+		connect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
 		return false;
 	}
-	disconnect(_SSM2Pdev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
-	connect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+	disconnect(_SSMP2dev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
+	connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	// set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Start  "));
 	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
@@ -350,7 +350,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
-		connect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
@@ -388,7 +388,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	{
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
-		disconnect(_SSM2Pdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
@@ -476,7 +476,7 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 
 void CUcontent_MBsSWs::setManipulateMBSWItemsButtonsStatus()
 {
-	if (_SSM2Pdev->state() == SSM2protocol::state_MBSWreading) return;
+	if (_SSMP2dev->state() == SSMprotocol2::state_MBSWreading) return;
 	QList<QTableWidgetItem*> selitemslist;
 	selitemslist = selectedMBsSWs_tableWidget->selectedItems();
 	// NOTE: this retruns the nr. of selected cells, NOT THE NR OF ROWS ! Empty cells are not included ! 

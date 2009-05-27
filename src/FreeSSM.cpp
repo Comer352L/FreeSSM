@@ -27,7 +27,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	_qt_translator = NULL;
 	_translator = NULL;
 	_port = NULL;
-	_SSM2Pdev = NULL;
+	_SSMP2dev = NULL;
 	_portname = "";
 	_language = "";
 	_dumping = false;
@@ -202,7 +202,7 @@ FreeSSM::~FreeSSM()
 	delete _dump_action;
 	delete _progtitle_label;
 	if (_port != NULL) delete _port;
-	if (_SSM2Pdev != NULL) delete _SSM2Pdev;
+	if (_SSMP2dev != NULL) delete _SSMP2dev;
 	if (_translator != NULL)
 	{
 		QApplication::removeTranslator(_translator);
@@ -222,8 +222,8 @@ void FreeSSM::engine()
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
-		_SSM2Pdev = new SSM2protocol(_port, SSM2protocol::ECU, _language);
-		Engine *enginewindow = new Engine(_SSM2Pdev, _progversion);
+		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::ECU, _language);
+		Engine *enginewindow = new Engine(_SSMP2dev, _progversion);
 		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}
 	else
@@ -240,8 +240,8 @@ void FreeSSM::transmission()
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
-		_SSM2Pdev = new SSM2protocol(_port, SSM2protocol::TCU, _language);
-		Transmission *transmissionwindow = new Transmission(_SSM2Pdev, _progversion);
+		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::TCU, _language);
+		Transmission *transmissionwindow = new Transmission(_SSMP2dev, _progversion);
 		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}
 	else
@@ -290,10 +290,10 @@ void FreeSSM::about()
 void FreeSSM::SSMPdevCleanup()
 {
 	disconnect(this, SLOT( SSMPdevCleanup() ));
-	if (_SSM2Pdev)
+	if (_SSMP2dev)
 	{
-		delete _SSM2Pdev;
-		_SSM2Pdev = NULL;
+		delete _SSMP2dev;
+		_SSMP2dev = NULL;
 	}
 	if (_port)
 	{
@@ -437,10 +437,10 @@ void FreeSSM::dumpCUdata()
 		return;
 	}
 	// Create SSMP-Communication-object:
-	SSM2Pcommunication SSM2Pcom(_port, '\x10', 0);
+	SSMP2communication SSMP2com(_port, '\x10', 0);
 	// *************** ECU ***************
 	// Read ECU data:
-	if (SSM2Pcom.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 	{
 		// Open/Create File:
 		if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -471,7 +471,7 @@ void FreeSSM::dumpCUdata()
 			dataaddr[0] = 0xDA;
 			dataaddr[1] = 0xDB;
 			dataaddr[2] = 0xDC;
-			if (!SSM2Pcom.readMultipleDatabytes(0x0, dataaddr, 3, data))
+			if (!SSMP2com.readMultipleDatabytes(0x0, dataaddr, 3, data))
 				goto end;
 			hexstr = libFSSM::StrToHexstr(data, 3);
 			hexstr.insert(0, "\n");
@@ -482,7 +482,7 @@ void FreeSSM::dumpCUdata()
 					+ (static_cast<unsigned char>(data[2]));
 			for (k=1; k<17; k++)
 				dataaddr[k] = dataaddr[0]+k;
-			if (!SSM2Pcom.readMultipleDatabytes(0x0, dataaddr, 17, data))
+			if (!SSMP2com.readMultipleDatabytes(0x0, dataaddr, 17, data))
 				goto end;
 			hexstr = libFSSM::StrToHexstr(data, 17);
 			hexstr.push_back('\n');
@@ -490,9 +490,9 @@ void FreeSSM::dumpCUdata()
 		}
 	}
 	// *************** TCU ***************
-	SSM2Pcom.setCUaddress('\x18');
+	SSMP2com.setCUaddress('\x18');
 	// Read TCU data:
-	if (SSM2Pcom.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 	{
 		if (!dumpfile.isOpen()) // if file is not opened yet
 		{

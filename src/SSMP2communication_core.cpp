@@ -1,5 +1,5 @@
 /*
- * SSM2Pcommunication_core.cpp - Core functions (services) of the new SSM-protocol
+ * SSMP2communication_core.cpp - Core functions (services) of the new SSM-protocol
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -18,18 +18,18 @@
  */
 
 
-#include "SSM2Pcommunication_core.h"
+#include "SSMP2communication_core.h"
 
 
 
-SSM2Pcommunication_core::SSM2Pcommunication_core(serialCOM *port)
+SSMP2communication_core::SSMP2communication_core(serialCOM *port)
 {
 	_port = port;
 }
 
 
 
-bool SSM2Pcommunication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
+bool SSMP2communication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
 {
 	// Send: 80 (ECUADR) F0 06  A0  00  00 01 21  (n-1)  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  E0  data_1 data_2 ... data_n  (CS)
@@ -65,7 +65,7 @@ bool SSM2Pcommunication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned
 
 
 
-bool SSM2Pcommunication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
+bool SSMP2communication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
 {
 	// 80 (ECUADR) F0 (2+3*n)  A8  (PADADDR)  a1_b2 a1_b1 a1_b0  a2_b2 a2_b1 a2_b0 ... an_b2 an_b1 an_b0  (CS)
 	// 80 F0 (ECUADR) (1+n)   E8  data_1 data_2 ... data_n  (CS)
@@ -104,7 +104,7 @@ bool SSM2Pcommunication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, 
 
 
 
-bool SSM2Pcommunication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
+bool SSMP2communication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
 {
 	// Send: 80 (ECUADR) F0 (4+n)  B0  00 01 21  data_1 data_2 ... data_n  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  F0  data_1 data_2 ...  (CS)
@@ -154,7 +154,7 @@ bool SSM2Pcommunication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr
 
 
 
-bool SSM2Pcommunication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
+bool SSMP2communication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
 {
 	// Send: 80 (ECUADR) F0 (05)  B8  00 01 21  databyte  (CS)
 	// Rcv:  80 F0 (ECUADR) (02)  F8  databyte  (CS)
@@ -199,7 +199,7 @@ bool SSM2Pcommunication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr,
 
 
 
-bool SSM2Pcommunication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	// Send: 80 (ECUADR) F0 01 BF (CS)
 	// Rcv:  80 F0 (ECUADR) (9+n)  FF  sysID_1 sysID_2 sysID_3 romID_1 ... romID_5 flagbyte_1 flagbyte_2 ... flagbyte_n  CS
@@ -239,7 +239,7 @@ bool SSM2Pcommunication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID
 
 
 
-bool SSM2Pcommunication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
+bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
 	if (_port == NULL) return false;
 	if (outdatalen < 1) return false;
@@ -405,7 +405,7 @@ bool SSM2Pcommunication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 
 
 
-char SSM2Pcommunication_core::calcchecksum(char *message, unsigned int nrofbytes)
+char SSMP2communication_core::calcchecksum(char *message, unsigned int nrofbytes)
 {
 	unsigned short int cs = 0;
 	unsigned int k;
@@ -415,7 +415,7 @@ char SSM2Pcommunication_core::calcchecksum(char *message, unsigned int nrofbytes
 }
 
 
-void SSM2Pcommunication_core::charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b)
+void SSMP2communication_core::charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b)
 {
 	unsigned int k;
 	for (k=0; k<len_b; k++)
@@ -425,7 +425,7 @@ void SSM2Pcommunication_core::charcat(char *chararray_a, char *chararray_b, unsi
 }
 
 
-bool SSM2Pcommunication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)
+bool SSMP2communication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)
 {
 	unsigned int k;
 	for (k=0; k<len; k++)

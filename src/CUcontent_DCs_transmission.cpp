@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_transmission.h"
 
 
-CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSM2protocol *SSM2Pdev, QString progversion) : CUcontent_DCs_abstract(parent, SSM2Pdev, progversion)
+CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSMprotocol2 *SSMP2dev, QString progversion) : CUcontent_DCs_abstract(parent, SSMP2dev, progversion)
 {
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
@@ -73,19 +73,19 @@ bool CUcontent_DCs_transmission::setup()
 	QString title;
 
 	// Reset data:
-	_supportedDCgroups = SSM2protocol::noDCs_DCgroup;
+	_supportedDCgroups = SSMprotocol2::noDCs_DCgroup;
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
 	_histOrMemDTCs.clear();
 	_histOrMemDTCdescriptions.clear();
 	// Get CU information:
-	ok =_SSM2Pdev->getSupportedDCgroups(&_supportedDCgroups);
+	ok =_SSMP2dev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
 	{
-		if ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup))
+		if ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup))
 			obd2DTCformat = false;
-		currOrTempDTCs_sup = ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup));
-		histOrMemDTCs_sup = ((_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup));
+		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup));
+		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup));
 	}
 	// Set titles of the DTC-tables
 	if ( obd2DTCformat )
@@ -115,10 +115,10 @@ bool CUcontent_DCs_transmission::setup()
 	printDClist_pushButton->setEnabled(false);
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// Connect start-slot:
-	if (ok && (_supportedDCgroups != SSM2protocol::noDCs_DCgroup))
-		connect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	if (ok && (_supportedDCgroups != SSMprotocol2::noDCs_DCgroup))
+		connect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	else
-		disconnect(_SSM2Pdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	// Return result;
 	return ok;
 }
@@ -127,15 +127,15 @@ bool CUcontent_DCs_transmission::setup()
 void CUcontent_DCs_transmission::connectGUIelements()
 {
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup)
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+		connect(_SSMP2dev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup)
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+		connect(_SSMP2dev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
@@ -146,8 +146,8 @@ void CUcontent_DCs_transmission::connectGUIelements()
 
 void CUcontent_DCs_transmission::disconnectGUIelements()
 {
-	disconnect(_SSM2Pdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSM2Pdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMP2dev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMP2dev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 }
 
 
@@ -198,7 +198,7 @@ void CUcontent_DCs_transmission::createDCprintTables(QTextCursor cursor)
 	QStringList histOrMemDTCcodes = _histOrMemDTCs;
 	QStringList histOrMemDTCdescriptions = _histOrMemDTCdescriptions;
 	// Current/Temporary DTCs:
-	if ((_supportedDCgroups & SSM2protocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::temporaryDTCs_DCgroup))
+	if ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup))
 	{
 		if (_currOrTempDTCdescriptions.size() == 0)
 		{
@@ -209,7 +209,7 @@ void CUcontent_DCs_transmission::createDCprintTables(QTextCursor cursor)
 		insertDCprintTable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
-	if ((_supportedDCgroups & SSM2protocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSM2protocol::memorizedDTCs_DCgroup))
+	if ((_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup))
 	{
 		if (_histOrMemDTCdescriptions.size() == 0)
 		{

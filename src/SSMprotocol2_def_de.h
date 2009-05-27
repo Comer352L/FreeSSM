@@ -1,5 +1,5 @@
 /*
- * SSM2protocol_def_de.h - SSM2-protocol-definitions
+ * SSMprotocol2_def_de.h - SSM2-protocol-definitions
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -18,14 +18,14 @@
  */
 
 
-#ifndef SSM2PROTOCOL_DEF_DE_H
-#define SSM2PROTOCOL_DEF_DE_H
+#ifndef SSMPROTOCOL2_DEF_DE_H
+#define SSMPROTOCOL2_DEF_DE_H
 
 
 #include <QStringList>
 
 
-class SSM2protocol_def_de
+class SSMprotocol2_def_de
 {
 
 private:
@@ -38,7 +38,7 @@ private:
 	QStringList _adjustment_defs_de;
 
 public:
-	SSM2protocol_def_de();
+	SSMprotocol2_def_de();
 	const QStringList MBrawDefs();
 	const QStringList SWrawDefs();
 	const QStringList SUBDTCrawDefs();
