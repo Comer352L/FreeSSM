@@ -68,7 +68,7 @@ private:
 	bool _result;
 	bool _abort;
 	unsigned char _errRetries;
-	// Buffers for sending/recieving data data:
+	// Buffers for sending/recieving data:
 	char _padadr;
 	unsigned int _dataadr[256];
 	unsigned char _datalen;

@@ -192,7 +192,7 @@ FreeSSM::FreeSSM(QApplication *app)
 
 FreeSSM::~FreeSSM()
 {
-	disconnect( _dump_action, SIGNAL(triggered()), this, SLOT(dumpCUdata()) );
+	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 

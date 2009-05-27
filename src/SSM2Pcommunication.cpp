@@ -99,7 +99,7 @@ void SSM2Pcommunication::run()
 	_mutex.unlock();
 #ifdef __FSSM_DEBUG__
 	// Debug-output:
-	std::string op_str = "SSMPcommunication::run():   operation: ";
+	std::string op_str = "SSMP2communication::run():   operation: ";
 	switch (operation)
 	{
 		case comOp_noCom:
@@ -206,7 +206,7 @@ void SSM2Pcommunication::run()
 		{
 			errcount++;
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMPcommunication::run():   communication operation error counter=" << (int)(errcount) << '\n';
+			std::cout << "SSMP2communication::run():   communication operation error counter=" << (int)(errcount) << '\n';
 #endif
 		}
 		// GET ABORT STATUS::
@@ -229,11 +229,9 @@ void SSM2Pcommunication::run()
 	_mutex.unlock();
 	// Ensures that event-loop is started started (should always be the case...)
 	while (!_el.isRunning())
-	{
 		msleep(10);
-	}
 #ifdef __FSSM_DEBUG__
-	std::cout << "SSMPcommunication::run():   communication operation finished." << '\n';
+	std::cout << "SSMP2communication::run():   communication operation finished." << '\n';
 #endif
 }
 
