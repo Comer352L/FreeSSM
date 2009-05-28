@@ -1632,20 +1632,20 @@ bool SSMprotocol2::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaL
 
 void SSMprotocol2::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
 {
-	unsigned int rawValues[SSMP_MAX_MBSW] = {0};
+	std::vector<unsigned int> rawValues;
 	QStringList valueStrList;
 	QStringList unitStrList;
-	assignMBSWRawData( MBSWrawdata, rawValues );
-	processMBSWRawValues( rawValues, &valueStrList, &unitStrList );
-	emit newMBSWvalues( valueStrList, unitStrList, duration_ms );
+	assignMBSWRawData( MBSWrawdata, &rawValues );
+	emit newMBSWrawValues(rawValues, duration_ms);
 }
 
 
-void SSMprotocol2::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues)
+void SSMprotocol2::assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues)
 {
 	// ***** ASSIGN RAW DATA *****:
 	unsigned int k = 0, m = 0;
-	for (k=0; k<_MBSWmetaList.size(); k++) mbswrawvalues[k]=0;
+	mbswrawvalues->clear();
+	mbswrawvalues->resize(_MBSWmetaList.size(), 0);
 	for (m=0; m<_selMBsSWsAddrLen; m++)	// ADDRESS LOOP
 	{
 		for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
@@ -1656,12 +1656,12 @@ void SSMprotocol2::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawv
 				if (_selMBsSWaAddr[m] == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
-					mbswrawvalues[k] += static_cast<unsigned char>(rawdata.at(m));
+					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m));
 				}
 				else if (_selMBsSWaAddr[m] == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
-					mbswrawvalues[k] += static_cast<unsigned char>(rawdata.at(m)) * 256;
+					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
 				}
 			}
 			else
@@ -1670,54 +1670,11 @@ void SSMprotocol2::assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawv
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
 					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) ) )	// IF ADDRESS BIT IS SET
-						mbswrawvalues[k] = 1;
+						mbswrawvalues->at(k) = 1;
 					else	// IF ADDRESS BIT IS NOT SET
-						mbswrawvalues[k] = 0;
+						mbswrawvalues->at(k) = 0;
 				}
 			}
-		}
-	}
-}
-
-
-void SSMprotocol2::processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList)
-{
-	QString defstr;
-	QString rvstr;
-	unsigned int k = 0;
-	QString scaledValueStr;
-	// RESET LISTS OF PROCESSED DATA:
-	valueStrList->clear();
-	unitStrList->clear();
-	// SCALE ALL MBs AND SWs:
-	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
-	{
-		if (_MBSWmetaList.at(k).blockType == 0)
-		{
-			if (libFSSM::raw2scaled( mbswrawvalues[k], _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
-			{
-				valueStrList->append(scaledValueStr);
-				unitStrList->append(_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
-			}
-			else
-			{
-				// USE RAW VALUE:
-				valueStrList->append(QString::number(mbswrawvalues[k], 10));
-				unitStrList->append("[RAW]");
-			}
-		}
-		else
-		{
-			// GET UNIT OF THE SWITCH:
-			if (mbswrawvalues[k] == 0)
-			{
-				valueStrList->append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
-			}
-			else if (mbswrawvalues[k] == 1)
-			{
-				valueStrList->append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
-			}
-			unitStrList->append("");
 		}
 	}
 }

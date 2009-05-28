@@ -23,9 +23,11 @@
 
 
 #include <QtGui>
+ #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
 #include "AddMBsSWsDlg.h"
 #include "SSMprotocol2.h"
+#include "libFSSM.h"
 
 
 
@@ -55,6 +57,7 @@ private:
 
 	void setupUiFonts();
 	void updateMWSWqueryListContent();
+	void updateMBSWvalues(QStringList MBvalueStrList, QStringList MBunitStrList, int refreshduration_ms);
 	void getSelectedTableWidgetRows(QTableWidget *tablewidget, unsigned int *selectedRowsIndexes, unsigned int *nrofselectedRows);
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
@@ -64,7 +67,7 @@ private slots:
 	void startstopMBsSWsButtonPressed();
 	void callStart();
 	void callStop();
-	void updateMBSWvalues(QStringList MBvalueStrList, QStringList MBunitStrList, int refreshduration_ms);
+	void processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
 	void moveupMBsSWs();

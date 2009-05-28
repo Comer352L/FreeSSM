@@ -79,16 +79,16 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool
 CUcontent_MBsSWs::~CUcontent_MBsSWs()
 {
 	_SSMP2dev->stopMBSWreading();
-	disconnect(_SSMP2dev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
-	disconnect(startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
-	disconnect(mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
-	disconnect(mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
-	disconnect(mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
-	disconnect(mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
-	disconnect(timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
-	disconnect(selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
-	disconnect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
-	disconnect(_SSMP2dev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+	disconnect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	disconnect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
+	disconnect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
+	disconnect( mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
+	disconnect( mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
+	disconnect( timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
+	disconnect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
+	disconnect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
+	disconnect( _SSMP2dev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 }
 
 
@@ -212,11 +212,11 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	if (state == SSMprotocol2::state_normal)
 	{
 		if (_MBSWmetaList.empty()) return false;
-		disconnect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect( _SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 		// Start MB/SW-reading:
 		if (!_SSMP2dev->startMBSWreading(_MBSWmetaList))
 		{
-			connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+			connect( _SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 			return false;
 		}
 	}
@@ -246,8 +246,8 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	else
 		return false;
 	// Connect signals and slots:
-	connect(_SSMP2dev, SIGNAL( newMBSWvalues(QStringList, QStringList, int) ), this, SLOT( updateMBSWvalues(QStringList, QStringList, int) ));
-	connect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
+	connect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+	connect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 	// Disable item manipulation buttons:
 	mbswmoveup_pushButton->setEnabled(false);
 	mbswmovedown_pushButton->setEnabled(false);
@@ -265,14 +265,14 @@ bool CUcontent_MBsSWs::startMBSWreading()
 
 bool CUcontent_MBsSWs::stopMBSWreading()
 {
-	disconnect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+	disconnect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
 	if (!_SSMP2dev->stopMBSWreading())
 	{
-		connect(_SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+		connect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
 		return false;
 	}
-	disconnect(_SSMP2dev, SIGNAL(newMBSWvalues(QStringList, QStringList, int)), this, SLOT(updateMBSWvalues(QStringList, QStringList, int)));
-	connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+	disconnect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+	connect( _SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 	// set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Start  "));
 	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
@@ -286,6 +286,50 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	return true;
 }
 
+
+void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms)
+{
+	QString defstr;
+	QString rvstr;
+	QString scaledValueStr;
+	unsigned int k = 0;
+	QStringList valueStrList;
+	QStringList unitStrList;
+	// SCALE ALL MBs AND SWs:
+	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
+	{
+		if (_MBSWmetaList.at(k).blockType == 0)
+		{
+			if (libFSSM::raw2scaled( rawValues.at(k), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
+			{
+				valueStrList.append(scaledValueStr);
+				unitStrList.append(_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
+			}
+			else
+			{
+				// USE RAW VALUE:
+				valueStrList.append(QString::number(rawValues.at(k), 10));
+				unitStrList.append("[RAW]");
+			}
+		}
+		else
+		{
+			// GET UNIT OF THE SWITCH:
+			if (rawValues.at(k) == 0)
+			{
+				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
+			}
+			else if (rawValues.at(k) == 1)
+			{
+				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
+			}
+			unitStrList.append("");
+		}
+	}
+	// Display new values:
+	updateMBSWvalues(valueStrList, unitStrList, refreshduration_ms);
+}
+// BETA
 
 void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList unitStrList, int refreshduration_ms)
 {

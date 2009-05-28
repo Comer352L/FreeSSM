@@ -56,6 +56,8 @@ class  mbsw_dt
 public:
 	QString title;
 	QString unit;
+	QString scaleformula;
+	char precision;
 };
 
 
@@ -64,8 +66,6 @@ class  mb_intl_dt: public mbsw_dt
 public:
 	unsigned int adr_low;
 	unsigned int adr_high;
-	QString scaleformula;
-	char precision;
 };
 
 
@@ -221,8 +221,7 @@ private:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void assignMBSWRawData(QByteArray rawdata, unsigned int * mbswrawvalues);
-	void processMBSWRawValues(unsigned int mbswrawvalues[SSMP_MAX_MBSW], QStringList *valueStrList, QStringList *unitStrList);
+	void assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues);
 	bool validateVIN(char VIN[17]);
 
 signals:
@@ -230,7 +229,7 @@ signals:
 	void historicOrMemorizedDTCs(QStringList historicDTCs, QStringList historicDTCsDescriptions);
 	void latestCCCCs(QStringList currentCCCCs, QStringList currentCCCCsDescriptions);
 	void memorizedCCCCs(QStringList historicCCCCs, QStringList historicCCCCsDescriptions);
-	void newMBSWvalues(QStringList valueStrList, QStringList unitStrList, int duration_ms);
+	void newMBSWrawValues(std::vector<unsigned int> rawValues, int duration_ms);
 	void startedMBSWreading();
 	void startedDCreading();
 	void startedActuatorTest();
