@@ -25,6 +25,7 @@
 #include <QtGui>
  #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
+#include "CUcontent_MBsSWs_tableView.h"
 #include "AddMBsSWsDlg.h"
 #include "SSMprotocol2.h"
 #include "libFSSM.h"
@@ -47,21 +48,24 @@ public:
 
 private:
 	SSMprotocol2 *_SSMP2dev;
+	QLabel *_MBSWrefreshTimeTitle_label;
+	QLabel *_MBSWrefreshTimeValue_label;
+	QPushButton *_timemode_pushButton;
+	CUcontent_MBsSWs_tableView *_valuesTableView;
 	std::vector<mbsw_dt> _supportedMBs;
 	std::vector<mbsw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;
-	unsigned int _maxrowsvisible;
-	QStringList _lastvalues;
-
+	QStringList _lastValueStr;
+	QList<unsigned int> _rawValueIndexes;	/* used to assign the incoming raw values to the MBs/SWs on the (meta-/displayed-) MB/SW-list
+						   => NEDED FOR MB/SW-MOVING DURING MB/SW-READING !					*/
+	void setupTimeModeUiElements();
 	void setupUiFonts();
-	void updateMWSWqueryListContent();
-	void updateMBSWvalues(QStringList MBvalueStrList, QStringList MBunitStrList, int refreshduration_ms);
-	void getSelectedTableWidgetRows(QTableWidget *tablewidget, unsigned int *selectedRowsIndexes, unsigned int *nrofselectedRows);
+	void displayMBsSWs();
+	void updateTimeInfo(int refreshduration_ms);
+	void communicationError(QString addstr);
 	void resizeEvent(QResizeEvent *event);
-	bool eventFilter(QObject *obj, QEvent *event);
-	void communicationError(QString adstr);
 
 private slots:
 	void startstopMBsSWsButtonPressed();
@@ -72,7 +76,7 @@ private slots:
 	void deleteMBsSWs();
 	void moveupMBsSWs();
 	void movedownMBsSWs();
-	void setManipulateMBSWItemsButtonsStatus();
+	void setDeleteButtonEnabledState();
 	void switchTimeMode();
 
 signals:

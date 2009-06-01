@@ -21,58 +21,49 @@
 
 
 
-
 CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool timemode) : QWidget(parent)
 {
-	QHeaderView *headerview;
 	_SSMP2dev = SSMP2dev;
 	_supportedMBs.clear();
 	_supportedSWs.clear();
 	_MBSWmetaList.clear();
 	_timemode = timemode;
 	_lastrefreshduration_ms = 0;
-	_maxrowsvisible = 0;
-	_lastvalues.clear();
+	_lastValueStr.clear();
+	_rawValueIndexes.clear();
 
 	// Setup GUI:
 	setupUi(this);
+	setupTimeModeUiElements();
 	setupUiFonts();
+	_valuesTableView = new CUcontent_MBsSWs_tableView(MBSWviews_tabWidget->widget(0));
+	valuesTableView_gridLayout->addWidget(_valuesTableView);
+	//_curvesTableView = new ...
+	//curvesView_gridLayout->addWidget();
 	// Disable all GUI-elements:
-	MBSWtitle_label->setEnabled( false );
-	MBSWrefreshTimeTitle_label->setEnabled( false );
-	MBSWrefreshTimeValue_label->setEnabled( false );
-	selectedMBsSWs_tableWidget->setEnabled( false );
+	_MBSWrefreshTimeTitle_label->setEnabled( false );
+	_MBSWrefreshTimeValue_label->setEnabled( false );
+	_timemode_pushButton->setEnabled( false );
 	startstopmbreading_pushButton->setEnabled( false );
 	mbswadd_pushButton->setEnabled( false );
 	mbswdelete_pushButton->setEnabled( false );
-	mbswmoveup_pushButton->setEnabled( false );
-	mbswmovedown_pushButton->setEnabled( false );
-	timemode_pushButton->setEnabled( false );
+	MBSWviews_tabWidget->setTabEnabled(1, false);
+	_valuesTableView->setEnabled(false);
 	// Set content of time refresh-time labels:
 	if (_timemode)
-		MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
+		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
 	else
-		MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
-	MBSWrefreshTimeValue_label->setText("---      ");
-	// Set table column resize behavior:
-	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	headerview->setResizeMode(0, QHeaderView::Stretch);
-	headerview->setResizeMode(1, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
-	headerview->setResizeMode(2, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
-	// Set column widths (columns 2+3):
-	selectedMBsSWs_tableWidget->setColumnWidth(1, 95);
-	selectedMBsSWs_tableWidget->setColumnWidth(2, 58);
-	// Install event-filter for MB/SW-table:
-	selectedMBsSWs_tableWidget->viewport()->installEventFilter(this);
+		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
+	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Connect signals and slots:
-	connect(startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
-	connect(mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
-	connect(mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
-	connect(mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
-	connect(mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
-	connect(timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
+	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
+	connect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
+	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
+	connect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
+	connect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
+	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	connect(selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
 }
 
 
@@ -83,12 +74,16 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
 	disconnect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	disconnect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
-	disconnect( mbswmoveup_pushButton , SIGNAL( released() ), this, SLOT( moveupMBsSWs() ) );
-	disconnect( mbswmovedown_pushButton , SIGNAL( released() ), this, SLOT( movedownMBsSWs() ) );
-	disconnect( timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
-	disconnect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setManipulateMBSWItemsButtonsStatus() ) );
+	disconnect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
+	disconnect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
+	disconnect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
+	disconnect( _timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
 	disconnect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 	disconnect( _SSMP2dev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+	delete _MBSWrefreshTimeTitle_label;
+	delete _MBSWrefreshTimeValue_label;
+	delete _timemode_pushButton;
+	delete _valuesTableView;
 }
 
 
@@ -106,28 +101,27 @@ bool CUcontent_MBsSWs::setup()
 		_supportedSWs.clear();
 	}
 	_MBSWmetaList.clear();
+	_rawValueIndexes.clear();
+	_lastValueStr.clear();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
-	MBSWrefreshTimeValue_label->setText("---      ");
-	// Clear last recieved values:
-	_lastvalues.clear();
+	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Output titles and units of the selcted MBs/SWs
-	updateMWSWqueryListContent();
+	displayMBsSWs();
 	// *** Enable/Disable all GUI-elements:
 	// Labels + tables:
-	MBSWtitle_label->setEnabled( ok );
-	MBSWrefreshTimeTitle_label->setEnabled( ok );
-	MBSWrefreshTimeValue_label->setEnabled( ok );
-	selectedMBsSWs_tableWidget->setEnabled( ok );
-	// Time mode push-button:
-	timemode_pushButton->setEnabled( ok );
+	_MBSWrefreshTimeTitle_label->setEnabled( ok );
+	_MBSWrefreshTimeValue_label->setEnabled( ok );
+	_valuesTableView->setEnabled( ok );
+	// Values table view widget:
+	_timemode_pushButton->setEnabled( ok );
 	// Disable "Add"-button, if all supported MBs/SWs are already selected:
-	if (_MBSWmetaList.size() >= (_supportedMBs.size()+_supportedSWs.size()))
-		mbswadd_pushButton->setEnabled(false);
-	else
+	if (_MBSWmetaList.size() < (_supportedMBs.size()+_supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
-	// Enable/disable "Delete"/"Move Up"/"Move Down"-buttons:
-	setManipulateMBSWItemsButtonsStatus();
+	else
+		mbswadd_pushButton->setEnabled(false);
+	// Enable/disable "Delete"-button:
+	setDeleteButtonEnabledState();
 	// Disable "Start"-button:
 	startstopmbreading_pushButton->setEnabled(false);
 	// Return result:
@@ -158,11 +152,11 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	// Save MB/SW-list:
 	_MBSWmetaList = MBSWmetaList;
 	// Clear last recieved values:
-	_lastvalues.clear();
+	_lastValueStr.clear();
 	// Update MB/SW table content:
-	updateMWSWqueryListContent();
+	displayMBsSWs();
 	// Clear time information:
-	MBSWrefreshTimeValue_label->setText("---      ");
+	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Activate/deactivate buttons:
 	if (_MBSWmetaList.size() > 0)
 	{
@@ -175,6 +169,36 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
+}
+
+
+void CUcontent_MBsSWs::displayMBsSWs()
+{
+	QStringList titles;
+	QStringList values;
+	QStringList units;
+	unsigned int k=0;
+	for (k=0; k<_MBSWmetaList.size(); k++)
+	{
+		// Title and unit:
+		if (_MBSWmetaList.at(k).blockType == 0)	// MB
+		{
+				titles.append( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
+				units.append( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
+		}
+		else	// SW
+		{
+				titles.append( _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
+				units.append( "" );
+		}
+		// Last value string:
+		if (static_cast<unsigned int>(_lastValueStr.size()) > k)
+			values.append( _lastValueStr.at(k) );
+		else
+			values.append("");
+	}
+	// Display MBs/SWs
+	_valuesTableView->setMWSWlistContent(titles, values, units);
 }
 
 
@@ -245,12 +269,14 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	}
 	else
 		return false;
+	// Reset/Setup list with the raw value indexes:
+	_rawValueIndexes.clear();
+	for (k=0; k<_MBSWmetaList.size(); k++)
+		_rawValueIndexes.push_back(k);
 	// Connect signals and slots:
 	connect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
 	connect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
-	// Disable item manipulation buttons:
-	mbswmoveup_pushButton->setEnabled(false);
-	mbswmovedown_pushButton->setEnabled(false);
+	// Disable add/delete buttons:
 	mbswdelete_pushButton->setEnabled(false);
 	mbswadd_pushButton->setEnabled(false);
 	// Set text+icon of start/stop-button:
@@ -273,14 +299,16 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	}
 	disconnect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
 	connect( _SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+	// Clear list with the raw value indexes:
+	_rawValueIndexes.clear();
 	// set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Start  "));
 	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
 	QSize startstopmbreadingiconsize(24,24);
 	startstopmbreading_pushButton->setIcon(startstopmbreadingicon);
 	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
-	// Enable item manipulation buttons (depending on list content and selection):
-	setManipulateMBSWItemsButtonsStatus();
+	// Enable add/delete button (depending on list content and selection):
+	setDeleteButtonEnabledState();
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
 	return true;
@@ -295,12 +323,19 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	unsigned int k = 0;
 	QStringList valueStrList;
 	QStringList unitStrList;
+	unsigned int rvIndex = 0;
 	// SCALE ALL MBs AND SWs:
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
+		// Get raw value index for the current MB/SW:
+		if (_rawValueIndexes.size() > 0)	// ONLY USE INDEX LIST, IF READING IS IN PROGRESS
+			rvIndex = _rawValueIndexes.at(k);
+		else
+			rvIndex = k;
+		// Scale raw values:
 		if (_MBSWmetaList.at(k).blockType == 0)
 		{
-			if (libFSSM::raw2scaled( rawValues.at(k), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
+			if (libFSSM::raw2scaled( rawValues.at(rvIndex), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
 			{
 				valueStrList.append(scaledValueStr);
 				unitStrList.append(_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
@@ -308,61 +343,50 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 			else
 			{
 				// USE RAW VALUE:
-				valueStrList.append(QString::number(rawValues.at(k), 10));
+				valueStrList.append(QString::number(rawValues.at(rvIndex), 10));
 				unitStrList.append("[RAW]");
 			}
 		}
 		else
 		{
 			// GET UNIT OF THE SWITCH:
-			if (rawValues.at(k) == 0)
+			if (rawValues.at(rvIndex) == 0)
 			{
 				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
 			}
-			else if (rawValues.at(k) == 1)
+			else if (rawValues.at(rvIndex) == 1)
 			{
 				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
 			}
 			unitStrList.append("");
 		}
 	}
+	// sSave current value strings:
+	_lastValueStr = valueStrList;
 	// Display new values:
-	updateMBSWvalues(valueStrList, unitStrList, refreshduration_ms);
+	_valuesTableView->updateMBSWvalues(valueStrList, unitStrList);
+	// Output refresh duration:
+	updateTimeInfo(refreshduration_ms);
 }
-// BETA
 
-void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList unitStrList, int refreshduration_ms)
+
+void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 {
-	int k = 0;
 	double secs_ilen = 0;
 	double datarate = 0;
 
 	_lastrefreshduration_ms = refreshduration_ms; // save last refresh duration
 	QString timeValStr = "";
-	QTableWidgetItem *valuetableelement;
-	QTableWidgetItem *unittableelement;
-	for (k=0; k<valueStrList.size(); k++)
-	{
-		// Output value:
-		valuetableelement = new QTableWidgetItem( valueStrList.at(k) );
-		valuetableelement->setTextAlignment(Qt::AlignCenter);
-		selectedMBsSWs_tableWidget->setItem(k, 1, valuetableelement);
-		// Output unit:
-		unittableelement = new QTableWidgetItem( unitStrList.at(k) );
-		selectedMBsSWs_tableWidget->setItem(k, 2, unittableelement);
-	}
-	// save current value strings:
-	_lastvalues = valueStrList;
 	// Output refresh duration:
 	secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
 	if (_timemode == 0)
 		timeValStr = QString::number(secs_ilen, 'f', 3) + " s";
 	else
 	{
-		datarate = valueStrList.size() / secs_ilen;
+		datarate = _MBSWmetaList.size() / secs_ilen;
 		timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 	}
-	MBSWrefreshTimeValue_label->setText(timeValStr);
+	_MBSWrefreshTimeValue_label->setText(timeValStr);
 }
 
 
@@ -377,17 +401,15 @@ void CUcontent_MBsSWs::addMBsSWs()
 	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
 	{
 		// Clear last recieved values:
-		_lastvalues.clear();
+		_lastValueStr.clear();
 		// Update MB/SW table content:
-		updateMWSWqueryListContent();
+		displayMBsSWs();
 		// Clear time information:
-		MBSWrefreshTimeValue_label->setText("---      ");
+		_MBSWrefreshTimeValue_label->setText("---      ");
 		// Select new MBs/SWs:
-		QTableWidgetSelectionRange selrange((MBSWmetaList_len_old), 0, (_MBSWmetaList.size()-1), 2);
-		selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
-		if (_MBSWmetaList.size() >= _maxrowsvisible)
-			// Scroll to end of the table:
-			selectedMBsSWs_tableWidget->scrollToBottom();
+		_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
+		// Scroll to end of the table:
+		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
 	}
 	// Activate/deactivate buttons:
 	if (_MBSWmetaList.size() > 0)
@@ -403,30 +425,28 @@ void CUcontent_MBsSWs::addMBsSWs()
 
 void CUcontent_MBsSWs::deleteMBsSWs()
 {
-	unsigned int k = 0;
-	unsigned int selectedRowsIndexes[300] = {0,};
-	unsigned int nrofselectedRows = 0;
+	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int startindex = 0;
 	unsigned int endindex = 0;
-
+	int k = 0;
 	// GET INDEXES OF SELECTED ROWS:
-	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
-	if (nrofselectedRows < 1) return;
+	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	if (selectedMBSWIndexes.size() < 1) return;
 	// CHECK AND CORRECT START AND END INDEXES:
-	startindex = selectedRowsIndexes[0];
+	startindex = selectedMBSWIndexes.at(0);
 	if (startindex > (_MBSWmetaList.size()-1)) return; // Cancel, if only empty table lines are selected
-	endindex = selectedRowsIndexes[nrofselectedRows-1];
+	endindex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1);
 	if (endindex > (_MBSWmetaList.size()-1))
 		endindex = (_MBSWmetaList.size()-1); // correct last index, if section exceeds end of list
 	// DELETE MB/SWs FROM SELECTION LIST (METALIST):
 	_MBSWmetaList.erase(_MBSWmetaList.begin()+startindex, _MBSWmetaList.begin()+endindex+1);
 	// DELETE LAST RECIEVED VALUE(S):
-	for (k=0; k<nrofselectedRows; k++)
-		_lastvalues.removeAt(startindex + k);
+	for (k=0; k<selectedMBSWIndexes.size(); k++)
+		_lastValueStr.removeAt(startindex + k);
 	// UPDATE MB/SW TABLE CONTENT:
-	updateMWSWqueryListContent();
+	displayMBsSWs();
 	// Clear time information:
-	MBSWrefreshTimeValue_label->setText("---      ");
+	_MBSWrefreshTimeValue_label->setText("---      ");
 	// ACTIVATE/DEACTIVATE BUTTONS:
 	if (_MBSWmetaList.empty())
 	{
@@ -441,167 +461,89 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 
 void CUcontent_MBsSWs::moveupMBsSWs()
 {
-	unsigned int selectedRowsIndexes[300] = {0,};
-	unsigned int nrofselectedRows = 0;
+	QList<unsigned int> selectedMBSWIndexes;
+	int nrofSelRows = 0;
 	int rowToMoveDownIndex = 0;
 	int rowToMoveDownTargetIndex = 0;
 	MBSWmetadata_dt datablockToMoveDown = {0, 0};
-	unsigned int k = 0;
-	
+	int k = 0;
 	// GET SELECTED ROWS:
-	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
+	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	nrofSelRows = selectedMBSWIndexes.size();
 	// CHECK AND CORRECT SELECTED ROWS:
-	if ((nrofselectedRows < 1) || (selectedRowsIndexes[0] < 1) || (1 + selectedRowsIndexes[0] > _MBSWmetaList.size()))
+	if ((nrofSelRows < 1) || (selectedMBSWIndexes.at(0) < 1) || (1 + selectedMBSWIndexes.at(0) > _MBSWmetaList.size()))
 		return;	// Cancel, if moving up is not possible
-	if ((selectedRowsIndexes[0] + nrofselectedRows) > _MBSWmetaList.size()) // if selection exceed the end of the list
-		nrofselectedRows = _MBSWmetaList.size() - selectedRowsIndexes[0];
+	if ((selectedMBSWIndexes.at(0) + nrofSelRows) > _MBSWmetaList.size()) // if selection exceed the end of the list
+		nrofSelRows = _MBSWmetaList.size() - selectedMBSWIndexes.at(0);
 	// NOTE: IN FACT WE ARE MOVING 1 ROW DOWN... 
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
-	rowToMoveDownIndex = selectedRowsIndexes[0]-1;	
-	rowToMoveDownTargetIndex = selectedRowsIndexes[nrofselectedRows-1];
+	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;	
+	rowToMoveDownTargetIndex = selectedMBSWIndexes.at(nrofSelRows-1);
 	// MOVE MBs/SWs AT SELECTION LIST (METALIST):
 	datablockToMoveDown = _MBSWmetaList.at(rowToMoveDownIndex);
-	for (k=1; k<=nrofselectedRows; k++)
+	for (k=1; k<=nrofSelRows; k++)
 		_MBSWmetaList.at(rowToMoveDownIndex + (k-1)) = _MBSWmetaList.at(rowToMoveDownIndex + k);
 	_MBSWmetaList.at(rowToMoveDownTargetIndex) = datablockToMoveDown;
 	// MOVE LAST RECIEVED VALUE:
-	if (_lastvalues.size() > rowToMoveDownTargetIndex)
-		_lastvalues.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
+	if (_lastValueStr.size() > rowToMoveDownTargetIndex)
+		_lastValueStr.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
+	// MOVE RAW VALUE INDEXES:
+	if (_rawValueIndexes.size()>0)
+	_rawValueIndexes.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
 	// UPDATE MB/SW TABLE CONTENT:
-	updateMWSWqueryListContent();
+	displayMBsSWs();
 	// RESELECT MOVED ROWS:
-	QTableWidgetSelectionRange selrange(rowToMoveDownIndex, 0, (rowToMoveDownTargetIndex-1), 2);
-	selectedMBsSWs_tableWidget->setRangeSelected(selrange, true);
+	_valuesTableView->selectMBSWtableRows(rowToMoveDownIndex, rowToMoveDownTargetIndex-1);
 	// SCROLL TO POSTION OF FIRST SELCTED ROW:
-	QTableWidgetItem *item = new QTableWidgetItem;
-	item = selectedMBsSWs_tableWidget->item(rowToMoveDownIndex, 0);
-	selectedMBsSWs_tableWidget->scrollToItem(item, QAbstractItemView::EnsureVisible);
+	_valuesTableView->scrollMBSWtable(rowToMoveDownIndex);
 }
 
 
 void CUcontent_MBsSWs::movedownMBsSWs()
 {
-	unsigned int selectedRowsIndexes[300] = {0,};
-	unsigned int nrofselectedRows = 0;
+	QList<unsigned int> selectedMBSWIndexes;
 	int rowToMoveUpIndex = 0;
 	int rowToMoveUpTargetIndex = 0;
 	MBSWmetadata_dt datablockToMoveUp = {0,0};
-	unsigned int k = 0;
-	QTableWidgetItem *item;
-
+	int k = 0;
 	// GET SELECTED ROWS:
-	getSelectedTableWidgetRows(selectedMBsSWs_tableWidget, selectedRowsIndexes, &nrofselectedRows);
+	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
 	// CHECK AND CORRECT SELECTED ROWS:
-	if ((nrofselectedRows < 1) | (selectedRowsIndexes[nrofselectedRows-1]+1 >= _MBSWmetaList.size()))
+	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible
 	// NOTE: IN FACT WE ARE MOVING 1 ROW UP... 
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
-	rowToMoveUpIndex = selectedRowsIndexes[nrofselectedRows-1]+1;
-	rowToMoveUpTargetIndex = selectedRowsIndexes[0];
+	rowToMoveUpIndex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1;
+	rowToMoveUpTargetIndex = selectedMBSWIndexes.at(0);
 	// MOVE MBs/SWs AT SELECTION LIST (METALIST):
 	datablockToMoveUp = _MBSWmetaList.at(rowToMoveUpIndex);
-	for (k=1; k<=nrofselectedRows; k++)
+	for (k=1; k<=selectedMBSWIndexes.size(); k++)
 		_MBSWmetaList.at(rowToMoveUpIndex - (k-1)) = _MBSWmetaList.at(rowToMoveUpIndex - k);
 	_MBSWmetaList.at(rowToMoveUpTargetIndex) = datablockToMoveUp;
 	// MOVE LAST RECIEVED VALUE:
-	if (_lastvalues.size() > rowToMoveUpIndex)
-		_lastvalues.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
+	if (_lastValueStr.size() > rowToMoveUpIndex)
+		_lastValueStr.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
+	// MOVE RAW VALUE INDEXES:
+	if (_rawValueIndexes.size()>0)
+	_rawValueIndexes.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
 	// UPDATE MB/SW TABLE CONTENT:
-	updateMWSWqueryListContent();
+	displayMBsSWs();
 	// RESELECT MOVED ROWS:
-	QTableWidgetSelectionRange selrange((rowToMoveUpTargetIndex+1), 0, rowToMoveUpIndex, 2);
-	selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
+	_valuesTableView->selectMBSWtableRows(rowToMoveUpTargetIndex+1, rowToMoveUpIndex);
 	// SCROLL TO POSTION OF LAST SELCTED ROW:
-	item = new QTableWidgetItem;
-	item = selectedMBsSWs_tableWidget->item(rowToMoveUpIndex,0);
-	selectedMBsSWs_tableWidget->scrollToItem(item, QAbstractItemView::EnsureVisible);
+	_valuesTableView->scrollMBSWtable(rowToMoveUpIndex);
 }
 
 
-void CUcontent_MBsSWs::setManipulateMBSWItemsButtonsStatus()
+void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 {
 	if (_SSMP2dev->state() == SSMprotocol2::state_MBSWreading) return;
-	QList<QTableWidgetItem*> selitemslist;
-	selitemslist = selectedMBsSWs_tableWidget->selectedItems();
-	// NOTE: this retruns the nr. of selected cells, NOT THE NR OF ROWS ! Empty cells are not included ! 
-	if (selitemslist.size() < 1)
-	{
+	QList<unsigned int> selectedMBSWIndexes;
+	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	if (selectedMBSWIndexes.size() < 1)
 		mbswdelete_pushButton->setEnabled(false);
-		mbswmovedown_pushButton->setEnabled(false);
-		mbswmoveup_pushButton->setEnabled(false);
-	}
 	else
-	{
-		if (_MBSWmetaList.size() < 2)
-		{
-			mbswmoveup_pushButton->setEnabled(false);
-			mbswmovedown_pushButton->setEnabled(false);
-		}
-		else
-		{
-			mbswmoveup_pushButton->setEnabled(true);
-			mbswmovedown_pushButton->setEnabled(true);
-
-		}
 		mbswdelete_pushButton->setEnabled(true);
-	}
-}
-
-
-void CUcontent_MBsSWs::updateMWSWqueryListContent()
-{
-	unsigned int k=0;
-	int firstrowvisibleindex = 0;
-	QTableWidgetItem *tableelement;
-
-	// Delete table content:
-	selectedMBsSWs_tableWidget->clearContents();
-	// Set number of rows and vertical scroll bar policy:
-	if (_MBSWmetaList.size() >= _maxrowsvisible)
-	{
-		selectedMBsSWs_tableWidget->setRowCount(_MBSWmetaList.size());
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-		// Check if get white space area at the bottom of the table:
-		firstrowvisibleindex = selectedMBsSWs_tableWidget->rowAt(0);
-		if (firstrowvisibleindex+_maxrowsvisible > _MBSWmetaList.size())
-		{
-			selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-			selectedMBsSWs_tableWidget->scrollToBottom();
-			selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem );
-		}
-	}
-	else
-	{
-		selectedMBsSWs_tableWidget->setRowCount(_maxrowsvisible);
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );	// only necessary for delete
-		selectedMBsSWs_tableWidget->scrollToTop();						// only necessary for delete
-	}
-	// Fill table:
-	for (k=0; k<_MBSWmetaList.size(); k++)
-	{
-		if (_MBSWmetaList.at(k).blockType == 0)		// MB
-		{
-			// Output title:
-			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
-			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
-			// Output unit:
-			tableelement = new QTableWidgetItem( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
-			selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
-		}
-		else	// SW
-		{
-			// Output title:
-			tableelement = new QTableWidgetItem( _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
-			selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
-		}
-		// Output last value string:
-		if (static_cast<unsigned int>(_lastvalues.size()) > k)	// size() = last index + 1
-		{
-			tableelement = new QTableWidgetItem( _lastvalues.at(k) );
-			tableelement->setTextAlignment(Qt::AlignCenter);
-			selectedMBsSWs_tableWidget->setItem(k, 1, tableelement);
-		}
-	}
 }
 
 
@@ -611,7 +553,7 @@ void CUcontent_MBsSWs::switchTimeMode()
 	_timemode = !_timemode;
 	if (_timemode)
 	{
-		MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
+		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
 		if (_lastrefreshduration_ms > 0)
 		{
 			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
@@ -620,36 +562,14 @@ void CUcontent_MBsSWs::switchTimeMode()
 	}
 	else
 	{
-		MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
+		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
 		if (_lastrefreshduration_ms > 0)
 		{
 			double sec = static_cast<double>(_lastrefreshduration_ms) / 1000;
 			timeValStr = QString::number(sec, 'f', 3) + " s";
 		}
 	}
-	MBSWrefreshTimeValue_label->setText(timeValStr);
-}
-
-
-void CUcontent_MBsSWs::getSelectedTableWidgetRows(QTableWidget *tablewidget, unsigned int *selectedRowsIndexes, unsigned int *nrofselectedRows)
-{
-	// GET INDEXES OF SELCTED ROWS:
-	*nrofselectedRows = 0;
-	QList<QTableWidgetSelectionRange> selectedRanges;
-	selectedRanges = tablewidget->selectedRanges();//selectedIndexes();
-	if (selectedRanges.size() < 1) return;
-	int k=0;
-	int m=0;
-	int rows=0;
-	for (k=0; k<selectedRanges.size(); k++)
-	{
-		rows = selectedRanges.at(k).bottomRow() - selectedRanges.at(k).topRow() + 1;
-		for (m=0; m<rows; m++)
-		{
-			selectedRowsIndexes[*nrofselectedRows] = selectedRanges.at(k).topRow() + m;
-			(*nrofselectedRows)++;
-		}
-	}
+	_MBSWrefreshTimeValue_label->setText(timeValStr);
 }
 
 
@@ -665,61 +585,10 @@ void CUcontent_MBsSWs::getCurrentTimeMode(bool *timemode)
 }
 
 
-void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
+void CUcontent_MBsSWs::communicationError(QString addstr)
 {
-	int rowheight = 0;
-	int vspace = 0;
-	QHeaderView *headerview;
-	unsigned int minnrofrows = 0;
-	// Get available vertical space (for rows) and height per row:
-	if (selectedMBsSWs_tableWidget->rowCount() < 1)
-		selectedMBsSWs_tableWidget->setRowCount(1); // Temporary create a row to get the row hight
-	rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
-	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	vspace = selectedMBsSWs_tableWidget->viewport()->height();
-	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
-	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-	// Calculate and set nr. of rows:
-	_maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (_maxrowsvisible < _MBSWmetaList.size())
-		minnrofrows = _MBSWmetaList.size();
-	else
-		minnrofrows = _maxrowsvisible;
-	selectedMBsSWs_tableWidget->setRowCount(minnrofrows);
-	// Set vertical scroll bar policy:
-	if (minnrofrows > _MBSWmetaList.size())
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-	else
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-	// Switch back to "Scroll per Item"-mode:
-	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that  here...
-	// accept event:
-	event->accept();
-}
-
-
-bool CUcontent_MBsSWs::eventFilter(QObject *obj, QEvent *event)
-{
-	if (obj == selectedMBsSWs_tableWidget->viewport())
-	{
-		if (event->type() == QEvent::Wheel)
-		{
-			if (selectedMBsSWs_tableWidget->verticalScrollBarPolicy() ==  Qt::ScrollBarAlwaysOff)
-			// ...or _maxrowsvisible > _MBSWmetaList_len
-				return true;	// filter out
-			else
-				return false;
-		}
-	}
-	// Pass the event on to the parent class
-	return QWidget::eventFilter(obj, event);
-}
-
-
-void CUcontent_MBsSWs::communicationError(QString adstr)
-{
-	if (adstr.size() > 0) adstr.prepend('\n');
-	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from Control Unit -") + adstr, QMessageBox::Ok, this);
+	if (addstr.size() > 0) addstr.prepend('\n');
+	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from Control Unit -") + addstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
 	msgfont.setPixelSize(12); // 9pts
 	msg.setFont( msgfont );
@@ -727,6 +596,36 @@ void CUcontent_MBsSWs::communicationError(QString adstr)
 	msg.exec();
 	msg.close();
 	emit error();
+}
+
+
+void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
+{
+	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
+	_MBSWrefreshTimeValue_label->move(width()-100, 3);
+	_timemode_pushButton->move(width()-27, 2);
+	event->accept();
+}
+
+
+void CUcontent_MBsSWs::setupTimeModeUiElements()
+{
+	_MBSWrefreshTimeTitle_label = new QLabel("", this);
+	_MBSWrefreshTimeTitle_label->setFixedWidth(140);
+	_MBSWrefreshTimeTitle_label->setFixedHeight(16);
+	_MBSWrefreshTimeValue_label = new QLabel("", this);
+	_MBSWrefreshTimeValue_label->setFixedWidth(55);
+	_MBSWrefreshTimeValue_label->setFixedHeight(16);
+	_timemode_pushButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/oxygen/16x16/chronometer.png")), "", this);
+	_timemode_pushButton->setFixedWidth(18);
+	_timemode_pushButton->setFixedHeight(18);
+	_timemode_pushButton->setIconSize(QSize(12,12));
+	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
+	_MBSWrefreshTimeValue_label->move(width()-100, 3);
+	_timemode_pushButton->move(width()-27, 2);
+	_MBSWrefreshTimeTitle_label->show();
+	_MBSWrefreshTimeValue_label->show();
+	_timemode_pushButton->show();
 }
 
 
@@ -738,20 +637,14 @@ void CUcontent_MBsSWs::setupUiFonts()
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);
 	this->setFont(contentfont);
-	// Table title:
-	QFont tabletitlefont = contentfont;
-	tabletitlefont.setUnderline(true);
-	MBSWtitle_label->setFont(tabletitlefont);
-	// Table:
-	selectedMBsSWs_tableWidget->setFont(contentfont);
 	// Buttons:
 	startstopmbreading_pushButton->setFont(contentfont);
 	mbswadd_pushButton->setFont(contentfont);
 	mbswdelete_pushButton->setFont(contentfont);
-	mbswmoveup_pushButton->setFont(contentfont);
-	mbswmovedown_pushButton->setFont(contentfont);
 	// Refresh interval labels:
-	MBSWrefreshTimeTitle_label->setFont(contentfont);
-	MBSWrefreshTimeValue_label->setFont(contentfont);
+	_MBSWrefreshTimeTitle_label->setFont(contentfont);
+	_MBSWrefreshTimeValue_label->setFont(contentfont);
+	// Tab widget:
+	MBSWviews_tabWidget->setFont(contentfont);
 }
 
