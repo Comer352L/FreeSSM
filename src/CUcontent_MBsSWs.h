@@ -23,12 +23,35 @@
 
 
 #include <QtGui>
- #include <vector>
+#include <vector>
 #include "ui_CUcontent_MBsSWs.h"
 #include "CUcontent_MBsSWs_tableView.h"
 #include "AddMBsSWsDlg.h"
 #include "SSMprotocol2.h"
 #include "libFSSM.h"
+
+
+class MBSWvalue_dt
+{
+public:
+	MBSWvalue_dt() { rawValue=0; };
+	unsigned int rawValue;
+	QString scaledStr;
+	QString unitStr;
+};
+
+
+
+class MinMaxMBSWvalue_dt
+{
+public:
+	MinMaxMBSWvalue_dt() { disabled=false; minRawValue=0; minRawValue=0; };
+	bool disabled;
+	double minRawValue;
+	double maxRawValue;
+	QString minScaledValueStr;
+	QString maxScaledValueStr;
+};
 
 
 
@@ -57,7 +80,8 @@ private:
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;
-	QStringList _lastValueStr;
+	QList<MBSWvalue_dt> _lastValues;
+	QList<MinMaxMBSWvalue_dt> _minmaxData;
 	QList<unsigned int> _rawValueIndexes;	/* used to assign the incoming raw values to the MBs/SWs on the (meta-/displayed-) MB/SW-list
 						   => NEDED FOR MB/SW-MOVING DURING MB/SW-READING !					*/
 	void setupTimeModeUiElements();
@@ -76,6 +100,7 @@ private slots:
 	void deleteMBsSWs();
 	void moveupMBsSWs();
 	void movedownMBsSWs();
+	void resetMinMax();
 	void setDeleteButtonEnabledState();
 	void switchTimeMode();
 

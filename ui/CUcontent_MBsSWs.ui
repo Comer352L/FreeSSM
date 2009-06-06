@@ -92,25 +92,25 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="startstopmbreading_pushButton" >
+      <widget class="QPushButton" name="mbswadd_pushButton" >
        <property name="minimumSize" >
         <size>
-         <width>72</width>
+         <width>40</width>
          <height>34</height>
         </size>
        </property>
        <property name="maximumSize" >
         <size>
-         <width>72</width>
+         <width>40</width>
          <height>34</height>
         </size>
        </property>
        <property name="text" >
-        <string> Start  </string>
+        <string/>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
-         <normaloff>:/icons/chrystal/32x32/player_play.png</normaloff>:/icons/chrystal/32x32/player_play.png</iconset>
+         <normaloff>:/icons/chrystal/32x32/add.png</normaloff>:/icons/chrystal/32x32/add.png</iconset>
        </property>
        <property name="iconSize" >
         <size>
@@ -119,19 +119,6 @@
         </size>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0" >
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="mbswdelete_pushButton" >
@@ -163,25 +150,38 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="mbswadd_pushButton" >
-       <property name="minimumSize" >
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="startstopmbreading_pushButton" >
+       <property name="minimumSize" >
+        <size>
+         <width>72</width>
          <height>34</height>
         </size>
        </property>
        <property name="maximumSize" >
         <size>
-         <width>40</width>
+         <width>72</width>
          <height>34</height>
         </size>
        </property>
        <property name="text" >
-        <string/>
+        <string> Start  </string>
        </property>
        <property name="icon" >
         <iconset resource="../resources/FreeSSM.qrc" >
-         <normaloff>:/icons/chrystal/32x32/add.png</normaloff>:/icons/chrystal/32x32/add.png</iconset>
+         <normaloff>:/icons/chrystal/32x32/player_play.png</normaloff>:/icons/chrystal/32x32/player_play.png</iconset>
        </property>
        <property name="iconSize" >
         <size>

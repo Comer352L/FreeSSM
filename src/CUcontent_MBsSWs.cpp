@@ -29,7 +29,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool
 	_MBSWmetaList.clear();
 	_timemode = timemode;
 	_lastrefreshduration_ms = 0;
-	_lastValueStr.clear();
+	_lastValues.clear();
+	_minmaxData.clear();
 	_rawValueIndexes.clear();
 
 	// Setup GUI:
@@ -61,6 +62,7 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool
 	connect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
 	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
 	connect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
+	connect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMax() ) );
 	connect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
@@ -76,6 +78,7 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	disconnect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
 	disconnect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
 	disconnect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
+	disconnect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMax() ) );
 	disconnect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	disconnect( _timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
 	disconnect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
@@ -102,7 +105,8 @@ bool CUcontent_MBsSWs::setup()
 	}
 	_MBSWmetaList.clear();
 	_rawValueIndexes.clear();
-	_lastValueStr.clear();
+	_lastValues.clear();
+	_minmaxData.clear();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
 	_MBSWrefreshTimeValue_label->setText("---      ");
@@ -151,8 +155,9 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	}
 	// Save MB/SW-list:
 	_MBSWmetaList = MBSWmetaList;
-	// Clear last recieved values:
-	_lastValueStr.clear();
+	// Clear last values:
+	_lastValues.clear();
+	_minmaxData.clear();
 	// Update MB/SW table content:
 	displayMBsSWs();
 	// Clear time information:
@@ -175,30 +180,65 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 void CUcontent_MBsSWs::displayMBsSWs()
 {
 	QStringList titles;
+	QStringList minvalues;
 	QStringList values;
+	QStringList maxvalues;
 	QStringList units;
 	unsigned int k=0;
 	for (k=0; k<_MBSWmetaList.size(); k++)
 	{
-		// Title and unit:
+		// Title:
 		if (_MBSWmetaList.at(k).blockType == 0)	// MB
-		{
 				titles.append( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
-				units.append( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
-		}
 		else	// SW
-		{
 				titles.append( _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
+		// Value and unit strings:
+		// NOTE: _lastValues can be empty !
+		if (static_cast<unsigned int>(_lastValues.size()) > k)
+		{
+			if (_lastValues.at(k).scaledStr.isEmpty())
+				values.append( QString::number(_lastValues.at(k).rawValue) );
+			else
+				values.append( _lastValues.at(k).scaledStr );
+			units.append( _lastValues.at(k).unitStr );
+		}
+		else
+		{
+			values.append( "" );
+			if (_MBSWmetaList.at(k).blockType == 0)	// MB
+				units.append( _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
+			else // SW
 				units.append( "" );
 		}
-		// Last value string:
-		if (static_cast<unsigned int>(_lastValueStr.size()) > k)
-			values.append( _lastValueStr.at(k) );
+		// Last min/max value strings:
+		// NOTE: _minmaxData can be empty !
+		if (static_cast<unsigned int>(_minmaxData.size()) > k)
+		{
+			if (!_minmaxData.at(k).disabled)
+			{
+				if (_minmaxData.at(k).minScaledValueStr.isEmpty())
+					minvalues.append( QString::number(_minmaxData.at(k).minRawValue) );
+				else
+					minvalues.append( _minmaxData.at(k).maxScaledValueStr );
+				if (_minmaxData.at(k).maxScaledValueStr.isEmpty())
+					maxvalues.append( QString::number(_minmaxData.at(k).minRawValue) );
+				else
+					maxvalues.append( _minmaxData.at(k).maxScaledValueStr );
+			}
+			else
+			{
+				maxvalues.append( "" );
+				maxvalues.append( "" );
+			}
+		}
 		else
-			values.append("");
+		{
+			minvalues.append("");
+			maxvalues.append("");
+		}
 	}
 	// Display MBs/SWs
-	_valuesTableView->setMWSWlistContent(titles, values, units);
+	_valuesTableView->setMWSWlistContent(titles, values, minvalues, maxvalues, units);
 }
 
 
@@ -319,52 +359,230 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 {
 	QString defstr;
 	QString rvstr;
+	bool scalingSuccessful = false;
 	QString scaledValueStr;
-	unsigned int k = 0;
+	int k = 0;
+	// Min/Max comparison:
+	bool noLastMinMaxValue = false;
+	bool isCurrentValueNumeric = false;
+	bool isLastMinValueNumeric = false;
+	bool isLastMaxValueNumeric = false;
+	double currentScaledValueNumeric = 0;
+	double lastMinScaledValueNumeric = 0;
+	double lastMaxScaledValueNumeric = 0;
+	double currentMinCompValue = 0;
+	double currentMaxCompValue = 0;
+	double lastMinCompValue = 0;
+	double lastMaxCompValue = 0;
+	// List output
+	QStringList minValueStrList;
 	QStringList valueStrList;
+	QStringList maxValueStrList;
 	QStringList unitStrList;
 	unsigned int rvIndex = 0;
-	// SCALE ALL MBs AND SWs:
-	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
+
+	for (k=0; static_cast<unsigned int>(k)<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
+		// ******** SCALE MB/SW ********:
 		// Get raw value index for the current MB/SW:
-		if (_rawValueIndexes.size() > 0)	// ONLY USE INDEX LIST, IF READING IS IN PROGRESS
-			rvIndex = _rawValueIndexes.at(k);
-		else
-			rvIndex = k;
+		rvIndex = _rawValueIndexes.at(k);
 		// Scale raw values:
-		if (_MBSWmetaList.at(k).blockType == 0)
+		if (_MBSWmetaList.at(k).blockType == 0) // if it is a MB
 		{
-			if (libFSSM::raw2scaled( rawValues.at(rvIndex), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr))
-			{
-				valueStrList.append(scaledValueStr);
+			scalingSuccessful = libFSSM::raw2scaled( rawValues.at(rvIndex), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr);
+			if (scalingSuccessful)
 				unitStrList.append(_supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
-			}
 			else
-			{
-				// USE RAW VALUE:
-				valueStrList.append(QString::number(rawValues.at(rvIndex), 10));
 				unitStrList.append("[RAW]");
-			}
 		}
-		else
+		else	// it is a SW
 		{
-			// GET UNIT OF THE SWITCH:
 			if (rawValues.at(rvIndex) == 0)
 			{
-				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0));
+				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0);
+				else
+					scaledValueStr.clear();
+				scalingSuccessful = !scaledValueStr.isEmpty();
 			}
 			else if (rawValues.at(rvIndex) == 1)
 			{
-				valueStrList.append(_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1));
+				scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1);
+				scalingSuccessful = !scaledValueStr.isEmpty();
 			}
-			unitStrList.append("");
+			else
+			{
+				/* NOTE:
+				 * THIS MEANS THAT WE HAVE A SEVERE BUG IN SSMprotocol2::assignMBSWRawData(...) !
+				 * => handling this theoretical case would be too complicated...
+				 *    => display the raw value (although it is definitely wrong)
+				 *       => in combination with the display unit [BIN], the user should notice
+                                 *          that something is going wrong...
+				 */
+				scalingSuccessful = false;
+				scaledValueStr = "";
+			}
+			// Add unit string to the output list:
+			if (!scalingSuccessful/*((rawValues.at(rvIndex)==0) || (rawValues.at(rvIndex) == 1)) && scaledValueStr.isEmpty()*/) // if we have a valid raw value but scaling failed
+				unitStrList.append("[BIN]"); // display a unit, to signal that the displayed value is unscaled 
+			else
+				unitStrList.append("");
+		}
+		// Add value string to the output list:
+		if (scalingSuccessful)
+			valueStrList.append( scaledValueStr );
+		else
+			valueStrList.append( QString::number( rawValues.at(rvIndex) ) );
+		// ******** CHECK FOR NEW MIN/MAX VALUE ********:
+		/* NOTE:   
+		 * - MB/SW scaled values can be NUMERIC VALUES or STRINGS or even BOTH MIXED (for different raw values)
+		 * - scaled numeric values DO NOT necessarily grow with increasing raw values
+		 * => STRATEGY:
+		 * - compare scaled values only if min/max AND current values both have numeric scaled values
+		 * - compare raw values in any other case (even if one of the scaled values is numeric !)
+		 */
+		// Check if we already have min+max values, try to convert last min/max values and current value to (scaled) numeric values:
+		isLastMinValueNumeric = false;
+		isLastMaxValueNumeric = false;
+		if (k >= _minmaxData.size())	// if no last min/max values available
+			noLastMinMaxValue = true;
+		else
+		{
+			noLastMinMaxValue = false;
+			if (scalingSuccessful && !_minmaxData.at(k).disabled) // NOTE: otherwise values aren't used
+			{
+				lastMinScaledValueNumeric = _minmaxData.at(k).minScaledValueStr.toDouble(&isLastMinValueNumeric);
+				lastMaxScaledValueNumeric = _minmaxData.at(k).maxScaledValueStr.toDouble(&isLastMaxValueNumeric);
+			}
+		}
+		if (isLastMinValueNumeric || isLastMaxValueNumeric || noLastMinMaxValue)
+			currentScaledValueNumeric = valueStrList.at(k).toDouble(&isCurrentValueNumeric);
+		// Disable min/max values for this MB/SW, if scaling failed and if we already have scaled min/max values:
+		if (!scalingSuccessful && !noLastMinMaxValue && !_minmaxData.at(k).disabled  && (!_minmaxData.at(k).minScaledValueStr.isEmpty() || !_minmaxData.at(k).maxScaledValueStr.isEmpty()))
+		{
+			_minmaxData[k].disabled = true;
+			_minmaxData[k].minScaledValueStr = "";	// important !
+			_minmaxData[k].maxScaledValueStr = "";	// important !
+			/* NOTE:
+			 * - do not generally disable min/max values, if scaling failed. Pure raw value MBs/SWs (without any scaling information) should be allowed
+			 * - maybe we can improve the min/max determination for MBs/SWs which are partially unscalable
+			 *   (does it make sense to switch betweend scaled and unscaled min/max values ???)
+			 */
+		}
+		// Update/get new min/max values:
+		if (noLastMinMaxValue || !_minmaxData.at(k).disabled) // if we don't have min/max-values yet or min/max values are not disabled
+		{
+			if (noLastMinMaxValue)
+			{
+				// Set min and max value to current value:
+				MinMaxMBSWvalue_dt newMinMaxDataset;
+				newMinMaxDataset.minRawValue = rawValues.at(rvIndex);
+				newMinMaxDataset.maxRawValue = rawValues.at(rvIndex);
+				if (scalingSuccessful)
+				{
+					newMinMaxDataset.minScaledValueStr = valueStrList.at(k);
+					newMinMaxDataset.maxScaledValueStr = valueStrList.at(k);
+				}
+				else
+				{
+					newMinMaxDataset.minScaledValueStr = "";
+					newMinMaxDataset.maxScaledValueStr = "";
+				}
+				_minmaxData.append( newMinMaxDataset );
+			}
+			else
+			{
+				// Determine values for min comparison:
+				if (scalingSuccessful && isCurrentValueNumeric && isLastMinValueNumeric)
+				{
+					// Use scaled values for min comparison:
+					currentMinCompValue = currentScaledValueNumeric;
+					lastMinCompValue = lastMinScaledValueNumeric;
+				}
+				else
+				{
+					// Use raw values for min comparison:
+					currentMinCompValue = rawValues.at(rvIndex);
+					lastMinCompValue = _minmaxData.at(k).minRawValue;
+				}
+				// Determine values for max comparison:
+				if (scalingSuccessful && isCurrentValueNumeric && isLastMaxValueNumeric)
+				{
+					// Use scaled values for max comparison:
+					currentMaxCompValue = currentScaledValueNumeric;
+					lastMaxCompValue = lastMaxScaledValueNumeric;
+				}
+				else
+				{
+					// Use raw values for max comparison:
+					currentMaxCompValue = rawValues.at(rvIndex);
+					lastMaxCompValue = _minmaxData.at(k).maxRawValue;
+				}
+				/* NOTE: only compare scaled values, if BOTH (min/max and current) are numeric ! */
+				// Check if we have a new min value:
+				if (currentMinCompValue < lastMinCompValue)
+				{
+					_minmaxData[k].minRawValue = rawValues.at(rvIndex);
+					if (scalingSuccessful)
+						_minmaxData[k].minScaledValueStr = valueStrList.at(k);
+					else
+						_minmaxData[k].minScaledValueStr = "";
+				}
+				// Check if we have a new max value:
+				if (currentMaxCompValue > lastMaxCompValue)
+				{
+					_minmaxData[k].maxRawValue = rawValues.at(rvIndex);
+					if (scalingSuccessful)
+						_minmaxData[k].maxScaledValueStr = valueStrList.at(k);
+					else
+						_minmaxData[k].maxScaledValueStr = "";
+				}
+			}
+		}
+		// Add min/max strings to the output list:
+		if (_minmaxData.at(k).disabled)
+		{
+			// Don not display any min/values, if disabled:
+			minValueStrList.append( "" );
+			maxValueStrList.append( "" );
+		}
+		else if (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty()) // if min/max is not disabled an we have unscaled min/max values
+		{
+			/* NOTE: min/max scaled value strings should BOTH be empty in this case (otherwise min/max would have been disabled before !) */
+			// Display raw min/max values:
+			minValueStrList.append( QString::number(_minmaxData.at(k).minRawValue) );
+			maxValueStrList.append( QString::number(_minmaxData.at(k).maxRawValue) );
+		}
+		else
+		{
+			// Display scaled min/max values:
+			minValueStrList.append( _minmaxData.at(k).minScaledValueStr );
+			maxValueStrList.append( _minmaxData.at(k).maxScaledValueStr );
+		}
+		// ******** Save current value data ********:
+		if (k >= _lastValues.size())
+		{
+			MBSWvalue_dt newValueDataset;
+			newValueDataset.rawValue = rawValues.at(rvIndex);
+			if (scalingSuccessful)
+				newValueDataset.scaledStr = valueStrList.at(k);
+			else
+				newValueDataset.scaledStr = "";
+			newValueDataset.unitStr = unitStrList.at(k);
+			_lastValues.append( newValueDataset );
+		}
+		else
+		{
+			_lastValues[k].rawValue = rawValues.at(rvIndex);
+			if (scalingSuccessful)
+				_lastValues[k].scaledStr = valueStrList.at(k);
+			else
+				_lastValues[k].scaledStr = "";
+			_lastValues[k].unitStr = unitStrList.at(k);
 		}
 	}
-	// sSave current value strings:
-	_lastValueStr = valueStrList;
 	// Display new values:
-	_valuesTableView->updateMBSWvalues(valueStrList, unitStrList);
+	_valuesTableView->updateMBSWvalues(valueStrList, minValueStrList, maxValueStrList, unitStrList);
 	// Output refresh duration:
 	updateTimeInfo(refreshduration_ms);
 }
@@ -400,8 +618,9 @@ void CUcontent_MBsSWs::addMBsSWs()
 	// Update table:
 	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
 	{
-		// Clear last recieved values:
-		_lastValueStr.clear();
+		// Clear current values:
+		_lastValues.clear();
+		_minmaxData.clear();
 		// Update MB/SW table content:
 		displayMBsSWs();
 		// Clear time information:
@@ -440,9 +659,12 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 		endindex = (_MBSWmetaList.size()-1); // correct last index, if section exceeds end of list
 	// DELETE MB/SWs FROM SELECTION LIST (METALIST):
 	_MBSWmetaList.erase(_MBSWmetaList.begin()+startindex, _MBSWmetaList.begin()+endindex+1);
-	// DELETE LAST RECIEVED VALUE(S):
+	// DELETE LAST VALUE(S):
 	for (k=0; k<selectedMBSWIndexes.size(); k++)
-		_lastValueStr.removeAt(startindex + k);
+	{
+		_lastValues.removeAt(startindex + k);
+		_minmaxData.removeAt(startindex + k);
+	}
 	// UPDATE MB/SW TABLE CONTENT:
 	displayMBsSWs();
 	// Clear time information:
@@ -484,9 +706,11 @@ void CUcontent_MBsSWs::moveupMBsSWs()
 	for (k=1; k<=nrofSelRows; k++)
 		_MBSWmetaList.at(rowToMoveDownIndex + (k-1)) = _MBSWmetaList.at(rowToMoveDownIndex + k);
 	_MBSWmetaList.at(rowToMoveDownTargetIndex) = datablockToMoveDown;
-	// MOVE LAST RECIEVED VALUE:
-	if (_lastValueStr.size() > rowToMoveDownTargetIndex)
-		_lastValueStr.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
+	// MOVE LAST VALUEs:
+	if (_lastValues.size() > rowToMoveDownTargetIndex)
+		_lastValues.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
+	if (_minmaxData.size() > rowToMoveDownTargetIndex)
+		_minmaxData.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
 	// MOVE RAW VALUE INDEXES:
 	if (_rawValueIndexes.size()>0)
 	_rawValueIndexes.move(rowToMoveDownIndex, rowToMoveDownTargetIndex);
@@ -520,9 +744,11 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 	for (k=1; k<=selectedMBSWIndexes.size(); k++)
 		_MBSWmetaList.at(rowToMoveUpIndex - (k-1)) = _MBSWmetaList.at(rowToMoveUpIndex - k);
 	_MBSWmetaList.at(rowToMoveUpTargetIndex) = datablockToMoveUp;
-	// MOVE LAST RECIEVED VALUE:
-	if (_lastValueStr.size() > rowToMoveUpIndex)
-		_lastValueStr.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
+	// MOVE LAST VALUES:
+	if (_lastValues.size() > rowToMoveUpIndex)
+		_lastValues.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
+	if (_minmaxData.size() > rowToMoveUpIndex)
+		_minmaxData.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
 	// MOVE RAW VALUE INDEXES:
 	if (_rawValueIndexes.size()>0)
 	_rawValueIndexes.move(rowToMoveUpIndex, rowToMoveUpTargetIndex);
@@ -532,6 +758,34 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 	_valuesTableView->selectMBSWtableRows(rowToMoveUpTargetIndex+1, rowToMoveUpIndex);
 	// SCROLL TO POSTION OF LAST SELCTED ROW:
 	_valuesTableView->scrollMBSWtable(rowToMoveUpIndex);
+}
+
+
+void CUcontent_MBsSWs::resetMinMax()
+{
+	QStringList lastValueStr;
+	QStringList lastUnitStr;
+	MinMaxMBSWvalue_dt newMinMaxDataset;
+	// Delete min/max values:
+	_minmaxData.clear();
+	// Setup new min/max values and output data:
+	for (int k=0; k<_lastValues.size(); k++)
+	{
+		// Set min/max values to current value:
+		newMinMaxDataset.minRawValue = _lastValues.at(k).rawValue;
+		newMinMaxDataset.maxRawValue = _lastValues.at(k).rawValue;
+		newMinMaxDataset.minScaledValueStr = _lastValues.at(k).scaledStr;
+		newMinMaxDataset.maxScaledValueStr = _lastValues.at(k).scaledStr;
+		_minmaxData.append( newMinMaxDataset );
+		// Get min/max value string and unit for output:
+		if (_lastValues.at(k).scaledStr.isEmpty())
+			lastValueStr.append( QString::number(_lastValues.at(k).rawValue) );
+		else
+			lastValueStr.append( _lastValues.at(k).scaledStr );
+		lastUnitStr.append( _lastValues.at(k).unitStr );
+	}
+	// Display last values as current/min/max values:
+	_valuesTableView->updateMBSWvalues(lastValueStr, lastValueStr, lastValueStr, lastUnitStr);
 }
 
 
@@ -603,7 +857,7 @@ void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 {
 	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
 	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-27, 2);
+	_timemode_pushButton->move(width()-29, 1);
 	event->accept();
 }
 
@@ -617,12 +871,12 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 	_MBSWrefreshTimeValue_label->setFixedWidth(55);
 	_MBSWrefreshTimeValue_label->setFixedHeight(16);
 	_timemode_pushButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/oxygen/16x16/chronometer.png")), "", this);
-	_timemode_pushButton->setFixedWidth(18);
-	_timemode_pushButton->setFixedHeight(18);
+	_timemode_pushButton->setFixedWidth(20);
+	_timemode_pushButton->setFixedHeight(20);
 	_timemode_pushButton->setIconSize(QSize(12,12));
 	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
 	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-27, 2);
+	_timemode_pushButton->move(width()-29, 1);
 	_MBSWrefreshTimeTitle_label->show();
 	_MBSWrefreshTimeValue_label->show();
 	_timemode_pushButton->show();
@@ -632,7 +886,7 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 void CUcontent_MBsSWs::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUcontent_MBsSWs.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);
@@ -641,6 +895,7 @@ void CUcontent_MBsSWs::setupUiFonts()
 	startstopmbreading_pushButton->setFont(contentfont);
 	mbswadd_pushButton->setFont(contentfont);
 	mbswdelete_pushButton->setFont(contentfont);
+	_timemode_pushButton->setFont(contentfont);
 	// Refresh interval labels:
 	_MBSWrefreshTimeTitle_label->setFont(contentfont);
 	_MBSWrefreshTimeValue_label->setFont(contentfont);

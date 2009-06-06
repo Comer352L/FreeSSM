@@ -1,6 +1,9 @@
 <RCC>
   <qresource prefix="/" >
+    <file>icons/freessm/24x24/reset-min-max.png</file>
     <file>icons/freessm/32x32/FreeSSM.png</file>
+    <file>icons/freessm/24x24/show-max-value.png</file>
+    <file>icons/freessm/24x24/show-min-value.png</file>
     <file>icons/oxygen/22x22/preferences-desktop-theme.png</file>
     <file>icons/oxygen/22x22/go-first.png</file>
     <file>icons/oxygen/22x22/go-next.png</file>

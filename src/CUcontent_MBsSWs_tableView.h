@@ -32,11 +32,11 @@ class CUcontent_MBsSWs_tableView : public QWidget, private Ui::MBSWtable_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs_tableView(QWidget *parent);
+	CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin=true, bool showMax=true);
 	~CUcontent_MBsSWs_tableView();
-	void setMWSWlistContent(QStringList titles, QStringList values, QStringList units);
+	void setMWSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
+	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
 	void clearMBSWlistContent();
-	void updateMBSWvalues(QStringList MBvalueStrList, QStringList MBunitStrList);
 	void getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes);
 	void selectMBSWtableRows(unsigned int start, unsigned int end);
 	void scrollMBSWtable(unsigned int rowindex);
@@ -51,10 +51,13 @@ private:
 
 private slots:
 	void setMoveButtonsEnabledState();
+	void toggleMinColumnVisible(bool show);
+	void toggleMaxColumnVisible(bool show);
 
 signals:
 	void moveUpButton_pressed();
 	void moveDownButton_pressed();
+	void resetMinMaxButton_pressed();
 	void itemSelectionChanged();
 
 };

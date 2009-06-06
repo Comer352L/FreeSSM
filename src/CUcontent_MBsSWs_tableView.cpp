@@ -21,7 +21,7 @@
 
 
 
-CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent) : QWidget(parent)
+CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin, bool showMax) : QWidget(parent)
 {
 	QHeaderView *headerview;
 	_nrofMBsSWs = 0;
@@ -37,15 +37,25 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent) : QWidge
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
 	headerview->setResizeMode(0, QHeaderView::Stretch);
 	headerview->setResizeMode(1, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
-	headerview->setResizeMode(2, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
-	// Set column widths (columns 2+3):
+	headerview->setResizeMode(2, QHeaderView::Fixed);
+	headerview->setResizeMode(3, QHeaderView::Fixed);
+	headerview->setResizeMode(4, QHeaderView::Fixed);
+	// Set column widths (columns 2-5):
 	selectedMBsSWs_tableWidget->setColumnWidth(1, 95);
-	selectedMBsSWs_tableWidget->setColumnWidth(2, 58);
+	selectedMBsSWs_tableWidget->setColumnWidth(2, 95);
+	selectedMBsSWs_tableWidget->setColumnWidth(3, 95);
+	selectedMBsSWs_tableWidget->setColumnWidth(4, 58);
 	// Install event-filter for MB/SW-table:
 	selectedMBsSWs_tableWidget->viewport()->installEventFilter(this);
+	// Check min/max toggle-buttons:
+	showMin_pushButton->setChecked(showMin);
+	showMax_pushButton->setChecked(showMax);
 	// Connect signals and slots:
 	connect( mbswmoveup_pushButton , SIGNAL( released() ), this, SIGNAL( moveUpButton_pressed() ) );
 	connect( mbswmovedown_pushButton , SIGNAL( released() ), this, SIGNAL( moveDownButton_pressed() ) );
+	connect( resetMinMax_pushButton , SIGNAL( released() ), this, SIGNAL( resetMinMaxButton_pressed() ) );
+	connect( showMin_pushButton , SIGNAL( clicked(bool) ), this, SLOT( toggleMinColumnVisible(bool) ) );
+	connect( showMax_pushButton , SIGNAL( clicked(bool) ), this, SLOT( toggleMaxColumnVisible(bool) ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	connect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setMoveButtonsEnabledState() ) );
 	connect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SIGNAL( itemSelectionChanged() ) );
@@ -56,12 +66,15 @@ CUcontent_MBsSWs_tableView::~CUcontent_MBsSWs_tableView()
 {
 	disconnect( mbswmoveup_pushButton , SIGNAL( released() ), this, SIGNAL( moveUpButton_pressed() ) );
 	disconnect( mbswmovedown_pushButton , SIGNAL( released() ), this, SIGNAL( moveDownButton_pressed() ) );
+	disconnect( resetMinMax_pushButton , SIGNAL( released() ), this, SIGNAL( resetMinMaxButton_pressed() ) );
+	disconnect( showMin_pushButton , SIGNAL( clicked(bool) ), this, SLOT( toggleMinColumnVisible(bool) ) );
+	disconnect( showMax_pushButton , SIGNAL( clicked(bool) ), this, SLOT( toggleMaxColumnVisible(bool) ) );
 	disconnect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SLOT( setMoveButtonsEnabledState() ) );
 	disconnect( selectedMBsSWs_tableWidget , SIGNAL( itemSelectionChanged() ), this, SIGNAL( itemSelectionChanged() ) );
 }
 
 
-void CUcontent_MBsSWs_tableView::setMWSWlistContent(QStringList titles, QStringList values, QStringList units)
+void CUcontent_MBsSWs_tableView::setMWSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units)
 {
 	int k=0;
 	int firstrowvisibleindex = 0;
@@ -69,7 +82,7 @@ void CUcontent_MBsSWs_tableView::setMWSWlistContent(QStringList titles, QStringL
 	// Delete table content:
 	selectedMBsSWs_tableWidget->clearContents();
 	// Save nr of MBs/Sws:
-	_nrofMBsSWs = qMax(qMax(titles.size(), values.size()), units.size());
+	_nrofMBsSWs = qMax( qMax( qMax( qMax( values.size(), minValues.size() ), maxValues.size() ), titles.size() ), units.size() );
 	// Set number of rows and vertical scroll bar policy:
 	if (_nrofMBsSWs >= _maxrowsvisible)
 	{
@@ -90,26 +103,53 @@ void CUcontent_MBsSWs_tableView::setMWSWlistContent(QStringList titles, QStringL
 		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 		selectedMBsSWs_tableWidget->scrollToTop();
 	}
-	// Fill table:
+	// *** Fill table ***:
 	for (k=0; k<titles.size(); k++)
 	{
 		// Title:
 		tableelement = new QTableWidgetItem( titles.at(k) );
 		selectedMBsSWs_tableWidget->setItem(k, 0, tableelement);
 	}
-	for (k=0; k<values.size(); k++)
+	// current/min/max values, units:
+	updateMBSWvalues(values, minValues, maxValues, units);
+}
+
+
+void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
+{
+	unsigned int k = 0;
+	QTableWidgetItem *tableelement;
+	// Update min values:
+	for (k=0; k<qMin( static_cast<unsigned int>( minValueStrList.size()), _nrofMBsSWs ); k++)
 	{
-		// Value:
-		tableelement = new QTableWidgetItem( values.at(k) );
+		tableelement = new QTableWidgetItem( minValueStrList.at(k) );
 		tableelement->setTextAlignment(Qt::AlignCenter);
 		selectedMBsSWs_tableWidget->setItem(k, 1, tableelement);
 	}
-	for (k=0; k<units.size(); k++)
+	// Update values:
+	for (k=0; k<qMin( static_cast<unsigned int>( valueStrList.size()), _nrofMBsSWs ); k++)
 	{
-		// Unit:
-		tableelement = new QTableWidgetItem( units.at(k) );
+		tableelement = new QTableWidgetItem( valueStrList.at(k) );
+		tableelement->setTextAlignment(Qt::AlignCenter);
 		selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
 	}
+	// Update max values:
+	for (k=0; k<qMin( static_cast<unsigned int>( maxValueStrList.size()), _nrofMBsSWs ); k++)
+	{
+		tableelement = new QTableWidgetItem( maxValueStrList.at(k) );
+		tableelement->setTextAlignment(Qt::AlignCenter);
+		selectedMBsSWs_tableWidget->setItem(k, 3, tableelement);
+	}
+	// Update units:
+	for (k=0; k<qMin( static_cast<unsigned int>( unitStrList.size() ), _nrofMBsSWs ); k++)
+	{
+		tableelement = new QTableWidgetItem( unitStrList.at(k) );
+		selectedMBsSWs_tableWidget->setItem(k, 4, tableelement);
+	}
+	/* NOTE: The units can change during MB/SW-reading !:
+	 *       If a MB/SW cannot be scaled (e.g. due to unexpected raw values, incomplete/invalid defintions),
+	 *       the raw value is displayed instead and the unit is switched to [RAW] (MBs) or [BIN] (SWs).
+	 */
 }
 
 
@@ -117,24 +157,6 @@ void CUcontent_MBsSWs_tableView::clearMBSWlistContent()
 {
 	selectedMBsSWs_tableWidget->clear();
 	_nrofMBsSWs = 0;
-}
-
-
-void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList unitStrList)
-{
-	int k = 0;
-	QTableWidgetItem *valuetableelement;
-	QTableWidgetItem *unittableelement;
-	for (k=0; k<valueStrList.size(); k++)
-	{
-		// Update value:
-		valuetableelement = new QTableWidgetItem( valueStrList.at(k) );
-		valuetableelement->setTextAlignment(Qt::AlignCenter);
-		selectedMBsSWs_tableWidget->setItem(k, 1, valuetableelement);
-		// Update unit:
-		unittableelement = new QTableWidgetItem( unitStrList.at(k) );
-		selectedMBsSWs_tableWidget->setItem(k, 2, unittableelement);
-	}
 }
 
 
@@ -158,6 +180,24 @@ void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 		else
 			mbswmovedown_pushButton->setEnabled(true);
 	}
+}
+
+
+void CUcontent_MBsSWs_tableView::toggleMinColumnVisible(bool show)
+{
+	if (show)
+		selectedMBsSWs_tableWidget->showColumn(1);
+	else
+		selectedMBsSWs_tableWidget->hideColumn(1);
+}
+
+
+void CUcontent_MBsSWs_tableView::toggleMaxColumnVisible(bool show)
+{
+	if (show)
+		selectedMBsSWs_tableWidget->showColumn(3);
+	else
+		selectedMBsSWs_tableWidget->hideColumn(3);
 }
 
 
@@ -192,7 +232,7 @@ void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> 
 
 void CUcontent_MBsSWs_tableView::selectMBSWtableRows(unsigned int start, unsigned int end)
 {
-	QTableWidgetSelectionRange selrange(start, 0, end, 2);
+	QTableWidgetSelectionRange selrange(start, 0, end, 4);
 	selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
 }
 
@@ -259,7 +299,7 @@ bool CUcontent_MBsSWs_tableView::eventFilter(QObject *obj, QEvent *event)
 void CUcontent_MBsSWs_tableView::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUcontent_MBsSWs_tableView.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);
@@ -269,5 +309,8 @@ void CUcontent_MBsSWs_tableView::setupUiFonts()
 	// Buttons:
 	mbswmoveup_pushButton->setFont(contentfont);
 	mbswmovedown_pushButton->setFont(contentfont);
+	resetMinMax_pushButton->setFont(contentfont);
+	showMin_pushButton->setFont(contentfont);
+	showMax_pushButton->setFont(contentfont);
 }
 
