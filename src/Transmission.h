@@ -48,7 +48,7 @@ private:
 	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
-	bool _MBSWtimemode;
+	MBSWsettings_dt _MBSWsettings;
 	// Pointer to content-widges:
 	CUcontent_DCs_transmission *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;

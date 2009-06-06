@@ -29,7 +29,6 @@ Transmission::Transmission(SSMprotocol2 *ssmp2dev, QString progversion)
 	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
 	_lastMBSWmetaList.clear();
-	_MBSWtimemode = 0;	// refresh duration [ms]
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// *** Setup window/GUI:
 	setAttribute (Qt::WA_DeleteOnClose, true);
@@ -37,7 +36,7 @@ Transmission::Transmission(SSMprotocol2 *ssmp2dev, QString progversion)
 	setupUi(this);
 	setupUiFonts();
 	// Move window to desired coordinates
-	move ( 30, 30 );
+	move( 30, 30 );
 	// Set window title:
 	QString wintitle = "FreeSSM " + progversion + " - " + windowTitle();
 	setWindowTitle(wintitle);
@@ -218,7 +217,7 @@ void Transmission::measuringblocks()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMP2dev, _MBSWtimemode);
+	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMP2dev, _MBSWsettings);
 	content_gridLayout->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
 	ok = _content_MBsSWs->setup();
@@ -326,7 +325,7 @@ void Transmission::clearContent()
 	{
 		disconnect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
 		_content_MBsSWs->getCurrentMBSWselection(&_lastMBSWmetaList);
-		_content_MBsSWs->getCurrentTimeMode(&_MBSWtimemode);
+		_content_MBsSWs->getSettings(&_MBSWsettings);
 		delete _content_MBsSWs;
 		_content_MBsSWs = NULL;
 	}

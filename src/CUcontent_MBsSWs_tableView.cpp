@@ -47,9 +47,12 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	selectedMBsSWs_tableWidget->setColumnWidth(4, 58);
 	// Install event-filter for MB/SW-table:
 	selectedMBsSWs_tableWidget->viewport()->installEventFilter(this);
-	// Check min/max toggle-buttons:
+	// (Un)check min/max toggle-buttons:
 	showMin_pushButton->setChecked(showMin);
 	showMax_pushButton->setChecked(showMax);
+	// Make min/max values columns (in)visible:
+	toggleMinColumnVisible(showMin);
+	toggleMaxColumnVisible(showMax);
 	// Connect signals and slots:
 	connect( mbswmoveup_pushButton , SIGNAL( released() ), this, SIGNAL( moveUpButton_pressed() ) );
 	connect( mbswmovedown_pushButton , SIGNAL( released() ), this, SIGNAL( moveDownButton_pressed() ) );
@@ -198,6 +201,18 @@ void CUcontent_MBsSWs_tableView::toggleMaxColumnVisible(bool show)
 		selectedMBsSWs_tableWidget->showColumn(3);
 	else
 		selectedMBsSWs_tableWidget->hideColumn(3);
+}
+
+
+bool CUcontent_MBsSWs_tableView::minValuesEnabled()
+{
+	return showMin_pushButton->isChecked();
+}
+
+
+bool CUcontent_MBsSWs_tableView::maxValuesEnabled()
+{
+	return showMax_pushButton->isChecked();
 }
 
 

@@ -55,19 +55,30 @@ public:
 
 
 
+class MBSWsettings_dt
+{
+public:
+	MBSWsettings_dt() { timeMode=0; minValuesEnabled=1; maxValuesEnabled=1; };
+	bool timeMode;
+	bool minValuesEnabled;
+	bool maxValuesEnabled;
+};
+
+
+
 class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 {
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool timemode = 0);
+	CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, MBSWsettings_dt options = MBSWsettings_dt());
 	~CUcontent_MBsSWs();
 	bool setup();
 	bool startMBSWreading();
 	bool stopMBSWreading();
 	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	void getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
-	void getCurrentTimeMode(bool *timemode);
+	void getSettings(MBSWsettings_dt *settings);
 
 private:
 	SSMprotocol2 *_SSMP2dev;

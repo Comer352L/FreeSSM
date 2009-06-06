@@ -37,6 +37,8 @@ public:
 	void setMWSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
 	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
 	void clearMBSWlistContent();
+	bool minValuesEnabled();
+	bool maxValuesEnabled();
 	void getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes);
 	void selectMBSWtableRows(unsigned int start, unsigned int end);
 	void scrollMBSWtable(unsigned int rowindex);

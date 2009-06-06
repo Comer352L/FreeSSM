@@ -21,13 +21,13 @@
 
 
 
-CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool timemode) : QWidget(parent)
+CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, MBSWsettings_dt settings) : QWidget(parent)
 {
 	_SSMP2dev = SSMP2dev;
 	_supportedMBs.clear();
 	_supportedSWs.clear();
 	_MBSWmetaList.clear();
-	_timemode = timemode;
+	_timemode = settings.timeMode;
 	_lastrefreshduration_ms = 0;
 	_lastValues.clear();
 	_minmaxData.clear();
@@ -37,7 +37,7 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, bool
 	setupUi(this);
 	setupTimeModeUiElements();
 	setupUiFonts();
-	_valuesTableView = new CUcontent_MBsSWs_tableView(MBSWviews_tabWidget->widget(0));
+	_valuesTableView = new CUcontent_MBsSWs_tableView(MBSWviews_tabWidget->widget(0), settings.minValuesEnabled, settings.maxValuesEnabled);
 	valuesTableView_gridLayout->addWidget(_valuesTableView);
 	//_curvesTableView = new ...
 	//curvesView_gridLayout->addWidget();
@@ -833,9 +833,11 @@ void CUcontent_MBsSWs::getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBS
 }
 
 
-void CUcontent_MBsSWs::getCurrentTimeMode(bool *timemode)
+void CUcontent_MBsSWs::getSettings(MBSWsettings_dt *settings)
 {
-	*timemode = _timemode;
+	settings->timeMode = _timemode;
+	settings->minValuesEnabled = _valuesTableView->minValuesEnabled();
+	settings->maxValuesEnabled = _valuesTableView->maxValuesEnabled();
 }
 
 
