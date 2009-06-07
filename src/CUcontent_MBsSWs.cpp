@@ -491,16 +491,20 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 		if (isLastMinValueNumeric || isLastMaxValueNumeric || noLastMinMaxValue)
 			currentScaledValueNumeric = valueStrList.at(k).toDouble(&isCurrentValueNumeric);
 		// Disable min/max values for this MB/SW, if scaling failed and if we already have scaled min/max values:
-		if (!scalingSuccessful && !noLastMinMaxValue && !_minmaxData.at(k).disabled  && (!_minmaxData.at(k).minScaledValueStr.isEmpty() || !_minmaxData.at(k).maxScaledValueStr.isEmpty()))
+		if (!noLastMinMaxValue && !_minmaxData.at(k).disabled)
 		{
-			_minmaxData[k].disabled = true;
-			_minmaxData[k].minScaledValueStr = "";	// important !
-			_minmaxData[k].maxScaledValueStr = "";	// important !
-			/* NOTE:
-			 * - do not generally disable min/max values, if scaling failed. Pure raw value MBs/SWs (without any scaling information) should be allowed
-			 * - maybe we can improve the min/max determination for MBs/SWs which are partially unscalable
-			 *   (does it make sense to switch betweend scaled and unscaled min/max values ???)
-			 */
+			if ( (!scalingSuccessful && (!_minmaxData.at(k).minScaledValueStr.isEmpty() || !_minmaxData.at(k).maxScaledValueStr.isEmpty())) ||
+			     (scalingSuccessful && (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty())) )
+			{
+				_minmaxData[k].disabled = true;
+				_minmaxData[k].minScaledValueStr = "";	// important !
+				_minmaxData[k].maxScaledValueStr = "";	// important !
+				/* NOTE:
+				* - do not generally disable min/max values, if scaling failed. Pure raw value MBs/SWs (without any scaling information) should be allowed
+				* - maybe we can improve the min/max determination for MBs/SWs which are partially unscalable
+				*   (does it make sense to switch betweend scaled and unscaled min/max values ???)
+				*/
+			}
 		}
 		// Update/get new min/max values:
 		if (noLastMinMaxValue || !_minmaxData.at(k).disabled) // if we don't have min/max-values yet or min/max values are not disabled
