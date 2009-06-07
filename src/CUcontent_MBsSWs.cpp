@@ -219,15 +219,15 @@ void CUcontent_MBsSWs::displayMBsSWs()
 				if (_minmaxData.at(k).minScaledValueStr.isEmpty())
 					minvalues.append( QString::number(_minmaxData.at(k).minRawValue) );
 				else
-					minvalues.append( _minmaxData.at(k).maxScaledValueStr );
+					minvalues.append( _minmaxData.at(k).minScaledValueStr );
 				if (_minmaxData.at(k).maxScaledValueStr.isEmpty())
-					maxvalues.append( QString::number(_minmaxData.at(k).minRawValue) );
+					maxvalues.append( QString::number(_minmaxData.at(k).maxRawValue) );
 				else
 					maxvalues.append( _minmaxData.at(k).maxScaledValueStr );
 			}
 			else
 			{
-				maxvalues.append( "" );
+				minvalues.append( "" );
 				maxvalues.append( "" );
 			}
 		}
