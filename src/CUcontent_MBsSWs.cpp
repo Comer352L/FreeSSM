@@ -626,7 +626,8 @@ void CUcontent_MBsSWs::addMBsSWs()
 		// Clear time information:
 		_MBSWrefreshTimeValue_label->setText("---      ");
 		// Select new MBs/SWs:
-		_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
+		if (MBSWmetaList_len_old > 0)
+			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
 		// Scroll to end of the table:
 		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
 	}
