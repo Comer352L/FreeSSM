@@ -363,6 +363,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	QString scaledValueStr;
 	int k = 0;
 	// Min/Max comparison:
+	bool invSWmeaning = false;
 	bool noLastMinMaxValue = false;
 	bool isCurrentValueNumeric = false;
 	bool isLastMinValueNumeric = false;
@@ -374,6 +375,8 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	double currentMaxCompValue = 0;
 	double lastMinCompValue = 0;
 	double lastMaxCompValue = 0;
+	bool newMin = false;
+	bool newMax = false;
 	// List output
 	QStringList minValueStrList;
 	QStringList valueStrList;
@@ -397,17 +400,47 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 		}
 		else	// it is a SW
 		{
+			/* NOTE: Some switches have an inverse meaning ! (e.g. 0="High", 1="Low")
+			 *       => the < > signs tell us which of them has to be interpreted as the lower/larger one
+			 *          during the min/max value determination
+			 * THE MEANING DOES NOT AFFECT THE SCALING PROCESS !
+			 */ 
 			if (rawValues.at(rvIndex) == 0)
 			{
-				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0);
+				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('<'))
+				{
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('<',0,0);
+					invSWmeaning = false;
+				}
+				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('>'))
+				{
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('>',0,0);
+					invSWmeaning = true;
+				}
 				else
+				{
 					scaledValueStr.clear();
+					invSWmeaning = false;
+				}
 				scalingSuccessful = !scaledValueStr.isEmpty();
 			}
 			else if (rawValues.at(rvIndex) == 1)
 			{
-				scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1);
+				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('<'))
+				{
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('<',1,1);
+					invSWmeaning = false;
+				}
+				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('>'))
+				{
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('>',1,1);
+					invSWmeaning = true;
+				}
+				else
+				{
+					scaledValueStr.clear();
+					invSWmeaning = false;
+				}
 				scalingSuccessful = !scaledValueStr.isEmpty();
 			}
 			else
@@ -519,8 +552,21 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 					lastMaxCompValue = _minmaxData.at(k).maxRawValue;
 				}
 				/* NOTE: only compare scaled values, if BOTH (min/max and current) are numeric ! */
+				// Compare current value with last min/max values:
+				if ( (_MBSWmetaList.at(k).blockType == 1) && scalingSuccessful && invSWmeaning)
+				{
+					// Inverse comparison:
+					newMin = (currentMinCompValue > lastMinCompValue);
+					newMax = (currentMaxCompValue < lastMaxCompValue);
+				}
+				else
+				{
+					// Normal comparison
+					newMin = (currentMinCompValue < lastMinCompValue);
+					newMax = (currentMaxCompValue > lastMaxCompValue);
+				}
 				// Check if we have a new min value:
-				if (currentMinCompValue < lastMinCompValue)
+				if (newMin)
 				{
 					_minmaxData[k].minRawValue = rawValues.at(rvIndex);
 					if (scalingSuccessful)
@@ -529,7 +575,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 						_minmaxData[k].minScaledValueStr = "";
 				}
 				// Check if we have a new max value:
-				if (currentMaxCompValue > lastMaxCompValue)
+				if (newMax)
 				{
 					_minmaxData[k].maxRawValue = rawValues.at(rvIndex);
 					if (scalingSuccessful)
@@ -537,6 +583,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 					else
 						_minmaxData[k].maxScaledValueStr = "";
 				}
+				/* NOTE: always save "real" values for SWs with inverse meaning ! */
 			}
 		}
 		// Add min/max strings to the output list:
