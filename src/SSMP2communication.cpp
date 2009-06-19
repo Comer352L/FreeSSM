@@ -227,9 +227,12 @@ void SSMP2communication::run()
 	}
 	_abort = false;
 	_mutex.unlock();
-	// Ensures that event-loop is started started (should always be the case...)
-	while (!_el.isRunning())
-		msleep(10);
+	if (!permanent)
+	{
+		// Ensures that event-loop is started before finishing (should always be the case...)
+		while (!_el.isRunning())
+			msleep(10);
+	}
 #ifdef __FSSM_DEBUG__
 	std::cout << "SSMP2communication::run():   communication operation finished." << '\n';
 #endif
