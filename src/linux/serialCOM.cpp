@@ -870,7 +870,13 @@ bool serialCOM::ClosePort()
 }
 
 
-bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
+bool serialCOM::Write(std::vector<char> data)
+{
+	return Write(&data.at(0), data.size());
+}
+
+
+bool serialCOM::Write(char *data, unsigned int datalen)
 {
 	int confirm = -1;
 	unsigned int nrofbyteswritten = 0;
@@ -889,17 +895,17 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 		}
 	}
 	// SEND DATA:
-	nrofbyteswritten = write(fd, outputstr, nrofbytestowrite);
+	nrofbyteswritten = write(fd, data, datalen);
 	// WAIT UNTIL ALL BYTES ARE TRANSMITTED (to the buffer !?):
 	confirm = ioctl(fd, TCSBRK, 1);	// => linux-implementation of POSIX-fcn tcdrain(fd)
 	// NOTE: 0 = send 250ms break; >0 = wait until all data is sent
 	// RETURN VALUE:
-	if ((nrofbyteswritten == nrofbytestowrite) && (confirm!=1))
+	if ((nrofbyteswritten == datalen) && (confirm!=1))
 		return true;
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		if (nrofbyteswritten != nrofbytestowrite)
+		if (nrofbyteswritten != datalen)
 			std::cout << "serialCOM::Write():   write(...) failed with error " << errno << " " << strerror(errno) << "\n";
 		if (confirm != 0)
 			std::cout << "serialCOM::Write():   ioctl(......, TCSBRK, 0) failed with error " << errno << " " << strerror(errno) << "\n";
@@ -909,13 +915,24 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 }
 
 
-bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
+bool serialCOM::Read(std::vector<char> *data)
+{
+	char rdata[512] = {0,};
+	unsigned int rdatalen = 0;
+	if (!Read(rdata, &rdatalen))
+		return false;
+	data->assign(rdata, rdata+rdatalen);
+	return true;
+}
+
+
+bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
 {
 	int ret;
 	*nrofbytesread = 0;
 	if (portisopen == false) return false;
 	// READ AVAILABLE DATA:
-	ret = read(fd, readdata, 512);
+	ret = read(fd, data, 512);
 	// RETURN VALUE:
 	if ((ret < 0) || (ret > 512))	// 512: important ! => possible if fd was not open !
 	{

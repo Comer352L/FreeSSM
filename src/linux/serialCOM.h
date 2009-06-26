@@ -28,7 +28,7 @@
 #include <cmath>		// round()
 extern "C"
 {
-    #include <asm/termbits.h>	// POSIX terminal control definitions (linux)
+    #include <asm/termbits.h>	// terminal control definitions (linux)
     #include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
     #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
@@ -80,8 +80,10 @@ public:
 	bool SetPortSettings(dt_portsettings newportsettings);
 	bool OpenPort(std::string portname);	// returns success of operation, NOT PORT STATUS (open/closed)
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
-	bool Write(char *outputstr, unsigned int nrofbytestowrite);
-	bool Read(char *readdata, unsigned int *nrofbytesread);
+	bool Write(std::vector<char> data);
+	bool Write(char *data, unsigned int datalen);
+	bool Read(std::vector<char> *data);
+	bool Read(char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearRecieveBuffer();
 	bool SendBreak(unsigned int duration_ms);
