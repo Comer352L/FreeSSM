@@ -960,7 +960,7 @@ bool serialCOM::ClearSendBuffer()
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearSendBuffer(...):   ioctl(..., TCFLSH, TCOFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearSendBuffer(...):   ioctl(..., TCFLSH, TCOFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -977,7 +977,7 @@ bool serialCOM::ClearRecieveBuffer()
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearRecieveBuffer(...):   ioctl(..., TCFLSH, TCIFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearRecieveBuffer(...):   ioctl(..., TCFLSH, TCIFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -990,21 +990,56 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 	if ((!portisopen) || (duration_ms < 1) || (duration_ms >= 32767))
 		return false;
 	breakset = true;
-	confirmSB =ioctl(fd, TCSBRK, static_cast<int>(duration_ms));
-	breakset = false;
-	// ALTERNATIVE:
-	//ioctl(fd, TIOCSBRK, 0);	// break ON
-	// msleep( static_cast<int>(duration_ms) );
-	//ioctl(fd, TIOCCBRK, 0);    // break OFF
-	if (confirmSB != -1)
-		return true;
+	if (duration_ms == 250) 
+	{
+		confirmSB = ioctl(fd, TCSBRK, 0);
+#ifdef __SERIALCOM_DEBUG__
+		if (confirmSB == -1)
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+		/* NOTE: the Linux TCSBRK-ioctl is different from other implementations !
+		 *	 - for arg == 0, a break of 250ms is send
+		 *	 - for arg > 0, it waits until the Tx-buffer is empty/all data is send
+		 *	   => this is how POSIX-fcn tcdrain(...) is implemented !
+		 */
+	}
+	else if ((duration_ms / 100)*100 == duration_ms)
+	{
+		confirmSB = ioctl(fd, TCSBRKP, duration_ms/100);
+#ifdef __SERIALCOM_DEBUG__
+		if (confirmSB == -1)
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRKP, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+		/* NOTE: the Linux TCSBRKP-icotl is defined for compatibility. 
+			 It works like the TCSBRK-ioctl on other systems and can be used to send breaks of selectable duration.
+			 => on Linux, the argument is interpreted as multiplier of 100ms (other systems behave different !)
+		 */
+	}
 	else
 	{
+		// We have to do the timing on our own
+		confirmSB = ioctl(fd, TIOCSBRK, 0);	// break ON
+		if (confirmSB != -1)
+		{
+			usleep(1000*duration_ms);		// GLIBC uses select() here... Would that be more accurate ?
+			confirmSB = ioctl(fd, TIOCCBRK, 0);	// break OFF
+			if (confirmSB == -1)
+			{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+				std::cout << "serialCOM::SendBreak(...):   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-		return false;
+				return false;	// WITH breakset STILL TRUE !
+			}
+		}
+#ifdef __SERIALCOM_DEBUG__
+		else
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TIOCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	}
+	breakset = false;
+	if (confirmSB == -1)
+		return false;
+	return true;
 }
 
 
@@ -1016,7 +1051,7 @@ bool serialCOM::SetBreak()
 	if (confirmIOCTL == -1)
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -1033,7 +1068,7 @@ bool serialCOM::ClearBreak()
 	if (confirmIOCTL == -1)
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -1061,7 +1096,7 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 	{
 		*nbytes = 0;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
