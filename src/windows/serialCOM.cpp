@@ -528,7 +528,13 @@ bool serialCOM::ClosePort()
 }
 
 
-bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
+bool serialCOM::Write(std::vector<char> data)
+{
+	return Write(&data.at(0), data.size());
+}
+
+
+bool serialCOM::Write(char *data, unsigned int datalen)
 {
 	bool confirmWF=false, confirmCCB=false;
 	DWORD BytesWritten = 0;
@@ -548,20 +554,20 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 	}
 	// SEND DATA:
 	confirmWF = WriteFile (hCom,			// Port handle
-			       outputstr,		// Pointer to the data to write 
-			       nrofbytestowrite,	// Number of bytes to write
+			       data,			// Pointer to the data to write 
+			       datalen,			// Number of bytes to write
 			       &BytesWritten,		// Pointer to the number of bytes written
 			       NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 			      );
 	// RETURN VALUE:
-	if (confirmWF && (BytesWritten == static_cast<DWORD>(nrofbytestowrite)))
+	if (confirmWF && (BytesWritten == static_cast<DWORD>(datalen)))
 		return true;
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirmWF)
 			std::cout << "serialCOM::Write():   WriteFile(...) failed\n";
-		if (BytesWritten != static_cast<DWORD>(nrofbytestowrite))
+		if (BytesWritten != static_cast<DWORD>(datalen))
 			std::cout << "serialCOM::Write():   some bytes could not be written\n";
 #endif
 		return false;
@@ -569,7 +575,18 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 }
 
 
-bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
+bool serialCOM::Read(std::vector<char> *data)
+{
+	char rdata[512] = {0,};
+	unsigned int rdatalen = 0;
+	if (!Read(rdata, &rdatalen))
+		return false;
+	data->assign(rdata, rdata+rdatalen);
+	return true;
+}
+
+
+bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
 {
 	bool confirmRF = false;
 	DWORD nbr = 0;
@@ -577,7 +594,7 @@ bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
 	if (!portisopen) return false;
 	// READ RECIEVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
-			      readdata,		// Pointer to data to read
+			      data,		// Pointer to data to read
 			      512,		// Number of bytes to read
 			      &nbr,		// Pointer to number of bytes read
 			      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
