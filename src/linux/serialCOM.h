@@ -28,7 +28,7 @@
 #include <cmath>		// round()
 extern "C"
 {
-    #include <termios.h>	// POSIX terminal control definitions
+    #include <asm/termbits.h>	// POSIX terminal control definitions (linux)
     #include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
     #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
@@ -48,20 +48,23 @@ class serialCOM
 {
 
 private:
-	int fd;                   // file descriptor for the port
+	int fd;					// file descriptor for the port
 	bool portisopen;
 	bool breakset;
 	std::string currentportname; 
-	struct termios oldtio;    // backup of port settings
+	struct termios2 oldtio;			// backup of port settings
 	struct serial_struct old_serdrvinfo;	// backup of serial driver settings
 	bool settingssaved;
 	bool serdrvaccess;
 	
-	bool GetStdbaudrateDCBConst(double baudrate, unsigned long int *DCBbaudconst);
+	bool GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst);
+	speed_t GetNearestStdBaudrate(double selBaudrate);
 
 public:
-	struct dt_portsettings
+	class dt_portsettings
 	{
+	public:
+		dt_portsettings() {baudrate=9600; databits=8; parity='N'; stopbits=1;};
 		double baudrate;
 		unsigned short databits;
 		char parity;

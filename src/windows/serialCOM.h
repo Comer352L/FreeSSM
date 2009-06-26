@@ -52,8 +52,10 @@ private:
 	bool GetMaxbaudrate(double *maxbaudrate);
 
 public:
-	struct dt_portsettings
+	class dt_portsettings
 	{
+	public:
+		dt_portsettings() {baudrate=9600; databits=8; parity='N'; stopbits=1;};
 		double baudrate;
 		unsigned short databits;
 		char parity;
