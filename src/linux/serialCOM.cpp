@@ -378,6 +378,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// Deactivate custom baudrate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
+		new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;
 	}
 	// SET CONTROL OPTIONS:
 	newtio.c_cflag = (CREAD | CLOCAL);
@@ -900,7 +901,7 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 	confirm = ioctl(fd, TCSBRK, 1);	// => linux-implementation of POSIX-fcn tcdrain(fd)
 	// NOTE: 0 = send 250ms break; >0 = wait until all data is sent
 	// RETURN VALUE:
-	if ((nrofbyteswritten == datalen) && (confirm!=1))
+	if ((nrofbyteswritten == datalen) && (confirm != -1))
 		return true;
 	else
 	{
