@@ -55,7 +55,9 @@ public:
 	class dt_portsettings
 	{
 	public:
-		dt_portsettings() {baudrate=9600; databits=8; parity='N'; stopbits=1;};
+		dt_portsettings() { baudrate=9600; databits=8; parity='N'; stopbits=1; };
+		dt_portsettings(double baudrate, unsigned short databits, char parity, float stopbits)
+		                : baudrate(baudrate), databits(databits), parity(parity), stopbits(stopbits) { };
 		double baudrate;
 		unsigned short databits;
 		char parity;

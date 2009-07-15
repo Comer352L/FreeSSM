@@ -119,12 +119,12 @@ std::string serialCOM::GetPortname()
 
 bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 {
-	short int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
+	int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
 	bool settingsvalid = true;
 	struct termios2 currenttio;
 	memset(&currenttio, 0, sizeof(currenttio));
 	speed_t baudrate=0;
-	unsigned long int cleanedbitmask=0;
+	unsigned int cleanedbitmask=0;
 	// Reset data:
 	currentportsettings->baudrate = 0;
 	currentportsettings->databits = 0;
@@ -796,6 +796,23 @@ bool serialCOM::OpenPort(std::string portname)
 				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
 #endif
 			return false;
+		}
+		// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
+		if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+		{
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
+				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
+			return false;
+			/* NOTE: SetPortSettings not only changes the 4 communication parameters.
+			         It configures additional parameters (like control characters, timeouts, ...) which are 
+				 are important to ensure proper communication behavior !
+			 */
 		}
 		return true;
 	}
