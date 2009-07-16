@@ -585,27 +585,30 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(std::vector<char> *data)
+bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
 {
-	char rdata[512] = {0,};
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	unsigned int rdatalen = 0;
-	if (!Read(rdata, &rdatalen))
-		return false;
-	data->assign(rdata, rdata+rdatalen);
-	return true;
+	char *rdata = (char*) malloc(maxbytes);
+	if (rdata == NULL) return false;
+	bool ok = Read(maxbytes, rdata, &rdatalen);
+	if (ok)	data->assign(rdata, rdata+rdatalen);
+	free(rdata);
+	return ok;
 }
 
 
-bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
 {
 	bool confirmRF = false;
 	DWORD nbr = 0;
 	*nrofbytesread = 0;
 	if (!portisopen) return false;
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	// READ RECIEVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
 			      data,		// Pointer to data to read
-			      512,		// Number of bytes to read
+			      maxbytes,		// Number of bytes to read
 			      &nbr,		// Pointer to number of bytes read
 			      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 			     );

@@ -26,6 +26,7 @@
 
 #include <cstring>		// memset(), strcpy(), ...
 #include <cmath>		// round()
+#include <cstdlib>		// malloc()/free()
 extern "C"
 {
     #include <asm/termbits.h>	// terminal control definitions (linux)
@@ -33,6 +34,7 @@ extern "C"
     #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
     #include <linux/serial.h>	// serial port driver
+    #include <limits.h>
     #ifdef __SERIALCOM_DEBUG__
         #include <errno.h>
     #endif
@@ -84,8 +86,8 @@ public:
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);
 	bool Write(char *data, unsigned int datalen);
-	bool Read(std::vector<char> *data);
-	bool Read(char *data, unsigned int *nrofbytesread);
+	bool Read(unsigned int maxbytes, std::vector<char> *data);
+	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearRecieveBuffer();
 	bool SendBreak(unsigned int duration_ms);

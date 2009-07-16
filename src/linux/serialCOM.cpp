@@ -933,26 +933,29 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(std::vector<char> *data)
+bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
 {
-	char rdata[512] = {0,};
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	unsigned int rdatalen = 0;
-	if (!Read(rdata, &rdatalen))
-		return false;
-	data->assign(rdata, rdata+rdatalen);
-	return true;
+	char *rdata = (char*) malloc(maxbytes);
+	if (rdata == NULL) return false;
+	bool ok = Read(maxbytes, rdata, &rdatalen);
+	if (ok)	data->assign(rdata, rdata+rdatalen);
+	free(rdata);
+	return ok;
 }
 
 
-bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
 {
 	int ret;
 	*nrofbytesread = 0;
 	if (portisopen == false) return false;
+	if (maxbytes > INT_MAX) return false;	// real limit: SSIZE_MAX
 	// READ AVAILABLE DATA:
-	ret = read(fd, data, 512);
+	ret = read(fd, data, maxbytes);
 	// RETURN VALUE:
-	if ((ret < 0) || (ret > 512))	// 512: important ! => possible if fd was not open !
+	if ((ret < 0) || (ret > static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
 	{
 		*nrofbytesread = 0;
 #ifdef __SERIALCOM_DEBUG__

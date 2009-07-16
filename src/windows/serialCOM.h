@@ -26,9 +26,11 @@
 
 #include <cstring>		// memset(), strcpy(), ...
 #include <cmath>		// round()
+#include <cstdlib>		// malloc()/free()
 extern "C"
 {
     #include <windows.h>
+    #include <limits.h>
 }
 #include <string>
 #include <vector>
@@ -75,8 +77,8 @@ public:
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);
 	bool Write(char *data, unsigned int datalen);
-	bool Read(std::vector<char> *data);
-	bool Read(char *data, unsigned int *nrofbytesread);
+	bool Read(unsigned int maxbytes, std::vector<char> *data);
+	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearRecieveBuffer();
 	bool SendBreak(unsigned int duration_ms);
