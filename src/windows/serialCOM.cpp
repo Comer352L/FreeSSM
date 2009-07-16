@@ -413,68 +413,78 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 		return false;
 	}
-	else	// port successfully opened
+	portisopen = true;
+	currentportname = portname;
+	// SAVE PORT SETTINGS:
+	memset(&olddcb, 0, sizeof(DCB));
+	olddcb.DCBlength = sizeof(DCB);
+	confirm = GetCommState(hCom, &olddcb);
+#ifdef __SERIALCOM_DEBUG__
+	if (!confirm)
+		std::cout << "serialCOM::OpenPort():   GetCommState(...) failed with error " << GetLastError() << "\n";
+#endif
+	settingssaved = confirm;
+	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns recieved characters):
+	COMMTIMEOUTS timeouts = {0};
+	timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
+	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
+	timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
+	timeouts.WriteTotalTimeoutConstant = 0;		// Total max. time for write operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
+	timeouts.WriteTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to write 
+	// all values in [ms]; if one of these max. times is exceeded, Read / Write Operation is stoped and nr. of Read/WrittenBytes is given back
+	confirm = SetCommTimeouts(hCom, &timeouts);	// Apply new timeout settings
+	if (!confirm)
 	{
-		portisopen = true;
-		currentportname = portname;
-		// SAVE PORT SETTINGS:
-		memset(&olddcb, 0, sizeof(DCB));
-		olddcb.DCBlength = sizeof(DCB);
-		confirm = GetCommState(hCom, &olddcb);
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::OpenPort():   SetCommTimeouts(...) failed with error " << GetLastError() << "\n";
+#endif
+		confirm = ClosePort();
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
-		{
-			std::cout << "serialCOM::OpenPort():   GetCommState(...) failed with error " << GetLastError() << "\n";
-		}
+			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
 #endif
-		settingssaved = confirm;
-		// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns recieved characters):
-		COMMTIMEOUTS timeouts = {0};
-		timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
-		timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
-		timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
-		timeouts.WriteTotalTimeoutConstant = 0;		// Total max. time for write operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
-		timeouts.WriteTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to write 
-		// all values in [ms]; if one of these max. times is exceeded, Read / Write Operation is stoped and nr. of Read/WrittenBytes is given back
-		confirm = SetCommTimeouts(hCom, &timeouts);	// Apply new timeout settings
-		if (!confirm)
-		{
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::OpenPort():   SetCommTimeouts(...) failed with error " << GetLastError() << "\n";
-#endif
-			confirm = ClosePort();
-#ifdef __SERIALCOM_DEBUG__
-			if (!confirm)
-				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
-#endif
-			return false;
-		}
-/*
-		// CLEAR BREAK (should not be necessary, because break is cancelled automatically after closing the device):
-		confirm = ClearCommBreak(hCom);
-		if (!confirm)
-		{
-			std::cout << "serialCOM::OpenPort():   ClearCommBreak(...) failed with error " << GetLastError() << "\n";	// debug-output
-		}
-		else
-*/
-		breakset = false;
-		// CLEAR HARDWARE BUFFERS:
-		confirm = PurgeComm(hCom, PURGE_RXABORT | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_TXCLEAR);   // clears output buffer (if the device driver has one)
-		if (!confirm)
-		{
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::OpenPort():   PurgeComm(...) failed with error " << GetLastError() << "\n";
-#endif
-			confirm = ClosePort();
-#ifdef __SERIALCOM_DEBUG__
-			if (!confirm)
-				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
-#endif
-			return false;
-		}
-		return true;
+		return false;
 	}
+/*
+	// CLEAR BREAK (should not be necessary, because break is cancelled automatically after closing the device):
+	confirm = ClearCommBreak(hCom);
+	if (!confirm)
+		std::cout << "serialCOM::OpenPort():   ClearCommBreak(...) failed with error " << GetLastError() << "\n";	// debug-output
+	else
+*/
+	breakset = false;
+	// CLEAR HARDWARE BUFFERS:
+	confirm = PurgeComm(hCom, PURGE_RXABORT | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_TXCLEAR);   // clears output buffer (if the device driver has one)
+	if (!confirm)
+	{
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::OpenPort():   PurgeComm(...) failed with error " << GetLastError() << "\n";
+#endif
+		confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirm)
+			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
+		return false;
+	}
+	// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
+	if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+	{
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
+#endif
+		confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirm)
+			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
+		return false;
+		/* NOTE: SetPortSettings not only changes the 4 communication parameters.
+		         It configures additional parameters (like control characters etc.) which are 
+			 are important to ensure proper communication behavior !
+		 */
+	}
+	return true;
 }
 
 
@@ -575,27 +585,30 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(std::vector<char> *data)
+bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
 {
-	char rdata[512] = {0,};
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	unsigned int rdatalen = 0;
-	if (!Read(rdata, &rdatalen))
-		return false;
-	data->assign(rdata, rdata+rdatalen);
-	return true;
+	char *rdata = (char*) malloc(maxbytes);
+	if (rdata == NULL) return false;
+	bool ok = Read(maxbytes, rdata, &rdatalen);
+	if (ok)	data->assign(rdata, rdata+rdatalen);
+	free(rdata);
+	return ok;
 }
 
 
-bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
 {
 	bool confirmRF = false;
 	DWORD nbr = 0;
 	*nrofbytesread = 0;
 	if (!portisopen) return false;
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	// READ RECIEVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
 			      data,		// Pointer to data to read
-			      512,		// Number of bytes to read
+			      maxbytes,		// Number of bytes to read
 			      &nbr,		// Pointer to number of bytes read
 			      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 			     );

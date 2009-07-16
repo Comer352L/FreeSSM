@@ -26,9 +26,11 @@
 
 #include <cstring>		// memset(), strcpy(), ...
 #include <cmath>		// round()
+#include <cstdlib>		// malloc()/free()
 extern "C"
 {
     #include <windows.h>
+    #include <limits.h>
 }
 #include <string>
 #include <vector>
@@ -55,7 +57,9 @@ public:
 	class dt_portsettings
 	{
 	public:
-		dt_portsettings() {baudrate=9600; databits=8; parity='N'; stopbits=1;};
+		dt_portsettings() { baudrate=9600; databits=8; parity='N'; stopbits=1; };
+		dt_portsettings(double baudrate, unsigned short databits, char parity, float stopbits)
+		                : baudrate(baudrate), databits(databits), parity(parity), stopbits(stopbits) { };
 		double baudrate;
 		unsigned short databits;
 		char parity;
@@ -73,8 +77,8 @@ public:
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);
 	bool Write(char *data, unsigned int datalen);
-	bool Read(std::vector<char> *data);
-	bool Read(char *data, unsigned int *nrofbytesread);
+	bool Read(unsigned int maxbytes, std::vector<char> *data);
+	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearRecieveBuffer();
 	bool SendBreak(unsigned int duration_ms);

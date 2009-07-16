@@ -119,12 +119,12 @@ std::string serialCOM::GetPortname()
 
 bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 {
-	short int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
+	int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
 	bool settingsvalid = true;
 	struct termios2 currenttio;
 	memset(&currenttio, 0, sizeof(currenttio));
 	speed_t baudrate=0;
-	unsigned long int cleanedbitmask=0;
+	unsigned int cleanedbitmask=0;
 	// Reset data:
 	currentportsettings->baudrate = 0;
 	currentportsettings->databits = 0;
@@ -378,6 +378,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// Deactivate custom baudrate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
+		new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;
 	}
 	// SET CONTROL OPTIONS:
 	newtio.c_cflag = (CREAD | CLOCAL);
@@ -796,6 +797,23 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 			return false;
 		}
+		// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
+		if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+		{
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
+				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
+			return false;
+			/* NOTE: SetPortSettings not only changes the 4 communication parameters.
+			         It configures additional parameters (like control characters, timeouts, ...) which are 
+				 are important to ensure proper communication behavior !
+			 */
+		}
 		return true;
 	}
 	else
@@ -900,7 +918,7 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 	confirm = ioctl(fd, TCSBRK, 1);	// => linux-implementation of POSIX-fcn tcdrain(fd)
 	// NOTE: 0 = send 250ms break; >0 = wait until all data is sent
 	// RETURN VALUE:
-	if ((nrofbyteswritten == datalen) && (confirm!=1))
+	if ((nrofbyteswritten == datalen) && (confirm != -1))
 		return true;
 	else
 	{
@@ -915,26 +933,29 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(std::vector<char> *data)
+bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
 {
-	char rdata[512] = {0,};
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
 	unsigned int rdatalen = 0;
-	if (!Read(rdata, &rdatalen))
-		return false;
-	data->assign(rdata, rdata+rdatalen);
-	return true;
+	char *rdata = (char*) malloc(maxbytes);
+	if (rdata == NULL) return false;
+	bool ok = Read(maxbytes, rdata, &rdatalen);
+	if (ok)	data->assign(rdata, rdata+rdatalen);
+	free(rdata);
+	return ok;
 }
 
 
-bool serialCOM::Read(char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
 {
 	int ret;
 	*nrofbytesread = 0;
 	if (portisopen == false) return false;
+	if (maxbytes > INT_MAX) return false;	// real limit: SSIZE_MAX
 	// READ AVAILABLE DATA:
-	ret = read(fd, data, 512);
+	ret = read(fd, data, maxbytes);
 	// RETURN VALUE:
-	if ((ret < 0) || (ret > 512))	// 512: important ! => possible if fd was not open !
+	if ((ret < 0) || (ret > static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
 	{
 		*nrofbytesread = 0;
 #ifdef __SERIALCOM_DEBUG__

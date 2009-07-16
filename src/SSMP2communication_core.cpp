@@ -317,7 +317,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 	}
 	nabytes = 0;
 	// READ AVAILABLE DATA (ANSWER MAY BE INCOMPLETE)
-	if (!_port->Read(readdata, &nrofbytesread))
+	if (!_port->Read(520, readdata, &nrofbytesread))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
@@ -351,7 +351,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 		// READ REST OF THE AVAILABLE DATA:
 		if (nabytes > 0)
 		{
-			if (!_port->Read(readdata, &nrofbytesread))
+			if (!_port->Read(520, readdata, &nrofbytesread))
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "SSMPcore::SndRcvMessage(...):   Read 2 failed\n";
