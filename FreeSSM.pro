@@ -18,6 +18,9 @@ HEADERS += src/FreeSSM.h \
            src/About.h \
            src/FSSMdialogs.h \
            src/ActuatorTestDlg.h \
+           src/SSMP1communication.h \
+           src/SSMP1communication_procedures.h \
+           src/SSMP1base.h \
            src/SSMP2communication.h \
            src/SSMP2communication_core.h \
            src/SSMprotocol2.h \
@@ -43,6 +46,9 @@ SOURCES += src/main.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
            src/ActuatorTestDlg.cpp \
+           src/SSMP1communication.cpp \
+           src/SSMP1communication_procedures.cpp \
+           src/SSMP1base.cpp \
            src/SSMP2communication.cpp \
            src/SSMP2communication_core.cpp \
            src/SSMprotocol2.cpp \
@@ -103,8 +109,10 @@ INSTALLS += target doctarget filestarget
 unix {
        DEPENDPATH += src/linux
        INCLUDEPATH += src/linux
-       HEADERS += src/linux/serialCOM.h
-       SOURCES += src/linux/serialCOM.cpp
+       HEADERS += src/linux/serialCOM.h \
+                  src/linux/TimeM.h
+       SOURCES += src/linux/serialCOM.cpp \
+                  src/linux/TimeM.cpp
        QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 }
 
@@ -112,8 +120,10 @@ win32 {
        CONFIG(debug, debug|release): CONFIG += console
        DEPENDPATH += src/windows
        INCLUDEPATH += src/windows
-       HEADERS += src/windows/serialCOM.h
-       SOURCES += src/windows/serialCOM.cpp
+       HEADERS += src/windows/serialCOM.h \
+                  src/windows/TimeM.h
+       SOURCES += src/windows/serialCOM.cpp \
+                  src/windows/TimeM.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
 
