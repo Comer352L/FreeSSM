@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,7 +119,7 @@ class SSMprotocol : public QObject
 	Q_OBJECT
 
 public:
-	enum CUtype_dt {CUtype_Engine, CUtype_Transmission};
+	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering};
 	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
 			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32, allDCs_DCgroup=63};

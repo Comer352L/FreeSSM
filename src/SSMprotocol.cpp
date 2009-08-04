@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2009 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
