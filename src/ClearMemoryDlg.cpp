@@ -179,7 +179,7 @@ bool ClearMemoryDlg::confirmClearMemory()
 		confirmStr.append( tr(" (level 2)") );
 	confirmStr.append( tr("\n- clears the Diagnostic Codes") );
 	confirmStr.append( tr("\n- resets all non-permanent Adjustment Values") );
-	if ( _SSMP2dev->CUtype() == SSMprotocol2::ECU || ((_SSMP2dev->CUtype() == SSMprotocol2::TCU) && (_level == SSMprotocol2::CMlevel_2)) )
+	if ( _SSMP2dev->CUtype() == SSMprotocol2::CUtype_Engine || ((_SSMP2dev->CUtype() == SSMprotocol2::CUtype_Transmission) && (_level == SSMprotocol2::CMlevel_2)) )
 		confirmStr.append( tr("\n- resets the Control Units' learning values") );
 	confirmStr.append( tr("\n\nDo you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol2::CMlevel_2)

@@ -222,7 +222,7 @@ void FreeSSM::engine()
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
-		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::ECU, _language);
+		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::CUtype_Engine, _language);
 		Engine *enginewindow = new Engine(_SSMP2dev, _progversion);
 		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}
@@ -240,7 +240,7 @@ void FreeSSM::transmission()
 	_port = new serialCOM;
 	if (initPort(4800, _port))
 	{
-		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::TCU, _language);
+		_SSMP2dev = new SSMprotocol2(_port, SSMprotocol2::CUtype_Transmission, _language);
 		Transmission *transmissionwindow = new Transmission(_SSMP2dev, _progversion);
 		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
 	}

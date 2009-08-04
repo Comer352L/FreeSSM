@@ -191,11 +191,11 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	// ##### GATHER CU-INFORMATIONS #####
 	datetime = QDateTime::currentDateTime().toString("dddd, dd. MMMM yyyy, h:mm") + ":";
 	SSMprotocol2::CUtype_dt cu_type = _SSMP2dev->CUtype();
-	if (cu_type == SSMprotocol2::ECU)
+	if (cu_type == SSMprotocol2::CUtype_Engine)
 	{
 		CU = tr("Engine");
 	}
-	else if (cu_type == SSMprotocol2::TCU)
+	else if (cu_type == SSMprotocol2::CUtype_Transmission)
 	{
 		CU = tr("Transmission");
 	}
@@ -218,7 +218,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	{
 		ROM_ID = _SSMP2dev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
 		ok = ROM_ID.length();
-		if (ok && (cu_type == SSMprotocol2::ECU))
+		if (ok && (cu_type == SSMprotocol2::CUtype_Engine))
 		{
 			ok = _SSMP2dev->hasVINsupport(&VINsup);
 			if (ok)
@@ -311,7 +311,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	tableFormat.setColumnWidthConstraints(widthconstraints);
 	tableFormat.setLeftMargin(20);
 	// Create and insert table:
-	if (cu_type == SSMprotocol2::ECU)
+	if (cu_type == SSMprotocol2::CUtype_Engine)
 		cursor.insertTable(4, 2, tableFormat);
 	else
 		cursor.insertTable(3, 2, tableFormat);
@@ -348,7 +348,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	charFormat.setFontWeight(QFont::Normal);
 	cursor.setCharFormat(charFormat);
 	cursor.insertText( QString::fromStdString(ROM_ID) );
-	if (cu_type == SSMprotocol2::ECU)
+	if (cu_type == SSMprotocol2::CUtype_Engine)
 	{
 		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 		// Row 4 - Column 1:
