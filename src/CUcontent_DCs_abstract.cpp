@@ -20,9 +20,9 @@
 #include "CUcontent_DCs_abstract.h"
 
 
-CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol2 *SSMP2dev, QString progversion) : QWidget(parent)
+CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol *SSMPdev, QString progversion) : QWidget(parent)
 {
-	_SSMP2dev = SSMP2dev;
+	_SSMPdev = SSMPdev;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
 }
@@ -30,10 +30,10 @@ CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol2 *SS
 
 CUcontent_DCs_abstract::~CUcontent_DCs_abstract()
 {
-	disconnect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-	_SSMP2dev->stopDCreading();
-	disconnect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	disconnect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
+	_SSMPdev->stopDCreading();
+	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 }
 
 
@@ -53,27 +53,27 @@ void CUcontent_DCs_abstract::callStop()
 
 bool CUcontent_DCs_abstract::startDCreading()
 {
-	SSMprotocol2::state_dt state = SSMprotocol2::state_needSetup;
+	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	int selDCgroups = 0;
 	// Check if DC-group(s) selected:
-	if (_supportedDCgroups == SSMprotocol2::noDCs_DCgroup)
+	if (_supportedDCgroups == SSMprotocol::noDCs_DCgroup)
 		return false;
 	// Check if DC-reading is startable or already in progress:
-	state = _SSMP2dev->state();
-	if (state == SSMprotocol2::state_normal)
+	state = _SSMPdev->state();
+	if (state == SSMprotocol::state_normal)
 	{
-		disconnect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 		// Start DC-reading:
-		if (!_SSMP2dev->startDCreading( _supportedDCgroups ))
+		if (!_SSMPdev->startDCreading( _supportedDCgroups ))
 		{
-			connect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+			connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 			return false;
 		}
 	}
-	else if (state == SSMprotocol2::state_DCreading)
+	else if (state == SSMprotocol::state_DCreading)
 	{
 		// Verify consistency:
-		if (!_SSMP2dev->getLastDCgroupsSelection(&selDCgroups))
+		if (!_SSMPdev->getLastDCgroupsSelection(&selDCgroups))
 			return false;
 		if (selDCgroups != _supportedDCgroups)  // inconsistency detected !
 		{
@@ -85,7 +85,7 @@ bool CUcontent_DCs_abstract::startDCreading()
 	else
 		return false;
 	// Enable notification about external DC-reading-stops:
-	connect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+	connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 	// Connect DC-table and print-button slots:
 	connectGUIelements();
 	return true;
@@ -94,16 +94,16 @@ bool CUcontent_DCs_abstract::startDCreading()
 
 bool CUcontent_DCs_abstract::stopDCreading()
 {
-	disconnect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-	if (_SSMP2dev->state() == SSMprotocol2::state_DCreading)
+	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
+	if (_SSMPdev->state() == SSMprotocol::state_DCreading)
 	{
-		if (!_SSMP2dev->stopDCreading())
+		if (!_SSMPdev->stopDCreading())
 		{
-			connect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
+			connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
 			return false;
 		}
 	}
-	connect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnectGUIelements();
 	return true;
 }
@@ -190,12 +190,12 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	printmbox.show();
 	// ##### GATHER CU-INFORMATIONS #####
 	datetime = QDateTime::currentDateTime().toString("dddd, dd. MMMM yyyy, h:mm") + ":";
-	SSMprotocol2::CUtype_dt cu_type = _SSMP2dev->CUtype();
-	if (cu_type == SSMprotocol2::CUtype_Engine)
+	SSMprotocol::CUtype_dt cu_type = _SSMPdev->CUtype();
+	if (cu_type == SSMprotocol::CUtype_Engine)
 	{
 		CU = tr("Engine");
 	}
-	else if (cu_type == SSMprotocol2::CUtype_Transmission)
+	else if (cu_type == SSMprotocol::CUtype_Transmission)
 	{
 		CU = tr("Transmission");
 	}
@@ -204,10 +204,10 @@ void CUcontent_DCs_abstract::printDCprotocol()
 		CU = tr("UNKNOWN");
 	}
 	ok = true;
-	if (!_SSMP2dev->getSystemDescription(&systype))
+	if (!_SSMPdev->getSystemDescription(&systype))
 	{
 		std::string SYS_ID = "";
-		SYS_ID = _SSMP2dev->getSysID();
+		SYS_ID = _SSMPdev->getSysID();
 		ok = SYS_ID.length();
 		if (ok)
 			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
@@ -216,30 +216,30 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	}
 	if (ok)
 	{
-		ROM_ID = _SSMP2dev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+		ROM_ID = _SSMPdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
 		ok = ROM_ID.length();
-		if (ok && (cu_type == SSMprotocol2::CUtype_Engine))
+		if (ok && (cu_type == SSMprotocol::CUtype_Engine))
 		{
-			ok = _SSMP2dev->hasVINsupport(&VINsup);
+			ok = _SSMPdev->hasVINsupport(&VINsup);
 			if (ok)
 			{
 				if ( VINsup )
 				{
 					// Temporary stop DC-reading for VIN-Query:
-					disconnect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-					ok = _SSMP2dev->stopDCreading();
+					disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+					ok = _SSMPdev->stopDCreading();
 					if (ok)
 					{
 						// Query VIN:
-						ok = _SSMP2dev->getVIN(&VIN);
+						ok = _SSMPdev->getVIN(&VIN);
 						if (ok)
 						{
 							if (VIN.size() == 0)
 								VIN = tr("not programmed yet");
 							// Restart DC-reading:
-							ok = _SSMP2dev->restartDCreading();
+							ok = _SSMPdev->restartDCreading();
 							if (ok)
-								connect(_SSMP2dev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+								connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 							else
 								errstr = tr("Couldn't restart Diagnostic Codes Reading.");
 						}
@@ -311,7 +311,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	tableFormat.setColumnWidthConstraints(widthconstraints);
 	tableFormat.setLeftMargin(20);
 	// Create and insert table:
-	if (cu_type == SSMprotocol2::CUtype_Engine)
+	if (cu_type == SSMprotocol::CUtype_Engine)
 		cursor.insertTable(4, 2, tableFormat);
 	else
 		cursor.insertTable(3, 2, tableFormat);
@@ -348,7 +348,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	charFormat.setFontWeight(QFont::Normal);
 	cursor.setCharFormat(charFormat);
 	cursor.insertText( QString::fromStdString(ROM_ID) );
-	if (cu_type == SSMprotocol2::CUtype_Engine)
+	if (cu_type == SSMprotocol::CUtype_Engine)
 	{
 		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 		// Row 4 - Column 1:
@@ -380,7 +380,6 @@ void CUcontent_DCs_abstract::insertDCprintTable(QTextCursor cursor, QString titl
 	QTextCharFormat charFormat;
 	QVector<QTextLength> widthconstraints(2);
 	int k = 0;
-
 	// Insert space line:
 	cursor.insertBlock();
 	// Set minimal column widths:
