@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <vector>
 #include "ui_CUcontent_Adjustments.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 #include "libFSSM.h"
 #include "FSSMdialogs.h"
 
@@ -92,11 +92,11 @@ class CUcontent_Adjustments : public QWidget, private Ui::Adjustments_Form
 	Q_OBJECT
 
 public:
-	CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP2dev);
+	CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPdev);
 	bool setup();
 
 private:
-	SSMprotocol2 *_SSMP2dev;
+	SSMprotocol *_SSMPdev;
 	std::vector<adjustment_dt> _supportedAdjustments;
 	std::vector<bool> _newValueSelWidgetType;
 	unsigned int _maxrowsvisible;
