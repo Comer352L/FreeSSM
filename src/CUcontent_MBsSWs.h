@@ -27,7 +27,7 @@
 #include "ui_CUcontent_MBsSWs.h"
 #include "CUcontent_MBsSWs_tableView.h"
 #include "AddMBsSWsDlg.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 #include "libFSSM.h"
 
 
@@ -71,7 +71,7 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, MBSWsettings_dt options = MBSWsettings_dt());
+	CUcontent_MBsSWs(QWidget *parent, SSMprotocol *SSMPdev, MBSWsettings_dt options = MBSWsettings_dt());
 	~CUcontent_MBsSWs();
 	bool setup();
 	bool startMBSWreading();
@@ -81,7 +81,7 @@ public:
 	void getSettings(MBSWsettings_dt *settings);
 
 private:
-	SSMprotocol2 *_SSMP2dev;
+	SSMprotocol *_SSMPdev;
 	QLabel *_MBSWrefreshTimeTitle_label;
 	QLabel *_MBSWrefreshTimeValue_label;
 	QPushButton *_timemode_pushButton;
