@@ -21,10 +21,10 @@
 
 
 
-ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol2 *SSMP2dev, SSMprotocol2::CMlevel_dt level)
+ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level)
 {
 	_parent = parent;
-	_SSMP2dev = SSMP2dev;
+	_SSMPdev = SSMPdev;
 	_level = level;
 }
 
@@ -36,7 +36,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	bool CMsuccess = false;
 	std::string SYS_ID_old;
 	std::string ROM_ID_old;
-	SSMprotocol2::state_dt CUstate_old;
+	SSMprotocol::state_dt CUstate_old;
 	int oldDCgroups = 0;
 	std::vector<MBSWmetadata_dt> oldMBSWmetaList;
 	std::vector<unsigned int> oldAdjVal;
@@ -50,45 +50,45 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		return ClearMemoryDlg::CMresult_aborted;
 	// Wait-messagebox:
 	QString waitstr = tr("Clearing memory");
-	if (_level == SSMprotocol2::CMlevel_2)
+	if (_level == SSMprotocol::CMlevel_2)
 		waitstr += tr(" (level 2)");
 	waitstr += tr("... Please wait !   ");
 	FSSM_WaitMsgBox waitmsgbox(_parent, waitstr);
 	waitmsgbox.show();
 	// Save CU-state, prepare for Clear Memory:
-	CUstate_old = _SSMP2dev->state();
-	if (CUstate_old == SSMprotocol2::state_DCreading)
+	CUstate_old = _SSMPdev->state();
+	if (CUstate_old == SSMprotocol::state_DCreading)
 	{
-		if (!_SSMP2dev->getLastDCgroupsSelection(&oldDCgroups))
+		if (!_SSMPdev->getLastDCgroupsSelection(&oldDCgroups))
 			return ClearMemoryDlg::CMresult_communicationError;
-		if (!_SSMP2dev->stopDCreading())
+		if (!_SSMPdev->stopDCreading())
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
-	else if (CUstate_old == SSMprotocol2::state_MBSWreading)
+	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
-		if (!_SSMP2dev->getLastMBSWselection(&oldMBSWmetaList))
+		if (!_SSMPdev->getLastMBSWselection(&oldMBSWmetaList))
 			return ClearMemoryDlg::CMresult_communicationError;
-		if (!_SSMP2dev->stopMBSWreading())
+		if (!_SSMPdev->stopMBSWreading())
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// NOTE: it's currently not possible to call this function while actuator-test is in progress, so we don't need to care about running actuator-tests
-	SYS_ID_old = _SSMP2dev->getSysID();
+	SYS_ID_old = _SSMPdev->getSysID();
 	if (!SYS_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
-	ROM_ID_old = _SSMP2dev->getROMID();
+	ROM_ID_old = _SSMPdev->getROMID();
 	if (!ROM_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
-	if (!_SSMP2dev->getAllAdjustmentValues(&oldAdjVal))
+	if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Clear Memory:
-	ok = _SSMP2dev->ClearMemory(_level, &CMsuccess);
+	ok = _SSMPdev->ClearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
 		return ClearMemoryDlg::CMresult_communicationError;
 	QTimer::singleShot(800, &el, SLOT( quit() ));
 	el.exec();
 	// Request user to switch ignition off and wait for communication error:
 	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
-	ok = _SSMP2dev->waitForIgnitionOff();
+	ok = _SSMPdev->waitForIgnitionOff();
 	// Wait 5 seconds
 	QTimer::singleShot(5000, &el, SLOT( quit() ));
 	el.exec();
@@ -101,28 +101,28 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	if (result != ClearMemoryDlg::CMresult_success)
 		return result;
 	// Stop all actuators if CU is in test-mode:
-	if (!_SSMP2dev->hasTestMode(&tm))
+	if (!_SSMPdev->hasTestMode(&tm))
 		return ClearMemoryDlg::CMresult_communicationError;
 	if (tm)
 	{
 		// Query test mode connector status:
-		if (!_SSMP2dev->isInTestMode(&tm))
+		if (!_SSMPdev->isInTestMode(&tm))
 			return ClearMemoryDlg::CMresult_communicationError;
 		if (tm)
 		{
 			// Check that engine is not running:
-			if (!_SSMP2dev->isEngineRunning(&enginerunning))
+			if (!_SSMPdev->isEngineRunning(&enginerunning))
 				return ClearMemoryDlg::CMresult_communicationError;
 			if (!enginerunning)
 			{
 				// Stop all actuator tests:
-				if (!_SSMP2dev->stopAllActuators())
+				if (!_SSMPdev->stopAllActuators())
 					return ClearMemoryDlg::CMresult_communicationError;
 			}
 		}
 	}
 	// Check if it makes sense to restore the adjustment values:
-	if (!_SSMP2dev->getSupportedAdjustments( &supAdj ))
+	if (!_SSMPdev->getSupportedAdjustments( &supAdj ))
 		return ClearMemoryDlg::CMresult_communicationError;
 	ok = false;
 	for (unsigned char k=0; k<supAdj.size(); k++)
@@ -154,14 +154,14 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 		}
 	}
 	// Restore last CU-state:
-	if (CUstate_old == SSMprotocol2::state_DCreading)
+	if (CUstate_old == SSMprotocol::state_DCreading)
 	{
-		if (!_SSMP2dev->startDCreading(oldDCgroups))
+		if (!_SSMPdev->startDCreading(oldDCgroups))
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
-	else if (CUstate_old == SSMprotocol2::state_MBSWreading)
+	else if (CUstate_old == SSMprotocol::state_MBSWreading)
 	{
-		if (!_SSMP2dev->startMBSWreading(oldMBSWmetaList))
+		if (!_SSMPdev->startMBSWreading(oldMBSWmetaList))
 			return ClearMemoryDlg::CMresult_communicationError;
 	}
 	// Return result:
@@ -175,14 +175,14 @@ bool ClearMemoryDlg::confirmClearMemory()
 	// Create dialog
 	QString winTitle = tr("Clear Memory");
 	QString confirmStr = tr("The Clear Memory procedure");
-	if (_level == SSMprotocol2::CMlevel_2)
+	if (_level == SSMprotocol::CMlevel_2)
 		confirmStr.append( tr(" (level 2)") );
 	confirmStr.append( tr("\n- clears the Diagnostic Codes") );
 	confirmStr.append( tr("\n- resets all non-permanent Adjustment Values") );
-	if ( _SSMP2dev->CUtype() == SSMprotocol2::CUtype_Engine || ((_SSMP2dev->CUtype() == SSMprotocol2::CUtype_Transmission) && (_level == SSMprotocol2::CMlevel_2)) )
+	if ( _SSMPdev->CUtype() == SSMprotocol::CUtype_Engine || ((_SSMPdev->CUtype() == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
 		confirmStr.append( tr("\n- resets the Control Units' learning values") );
 	confirmStr.append( tr("\n\nDo you really want to clear the Control Units' memory") );
-	if (_level == SSMprotocol2::CMlevel_2)
+	if (_level == SSMprotocol::CMlevel_2)
 	{
 		winTitle.append( " 2" );
 		confirmStr.append( tr(" (level 2)") );
@@ -241,7 +241,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 	waitmsgbox.show();
 	for (unsigned char m=0; m<oldAdjVal.size(); m++)
 	{
-		if (!_SSMP2dev->setAdjustmentValue(m, oldAdjVal.at(m)))
+		if (!_SSMPdev->setAdjustmentValue(m, oldAdjVal.at(m)))
 		{
 			waitmsgbox.close();
 			return CMresult_communicationError;
@@ -249,7 +249,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 		}
 	}
 	// To be sure: read and verify value again
-	ok = _SSMP2dev->getAllAdjustmentValues(&currentAdjVal);
+	ok = _SSMPdev->getAllAdjustmentValues(&currentAdjVal);
 	waitmsgbox.close();
 	if (ok)
 	{
@@ -279,7 +279,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(std::string SYS_ID_old, st
 	bool equal = false;
 	// Messagebox: Tell user to switch ignition on (or leave CU):
 	QString winTitle = tr("Clear Memory");
-	if (_level == SSMprotocol2::CMlevel_2)
+	if (_level == SSMprotocol::CMlevel_2)
 		winTitle.append( " 2" );
 	QMessageBox ignonmsgbox( QMessageBox::Information, winTitle, tr("Please switch ignition ON again."), QMessageBox::NoButton, _parent);
 	ignonmsgbox.addButton(tr("Continue"), QMessageBox::AcceptRole);
@@ -298,17 +298,17 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(std::string SYS_ID_old, st
 			return ClearMemoryDlg::CMresult_reconnectAborted;
 		// Validate CU idetification:
 		waitmsgbox.show();
-		ok = _SSMP2dev->setupCUdata();
+		ok = _SSMPdev->setupCUdata();
 		if (ok)
 		{
-			ID_new = _SSMP2dev->getSysID();
+			ID_new = _SSMPdev->getSysID();
 			ok = ID_new.length();
 			if (ok)
 			{
 				equal = (ID_new == SYS_ID_old);
 				if (equal)
 				{
-					ID_new = _SSMP2dev->getROMID();
+					ID_new = _SSMPdev->getROMID();
 					ok = ID_new.length();
 					if (ok)
 						equal = (ID_new == ROM_ID_old);
