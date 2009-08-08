@@ -56,7 +56,7 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	bool getSupportedDCgroups(int *DCgroups);
+	bool getSupportedDCgroups(int *DCgroups);							// CHECK
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
@@ -74,13 +74,9 @@ private:
 	char _ROM_ID[3];
 
 	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCaddresses();
+	void setupDTCdata();
 	void setupSupportedMBs();
 	void setupSupportedSWs();
-	// EVALUATION FUNCTIONS:
-/*	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
-				QStringList *DC, QStringList *DCdescription);
-	=> adapt from SSMprotocol2 !								*/
 
 private slots:
 	void processDCsRawdata(QByteArray dcrawdata, int duration_ms);					// INCOMPLETE IMPLEMENTATION

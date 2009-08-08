@@ -48,7 +48,16 @@
 
 
 
-
+class dc_defs_dt
+{
+public:
+	unsigned int byteAddr_currentOrTempOrLatest;
+	unsigned int byteAddr_historicOrMemorized;
+	QString code[8];
+	QString title[8];
+};
+  
+  
 class  mbsw_dt
 {
 public:
@@ -179,8 +188,7 @@ protected:
 	QString _language;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
-	std::vector<unsigned int> _currOrTempDTCsAddr;
-	std::vector<unsigned int> _histOrMemDTCsAddr;
+	std::vector<dc_defs_dt> _DTCdefs;
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;
@@ -191,7 +199,8 @@ protected:
 	int _selectedDCgroups;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 
-	// PREPARATION AND EVALUATION FUNCTIONS:
+	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
+				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	void assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues);
 

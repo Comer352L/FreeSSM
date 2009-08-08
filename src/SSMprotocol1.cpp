@@ -126,11 +126,11 @@ bool SSMprotocol1::hasActuatorTests(bool *ATsup)
 }
 
 
-void SSMprotocol1::setupDTCaddresses()
+void SSMprotocol1::setupDTCdata()
 {
 
 	// TODO !
-	// => Get supported DTC addresses from definitions and save to _currOrTempDTCsAddr, _histOrMemDTCsAddr
+	// => Get supported DTCs from definitions and save to _DTCdefs
 
 }
 // IMPLEMENTATION MISSING
@@ -158,14 +158,12 @@ bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 	int retDCgroups = 0;
 	bool supported = false;
 	if (_state == state_needSetup) return false;
-	if (!_currOrTempDTCsAddr.empty())
-		retDCgroups += currentDTCs_DCgroup;
-	if (!_histOrMemDTCsAddr.empty())
-		retDCgroups += historicDTCs_DCgroup;
+	if (_DTCdefs.size())
+		retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
 	*DCgroups = retDCgroups;
 	return true;
 }
-
+// CHECK: really always Current and Historic DTCs supported ?
 
 bool SSMprotocol1::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
@@ -217,13 +215,13 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 	// Setup diagnostic codes addresses list:
 	if (DCgroups & currentDTCs_DCgroup)	// current DTCs
 	{
-		for (k=0; k<_currOrTempDTCsAddr.size(); k++)
-			DCqueryAddrList.push_back( _currOrTempDTCsAddr.at(k) );
+		for (k=0; k<_DTCdefs.size(); k++)
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
 	}
 	if (DCgroups & historicDTCs_DCgroup)	// historic DTCs
 	{
-		for (k=0; k<_histOrMemDTCsAddr.size(); k++)
-			DCqueryAddrList.push_back( _histOrMemDTCsAddr.at(k) );
+		for (k=0; k<_DTCdefs.size(); k++)
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
 	}
 	// Check if min. 1 Address to read:
 	if (!DCqueryAddrList.size())
@@ -281,13 +279,13 @@ void SSMprotocol1::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate current/latest data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_currOrTempDTCsAddr.size(); DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
 		{
-//			evaluateDCdataByte(_currOrTempDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_currentOrTempOrLatest, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _currOrTempDTCsAddr.size();
+		DCsAddrIndexOffset += _DTCdefs.size();
 		emit currentOrTemporaryDTCs(DCs, DCdescriptions, false, false);
 	}
 	if (_selectedDCgroups & historicDTCs_DCgroup)
@@ -295,17 +293,17 @@ void SSMprotocol1::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate historic/memorized data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_histOrMemDTCsAddr.size(); DCsAddrIndex++)
+		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
 		{
-//			evaluateDCdataByte(_histOrMemDTCsAddr.at(DCsAddrIndex), DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTC_rawDefs, &tmpDTCs, &tmpDTCsDescriptions);
+			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_historicOrMemorized, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _histOrMemDTCsAddr.size();
+		DCsAddrIndexOffset += _DTCdefs.size();
 		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
 	}
 }
-// INCOMPLETE; evaluateDCdataByte(); TestMode, DCheckActive always false ???;
+// INCOMPLETE; TestMode, DCheckActive always false ???;
 
 bool SSMprotocol1::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 {

@@ -91,12 +91,8 @@ private:
 	char _flagbytes[96];
 	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
-	// Diagnostic Trouble Codes:
-	QStringList _DTC_rawDefs;
 	// Cruise Control Cancel Codes:
-	std::vector<unsigned int> _latestCCCCsAddr;
-	std::vector<unsigned int> _memorizedCCCCsAddr;
-	QStringList _CC_rawDefs;
+	std::vector<dc_defs_dt> _CCCCdefs;
 	// Adjustment Values:
 	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:
@@ -106,15 +102,14 @@ private:
 	unsigned char _selectedActuatorTestIndex;
 
 	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCaddresses();
-	void setupCCCCaddresses();
+	void setupDTCdata();
+	void setupCCCCdata();
 	void setupSupportedMBs();
 	void setupSupportedSWs();
 	void setupAdjustmentsData();
 	void setupActuatorTestData();
+	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
 	// PREPARATION AND EVALUATION FUNCTIONS:
-	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, QStringList DC_rawDefs,
-				QStringList *DC, QStringList *DCdescription);
 	bool validateVIN(char VIN[17]);
 
 private slots:
