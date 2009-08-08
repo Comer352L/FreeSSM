@@ -132,10 +132,12 @@ bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 	{
 		CUaddress = '\x10';
 	}
-	else if (_CU == CUtype_Engine)
+	else if (_CU == CUtype_Transmission)
 	{
 		CUaddress = '\x18';
 	}
+	else
+		return false;
 	_SSMP2com = new SSMP2communication(_port, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
