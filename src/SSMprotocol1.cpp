@@ -185,7 +185,7 @@ return false;
 }
 // IMPLEMENTATION MISSING; DO WE NEED IT ?
 
-bool SSMprotocol1::ClearMemory(CMlevel_dt level, bool *success)
+bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
@@ -196,7 +196,7 @@ return false;
 }
 // IMPLEMENTATION MISSING
 
-bool SSMprotocol1::TestImmobilizerCommLine(immoTestResult_dt *result)
+bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 
 	// TODO !

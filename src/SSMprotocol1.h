@@ -60,8 +60,8 @@ public:
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
-	bool ClearMemory(CMlevel_dt level, bool *success);						// IMPLEMENTATION MISSING
-	bool TestImmobilizerCommLine(immoTestResult_dt *result);					// IMPLEMENTATION MISSING
+	bool clearMemory(CMlevel_dt level, bool *success);						// IMPLEMENTATION MISSING
+	bool testImmobilizerCommLine(immoTestResult_dt *result);					// IMPLEMENTATION MISSING
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
 	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);

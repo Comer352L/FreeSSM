@@ -81,7 +81,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Clear Memory:
-	ok = _SSMPdev->ClearMemory(_level, &CMsuccess);
+	ok = _SSMPdev->clearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
 		return ClearMemoryDlg::CMresult_communicationError;
 	QTimer::singleShot(800, &el, SLOT( quit() ));

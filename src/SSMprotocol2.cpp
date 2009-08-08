@@ -1114,7 +1114,7 @@ bool SSMprotocol2::isInTestMode(bool *testmode)
 }
 
 
-bool SSMprotocol2::ClearMemory(CMlevel_dt level, bool *success)
+bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 {
 	char val = 0;
 	char bytewritten = 0;
@@ -1145,7 +1145,7 @@ bool SSMprotocol2::ClearMemory(CMlevel_dt level, bool *success)
 }
 
 
-bool SSMprotocol2::TestImmobilizerCommLine(immoTestResult_dt *result)
+bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 	bool ImmoSup = false;
 	if (_state != state_normal) return false;

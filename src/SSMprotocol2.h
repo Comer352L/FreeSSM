@@ -71,8 +71,8 @@ public:
 	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	bool ClearMemory(CMlevel_dt level, bool *success);
-	bool TestImmobilizerCommLine(immoTestResult_dt *result);
+	bool clearMemory(CMlevel_dt level, bool *success);
+	bool testImmobilizerCommLine(immoTestResult_dt *result);
 	bool stopAllActuators();
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();

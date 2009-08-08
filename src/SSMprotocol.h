@@ -157,8 +157,8 @@ public:
 	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
 	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	virtual bool ClearMemory(CMlevel_dt level, bool *success) = 0;
-	virtual bool TestImmobilizerCommLine(immoTestResult_dt *result) = 0;
+	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
+	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
 	virtual bool stopAllActuators();
 	virtual bool startDCreading(int DCgroups) = 0;
 	bool restartDCreading();

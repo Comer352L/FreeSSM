@@ -144,7 +144,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 	// Run immobilizer communication line test:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !   "));
 	wmsgbox.show();
-	ok = _SSMPdev->TestImmobilizerCommLine(&testresult);
+	ok = _SSMPdev->testImmobilizerCommLine(&testresult);
 	if (ok)
 	{
 		QEventLoop el;
