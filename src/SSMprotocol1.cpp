@@ -41,14 +41,57 @@ void SSMprotocol1::resetCUdata()
 }
 // IMPLEMENTATION MISSING
 
-bool SSMprotocol1::setupCUdata(bool ignoreIgnitionOFF)
+bool SSMprotocol1::setupCUdata()
 {
-
-	// TODO !
+	SSM1_CUtype_dt SSM1_CU;
+	// Reset:
+	resetCUdata();
+	// Create SSMP1communication-object:
+	if (_CU == CUtype_Engine)
+	{
+		SSM1_CU = Engine;
+	}
+	else if (_CU == CUtype_Transmission)
+	{
+		SSM1_CU = Transmission;
+	}
+	else if (_CU == CUtype_CruiseControl)
+	{
+		SSM1_CU = CruiseCtrl;
+	}
+	else if (_CU == CUtype_AirCon)
+	{
+		SSM1_CU = AirCon;
+	}
+	else if (_CU == CUtype_FourWheelSteering)
+	{
+		SSM1_CU = FourWS;
+	}
+	else
+		return false;
+	_SSMP1com = new SSMP1communication(_port, SSM1_CU);
+	// Get control unit data:
+	if (!_SSMP1com->readRomId(_ROM_ID))
+		 return false;
+	_state = state_normal;
+	// Connect communication error signals from SSMP1communication:
+	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	// Get definitions of the supported diagnostic codes:
+	setupDTCdata();
+	// Get supported MBs and SWs:
+	setupSupportedMBs();
+	setupSupportedSWs();
+	return true;
 	
-return false;
+	
+	/* TODO:
+		- setup test-addresses for Immobilizer-communication-line
+		- does the communication always immediately abort when ignition is switched off ?
+	*/
+	
 }
-// IMPLEMENTATION MISSING
+// INCOMPLETE IMPLEMENTATION
 
 std::string SSMprotocol1::getROMID()
 {

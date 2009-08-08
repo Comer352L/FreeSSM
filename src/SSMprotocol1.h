@@ -46,7 +46,7 @@ public:
 	SSMprotocol1(serialCOM *port, CUtype_dt CU, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata(bool ignoreIgnitionOFF=false);							// IMPLEMENTATION MISSING
+	bool setupCUdata();										// INCOMPLETE IMPLEMENTATION
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
 	bool hasOBD2system(bool *OBD2);
