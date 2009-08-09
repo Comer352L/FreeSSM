@@ -135,12 +135,12 @@ public:
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
-	SSMprotocol(serialCOM *port, CUtype_dt CU, QString language="en");
+	SSMprotocol(serialCOM *port, QString language="en");
 	~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
-	SSMprotocol::CUtype_dt CUtype();
+	bool CUtype(SSMprotocol::CUtype_dt *CU);
 	SSMprotocol::state_dt state();
-	virtual bool setupCUdata(bool ignoreIgnitionOFF=false) = 0;
+	virtual bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false) = 0;
 	virtual std::string getSysID();
 	virtual std::string getROMID() = 0;
 	virtual bool getSystemDescription(QString *sysdescription) = 0;

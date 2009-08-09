@@ -34,6 +34,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	CMresult_dt result = CMresult_success;
 	bool ok = false;
 	bool CMsuccess = false;
+	SSMprotocol::CUtype_dt cu_old;
 	std::string SYS_ID_old;
 	std::string ROM_ID_old;
 	SSMprotocol::state_dt CUstate_old;
@@ -45,8 +46,10 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	std::vector<adjustment_dt> supAdj;
 	QEventLoop el;
 
+	if (!_SSMPdev->CUtype(&cu_old))
+		return ClearMemoryDlg::CMresult_communicationError;
 	// Let the user confirm the Clear Memory procedure:
-	if (!confirmClearMemory())
+	if (!confirmClearMemory(cu_old))
 		return ClearMemoryDlg::CMresult_aborted;
 	// Wait-messagebox:
 	QString waitstr = tr("Clearing memory");
@@ -97,7 +100,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	if (!ok)
 		return ClearMemoryDlg::CMresult_communicationError;
 	// Request user to switch ignition on and ensure that CU is still the same:
-	result = reconnect(SYS_ID_old, ROM_ID_old);
+	result = reconnect(cu_old, SYS_ID_old, ROM_ID_old);
 	if (result != ClearMemoryDlg::CMresult_success)
 		return result;
 	// Stop all actuators if CU is in test-mode:
@@ -169,7 +172,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 }
 
 
-bool ClearMemoryDlg::confirmClearMemory()
+bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
 {
 	int uc = 0;
 	// Create dialog
@@ -179,7 +182,7 @@ bool ClearMemoryDlg::confirmClearMemory()
 		confirmStr.append( tr(" (level 2)") );
 	confirmStr.append( tr("\n- clears the Diagnostic Codes") );
 	confirmStr.append( tr("\n- resets all non-permanent Adjustment Values") );
-	if ( _SSMPdev->CUtype() == SSMprotocol::CUtype_Engine || ((_SSMPdev->CUtype() == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
+	if ( cu_type == SSMprotocol::CUtype_Engine || ((cu_type == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
 		confirmStr.append( tr("\n- resets the Control Units' learning values") );
 	confirmStr.append( tr("\n\nDo you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol::CMlevel_2)
@@ -271,7 +274,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 }
 
 
-ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(std::string SYS_ID_old, std::string ROM_ID_old)
+ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu, std::string SYS_ID_old, std::string ROM_ID_old)
 {
 	std::string ID_new;
 	int uc = 0;
@@ -298,7 +301,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(std::string SYS_ID_old, st
 			return ClearMemoryDlg::CMresult_reconnectAborted;
 		// Validate CU idetification:
 		waitmsgbox.show();
-		ok = _SSMPdev->setupCUdata();
+		ok = _SSMPdev->setupCUdata(cu);
 		if (ok)
 		{
 			ID_new = _SSMPdev->getSysID();

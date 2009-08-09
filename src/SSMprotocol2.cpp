@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol2::SSMprotocol2(serialCOM *port, CUtype_dt CU, QString language) : SSMprotocol(port, CU, language)
+SSMprotocol2::SSMprotocol2(serialCOM *port, QString language) : SSMprotocol(port, language)
 {
 	_SSMP2com = NULL;
 	resetCUdata();
@@ -120,7 +120,7 @@ void SSMprotocol2::resetCUdata()
 }
 
 
-bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
+bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
 	bool ATsup = false;
@@ -128,11 +128,11 @@ bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 	// Reset:
 	resetCUdata();
 	// Create SSM2Pcommunication-object:
-	if (_CU == CUtype_Engine)
+	if (CU == CUtype_Engine)
 	{
 		CUaddress = '\x10';
 	}
-	else if (_CU == CUtype_Transmission)
+	else if (CU == CUtype_Transmission)
 	{
 		CUaddress = '\x18';
 	}
@@ -151,6 +151,7 @@ bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 			return false;
 		if (!(data & 0x08)) return false;
 	}
+	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
 	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );

@@ -21,10 +21,9 @@
 
 
 
-SSMprotocol::SSMprotocol(serialCOM *port, CUtype_dt CU, QString language)
+SSMprotocol::SSMprotocol(serialCOM *port, QString language)
 {
 	_port = port;
-	_CU = CU;
 	_language = language;
 	_state = state_needSetup;
 }
@@ -35,9 +34,11 @@ SSMprotocol::~SSMprotocol()
 }
 
 
-SSMprotocol::CUtype_dt SSMprotocol::CUtype()
+bool SSMprotocol::CUtype(SSMprotocol::CUtype_dt *CU)
 {
-	return _CU;
+	if (_state == state_needSetup) return false;
+	*CU = _CU;
+	return true;
 }
 
 

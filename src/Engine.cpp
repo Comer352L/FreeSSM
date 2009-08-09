@@ -90,7 +90,7 @@ void Engine::setup()
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( _SSMP2dev->setupCUdata() )
+	if( _SSMP2dev->setupCUdata(SSMprotocol2::CUtype_Engine) )
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing ECU data... Please wait !"));

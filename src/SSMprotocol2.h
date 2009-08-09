@@ -46,10 +46,10 @@ class SSMprotocol2 : public SSMprotocol, private SSMprotocol2_ID
 	Q_OBJECT
 
 public:
-	SSMprotocol2(serialCOM *port, CUtype_dt CU, QString language="en");
+	SSMprotocol2(serialCOM *port, QString language="en");
 	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata(bool ignoreIgnitionOFF=false);
+	bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
 	std::string getSysID();
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);

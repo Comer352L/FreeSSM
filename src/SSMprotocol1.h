@@ -43,10 +43,10 @@ class SSMprotocol1 : public SSMprotocol
 	Q_OBJECT
 
 public:
-	SSMprotocol1(serialCOM *port, CUtype_dt CU, QString language="en");
+	SSMprotocol1(serialCOM *port, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata();										// INCOMPLETE IMPLEMENTATION
+	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
 	bool hasOBD2system(bool *OBD2);

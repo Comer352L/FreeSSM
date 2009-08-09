@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol1::SSMprotocol1(serialCOM *port, CUtype_dt CU, QString language) : SSMprotocol(port, CU, language)
+SSMprotocol1::SSMprotocol1(serialCOM *port, QString language) : SSMprotocol(port, language)
 {
 	_SSMP1com = NULL;
 	resetCUdata();
@@ -41,29 +41,29 @@ void SSMprotocol1::resetCUdata()
 }
 // IMPLEMENTATION MISSING
 
-bool SSMprotocol1::setupCUdata()
+bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
 	SSM1_CUtype_dt SSM1_CU;
 	// Reset:
 	resetCUdata();
 	// Create SSMP1communication-object:
-	if (_CU == CUtype_Engine)
+	if (CU == CUtype_Engine)
 	{
 		SSM1_CU = Engine;
 	}
-	else if (_CU == CUtype_Transmission)
+	else if (CU == CUtype_Transmission)
 	{
 		SSM1_CU = Transmission;
 	}
-	else if (_CU == CUtype_CruiseControl)
+	else if (CU == CUtype_CruiseControl)
 	{
 		SSM1_CU = CruiseCtrl;
 	}
-	else if (_CU == CUtype_AirCon)
+	else if (CU == CUtype_AirCon)
 	{
 		SSM1_CU = AirCon;
 	}
-	else if (_CU == CUtype_FourWheelSteering)
+	else if (CU == CUtype_FourWheelSteering)
 	{
 		SSM1_CU = FourWS;
 	}
@@ -73,6 +73,7 @@ bool SSMprotocol1::setupCUdata()
 	// Get control unit data:
 	if (!_SSMP1com->readRomId(_ROM_ID))
 		 return false;
+	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );

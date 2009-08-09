@@ -164,6 +164,7 @@ void CUcontent_DCs_abstract::setNrOfTableRows(QTableWidget *tablewidget, unsigne
 void CUcontent_DCs_abstract::printDCprotocol()
 {
 	QString datetime;
+	SSMprotocol::CUtype_dt cu_type;
 	QString CU;
 	QString systype;
 	std::string ROM_ID;
@@ -190,19 +191,6 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	printmbox.show();
 	// ##### GATHER CU-INFORMATIONS #####
 	datetime = QDateTime::currentDateTime().toString("dddd, dd. MMMM yyyy, h:mm") + ":";
-	SSMprotocol::CUtype_dt cu_type = _SSMPdev->CUtype();
-	if (cu_type == SSMprotocol::CUtype_Engine)
-	{
-		CU = tr("Engine");
-	}
-	else if (cu_type == SSMprotocol::CUtype_Transmission)
-	{
-		CU = tr("Transmission");
-	}
-	else
-	{
-		CU = tr("UNKNOWN");
-	}
 	ok = true;
 	if (!_SSMPdev->getSystemDescription(&systype))
 	{
@@ -216,45 +204,63 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	}
 	if (ok)
 	{
-		ROM_ID = _SSMPdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
-		ok = ROM_ID.length();
-		if (ok && (cu_type == SSMprotocol::CUtype_Engine))
+		ok = _SSMPdev->CUtype(&cu_type);
+		if (ok)
 		{
-			ok = _SSMPdev->hasVINsupport(&VINsup);
-			if (ok)
+			if (cu_type == SSMprotocol::CUtype_Engine)
 			{
-				if ( VINsup )
-				{
-					// Temporary stop DC-reading for VIN-Query:
-					disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-					ok = _SSMPdev->stopDCreading();
-					if (ok)
-					{
-						// Query VIN:
-						ok = _SSMPdev->getVIN(&VIN);
-						if (ok)
-						{
-							if (VIN.size() == 0)
-								VIN = tr("not programmed yet");
-							// Restart DC-reading:
-							ok = _SSMPdev->restartDCreading();
-							if (ok)
-								connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-							else
-								errstr = tr("Couldn't restart Diagnostic Codes Reading.");
-						}
-						else
-							errstr = tr("Query of the VIN failed.");
-					}
-					else
-						errstr = tr("Couldn't stop Diagnostic Codes Reading.");
-				}
+				CU = tr("Engine");
+			}
+			else if (cu_type == SSMprotocol::CUtype_Transmission)
+			{
+				CU = tr("Transmission");
 			}
 			else
-				errstr = tr("Couldn't determine if VIN-registration is supported.");
+			{
+				CU = tr("UNKNOWN");
+			}	
+			ROM_ID = _SSMPdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+			ok = ROM_ID.length();
+			if (ok && (cu_type == SSMprotocol::CUtype_Engine))
+			{
+				ok = _SSMPdev->hasVINsupport(&VINsup);
+				if (ok)
+				{
+					if ( VINsup )
+					{
+						// Temporary stop DC-reading for VIN-Query:
+						disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+						ok = _SSMPdev->stopDCreading();
+						if (ok)
+						{
+							// Query VIN:
+							ok = _SSMPdev->getVIN(&VIN);
+							if (ok)
+							{
+								if (VIN.size() == 0)
+									VIN = tr("not programmed yet");
+								// Restart DC-reading:
+								ok = _SSMPdev->restartDCreading();
+								if (ok)
+									connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+								else
+									errstr = tr("Couldn't restart Diagnostic Codes Reading.");
+							}
+							else
+								errstr = tr("Query of the VIN failed.");
+						}
+						else
+							errstr = tr("Couldn't stop Diagnostic Codes Reading.");
+					}
+				}
+				else
+					errstr = tr("Couldn't determine if VIN-registration is supported.");
+			}
+			else
+				errstr = tr("Query of the ROM-ID failed.");
 		}
 		else
-			errstr = tr("Query of the ROM-ID failed.");
+			errstr = tr("Couldn't determine Control Unit type.");
 	}
 	// Check for communication error:
 	if (!ok)
