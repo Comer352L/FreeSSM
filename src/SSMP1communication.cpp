@@ -211,7 +211,7 @@ void SSMP1communication::run()
 	std::vector<unsigned int> addresses;
 	std::vector<char> data;
 	unsigned int k = 0;
-	bool setNextAddr = true;
+	bool setAddr = true;
 	unsigned char errmax = 3;
 	char errcount = 0;
 
@@ -265,16 +265,16 @@ void SSMP1communication::run()
 	do
 	{
 		// Set next address:
-		if (setNextAddr)
+		if (setAddr)
 		{
 			op_success = setAddress(cu, addresses.at(k));
-			setNextAddr = !op_success;
+			setAddr = !op_success;
 #ifdef __FSSM_DEBUG__
 			if (!op_success)
 				std::cout << "SSMP1communication::run():   setAddress(...) failed for address 0x" << std::hex << addresses.at(k) << " !\n";
 #endif
 		}
-		if (!setNextAddr)	// only if there was no error during address-setting
+		if (!setAddr)	// only if there was no error during address-setting
 		{
 			// Do communication operation for the current address:
 			if ((operation == comOp_read) || (operation == comOp_read_p))
@@ -318,7 +318,7 @@ void SSMP1communication::run()
 					k++;
 				else
 					k=0;
-				setNextAddr = true;
+				setAddr = true;
 			}
 			// Send data to main thread:
 			if (permanent && (k==0))
@@ -335,6 +335,7 @@ void SSMP1communication::run()
 			std::cout << "SSMP1communication::run():   communication operation error counter=" << (int)(errcount) << '\n';
 #endif
 			errcount++;
+			setAddr = true;	// repeat the complete procedure
 			if (errcount < errmax) msleep(100);
 		}
 		// GET ABORT STATUS::
