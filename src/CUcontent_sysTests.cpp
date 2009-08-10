@@ -44,7 +44,8 @@ CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSMprotocol *SSMPdev) : 
 
 CUcontent_sysTests::~CUcontent_sysTests()
 {
-	_SSMPdev->stopActuatorTesting();	// ActuatorTestDlg already stops test on delete...
+	if (_SSMPdev)
+		_SSMPdev->stopActuatorTesting();	// ActuatorTestDlg already stops test on delete...
 	disconnect( startActuatorTest_pushButton, SIGNAL( released() ), this, SLOT( startActuatorTest() ) );
 	disconnect( testImmoLine_pushButton, SIGNAL( released() ), this, SLOT( testImmobilizerLine() ) );
 }
@@ -59,7 +60,9 @@ bool CUcontent_sysTests::setup()
 
 	_actuatorTestTitles.clear();
 	// Get CU-informations:
-	ok = _SSMPdev->hasActuatorTests(&AT_sup);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok = _SSMPdev->hasActuatorTests(&AT_sup);
 	if (ok)
 		ok = _SSMPdev->getSupportedActuatorTests(&_actuatorTestTitles);
 	if (ok)
@@ -97,6 +100,7 @@ void CUcontent_sysTests::startActuatorTest()
 	bool testmode = false;
 	QFont mbfont;
 	
+	if (!_SSMPdev) return;
 	// Create wait message for test mode connecter status check:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Checking test mode connector... Please wait !   "));
 	wmsgbox.show();
@@ -141,6 +145,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 	QString resultInfo = "";
 	QMessageBox::Icon msgboxicon = QMessageBox::NoIcon;
 	
+	if (!_SSMPdev) return;
 	// Run immobilizer communication line test:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !   "));
 	wmsgbox.show();

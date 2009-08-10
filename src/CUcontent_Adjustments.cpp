@@ -231,7 +231,9 @@ bool CUcontent_Adjustments::setup()
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
 	// Get supported adjustments:
-	ok = _SSMPdev->getSupportedAdjustments(&_supportedAdjustments);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok = _SSMPdev->getSupportedAdjustments(&_supportedAdjustments);
 	if (ok && !_supportedAdjustments.empty())
 	{
 		// Determine the needed selection widget type for new values:
@@ -524,6 +526,7 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 	unsigned int controlValue_raw = 0;
 	bool ok = false;
 
+	if (!_SSMPdev) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !      "));
 	waitmsgbox.show();
@@ -580,6 +583,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	unsigned char k = 0;
 	bool calcerror = false;
 
+	if (!_SSMPdev) return;
 	// Show "Confirm"-dialog:
 	QMessageBox confirmmsg( QMessageBox::Question, tr("Continue ?"), tr("Do you really want to reset all adjustment values ?"), QMessageBox::NoButton, this);
 	confirmmsg.addButton(tr("OK"), QMessageBox::AcceptRole);

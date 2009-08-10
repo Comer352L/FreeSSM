@@ -110,7 +110,9 @@ bool CUcontent_DCs_engine::setup()
 	_memorizedCCCCs.clear();
 	_memorizedCCCCdescriptions.clear();
 	// Get CU information:
-	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
 	{
 		ok = _SSMPdev->hasTestMode(&TMsup);
@@ -170,10 +172,13 @@ bool CUcontent_DCs_engine::setup()
 		DCgroups_tabWidget->setTabEnabled(1, false);
 	}
 	// Connect start-slot:
-	if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
-		connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	else
-		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	if (_SSMPdev)
+	{
+		if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
+			connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		else
+			disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	}
 	// Return result;
 	return ok;
 }
@@ -181,6 +186,7 @@ bool CUcontent_DCs_engine::setup()
 
 void CUcontent_DCs_engine::connectGUIelements()
 {
+	if (!_SSMPdev) return;
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
 	{
@@ -211,6 +217,7 @@ void CUcontent_DCs_engine::connectGUIelements()
 
 void CUcontent_DCs_engine::disconnectGUIelements()
 {
+	if (!_SSMPdev) return;	// avoid NULL-pointer-warning-message
 	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));

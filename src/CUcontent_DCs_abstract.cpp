@@ -30,9 +30,9 @@ CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol *SSM
 
 CUcontent_DCs_abstract::~CUcontent_DCs_abstract()
 {
+	if (!_SSMPdev) return;	// avoid NULL-pointer-warning-message
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-	if (_SSMPdev)
-		_SSMPdev->stopDCreading();
+	_SSMPdev->stopDCreading();
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 }
@@ -56,6 +56,7 @@ bool CUcontent_DCs_abstract::startDCreading()
 {
 	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	int selDCgroups = 0;
+	if (!_SSMPdev) return false;
 	// Check if DC-group(s) selected:
 	if (_supportedDCgroups == SSMprotocol::noDCs_DCgroup)
 		return false;
@@ -95,16 +96,19 @@ bool CUcontent_DCs_abstract::startDCreading()
 
 bool CUcontent_DCs_abstract::stopDCreading()
 {
-	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-	if (_SSMPdev->state() == SSMprotocol::state_DCreading)
+	if (_SSMPdev)
 	{
-		if (!_SSMPdev->stopDCreading())
+		disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
+		if (_SSMPdev->state() == SSMprotocol::state_DCreading)
 		{
-			connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-			return false;
+			if (!_SSMPdev->stopDCreading())
+			{
+				connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
+				return false;
+			}
 		}
+		connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	}
-	connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnectGUIelements();
 	return true;
 }
@@ -174,6 +178,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	bool ok = false;
 	QString errstr = "";
 
+	if (!_SSMPdev) return;
 	// Create Printer:
 	QPrinter printer(QPrinter::ScreenResolution);
 	// Show print dialog:

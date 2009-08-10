@@ -79,7 +79,9 @@ bool CUcontent_DCs_transmission::setup()
 	_histOrMemDTCs.clear();
 	_histOrMemDTCdescriptions.clear();
 	// Get CU information:
-	ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
 	{
 		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
@@ -115,10 +117,13 @@ bool CUcontent_DCs_transmission::setup()
 	printDClist_pushButton->setEnabled(false);
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// Connect start-slot:
-	if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
-		connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	else
-		disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	if (_SSMPdev)
+	{
+		if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
+			connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		else
+			disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	}
 	// Return result;
 	return ok;
 }
@@ -126,6 +131,7 @@ bool CUcontent_DCs_transmission::setup()
 
 void CUcontent_DCs_transmission::connectGUIelements()
 {
+	if (!_SSMPdev) return;
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
 	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
 	{
@@ -146,6 +152,7 @@ void CUcontent_DCs_transmission::connectGUIelements()
 
 void CUcontent_DCs_transmission::disconnectGUIelements()
 {
+	if (!_SSMPdev) return;	// avoid NULL-pointer-warning-message
 	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 }
