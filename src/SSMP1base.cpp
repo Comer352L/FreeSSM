@@ -105,7 +105,7 @@ bool SSMP1commands::sendMsg(char msg[4], unsigned char msglen)
 {
 	TimeM time;
 	unsigned int t_el = 0;
-	unsigned int T_Tx_min = 1000 * msglen * 11 / (double)1953;
+	unsigned int T_Tx_min = static_cast<unsigned int>(1000 * msglen * 11 / 1953.0);
 	// CLEAR SEND BUFFER:
 	if (!_port->ClearSendBuffer())
 		return false;

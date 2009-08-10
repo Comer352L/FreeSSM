@@ -200,7 +200,6 @@ void SSMprotocol1::setupSupportedSWs()
 bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 {
 	int retDCgroups = 0;
-	bool supported = false;
 	if (_state == state_needSetup) return false;
 	if (_DTCdefs.size())
 		retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
