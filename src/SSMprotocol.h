@@ -140,7 +140,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
 	SSMprotocol::state_dt state();
-	virtual bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false) = 0;
+	virtual bool setupCUdata(CUtype_dt CU) = 0;
 	virtual std::string getSysID();
 	virtual std::string getROMID() = 0;
 	virtual bool getSystemDescription(QString *sysdescription) = 0;

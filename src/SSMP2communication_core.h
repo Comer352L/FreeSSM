@@ -22,10 +22,8 @@
 
 
 #ifdef __WIN32__
-    #define waitms(x) Sleep(x);
     #include "windows\serialCOM.h"
 #elif defined __linux__
-    #define waitms(x) usleep(1000*x);
     #include "linux/serialCOM.h"
 #else
     #error "Operating system not supported !"
@@ -50,13 +48,12 @@ public:
 	bool GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 
 private:
+	serialCOM *_port;
+
 	bool SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	char calcchecksum(char *message, unsigned int nrofbytes);
 	void charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
-
-protected:
-	serialCOM *_port;
 
 };
 

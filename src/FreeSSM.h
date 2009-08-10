@@ -35,7 +35,6 @@
 #endif
 #include <QtGui>
 #include <string>
-#include "SSMprotocol2.h"
 #include "SSMP2communication.h"
 #include "libFSSM.h"
 #include "Engine.h"
@@ -58,13 +57,12 @@ private:
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
 	serialCOM *_port;
-	SSMprotocol2 *_SSMP2dev;
 	QLabel *_progtitle_label;
 	QAction *_dump_action;
 	bool _dumping;
 
 	void setupUiFonts();
-	bool initPort(unsigned int baudrate, serialCOM *port);
+	bool initPort();
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 
@@ -78,7 +76,7 @@ private slots:
 	void preferences();
 	void help();
 	void about();
-	void SSMPdevCleanup();
+	void cleanupPort();
 	void retranslate(QString newlanguage, QTranslator *newtranslator);
 	void dumpCUdata();
 

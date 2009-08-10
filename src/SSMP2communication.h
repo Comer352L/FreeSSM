@@ -76,8 +76,8 @@ private:
 	char _rec_buf[256];
 	int _delay;
 
-	void run();
 	bool doSingleCommOperation();
+	void run();
 
 signals:
 	void recievedData(QByteArray rawdata, int duration_ms);

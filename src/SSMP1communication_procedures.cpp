@@ -19,6 +19,14 @@
 
 #include "SSMP1communication_procedures.h"
 
+#ifdef __WIN32__
+    #define waitms(x) Sleep(x)
+#elif defined __linux__
+    #define waitms(x) usleep(1000*x)
+#else
+    #error "Operating system not supported !"
+#endif
+
 
 SSMP1communication_procedures::SSMP1communication_procedures(serialCOM *port) : SSMP1commands(port)
 {
@@ -31,7 +39,7 @@ SSMP1communication_procedures::SSMP1communication_procedures(serialCOM *port) : 
 
 bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int addr)
 {
-	if (((cu != Engine) && (cu != Transmission)) && (addr > 0xFF))
+	if (((cu != SSM1_CU_Engine) && (cu != SSM1_CU_Transmission)) && (addr > 0xFF))
 		return false;
 	if (!sendReadAddressCmd(cu, addr))
 		return false;

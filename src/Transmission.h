@@ -21,9 +21,16 @@
 #define TRANSMISSION_H
 
 
-
+#ifdef __WIN32__
+    #include "windows\serialCOM.h"
+#elif defined __linux__
+    #include "linux/serialCOM.h"
+#else
+    #error "Operating system not supported !"
+#endif
 #include <QtGui>
 #include "ui_Transmission.h"
+#include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
 #include "CUcontent_DCs_transmission.h"
@@ -38,13 +45,15 @@ class Transmission : public QMainWindow, private Ui::Transmission_Window
 	Q_OBJECT
 
 public:
-	Transmission(SSMprotocol2 *ssmp2dev, QString progversion = "");
+	Transmission(serialCOM *port, QString language, QString progversion = "");
 	~Transmission();
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
 
-	SSMprotocol2 *_SSMP2dev;
+	QString _language;
+	serialCOM *_port;
+	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
@@ -57,7 +66,9 @@ private:
 	mode_dt _mode;
 
 	void setup();
-	void runClearMemory(SSMprotocol2::CMlevel_dt level);
+	bool probeProtocol();
+	bool configurePort(unsigned int baud, char parity);
+	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void setupUiFonts();
 	void clearContent();
 	void closeEvent(QCloseEvent *event);

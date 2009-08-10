@@ -22,11 +22,9 @@
 
 
 #ifdef __WIN32__
-    #define waitms(x) Sleep(x)
     #include "windows\serialCOM.h"
     #include "windows\TimeM.h"
 #elif defined __linux__
-    #define waitms(x) usleep(1000*x)
     #include "linux/serialCOM.h"
     #include "linux/TimeM.h"
 #else
@@ -53,7 +51,7 @@
 
 
 
-enum SSM1_CUtype_dt {Engine, Transmission, CruiseCtrl, AirCon, FourWS};
+enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_FourWS};
 
 
 class SSMP1commands

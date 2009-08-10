@@ -27,7 +27,6 @@ FreeSSM::FreeSSM(QApplication *app)
 	_qt_translator = NULL;
 	_translator = NULL;
 	_port = NULL;
-	_SSMP2dev = NULL;
 	_portname = "";
 	_language = "";
 	_dumping = false;
@@ -202,7 +201,6 @@ FreeSSM::~FreeSSM()
 	delete _dump_action;
 	delete _progtitle_label;
 	if (_port != NULL) delete _port;
-	if (_SSMP2dev != NULL) delete _SSMP2dev;
 	if (_translator != NULL)
 	{
 		QApplication::removeTranslator(_translator);
@@ -219,17 +217,10 @@ FreeSSM::~FreeSSM()
 void FreeSSM::engine()
 {
 	if (_dumping) return;
-	_port = new serialCOM;
-	if (initPort(4800, _port))
+	if (initPort())
 	{
-		_SSMP2dev = new SSMprotocol2(_port, _language);
-		Engine *enginewindow = new Engine(_SSMP2dev, _progversion);
-		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
-	}
-	else
-	{
-		delete _port;
-		_port = NULL;
+		Engine *enginewindow = new Engine(_port, _language, _progversion);
+		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
 
@@ -237,17 +228,10 @@ void FreeSSM::engine()
 void FreeSSM::transmission()
 {
 	if (_dumping) return;
-	_port = new serialCOM;
-	if (initPort(4800, _port))
+	if (initPort())
 	{
-		_SSMP2dev = new SSMprotocol2(_port, _language);
-		Transmission *transmissionwindow = new Transmission(_SSMP2dev, _progversion);
-		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( SSMPdevCleanup() ));
-	}
-	else
-	{
-		delete _port;
-		_port = NULL;
+		Transmission *transmissionwindow = new Transmission(_port, _language, _progversion);
+		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
 
@@ -287,14 +271,9 @@ void FreeSSM::about()
 }
 
 
-void FreeSSM::SSMPdevCleanup()
+void FreeSSM::cleanupPort()
 {
-	disconnect(this, SLOT( SSMPdevCleanup() ));
-	if (_SSMP2dev)
-	{
-		delete _SSMP2dev;
-		_SSMP2dev = NULL;
-	}
+	disconnect(this, SLOT( cleanupPort() ));
 	if (_port)
 	{
 		delete _port;	// port will be closed in destructor of serialCOM
@@ -303,7 +282,7 @@ void FreeSSM::SSMPdevCleanup()
 }
 
 
-bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
+bool FreeSSM::initPort()
 {
 	// IF NO PORT IS SELECTED YET: SELECT FIRST AVAILABLE PORT
 	if (_portname == "")
@@ -326,36 +305,20 @@ bool FreeSSM::initPort(unsigned int baudrate, serialCOM *port)
 		}
 	}
 	// Open port:
-	if (!port->OpenPort(_portname.toStdString()))
-	{
-		QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
-		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
-		msg.setFont( msgfont );
-		msg.show();
-		msg.exec();
-		msg.close();
-		return false;
-	}
-	// Configure port:
-	serialCOM::dt_portsettings newportsettings;
-	newportsettings.baudrate = (double)baudrate;
-	newportsettings.databits = 8;
-	newportsettings.parity = 'N';
-	newportsettings.stopbits = 1;
-	if(!_port->SetPortSettings(newportsettings))
-	{
-		QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't apply the necessary serial port settings !"), QMessageBox::Ok, this);
-		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
-		msg.setFont( msgfont );
-		msg.show();
-		msg.exec();
-		msg.close();
-		_port->ClosePort();
-		return false;
-	}
-	return true;
+	_port = new serialCOM;
+	if (_port->OpenPort(_portname.toStdString()))
+		return true;
+	// Return error:
+	QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
+	QFont msgfont = msg.font();
+	msgfont.setPixelSize(12); // 9pts
+	msg.setFont( msgfont );
+	msg.show();
+	msg.exec();
+	msg.close();
+	delete _port;
+	_port = NULL;
+	return false;
 }
 
 
@@ -428,11 +391,8 @@ void FreeSSM::dumpCUdata()
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
 	// Initialize serial port:
-	_port = new serialCOM;
-	if (!initPort(4800, _port))
+	if (!initPort())
 	{
-		delete _port;	// port will be closed in destructor of serialCOM
-		_port = NULL;
 		_dumping = false;
 		return;
 	}

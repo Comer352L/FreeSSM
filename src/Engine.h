@@ -21,9 +21,16 @@
 #define ENGINE_H
 
 
-
+#ifdef __WIN32__
+    #include "windows\serialCOM.h"
+#elif defined __linux__
+    #include "linux/serialCOM.h"
+#else
+    #error "Operating system not supported !"
+#endif
 #include <QtGui>
 #include "ui_Engine.h"
+#include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
 #include "CUcontent_DCs_engine.h"
@@ -39,13 +46,15 @@ class Engine : public QMainWindow, private Ui::Engine_Window
 	Q_OBJECT
 
 public:
-	Engine(SSMprotocol2 *ssmp2dev, QString progversion = "");
+	Engine(serialCOM *port, QString language, QString progversion = "");
 	~Engine();
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
 
-	SSMprotocol2 *_SSMP2dev;
+	QString _language;
+	serialCOM *_port;
+	SSMprotocol *_SSMPdev;
 	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
@@ -59,6 +68,8 @@ private:
 	mode_dt _mode;
 
 	void setup();
+	bool probeProtocol();
+	bool configurePort(unsigned int baud, char parity);
 	void setupUiFonts();
 	void clearContent();
 	void closeEvent(QCloseEvent *event);

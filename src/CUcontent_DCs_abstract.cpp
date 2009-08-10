@@ -31,7 +31,8 @@ CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol *SSM
 CUcontent_DCs_abstract::~CUcontent_DCs_abstract()
 {
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() )); // this must be done BEFORE calling _SSMP2dev->stopDCreading() !
-	_SSMPdev->stopDCreading();
+	if (_SSMPdev)
+		_SSMPdev->stopDCreading();
 	disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
 	disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
 }

@@ -120,6 +120,12 @@ void SSMprotocol2::resetCUdata()
 }
 
 
+bool SSMprotocol2::setupCUdata(CUtype_dt CU)
+{
+	return setupCUdata(CU, false);
+}
+
+
 bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
@@ -127,7 +133,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	bool CCsup = false;
 	// Reset:
 	resetCUdata();
-	// Create SSM2Pcommunication-object:
+	// Create SSMP2communication-object:
 	if (CU == CUtype_Engine)
 	{
 		CUaddress = '\x10';

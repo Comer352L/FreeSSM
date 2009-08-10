@@ -19,6 +19,14 @@
 
 #include "SSMP1base.h"
 
+#ifdef __WIN32__
+    #define waitms(x) Sleep(x)
+#elif defined __linux__
+    #define waitms(x) usleep(1000*x)
+#else
+    #error "Operating system not supported !"
+#endif
+
 
 SSMP1commands::SSMP1commands(serialCOM * port)
 {
@@ -45,27 +53,27 @@ bool SSMP1commands::sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr)
 	if (dataaddr > 0xffff) return false;
 	char msg[4] = {0,};
 	unsigned char msglen = 0;
-	if (cu == Engine)
+	if (cu == SSM1_CU_Engine)
 	{
 		msg[0] = SSMP1_CMD_READ_ENGINE;
 		msglen = 4;
 	}
-	else if (cu == Transmission)
+	else if (cu == SSM1_CU_Transmission)
 	{
 		msg[0] = SSMP1_CMD_READ_TRANSMISSION;
 		msglen = 4;
 	}
-	else if (cu == CruiseCtrl)
+	else if (cu == SSM1_CU_CruiseCtrl)
 	{
 		msg[0] = SSMP1_CMD_READ_CRUISECONTROL;
 		msglen = 3;
 	}
-	else if (cu == AirCon)
+	else if (cu == SSM1_CU_AirCon)
 	{
 		msg[0] = SSMP1_CMD_READ_AIRCON;
 		msglen = 3;
 	}
-	else if (cu == FourWS)
+	else if (cu == SSM1_CU_FourWS)
 	{
 		msg[0] = SSMP1_CMD_READ_4WS;
 		msglen = 3;

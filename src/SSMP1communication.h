@@ -68,8 +68,8 @@ private:
 	std::vector<char> _data;		/* processed data from read/Rom-ID operation(s)      OR
 						   data to be written during the write operation(s)  */
 
-	void run();
 	bool doSingleCommOperation();
+	void run();
 
 signals:
 	void recievedData(std::vector<char> rawdata, int duration_ms);

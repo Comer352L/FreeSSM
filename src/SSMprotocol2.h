@@ -49,6 +49,7 @@ public:
 	SSMprotocol2(serialCOM *port, QString language="en");
 	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
+	bool setupCUdata(CUtype_dt CU);
 	bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
 	std::string getSysID();
 	std::string getROMID();

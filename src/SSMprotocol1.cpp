@@ -49,23 +49,23 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	// Create SSMP1communication-object:
 	if (CU == CUtype_Engine)
 	{
-		SSM1_CU = Engine;
+		SSM1_CU = SSM1_CU_Engine;
 	}
 	else if (CU == CUtype_Transmission)
 	{
-		SSM1_CU = Transmission;
+		SSM1_CU = SSM1_CU_Transmission;
 	}
 	else if (CU == CUtype_CruiseControl)
 	{
-		SSM1_CU = CruiseCtrl;
+		SSM1_CU = SSM1_CU_CruiseCtrl;
 	}
 	else if (CU == CUtype_AirCon)
 	{
-		SSM1_CU = AirCon;
+		SSM1_CU = SSM1_CU_AirCon;
 	}
 	else if (CU == CUtype_FourWheelSteering)
 	{
-		SSM1_CU = FourWS;
+		SSM1_CU = SSM1_CU_FourWS;
 	}
 	else
 		return false;
