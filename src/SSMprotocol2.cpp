@@ -114,8 +114,7 @@ void SSMprotocol2::resetCUdata()
 	// *** Reset selection data ***:
 	_selectedDCgroups = noDCs_DCgroup;
 	_MBSWmetaList.clear();
-	for (k=0; k<(SSMP_MAX_MBSW); k++) _selMBsSWsAddr[k] = 0;
-	_selMBsSWsAddrLen = 0;
+	_selMBsSWsAddr.clear();
 	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
 }
 
@@ -943,25 +942,21 @@ bool SSMprotocol2::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 
 bool SSMprotocol2::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 {
-	unsigned int dataaddr[2*SSMP_MAX_ADJUSTMENTS] = {0,};
-	unsigned int datalen = 0;
-	char data[2*SSMP_MAX_ADJUSTMENTS] = {0,};
+	std::vector<unsigned int> dataaddr;
+	std::vector<char> data;
 	unsigned char k = 0;
 	unsigned int addrindex = 0;
 	if ((_state != state_normal) || _adjustments.empty()) return false;
 	// Setup address list:
 	for (k=0; k<_adjustments.size(); k++)
 	{
-		dataaddr[datalen] = _adjustments.at(k).AddrLow;
-		datalen++;
+		dataaddr.push_back( _adjustments.at(k).AddrLow );
 		if (_adjustments.at(k).AddrHigh > 0)
-		{
-			dataaddr[datalen] = _adjustments.at(k).AddrHigh;
-			datalen++;
-		}
+			dataaddr.push_back( _adjustments.at(k).AddrHigh );
 	}
 	// Read data from control unit:
-	if (!_SSMP2com->readMultipleDatabytes('\x0', dataaddr, datalen, data))
+	data.resize( dataaddr.size() );
+	if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr.at(0), dataaddr.size(), &data.at(0)))
 	{
 		resetCUdata();
 		return false;
@@ -970,11 +965,11 @@ bool SSMprotocol2::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 	rawValues->clear();
 	for (k=0; k<_adjustments.size(); k++)
 	{
-		rawValues->push_back( static_cast<unsigned char>(data[addrindex]) );
+		rawValues->push_back( static_cast<unsigned char>(data.at(addrindex)) );
 		addrindex++;
 		if (_adjustments.at(k).AddrHigh > 0)
 		{
-			rawValues->at(k) += 256*static_cast<unsigned char>(data[addrindex]);
+			rawValues->at(k) += 256*static_cast<unsigned char>(data.at(addrindex));
 			addrindex++;
 		}
 	}
@@ -1166,8 +1161,7 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 
 bool SSMprotocol2::startDCreading(int DCgroups)
 {
-	unsigned int DCqueryAddrList[(2*SSMP_MAX_DTCADDR)+(2*SSMP_MAX_CCCCADDR)] = {0};
-	unsigned int DCqueryAddrListLen = 0;
+	std::vector <unsigned int> DCqueryAddrList;
 	unsigned char k = 0;
 	bool CCsup = false;
 	bool CCmemSup = false;
@@ -1194,48 +1188,33 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
 		if (_CU == CUtype_Engine)
-		{
-			DCqueryAddrList[DCqueryAddrListLen] = 0x000061;
-			DCqueryAddrListLen++;
-		}
+			DCqueryAddrList.push_back( 0x000061 );
 		for (k=0; k<_DTCdefs.size(); k++)
-		{
-			DCqueryAddrList[DCqueryAddrListLen] = _DTCdefs.at(k).byteAddr_currentOrTempOrLatest;
-			DCqueryAddrListLen++;
-		}
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
 	}	
 	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
-		{
-			DCqueryAddrList[DCqueryAddrListLen] = _DTCdefs.at(k).byteAddr_historicOrMemorized;
-			DCqueryAddrListLen++;
-		}
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
 	}
 	if (CCsup)
 	{
 		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
 		{
 			for (k=0; k<_CCCCdefs.size(); k++)
-			{
-				DCqueryAddrList[DCqueryAddrListLen] = _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest;
-				DCqueryAddrListLen++;
-			}
+				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest );
 		}
 		if ((DCgroups & CCmemorizedCCs_DCgroup) && CCmemSup)	// CC memorized cancel codes
 		{
 			for (k=0; k<_CCCCdefs.size(); k++)
-			{
-				DCqueryAddrList[DCqueryAddrListLen] = _CCCCdefs.at(k).byteAddr_historicOrMemorized;
-				DCqueryAddrListLen++;
-			}
+				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );
 		}
 	}
 	// Check if min. 1 Address to read:
-	if ((DCqueryAddrListLen < 1) || ((DCqueryAddrList[0] == 0x000061) && (DCqueryAddrListLen < 2)))
+	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.at(0) == 0x000061) && (DCqueryAddrList.size() < 2)))
 		return false;
 	// Start diagostic code reading:
-	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', DCqueryAddrList, DCqueryAddrListLen);
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
 	if (started)
 	{
 		_state = state_DCreading;
@@ -1363,7 +1342,7 @@ bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 	if (!setupMBSWQueryAddrList(mbswmetaList))
 		return false;
  	// Start MB/SW-reading:
-	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', _selMBsSWsAddr, _selMBsSWsAddrLen);
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &_selMBsSWsAddr.at(0), _selMBsSWsAddr.size());
 	if (started)
 	{
 		_state = state_MBSWreading;

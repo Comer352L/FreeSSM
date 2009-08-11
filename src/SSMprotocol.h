@@ -38,16 +38,6 @@
 
 
 
-
-#define SSMP_MAX_MB			300				/* currently 156 */
-#define SSMP_MAX_SW			300				/* currently 154 */
-#define SSMP_MAX_MBSW			(SSMP_MAX_MB + SSMP_MAX_SW)
-#define SSMP_MAX_DTCADDR		100				/* currently 61/61	<256 ! */
-#define SSMP_MAX_CCCCADDR		10				/* currently 4/4	<256 ! */
-#define SSMP_MAX_ADJUSTMENTS		30				/* currently 24		<256 ! */
-
-
-
 class dc_defs_dt
 {
 public:
@@ -193,8 +183,7 @@ protected:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;
 	// *** Temporary (operation related) data ***:
-	unsigned int _selMBsSWsAddr[SSMP_MAX_MBSW];
-	unsigned int _selMBsSWsAddrLen;
+	std::vector<unsigned int> _selMBsSWsAddr;
 	// *** Selection data ***:
 	int _selectedDCgroups;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;

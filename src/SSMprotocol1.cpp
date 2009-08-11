@@ -357,7 +357,7 @@ bool SSMprotocol1::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 	if (!setupMBSWQueryAddrList(mbswmetaList))
 		return false;
 	// Start MB/SW-reading:
-	started = _SSMP1com->readAddresses_permanent( std::vector<unsigned int>(_selMBsSWsAddr, _selMBsSWsAddr + _selMBsSWsAddrLen) );
+	started = _SSMP1com->readAddresses_permanent( _selMBsSWsAddr );
 	if (started)
 	{
 		_state = state_MBSWreading;
