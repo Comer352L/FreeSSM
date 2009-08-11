@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_transmission.h"
 
 
-CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, SSMprotocol *SSMPdev, QString progversion) : CUcontent_DCs_abstract(parent, SSMPdev, progversion)
+CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, QString progversion) : CUcontent_DCs_abstract(parent, progversion)
 {
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
@@ -64,7 +64,7 @@ CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
 }
 
 
-bool CUcontent_DCs_transmission::setup()
+bool CUcontent_DCs_transmission::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool obd2DTCformat = true;
@@ -72,6 +72,7 @@ bool CUcontent_DCs_transmission::setup()
 	bool histOrMemDTCs_sup = false;
 	QString title;
 
+	_SSMPdev = SSMPdev;
 	// Reset data:
 	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
 	_currOrTempDTCs.clear();

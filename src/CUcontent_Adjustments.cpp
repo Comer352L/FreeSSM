@@ -191,10 +191,10 @@ void QIdPushButton::emitReleased()
 
 
 
-CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPdev) : QWidget(parent)
+CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 {
 	QHeaderView *headerview;
-	_SSMPdev = SSMPdev;
+	_SSMPdev = NULL;
 	_maxrowsvisible = 0; // We don't need to calculate a value here, because we always get a resizeEvent before setting the table content
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
@@ -219,14 +219,14 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPd
 }
 
 
-
-bool CUcontent_Adjustments::setup()
+bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 {
 	std::vector<unsigned int> rawValues;
 	unsigned char k = 0;
 	bool ok = false;
 	bool calcerror = false;
 
+	_SSMPdev = SSMPdev;
 	// Reset data:
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
@@ -270,7 +270,6 @@ bool CUcontent_Adjustments::setup()
 }
 
 
-
 void CUcontent_Adjustments::setupNewValueSelWidgetTypes()
 {
 	bool combobox = false;
@@ -307,7 +306,6 @@ void CUcontent_Adjustments::setupNewValueSelWidgetTypes()
 }
 
 
-
 void CUcontent_Adjustments::getSelectableScaledValueStrings(QString formulaStr, QStringList *selectableScaledValueStr)
 {
 	int k = 0;
@@ -327,7 +325,6 @@ void CUcontent_Adjustments::getSelectableScaledValueStrings(QString formulaStr, 
 		}
 	}
 }
-
 
 
 void CUcontent_Adjustments::setupAdjustmentsTable()
@@ -470,7 +467,6 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 }
 
 
-
 void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit)
 {
 	QTableWidgetItem *tableItem;
@@ -512,7 +508,6 @@ void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, 
 		}
 	}
 }
-
 
 
 void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
@@ -576,7 +571,6 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 }
 
 
-
 void CUcontent_Adjustments::resetAllAdjustmentValues()
 {
 	int uc = 0;
@@ -624,7 +618,6 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 }
 
 
-
 void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 {
 	int rowheight = 0;
@@ -658,7 +651,6 @@ void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 }
 
 
-
 bool CUcontent_Adjustments::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == adjustments_tableWidget->viewport())
@@ -677,7 +669,6 @@ bool CUcontent_Adjustments::eventFilter(QObject *obj, QEvent *event)
 }
 
 
-
 void CUcontent_Adjustments::communicationError(QString errstr)
 {
 	errstr = tr("Communication Error:") + ('\n') + errstr;
@@ -686,14 +677,12 @@ void CUcontent_Adjustments::communicationError(QString errstr)
 }
 
 
-
 void CUcontent_Adjustments::calculationError(QString errstr)
 {
 	errstr = tr("Calculation Error:") + ('\n') + errstr;
 	errorMsg(tr("Calculation Error"), errstr);
 	emit calculationError();
 }
-
 
 
 void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
@@ -706,7 +695,6 @@ void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
 	msg.exec();
 	msg.close();
 }
-
 
 
 void CUcontent_Adjustments::setupUiFonts()

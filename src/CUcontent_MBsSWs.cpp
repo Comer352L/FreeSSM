@@ -21,9 +21,9 @@
 
 
 
-CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol *SSMPdev, MBSWsettings_dt settings) : QWidget(parent)
+CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, MBSWsettings_dt settings) : QWidget(parent)
 {
-	_SSMPdev = SSMPdev;
+	_SSMPdev = NULL;
 	_supportedMBs.clear();
 	_supportedSWs.clear();
 	_MBSWmetaList.clear();
@@ -93,9 +93,10 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 }
 
 
-bool CUcontent_MBsSWs::setup()
+bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 {
 	bool ok;
+	_SSMPdev = SSMPdev;
 	// Get supported MBs/SWs:
 	ok = (_SSMPdev != NULL);
 	if (ok)

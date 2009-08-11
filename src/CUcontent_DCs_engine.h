@@ -33,10 +33,10 @@ class CUcontent_DCs_engine : public CUcontent_DCs_abstract, private Ui::engineDC
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev, QString progversion);
+	CUcontent_DCs_engine(QWidget *parent, QString progversion);
 	~CUcontent_DCs_engine();
 	void show();
-	bool setup();
+	bool setup(SSMprotocol *SSMPdev);
 
 private:
 	bool _obd2DTCformat;

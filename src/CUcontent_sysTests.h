@@ -42,9 +42,9 @@ private:
 	void communicationError(QString adstr = "");
 
 public:
-	CUcontent_sysTests(QWidget *parent, SSMprotocol *SSMPdev);
+	CUcontent_sysTests(QWidget *parent);
 	~CUcontent_sysTests();
-	bool setup();
+	bool setup(SSMprotocol *SSMPdev);
 
 private slots:
 	void startActuatorTest();

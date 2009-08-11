@@ -30,7 +30,7 @@ class CUcontent_DCs_abstract : public QWidget
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_abstract(QWidget *parent, SSMprotocol *SSMPdev, QString progversion);
+	CUcontent_DCs_abstract(QWidget *parent, QString progversion);
 	~CUcontent_DCs_abstract();
 	bool startDCreading();
 	bool stopDCreading();

@@ -46,7 +46,7 @@ Engine::Engine(serialCOM *port, QString language, QString progversion)
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DCs_pushButton->setChecked(true);
-	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -56,10 +56,8 @@ Engine::Engine(serialCOM *port, QString language, QString progversion)
 }
 
 
-
 Engine::~Engine()
 {
-	disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	disconnect( DCs_pushButton, SIGNAL( released() ), this, SLOT( DCs() ) );
 	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
 	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
@@ -67,9 +65,12 @@ Engine::~Engine()
 	disconnect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	clearContent();
-	if (_SSMPdev) delete _SSMPdev;
+	if (_SSMPdev)
+	{
+		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+		delete _SSMPdev;
+	}
 }
-
 
 
 void Engine::setup()
@@ -212,7 +213,7 @@ void Engine::setup()
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
-	if (!_content_DCs->setup())
+	if (!_content_DCs->setup(_SSMPdev))
 		goto commError;
 	if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
 		goto commError;
@@ -236,7 +237,6 @@ commError:
 }
 
 
-
 bool Engine::probeProtocol()
 {
 	if (configurePort(4800, 'N'))
@@ -258,7 +258,6 @@ bool Engine::probeProtocol()
 }
 
 
-
 bool Engine::configurePort(unsigned int baud, char parity)
 {
 	serialCOM::dt_portsettings portsettings;
@@ -276,7 +275,6 @@ bool Engine::configurePort(unsigned int baud, char parity)
 }
 
 
-
 void Engine::DCs()
 {
 	bool ok = false;
@@ -292,10 +290,10 @@ void Engine::DCs()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_engine(content_groupBox, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
-	ok = _content_DCs->setup();
+	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
 	if (ok)
 		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
@@ -312,7 +310,6 @@ void Engine::DCs()
 }
 
 
-
 void Engine::measuringblocks()
 {
 	bool ok = false;
@@ -327,10 +324,10 @@ void Engine::measuringblocks()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMPdev, _MBSWsettings);
+	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _MBSWsettings);
 	content_gridLayout->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
-	ok = _content_MBsSWs->setup();
+	ok = _content_MBsSWs->setup(_SSMPdev);
 	if (ok)
 		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
@@ -342,7 +339,6 @@ void Engine::measuringblocks()
 	if (!ok)
 		communicationError();
 }
-
 
 
 void Engine::adjustments()
@@ -359,10 +355,10 @@ void Engine::adjustments()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSMPdev);
+	_content_Adjustments = new CUcontent_Adjustments(content_groupBox);
 	content_gridLayout->addWidget(_content_Adjustments);
 	_content_Adjustments->show();
-	ok = _content_Adjustments->setup();
+	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
 		connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
 	// Close wait-message:
@@ -371,7 +367,6 @@ void Engine::adjustments()
 	if (!ok)
 		communicationError();
 }
-
 
 
 void Engine::systemoperationtests()
@@ -388,10 +383,10 @@ void Engine::systemoperationtests()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("System Operation Tests:"));
 	// Create, setup and insert content-widget:
-	_content_SysTests = new CUcontent_sysTests(content_groupBox, _SSMPdev);
+	_content_SysTests = new CUcontent_sysTests(content_groupBox);
 	content_gridLayout->addWidget(_content_SysTests);
 	_content_SysTests->show();
-	ok = _content_SysTests->setup();
+	ok = _content_SysTests->setup(_SSMPdev);
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
@@ -401,7 +396,6 @@ void Engine::systemoperationtests()
 	if (!ok)
 		communicationError();
 }
-
 
 
 void Engine::clearMemory()
@@ -421,7 +415,7 @@ void Engine::clearMemory()
 	{
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !   "));
 		waitmsgbox.show();
-		ok = _content_Adjustments->setup(); // refresh adjustment values
+		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
 		waitmsgbox.close();
 		if (!ok)
 			communicationError();
@@ -435,7 +429,6 @@ void Engine::clearMemory()
 		close(); // exit engine control unit dialog
 	}
 }
-
 
 
 void Engine::clearContent()
@@ -470,7 +463,6 @@ void Engine::clearContent()
 }
 
 
-
 void Engine::communicationError(QString addstr)
 {
 	// Show error message
@@ -485,7 +477,6 @@ void Engine::communicationError(QString addstr)
 	// Close engine window (and delete all objects)
 	close();
 }
-
 
 
 void Engine::closeEvent(QCloseEvent *event)
@@ -504,7 +495,6 @@ void Engine::closeEvent(QCloseEvent *event)
 	}
 	event->accept();
 }
-
 
 
 void Engine::setupUiFonts()
@@ -613,5 +603,4 @@ void Engine::setupUiFonts()
 	font.setPixelSize(15);	// 11-12pts
 	content_groupBox->setFont(font);
 }
-
 

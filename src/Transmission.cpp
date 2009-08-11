@@ -45,7 +45,7 @@ Transmission::Transmission(serialCOM *port, QString language, QString progversio
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DTCs_pushButton->setChecked(true);
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -55,10 +55,8 @@ Transmission::Transmission(serialCOM *port, QString language, QString progversio
 }
 
 
-
 Transmission::~Transmission()
 {
-	disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	disconnect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
 	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
 	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
@@ -66,9 +64,12 @@ Transmission::~Transmission()
 	disconnect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	clearContent();
-	if (_SSMPdev) delete _SSMPdev;
+	if (_SSMPdev)
+	{
+		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+		delete _SSMPdev;
+	}
 }
-
 
 
 void Transmission::setup()
@@ -143,7 +144,7 @@ void Transmission::setup()
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
-	if (!_content_DCs->setup())
+	if (!_content_DCs->setup(_SSMPdev))
 		goto commError;
 	if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
 		goto commError;
@@ -167,7 +168,6 @@ commError:
 }
 
 
-
 bool Transmission::probeProtocol()
 {
 	if (configurePort(4800, 'N'))
@@ -189,7 +189,6 @@ bool Transmission::probeProtocol()
 }
 
 
-
 bool Transmission::configurePort(unsigned int baud, char parity)
 {
 	serialCOM::dt_portsettings portsettings;
@@ -207,7 +206,6 @@ bool Transmission::configurePort(unsigned int baud, char parity)
 }
 
 
-
 void Transmission::DTCs()
 {
 	bool ok = false;
@@ -223,10 +221,10 @@ void Transmission::DTCs()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _SSMPdev, _progversion);
+	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _progversion);
 	content_gridLayout->addWidget(_content_DCs);
 	_content_DCs->show();
-	ok = _content_DCs->setup();
+	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
 	if (ok)
 	{
@@ -245,7 +243,6 @@ void Transmission::DTCs()
 }
 
 
-
 void Transmission::measuringblocks()
 {
 	bool ok = false;
@@ -260,10 +257,10 @@ void Transmission::measuringblocks()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _SSMPdev, _MBSWsettings);
+	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _MBSWsettings);
 	content_gridLayout->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
-	ok = _content_MBsSWs->setup();
+	ok = _content_MBsSWs->setup(_SSMPdev);
 	if (ok)
 		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
@@ -275,7 +272,6 @@ void Transmission::measuringblocks()
 	if (!ok)
 		communicationError();
 }
-
 
 
 void Transmission::adjustments()
@@ -292,10 +288,10 @@ void Transmission::adjustments()
 	// Set title of the content group-box:
 	content_groupBox->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(content_groupBox, _SSMPdev);
+	_content_Adjustments = new CUcontent_Adjustments(content_groupBox);
 	content_gridLayout->addWidget(_content_Adjustments);
 	_content_Adjustments->show();
-	ok = _content_Adjustments->setup();
+	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
 		connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
 	// Close wait-message:
@@ -306,19 +302,16 @@ void Transmission::adjustments()
 }
 
 
-
 void Transmission::clearMemory()
 {
 	runClearMemory(SSMprotocol::CMlevel_1);
 }
 
 
-
 void Transmission::clearMemory2()
 {
 	runClearMemory(SSMprotocol::CMlevel_2);
 }
-
 
 
 void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
@@ -338,7 +331,7 @@ void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
 	{
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !   "));
 		waitmsgbox.show();
-		ok = _content_Adjustments->setup(); // refresh adjustment values
+		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
 		waitmsgbox.close();
 		if (!ok)
 			communicationError();
@@ -352,7 +345,6 @@ void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
 		close(); // exit engine control unit dialog
 	}
 }
-
 
 
 void Transmission::clearContent()
@@ -381,7 +373,6 @@ void Transmission::clearContent()
 }
 
 
-
 void Transmission::communicationError(QString addstr)
 {
 	// Show error message
@@ -396,7 +387,6 @@ void Transmission::communicationError(QString addstr)
 	// Close transmission window (and delete all objects)
 	close();
 }
-
 
 
 void Transmission::closeEvent(QCloseEvent *event)
@@ -415,7 +405,6 @@ void Transmission::closeEvent(QCloseEvent *event)
 	}
 	event->accept();
 }
-
 
 
 void Transmission::setupUiFonts()
@@ -508,5 +497,4 @@ void Transmission::setupUiFonts()
 	font.setPixelSize(15);	// 11-12pts
 	content_groupBox->setFont(font);
 }
-
 

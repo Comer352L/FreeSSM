@@ -20,9 +20,9 @@
 #include "CUcontent_DCs_abstract.h"
 
 
-CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, SSMprotocol *SSMPdev, QString progversion) : QWidget(parent)
+CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, QString progversion) : QWidget(parent)
 {
-	_SSMPdev = SSMPdev;
+	_SSMPdev = NULL;
 	_progversion = progversion;
 	_supportedDCgroups = 0;
 }

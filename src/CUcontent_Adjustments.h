@@ -92,8 +92,8 @@ class CUcontent_Adjustments : public QWidget, private Ui::Adjustments_Form
 	Q_OBJECT
 
 public:
-	CUcontent_Adjustments(QWidget *parent, SSMprotocol *SSMPdev);
-	bool setup();
+	CUcontent_Adjustments(QWidget *parent);
+	bool setup(SSMprotocol *SSMPdev);
 
 private:
 	SSMprotocol *_SSMPdev;

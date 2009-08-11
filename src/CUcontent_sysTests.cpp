@@ -20,9 +20,9 @@
 #include "CUcontent_sysTests.h"
 
 
-CUcontent_sysTests::CUcontent_sysTests(QWidget *parent, SSMprotocol *SSMPdev) : QWidget(parent)
+CUcontent_sysTests::CUcontent_sysTests(QWidget *parent) : QWidget(parent)
 {
-	_SSMPdev = SSMPdev;
+	_SSMPdev = NULL;
 	_actuatorTestTitles.clear();
 	// Setup GUI:
 	setupUi(this);
@@ -51,13 +51,14 @@ CUcontent_sysTests::~CUcontent_sysTests()
 }
 
 
-bool CUcontent_sysTests::setup()
+bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool AT_sup = false;
 	bool immo_sup = false;
 	unsigned char k = 0;
 
+	_SSMPdev = SSMPdev;
 	_actuatorTestTitles.clear();
 	// Get CU-informations:
 	ok = (_SSMPdev != NULL);

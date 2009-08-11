@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_engine.h"
 
 
-CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol *SSMPdev, QString progversion) : CUcontent_DCs_abstract(parent, SSMPdev, progversion)
+CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, QString progversion) : CUcontent_DCs_abstract(parent, progversion)
 {
 	_obd2DTCformat = true;
 	_testMode = false;
@@ -86,7 +86,7 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 }
 
 
-bool CUcontent_DCs_engine::setup()
+bool CUcontent_DCs_engine::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool TMsup = false;
@@ -96,6 +96,7 @@ bool CUcontent_DCs_engine::setup()
 	bool memCCCCs_sup = false;
 	QString title;
 
+	_SSMPdev = SSMPdev;
 	// Reset data:
 	_obd2DTCformat = true;
 	_testMode = false;
