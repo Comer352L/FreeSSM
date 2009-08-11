@@ -170,16 +170,22 @@ commError:
 
 bool Transmission::probeProtocol()
 {
-	if (configurePort(4800, 'N'))
-	{
-		_SSMPdev = new SSMprotocol2(_port, _language);
-		if (_SSMPdev->setupCUdata( SSMprotocol::CUtype_Transmission ))
-			return true;
-		delete _SSMPdev;
-	}
+	// Probe SSM1-protocol:
 	if (configurePort(1953, 'E'))
 	{
 		_SSMPdev = new SSMprotocol1(_port, _language);
+		if (_SSMPdev->setupCUdata( SSMprotocol::CUtype_Transmission ))
+			return true;
+		delete _SSMPdev;
+		// Wait 500ms:
+		QEventLoop el;
+		QTimer::singleShot(500, &el, SLOT(quit()));
+		el.exec();
+	}
+	// Probe SSM2-protocol:
+	if (configurePort(4800, 'N'))
+	{
+		_SSMPdev = new SSMprotocol2(_port, _language);
 		if (_SSMPdev->setupCUdata( SSMprotocol::CUtype_Transmission ))
 			return true;
 		delete _SSMPdev;
