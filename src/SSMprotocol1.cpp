@@ -134,7 +134,8 @@ bool SSMprotocol1::hasImmobilizer(bool *ImmoSup)
 
 	// TODO !
 
-return false;
+*ImmoSup = false;
+return true;
 }
 // IMPLEMENTATION MISSING
 
