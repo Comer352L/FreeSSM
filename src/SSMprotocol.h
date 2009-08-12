@@ -127,7 +127,7 @@ public:
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
 	SSMprotocol(serialCOM *port, QString language="en");
-	~SSMprotocol();
+	virtual ~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
 	SSMprotocol::state_dt state();
