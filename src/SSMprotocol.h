@@ -120,9 +120,9 @@ class SSMprotocol : public QObject
 public:
 	enum protocol_dt {SSM1, SSM2};
 	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering};
-	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
+	enum state_dt {state_needSetup, state_normal, state_DCreading, state_MBSWreading, state_ActTesting, state_waitingForIgnOff};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
-			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32, allDCs_DCgroup=63};
+			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32};
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
