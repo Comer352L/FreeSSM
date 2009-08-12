@@ -47,6 +47,7 @@ public:
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
+	protocol_dt protocolType() { return SSM1; };
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
 	bool hasOBD2system(bool *OBD2);

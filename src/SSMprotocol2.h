@@ -51,6 +51,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);
 	bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
+	protocol_dt protocolType() { return SSM2; };
 	std::string getSysID();
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);

@@ -118,6 +118,7 @@ class SSMprotocol : public QObject
 	Q_OBJECT
 
 public:
+	enum protocol_dt {SSM1, SSM2};
 	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering};
 	enum state_dt {state_needSetup=0, state_normal=1, state_DCreading=2, state_MBSWreading=3, state_ActTesting=4, state_waitingForIgnOff=5};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
@@ -131,6 +132,7 @@ public:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
 	SSMprotocol::state_dt state();
 	virtual bool setupCUdata(CUtype_dt CU) = 0;
+	virtual protocol_dt protocolType() = 0;
 	virtual std::string getSysID();
 	virtual std::string getROMID() = 0;
 	virtual bool getSystemDescription(QString *sysdescription) = 0;
