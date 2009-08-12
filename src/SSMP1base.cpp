@@ -41,9 +41,9 @@ bool SSMP1commands::sendStopTalkingCmd()
 }
 
 
-bool SSMP1commands::sendQueryRomIdCmd()
+bool SSMP1commands::sendQueryIdCmd()
 {
-	char querymsg[4] = {SSMP1_CMD_GET_ROMID, '\x46', '\x48', '\x49'};
+	char querymsg[4] = {SSMP1_CMD_GET_ID, '\x46', '\x48', '\x49'};
 	return sendMsg(querymsg, 4);
 }
 

@@ -133,7 +133,7 @@ public:
 	SSMprotocol::state_dt state();
 	virtual bool setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	virtual std::string getSysID();
+	virtual std::string getSysID() = 0;
 	virtual std::string getROMID() = 0;
 	virtual bool getSystemDescription(QString *sysdescription) = 0;
 	virtual bool hasOBD2system(bool *OBD2) = 0;

@@ -94,20 +94,22 @@ void Transmission::setup()
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
 		initstatusmsgbox.setValue(40);
+		// Query ROM-ID:
+		ROM_ID = _SSMPdev->getROMID();
+		if (!ROM_ID.length())
+			goto commError;
 		// Query system description:
 		if (!_SSMPdev->getSystemDescription(&sysdescription))
 		{
 			std::string SYS_ID = _SSMPdev->getSysID();
 			if (!SYS_ID.length())
 				goto commError;
-			sysdescription = tr("unknown (") + QString::fromStdString(SYS_ID) + ")";
+			sysdescription = tr("unknown");
+			if (SYS_ID != ROM_ID)
+				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
 		transmissiontype_label->setText(sysdescription);
-		// Query ROM-ID:
-		ROM_ID = _SSMPdev->getROMID();
-		if (!ROM_ID.length())
-			goto commError;
 		// Output ROM-ID:
 		romID_label->setText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:

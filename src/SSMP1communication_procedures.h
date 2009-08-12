@@ -43,7 +43,7 @@ class SSMP1communication_procedures : private SSMP1commands
 public:
 	SSMP1communication_procedures(serialCOM *port);
 	bool setAddress(SSM1_CUtype_dt cu, unsigned int addr);
-	bool getRomId(std::vector<char> * data);
+	bool getID(std::vector<char> * data);
 	bool writeDatabyte(char databyte);
 	bool getNextData(std::vector<char> * data, unsigned int timeout = SSMP1_T_RW_REC_MAX);	/* read and process recieved data */
 	bool waitForDataValue(char data, unsigned int timeout = SSMP1_T_NEWDATA_REC_MAX);

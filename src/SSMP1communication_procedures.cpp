@@ -61,15 +61,15 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 }
 
 
-bool SSMP1communication_procedures::getRomId(std::vector<char> * data)
+bool SSMP1communication_procedures::getID(std::vector<char> * data)
 {
-	if (!sendQueryRomIdCmd()) return false;
+	if (!sendQueryIdCmd()) return false;
 	waitms(SSMP1_T_IC_WAIT);
 	_recbuffer.clear();
 	_currentaddr = -1;
 	_lastaddr = -1;
 	_addrswitch_pending = false;
-	if (!sendQueryRomIdCmd()) return false;
+	if (!sendQueryIdCmd()) return false;
 	waitms(SSMP1_T_NEWDATA_REC_MAX);
 	// Read all data from port and return the last 3 bytes
 	if (_port->Read(1024, data) && (data->size() > 2))

@@ -24,6 +24,9 @@
 SSMprotocol1::SSMprotocol1(serialCOM *port, QString language) : SSMprotocol(port, language)
 {
 	_SSMP1com = NULL;
+	_ID[0] = '\x0';
+	_ID[1] = '\x0';
+	_ID[2] = '\x0';
 	resetCUdata();
 }
 
@@ -71,7 +74,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return false;
 	_SSMP1com = new SSMP1communication(_port, SSM1_CU);
 	// Get control unit data:
-	if (!_SSMP1com->readRomId(_ROM_ID))
+	if (!_SSMP1com->readID(_ID))
 		 return false;
 	_CU = CU;
 	_state = state_normal;
@@ -94,10 +97,16 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 }
 // INCOMPLETE IMPLEMENTATION
 
-std::string SSMprotocol1::getROMID()
+std::string SSMprotocol1::getSysID()
 {
 	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_ROM_ID, 3);
+	return libFSSM::StrToHexstr(_ID, 3);
+}
+
+
+std::string SSMprotocol1::getROMID()
+{
+	return getSysID();
 }
 
 
@@ -108,7 +117,7 @@ bool SSMprotocol1::getSystemDescription(QString *sysdescription)
 	// TODO !
 	// => Get system description from definitions and copy to sysdescription
 
-	return true;
+return false;
 }
 // IMPLEMENTATION MISSING
 

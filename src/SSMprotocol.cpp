@@ -48,12 +48,6 @@ SSMprotocol::state_dt SSMprotocol::state()
 }
 
 
-std::string SSMprotocol::getSysID()
-{
-	return "";
-}
-
-
 bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 {
 	if (_state == state_needSetup) return false;

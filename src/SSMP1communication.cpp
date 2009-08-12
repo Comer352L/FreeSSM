@@ -54,7 +54,7 @@ SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 }
 
 
-bool SSMP1communication::readRomId(char *ROM_ID)
+bool SSMP1communication::readID(char *ID)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning()) return false;
@@ -64,9 +64,9 @@ bool SSMP1communication::readRomId(char *ROM_ID)
 	if (ok)
 	{
 		// Return ROM-ID
-		ROM_ID[0] = _data.at(0);
-		ROM_ID[1] = _data.at(1);
-		ROM_ID[2] = _data.at(2);
+		ID[0] = _data.at(0);
+		ID[1] = _data.at(1);
+		ID[2] = _data.at(2);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;
@@ -302,7 +302,7 @@ void SSMP1communication::run()
 			else if (operation == comOp_readRomId)
 			{
 				// Get ROM-ID:
-				op_success = getRomId(&data);
+				op_success = getID(&data);
 			}
 		}
 		// Evaluate result; Prepare for next operation:

@@ -48,6 +48,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
 	protocol_dt protocolType() { return SSM1; };
+	std::string getSysID();
 	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
 	bool hasOBD2system(bool *OBD2);
@@ -72,7 +73,7 @@ public:
 private:
 	SSMP1communication *_SSMP1com;
 	// *** CONTROL UNIT RAW DATA ***:
-	char _ROM_ID[3];
+	char _ID[3];
 
 	// CU-FEATURES SETUP FUNCTIONS:
 	void setupDTCdata();

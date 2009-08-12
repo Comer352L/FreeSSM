@@ -45,7 +45,7 @@ public:
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);
 	comOp_dt getCurrentCommOperation();
-	bool readRomId(char *ROM_ID);
+	bool readID(char *ID);
 	bool readAddress(unsigned int addr, char * databyte);
 	bool readAddresses(std::vector<unsigned int> addr, std::vector<char> * data);
 	bool readAddress_permanent(unsigned int addr);

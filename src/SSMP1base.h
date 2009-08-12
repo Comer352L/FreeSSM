@@ -33,7 +33,7 @@
 
 
 /* SSM1-protocol-commands */
-#define		SSMP1_CMD_GET_ROMID			0x00
+#define		SSMP1_CMD_GET_ID			0x00
 #define		SSMP1_CMD_STOP_READING			0x12
 #define		SSMP1_CMD_READ_ENGINE			0x78
 #define		SSMP1_CMD_READ_TRANSMISSION		0x45
@@ -60,7 +60,7 @@ class SSMP1commands
 public:
 	SSMP1commands(serialCOM * port);
 	bool sendStopTalkingCmd();
-	bool sendQueryRomIdCmd();
+	bool sendQueryIdCmd();
 	bool sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr);
 	bool sendWriteDatabyteCmd(unsigned int dataaddr, char databyte);
 
