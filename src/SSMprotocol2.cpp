@@ -817,9 +817,18 @@ void SSMprotocol2::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned in
 	unsigned int tmpdtcaddr_2 = 0;
 	unsigned int tmpbitaddr = 0;
 	bool ok = false;
-	
+
 	tmpdef.byteAddr_currentOrTempOrLatest = currOrTempOrLatestDCsAddr;
 	tmpdef.byteAddr_historicOrMemorized = histOrMemDCsAddr;
+	for (unsigned char k=0; k<8; k++)
+	{
+		tmpdef.code[k] = "???";
+		if (_language == "de")
+			tmpdef.title[k] = "UNBEKANNT (Adresse 0x";
+		else
+			tmpdef.title[k] = "UNKNOWN (Address 0x";
+		tmpdef.title[k] += QString::number(currOrTempOrLatestDCsAddr,16).toUpper() + "/0x" + QString::number(histOrMemDCsAddr,16).toUpper() + " Bit " + QString::number(k+1) + ")";
+	}
 	for (int m=0; m<rawDefs.size(); m++)
 	{
 		tmpdefparts = rawDefs.at(m).split(';');
@@ -836,6 +845,8 @@ void SSMprotocol2::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned in
 		}
 	}
 	defs->push_back(tmpdef);
+	/* NOTE:	- DCs with missing definitions are displayed as UNKNOWN
+			- DCs with existing definition and empty code- and title-fields are ignored */
 }
 
 

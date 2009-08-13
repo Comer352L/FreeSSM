@@ -158,47 +158,28 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std
 	DC->clear();
 	DCdescription->clear();
 	if (DCrawdata == 0) return;
-	// Create list of set flagbits:
-	unsigned char flagbit = 0;
-	for (flagbit=1; flagbit<9; flagbit++)
-	{
-		if (DCrawdata & static_cast<char>(pow(2, (flagbit-1))))
-		{
-			setbits[setbitslen] = flagbit;
-			setbitslen++;
-		}
-	}
-	// *** Search for matching DC definition ***:
+	// Search definitions:
+	dc_defs_dt def;
 	for (k=0; k<DCdefs.size(); k++)
 	{
-		/* NOTE:	- unknown/reserved DCs have a definition with description "UNKNOWN ..."
-				- DCs with missing definitions are ignored				*/
 		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteadr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteadr))
 		{
-			for (setbitsindex=0; setbitsindex<setbitslen; setbitsindex++)
-			{
-				// Check if DC is to be ignored:
-				if (!(DCdefs.at(k).code[ setbits[setbitsindex]-1 ].isEmpty() && DCdefs.at(k).title[ setbits[setbitsindex]-1 ].isEmpty()))
-				{
-					DC->push_back( DCdefs.at(k).code[ setbits[setbitsindex]-1 ] );		// DC
-					DCdescription->push_back( DCdefs.at(k).title[ setbits[setbitsindex]-1 ] );	// DC description
-				}
-				DCsAssigned[setbitsindex] = true;
-			}
+			def = DCdefs.at(k);
+			break;
 		}
 	}
-	// *** Add DCs without matching definition:
-	for (k=0; k<setbitslen; k++)
+	// Assign codes and descriptions:
+	for (unsigned char flagbit=0; flagbit<8; flagbit++)
 	{
-		if (!DCsAssigned[k])
+		if (DCrawdata & static_cast<char>(pow(2, flagbit)))
 		{
-			if (_language == "de")
-				ukdctitle = "UNBEKANNT (Adresse 0x";
-			else
-				ukdctitle = "UNKNOWN (Address 0x";
-			ukdctitle += QString::number(DCbyteadr,16).toUpper() + " Bit " + QString::number(setbits[k]) + ")";
-			DC->push_back("???");			// DC
-			DCdescription->push_back(ukdctitle);	// DC description
+			// Check if DC is to be ignored:
+			// NOTE: DCs with existing definition and empty code- and title-fields must be ignored !
+			if (!(def.code[flagbit].isEmpty() && def.title[flagbit].isEmpty()))
+			{
+				DC->push_back( def.code[flagbit] );		// DC
+				DCdescription->push_back( def.title[flagbit] );	// DC description
+			}
 		}
 	}
 }
