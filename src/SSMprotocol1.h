@@ -68,7 +68,7 @@ public:
 	bool stopDCreading();
 	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
 	bool stopMBSWreading();
-	bool waitForIgnitionOff();									// IMPLEMENTATION MISSING
+	bool waitForIgnitionOff();									// IMPROVE ?
 
 private:
 	SSMP1communication *_SSMP1com;

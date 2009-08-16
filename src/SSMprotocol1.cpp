@@ -90,6 +90,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	
 	
 	/* TODO:
+		- setup Clear Memory address (and value ?)
 		- setup test-addresses for Immobilizer-communication-line
 		- does the communication always immediately abort when ignition is switched off ?
 	*/
@@ -406,11 +407,25 @@ bool SSMprotocol1::stopMBSWreading()
 
 bool SSMprotocol1::waitForIgnitionOff()
 {
-
-	// TODO !
-
-return true;
+	if (_state != state_normal)
+		return false;
+	_state = state_waitingForIgnOff;
+	_SSMP1com->setRetriesOnError(1);
+	disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+	disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	if (!_SSMP1com->readAddress_permanent( 0x0000 ))
+	{
+		resetCUdata();
+		return false;
+	}
+	QEventLoop el;
+	connect(_SSMP1com, SIGNAL( commError() ), &el, SLOT( quit() ));
+	el.exec();
+	disconnect(_SSMP1com, SIGNAL( commError() ), &el, SLOT( quit() ));
+	_SSMP1com->setRetriesOnError(2);
+	resetCUdata();
+	return true;
 /* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
 }
-// IMPLEMENTATION MISSING
+// USE SWITCH "ignition" (if exists) ?
 
