@@ -48,7 +48,7 @@ public:
 };
   
   
-class  mbsw_dt
+class  mb_dt
 {
 public:
 	QString title;
@@ -58,7 +58,15 @@ public:
 };
 
 
-class  mb_intl_dt: public mbsw_dt
+class  sw_dt
+{
+public:
+	QString title;
+	QString unit;
+};
+
+
+class  mb_intl_dt: public mb_dt
 {
 public:
 	unsigned int adr_low;
@@ -66,7 +74,7 @@ public:
 };
 
 
-class sw_intl_dt : public mbsw_dt
+class sw_intl_dt : public sw_dt
 {
 public:
 	unsigned int  byteadr;
@@ -145,8 +153,8 @@ public:
 	virtual bool hasActuatorTests(bool *ATsup) = 0;
 	virtual bool getSupportedDCgroups(int *DCgroups) = 0;
 	bool getLastDCgroupsSelection(int *DCgroups);
-	bool getSupportedMBs(std::vector<mbsw_dt> *supportedMBs);
-	bool getSupportedSWs(std::vector<mbsw_dt> *supportedSWs);
+	bool getSupportedMBs(std::vector<mb_dt> *supportedMBs);
+	bool getSupportedSWs(std::vector<sw_dt> *supportedSWs);
 	bool getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	virtual bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments) = 0;
 	virtual bool getSupportedActuatorTests(QStringList *actuatorTestTitles);

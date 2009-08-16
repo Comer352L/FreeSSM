@@ -86,8 +86,8 @@ private:
 	QLabel *_MBSWrefreshTimeValue_label;
 	QPushButton *_timemode_pushButton;
 	CUcontent_MBsSWs_tableView *_valuesTableView;
-	std::vector<mbsw_dt> _supportedMBs;
-	std::vector<mbsw_dt> _supportedSWs;
+	std::vector<mb_dt> _supportedMBs;
+	std::vector<sw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;

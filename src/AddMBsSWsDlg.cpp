@@ -21,7 +21,7 @@
 
 
 
-AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mbsw_dt> supportedMBs, std::vector<mbsw_dt> supportedSWs,
+AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,
                            std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
 {
 	unsigned int k=0;

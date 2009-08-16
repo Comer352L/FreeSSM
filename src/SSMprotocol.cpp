@@ -60,7 +60,7 @@ bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 }
 
 
-bool SSMprotocol::getSupportedMBs(std::vector<mbsw_dt> *supportedMBs)
+bool SSMprotocol::getSupportedMBs(std::vector<mb_dt> *supportedMBs)
 {
 	if (_state == state_needSetup) return false;
 	supportedMBs->clear();
@@ -70,7 +70,7 @@ bool SSMprotocol::getSupportedMBs(std::vector<mbsw_dt> *supportedMBs)
 }
 
 
-bool SSMprotocol::getSupportedSWs(std::vector<mbsw_dt> *supportedSWs)
+bool SSMprotocol::getSupportedSWs(std::vector<sw_dt> *supportedSWs)
 {
 	if (_state == state_needSetup) return false;
 	supportedSWs->clear();

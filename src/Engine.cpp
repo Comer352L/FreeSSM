@@ -81,7 +81,8 @@ void Engine::setup()
 	bool supported = false;
 	bool testmode = false;
 	bool enginerunning = false;
-	std::vector<mbsw_dt> supportedMBsSWs;
+	std::vector<mb_dt> supportedMBs;
+	std::vector<sw_dt> supportedSWs;
 	int supDCgroups = 0;
 	QColor VINcolor;
 	QPalette VINlabel_palette;
@@ -118,12 +119,12 @@ void Engine::setup()
 		// Output ROM-ID:
 		romID_label->setText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&supportedMBsSWs))
+		if (!_SSMPdev->getSupportedMBs(&supportedMBs))
 			goto commError;
-		nrofdatambs_label->setText( QString::number(supportedMBsSWs.size(), 10) );
-		if (!_SSMPdev->getSupportedSWs(&supportedMBsSWs))
+		nrofdatambs_label->setText( QString::number(supportedMBs.size(), 10) );
+		if (!_SSMPdev->getSupportedSWs(&supportedSWs))
 			goto commError;
-		nrofswitches_label->setText( QString::number(supportedMBsSWs.size(), 10) );
+		nrofswitches_label->setText( QString::number(supportedSWs.size(), 10) );
 		// OBD2-Support:
 		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
