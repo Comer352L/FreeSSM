@@ -481,7 +481,7 @@ void CUcontent_DCs_engine::show()
 void CUcontent_DCs_engine::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_engine.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);

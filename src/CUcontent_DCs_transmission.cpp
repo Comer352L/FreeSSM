@@ -267,7 +267,7 @@ bool CUcontent_DCs_transmission::eventFilter(QObject *obj, QEvent *event)
 void CUcontent_DCs_transmission::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_transmission.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12); // 9pts
 	contentfont.setBold(false);

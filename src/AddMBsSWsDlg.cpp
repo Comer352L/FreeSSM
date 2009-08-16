@@ -136,7 +136,7 @@ bool AddMBsSWsDlg::rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi
 void AddMBsSWsDlg::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_AddMBsSWsDlg.h (made with QDesigner)
 	QFont appfont = QApplication::font();
 	QFont font = this->font();
 	font.setFamily(appfont.family());

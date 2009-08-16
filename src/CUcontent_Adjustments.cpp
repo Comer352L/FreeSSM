@@ -700,7 +700,7 @@ void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
 void CUcontent_Adjustments::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_Adjustments.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);
