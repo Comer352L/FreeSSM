@@ -374,6 +374,19 @@ void FreeSSM::dumpCUdata()
 	char data[17] = {0};
 
 	if (_dumping) return;
+	// Initialize and configure serial port:
+	if (initPort())
+	{
+		serialCOM::dt_portsettings portsettings;
+		portsettings.baudrate = 4800;
+		portsettings.databits = 8;
+		portsettings.parity = 'N';
+		portsettings.stopbits = 1;
+		if (!_port->SetPortSettings(portsettings))
+			return;
+	}
+	else
+		return;
 	_dumping = true;
 	// Set filename:
 	QString filename(QDir::homePath() + "/dump");
@@ -390,12 +403,6 @@ void FreeSSM::dumpCUdata()
 	}
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
-	// Initialize serial port:
-	if (!initPort())
-	{
-		_dumping = false;
-		return;
-	}
 	// Create SSMP-Communication-object:
 	SSMP2communication SSMP2com(_port, '\x10', 0);
 	// *************** ECU ***************
