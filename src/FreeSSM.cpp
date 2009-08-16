@@ -363,6 +363,7 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 
 void FreeSSM::dumpCUdata()
 {
+	serialCOM::dt_portsettings portsettings;
 	QFile dumpfile;
 	char SYS_ID[3] = {0};
 	char ROM_ID[5] = {0};
@@ -372,12 +373,12 @@ void FreeSSM::dumpCUdata()
 	unsigned char k = 0;
 	unsigned int dataaddr[17] = {0};
 	char data[17] = {0};
+	int ssm1_cu_index = SSM1_CU_Engine;
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
 	if (initPort())
 	{
-		serialCOM::dt_portsettings portsettings;
 		portsettings.baudrate = 4800;
 		portsettings.databits = 8;
 		portsettings.parity = 'N';
@@ -403,9 +404,12 @@ void FreeSSM::dumpCUdata()
 	}
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
-	// Create SSMP-Communication-object:
+	// Create SSMP1-Communication-object:
+	SSMP1communication SSMP1com(_port, SSM1_CU_Engine, 0);
+	// Create SSMP2-Communication-object:
 	SSMP2communication SSMP2com(_port, '\x10', 0);
-	// *************** ECU ***************
+	// ######## SSM2-Control-Units ########
+	// **************** ECU ***************
 	// Read ECU data:
 	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 	{
@@ -456,7 +460,9 @@ void FreeSSM::dumpCUdata()
 			dumpfile.write(hexstr.data(), hexstr.size());
 		}
 	}
-	// *************** TCU ***************
+	else if (dumpfile.isOpen())
+		dumpfile.write("\n---\n", 5);
+	// **************** TCU ***************
 	SSMP2com.setCUaddress('\x18');
 	// Read TCU data:
 	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
@@ -466,6 +472,7 @@ void FreeSSM::dumpCUdata()
 			// Open/Create File:
 			if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
 				goto end;
+			dumpfile.write("\n---\n", 5);
 		}
 		// *** Convert and write data to file:
 		// Sys-ID:
@@ -489,6 +496,49 @@ void FreeSSM::dumpCUdata()
 			dumpfile.write(hexstr.data(), hexstr.length());
 		}
 	}
+	else if (dumpfile.isOpen())
+		dumpfile.write("\n---\n", 5);
+	// ######## SSM1-Control-Units ########
+	// Configure Port:
+	portsettings.baudrate = 1953;
+	portsettings.databits = 8;
+	portsettings.parity = 'E';
+	portsettings.stopbits = 1;
+	if(!_port->SetPortSettings(portsettings))
+		goto end;
+	if(!_port->GetPortSettings(&portsettings))
+		goto end;
+	if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
+		goto end;
+	// Dump all SSM1-CUs:
+	for (ssm1_cu_index=SSM1_CU_Engine; ssm1_cu_index<SSM1_CU_FourWS; ssm1_cu_index++)
+	{
+		// Select CU:
+		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );
+		// Read CU-ID:
+		if (SSMP1com.readID(SYS_ID))
+		{
+			if (!dumpfile.isOpen()) // if file is not opened yet
+			{
+				// Open/Create File:
+				if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
+					goto end;
+
+			for (k=0; k<(ssm1_cu_index+2); k++)
+				dumpfile.write("\n-----\n", 7);
+
+			}
+			// *** Convert and write data to file:
+			// ID:
+			hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
+			hexstr.insert(0, "\n");
+			hexstr.push_back('\n');
+			dumpfile.write(hexstr.data(), hexstr.length());
+		}
+		else if (dumpfile.isOpen())
+			dumpfile.write("\n-----\n", 7);
+	}
+
 end:
 	dumpfile.close();
 	delete _port;	// port will be closed in destructor of serialCOM
