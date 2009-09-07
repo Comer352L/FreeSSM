@@ -7,7 +7,7 @@ TEMPLATE = app
 TARGET = FreeSSM
 DESTDIR = ./
 DEPENDPATH += . src ui
-INCLUDEPATH += . src
+INCLUDEPATH += . src src/tinyxml
 
 
 # Input
@@ -34,11 +34,14 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_MBsSWs_tableView.h \
            src/CUcontent_Adjustments.h \
            src/CUcontent_sysTests.h \
+           src/SSM1definitionsInterface.h \
            src/SSMprotocol2_ID.h \
            src/SSMprotocol2_def_en.h \
            src/SSMprotocol2_def_de.h \
            src/ClearMemoryDlg.h \
-           src/libFSSM.h
+           src/libFSSM.h \
+           src/tinyxml/tinyxml.h \
+           src/tinyxml/tinystr.h
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
@@ -64,11 +67,16 @@ SOURCES += src/main.cpp \
            src/CUcontent_MBsSWs_tableView.cpp \
            src/CUcontent_Adjustments.cpp \
            src/CUcontent_sysTests.cpp \
+           src/SSM1definitionsInterface.cpp \
            src/SSMprotocol2_ID.cpp \
            src/SSMprotocol2_def_en.cpp \
            src/SSMprotocol2_def_de.cpp \
            src/ClearMemoryDlg.cpp \
-           src/libFSSM.cpp
+           src/libFSSM.cpp \
+           src/tinyxml/tinyxml.cpp \
+           src/tinyxml/tinystr.cpp \
+           src/tinyxml/tinyxmlerror.cpp \
+           src/tinyxml/tinyxmlparser.cpp
 
 FORMS +=   ui/FreeSSM.ui \
            ui/Preferences.ui \
@@ -92,6 +100,7 @@ TRANSLATIONS = FreeSSM_en.ts \
 translation.commands = lrelease FreeSSM.pro & qmake
 QMAKE_EXTRA_TARGETS += translation
 
+DEFINES += TIXML_USE_STL
 # Add pre-processor-define if we compile as debug:
 CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__
 
