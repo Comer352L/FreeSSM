@@ -26,9 +26,11 @@
 
 #include <cstring>		// memset(), strcpy(), ...
 #include <cmath>		// round()
+#include <cstdlib>		// malloc()/free()
 extern "C"
 {
     #include <windows.h>
+    #include <limits.h>
 }
 #include <string>
 #include <vector>
@@ -52,8 +54,12 @@ private:
 	bool GetMaxbaudrate(double *maxbaudrate);
 
 public:
-	struct dt_portsettings
+	class dt_portsettings
 	{
+	public:
+		dt_portsettings() { baudrate=9600; databits=8; parity='N'; stopbits=1; };
+		dt_portsettings(double baudrate, unsigned short databits, char parity, float stopbits)
+		                : baudrate(baudrate), databits(databits), parity(parity), stopbits(stopbits) { };
 		double baudrate;
 		unsigned short databits;
 		char parity;
@@ -69,8 +75,10 @@ public:
 	bool SetPortSettings(dt_portsettings newportsettings);
 	bool OpenPort(std::string portname);	// returns success of operation, NOT PORT STATUS (open/closed)
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
-	bool Write(char *outputstr, unsigned int nrofbytestowrite);
-	bool Read(char *readdata, unsigned int *nrofbytesread);
+	bool Write(std::vector<char> data);
+	bool Write(char *data, unsigned int datalen);
+	bool Read(unsigned int maxbytes, std::vector<char> *data);
+	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearRecieveBuffer();
 	bool SendBreak(unsigned int duration_ms);
@@ -78,6 +86,7 @@ public:
 	bool ClearBreak();
 	bool BreakIsSet();
 	bool GetNrOfBytesAvailable(unsigned int *nbytes);
+	bool SetControlLines(bool DTR, bool RTS);
 
 };
 

@@ -33,6 +33,12 @@ serialCOM::serialCOM()
 }
 
 
+serialCOM::~serialCOM()
+{
+	if (portisopen) ClosePort();
+}
+
+
 std::vector<std::string> serialCOM::GetAvailablePorts()
 {
 	std::vector<std::string> portlist(0);
@@ -45,10 +51,10 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 	if (dp != NULL)
 	{
 		do {
-			fp = readdir (dp);     // get next file in directory
+			fp = readdir (dp);	// get next file in directory
 			if (fp != NULL)
 			{
-				if ((!strncmp(fp->d_name,"ttyS",4)) | (!strncmp(fp->d_name,"ttyUSB",6)))	// if filename starts with "ttyS" or "ttyUSB"
+				if ((!strncmp(fp->d_name,"ttyS",4)) | (!strncmp(fp->d_name,"ttyUSB",6))) // if filename starts with "ttyS" or "ttyUSB"
 				{
 					// CONSTRUCT FULL FILENAME:
 					strcpy(ffn, "/dev/");		// (replaces old string)
@@ -82,7 +88,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 				if (!strncmp(fp->d_name,"ttyUSB",6))	// if filename starts with "ttyUSB"
 				{
 					// CONSTRUCT FULL FILENAME:
-					strcpy(ffn, "/dev/usb/");		// (replaces old string)
+					strcpy(ffn, "/dev/usb/");	// (replaces old string)
 					strcat(ffn, fp->d_name);
 					testfd = -1;
 					testfd = open(ffn, O_RDWR | O_NOCTTY | O_NDELAY);
@@ -119,13 +125,12 @@ std::string serialCOM::GetPortname()
 
 bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 {
-	short int cvTGA = -1;	// 0=OK , -1=ERROR
-	short int cvIOCTL = -1;	// -1=ERROR , others=OK
+	int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
 	bool settingsvalid = true;
-	struct termios currenttio;
-	memset(&currenttio, 0, sizeof(termios));
-	speed_t inputbaudrate=0, outputbaudrate=0;	// speed_t defined in termios.h
-	unsigned long int cleanedbitmask=0;
+	struct termios2 currenttio;
+	memset(&currenttio, 0, sizeof(currenttio));
+	speed_t baudrate=0;
+	unsigned int cleanedbitmask=0;
 	// Reset data:
 	currentportsettings->baudrate = 0;
 	currentportsettings->databits = 0;
@@ -133,224 +138,253 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 	currentportsettings->stopbits = 0;
 	if (!portisopen) return false;
 	// Query current settings:
-	cvTGA = tcgetattr(fd, &currenttio);
-	if (cvTGA == 0)
+	if (ioctl(fd, TCGETS2, &currenttio) == -1)
 	{
-		// BAUDRATE:
-		inputbaudrate = cfgetispeed(&currenttio);	// get input baud rate
-		outputbaudrate = cfgetospeed(&currenttio);	// get output baud rate
-		if (inputbaudrate == outputbaudrate)
-		{
-			if (outputbaudrate == B0)	// B0 is not allowed (=> Windows compatibility)
-			{
-				currentportsettings->baudrate = 0;
-			}
-			else if (outputbaudrate == B50)
-			{
-				currentportsettings->baudrate = 50;
-			}
-			else if (outputbaudrate == B75)
-			{
-				currentportsettings->baudrate = 75;
-			}
-			/*else if (outputbaudrate == B110)
-			{
-				currentportsettings->baudrate = 110;
-			}
-			else if (outputbaudrate == B134)
-			{
-				currentportsettings->baudrate = 134;	// 134.5 !
-			}*/
-			else if (outputbaudrate == B150)
-			{
-				currentportsettings->baudrate = 150;
-			}
-			else if (outputbaudrate == B200)
-			{
-				currentportsettings->baudrate = 200;
-			}
-			else if (outputbaudrate == B300)
-			{
-				currentportsettings->baudrate = 300;
-			}
-			else if (outputbaudrate == B600)
-			{
-				currentportsettings->baudrate = 600;
-			}
-			else if (outputbaudrate == B1200)
-			{
-				currentportsettings->baudrate = 1200;
-			}
-			else if (outputbaudrate == B2400)
-			{
-				currentportsettings->baudrate = 2400;
-			}
-			else if (outputbaudrate == B4800)
-			{
-				currentportsettings->baudrate = 4800;
-			}
-			else if (outputbaudrate == B9600)
-			{
-				currentportsettings->baudrate = 9600;
-			}
-			else if (outputbaudrate == B19200)
-			{
-				currentportsettings->baudrate = 19200;
-			}
-			else if (outputbaudrate == B38400)
-			{
-				if (serdrvaccess) // if we have access to the driver
-				{
-					// Get driver settings
-					struct serial_struct current_serdrvinfo;
-					memset(&current_serdrvinfo, 0, sizeof(serial_struct));
-					cvIOCTL = ioctl(fd, TIOCGSERIAL, &current_serdrvinfo);
-					if (cvIOCTL != -1)
-					{
-						// Check if it is a non-standard baudrate:
-						if (current_serdrvinfo.flags != (current_serdrvinfo.flags | ASYNC_SPD_CUST))
-							currentportsettings->baudrate = 38400;
-						else
-						{
-							if (current_serdrvinfo.custom_divisor != 0)
-								currentportsettings->baudrate = ( static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
-							else
-							{
-								settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-								std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
+		std::cout << "serialCOM::GetPortSettings():   ioctl(..., TCGETS2, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
-							}
-						}
-					}
-					else	// If driver settings are not available 
+		return false;
+	}
+	// BAUDRATE:
+	baudrate = currenttio.c_cflag & CBAUD;	// get baud rate
+	/* NOTE:
+	   - c_ispeed/c_ospeed is ignored by the system when setting a
+	     new termios2 with c_cflag not set to BOTHER (set to another Bxxxxx)
+	   - when getting the termios2 struct from the system, the
+	     c_ispeed/c_ospeed field SEEM to contain always the
+	     baudrate value regardless of the baud settings in c_cflag
+	     CAN WE BE SURE THAT ALL DRIVERS BEHAVE LIKE THIS ???
+	     => For now, we only trust c_ispeed/c_ospeed if c_cflag
+	     contains BOTHER
+	*/
+#ifdef __SERIALCOM_DEBUG__
+	std::cout << "serialCOM::GetPortSettings(): baudrates in struct termios2:\n";
+	std::cout << "   c_cflag & CBAUD: " << (currenttio.c_cflag & CBAUD) << '\n';
+	std::cout << "   c_ispeed: " << currenttio.c_ispeed << '\n';
+	std::cout << "   c_ospeed: " << currenttio.c_ospeed << '\n';
+#endif
+	if (baudrate == BOTHER)
+	{
+		if (currenttio.c_ispeed == currenttio.c_ispeed)
+		{
+			currentportsettings->baudrate = currenttio.c_ispeed;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::GetPortSettings():   WARNING:   baudrate is encoded with the BOTHER-method !\n => The reported baudrate may differ from the ''real'' baudrate depending on the driver !\n";
+#endif
+		}
+		else
+		{
+			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::GetPortSettings():   ERROR:   different baud rates for transmitting and recieving detected\n";
+#endif
+		}
+	}
+	else if (baudrate == B0)	// B0 is not allowed (=> Windows compatibility)
+	{
+		currentportsettings->baudrate = 0;
+	}
+	else if (baudrate == B50)
+	{
+		currentportsettings->baudrate = 50;
+	}
+	else if (baudrate == B75)
+	{
+		currentportsettings->baudrate = 75;
+	}
+	else if (baudrate == B110)
+	{
+		currentportsettings->baudrate = 110;
+	}
+	else if (baudrate == B134)
+	{
+		currentportsettings->baudrate = 134.5;
+	}
+	else if (baudrate == B150)
+	{
+		currentportsettings->baudrate = 150;
+	}
+	else if (baudrate == B200)
+	{
+		currentportsettings->baudrate = 200;
+	}
+	else if (baudrate == B300)
+	{
+		currentportsettings->baudrate = 300;
+	}
+	else if (baudrate == B600)
+	{
+		currentportsettings->baudrate = 600;
+	}
+	else if (baudrate == B1200)
+	{
+		currentportsettings->baudrate = 1200;
+	}
+	else if (baudrate == B1800)
+	{
+		currentportsettings->baudrate = 1800;
+	}
+	else if (baudrate == B2400)
+	{
+		currentportsettings->baudrate = 2400;
+	}
+	else if (baudrate == B4800)
+	{
+		currentportsettings->baudrate = 4800;
+	}
+	else if (baudrate == B9600)
+	{
+		currentportsettings->baudrate = 9600;
+	}
+	else if (baudrate == B19200)
+	{
+		currentportsettings->baudrate = 19200;
+	}
+	else if (baudrate == B38400)
+	{
+		if (serdrvaccess) // if we have access to the driver
+		{
+			// Get driver settings
+			struct serial_struct current_serdrvinfo;
+			memset(&current_serdrvinfo, 0, sizeof(current_serdrvinfo));
+			cvIOCTL_SD = ioctl(fd, TIOCGSERIAL, &current_serdrvinfo);
+			if (cvIOCTL_SD != -1)
+			{
+				// Check if it is a non-standard baudrate:
+				if (current_serdrvinfo.flags != (current_serdrvinfo.flags | ASYNC_SPD_CUST))
+					currentportsettings->baudrate = 38400;
+				else
+				{
+					if (current_serdrvinfo.custom_divisor != 0)
+						currentportsettings->baudrate = ( static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
+					else
 					{
 						settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-						std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
+						std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
 #endif
 					}
 				}
-				else
-					currentportsettings->baudrate = 38400;
 			}
-			else if (outputbaudrate == B57600)
-			{
-				currentportsettings->baudrate = 57600;
-			}
-			else if (outputbaudrate == B115200)
-			{
-				currentportsettings->baudrate = 115200;
-			}
-			else
+			else	// If driver settings are not available 
 			{
 				settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
+				std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
 			}
-		}
-		else	// if different baudrate settings for input and output detected
-		{
-			settingsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   WARNING:   different baud rates for transmitting and recieving detected\n";
-#endif
-		}
-		// DATABITS:
-		cleanedbitmask = (currenttio.c_cflag & ~CSIZE);
-		if (currenttio.c_cflag == (cleanedbitmask | CS8))
-		{
-			currentportsettings->databits = 8;
-		}
-		else if (currenttio.c_cflag == (cleanedbitmask | CS7))
-		{
-			currentportsettings->databits = 7;
-		}
-		else if (currenttio.c_cflag == (cleanedbitmask | CS6))
-		{
-			currentportsettings->databits = 6;
-		}
-		else if (currenttio.c_cflag == (cleanedbitmask | CS5))
-		{
-			currentportsettings->databits = 5;
 		}
 		else
-		{
-			settingsvalid = false;
+			currentportsettings->baudrate = 38400;
+	}
+	else if (baudrate == B57600)
+	{
+		currentportsettings->baudrate = 57600;
+	}
+	else if (baudrate == B115200)
+	{
+		currentportsettings->baudrate = 115200;
+	}
+	else
+	{
+		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   error: unknown number of databits\n";
+		std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
 #endif
-		}
-		// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
-		if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
-			currentportsettings->parity='N';
-		else    	// if parity-flag is set
+	}
+	// DATABITS:
+	cleanedbitmask = (currenttio.c_cflag & ~CSIZE);
+	if (currenttio.c_cflag == (cleanedbitmask | CS8))
+	{
+		currentportsettings->databits = 8;
+	}
+	else if (currenttio.c_cflag == (cleanedbitmask | CS7))
+	{
+		currentportsettings->databits = 7;
+	}
+	else if (currenttio.c_cflag == (cleanedbitmask | CS6))
+	{
+		currentportsettings->databits = 6;
+	}
+	else if (currenttio.c_cflag == (cleanedbitmask | CS5))
+	{
+		currentportsettings->databits = 5;
+	}
+	else
+	{
+		settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::GetPortSettings():   error: unknown number of databits\n";
+#endif
+	}
+	// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
+	if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
+		currentportsettings->parity='N';
+	else    	// if parity-flag is set
+	{
+		if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
 		{
-			if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
-			{
-				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-					currentportsettings->parity='E';
-				else
-					currentportsettings->parity='S';
-			}
-			else	// if Odd-(Mark-) parity-flag is set
-			{
-				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-					currentportsettings->parity='O';
-				else
-					currentportsettings->parity='M';
-			}
-		}
-		// STOPBITS:
-		if (currenttio.c_cflag != (currenttio.c_cflag | CSTOPB))
-			currentportsettings->stopbits = 1;
-		else
-		{
-			if (currentportsettings->databits == 5)
-			{
-				currentportsettings->stopbits = 1.5;
-			}
-			else if (currentportsettings->databits > 5)
-			{
-				currentportsettings->stopbits = 2;
-			}
+			if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
+				currentportsettings->parity='E';
 			else
-			{
-				settingsvalid = false;
-				currentportsettings->stopbits = 0;
-			}
+				currentportsettings->parity='S';
+		}
+		else	// if Odd-(Mark-) parity-flag is set
+		{
+			if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
+				currentportsettings->parity='O';
+			else
+				currentportsettings->parity='M';
 		}
 	}
-	// RETURN VALUE (SUCCESS CONTROL):
-	return ((cvTGA != -1) && (settingsvalid));
+	// STOPBITS:
+	if (currenttio.c_cflag != (currenttio.c_cflag | CSTOPB))
+		currentportsettings->stopbits = 1;
+	else
+	{
+		if (currentportsettings->databits == 5)
+		{
+			currentportsettings->stopbits = 1.5;
+		}
+		else if (currentportsettings->databits > 5)
+		{
+			currentportsettings->stopbits = 2;
+		}
+		else
+		{
+			settingsvalid = false;
+			currentportsettings->stopbits = 0;
+		}
+	}
+	// RETURN SUCCESS:
+	return settingsvalid;
 }
 
 
 bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 {
 	int cIOCTL = -1;
-	int cCFSSI = -1;
-	int cCFSSO = -1;
-	int cTSA = -1;
+	int cIOCTL_SD = -1;
+	bool isStdBaud = true;
 	bool settingsvalid = true;
-	speed_t newbaudrate = 0;	// speed_t defined in termios.h
-	struct termios newtio;
-	memset(&newtio, 0, sizeof(termios));
+	speed_t newbaudrate = 0;
+	struct termios2 newtio;
+	memset(&newtio, 0, sizeof(newtio));
 	if (!portisopen) return false;
 	struct serial_struct new_serdrvinfo;
-	memset(&new_serdrvinfo, 0, sizeof(serial_struct));
+	memset(&new_serdrvinfo, 0, sizeof(new_serdrvinfo));
 	if (serdrvaccess)
 	{
 		// Get current port settings:
-		cIOCTL = ioctl(fd, TIOCGSERIAL, &new_serdrvinfo);	// read from driver
+		cIOCTL_SD = ioctl(fd, TIOCGSERIAL, &new_serdrvinfo);	// read from driver
 #ifdef __SERIALCOM_DEBUG__
-		if (cIOCTL == -1)
+		if (cIOCTL_SD == -1)
 			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #1 failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
 		// Deactivate custom baudrate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
+		new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;
 	}
 	// SET CONTROL OPTIONS:
 	newtio.c_cflag = (CREAD | CLOCAL);
@@ -363,7 +397,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		if (newportsettings.baudrate == 0)
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - 0 baud not possible\n";
 		else
-			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baud must be > 0\n";
+			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrate must be > 0\n";
 #endif
 	}
 	else if (newportsettings.baudrate > 115200)
@@ -375,59 +409,45 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	}
 	else
 	{
-		unsigned long int DCBbaudconst=0;
-		bool cvGSDCBC = false;
-		cvGSDCBC = GetStdbaudrateDCBConst(newportsettings.baudrate, &DCBbaudconst);
-		if (cvGSDCBC==true)	// if it's a standard baud rate
-			newbaudrate = DCBbaudconst;
-		else if (serdrvaccess && (cIOCTL != -1))	// if it's not a standard baud rate and we have access to serial driver
+		isStdBaud = GetStdbaudrateDCBConst(newportsettings.baudrate, &newbaudrate);
+		if (!isStdBaud)
 		{
-			int customdivisor = 0;
-			double custombaudrate = 0;
-			customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / newportsettings.baudrate));
-			if (customdivisor < 1)
-				customdivisor = 1;	// ...to be sure
-			if (customdivisor > 65535)
-				customdivisor = 65535;
-			custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
-			// Check if it is a standard baud rate now:
-			cvGSDCBC = serialCOM::GetStdbaudrateDCBConst(custombaudrate, &DCBbaudconst);
-			if (cvGSDCBC==true)
-				newbaudrate = DCBbaudconst;
-			else
+			/* NOTE: The "old" method for setting non-standrad baudrates is prefered,
+			*	 because we know the supported baudrates exactly and can select them
+			*	 according to our own startegy (=> min. relative deviation)
+			*/
+			if (serdrvaccess && (cIOCTL_SD != -1))	// if we have access to serial driver
 			{
-				newbaudrate = B38400;
-				new_serdrvinfo.flags |= ASYNC_SPD_CUST;
-				new_serdrvinfo.custom_divisor = customdivisor;
-			}
-		}
-		else
-		{
-			// Get nearest standard baudrate:
-			double br[14] = {50, 75, /*110, B134.5*/ 150, 200, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
-			int bc[14] = {B50, B75, /*B110, B134*/ B150, B200, B300, B600, B1200, B2400, B4800, B9600, B19200, B38400, B57600, B115200};
-			if (newportsettings.baudrate <= br[0])
-				newbaudrate=static_cast<speed_t>(br[0]);
-			else
-			{
-				double q2=0;
-				double q1=0;
-				for (int b=1; b<14; b++)
+				int customdivisor = 0;
+				double custombaudrate = 0;
+				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / newportsettings.baudrate));
+				if (customdivisor < 1)
+					customdivisor = 1;	// ...to be sure
+				if (customdivisor > 65535)
+					customdivisor = 65535;
+				custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
+				// Check if it is a standard baud rate now:
+				if (!GetStdbaudrateDCBConst(newportsettings.baudrate, &newbaudrate))
 				{
-					q2 = br[b] / newportsettings.baudrate; 
-					if (q2 >= 1)
-					{
-						// br[b-1] < baudrate < br[b]:
-						q1 = br[b-1] / newportsettings.baudrate; 
-						// compare relative baudrate abberation, select baudrate:
-						if ((q2-1) < (1-q1))
-							newbaudrate=bc[b];
-						else
-							newbaudrate=bc[b-1];
-						break;
-					}
+					newbaudrate = B38400;
+					new_serdrvinfo.flags |= ASYNC_SPD_CUST;
+					new_serdrvinfo.custom_divisor = customdivisor;
 				}
-         		}
+			}
+			else
+			{
+				newbaudrate = BOTHER;
+				newtio.c_ispeed = round(newportsettings.baudrate);
+				newtio.c_ospeed = round(newportsettings.baudrate);
+				/* TODO:
+				* - DOES ioctl(..., TCSETS2, ...) ALWAYS SET THE NEAREST POSSIBLE BAUD RATE ? HOW IS "NEAREST" DEFINED (ABSOLUTE/RELATIVE ?) ?
+				* - IS THERE A MAXIMUM DEVIATION, WHICH LETS THE ioctl() FAIL IF IT IS EXCEEDED ?
+				* - IS THIS BEHAVIOR UNIFIED/GUARANTEED FOR ALL SERIAL PORT DRIVERS ?
+				*/
+				/* NOTE: if the ioctl() fails (later in this function), we will
+				*       retry with the nearest possible standard baudrate
+				*/
+			}
 		}
 	}
 	// DATABITS:
@@ -653,37 +673,49 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	VLNEXT							CTRL-v
 	...									*/
 	// SET NEW PORT SETTING:
-	if (settingsvalid == true)	// only apply new settings only if they are all valid !
+	if (settingsvalid == true)	// apply new settings only if they are all valid !
 	{
 		if (serdrvaccess)
 		{
-			cIOCTL = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings	// -1 on error
+			cIOCTL_SD = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings	// -1 on error
+			/* NOTE: always do this ioctl to deactivate the ASYNC_SPD_CUST if we have a standard-baudrate ! */
 #ifdef __SERIALCOM_DEBUG__
-			if (cIOCTL == -1)
+			if (cIOCTL_SD == -1)
 				std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #2 failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
 		}
-		cCFSSI = cfsetispeed(&newtio, newbaudrate);		// 0 on success, check errno
+		newtio.c_cflag &= ~CBAUD;
+		newtio.c_cflag |= newbaudrate;
+		cIOCTL = ioctl(fd, TCSETS2, &newtio);	// 0 on success, check errno
 #ifdef __SERIALCOM_DEBUG__
-		if (cCFSSI != 0)
-			std::cout << "serialCOM::SetPortSettings():   cfsetispeed(...) failed with error " << errno << " " << strerror(errno)<< "\n";
+		if (cIOCTL == -1)
+			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TCSETS2, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
-		cCFSSO = cfsetospeed(&newtio, newbaudrate);		// 0 on success, check errno
+		/* NOTE: The following code-block guarantees maximum compatibility:
+		 * In case of non-standard baudrates set with the "BOTHER"-method,
+		 * some serial port drivers might not set the baudrate to the nearest
+		 * supported value IN ANY CASE: 
+		 * The ioctl() could fail, if a maximum deviation is exceeded !
+		 * => We try to select the nearest supported baudrate manually in this case
+		 */
+		if ((cIOCTL == -1) && (!isStdBaud))
+		{
+			// Set baudrate to the nearest standard value:
+			newbaudrate = GetNearestStdBaudrate(newportsettings.baudrate);
+			newtio.c_cflag &= ~CBAUD;
+			newtio.c_cflag |= newbaudrate;
+			cIOCTL = ioctl(fd, TCSETS2, &newtio);
 #ifdef __SERIALCOM_DEBUG__
-		if (cCFSSO != 0)
-			std::cout << "serialCOM::SetPortSettings():   cfsetospeed(...) failed with error " << errno << " " << strerror(errno)<< "\n";
+			if (cIOCTL == -1)
+				std::cout << "serialCOM::SetPortSettings():   ioctl(..., TCSETS2, ...) #2 failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
-		cTSA = tcsetattr(fd, TCSANOW, &newtio );	// 0 on success, check errno
-		/*	TCSANOW		Make changes now without waiting for data to complete
-			TCSADRAIN	Wait until everything has been transmitted
-			TCSAFLUSH	Flush input and output buffers and make the change	*/
-#ifdef __SERIALCOM_DEBUG__
-		if (cTSA != 0)
-			std::cout << "serialCOM::SetPortSettings():   tcsetattr(...) failed with error " << errno << " " << strerror(errno)<< "\n";
-#endif
+		}
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
-	return ((cIOCTL != -1) && (cCFSSI == 0) && (cCFSSO == 0) && (cTSA == 0));
+	return ((cIOCTL != -1) && (!serdrvaccess || (serdrvaccess && (cIOCTL_SD != -1)) || (isStdBaud && (newbaudrate!=B38400))));
+	/* NOTE: we can tolerate a failing TIOCSSERIAL-ioctl() if the baudrate is not set to B38400,
+	 *       because the ASYNC_SPD_CUST-flag and the custom divisor are always ignored if B38400 is not set !
+	 */
 }
 
 
@@ -692,9 +724,9 @@ bool serialCOM::OpenPort(std::string portname)
 	int confirm = -1;	// -1=error
 	struct serial_struct new_serdrvinfo;	// new driver settings
 	if (portisopen) return false;	// if port is already open => cancel and return "false"
-	memset(&new_serdrvinfo, 0, sizeof(serial_struct));
-	memset(&oldtio, 0, sizeof(termios));
-	memset(&old_serdrvinfo, 0, sizeof(serial_struct));
+	memset(&new_serdrvinfo, 0, sizeof(new_serdrvinfo));
+	memset(&oldtio, 0, sizeof(oldtio));
+	memset(&old_serdrvinfo, 0, sizeof(old_serdrvinfo));
 	// OPEN PORT:
 	fd = open(portname.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 	/* 		O_RDWR	 = read/write access;
@@ -723,11 +755,11 @@ bool serialCOM::OpenPort(std::string portname)
 			return false;
 		}
 		// SAVE SETTINGS:
-		confirm = tcgetattr(fd, &oldtio);	// save current serial port settings for restore when closing port
+		confirm = ioctl(fd, TCGETS2, &oldtio);
 		if (confirm == -1)
 		{
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::OpenPort():   tcgetattr(...) failed with error " << errno << "\n";
+			std::cout << "serialCOM::OpenPort():   ioctl(..., TCGETS2, ...) failed with error " << errno << "\n";
 #endif
 			settingssaved = false;
 		}
@@ -758,11 +790,11 @@ bool serialCOM::OpenPort(std::string portname)
 */
 		breakset = false;
 		// CLEAR HARDWARE BUFFERS:
-		confirm = tcflush(fd, TCIOFLUSH);
+		confirm = ioctl(fd, TCFLSH, TCIOFLUSH);
 		if (confirm == -1)
 		{
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::OpenPort():   tcflush(..., TCIOFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
+			std::cout << "serialCOM::OpenPort():   ioctl(..., TCFLSH, TCIOFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 			confirm = ClosePort();
 #ifdef __SERIALCOM_DEBUG__
@@ -771,6 +803,32 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 			return false;
 		}
+		// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
+		if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+		{
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
+#endif
+			confirm = ClosePort();
+#ifdef __SERIALCOM_DEBUG__
+			if (!confirm)
+				std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+#endif
+			return false;
+			/* NOTE: SetPortSettings not only changes the 4 communication parameters.
+			         It configures additional parameters (like control characters, timeouts, ...) which are 
+				 are important to ensure proper communication behavior !
+			 */
+		}
+		// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
+		confirm = SetControlLines(true, false);
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirm)
+			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
+#endif
+		/* NOTE: Call SetControlLines AFTER SetPortSettings, because drivers can
+		* change DTS+RTS when new baudrate/databits/parity/stopbits, 
+		* especially at the first time after opening the port !		*/
 		return true;
 	}
 	else
@@ -796,10 +854,10 @@ bool serialCOM::ClosePort()
 		std::cout << "serialCOM::ClosePort():   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 	// CLEAR HARDWARE BUFFERS:
-	confirm = tcflush(fd, TCIOFLUSH);	// clear buffers (input and output)
+	confirm = ioctl(fd, TCFLSH, TCIOFLUSH);	// clear buffers (input and output)
 #ifdef __SERIALCOM_DEBUG__
-	if (confirm != 0)
-		std::cout << "serialCOM::ClosePort():   tcflush(...) failed with error " << errno << "\n";
+	if (confirm == -1)
+		std::cout << "serialCOM::ClosePort():   ioctl(..., TCFLSH, TCIOFLUSH) failed with error " << errno << "\n";
 #endif
 	// RESTORE PORT SETTINGS:
 	if (serdrvaccess)
@@ -811,11 +869,13 @@ bool serialCOM::ClosePort()
 #endif
 	}
 	if (settingssaved)
-		confirm = tcsetattr(fd, TCSANOW, &oldtio);	// restore the old port settings
+	{
+		confirm = ioctl(fd, TCSETS2, &oldtio);	// restore the old port settings
 #ifdef __SERIALCOM_DEBUG__
-	if (confirm != 0)
-		std::cout << "serialCOM::ClosePort():   tcsetattr(...) failed with error " << errno << " " << strerror(errno) << "\n";
+	if (confirm == -1)
+		std::cout << "serialCOM::ClosePort():   ioctl(..., TCSETS2, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
+	}
 	confirm = ioctl(fd, TIOCNXCL, NULL);	// unlock device
 #ifdef __SERIALCOM_DEBUG__
 	if (confirm == -1)
@@ -843,7 +903,13 @@ bool serialCOM::ClosePort()
 }
 
 
-bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
+bool serialCOM::Write(std::vector<char> data)
+{
+	return Write(&data.at(0), data.size());
+}
+
+
+bool serialCOM::Write(char *data, unsigned int datalen)
 {
 	int confirm = -1;
 	unsigned int nrofbyteswritten = 0;
@@ -862,33 +928,49 @@ bool serialCOM::Write(char *outputstr, unsigned int nrofbytestowrite)
 		}
 	}
 	// SEND DATA:
-	nrofbyteswritten = write(fd, outputstr, nrofbytestowrite);
-	confirm = tcdrain(fd); // wait for all output to be transmitted (to the buffer !?)
+	nrofbyteswritten = write(fd, data, datalen);
+	// WAIT UNTIL ALL BYTES ARE TRANSMITTED (to the buffer !?):
+	confirm = ioctl(fd, TCSBRK, 1);	// => linux-implementation of POSIX-fcn tcdrain(fd)
+	// NOTE: 0 = send 250ms break; >0 = wait until all data is sent
 	// RETURN VALUE:
-	if ((nrofbyteswritten == nrofbytestowrite) && (confirm==0))
+	if ((nrofbyteswritten == datalen) && (confirm != -1))
 		return true;
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		if (nrofbyteswritten != nrofbytestowrite)
-			std::cout << "serialCOM::Write():   write(..) failed with error " << errno << " " << strerror(errno) << "\n";
+		if (nrofbyteswritten != datalen)
+			std::cout << "serialCOM::Write():   write(...) failed with error " << errno << " " << strerror(errno) << "\n";
 		if (confirm != 0)
-			std::cout << "serialCOM::Write():   tcdrain(..) failed with error " << errno << " " << strerror(errno) << "\n";
+			std::cout << "serialCOM::Write():   ioctl(......, TCSBRK, 0) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
 }
 
 
-bool serialCOM::Read(char *readdata, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
+{
+	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
+	unsigned int rdatalen = 0;
+	char *rdata = (char*) malloc(maxbytes);
+	if (rdata == NULL) return false;
+	bool ok = Read(maxbytes, rdata, &rdatalen);
+	if (ok)	data->assign(rdata, rdata+rdatalen);
+	free(rdata);
+	return ok;
+}
+
+
+bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
 {
 	int ret;
 	*nrofbytesread = 0;
 	if (portisopen == false) return false;
+	if (maxbytes > INT_MAX) return false;	// real limit: SSIZE_MAX
 	// READ AVAILABLE DATA:
-	ret = read(fd, readdata, 512);
+	ret = read(fd, data, maxbytes);
 	// RETURN VALUE:
-	if ((ret < 0) || (ret > 512))	// 512: important ! => possible if fd was not open !
+	if ((ret < 0) || (ret > static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
 	{
 		*nrofbytesread = 0;
 #ifdef __SERIALCOM_DEBUG__
@@ -908,13 +990,13 @@ bool serialCOM::ClearSendBuffer()
 {
 	int cvTF = -1;
 	if (portisopen)
-		cvTF = tcflush(fd, TCOFLUSH);
-	if (cvTF == 0)
+		cvTF = ioctl(fd, TCFLSH, TCOFLUSH);
+	if (cvTF != -1)
 		return true;
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearSendBuffer(...):   tcflush(..., TCOFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearSendBuffer(...):   ioctl(..., TCFLSH, TCOFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -925,13 +1007,13 @@ bool serialCOM::ClearRecieveBuffer()
 {
 	int cvTF = -1;
 	if (portisopen)
-		cvTF = tcflush(fd, TCIFLUSH);
-	if (cvTF == 0)
+		cvTF = ioctl(fd, TCFLSH, TCIFLUSH);
+	if (cvTF != -1)
 		return true;
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearRecieveBuffer(...):   tcflush(..., TCIFLUSH) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearRecieveBuffer(...):   ioctl(..., TCFLSH, TCIFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -940,37 +1022,72 @@ bool serialCOM::ClearRecieveBuffer()
 
 bool serialCOM::SendBreak(unsigned int duration_ms)
 {
-	short int confirmTSB = -1;	// 0 or -1
+	int confirmSB = -1;	// 0 or -1
 	if ((!portisopen) || (duration_ms < 1) || (duration_ms >= 32767))
 		return false;
 	breakset = true;
-	confirmTSB = tcsendbreak(fd, static_cast<int>(duration_ms));
-	breakset = false;
-	// ALTERNATIVE:
-	//ioctl(fd, TIOCSBRK, 0);	// break ON
-	// msleep( (int)duration_ms );
-	//ioctl(fd, TIOCCBRK, 0);    // break OFF
-	if (confirmTSB == 0)
-		return true;
+	if (duration_ms == 250) 
+	{
+		confirmSB = ioctl(fd, TCSBRK, 0);
+#ifdef __SERIALCOM_DEBUG__
+		if (confirmSB == -1)
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+		/* NOTE: the Linux TCSBRK-ioctl is different from other implementations !
+		 *	 - for arg == 0, a break of 250ms is send
+		 *	 - for arg > 0, it waits until the Tx-buffer is empty/all data is send
+		 *	   => this is how POSIX-fcn tcdrain(...) is implemented !
+		 */
+	}
+	else if ((duration_ms / 100)*100 == duration_ms)
+	{
+		confirmSB = ioctl(fd, TCSBRKP, duration_ms/100);
+#ifdef __SERIALCOM_DEBUG__
+		if (confirmSB == -1)
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRKP, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+		/* NOTE: the Linux TCSBRKP-icotl is defined for compatibility. 
+			 It works like the TCSBRK-ioctl on other systems and can be used to send breaks of selectable duration.
+			 => on Linux, the argument is interpreted as multiplier of 100ms (other systems behave different !)
+		 */
+	}
 	else
 	{
+		// We have to do the timing on our own
+		confirmSB = ioctl(fd, TIOCSBRK, 0);	// break ON
+		if (confirmSB != -1)
+		{
+			usleep(1000*duration_ms);		// GLIBC uses select() here... Would that be more accurate ?
+			confirmSB = ioctl(fd, TIOCCBRK, 0);	// break OFF
+			if (confirmSB == -1)
+			{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SendBreak(...):   tcsendbreak(...) returned error " << errno << " " << strerror(errno) << "\n";
+				std::cout << "serialCOM::SendBreak(...):   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-		return false;
+				return false;	// WITH breakset STILL TRUE !
+			}
+		}
+#ifdef __SERIALCOM_DEBUG__
+		else
+			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TIOCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
 	}
+	breakset = false;
+	if (confirmSB == -1)
+		return false;
+	return true;
 }
 
 
 bool serialCOM::SetBreak()
 {
-	short int confirmIOCTL = -1;
+	int confirmIOCTL = -1;
 	if (!portisopen) return false;
 	confirmIOCTL = ioctl(fd, TIOCSBRK, 0);	// break ON
 	if (confirmIOCTL == -1)
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::SetBreak(...):   ioctl(..., TIOCSBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -981,13 +1098,13 @@ bool serialCOM::SetBreak()
 
 bool serialCOM::ClearBreak()
 {
-	short int confirmIOCTL = -1;
+	int confirmIOCTL = -1;
 	if (!portisopen) return false;
 	confirmIOCTL = ioctl(fd, TIOCCBRK, 0);    // break OFF
 	if (confirmIOCTL == -1)
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearBreak(...):   ioctl(..., TIOCCBRK, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
@@ -1015,27 +1132,52 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 	{
 		*nbytes = 0;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) returned error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::GetNrOfBytesAvailable(...):   ioctl(..., FIONREAD, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}
 }
 
 
-serialCOM::~serialCOM()
+bool serialCOM::SetControlLines(bool DTR, bool RTS)
 {
-	if (portisopen) ClosePort();
+	int linestatus = 0;
+	int retIOCTL = -1;
+	if (!portisopen) return false;
+	retIOCTL = ioctl(fd, TIOCMGET, &linestatus);
+	if (retIOCTL == -1)
+	{
+		linestatus |= TIOCM_ST; // set seconary TX-line (only DB25) to 1/HIGH = idle state;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetControlLines():   ioctl(..., TIOCMGET, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+	}
+	if (DTR)
+		linestatus |= TIOCM_DTR;	// "Ready"
+	else
+		linestatus &= ~TIOCM_DTR;	// "NOT Ready"
+	if (RTS)
+		linestatus |= TIOCM_RTS;	// "Request"
+	else
+		linestatus &= ~TIOCM_RTS;	// "NO Request"
+	/* NOTE: lines are inverted. Set flag means line=0/low/"space" */
+	retIOCTL = ioctl(fd, TIOCMSET, &linestatus);
+#ifdef __SERIALCOM_DEBUG__
+	if (retIOCTL == -1)
+		std::cout << "serialCOM::SetControlLines():   ioctl(..., TIOCMSET, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+	return (retIOCTL != -1);
 }
 
-
 // PRIVATE
-bool serialCOM::GetStdbaudrateDCBConst(double baudrate, unsigned long int *DCBbaudconst)
+
+bool serialCOM::GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst)
 {
 	// B0 not used, because of Windows compatibility; B110, B134: divisor not unique 
-	const unsigned long int stdbaudrates[] = {50,75,150,200,300,600,1200,2400,4800,9600,19200,38400,57600,115200};
-	const unsigned long int stdbaudconst[] = {B50,B75,B150,B200,B300,B600,B1200,B2400,B4800,B9600,B19200,B38400,B57600,B115200};
+	const double stdbaudrates[] = {50,75,110,134.5,150,200,300,600,1200,1800,2400,4800,9600,19200,38400,57600,115200};
+	const speed_t stdbaudconst[] = {B50,B75,B110,B134,B150,B200,B300,B600,B1200,B1800,B2400,B4800,B9600,B19200,B38400,B57600,B115200};
 	unsigned char k;
-	for (k=0; k<14; k++)
+	for (k=0; k<17; k++)
 	{
 		if (stdbaudrates[k] == baudrate)
 		{
@@ -1046,3 +1188,40 @@ bool serialCOM::GetStdbaudrateDCBConst(double baudrate, unsigned long int *DCBba
 	return false;
 }
 
+
+speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
+{
+	// Get nearest standard baudrate:
+	speed_t nearestBaudrate = 0;
+	const double br[17] = {50, 75, 110, 134.5, 150, 200, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
+	const speed_t bc[17] = {B50, B75, B110, B134, B150, B200, B300, B600, B1200, B1800, B2400, B4800, B9600, B19200, B38400, B57600, B115200};
+	if (selBaudrate <= br[0])
+	{
+		nearestBaudrate=bc[0];
+	}
+	else if (selBaudrate >= br[16])
+	{
+		nearestBaudrate=bc[16];
+	}
+	else
+	{
+		double q2=0;
+		double q1=0;
+		for (int b=1; b<17; b++)
+		{
+			q2 = br[b] / selBaudrate; 
+			if (q2 >= 1)
+			{
+				// br[b-1] < baudrate < br[b]:
+				q1 = br[b-1] / selBaudrate; 
+				// compare relative baudrate deviation, select baudrate:
+				if ((q2-1) < (1-q1))
+					nearestBaudrate=bc[b];
+				else
+					nearestBaudrate=bc[b-1];
+				break;
+			}
+		}
+	}
+	return nearestBaudrate;
+}
