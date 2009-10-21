@@ -33,6 +33,12 @@ serialCOM::serialCOM()
 }
 
 
+serialCOM::~serialCOM()
+{
+	if (portisopen) ClosePort();
+}
+
+
 std::vector<std::string> serialCOM::GetAvailablePorts()
 {
 	std::vector<std::string> portlist(0);
@@ -407,7 +413,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		if (!isStdBaud)
 		{
 			/* NOTE: The "old" method for setting non-standrad baudrates is prefered,
-			*	 because we konw the supported baudrates exactly and can select them
+			*	 because we know the supported baudrates exactly and can select them
 			*	 according to our own startegy (=> min. relative deviation)
 			*/
 			if (serdrvaccess && (cIOCTL_SD != -1))	// if we have access to serial driver
@@ -814,6 +820,15 @@ bool serialCOM::OpenPort(std::string portname)
 				 are important to ensure proper communication behavior !
 			 */
 		}
+		// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
+		confirm = SetControlLines(true, false);
+#ifdef __SERIALCOM_DEBUG__
+		if (!confirm)
+			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
+#endif
+		/* NOTE: Call SetControlLines AFTER SetPortSettings, because drivers can
+		* change DTS+RTS when new baudrate/databits/parity/stopbits, 
+		* especially at the first time after opening the port !		*/
 		return true;
 	}
 	else
@@ -1124,9 +1139,34 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 }
 
 
-serialCOM::~serialCOM()
+bool serialCOM::SetControlLines(bool DTR, bool RTS)
 {
-	if (portisopen) ClosePort();
+	int linestatus = 0;
+	int retIOCTL = -1;
+	if (!portisopen) return false;
+	retIOCTL = ioctl(fd, TIOCMGET, &linestatus);
+	if (retIOCTL == -1)
+	{
+		linestatus |= TIOCM_ST; // set seconary TX-line (only DB25) to 1/HIGH = idle state;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetControlLines():   ioctl(..., TIOCMGET, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+	}
+	if (DTR)
+		linestatus |= TIOCM_DTR;	// "Ready"
+	else
+		linestatus &= ~TIOCM_DTR;	// "NOT Ready"
+	if (RTS)
+		linestatus |= TIOCM_RTS;	// "Request"
+	else
+		linestatus &= ~TIOCM_RTS;	// "NO Request"
+	/* NOTE: lines are inverted. Set flag means line=0/low/"space" */
+	retIOCTL = ioctl(fd, TIOCMSET, &linestatus);
+#ifdef __SERIALCOM_DEBUG__
+	if (retIOCTL == -1)
+		std::cout << "serialCOM::SetControlLines():   ioctl(..., TIOCMSET, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+	return (retIOCTL != -1);
 }
 
 // PRIVATE
