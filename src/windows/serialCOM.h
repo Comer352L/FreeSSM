@@ -86,6 +86,7 @@ public:
 	bool ClearBreak();
 	bool BreakIsSet();
 	bool GetNrOfBytesAvailable(unsigned int *nbytes);
+	bool SetControlLines(bool DTR, bool RTS);
 
 };
 

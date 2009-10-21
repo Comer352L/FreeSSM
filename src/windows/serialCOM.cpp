@@ -33,6 +33,12 @@ serialCOM::serialCOM()
 }
 
 
+serialCOM::~serialCOM()
+{
+	if (portisopen) ClosePort();
+}
+
+
 std::vector<std::string> serialCOM::GetAvailablePorts()
 {
 	std::vector<std::string> portlist(0);
@@ -357,8 +363,8 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// FLOW CONTROL:
 		newdcb.fOutxCtsFlow = false;	// CTS disabled
 		newdcb.fOutxDsrFlow = false;	// DSR disabled
-		newdcb.fDtrControl = DTR_CONTROL_DISABLE;	// DTR disabled
-		newdcb.fRtsControl = RTS_CONTROL_DISABLE;	// RTS disabled
+		// newdcb.fDtrControl = DTR_CONTROL_ENABLE;	// DTR enabled = "ready"
+		// newdcb.fRtsControl = RTS_CONTROL_ENABLE;	// RTS enabled = "request"
 		newdcb.fDsrSensitivity = false;
 		newdcb.fOutX = false;		// XON/XOFF (for transmission) diabled
 		newdcb.fInX = false;		// XON/XOFF (for reception) diabled
@@ -441,7 +447,7 @@ bool serialCOM::OpenPort(std::string portname)
 		confirm = ClosePort();
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
-			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+			std::cout << "serialCOM::OpenPort():   Port couldn't be closed after error during opening process\n";
 #endif
 		return false;
 	}
@@ -463,7 +469,7 @@ bool serialCOM::OpenPort(std::string portname)
 		confirm = ClosePort();
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
-			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+			std::cout << "serialCOM::OpenPort():   Port couldn't be closed after error during opening process\n";
 #endif
 		return false;
 	}
@@ -471,19 +477,28 @@ bool serialCOM::OpenPort(std::string portname)
 	if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
+		std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings()\n";
 #endif
 		confirm = ClosePort();
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
-			std::cout << "serialCOM::OpenPort():   port couldn't be closed after error during opening process\n";
+			std::cout << "serialCOM::OpenPort():   Port couldn't be closed after error during opening process\n";
 #endif
 		return false;
 		/* NOTE: SetPortSettings not only changes the 4 communication parameters.
-		         It configures additional parameters (like control characters etc.) which are 
+		         It configures additional parameters which are 
 			 are important to ensure proper communication behavior !
 		 */
 	}
+	// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
+	confirm = SetControlLines(true, false);
+#ifdef __SERIALCOM_DEBUG__
+	if (!confirm)
+		std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
+#endif
+	/* NOTE: Call SetControlLines() AFTER SetPortSettings(), because drivers can
+	 * change DTS+RTS when new baudrate/databits/parity/stopbits, 
+	 * especially at the first time after opening the port !		*/
 	return true;
 }
 
@@ -738,14 +753,28 @@ bool serialCOM::GetNrOfBytesAvailable(unsigned int *nbytes)
 }
 
 
-serialCOM::~serialCOM()
+bool serialCOM::SetControlLines(bool DTR, bool RTS)
 {
-	if (portisopen) ClosePort();
+	bool ok = false;
+	if (!portisopen) return false;
+	if (DTR)
+		ok = EscapeCommFunction(hCom, SETDTR);	// "Ready"
+	else
+		ok = EscapeCommFunction(hCom, CLRDTR);	// "NOT Ready"
+	if (RTS)
+		ok = EscapeCommFunction(hCom, SETRTS);	// "Request"
+	else
+		ok = EscapeCommFunction(hCom, CLRRTS);	// "NO Request"
+	/* NOTE: lines are inverted. Set flag means line=0/low/"space" */
+#ifdef __SERIALCOM_DEBUG__
+	if (!ok)
+		std::cout << "serialCOM::SetControlLines():   EscapeCommFunction(...) failed with error " << GetLastError() << "\n";
+#endif
+	return ok;
 }
 
-
-
 // PRIVATE
+
 bool serialCOM::GetMaxbaudrate(double *maxbaudrate)
 {
 	bool confirmGCP = false, baudbasedet=true;
