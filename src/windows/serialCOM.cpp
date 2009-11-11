@@ -835,8 +835,11 @@ bool serialCOM::GetMaxbaudrate(double *maxbaudrate)
 		baudbasedet = false;
 	}
 	return baudbasedet;
-	/*NOTE: instead of checking dwSettableBaud we could also use dwMaxBaud, which should (!) contain
-	 * the max. baudrate as a single bit set.
+	/*NOTE: dwMaxBaud should contain the maximum baudrate directly (no bit-field),
+	 * but it seems to be set to BAUD_USER always, if the device supports non-standrad-baudrates !
+	 * For example: UART16550A (max. baudrate 115200), generic driver:
+	 * dwMaxBaud is BAUD_USER instead of BAUD_115200
+	 * => we have to use the dwSettableBaud bit-field
 	 */
 }
 
