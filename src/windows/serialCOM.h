@@ -47,6 +47,8 @@ private:
 	HANDLE hCom;		// handle to port
 	bool portisopen;
 	bool breakset;
+	bool DTRset;
+	bool RTSset;
 	std::string currentportname; 
 	DCB olddcb;		// backup of old port settings
 	bool settingssaved;
