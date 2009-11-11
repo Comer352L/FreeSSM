@@ -26,6 +26,8 @@ serialCOM::serialCOM()
 	hCom = 0;
 	portisopen = false;
 	breakset = false;
+	DTRset = true;
+	RTSset = false;
 	currentportname = "";
 	memset(&olddcb, 0, sizeof(DCB));
 	olddcb.DCBlength = sizeof(DCB);
@@ -363,8 +365,15 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// FLOW CONTROL:
 		newdcb.fOutxCtsFlow = false;	// CTS disabled
 		newdcb.fOutxDsrFlow = false;	// DSR disabled
-		// newdcb.fDtrControl = DTR_CONTROL_ENABLE;	// DTR enabled = "ready"
-		// newdcb.fRtsControl = RTS_CONTROL_ENABLE;	// RTS enabled = "request"
+		if (DTRset)
+			newdcb.fDtrControl = DTR_CONTROL_ENABLE;	// DTR enabled = "ready"
+		else
+			newdcb.fDtrControl = DTR_CONTROL_DISABLE;	// DTR enabled = "ready"
+		if (RTSset)
+			newdcb.fRtsControl = RTS_CONTROL_ENABLE;	// RTS enabled = "request"
+		else
+			newdcb.fRtsControl = RTS_CONTROL_DISABLE;	// RTS enabled = "request"
+		// NOTE: Important: set to XXX_CONTROL_DISABLE or XXX_CONTROL_ENABLE to ensure that flow control is disabled !
 		newdcb.fDsrSensitivity = false;
 		newdcb.fOutX = false;		// XON/XOFF (for transmission) diabled
 		newdcb.fInX = false;		// XON/XOFF (for reception) diabled
@@ -490,15 +499,7 @@ bool serialCOM::OpenPort(std::string portname)
 			 are important to ensure proper communication behavior !
 		 */
 	}
-	// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
-	confirm = SetControlLines(true, false);
-#ifdef __SERIALCOM_DEBUG__
-	if (!confirm)
-		std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
-#endif
-	/* NOTE: Call SetControlLines() AFTER SetPortSettings(), because drivers can
-	 * change DTS+RTS when new baudrate/databits/parity/stopbits, 
-	 * especially at the first time after opening the port !		*/
+	/* NOTE: DTR+RTS control lines are set in SetPortSettings() */
 	return true;
 }
 
@@ -766,8 +767,13 @@ bool serialCOM::SetControlLines(bool DTR, bool RTS)
 	else
 		ok = EscapeCommFunction(hCom, CLRRTS);	// "NO Request"
 	/* NOTE: lines are inverted. Set flag means line=0/low/"space" */
+	if (ok)
+	{
+		DTRset = DTR;
+		RTSset = RTS;
+	}
 #ifdef __SERIALCOM_DEBUG__
-	if (!ok)
+	else
 		std::cout << "serialCOM::SetControlLines():   EscapeCommFunction(...) failed with error " << GetLastError() << "\n";
 #endif
 	return ok;
