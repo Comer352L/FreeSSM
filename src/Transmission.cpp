@@ -368,7 +368,7 @@ void Transmission::clearContent()
 	if (_content_MBsSWs != NULL)
 	{
 		disconnect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-		_content_MBsSWs->getCurrentMBSWselection(&_lastMBSWmetaList);
+		_content_MBsSWs->getMBSWselection(&_lastMBSWmetaList);
 		_content_MBsSWs->getSettings(&_MBSWsettings);
 		delete _content_MBsSWs;
 		_content_MBsSWs = NULL;
