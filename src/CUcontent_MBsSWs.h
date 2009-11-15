@@ -77,7 +77,7 @@ public:
 	bool startMBSWreading();
 	bool stopMBSWreading();
 	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
+	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	void getSettings(MBSWsettings_dt *settings);
 
 private:
@@ -93,8 +93,8 @@ private:
 	int _lastrefreshduration_ms;
 	QList<MBSWvalue_dt> _lastValues;
 	QList<MinMaxMBSWvalue_dt> _minmaxData;
-	QList<unsigned int> _rawValueIndexes;	/* used to assign the incoming raw values to the MBs/SWs on the (meta-/displayed-) MB/SW-list
-						   => NEDED FOR MB/SW-MOVING DURING MB/SW-READING !					*/
+	QList<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	
 	void setupTimeModeUiElements();
 	void setupUiFonts();
 	void displayMBsSWs();
@@ -109,9 +109,9 @@ private slots:
 	void processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
-	void moveupMBsSWs();
-	void movedownMBsSWs();
-	void resetMinMax();
+	void moveUpMBsSWsOnTheTable();
+	void moveDownMBsSWsOnTheTable();
+	void resetMinMaxTableValues();
 	void setDeleteButtonEnabledState();
 	void switchTimeMode();
 
