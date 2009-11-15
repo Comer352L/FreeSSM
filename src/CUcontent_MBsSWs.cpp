@@ -313,6 +313,12 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	_rawValueIndexes.clear();
 	for (k=0; k<_MBSWmetaList.size(); k++)
 		_rawValueIndexes.push_back(k);
+	_lastValues.clear();
+	_minmaxData.clear();
+	// Clear values in MB/SW-table:
+	displayMBsSWs();
+	// Clear refresh-time-information:
+	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Connect signals and slots:
 	connect( _SSMP2dev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
 	connect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
