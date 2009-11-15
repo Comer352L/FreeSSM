@@ -60,9 +60,9 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, MBSW
 	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	connect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
-	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
-	connect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
-	connect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMax() ) );
+	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveUpMBsSWsOnTheTable() ) );
+	connect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( moveDownMBsSWsOnTheTable() ) );
+	connect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMaxTableValues() ) );
 	connect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
@@ -76,9 +76,9 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
 	disconnect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	disconnect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
-	disconnect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveupMBsSWs() ) );
-	disconnect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( movedownMBsSWs() ) );
-	disconnect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMax() ) );
+	disconnect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveUpMBsSWsOnTheTable() ) );
+	disconnect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( moveDownMBsSWsOnTheTable() ) );
+	disconnect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMaxTableValues() ) );
 	disconnect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	disconnect( _timemode_pushButton , SIGNAL(released() ), this, SLOT( switchTimeMode() ) );
 	disconnect( _SSMP2dev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
@@ -177,6 +177,17 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
+}
+
+
+void CUcontent_MBsSWs::getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
+{
+	unsigned int k = 0;
+	// Return the MBSW-metalist re-ordered according to their positions on the values-table-widget:
+	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(_MBSWmetaList);
+	for (k=0; k<_MBSWmetaList.size(); k++)
+		orderedMBSWmetalist.at(_tableRowPosIndexes.at(k)) = _MBSWmetaList.at(k);
+	*MBSWmetaList = orderedMBSWmetalist;
 }
 
 
@@ -766,7 +777,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 }
 
 
-void CUcontent_MBsSWs::moveupMBsSWs()
+void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 {
 	QList<unsigned int> selectedMBSWIndexes;
 	int nrofSelRows = 0;
@@ -806,7 +817,7 @@ void CUcontent_MBsSWs::moveupMBsSWs()
 }
 
 
-void CUcontent_MBsSWs::movedownMBsSWs()
+void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 {
 	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int rowToMoveUpIndex = 0;
@@ -842,7 +853,7 @@ void CUcontent_MBsSWs::movedownMBsSWs()
 }
 
 
-void CUcontent_MBsSWs::resetMinMax()
+void CUcontent_MBsSWs::resetMinMaxTableValues()
 {
 	QStringList lastValueStr;
 	QStringList lastUnitStr;
@@ -905,17 +916,6 @@ void CUcontent_MBsSWs::switchTimeMode()
 		}
 	}
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
-}
-
-
-void CUcontent_MBsSWs::getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
-{
-	unsigned int k = 0;
-	// Return the MBSW-metalist re-ordered according to their positions on the values-table-widget:
-	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(_MBSWmetaList);
-	for (k=0; k<_MBSWmetaList.size(); k++)
-		orderedMBSWmetalist.at(_tableRowPosIndexes.at(k)) = _MBSWmetaList.at(k);
-	*MBSWmetaList = orderedMBSWmetalist;
 }
 
 

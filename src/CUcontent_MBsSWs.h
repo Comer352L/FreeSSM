@@ -77,7 +77,7 @@ public:
 	bool startMBSWreading();
 	bool stopMBSWreading();
 	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
+	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	void getSettings(MBSWsettings_dt *settings);
 
 private:
@@ -109,9 +109,9 @@ private slots:
 	void processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
-	void moveupMBsSWs();
-	void movedownMBsSWs();
-	void resetMinMax();
+	void moveUpMBsSWsOnTheTable();
+	void moveDownMBsSWsOnTheTable();
+	void resetMinMaxTableValues();
 	void setDeleteButtonEnabledState();
 	void switchTimeMode();
 
