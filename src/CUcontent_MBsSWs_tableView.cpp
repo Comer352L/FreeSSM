@@ -77,7 +77,7 @@ CUcontent_MBsSWs_tableView::~CUcontent_MBsSWs_tableView()
 }
 
 
-void CUcontent_MBsSWs_tableView::setMWSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units)
+void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units)
 {
 	int k=0;
 	int firstrowvisibleindex = 0;

@@ -238,7 +238,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		}
 	}
 	// Display MBs/SWs
-	_valuesTableView->setMWSWlistContent(titles, values, minvalues, maxvalues, units);
+	_valuesTableView->setMBSWlistContent(titles, values, minvalues, maxvalues, units);
 }
 
 
