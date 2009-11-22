@@ -184,7 +184,7 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
-		mbswdelete_pushButton->setEnabled(true);
+		setListContentManipulationButtonsEnabledState();
 		connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	else
@@ -799,7 +799,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
-		mbswdelete_pushButton->setEnabled(true);
+		setListContentManipulationButtonsEnabledState();
 		connect(_SSMP2dev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
@@ -956,18 +956,16 @@ void CUcontent_MBsSWs::resetMinMax()
 
 void CUcontent_MBsSWs::setListContentManipulationButtonsEnabledState()
 {
-	if (_SSMP2dev->state() == SSMprotocol2::state_MBSWreading) return;
 	QList<unsigned int> selectedMBSWIndexes;
 	getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	// Move up/down buttons:
 	if (selectedMBSWIndexes.size() < 1)
 	{
-		mbswdelete_pushButton->setEnabled(false);
 		mbswmovedown_pushButton->setEnabled(false);
 		mbswmoveup_pushButton->setEnabled(false);
 	}
 	else
 	{
-		mbswdelete_pushButton->setEnabled(true);
 		if (selectedMBSWIndexes.at(0) == 0)
 			mbswmoveup_pushButton->setEnabled(false);
 		else
@@ -977,6 +975,12 @@ void CUcontent_MBsSWs::setListContentManipulationButtonsEnabledState()
 		else
 			mbswmovedown_pushButton->setEnabled(true);
 	}
+	// Delete button:
+	if ((_SSMP2dev->state() == SSMprotocol2::state_MBSWreading) || !selectedMBSWIndexes.size())
+		mbswdelete_pushButton->setEnabled(false);
+	else
+		mbswdelete_pushButton->setEnabled(true);
+	
 }
 
 
