@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>transmissionDCcontent_Form</class>
- <widget class="QWidget" name="transmissionDCcontent_Form" >
-  <property name="geometry" >
+ <widget class="QWidget" name="transmissionDCcontent_Form">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,175 +10,175 @@
     <height>518</height>
    </rect>
   </property>
-  <property name="minimumSize" >
+  <property name="minimumSize">
    <size>
     <width>578</width>
     <height>518</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Diagnostic Codes</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
     <number>0</number>
    </property>
-   <property name="topMargin" >
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <property name="bottomMargin" >
+   <property name="bottomMargin">
     <number>10</number>
    </property>
    <item>
-    <widget class="QLabel" name="currOrTempDTCsTitle_label" >
-     <property name="minimumSize" >
+    <widget class="QLabel" name="currOrTempDTCsTitle_label">
+     <property name="minimumSize">
+      <size>
+       <width>280</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="maximumSize">
       <size>
        <width>280</width>
        <height>20</height>
       </size>
      </property>
-     <property name="maximumSize" >
-      <size>
-       <width>280</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Current/Temporary Diagnostic Trouble Code(s):</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="currOrTempDTCs_tableWidget" >
-     <property name="minimumSize" >
+    <widget class="QTableWidget" name="currOrTempDTCs_tableWidget">
+     <property name="minimumSize">
       <size>
        <width>541</width>
        <height>120</height>
       </size>
      </property>
-     <property name="editTriggers" >
+     <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <property name="alternatingRowColors" >
+     <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
-     <property name="selectionBehavior" >
+     <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>Code:</string>
       </property>
      </column>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>Description:</string>
       </property>
      </column>
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="histOrMemDTCsTitle_label" >
-     <property name="minimumSize" >
+    <widget class="QLabel" name="histOrMemDTCsTitle_label">
+     <property name="minimumSize">
+      <size>
+       <width>280</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="maximumSize">
       <size>
        <width>280</width>
        <height>30</height>
       </size>
      </property>
-     <property name="maximumSize" >
-      <size>
-       <width>280</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Historic/Memorized Diagnostic Trouble Code(s):</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="histOrMemDTCs_tableWidget" >
-     <property name="minimumSize" >
+    <widget class="QTableWidget" name="histOrMemDTCs_tableWidget">
+     <property name="minimumSize">
       <size>
        <width>541</width>
        <height>120</height>
       </size>
      </property>
-     <property name="editTriggers" >
+     <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <property name="alternatingRowColors" >
+     <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
-     <property name="selectionBehavior" >
+     <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>Code:</string>
       </property>
      </column>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>Description:</string>
       </property>
      </column>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <property name="topMargin" >
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
       <number>11</number>
      </property>
-     <property name="bottomMargin" >
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="DCclearingInfo_label" >
-       <property name="minimumSize" >
+      <widget class="QLabel" name="DCclearingInfo_label">
+       <property name="minimumSize">
         <size>
          <width>440</width>
          <height>15</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>16777215</width>
          <height>15</height>
         </size>
        </property>
-       <property name="text" >
-        <string>=> Call ''Clear Memory'' from the ''Selection'' menu to erease all DTCs.</string>
+       <property name="text">
+        <string>=&gt; Call ''Clear Memory'' from the ''Selection'' menu to erease all DTCs.</string>
        </property>
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
          <height>20</height>
@@ -186,27 +187,27 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="printDClist_pushButton" >
-       <property name="minimumSize" >
+      <widget class="QPushButton" name="printDClist_pushButton">
+       <property name="minimumSize">
         <size>
          <width>90</width>
          <height>31</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>90</width>
          <height>31</height>
         </size>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>    Print    </string>
        </property>
-       <property name="icon" >
-        <iconset resource="../resources/FreeSSM.qrc" >
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
          <normaloff>:/icons/chrystal/32x32/fileprint.png</normaloff>:/icons/chrystal/32x32/fileprint.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
          <width>24</width>
          <height>24</height>
@@ -219,7 +220,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc"/>
  </resources>
  <connections/>
 </ui>
