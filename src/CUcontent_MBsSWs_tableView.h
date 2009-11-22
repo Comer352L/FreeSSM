@@ -34,7 +34,7 @@ class CUcontent_MBsSWs_tableView : public QWidget, private Ui::MBSWtable_Form
 public:
 	CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin=true, bool showMax=true);
 	~CUcontent_MBsSWs_tableView();
-	void setMWSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
+	void setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
 	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
 	void clearMBSWlistContent();
 	bool minValuesEnabled();
