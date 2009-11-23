@@ -23,6 +23,7 @@
 
 
 #include <QtGui>
+#include <QtGlobal>
 #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
 #include "AddMBsSWsDlg.h"
