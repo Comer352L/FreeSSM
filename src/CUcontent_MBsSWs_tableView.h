@@ -23,6 +23,7 @@
 
 
 #include <QtGui>
+#include <QtGlobal>
 #include "ui_CUcontent_MBsSWs_tableView.h"
 
 
