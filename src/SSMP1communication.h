@@ -33,7 +33,7 @@
 #include "SSMP1communication_procedures.h"
 
 
-class SSMP1communication : protected QThread, private SSMP1communication_procedures
+class SSMP1communication : public QThread, private SSMP1communication_procedures
 {
 	Q_OBJECT
 
