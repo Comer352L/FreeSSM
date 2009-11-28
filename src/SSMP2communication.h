@@ -33,7 +33,7 @@
 
 
 
-class SSMP2communication : protected QThread, private SSMP2communication_core
+class SSMP2communication : public QThread, private SSMP2communication_core
 {
 	Q_OBJECT
 
