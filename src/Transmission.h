@@ -30,6 +30,7 @@
 #endif
 #include <QtGui>
 #include "ui_Transmission.h"
+#include "CUinfo_Transmission.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
@@ -58,7 +59,8 @@ private:
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
-	// Pointer to content-widges:
+	// Info- and content-widgets:
+	CUinfo_Transmission *_infoWidget;
 	CUcontent_DCs_transmission *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;

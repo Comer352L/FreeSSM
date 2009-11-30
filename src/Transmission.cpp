@@ -42,6 +42,9 @@ Transmission::Transmission(serialCOM *port, QString language, QString progversio
 	// Set window title:
 	QString wintitle = "FreeSSM " + progversion + " - " + windowTitle();
 	setWindowTitle(wintitle);
+	// Show information-widget:
+	_infoWidget = new CUinfo_Transmission(information_groupBox);
+	_infoWidget->show();
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DTCs_pushButton->setChecked(true);
@@ -69,6 +72,7 @@ Transmission::~Transmission()
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 		delete _SSMPdev;
 	}
+	delete _infoWidget;
 }
 
 
@@ -81,8 +85,6 @@ void Transmission::setup()
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
 	int supDCgroups = 0;
-	QPixmap sup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/ok.png"));
-	QPixmap nsup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/editdelete.png"));
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to TCU... Please wait !"), 0, 0, 100, this);
@@ -110,23 +112,17 @@ void Transmission::setup()
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
-		transmissiontype_label->setText(sysdescription);
+		_infoWidget->setTransmissionTypeText(sysdescription);
 		// Output ROM-ID:
-		romID_label->setText( QString::fromStdString(ROM_ID) );
+		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&supportedMBs))
+		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
-		nrofdatambs_label->setText( QString::number(supportedMBs.size(), 10) );
-		if (!_SSMPdev->getSupportedSWs(&supportedSWs))
-			goto commError;
-		nrofswitches_label->setText( QString::number(supportedSWs.size(), 10) );
+		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 		// OBD2-Support:
 		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
-		if (supported)
-			obd2system_label->setPixmap(sup_pixmap);
-		else
-			obd2system_label->setPixmap(nsup_pixmap);
+		_infoWidget->setOBD2Supported(supported);
 		// "Clear Memory 2"-support:
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
@@ -433,46 +429,6 @@ void Transmission::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(15);	// 11-12pts
 	information_groupBox->setFont(font);
-	font = transmissiontypetitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	transmissiontypetitle_label->setFont(font);
-	font = transmissiontype_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	transmissiontype_label->setFont(font);
-	font = romIDtitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	romIDtitle_label->setFont(font);
-	font = romID_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	romID_label->setFont(font);
-	font = nrofmbsswstitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofmbsswstitle_label->setFont(font);
-	font = nrofdatambstitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofdatambstitle_label->setFont(font);
-	font = nrofdatambs_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofdatambs_label->setFont(font);
-	font = nrofswitchestitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofswitchestitle_label->setFont(font);
-	font = nrofswitches_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofswitches_label->setFont(font);
-	font = obd2systemTitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	obd2systemTitle_label->setFont(font);
 	font = selection_groupBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(15);	// 11-12pts

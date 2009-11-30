@@ -43,6 +43,9 @@ Engine::Engine(serialCOM *port, QString language, QString progversion)
 	// Set window title:
 	QString wintitle = "FreeSSM " + progversion + " - " + windowTitle();
 	setWindowTitle(wintitle);
+	// Show information-widget:
+	_infoWidget = new CUinfo_Engine(information_groupBox);
+	_infoWidget->show();
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DCs_pushButton->setChecked(true);
@@ -70,6 +73,7 @@ Engine::~Engine()
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 		delete _SSMPdev;
 	}
+	delete _infoWidget;
 }
 
 
@@ -84,10 +88,6 @@ void Engine::setup()
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
 	int supDCgroups = 0;
-	QColor VINcolor;
-	QPalette VINlabel_palette;
-	QPixmap sup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/ok.png"));
-	QPixmap nsup_pixmap(QString::fromUtf8(":/icons/chrystal/22x22/editdelete.png"));
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ECU... Please wait !"), 0, 0, 100, this);
@@ -115,37 +115,25 @@ void Engine::setup()
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
-		enginetype_label->setText(sysdescription);
+		_infoWidget->setEngineTypeText(sysdescription);
 		// Output ROM-ID:
-		romID_label->setText( QString::fromStdString(ROM_ID) );
+		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
-		if (!_SSMPdev->getSupportedMBs(&supportedMBs))
+		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
-		nrofdatambs_label->setText( QString::number(supportedMBs.size(), 10) );
-		if (!_SSMPdev->getSupportedSWs(&supportedSWs))
-			goto commError;
-		nrofswitches_label->setText( QString::number(supportedSWs.size(), 10) );
+		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 		// OBD2-Support:
 		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
-		if (supported)
-			obd2system_label->setPixmap(sup_pixmap);
-		else
-			obd2system_label->setPixmap(nsup_pixmap);
+		_infoWidget->setOBD2Supported(supported);
 		// Integrated Cruise Control:
 		if (!_SSMPdev->hasIntegratedCC(&supported))
 			goto commError;
-		if (supported)
-			ccintegrated_label->setPixmap(sup_pixmap);
-		else
-			ccintegrated_label->setPixmap(nsup_pixmap);
+		_infoWidget->setIntegratedCCSupported(supported);
 		// Immobilizer:
 		if (!_SSMPdev->hasImmobilizer(&supported))
 			goto commError;
-		if (supported)
-			immobilizer_label->setPixmap(sup_pixmap);
-		else
-			immobilizer_label->setPixmap(nsup_pixmap);
+		_infoWidget->setImmobilizerSupported(supported);
 		// // Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
 		initstatusmsgbox.setValue(55);
@@ -156,26 +144,8 @@ void Engine::setup()
 		{
 			if (!_SSMPdev->getVIN(&VIN))
 				goto commError;
-			if (VIN.size() == 0)
-			{
-				VIN_label->setText(tr("not programmed yet"));
-				VINcolor.setRgb( 255, 170, 0, 255);	// r,g,b,alpha: orange
-			}
-			else
-			{
-				VIN_label->setText(VIN);
-				VINcolor.setRgb( 0, 170, 0, 255);	// r,g,b,alpha: green
-			}
 		}
-		else
-		{
-			VIN_label->setText(tr("not supported by ECU"));
-			VINcolor.setRgb( 255, 0, 0, 255);	// r,g,b,alpha: red
-		}
-		VINlabel_palette = VIN_label->palette();
-		VINlabel_palette.setColor(QPalette::Active, QPalette::WindowText, VINcolor);
-		VINlabel_palette.setColor(QPalette::Inactive, QPalette::WindowText, VINcolor);
-		VIN_label->setPalette(VINlabel_palette);
+		_infoWidget->setVINinfo(supported, VIN);
 		// Check if we need to stop the automatic actuator test:
 		if (!_SSMPdev->hasActuatorTests(&supported))
 			goto commError;
@@ -523,62 +493,6 @@ void Engine::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(15);	// 11-12pts
 	information_groupBox->setFont(font);
-	font = enginetypetitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	enginetypetitle_label->setFont(font);
-	font = enginetype_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	enginetype_label->setFont(font);
-	font = romIDtitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	romIDtitle_label->setFont(font);
-	font = romID_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	romID_label->setFont(font);
-	font = VINtitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	VINtitle_label->setFont(font);
-	font = VIN_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	VIN_label->setFont(font);
-	font = nrofmbsswstitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofmbsswstitle_label->setFont(font);
-	font = nrofdatambstitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofdatambstitle_label->setFont(font);
-	font = nrofdatambs_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofdatambs_label->setFont(font);
-	font = nrofswitchestitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofswitchestitle_label->setFont(font);
-	font = nrofswitches_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	nrofswitches_label->setFont(font);
-	font = obd2systemTitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	obd2systemTitle_label->setFont(font);
-	font = integCCtitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	integCCtitle_label->setFont(font);
-	font = immosupportedtitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	immosupportedtitle_label->setFont(font);
 	font = selection_groupBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(15);	// 11-12pts
