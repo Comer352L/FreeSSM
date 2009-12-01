@@ -72,16 +72,33 @@ QGroupBox * ControlUnitDialog::contentGroupBox()
 
 QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool checkable)
 {
-	QPushButton *button = new QPushButton(icon, title, selection_groupBox);
+	QPushButton *button = new QPushButton(selection_groupBox);
 	button->setGeometry(20, 23 + 41 * _selButtons.size(), 152, 35);
-	button->setIconSize(QSize(22, 22));
 	button->setCheckable(checkable);
 	button->setAutoExclusive(checkable);
+	// Icon:
+	button->setIconSize(QSize(22, 22));
+	button->setIcon(icon);
+	// Font:
 	QFont font = button->font();
 	font.setFamily(QApplication::font().family());
 	font.setBold(false);
 	font.setPixelSize(13);	// 10pts
 	button->setFont(font);
+	// Text: prepend/append spaces to achieve proper icon positions:
+	QFontMetrics fm(font);
+	title = title.trimmed();
+	int targetstrsize = button->size().width() - button->iconSize().width() - 18;
+	int barestrsize = fm.size(Qt::TextShowMnemonic, title).width();
+	if (barestrsize < targetstrsize)
+	{
+		double spacesize = fm.size(Qt::TextShowMnemonic, " ").width();
+		int nspaces = ((targetstrsize - barestrsize) / spacesize + 0.5);
+		title.prepend( QString( nspaces/2, ' ' ) );
+		title.append( QString( nspaces - nspaces/2, ' ' ) );
+	}
+	button->setText(title);
+	// Save, show and return button:
 	button->show();
 	_selButtons.push_back(button);
 	return button;

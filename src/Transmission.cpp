@@ -32,16 +32,16 @@ Transmission::Transmission(serialCOM *port, QString language, QString progversio
 	_infoWidget = new CUinfo_Transmission(infoGroupBox());
 	_infoWidget->show();
 	// Setup functions:
-	_DTCs_pushButton = addFunction(tr("  &Diagnostic Codes "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	_DTCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
 	_DTCs_pushButton->setChecked(true);
 	connect( _DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
-	_measuringblocks_pushButton = addFunction(tr(" &Measuring Blocks "), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	_measuringblocks_pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
 	connect( _measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	_adjustments_pushButton = addFunction(tr("     &Adjustments     "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	_adjustments_pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( _adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	QPushButton *cmbutton = addFunction(tr("    Clear Memory    "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	QPushButton *cmbutton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
-	_clearMemory2_pushButton = addFunction(tr("   Clear Memory 2  "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:

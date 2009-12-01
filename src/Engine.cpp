@@ -33,16 +33,16 @@ Engine::Engine(serialCOM *port, QString language, QString progversion) : Control
 	_infoWidget = new CUinfo_Engine(infoGroupBox());
 	_infoWidget->show();
 	// Setup functions:
-	_DCs_pushButton = addFunction(tr(" &Diagnostic Codes  "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	_DCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
 	_DCs_pushButton->setChecked(true);
 	connect( _DCs_pushButton, SIGNAL( released() ), this, SLOT( DCs() ) );
-	_measuringblocks_pushButton = addFunction(tr(" &Measuring Blocks "), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	_measuringblocks_pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
 	connect( _measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	_adjustments_pushButton = addFunction(tr("     &Adjustments     "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	_adjustments_pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( _adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	_systemoperationtests_pushButton = addFunction(tr("    System &Tests    "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
+	_systemoperationtests_pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
 	connect( _systemoperationtests_pushButton, SIGNAL( released() ), this, SLOT( systemoperationtests() ) );
-	QPushButton *cmbutton = addFunction(tr("    Clear Memory    "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	QPushButton *cmbutton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
