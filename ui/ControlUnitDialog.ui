@@ -221,7 +221,7 @@
        </font>
       </property>
       <property name="title">
-       <string>ContentTitle:</string>
+       <string>Content Title:</string>
       </property>
       <layout class="QGridLayout" name="content_gridLayout">
        <property name="margin">
