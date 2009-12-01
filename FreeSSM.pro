@@ -27,6 +27,7 @@ HEADERS += src/FreeSSM.h \
            src/SSMprotocol1.h \
            src/SSMprotocol2.h \
            src/AddMBsSWsDlg.h \
+           src/ControlUnitDialog.h \
            src/CUinfo_Engine.h \
            src/CUinfo_Transmission.h \
            src/CUcontent_DCs_abstract.h \
@@ -59,6 +60,7 @@ SOURCES += src/main.cpp \
            src/SSMprotocol1.cpp \
            src/SSMprotocol2.cpp \
            src/AddMBsSWsDlg.cpp \
+           src/ControlUnitDialog.cpp \
            src/CUinfo_Engine.cpp \
            src/CUinfo_Transmission.cpp \
            src/CUcontent_DCs_abstract.cpp \
@@ -76,9 +78,8 @@ SOURCES += src/main.cpp \
 
 FORMS +=   ui/FreeSSM.ui \
            ui/Preferences.ui \
-           ui/Engine.ui \
-           ui/Transmission.ui \
            ui/About.ui \
+           ui/ControlUnitDialog.ui \
            ui/CUinfo_Engine.ui \
            ui/CUinfo_Transmission.ui \
            ui/CUcontent_DCs_engine.ui \

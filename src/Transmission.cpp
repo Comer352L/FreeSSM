@@ -20,36 +20,34 @@
 #include "Transmission.h"
 
 
-Transmission::Transmission(serialCOM *port, QString language, QString progversion)
+Transmission::Transmission(serialCOM *port, QString language, QString progversion) : ControlUnitDialog(tr("Transmission Control Unit"), port, language, progversion)
 {
 	// *** Initialize global variables:
-	_language = language;
-	_port = port;
-	_SSMPdev = NULL;
-	_progversion = progversion;
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
 	_lastMBSWmetaList.clear();
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
-	// *** Setup window/GUI:
-	setAttribute (Qt::WA_DeleteOnClose, true);
-	// Setup GUI:
-	setupUi(this);
-	setupUiFonts();
-	// Move window to desired coordinates
-	move( 30, 30 );
-	// Set window title:
-	QString wintitle = "FreeSSM " + progversion + " - " + windowTitle();
-	setWindowTitle(wintitle);
 	// Show information-widget:
-	_infoWidget = new CUinfo_Transmission(information_groupBox);
+	_infoWidget = new CUinfo_Transmission(infoGroupBox());
 	_infoWidget->show();
+	// Setup functions:
+	_DTCs_pushButton = addFunction(tr("  &Diagnostic Codes "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	_DTCs_pushButton->setChecked(true);
+	connect( _DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
+	_measuringblocks_pushButton = addFunction(tr(" &Measuring Blocks "), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	connect( _measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
+	_adjustments_pushButton = addFunction(tr("     &Adjustments     "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	connect( _adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
+	QPushButton *cmbutton = addFunction(tr("    Clear Memory    "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
+	_clearMemory2_pushButton = addFunction(tr("   Clear Memory 2  "), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	connect( _clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
+	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
-	content_groupBox->setTitle(tr("Diagnostic Codes:"));
-	DTCs_pushButton->setChecked(true);
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _progversion);
-	content_gridLayout->addWidget(_content_DCs);
+	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
+	_content_DCs = new CUcontent_DCs_transmission(contentGroupBox(), _progversion);
+	contentGroupBox()->layout()->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
 	this->show();
@@ -60,18 +58,7 @@ Transmission::Transmission(serialCOM *port, QString language, QString progversio
 
 Transmission::~Transmission()
 {
-	disconnect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
-	disconnect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	disconnect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	disconnect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
-	disconnect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
-	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	clearContent();
-	if (_SSMPdev)
-	{
-		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-		delete _SSMPdev;
-	}
 	delete _infoWidget;
 }
 
@@ -92,7 +79,7 @@ void Transmission::setup()
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( probeProtocol() )
+	if( probeProtocol(SSMprotocol::CUtype_Transmission) )
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
@@ -127,21 +114,12 @@ void Transmission::setup()
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
 		if (supported)
-			clearMemory2_pushButton->setEnabled(true);
+			_clearMemory2_pushButton->setEnabled(true);
 		else
-			clearMemory2_pushButton->setEnabled(false);
+			_clearMemory2_pushButton->setEnabled(false);
 	}
 	else // CU-connection could not be established
 		goto commError;
-	// Connect signals/slots:
-	connect( DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
-	connect( measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	connect( adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	connect( clearMemory_pushButton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
-	connect( clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
-	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
-	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 	// Start Diagnostic Codes reading:
 	if (!_content_DCs->setup(_SSMPdev))
 		goto commError;
@@ -167,67 +145,23 @@ commError:
 }
 
 
-bool Transmission::probeProtocol()
-{
-	// Probe SSM1-protocol:
-	if (configurePort(1953, 'E'))
-	{
-		_SSMPdev = new SSMprotocol1(_port, _language);
-		if (_SSMPdev->setupCUdata( SSMprotocol::CUtype_Transmission ))
-			return true;
-		delete _SSMPdev;
-		// Wait 500ms:
-		QEventLoop el;
-		QTimer::singleShot(500, &el, SLOT(quit()));
-		el.exec();
-	}
-	// Probe SSM2-protocol:
-	if (configurePort(4800, 'N'))
-	{
-		_SSMPdev = new SSMprotocol2(_port, _language);
-		if (_SSMPdev->setupCUdata( SSMprotocol::CUtype_Transmission ))
-			return true;
-		delete _SSMPdev;
-	}
-	_SSMPdev = NULL;
-	return false;
-}
-
-
-bool Transmission::configurePort(unsigned int baud, char parity)
-{
-	serialCOM::dt_portsettings portsettings;
-	portsettings.baudrate = static_cast<double>(baud);
-	portsettings.databits = 8;
-	portsettings.parity = parity;
-	portsettings.stopbits = 1;
-	if(!_port->SetPortSettings(portsettings))
-		return false;
-	if(!_port->GetPortSettings(&portsettings))
-		return false;
-	if ((portsettings.baudrate < (0.97*baud)) || (portsettings.baudrate > (1.03*baud)))
-		return false;
-	return true;
-}
-
-
 void Transmission::DTCs()
 {
 	bool ok = false;
 	int DCgroups = 0;
 	if (_mode == DCs_mode) return;
 	_mode = DCs_mode;
-	DTCs_pushButton->setChecked(true);
+	_DTCs_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
 	// Remove old content:
 	clearContent();
 	// Set title of the content group-box:
-	content_groupBox->setTitle(tr("Diagnostic Codes:"));
+	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_transmission(content_groupBox, _progversion);
-	content_gridLayout->addWidget(_content_DCs);
+	_content_DCs = new CUcontent_DCs_transmission(contentGroupBox(), _progversion);
+	contentGroupBox()->layout()->addWidget(_content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
@@ -253,17 +187,17 @@ void Transmission::measuringblocks()
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
 	_mode = MBsSWs_mode;
-	measuringblocks_pushButton->setChecked(true);
+	_measuringblocks_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
 	waitmsgbox.show();
 	// Remove old content:
 	clearContent();
 	// Set title of the content group-box:
-	content_groupBox->setTitle(tr("Measuring Blocks:"));
+	contentGroupBox()->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(content_groupBox, _MBSWsettings);
-	content_gridLayout->addWidget(_content_MBsSWs);
+	_content_MBsSWs = new CUcontent_MBsSWs(contentGroupBox(), _MBSWsettings);
+	contentGroupBox()->layout()->addWidget(_content_MBsSWs);
 	_content_MBsSWs->show();
 	ok = _content_MBsSWs->setup(_SSMPdev);
 	if (ok)
@@ -284,17 +218,17 @@ void Transmission::adjustments()
 	bool ok = false;
 	if (_mode == Adaptions_mode) return;
 	_mode = Adaptions_mode;
-	adjustments_pushButton->setChecked(true);
+	_adjustments_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
 	waitmsgbox.show();
 	// Remove old content:
 	clearContent();
 	// Set title of the content group-box:
-	content_groupBox->setTitle(tr("Adjustments:"));
+	contentGroupBox()->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(content_groupBox);
-	content_gridLayout->addWidget(_content_Adjustments);
+	_content_Adjustments = new CUcontent_Adjustments(contentGroupBox());
+	contentGroupBox()->layout()->addWidget(_content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
@@ -375,91 +309,5 @@ void Transmission::clearContent()
 		delete _content_Adjustments;
 		_content_Adjustments = NULL;
 	}
-}
-
-
-void Transmission::communicationError(QString addstr)
-{
-	// Show error message
-	if (addstr.size() > 0) addstr.prepend('\n');
-	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from TCU -") + addstr, QMessageBox::Ok, this);
-	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12);	// 9pts
-	msg.setFont( msgfont );
-	msg.show();
-	msg.exec();
-	msg.close();
-	// Close transmission window (and delete all objects)
-	close();
-}
-
-
-void Transmission::closeEvent(QCloseEvent *event)
-{
-	if (_SSMPdev)
-	{
-		// Create wait message box:
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !   "));
-		waitmsgbox.show();
-		// Stop all permanent communication operations:
-		_SSMPdev->stopAllPermanentOperations();
-		// Reset CU data:
-		_SSMPdev->resetCUdata();
-		// Close wait message box:
-		waitmsgbox.close();
-	}
-	event->accept();
-}
-
-
-void Transmission::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_Transmission.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = title_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(29);	// 22pts
-	title_label->setFont(font);
-	font = information_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	information_groupBox->setFont(font);
-	font = selection_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	selection_groupBox->setFont(font);
-	font = DTCs_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	DTCs_pushButton->setFont(font);
-	font = measuringblocks_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	measuringblocks_pushButton->setFont(font);
-	font = adjustments_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	adjustments_pushButton->setFont(font);
-	font = clearMemory_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	clearMemory_pushButton->setFont(font);
-	font = clearMemory2_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	clearMemory2_pushButton->setFont(font);
-	font = exit_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	exit_pushButton->setFont(font);
-	font = content_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	content_groupBox->setFont(font);
 }
 

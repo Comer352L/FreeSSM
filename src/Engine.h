@@ -29,20 +29,20 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
-#include "ui_Engine.h"
+#include "ControlUnitDialog.h"
 #include "CUinfo_Engine.h"
-#include "SSMprotocol1.h"
-#include "SSMprotocol2.h"
-#include "FSSMdialogs.h"
 #include "CUcontent_DCs_engine.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "CUcontent_sysTests.h"
 #include "ClearMemoryDlg.h"
+#include "FSSMdialogs.h"
+#include "SSMprotocol1.h"
+#include "SSMprotocol2.h"
 
 
 
-class Engine : public QMainWindow, private Ui::Engine_Window
+class Engine : public ControlUnitDialog
 {
 	Q_OBJECT
 
@@ -53,13 +53,14 @@ public:
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
 
-	QString _language;
-	serialCOM *_port;
-	SSMprotocol *_SSMPdev;
-	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
+	// Selection buttons:
+	QPushButton *_DCs_pushButton;
+	QPushButton *_measuringblocks_pushButton;
+	QPushButton *_adjustments_pushButton;
+	QPushButton *_systemoperationtests_pushButton;
 	// Info- and content-widgets:
 	CUinfo_Engine *_infoWidget;
 	CUcontent_DCs_engine *_content_DCs;
@@ -70,11 +71,7 @@ private:
 	mode_dt _mode;
 
 	void setup();
-	bool probeProtocol();
-	bool configurePort(unsigned int baud, char parity);
-	void setupUiFonts();
 	void clearContent();
-	void closeEvent(QCloseEvent *event);
 
 private slots:
 	void DCs();
@@ -82,7 +79,7 @@ private slots:
 	void adjustments();
 	void systemoperationtests();
 	void clearMemory();
-	void communicationError(QString addstr = "");
+
 };
 
 
