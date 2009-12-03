@@ -47,7 +47,7 @@ class Engine : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	Engine(serialCOM *port, QString language, QString progversion = "");
+	Engine(serialCOM *port, QString language);
 	~Engine();
 
 private:

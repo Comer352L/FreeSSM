@@ -41,11 +41,10 @@ class ControlUnitDialog : public QMainWindow, private Ui::ControlUnit_Window
 	Q_OBJECT
 
 public:
-	ControlUnitDialog(QString title, serialCOM *port, QString language, QString progversion = "");
+	ControlUnitDialog(QString title, serialCOM *port, QString language);
 	~ControlUnitDialog();
 
 protected:
-	QString _progversion;
 	SSMprotocol *_SSMPdev;
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);

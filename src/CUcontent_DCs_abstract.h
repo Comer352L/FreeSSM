@@ -30,14 +30,13 @@ class CUcontent_DCs_abstract : public QWidget
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_abstract(QWidget *parent, QString progversion);
+	CUcontent_DCs_abstract(QWidget *parent);
 	~CUcontent_DCs_abstract();
 	bool startDCreading();
 	bool stopDCreading();
 
 protected:
 	SSMprotocol * _SSMPdev;
-	QString _progversion;
 	int _supportedDCgroups;
 
 	virtual void connectGUIelements() = 0;

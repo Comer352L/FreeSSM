@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_engine.h"
 
 
-CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, QString progversion) : CUcontent_DCs_abstract(parent, progversion)
+CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent) : CUcontent_DCs_abstract(parent)
 {
 	_obd2DTCformat = true;
 	_testMode = false;

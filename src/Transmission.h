@@ -46,7 +46,7 @@ class Transmission : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	Transmission(serialCOM *port, QString language, QString progversion = "");
+	Transmission(serialCOM *port, QString language);
 	~Transmission();
  
 private:

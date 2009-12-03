@@ -20,7 +20,7 @@
 #include "Engine.h"
 
 
-Engine::Engine(serialCOM *port, QString language, QString progversion) : ControlUnitDialog(tr("Engine Control Unit"), port, language, progversion)
+Engine::Engine(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine Control Unit"), port, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
@@ -47,7 +47,7 @@ Engine::Engine(serialCOM *port, QString language, QString progversion) : Control
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
 	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
-	_content_DCs = new CUcontent_DCs_engine(contentGroupBox(), _progversion);
+	_content_DCs = new CUcontent_DCs_engine(contentGroupBox());
 	contentGroupBox()->layout()->addWidget(_content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -203,7 +203,7 @@ void Engine::DCs()
 	// Set title of the content group-box:
 	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_engine(contentGroupBox(), _progversion);
+	_content_DCs = new CUcontent_DCs_engine(contentGroupBox());
 	contentGroupBox()->layout()->addWidget(_content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);

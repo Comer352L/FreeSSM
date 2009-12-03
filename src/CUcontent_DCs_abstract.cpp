@@ -20,10 +20,9 @@
 #include "CUcontent_DCs_abstract.h"
 
 
-CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent, QString progversion) : QWidget(parent)
+CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent) : QWidget(parent)
 {
 	_SSMPdev = NULL;
-	_progversion = progversion;
 	_supportedDCgroups = 0;
 }
 
@@ -292,7 +291,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	// Put title into text document:
 	cursor.setBlockFormat(blockFormat);
 	cursor.setCharFormat(charFormat);
-	cursor.insertText("FreeSSM " + _progversion);
+	cursor.insertText("FreeSSM " + QApplication::applicationVersion());
 	cursor.insertBlock();
 	// --- DATE, TIME ---
 	// Format date + time:

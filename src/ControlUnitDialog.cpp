@@ -20,13 +20,12 @@
 #include "ControlUnitDialog.h"
 
 
-ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString language, QString progversion)
+ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString language)
 {
 	// *** Initialize global variables:
 	_language = language;
 	_port = port;
 	_SSMPdev = NULL;
-	_progversion = progversion;
 	// *** Setup window/GUI:
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	// Setup GUI:
@@ -35,7 +34,7 @@ ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString lan
 	// Move window to desired coordinates
 	move( 30, 30 );
 	// Set window and dialog titles:
-	setWindowTitle("FreeSSM " + progversion + " - " + title);
+	setWindowTitle("FreeSSM " + QApplication::applicationVersion() + " - " + title);
 	title_label->setText(title);
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );

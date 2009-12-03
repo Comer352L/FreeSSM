@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_transmission.h"
 
 
-CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent, QString progversion) : CUcontent_DCs_abstract(parent, progversion)
+CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent) : CUcontent_DCs_abstract(parent)
 {
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
