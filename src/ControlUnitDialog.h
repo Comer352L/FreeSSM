@@ -49,12 +49,14 @@ protected:
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
 	bool probeProtocol(SSMprotocol::CUtype_dt CUtype);
-	QGroupBox * infoGroupBox();
-	QGroupBox * contentGroupBox();
+	void setInfoWidget(QWidget *infowidget);
+	void setContentWidget(QString title, QWidget *contentwidget);
 
 private:
 	QString _language;
 	serialCOM *_port;
+	QWidget *_infoWidget;
+	QWidget *_contentWidget;
 	QList<QPushButton*> _selButtons;
 
 	bool configurePort(unsigned int baud, char parity);

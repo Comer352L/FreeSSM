@@ -31,7 +31,7 @@ class CUcontent_DCs_abstract : public QWidget
 
 public:
 	CUcontent_DCs_abstract(QWidget *parent);
-	~CUcontent_DCs_abstract();
+	virtual ~CUcontent_DCs_abstract();
 	bool startDCreading();
 	bool stopDCreading();
 

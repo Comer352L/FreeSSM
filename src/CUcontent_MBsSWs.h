@@ -71,7 +71,7 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(QWidget *parent, MBSWsettings_dt options = MBSWsettings_dt());
+	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = 0);
 	~CUcontent_MBsSWs();
 	bool setup(SSMprotocol *SSMPdev);
 	bool startMBSWreading();

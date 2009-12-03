@@ -24,13 +24,12 @@ Engine::Engine(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
-	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
-	_content_SysTests = NULL;
 	_lastMBSWmetaList.clear();
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_Engine(infoGroupBox());
+	_infoWidget = new CUinfo_Engine();
+	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
 	_DCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
@@ -46,21 +45,13 @@ Engine::Engine(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine
 	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
-	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
-	_content_DCs = new CUcontent_DCs_engine(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_DCs);
+	_content_DCs = new CUcontent_DCs_engine();
+	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
 	this->show();
 	// Connect to Control Unit, get data and setup GUI:
 	setup();
-}
-
-
-Engine::~Engine()
-{
-	clearContent();
-	delete _infoWidget;
 }
 
 
@@ -121,7 +112,7 @@ void Engine::setup()
 		if (!_SSMPdev->hasImmobilizer(&supported))
 			goto commError;
 		_infoWidget->setImmobilizerSupported(supported);
-		// // Update status info message box:
+		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
 		initstatusmsgbox.setValue(55);
 		// Query and output VIN, if supported:
@@ -198,13 +189,9 @@ void Engine::DCs()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_engine(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_DCs);
+	_content_DCs = new CUcontent_DCs_engine();
+	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
@@ -232,20 +219,16 @@ void Engine::measuringblocks()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(contentGroupBox(), _MBSWsettings);
-	contentGroupBox()->layout()->addWidget(_content_MBsSWs);
-	_content_MBsSWs->show();
-	ok = _content_MBsSWs->setup(_SSMPdev);
+	CUcontent_MBsSWs *content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
+	setContentWidget(tr("Measuring Blocks:"), content_MBsSWs);
+	content_MBsSWs->show();
+	ok = content_MBsSWs->setup(_SSMPdev);
 	if (ok)
-		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
+		ok = content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
 	if (ok)
-		connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+		connect(content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -263,13 +246,9 @@ void Engine::adjustments()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_Adjustments);
+	_content_Adjustments = new CUcontent_Adjustments();
+	setContentWidget(tr("Adjustments:"), _content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
@@ -291,18 +270,14 @@ void Engine::systemoperationtests()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("System Operation Tests:"));
 	// Create, setup and insert content-widget:
-	_content_SysTests = new CUcontent_sysTests(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_SysTests);
-	_content_SysTests->show();
-	ok = _content_SysTests->setup(_SSMPdev);
+	CUcontent_sysTests *content_SysTests = new CUcontent_sysTests();
+	setContentWidget(tr("System Operation Tests:"), content_SysTests);
+	content_SysTests->show();
+	ok = content_SysTests->setup(_SSMPdev);
 	// Get notification, if internal error occures:
 	if (ok)
-		connect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
+		connect(content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -340,38 +315,6 @@ void Engine::clearMemory()
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit engine control unit dialog
-	}
-}
-
-
-void Engine::clearContent()
-{
-	// Delete content widget(s):
-	if (_content_DCs != NULL)
-	{
-		disconnect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-		delete _content_DCs;
-		_content_DCs = NULL;
-	}
-	if (_content_MBsSWs != NULL)
-	{
-		disconnect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-		_content_MBsSWs->getMBSWselection(&_lastMBSWmetaList);
-		_content_MBsSWs->getSettings(&_MBSWsettings);
-		delete _content_MBsSWs;
-		_content_MBsSWs = NULL;
-	}
-	if (_content_Adjustments != NULL)
-	{
-		disconnect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-		delete _content_Adjustments;
-		_content_Adjustments = NULL;
-	}
-	if (_content_SysTests != NULL)
-	{
-		disconnect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
-		delete _content_SysTests;
-		_content_SysTests = NULL;
 	}
 }
 

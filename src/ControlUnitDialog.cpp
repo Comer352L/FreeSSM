@@ -26,6 +26,8 @@ ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString lan
 	_language = language;
 	_port = port;
 	_SSMPdev = NULL;
+	_infoWidget = NULL;
+	_contentWidget = NULL;
 	// *** Setup window/GUI:
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	// Setup GUI:
@@ -44,6 +46,10 @@ ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString lan
 ControlUnitDialog::~ControlUnitDialog()
 {
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
+	if (_infoWidget)
+		delete _infoWidget;
+	if (_contentWidget)
+		delete _contentWidget;
 	if (_SSMPdev)
 	{
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -57,15 +63,23 @@ ControlUnitDialog::~ControlUnitDialog()
 }
 
 
-QGroupBox * ControlUnitDialog::infoGroupBox()
+void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
 {
-	return information_groupBox;
+	if (_infoWidget)
+		delete _infoWidget;
+	infowidget->setParent(information_groupBox);
+	_infoWidget = infowidget;
 }
 
 
-QGroupBox * ControlUnitDialog::contentGroupBox()
+void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 {
-	return content_groupBox;
+	if (_contentWidget)
+		delete _contentWidget;
+	content_groupBox->setTitle(title);
+	contentwidget->setParent(content_groupBox);
+	content_groupBox->layout()->addWidget(contentwidget);
+	_contentWidget = contentwidget;
 }
 
 

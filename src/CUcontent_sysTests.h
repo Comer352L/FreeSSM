@@ -42,7 +42,7 @@ private:
 	void communicationError(QString adstr = "");
 
 public:
-	CUcontent_sysTests(QWidget *parent);
+	CUcontent_sysTests(QWidget *parent = 0);
 	~CUcontent_sysTests();
 	bool setup(SSMprotocol *SSMPdev);
 

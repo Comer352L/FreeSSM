@@ -24,12 +24,12 @@ Transmission::Transmission(serialCOM *port, QString language) : ControlUnitDialo
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
-	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
 	_lastMBSWmetaList.clear();
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_Transmission(infoGroupBox());
+	_infoWidget = new CUinfo_Transmission();
+	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
 	_DTCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
@@ -45,21 +45,13 @@ Transmission::Transmission(serialCOM *port, QString language) : ControlUnitDialo
 	connect( _clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
-	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
-	_content_DCs = new CUcontent_DCs_transmission(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_DCs);
+	_content_DCs = new CUcontent_DCs_transmission();
+	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
 	this->show();
 	// Connect to Control Unit, get data and setup GUI:
 	setup();
-}
-
-
-Transmission::~Transmission()
-{
-	clearContent();
-	delete _infoWidget;
 }
 
 
@@ -155,13 +147,9 @@ void Transmission::DTCs()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Diagnostic Codes:"));
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_transmission(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_DCs);
+	_content_DCs = new CUcontent_DCs_transmission();
+	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
@@ -191,20 +179,16 @@ void Transmission::measuringblocks()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Measuring Blocks:"));
 	// Create, setup and insert content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(contentGroupBox(), _MBSWsettings);
-	contentGroupBox()->layout()->addWidget(_content_MBsSWs);
-	_content_MBsSWs->show();
-	ok = _content_MBsSWs->setup(_SSMPdev);
+	CUcontent_MBsSWs *content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
+	setContentWidget(tr("Measuring Blocks:"), content_MBsSWs);
+	content_MBsSWs->show();
+	ok = content_MBsSWs->setup(_SSMPdev);
 	if (ok)
-		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
+		ok = content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
 	if (ok)
-		connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+		connect(content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -222,13 +206,9 @@ void Transmission::adjustments()
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
 	waitmsgbox.show();
-	// Remove old content:
-	clearContent();
-	// Set title of the content group-box:
-	contentGroupBox()->setTitle(tr("Adjustments:"));
 	// Create, setup and insert content-widget:
-	_content_Adjustments = new CUcontent_Adjustments(contentGroupBox());
-	contentGroupBox()->layout()->addWidget(_content_Adjustments);
+	_content_Adjustments = new CUcontent_Adjustments();
+	setContentWidget(tr("Adjustments:"), _content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
@@ -282,32 +262,6 @@ void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit engine control unit dialog
-	}
-}
-
-
-void Transmission::clearContent()
-{
-	// Delete content widget(s):
-	if (_content_DCs != NULL)
-	{
-		disconnect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-		delete _content_DCs;
-		_content_DCs = NULL;
-	}
-	if (_content_MBsSWs != NULL)
-	{
-		disconnect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-		_content_MBsSWs->getMBSWselection(&_lastMBSWmetaList);
-		_content_MBsSWs->getSettings(&_MBSWsettings);
-		delete _content_MBsSWs;
-		_content_MBsSWs = NULL;
-	}
-	if (_content_Adjustments != NULL)
-	{
-		disconnect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-		delete _content_Adjustments;
-		_content_Adjustments = NULL;
 	}
 }
 

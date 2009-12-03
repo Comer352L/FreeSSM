@@ -48,7 +48,6 @@ class Engine : public ControlUnitDialog
 
 public:
 	Engine(serialCOM *port, QString language);
-	~Engine();
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
@@ -64,14 +63,11 @@ private:
 	// Info- and content-widgets:
 	CUinfo_Engine *_infoWidget;
 	CUcontent_DCs_engine *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
-	CUcontent_sysTests *_content_SysTests;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
-	void clearContent();
 
 private slots:
 	void DCs();

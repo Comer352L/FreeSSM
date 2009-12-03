@@ -47,7 +47,6 @@ class Transmission : public ControlUnitDialog
 
 public:
 	Transmission(serialCOM *port, QString language);
-	~Transmission();
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
@@ -63,14 +62,12 @@ private:
 	// Info- and content-widgets:
 	CUinfo_Transmission *_infoWidget;
 	CUcontent_DCs_transmission *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
-	void clearContent();
 
 private slots:
 	void DTCs();
