@@ -106,7 +106,7 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 	if (barestrsize < targetstrsize)
 	{
 		double spacesize = fm.size(Qt::TextShowMnemonic, " ").width();
-		int nspaces = ((targetstrsize - barestrsize) / spacesize + 0.5);
+		int nspaces = static_cast<int>((targetstrsize - barestrsize) / spacesize + 0.5);
 		title.prepend( QString( nspaces/2, ' ' ) );
 		title.append( QString( nspaces - nspaces/2, ' ' ) );
 	}
