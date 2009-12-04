@@ -33,7 +33,7 @@ class CUcontent_DCs_transmission : public CUcontent_DCs_abstract, private Ui::tr
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_transmission(QWidget *parent, QString progversion);
+	CUcontent_DCs_transmission(QWidget *parent = 0);
 	~CUcontent_DCs_transmission();
 	bool setup(SSMprotocol *SSMPdev);
 

@@ -21,7 +21,7 @@
 
 
 
-CUcontent_MBsSWs::CUcontent_MBsSWs(QWidget *parent, MBSWsettings_dt settings) : QWidget(parent)
+CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : QWidget(parent)
 {
 	_SSMPdev = NULL;
 	_supportedMBs.clear();

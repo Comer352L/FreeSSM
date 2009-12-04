@@ -29,49 +29,42 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
-#include "ui_Transmission.h"
-#include "SSMprotocol1.h"
-#include "SSMprotocol2.h"
-#include "FSSMdialogs.h"
+#include "ControlUnitDialog.h"
+#include "CUinfo_Transmission.h"
 #include "CUcontent_DCs_transmission.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
+#include "FSSMdialogs.h"
+#include "SSMprotocol1.h"
+#include "SSMprotocol2.h"
 
 
 
-class Transmission : public QMainWindow, private Ui::Transmission_Window
+class Transmission : public ControlUnitDialog
 {
 	Q_OBJECT
 
 public:
-	Transmission(serialCOM *port, QString language, QString progversion = "");
-	~Transmission();
+	Transmission(serialCOM *port, QString language);
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
 
-	QString _language;
-	serialCOM *_port;
-	SSMprotocol *_SSMPdev;
-	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
-	// Pointer to content-widges:
+	// Selection buttons:
+	QPushButton *_clearMemory2_pushButton;
+	// Info- and content-widgets:
+	CUinfo_Transmission *_infoWidget;
 	CUcontent_DCs_transmission *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
-	bool probeProtocol();
-	bool configurePort(unsigned int baud, char parity);
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
-	void setupUiFonts();
-	void clearContent();
-	void closeEvent(QCloseEvent *event);
 
 private slots:
 	void DTCs();
@@ -79,7 +72,6 @@ private slots:
 	void adjustments();
 	void clearMemory();
 	void clearMemory2();
-	void communicationError(QString addstr = "");
 
 };
 

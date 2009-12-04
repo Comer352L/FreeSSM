@@ -1,5 +1,5 @@
 /*
- * About.h - Display informations about the FreeSSM software
+ * CUinfo_Transmission.h - Widget for displaying Transmission Control Unit information
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,23 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ABOUT_H
-#define ABOUT_H
-
+#ifndef CUINFO_TRANSMISSION_H
+#define CUINFO_TRANSMISSION_H
 
 
 #include <QtGui>
-#include "ui_About.h"
-#include "SSMprotocol2_def_en.h"
+#include "ui_CUinfo_Transmission.h"
 
 
 
-class About : public QDialog, private Ui::about_Dialog
+class CUinfo_Transmission : public QWidget, private Ui::CUinfo_Transmission_Form
 {
 	Q_OBJECT
 
 public:
-	About(QWidget *parent = 0, QString language = "");
+	CUinfo_Transmission(QWidget * parent = 0);
+	~CUinfo_Transmission();
+	void setTransmissionTypeText(QString Type);
+	void setRomIDText(QString RomID);
+	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
+	void setOBD2Supported(bool sup);
 
 private:
 	void setupUiFonts();

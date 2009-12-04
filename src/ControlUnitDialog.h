@@ -1,5 +1,5 @@
 /*
- * Engine.h - Engine Control Unit dialog
+ * ControlUnitDialog.h - Template for Control Unit dialogs
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef CONTROLUNITDIALOG_H
+#define CONTROLUNITDIALOG_H
 
 
 #ifdef __WIN32__
@@ -29,47 +29,42 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
-#include "ControlUnitDialog.h"
-#include "CUinfo_Engine.h"
-#include "CUcontent_DCs_engine.h"
-#include "CUcontent_MBsSWs.h"
-#include "CUcontent_Adjustments.h"
-#include "CUcontent_sysTests.h"
-#include "ClearMemoryDlg.h"
-#include "FSSMdialogs.h"
+#include "ui_ControlUnitDialog.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
+#include "FSSMdialogs.h"
 
 
 
-class Engine : public ControlUnitDialog
+class ControlUnitDialog : public QMainWindow, private Ui::ControlUnit_Window
 {
 	Q_OBJECT
 
 public:
-	Engine(serialCOM *port, QString language);
+	ControlUnitDialog(QString title, serialCOM *port, QString language);
+	~ControlUnitDialog();
+
+protected:
+	SSMprotocol *_SSMPdev;
+
+	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
+	bool probeProtocol(SSMprotocol::CUtype_dt CUtype);
+	void setInfoWidget(QWidget *infowidget);
+	void setContentWidget(QString title, QWidget *contentwidget);
 
 private:
-	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
+	QString _language;
+	serialCOM *_port;
+	QWidget *_infoWidget;
+	QWidget *_contentWidget;
+	QList<QPushButton*> _selButtons;
 
-	// Content backup parameters:
-	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
-	MBSWsettings_dt _MBSWsettings;
-	// Info- and content-widgets:
-	CUinfo_Engine *_infoWidget;
-	CUcontent_DCs_engine *_content_DCs;
-	CUcontent_Adjustments *_content_Adjustments;
-	// Current content/mode:
-	mode_dt _mode;
+	bool configurePort(unsigned int baud, char parity);
+	void setupUiFonts();
+	void closeEvent(QCloseEvent *event);
 
-	void setup();
-
-private slots:
-	void DCs();
-	void measuringblocks();
-	void adjustments();
-	void systemoperationtests();
-	void clearMemory();
+protected slots:
+	void communicationError(QString addstr = "");
 
 };
 

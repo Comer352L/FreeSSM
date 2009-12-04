@@ -1,5 +1,5 @@
 /*
- * About.h - Display informations about the FreeSSM software
+ * CUinfo_Engine.h - Widget for displaying Engine Control Unit information
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,23 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ABOUT_H
-#define ABOUT_H
-
+#ifndef CUINFO_ENGINE_H
+#define CUINFO_ENGINE_H
 
 
 #include <QtGui>
-#include "ui_About.h"
-#include "SSMprotocol2_def_en.h"
+#include "ui_CUinfo_Engine.h"
 
 
 
-class About : public QDialog, private Ui::about_Dialog
+class CUinfo_Engine : public QWidget, private Ui::CUinfo_Engine_Form
 {
 	Q_OBJECT
 
 public:
-	About(QWidget *parent = 0, QString language = "");
+	CUinfo_Engine(QWidget * parent = 0);
+	~CUinfo_Engine();
+	void setEngineTypeText(QString Type);
+	void setRomIDText(QString RomID);
+	void setVINinfo(bool VINsupported, QString VIN);
+	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
+	void setOBD2Supported(bool sup);
+	void setIntegratedCCSupported(bool sup);
+	void setImmobilizerSupported(bool sup);
 
 private:
 	void setupUiFonts();

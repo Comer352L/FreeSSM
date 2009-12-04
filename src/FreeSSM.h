@@ -22,10 +22,6 @@
 
 
 
-#define FSSM_VERSION "v1.1.1"
-
-
-
 #ifdef __WIN32__
     #include "windows\serialCOM.h"
 #elif defined __linux__
@@ -51,7 +47,6 @@ class FreeSSM : public QMainWindow, private Ui::FreeSSM_MainWindow
 	Q_OBJECT
 
 private:
-	QString _progversion;
 	QString _portname;
 	QString _language;
 	QTranslator *_qt_translator;

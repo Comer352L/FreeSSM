@@ -23,7 +23,6 @@
 
 FreeSSM::FreeSSM(QApplication *app)
 {
-	_progversion = FSSM_VERSION;
 	_qt_translator = NULL;
 	_translator = NULL;
 	_port = NULL;
@@ -44,8 +43,8 @@ FreeSSM::FreeSSM(QApplication *app)
 	_progtitle_label = new QLabel(this);
 	_progtitle_label->setGeometry(20, 17, 315, 34);
 	_progtitle_label->setFont( titlefont );
-	_progtitle_label->setText("FreeSSM " + _progversion);
-	this->setWindowTitle("FreeSSM " + _progversion);
+	_progtitle_label->setText("FreeSSM " + QApplication::applicationVersion());
+	this->setWindowTitle("FreeSSM " + QApplication::applicationVersion());
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
 	QDesktopWidget desktop;
 	int x = (desktop.width() - size().width()) / 2;
@@ -219,7 +218,7 @@ void FreeSSM::engine()
 	if (_dumping) return;
 	if (initPort())
 	{
-		Engine *enginewindow = new Engine(_port, _language, _progversion);
+		Engine *enginewindow = new Engine(_port, _language);
 		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
@@ -230,7 +229,7 @@ void FreeSSM::transmission()
 	if (_dumping) return;
 	if (initPort())
 	{
-		Transmission *transmissionwindow = new Transmission(_port, _language, _progversion);
+		Transmission *transmissionwindow = new Transmission(_port, _language);
 		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
@@ -264,7 +263,7 @@ void FreeSSM::help()
 
 void FreeSSM::about()
 {
-	About *aboutdlg = new About(this, _progversion, _language);
+	About *aboutdlg = new About(this, _language);
 	aboutdlg->show();
 	aboutdlg->exec();
 	delete aboutdlg;
