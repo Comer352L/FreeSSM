@@ -25,24 +25,23 @@ Transmission::Transmission(serialCOM *port, QString language) : ControlUnitDialo
 	// *** Initialize global variables:
 	_content_DCs = NULL;
 	_content_Adjustments = NULL;
-	_lastMBSWmetaList.clear();
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
 	_infoWidget = new CUinfo_Transmission();
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	_DTCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
-	_DTCs_pushButton->setChecked(true);
-	connect( _DTCs_pushButton, SIGNAL( released() ), this, SLOT( DTCs() ) );
-	_measuringblocks_pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
-	connect( _measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	_adjustments_pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
-	connect( _adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	QPushButton *cmbutton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
+	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	pushButton->setChecked(true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DTCs() ) );
+	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
+	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
+	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( _clearMemory2_pushButton, SIGNAL( released() ), this, SLOT( clearMemory2() ) );
+	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
 	_content_DCs = new CUcontent_DCs_transmission();
@@ -143,7 +142,6 @@ void Transmission::DTCs()
 	int DCgroups = 0;
 	if (_mode == DCs_mode) return;
 	_mode = DCs_mode;
-	_DTCs_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
@@ -175,7 +173,6 @@ void Transmission::measuringblocks()
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
 	_mode = MBsSWs_mode;
-	_measuringblocks_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
 	waitmsgbox.show();
@@ -202,7 +199,6 @@ void Transmission::adjustments()
 	bool ok = false;
 	if (_mode == Adaptions_mode) return;
 	_mode = Adaptions_mode;
-	_adjustments_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
 	waitmsgbox.show();

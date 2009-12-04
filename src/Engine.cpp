@@ -25,25 +25,23 @@ Engine::Engine(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine
 	// *** Initialize global variables:
 	_content_DCs = NULL;
 	_content_Adjustments = NULL;
-	_lastMBSWmetaList.clear();
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
 	_infoWidget = new CUinfo_Engine();
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	_DCs_pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
-	_DCs_pushButton->setChecked(true);
-	connect( _DCs_pushButton, SIGNAL( released() ), this, SLOT( DCs() ) );
-	_measuringblocks_pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
-	connect( _measuringblocks_pushButton, SIGNAL( released() ), this, SLOT( measuringblocks() ) );
-	_adjustments_pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
-	connect( _adjustments_pushButton, SIGNAL( released() ), this, SLOT( adjustments() ) );
-	_systemoperationtests_pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
-	connect( _systemoperationtests_pushButton, SIGNAL( released() ), this, SLOT( systemoperationtests() ) );
-	QPushButton *cmbutton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( cmbutton, SIGNAL( released() ), this, SLOT( clearMemory() ) );
-	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
+	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	pushButton->setChecked(true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DCs() ) );
+	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
+	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
+	pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( systemoperationtests() ) );
+	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	// Load/Show Diagnostic Code content:
 	_content_DCs = new CUcontent_DCs_engine();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
@@ -185,7 +183,6 @@ void Engine::DCs()
 	int DCgroups = 0;
 	if (_mode == DCs_mode) return;
 	_mode = DCs_mode;
-	_DCs_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
@@ -215,7 +212,6 @@ void Engine::measuringblocks()
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
 	_mode = MBsSWs_mode;
-	_measuringblocks_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
 	waitmsgbox.show();
@@ -242,7 +238,6 @@ void Engine::adjustments()
 	bool ok = false;
 	if (_mode == Adaptions_mode) return;
 	_mode = Adaptions_mode;
-	_adjustments_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
 	waitmsgbox.show();
@@ -266,7 +261,6 @@ void Engine::systemoperationtests()
 	bool ok = false;
 	if (_mode == SysTests_mode) return;
 	_mode = SysTests_mode;
-	_systemoperationtests_pushButton->setChecked(true);
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !   "));
 	waitmsgbox.show();
