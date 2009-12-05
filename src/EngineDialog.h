@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef ENGINEDIALOG_H
+#define ENGINEDIALOG_H
 
 
 #ifdef __WIN32__
@@ -42,12 +42,12 @@
 
 
 
-class Engine : public ControlUnitDialog
+class EngineDialog : public ControlUnitDialog
 {
 	Q_OBJECT
 
 public:
-	Engine(serialCOM *port, QString language);
+	EngineDialog(serialCOM *port, QString language);
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};

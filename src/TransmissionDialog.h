@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRANSMISSION_H
-#define TRANSMISSION_H
+#ifndef TRANSMISSIONDIALOG_H
+#define TRANSMISSIONDIALOG_H
 
 
 #ifdef __WIN32__
@@ -41,12 +41,12 @@
 
 
 
-class Transmission : public ControlUnitDialog
+class TransmissionDialog : public ControlUnitDialog
 {
 	Q_OBJECT
 
 public:
-	Transmission(serialCOM *port, QString language);
+	TransmissionDialog(serialCOM *port, QString language);
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};

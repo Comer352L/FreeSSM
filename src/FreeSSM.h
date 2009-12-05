@@ -33,8 +33,8 @@
 #include <string>
 #include "SSMP2communication.h"
 #include "libFSSM.h"
-#include "Engine.h"
-#include "Transmission.h"
+#include "EngineDialog.h"
+#include "TransmissionDialog.h"
 #include "Preferences.h"
 #include "About.h"
 #include "ui_FreeSSM.h"

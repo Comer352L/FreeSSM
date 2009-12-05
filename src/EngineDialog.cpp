@@ -1,5 +1,5 @@
 /*
- * Transmission.cpp - Transmission Control Unit dialog
+ * Engine.cpp - Engine Control Unit dialog
  *
  * Copyright (C) 2008-2009 Comer352l
  *
@@ -17,34 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Transmission.h"
+#include "EngineDialog.h"
 
 
-Transmission::Transmission(serialCOM *port, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), port, language)
+EngineDialog::EngineDialog(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine Control Unit"), port, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
 	_content_Adjustments = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_Transmission();
+	_infoWidget = new CUinfo_Engine();
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
 	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
 	pushButton->setChecked(true);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DTCs() ) );
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DCs() ) );
 	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
 	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
+	pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( systemoperationtests() ) );
 	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
-	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
-	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
-	_content_DCs = new CUcontent_DCs_transmission();
+	_content_DCs = new CUcontent_DCs_engine();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -54,26 +53,28 @@ Transmission::Transmission(serialCOM *port, QString language) : ControlUnitDialo
 }
 
 
-void Transmission::setup()
+void EngineDialog::setup()
 {
-	// *** Local variables:
 	QString sysdescription = "";
 	std::string ROM_ID = "";
+	QString VIN = "";
 	bool supported = false;
+	bool testmode = false;
+	bool enginerunning = false;
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
 	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to TCU... Please wait !"), 0, 0, 100, this);
-	initstatusmsgbox.setWindowTitle(tr("Connecting to TCU..."));
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ECU... Please wait !"), 0, 0, 100, this);
+	initstatusmsgbox.setWindowTitle(tr("Connecting to ECU..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( probeProtocol(SSMprotocol::CUtype_Transmission) )
+	if( probeProtocol(SSMprotocol::CUtype_Engine) )
 	{
 		// Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
+		initstatusmsgbox.setLabelText(tr("Processing ECU data... Please wait !"));
 		initstatusmsgbox.setValue(40);
 		// Query ROM-ID:
 		ROM_ID = _SSMPdev->getROMID();
@@ -90,7 +91,7 @@ void Transmission::setup()
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
-		_infoWidget->setTransmissionTypeText(sysdescription);
+		_infoWidget->setEngineTypeText(sysdescription);
 		// Output ROM-ID:
 		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		// Number of supported MBs / SWs:
@@ -101,13 +102,53 @@ void Transmission::setup()
 		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
 		_infoWidget->setOBD2Supported(supported);
-		// "Clear Memory 2"-support:
-		if (!_SSMPdev->hasClearMemory2(&supported))
+		// Integrated Cruise Control:
+		if (!_SSMPdev->hasIntegratedCC(&supported))
+			goto commError;
+		_infoWidget->setIntegratedCCSupported(supported);
+		// Immobilizer:
+		if (!_SSMPdev->hasImmobilizer(&supported))
+			goto commError;
+		_infoWidget->setImmobilizerSupported(supported);
+		// Update status info message box:
+		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
+		initstatusmsgbox.setValue(55);
+		// Query and output VIN, if supported:
+		if (!_SSMPdev->hasVINsupport(&supported))
 			goto commError;
 		if (supported)
-			_clearMemory2_pushButton->setEnabled(true);
-		else
-			_clearMemory2_pushButton->setEnabled(false);
+		{
+			if (!_SSMPdev->getVIN(&VIN))
+				goto commError;
+		}
+		_infoWidget->setVINinfo(supported, VIN);
+		// Check if we need to stop the automatic actuator test:
+		if (!_SSMPdev->hasActuatorTests(&supported))
+			goto commError;
+		if (supported)
+		{
+			// Update status info message box:
+			initstatusmsgbox.setLabelText(tr("Checking system status... Please wait !"));
+			initstatusmsgbox.setValue(70);
+			// Query test mode connector status:
+			if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
+				goto commError;
+			if (testmode)	// wenn ECU im Testmodus
+			{
+				// Check that engine is not running:
+				if (!_SSMPdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
+					goto commError;
+				if (!enginerunning)
+				{
+					// Update status info message box:
+					initstatusmsgbox.setLabelText(tr("Stopping actuators... Please wait !"));
+					initstatusmsgbox.setValue(85);
+					// Stop all actuator tests:
+					if (!_SSMPdev->stopAllActuators())
+						goto commError;
+				}
+			}
+		}
 	}
 	else // CU-connection could not be established
 		goto commError;
@@ -123,7 +164,7 @@ void Transmission::setup()
 	}
 	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
 	// Update and close status info:
-	initstatusmsgbox.setLabelText(tr("TCU-initialisation successful !"));
+	initstatusmsgbox.setLabelText(tr("ECU-initialisation successful !"));
 	initstatusmsgbox.setValue(100);
 	QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 	initstatusmsgbox.exec();
@@ -136,7 +177,7 @@ commError:
 }
 
 
-void Transmission::DTCs()
+void EngineDialog::DCs()
 {
 	bool ok = false;
 	int DCgroups = 0;
@@ -146,17 +187,15 @@ void Transmission::DTCs()
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
-	_content_DCs = new CUcontent_DCs_transmission();
+	_content_DCs = new CUcontent_DCs_engine();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
 	if (ok)
-	{
 		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
 		if (ok && DCgroups != SSMprotocol::noDCs_DCgroup)
 			ok = _content_DCs->startDCreading();
-	}
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
@@ -168,7 +207,7 @@ void Transmission::DTCs()
 }
 
 
-void Transmission::measuringblocks()
+void EngineDialog::measuringblocks()
 {
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
@@ -194,7 +233,7 @@ void Transmission::measuringblocks()
 }
 
 
-void Transmission::adjustments()
+void EngineDialog::adjustments()
 {
 	bool ok = false;
 	if (_mode == Adaptions_mode) return;
@@ -217,24 +256,36 @@ void Transmission::adjustments()
 }
 
 
-void Transmission::clearMemory()
+void EngineDialog::systemoperationtests()
 {
-	runClearMemory(SSMprotocol::CMlevel_1);
+	bool ok = false;
+	if (_mode == SysTests_mode) return;
+	_mode = SysTests_mode;
+	// Show wait-message:
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !   "));
+	waitmsgbox.show();
+	// Create, setup and insert content-widget:
+	CUcontent_sysTests *content_SysTests = new CUcontent_sysTests();
+	setContentWidget(tr("System Operation Tests:"), content_SysTests);
+	content_SysTests->show();
+	ok = content_SysTests->setup(_SSMPdev);
+	// Get notification, if internal error occures:
+	if (ok)
+		connect(content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
+	// Close wait-message:
+	waitmsgbox.close();
+	// Check for communication error:
+	if (!ok)
+		communicationError();
 }
 
 
-void Transmission::clearMemory2()
-{
-	runClearMemory(SSMprotocol::CMlevel_2);
-}
-
-
-void Transmission::runClearMemory(SSMprotocol::CMlevel_dt level)
+void EngineDialog::clearMemory()
 {
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
 	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, level);
+	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
 	// Temporary disconnect from "communication error"-signal:
 	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Run "Clear Memory"-procedure:

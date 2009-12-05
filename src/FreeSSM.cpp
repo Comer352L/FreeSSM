@@ -218,8 +218,8 @@ void FreeSSM::engine()
 	if (_dumping) return;
 	if (initPort())
 	{
-		Engine *enginewindow = new Engine(_port, _language);
-		connect(enginewindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		EngineDialog *enginedialog = new EngineDialog(_port, _language);
+		connect(enginedialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
 
@@ -229,8 +229,8 @@ void FreeSSM::transmission()
 	if (_dumping) return;
 	if (initPort())
 	{
-		Transmission *transmissionwindow = new Transmission(_port, _language);
-		connect(transmissionwindow, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		TransmissionDialog *transmissiondialog = new TransmissionDialog(_port, _language);
+		connect(transmissiondialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
 	}
 }
 
