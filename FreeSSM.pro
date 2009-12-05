@@ -12,8 +12,8 @@ INCLUDEPATH += . src src/tinyxml
 
 # Input
 HEADERS += src/FreeSSM.h \
-           src/Engine.h \
-           src/Transmission.h \
+           src/EngineDialog.h \
+           src/TransmissionDialog.h \
            src/Preferences.h \
            src/About.h \
            src/FSSMdialogs.h \
@@ -48,8 +48,8 @@ HEADERS += src/FreeSSM.h \
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
-           src/Engine.cpp \
-           src/Transmission.cpp \
+           src/EngineDialog.cpp \
+           src/TransmissionDialog.cpp \
            src/Preferences.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
