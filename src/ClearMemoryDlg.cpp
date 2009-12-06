@@ -21,7 +21,7 @@
 
 
 
-ClearMemoryDlg::ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level)
+ClearMemoryDlg::ClearMemoryDlg(QDialog *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level)
 {
 	_parent = parent;
 	_SSMPdev = SSMPdev;

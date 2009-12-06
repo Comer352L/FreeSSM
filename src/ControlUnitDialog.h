@@ -36,7 +36,7 @@
 
 
 
-class ControlUnitDialog : public QMainWindow, private Ui::ControlUnit_Window
+class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 {
 	Q_OBJECT
 

@@ -71,7 +71,6 @@ private slots:
 	void preferences();
 	void help();
 	void about();
-	void cleanupPort();
 	void retranslate(QString newlanguage, QTranslator *newtranslator);
 	void dumpCUdata();
 

@@ -35,11 +35,11 @@ class ClearMemoryDlg : public QObject
 public:
 	enum CMresult_dt {CMresult_aborted, CMresult_communicationError, CMresult_success, CMresult_adjValRestorationFailed, CMresult_reconnectAborted, CMresult_reconnectFailed};
 
-	ClearMemoryDlg(QMainWindow *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level);
+	ClearMemoryDlg(QDialog *parent, SSMprotocol *SSMPdev, SSMprotocol::CMlevel_dt level);
 	CMresult_dt run();
 
 private:
-	QMainWindow *_parent;
+	QDialog *_parent;
 	SSMprotocol *_SSMPdev;
 	SSMprotocol::CMlevel_dt _level;
 

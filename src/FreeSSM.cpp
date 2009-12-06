@@ -219,7 +219,9 @@ void FreeSSM::engine()
 	if (initPort())
 	{
 		EngineDialog *enginedialog = new EngineDialog(_port, _language);
-		connect(enginedialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		enginedialog->exec();
+		delete _port;
+		_port = NULL;
 	}
 }
 
@@ -230,7 +232,9 @@ void FreeSSM::transmission()
 	if (initPort())
 	{
 		TransmissionDialog *transmissiondialog = new TransmissionDialog(_port, _language);
-		connect(transmissiondialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		transmissiondialog->exec();
+		delete _port;
+		_port = NULL;
 	}
 }
 
@@ -267,17 +271,6 @@ void FreeSSM::about()
 	aboutdlg->show();
 	aboutdlg->exec();
 	delete aboutdlg;
-}
-
-
-void FreeSSM::cleanupPort()
-{
-	disconnect(this, SLOT( cleanupPort() ));
-	if (_port)
-	{
-		delete _port;	// port will be closed in destructor of serialCOM
-		_port = NULL;
-	}
 }
 
 
