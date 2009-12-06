@@ -26,7 +26,6 @@ CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent) : CUcont
 	_currOrTempDTCdescriptions.clear();
 	_histOrMemDTCs.clear();
 	_histOrMemDTCdescriptions.clear();
-
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();

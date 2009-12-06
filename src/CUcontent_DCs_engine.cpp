@@ -418,10 +418,6 @@ void CUcontent_DCs_engine::resizeEvent(QResizeEvent *event)
 	setNrOfRowsOfAllTableWidgets();
 	// accept event:
 	event->accept();
-	/* NOTE: Switching the tabs is a "dirty" workaround for a Qt-issue:
-	 * for all tabs except the current tab, the returned table height is wrong.
-	 * Fortunately, the switch is not visible...
-	 */
 }
 
 
