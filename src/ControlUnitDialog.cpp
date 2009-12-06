@@ -68,6 +68,7 @@ void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
 	if (_infoWidget)
 		delete _infoWidget;
 	infowidget->setParent(information_groupBox);
+	information_groupBox->setMinimumHeight(infowidget->minimumHeight());
 	_infoWidget = infowidget;
 }
 
