@@ -203,69 +203,77 @@ void CUcontent_DCs_abstract::printDCprotocol()
 		SYS_ID = _SSMPdev->getSysID();
 		ok = SYS_ID.length();
 		if (ok)
-			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";	// NOTE: SYS_ID is always available, if CU is initialized/connection is alive
+			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";  // NOTE: SYS_ID is always available, if CU is initialized/connection is alive
 		else
 			errstr = tr("Query of the System-ID failed.");
 	}
 	if (ok)
 	{
-		ok = _SSMPdev->CUtype(&cu_type);
+		ROM_ID = _SSMPdev->getROMID();	// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
+		ok = ROM_ID.length();
 		if (ok)
 		{
-			if (cu_type == SSMprotocol::CUtype_Engine)
+			ok = _SSMPdev->CUtype(&cu_type);
+			if (ok)
 			{
-				CU = tr("Engine");
-			}
-			else if (cu_type == SSMprotocol::CUtype_Transmission)
-			{
-				CU = tr("Transmission");
-			}
-			else
-			{
-				CU = tr("UNKNOWN");
-			}	
-			ROM_ID = _SSMPdev->getROMID();		// NOTE: ROM_ID is always available, if CU is initialized/connection is alive
-			ok = ROM_ID.length();
-			if (ok && (cu_type == SSMprotocol::CUtype_Engine))
-			{
-				ok = _SSMPdev->hasVINsupport(&VINsup);
-				if (ok)
+				switch (cu_type)
 				{
-					if ( VINsup )
-					{
-						// Temporary stop DC-reading for VIN-Query:
-						disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
-						ok = _SSMPdev->stopDCreading();
+					case SSMprotocol::CUtype_Engine:
+						CU = tr("Engine");
+						ok = _SSMPdev->hasVINsupport(&VINsup);
 						if (ok)
 						{
-							// Query VIN:
-							ok = _SSMPdev->getVIN(&VIN);
-							if (ok)
+							if (VINsup)
 							{
-								if (VIN.size() == 0)
-									VIN = tr("not programmed yet");
-								// Restart DC-reading:
-								ok = _SSMPdev->restartDCreading();
+								// Temporary stop DC-reading for VIN-Query:
+								disconnect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+								ok = _SSMPdev->stopDCreading();
 								if (ok)
-									connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+								{
+									// Query VIN:
+									ok = _SSMPdev->getVIN(&VIN);
+									if (ok)
+									{
+										if (VIN.size() == 0)
+											VIN = tr("not programmed yet");
+										// Restart DC-reading:
+										ok = _SSMPdev->restartDCreading();
+										if (ok)
+											connect(_SSMPdev, SIGNAL( stoppedDCreading() ), this, SLOT( callStop() ));
+										else
+											errstr = tr("Couldn't restart Diagnostic Codes Reading.");
+									}
+									else
+										errstr = tr("Query of the VIN failed.");
+								}
 								else
-									errstr = tr("Couldn't restart Diagnostic Codes Reading.");
+									errstr = tr("Couldn't stop Diagnostic Codes Reading.");
 							}
-							else
-								errstr = tr("Query of the VIN failed.");
 						}
 						else
-							errstr = tr("Couldn't stop Diagnostic Codes Reading.");
-					}
+							errstr = tr("Couldn't determine if VIN-registration is supported.");
+						break;
+					case SSMprotocol::CUtype_Transmission:
+						CU = tr("Transmission");
+						break;
+					case SSMprotocol::CUtype_CruiseControl:
+						CU = tr("Cruise Control");
+						break;
+					case SSMprotocol::CUtype_AirCon:
+						CU = tr("Air Conditioning");
+						break;
+					case SSMprotocol::CUtype_FourWheelSteering:
+						CU = tr("4 Wheel Steering");
+						break;
+					default:
+						CU = tr("UNKNOWN");
 				}
-				else
-					errstr = tr("Couldn't determine if VIN-registration is supported.");
 			}
 			else
-				errstr = tr("Query of the ROM-ID failed.");
+				errstr = tr("Couldn't determine Control Unit type.");
 		}
 		else
-			errstr = tr("Couldn't determine Control Unit type.");
+			errstr = tr("Query of the ROM-ID failed.");
 	}
 	// Check for communication error:
 	if (!ok)
@@ -396,12 +404,12 @@ void CUcontent_DCs_abstract::insertDCprintTable(QTextCursor cursor, QString titl
 	// Set minimal column widths:
 	widthconstraints.clear();
 	widthconstraints.resize(2);
-	widthconstraints[0] = QTextLength(QTextLength::PercentageLength,15);
-	widthconstraints[1] = QTextLength(QTextLength::PercentageLength,85);
+	widthconstraints[0] = QTextLength(QTextLength::PercentageLength,12);
+	widthconstraints[1] = QTextLength(QTextLength::PercentageLength,88);
 	// Set table format:
 	tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_None);
 	tableFormat.setColumnWidthConstraints(widthconstraints);
-	tableFormat.setLeftMargin(30);
+	tableFormat.setLeftMargin(20);
 	// Set title:
 	charFormat.setFontPointSize(14);
 	charFormat.setFontWeight(QFont::Bold);
