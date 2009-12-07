@@ -1,195 +1,215 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>sysTestsContent_Form</class>
- <widget class="QWidget" name="sysTestsContent_Form" >
-  <property name="geometry" >
+ <widget class="QWidget" name="sysTestsContent_Form">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>475</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
   </property>
-  <property name="minimumSize" >
+  <property name="minimumSize">
    <size>
-    <width>565</width>
-    <height>475</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>System Tests</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <property name="topMargin" >
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <property name="verticalSpacing" >
-    <number>1</number>
+   <property name="horizontalSpacing">
+    <number>6</number>
    </property>
-   <item rowspan="2" row="2" column="0" >
-    <widget class="QListWidget" name="actuators_listWidget" >
-     <property name="minimumSize" >
-      <size>
-       <width>315</width>
-       <height>340</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1" colspan="2" >
-    <widget class="QLabel" name="actuatorTestInfo_label" >
-     <property name="minimumSize" >
-      <size>
-       <width>220</width>
-       <height>160</height>
-      </size>
-     </property>
-     <property name="text" >
-      <string>NOTE:
-Not all actuator tests may be available for this vehicle.
-If the selected actuator is not supported, nothing will happen.
-For corresponding information, please read the manufacturers repair manual.</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-     </property>
-     <property name="wordWrap" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" >
-    <widget class="QLabel" name="actuatorTest_arrow_label" >
-     <property name="minimumSize" >
-      <size>
-       <width>65</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="maximumSize" >
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="font" >
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text" >
-      <string>>> >></string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2" >
-    <widget class="QPushButton" name="startActuatorTest_pushButton" >
-     <property name="minimumSize" >
+   <property name="verticalSpacing">
+    <number>0</number>
+   </property>
+   <item row="1" column="0">
+    <widget class="QLabel" name="actuatorlistTitle_label">
+     <property name="minimumSize">
       <size>
        <width>100</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="maximumSize" >
-      <size>
-       <width>100</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="text" >
-      <string>Start</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="3" >
-    <widget class="Line" name="hsep_line" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
        <height>18</height>
       </size>
      </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Actuators:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" >
-    <widget class="QLabel" name="testImmoLineTitel_label" >
-     <property name="minimumSize" >
+   <item row="5" column="0">
+    <widget class="QLabel" name="testImmoLineTitel_label">
+     <property name="minimumSize">
       <size>
        <width>245</width>
        <height>16</height>
       </size>
      </property>
-     <property name="maximumSize" >
+     <property name="maximumSize">
       <size>
        <width>16777215</width>
        <height>16</height>
       </size>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Immobilizer Communication Line:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="2" >
-    <widget class="QPushButton" name="testImmoLine_pushButton" >
-     <property name="minimumSize" >
+   <item row="5" column="2">
+    <widget class="QPushButton" name="testImmoLine_pushButton">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
       <size>
        <width>100</width>
        <height>30</height>
       </size>
      </property>
-     <property name="maximumSize" >
-      <size>
-       <width>100</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="text" >
+     <property name="text">
       <string>Check</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QLabel" name="actuatorlistTitle_label" >
-     <property name="minimumSize" >
+   <item row="4" column="0" colspan="3">
+    <widget class="Line" name="hsep_line">
+     <property name="minimumSize">
       <size>
-       <width>100</width>
+       <width>0</width>
        <height>18</height>
       </size>
      </property>
-     <property name="maximumSize" >
-      <size>
-       <width>100</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="font" >
-      <font>
-       <underline>true</underline>
-      </font>
-     </property>
-     <property name="text" >
-      <string>Actuators:</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="startActuatorTest_pushButton">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Start</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="actuatorTest_arrow_label">
+     <property name="minimumSize">
+      <size>
+       <width>65</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>&gt;&gt; &gt;&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="actuatorTestInfo_label">
+     <property name="minimumSize">
+      <size>
+       <width>220</width>
+       <height>160</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>NOTE:
+Not all actuator tests may be available for this vehicle.
+If the selected actuator is not supported, nothing will happen.
+For corresponding information, please read the manufacturers repair manual.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" rowspan="2">
+    <widget class="QListWidget" name="actuators_listWidget">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>2</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

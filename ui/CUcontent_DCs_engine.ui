@@ -1,182 +1,153 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>engineDCcontent_Form</class>
- <widget class="QWidget" name="engineDCcontent_Form" >
-  <property name="geometry" >
+ <widget class="QWidget" name="engineDCcontent_Form">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>577</width>
-    <height>517</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize" >
+  <property name="minimumSize">
    <size>
-    <width>515</width>
-    <height>400</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Diagnostic Codes</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <property name="leftMargin" >
-    <number>9</number>
-   </property>
-   <property name="topMargin" >
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <property name="spacing" >
-    <number>11</number>
-   </property>
-   <item row="0" column="0" colspan="2" >
-    <widget class="QTabWidget" name="DCgroups_tabWidget" >
-     <property name="minimumSize" >
-      <size>
-       <width>497</width>
-       <height>335</height>
-      </size>
+   <item>
+    <widget class="QTabWidget" name="DCgroups_tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="currentIndex" >
+     <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="engineDTCs_tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="engineDTCs_tab">
+      <attribute name="title">
        <string>Engine</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
-       <property name="spacing" >
-        <number>2</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>17</number>
+      <layout class="QVBoxLayout" name="engineDTCsTab_verticalLayout">
+       <property name="spacing">
+        <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="currOrTempDTCsTitle_label" >
-         <property name="minimumSize" >
+        <widget class="QLabel" name="currOrTempDTCsTitle_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
           <size>
-           <width>280</width>
-           <height>31</height>
+           <width>0</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
-           <width>280</width>
-           <height>31</height>
+           <width>16777215</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="font" >
+         <property name="font">
           <font>
            <underline>true</underline>
           </font>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Current/Temporary Diagnostic Trouble Code(s):</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="currOrTempDTCs_tableWidget" >
-         <property name="minimumSize" >
-          <size>
-           <width>360</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="editTriggers" >
+        <widget class="QTableWidget" name="currOrTempDTCs_tableWidget">
+         <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
-         <property name="alternatingRowColors" >
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
-         <property name="selectionBehavior" >
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Code:</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Description:</string>
           </property>
          </column>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="histOrMemDTCsTitle_label" >
-         <property name="minimumSize" >
+        <widget class="QLabel" name="histOrMemDTCsTitle_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
           <size>
-           <width>280</width>
-           <height>29</height>
+           <width>0</width>
+           <height>25</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
-           <width>280</width>
-           <height>29</height>
+           <width>16777215</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="font" >
+         <property name="font">
           <font>
            <underline>true</underline>
           </font>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Historic/Memorized Diagnostic Trouble Code(s):</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="histOrMemDTCs_tableWidget" >
-         <property name="minimumSize" >
-          <size>
-           <width>360</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="editTriggers" >
+        <widget class="QTableWidget" name="histOrMemDTCs_tableWidget">
+         <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
-         <property name="alternatingRowColors" >
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
-         <property name="selectionBehavior" >
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Code:</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Description:</string>
           </property>
          </column>
@@ -184,127 +155,115 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="CCCCs_tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="CCCCs_tab">
+      <attribute name="title">
        <string>Cruise Control</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2" >
-       <property name="spacing" >
-        <number>2</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>17</number>
+      <layout class="QVBoxLayout" name="CCCCsTab_verticalLayout">
+       <property name="spacing">
+        <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="latestCCCCsTitle_label" >
-         <property name="minimumSize" >
+        <widget class="QLabel" name="latestCCCCsTitle_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
           <size>
-           <width>250</width>
-           <height>31</height>
+           <width>0</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
-           <width>250</width>
-           <height>31</height>
+           <width>16777215</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="font" >
+         <property name="font">
           <font>
            <underline>true</underline>
           </font>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Latest Cancel Code(s):</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="latestCCCCs_tableWidget" >
-         <property name="minimumSize" >
-          <size>
-           <width>360</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="editTriggers" >
+        <widget class="QTableWidget" name="latestCCCCs_tableWidget">
+         <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
-         <property name="alternatingRowColors" >
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
-         <property name="selectionBehavior" >
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Code:</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Description:</string>
           </property>
          </column>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="memorizedCCCCsTitle_label" >
-         <property name="minimumSize" >
+        <widget class="QLabel" name="memorizedCCCCsTitle_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
           <size>
-           <width>250</width>
-           <height>29</height>
+           <width>0</width>
+           <height>25</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
-           <width>250</width>
-           <height>29</height>
+           <width>16777215</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="font" >
+         <property name="font">
           <font>
            <underline>true</underline>
           </font>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Memorized Cancel Code(s):</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="memorizedCCCCs_tableWidget" >
-         <property name="minimumSize" >
-          <size>
-           <width>360</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="editTriggers" >
+        <widget class="QTableWidget" name="memorizedCCCCs_tableWidget">
+         <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
-         <property name="alternatingRowColors" >
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
-         <property name="selectionBehavior" >
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Code:</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Description:</string>
           </property>
          </column>
@@ -314,66 +273,59 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QLabel" name="DCclearingInfo_label" >
-     <property name="minimumSize" >
-      <size>
-       <width>400</width>
-       <height>15</height>
-      </size>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
      </property>
-     <property name="maximumSize" >
-      <size>
-       <width>16777215</width>
-       <height>15</height>
-      </size>
-     </property>
-     <property name="text" >
-      <string>=> Call ''Clear Memory'' from the ''Selection'' menu to erease all DTCs.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" >
-    <widget class="QPushButton" name="printDClist_pushButton" >
-     <property name="minimumSize" >
-      <size>
-       <width>90</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="maximumSize" >
-      <size>
-       <width>90</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="text" >
-      <string>    Print    </string>
-     </property>
-     <property name="icon" >
-      <iconset resource="../resources/FreeSSM.qrc" >
-       <normaloff>:/icons/chrystal/32x32/fileprint.png</normaloff>:/icons/chrystal/32x32/fileprint.png</iconset>
-     </property>
-     <property name="iconSize" >
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-    </widget>
+     <item>
+      <widget class="QLabel" name="DCclearingInfo_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>=&gt; Call ''Clear Memory'' from the ''Selection'' menu to erease all DTCs.</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="printDClist_pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>90</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>    Print    </string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
+         <normaloff>:/icons/chrystal/32x32/fileprint.png</normaloff>:/icons/chrystal/32x32/fileprint.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>DCgroups_tabWidget</tabstop>
-  <tabstop>currOrTempDTCs_tableWidget</tabstop>
-  <tabstop>histOrMemDTCs_tableWidget</tabstop>
-  <tabstop>printDClist_pushButton</tabstop>
-  <tabstop>latestCCCCs_tableWidget</tabstop>
-  <tabstop>memorizedCCCCs_tableWidget</tabstop>
- </tabstops>
  <resources>
-  <include location="../resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc"/>
  </resources>
  <connections/>
 </ui>
