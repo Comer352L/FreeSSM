@@ -247,113 +247,113 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_DCs_abstract</name>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="44"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="43"/>
         <source>Couldn&apos;t start Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t start Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="51"/>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="259"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="50"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="258"/>
         <source>Couldn&apos;t stop Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t stop Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="176"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="175"/>
         <source>not supported by ECU</source>
         <translation type="unfinished">not supported by ECU</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="189"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="188"/>
         <source>Printing...</source>
         <translation type="unfinished">Printing...</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="189"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="188"/>
         <source>Printing... Please wait !    </source>
         <translation type="unfinished">Printing... Please wait !    </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="218"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="217"/>
         <source>Engine</source>
         <translation type="unfinished">Engine</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="222"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="221"/>
         <source>Transmission</source>
         <translation type="unfinished">Transmission</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="226"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="225"/>
         <source>UNKNOWN</source>
         <translation type="unfinished">UNKNOWN</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="207"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="206"/>
         <source>Unknown (</source>
         <translation type="unfinished">Unknown (</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="209"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="208"/>
         <source>Query of the System-ID failed.</source>
         <translation type="unfinished">Query of the System-ID failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="247"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="246"/>
         <source>not programmed yet</source>
         <translation type="unfinished">not programmed yet</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="253"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="252"/>
         <source>Couldn&apos;t restart Diagnostic Codes Reading.</source>
         <translation type="unfinished">Couldn&apos;t restart Diagnostic Codes Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="256"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="255"/>
         <source>Query of the VIN failed.</source>
         <translation type="unfinished">Query of the VIN failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="263"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="262"/>
         <source>Couldn&apos;t determine if VIN-registration is supported.</source>
         <translation type="unfinished">Couldn&apos;t determine if VIN-registration is supported.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="266"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="265"/>
         <source>Query of the ROM-ID failed.</source>
         <translation type="unfinished">Query of the ROM-ID failed.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="269"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="268"/>
         <source>Couldn&apos;t determine Control Unit type.</source>
         <translation type="unfinished">Couldn&apos;t determine Control Unit type.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="337"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="336"/>
         <source>Control Unit:</source>
         <translation type="unfinished">Control Unit:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="347"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="346"/>
         <source>System Type:</source>
         <translation type="unfinished">System Type:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="357"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="356"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="369"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="368"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registered VIN:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="435"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="434"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="435"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="434"/>
         <source>Communication Error:</source>
         <translation type="unfinished">Communication Error:</translation>
     </message>
@@ -428,44 +428,44 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_DCs_transmission</name>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="48"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="95"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="47"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="94"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Temporary Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="97"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="96"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Current Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="49"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="100"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="48"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="99"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Memorized Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="102"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="101"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historic Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="139"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="144"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="138"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="143"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation type="unfinished">----- Reading data... Please wait ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="106"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="112"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="105"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="111"/>
         <source>----- Not supported by ECU -----</source>
         <translation type="unfinished">----- Not supported by ECU -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="173"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="193"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="214"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="225"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="172"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="192"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="213"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="224"/>
         <source>----- No Trouble Codes -----</source>
         <translation type="unfinished">----- No Trouble Codes -----</translation>
     </message>
@@ -601,47 +601,47 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
 <context>
     <name>CUinfo_Engine_Form</name>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="42"/>
+        <location filename="ui/CUinfo_Engine.ui" line="48"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="122"/>
+        <location filename="ui/CUinfo_Engine.ui" line="128"/>
         <source>Data:</source>
         <translation type="unfinished">Data:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="143"/>
+        <location filename="ui/CUinfo_Engine.ui" line="149"/>
         <source>Integ. Cruise Control:</source>
         <translation type="unfinished">Integ. Cruise Control:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="224"/>
+        <location filename="ui/CUinfo_Engine.ui" line="230"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registered VIN:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="304"/>
+        <location filename="ui/CUinfo_Engine.ui" line="310"/>
         <source>Switches:</source>
         <translation type="unfinished">Switches:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="325"/>
+        <location filename="ui/CUinfo_Engine.ui" line="331"/>
         <source>Immobilizer:</source>
         <translation type="unfinished">Immobilizer:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="480"/>
+        <location filename="ui/CUinfo_Engine.ui" line="486"/>
         <source>Engine Type:</source>
         <translation type="unfinished">Engine Type:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="558"/>
+        <location filename="ui/CUinfo_Engine.ui" line="564"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Engine.ui" line="639"/>
+        <location filename="ui/CUinfo_Engine.ui" line="645"/>
         <source>OBD2-System:</source>
         <translation type="unfinished">OBD2-System:</translation>
     </message>
@@ -649,32 +649,32 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
 <context>
     <name>CUinfo_Transmission_Form</name>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="48"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="54"/>
         <source>Transmission Type:</source>
         <translation type="unfinished">Transmission Type:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="126"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="132"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="207"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="213"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="227"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="233"/>
         <source>Data:</source>
         <translation type="unfinished">Data:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="247"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="253"/>
         <source>Switches:</source>
         <translation type="unfinished">Switches:</translation>
     </message>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="382"/>
+        <location filename="ui/CUinfo_Transmission.ui" line="388"/>
         <source>OBD2-System:</source>
         <translation type="unfinished">OBD2-System:</translation>
     </message>
@@ -819,170 +819,169 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="165"/>
+        <location filename="src/ControlUnitDialog.cpp" line="181"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="165"/>
+        <location filename="src/ControlUnitDialog.cpp" line="181"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Communication Error:
 - No or invalid answer from ECU -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="182"/>
+        <location filename="src/ControlUnitDialog.cpp" line="198"/>
         <source>Stopping Communication... Please wait !   </source>
         <translation type="unfinished">Stopping Communication... Please wait !   </translation>
     </message>
 </context>
 <context>
-    <name>ControlUnit_Window</name>
+    <name>ControlUnit_Dialog</name>
     <message>
-        <location filename="ui/ControlUnitDialog.ui" line="34"/>
-        <location filename="ui/ControlUnitDialog.ui" line="64"/>
+        <location filename="ui/ControlUnitDialog.ui" line="17"/>
+        <location filename="ui/ControlUnitDialog.ui" line="40"/>
         <source>Control Unit</source>
         <translation type="unfinished">Control Unit</translation>
     </message>
     <message>
-        <location filename="ui/ControlUnitDialog.ui" line="90"/>
+        <location filename="ui/ControlUnitDialog.ui" line="79"/>
         <source>Information:</source>
         <translation type="unfinished">Information:</translation>
     </message>
     <message>
-        <location filename="ui/ControlUnitDialog.ui" line="224"/>
-        <source>Content Title:</source>
-        <oldsource>Content:</oldsource>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="ui/ControlUnitDialog.ui" line="258"/>
+        <location filename="ui/ControlUnitDialog.ui" line="111"/>
         <source>Selection:</source>
         <translation type="unfinished">Selection:</translation>
     </message>
     <message>
-        <location filename="ui/ControlUnitDialog.ui" line="282"/>
+        <location filename="ui/ControlUnitDialog.ui" line="213"/>
         <source>       &amp;Exit Control Unit        </source>
         <translation type="unfinished">       &amp;Exit Control Unit        </translation>
     </message>
+    <message>
+        <location filename="ui/ControlUnitDialog.ui" line="251"/>
+        <source>Content Title:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
-    <name>Engine</name>
+    <name>EngineDialog</name>
     <message>
-        <location filename="src/Engine.cpp" line="49"/>
-        <location filename="src/Engine.cpp" line="204"/>
-        <source>Diagnostic Codes:</source>
-        <translation type="unfinished">Diagnostic Codes:</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="100"/>
-        <source>unknown</source>
-        <translation type="unfinished">unknown</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="238"/>
-        <source>Measuring Blocks:</source>
-        <translation type="unfinished">Measuring Blocks:</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="269"/>
-        <source>Adjustments:</source>
-        <translation type="unfinished">Adjustments:</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="297"/>
-        <source>System Operation Tests:</source>
-        <translation type="unfinished">System Operation Tests:</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="233"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="80"/>
-        <source>Connecting to ECU... Please wait !</source>
-        <translation type="unfinished">Connecting to ECU... Please wait !</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="23"/>
+        <location filename="src/EngineDialog.cpp" line="23"/>
         <source>Engine Control Unit</source>
         <translation type="unfinished">Engine Control Unit</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="36"/>
+        <location filename="src/EngineDialog.cpp" line="34"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnostic Codes</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="39"/>
+        <location filename="src/EngineDialog.cpp" line="37"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="41"/>
+        <location filename="src/EngineDialog.cpp" line="39"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Adjustments</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="43"/>
+        <location filename="src/EngineDialog.cpp" line="41"/>
         <source>System &amp;Tests</source>
         <translation type="unfinished">System &amp;Tests</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="45"/>
+        <location filename="src/EngineDialog.cpp" line="43"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="88"/>
-        <source>Processing ECU data... Please wait !</source>
-        <translation type="unfinished">Processing ECU data... Please wait !</translation>
+        <location filename="src/EngineDialog.cpp" line="47"/>
+        <location filename="src/EngineDialog.cpp" line="191"/>
+        <source>Diagnostic Codes:</source>
+        <translation type="unfinished">Diagnostic Codes:</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="125"/>
-        <source>Reading Vehicle Ident. Number... Please wait !</source>
-        <translation type="unfinished">Reading Vehicle Ident. Number... Please wait !</translation>
+        <location filename="src/EngineDialog.cpp" line="69"/>
+        <source>Connecting to ECU... Please wait !</source>
+        <translation type="unfinished">Connecting to ECU... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="155"/>
-        <source>Stopping actuators... Please wait !</source>
-        <translation type="unfinished">Stopping actuators... Please wait !</translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="81"/>
+        <location filename="src/EngineDialog.cpp" line="70"/>
         <source>Connecting to ECU...</source>
         <translation type="unfinished">Connecting to ECU...</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="199"/>
-        <source>Switching to Diagnostic Codes... Please wait !   </source>
-        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+        <location filename="src/EngineDialog.cpp" line="77"/>
+        <source>Processing ECU data... Please wait !</source>
+        <translation type="unfinished">Processing ECU data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="264"/>
-        <source>Switching to Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+        <location filename="src/EngineDialog.cpp" line="89"/>
+        <source>unknown</source>
+        <translation type="unfinished">unknown</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="292"/>
-        <source>Switching to System Tests... Please wait !   </source>
-        <translation type="unfinished">Switching to System Tests... Please wait !   </translation>
+        <location filename="src/EngineDialog.cpp" line="114"/>
+        <source>Reading Vehicle Ident. Number... Please wait !</source>
+        <translation type="unfinished">Reading Vehicle Ident. Number... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="329"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
-    </message>
-    <message>
-        <location filename="src/Engine.cpp" line="142"/>
+        <location filename="src/EngineDialog.cpp" line="131"/>
         <source>Checking system status... Please wait !</source>
         <translation type="unfinished">Checking system status... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/Engine.cpp" line="178"/>
+        <location filename="src/EngineDialog.cpp" line="144"/>
+        <source>Stopping actuators... Please wait !</source>
+        <translation type="unfinished">Stopping actuators... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="167"/>
         <source>ECU-initialisation successful !</source>
         <translation type="unfinished">ECU-initialisation successful !</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="187"/>
+        <source>Switching to Diagnostic Codes... Please wait !   </source>
+        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="216"/>
+        <source>Switching to Measuring Blocks... Please wait !   </source>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="220"/>
+        <source>Measuring Blocks:</source>
+        <translation type="unfinished">Measuring Blocks:</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="242"/>
+        <source>Switching to Adjustment Values... Please wait !   </source>
+        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="246"/>
+        <source>Adjustments:</source>
+        <translation type="unfinished">Adjustments:</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="265"/>
+        <source>Switching to System Tests... Please wait !   </source>
+        <translation type="unfinished">Switching to System Tests... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="269"/>
+        <source>System Operation Tests:</source>
+        <translation type="unfinished">System Operation Tests:</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="298"/>
+        <source>Reading Adjustment Values... Please wait !   </source>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
     </message>
 </context>
 <context>
@@ -996,26 +995,26 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="132"/>
-        <location filename="src/FreeSSM.cpp" line="297"/>
-        <location filename="src/FreeSSM.cpp" line="312"/>
+        <location filename="src/FreeSSM.cpp" line="131"/>
+        <location filename="src/FreeSSM.cpp" line="289"/>
+        <location filename="src/FreeSSM.cpp" line="304"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="312"/>
+        <location filename="src/FreeSSM.cpp" line="304"/>
         <source>Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open serial port !
 Maybe port is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="297"/>
+        <location filename="src/FreeSSM.cpp" line="289"/>
         <source>No serial port available !</source>
         <translation type="unfinished">No serial port available !</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="132"/>
+        <location filename="src/FreeSSM.cpp" line="131"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
@@ -1068,17 +1067,17 @@ Maybe port is already in use by another application...</translation>
 <context>
     <name>MBSWcontent_Form</name>
     <message>
-        <location filename="ui/CUcontent_MBsSWs.ui" line="58"/>
+        <location filename="ui/CUcontent_MBsSWs.ui" line="45"/>
         <source>Values Table</source>
         <translation type="unfinished">Values Table</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs.ui" line="71"/>
+        <location filename="ui/CUcontent_MBsSWs.ui" line="58"/>
         <source>Curve Plots</source>
         <translation type="unfinished">Curve Plots</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs.ui" line="181"/>
+        <location filename="ui/CUcontent_MBsSWs.ui" line="165"/>
         <source> Start  </source>
         <translation type="unfinished"> Start  </translation>
     </message>
@@ -1096,27 +1095,27 @@ Maybe port is already in use by another application...</translation>
         <translation type="unfinished">Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="61"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="58"/>
         <source>Title:</source>
         <translation type="unfinished">Title:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="66"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="63"/>
         <source>Min. Value:</source>
         <translation type="unfinished">Min. Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="71"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="68"/>
         <source>Current Value:</source>
         <translation type="unfinished">Current Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="76"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="73"/>
         <source>Max. Value:</source>
         <translation type="unfinished">Max. Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="81"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="78"/>
         <source>Unit:</source>
         <translation type="unfinished">Unit:</translation>
     </message>
@@ -1269,97 +1268,97 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
 </context>
 <context>
-    <name>Transmission</name>
+    <name>TransmissionDialog</name>
     <message>
-        <location filename="src/Transmission.cpp" line="48"/>
-        <location filename="src/Transmission.cpp" line="161"/>
-        <source>Diagnostic Codes:</source>
-        <translation type="unfinished">Diagnostic Codes:</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="197"/>
-        <source>Measuring Blocks:</source>
-        <translation type="unfinished">Measuring Blocks:</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="228"/>
-        <source>Adjustments:</source>
-        <translation type="unfinished">Adjustments:</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="192"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="77"/>
-        <source>Connecting to TCU... Please wait !</source>
-        <translation type="unfinished">Connecting to TCU... Please wait !</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="85"/>
-        <source>Processing TCU data... Please wait !</source>
-        <translation type="unfinished">Processing TCU data... Please wait !</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="78"/>
-        <source>Connecting to TCU...</source>
-        <translation type="unfinished">Connecting to TCU...</translation>
-    </message>
-    <message>
-        <location filename="src/Transmission.cpp" line="23"/>
+        <location filename="src/TransmissionDialog.cpp" line="23"/>
         <source>Transmission Control Unit</source>
         <translation type="unfinished">Transmission Control Unit</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="35"/>
+        <location filename="src/TransmissionDialog.cpp" line="34"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnostic Codes</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="38"/>
+        <location filename="src/TransmissionDialog.cpp" line="37"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="40"/>
+        <location filename="src/TransmissionDialog.cpp" line="39"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Adjustments</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="42"/>
+        <location filename="src/TransmissionDialog.cpp" line="41"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="44"/>
+        <location filename="src/TransmissionDialog.cpp" line="43"/>
         <source>Clear Memory 2</source>
         <translation type="unfinished">Clear Memory 2</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="97"/>
+        <location filename="src/TransmissionDialog.cpp" line="48"/>
+        <location filename="src/TransmissionDialog.cpp" line="150"/>
+        <source>Diagnostic Codes:</source>
+        <translation type="unfinished">Diagnostic Codes:</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="68"/>
+        <source>Connecting to TCU... Please wait !</source>
+        <translation type="unfinished">Connecting to TCU... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="69"/>
+        <source>Connecting to TCU...</source>
+        <translation type="unfinished">Connecting to TCU...</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="76"/>
+        <source>Processing TCU data... Please wait !</source>
+        <translation type="unfinished">Processing TCU data... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="88"/>
         <source>unknown</source>
         <translation type="unfinished">unknown</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="156"/>
+        <location filename="src/TransmissionDialog.cpp" line="126"/>
+        <source>TCU-initialisation successful !</source>
+        <translation type="unfinished">TCU-initialisation successful !</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="146"/>
         <source>Switching to Diagnostic Codes... Please wait !   </source>
         <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="223"/>
+        <location filename="src/TransmissionDialog.cpp" line="177"/>
+        <source>Switching to Measuring Blocks... Please wait !   </source>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="181"/>
+        <source>Measuring Blocks:</source>
+        <translation type="unfinished">Measuring Blocks:</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="203"/>
         <source>Switching to Adjustment Values... Please wait !   </source>
         <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="271"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
+        <location filename="src/TransmissionDialog.cpp" line="207"/>
+        <source>Adjustments:</source>
+        <translation type="unfinished">Adjustments:</translation>
     </message>
     <message>
-        <location filename="src/Transmission.cpp" line="135"/>
-        <source>TCU-initialisation successful !</source>
-        <translation type="unfinished">TCU-initialisation successful !</translation>
+        <location filename="src/TransmissionDialog.cpp" line="247"/>
+        <source>Reading Adjustment Values... Please wait !   </source>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
     </message>
 </context>
 <context>
@@ -1594,63 +1593,63 @@ You should have received a copy of the GNU General Public License along with thi
 <context>
     <name>engineDCcontent_Form</name>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="61"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="38"/>
         <source>Engine</source>
         <translation type="unfinished">Engine</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="149"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="120"/>
         <source>Historic/Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historic/Memorized Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="119"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="175"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="247"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="303"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="84"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="137"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="197"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="250"/>
         <source>Code:</source>
         <translation type="unfinished">Code:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="124"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="180"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="252"/>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="308"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="89"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="142"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="202"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="255"/>
         <source>Description:</source>
         <translation type="unfinished">Description:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="189"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="151"/>
         <source>Cruise Control</source>
         <translation type="unfinished">Cruise Control</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="221"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="180"/>
         <source>Latest Cancel Code(s):</source>
         <translation type="unfinished">Latest Cancel Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="277"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="233"/>
         <source>Memorized Cancel Code(s):</source>
         <translation type="unfinished">Memorized Cancel Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="332"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="278"/>
         <source>=&gt; Call &apos;&apos;Clear Memory&apos;&apos; from the &apos;&apos;Selection&apos;&apos; menu to erease all DTCs.</source>
         <translation type="unfinished">=&gt; Call &apos;&apos;Clear Memory&apos;&apos; from the &apos;&apos;Selection&apos;&apos; menu to erease all DTCs.</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="351"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="297"/>
         <source>    Print    </source>
         <translation type="unfinished">    Print    </translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="93"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="67"/>
         <source>Current/Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Current/Temporary Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_engine.ui" line="30"/>
+        <location filename="ui/CUcontent_DCs_engine.ui" line="19"/>
         <source>Diagnostic Codes</source>
         <translation type="unfinished">Diagnostic Codes</translation>
     </message>
@@ -1658,12 +1657,12 @@ You should have received a copy of the GNU General Public License along with thi
 <context>
     <name>sysTestsContent_Form</name>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="187"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="191"/>
         <source>Actuators:</source>
         <translation type="unfinished">Actuators:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="52"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="56"/>
         <source>NOTE:
 Not all actuator tests may be available for this vehicle.
 If the selected actuator is not supported, nothing will happen.
@@ -1674,27 +1673,27 @@ If the selected actuator is not supported, nothing will happen.
 For corresponding information, please read the manufacturers repair manual.</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="85"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="89"/>
         <source>&gt;&gt; &gt;&gt;</source>
         <translation type="unfinished">&gt;&gt; &gt;&gt;</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="107"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="111"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="144"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="148"/>
         <source>Immobilizer Communication Line:</source>
         <translation type="unfinished">Immobilizer Communication Line:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="163"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="167"/>
         <source>Check</source>
         <translation type="unfinished">Check</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_sysTests.ui" line="24"/>
+        <location filename="ui/CUcontent_sysTests.ui" line="25"/>
         <source>System Tests</source>
         <translation type="unfinished">System Tests</translation>
     </message>
@@ -1702,39 +1701,39 @@ For corresponding information, please read the manufacturers repair manual.</tra
 <context>
     <name>transmissionDCcontent_Form</name>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="171"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="166"/>
         <source>=&gt; Call &apos;&apos;Clear Memory&apos;&apos; from the &apos;&apos;Selection&apos;&apos; menu to erease all DTCs.</source>
         <translation type="unfinished">=&gt; Call &apos;&apos;Clear Memory&apos;&apos; from the &apos;&apos;Selection&apos;&apos; menu to erease all DTCs.</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="203"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="198"/>
         <source>    Print    </source>
         <translation type="unfinished">    Print    </translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="82"/>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="138"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="80"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="136"/>
         <source>Code:</source>
         <translation type="unfinished">Code:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="87"/>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="143"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="85"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="141"/>
         <source>Description:</source>
         <translation type="unfinished">Description:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="112"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="110"/>
         <source>Historic/Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historic/Memorized Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="56"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="54"/>
         <source>Current/Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Current/Temporary Diagnostic Trouble Code(s):</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_transmission.ui" line="24"/>
+        <location filename="ui/CUcontent_DCs_transmission.ui" line="25"/>
         <source>Diagnostic Codes</source>
         <translation type="unfinished">Diagnostic Codes</translation>
     </message>
