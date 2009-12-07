@@ -51,13 +51,12 @@ private:
 	QString _language;
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
-	serialCOM *_port;
 	QLabel *_progtitle_label;
 	QAction *_dump_action;
 	bool _dumping;
 
 	void setupUiFonts();
-	bool initPort();
+	serialCOM * initPort();
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 
