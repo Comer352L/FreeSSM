@@ -218,7 +218,9 @@ void FreeSSM::engine()
 	if (port)
 	{
 		EngineDialog *enginedialog = new EngineDialog(port, _language);
-		enginedialog->exec();
+		if (!enginedialog->isHidden())
+			enginedialog->exec();
+		delete enginedialog;
 		delete port;
 	}
 }
@@ -231,7 +233,9 @@ void FreeSSM::transmission()
 	if (port)
 	{
 		TransmissionDialog *transmissiondialog = new TransmissionDialog(port, _language);
-		transmissiondialog->exec();
+		if (!transmissiondialog->isHidden())
+			transmissiondialog->exec();
+		delete transmissiondialog;
 		delete port;
 	}
 }

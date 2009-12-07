@@ -28,8 +28,6 @@ ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString lan
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
-	// *** Setup window/GUI:
-	setAttribute(Qt::WA_DeleteOnClose, true);
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();
