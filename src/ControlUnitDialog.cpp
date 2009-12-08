@@ -28,8 +28,6 @@ ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString lan
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
-	// *** Setup window/GUI:
-	setAttribute(Qt::WA_DeleteOnClose, true);
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();
@@ -68,6 +66,7 @@ void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
 	if (_infoWidget)
 		delete _infoWidget;
 	infowidget->setParent(information_groupBox);
+	information_groupBox->setMinimumHeight(infowidget->minimumHeight());
 	_infoWidget = infowidget;
 }
 
@@ -78,7 +77,7 @@ void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 		delete _contentWidget;
 	content_groupBox->setTitle(title);
 	contentwidget->setParent(content_groupBox);
-	content_groupBox->layout()->addWidget(contentwidget);
+	content_gridLayout->addWidget(contentwidget);
 	_contentWidget = contentwidget;
 }
 
@@ -86,7 +85,9 @@ void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool checkable)
 {
 	QPushButton *button = new QPushButton(selection_groupBox);
-	button->setGeometry(20, 23 + 41 * _selButtons.size(), 152, 35);
+	selButtons_verticalLayout->insertWidget(_selButtons.size(), button);
+	button->setFixedWidth(160);
+	button->setFixedHeight(35);
 	button->setCheckable(checkable);
 	button->setAutoExclusive(checkable);
 	// Icon:

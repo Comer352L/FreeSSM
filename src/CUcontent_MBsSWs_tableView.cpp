@@ -40,6 +40,11 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	headerview->setResizeMode(2, QHeaderView::Fixed);
 	headerview->setResizeMode(3, QHeaderView::Fixed);
 	headerview->setResizeMode(4, QHeaderView::Fixed);
+	// Set table row resize behavior:
+	headerview = selectedMBsSWs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	/* NOTE: Current method for calculating ther nr. of needed rows 
+	 * assumes all rows to have the same constsant height */
 	// Set column widths (columns 2-5):
 	selectedMBsSWs_tableWidget->setColumnWidth(1, 95);
 	selectedMBsSWs_tableWidget->setColumnWidth(2, 95);
@@ -264,14 +269,13 @@ void CUcontent_MBsSWs_tableView::resizeEvent(QResizeEvent *event)
 {
 	int rowheight = 0;
 	int vspace = 0;
-	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (selectedMBsSWs_tableWidget->rowCount() < 1)
 		selectedMBsSWs_tableWidget->setRowCount(1); // Temporary create a row to get the row hight
 	rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
-	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	vspace = selectedMBsSWs_tableWidget->viewport()->height();
+	//vspace = selectedMBsSWs_tableWidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
+	vspace = selectedMBsSWs_tableWidget->height() - selectedMBsSWs_tableWidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:

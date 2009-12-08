@@ -25,7 +25,6 @@ FreeSSM::FreeSSM(QApplication *app)
 {
 	_qt_translator = NULL;
 	_translator = NULL;
-	_port = NULL;
 	_portname = "";
 	_language = "";
 	_dumping = false;
@@ -199,7 +198,6 @@ FreeSSM::~FreeSSM()
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	delete _dump_action;
 	delete _progtitle_label;
-	if (_port != NULL) delete _port;
 	if (_translator != NULL)
 	{
 		QApplication::removeTranslator(_translator);
@@ -216,10 +214,14 @@ FreeSSM::~FreeSSM()
 void FreeSSM::engine()
 {
 	if (_dumping) return;
-	if (initPort())
+	serialCOM *port = initPort();
+	if (port)
 	{
-		EngineDialog *enginedialog = new EngineDialog(_port, _language);
-		connect(enginedialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		EngineDialog *enginedialog = new EngineDialog(port, _language);
+		if (!enginedialog->isHidden())
+			enginedialog->exec();
+		delete enginedialog;
+		delete port;
 	}
 }
 
@@ -227,10 +229,14 @@ void FreeSSM::engine()
 void FreeSSM::transmission()
 {
 	if (_dumping) return;
-	if (initPort())
+	serialCOM *port = initPort();
+	if (port)
 	{
-		TransmissionDialog *transmissiondialog = new TransmissionDialog(_port, _language);
-		connect(transmissiondialog, SIGNAL( destroyed() ), this, SLOT( cleanupPort() ));
+		TransmissionDialog *transmissiondialog = new TransmissionDialog(port, _language);
+		if (!transmissiondialog->isHidden())
+			transmissiondialog->exec();
+		delete transmissiondialog;
+		delete port;
 	}
 }
 
@@ -270,18 +276,7 @@ void FreeSSM::about()
 }
 
 
-void FreeSSM::cleanupPort()
-{
-	disconnect(this, SLOT( cleanupPort() ));
-	if (_port)
-	{
-		delete _port;	// port will be closed in destructor of serialCOM
-		_port = NULL;
-	}
-}
-
-
-bool FreeSSM::initPort()
+serialCOM * FreeSSM::initPort()
 {
 	// IF NO PORT IS SELECTED YET: SELECT FIRST AVAILABLE PORT
 	if (_portname == "")
@@ -304,9 +299,9 @@ bool FreeSSM::initPort()
 		}
 	}
 	// Open port:
-	_port = new serialCOM;
-	if (_port->OpenPort(_portname.toStdString()))
-		return true;
+	serialCOM *port = new serialCOM;
+	if (port->OpenPort(_portname.toStdString()))
+		return port;
 	// Return error:
 	QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
@@ -315,9 +310,8 @@ bool FreeSSM::initPort()
 	msg.show();
 	msg.exec();
 	msg.close();
-	delete _port;
-	_port = NULL;
-	return false;
+	delete port;
+	return NULL;
 }
 
 
@@ -376,13 +370,14 @@ void FreeSSM::dumpCUdata()
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
-	if (initPort())
+	serialCOM *port = initPort();
+	if (port)
 	{
 		portsettings.baudrate = 4800;
 		portsettings.databits = 8;
 		portsettings.parity = 'N';
 		portsettings.stopbits = 1;
-		if (!_port->SetPortSettings(portsettings))
+		if (!port->SetPortSettings(portsettings))
 			return;
 	}
 	else
@@ -404,9 +399,9 @@ void FreeSSM::dumpCUdata()
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
 	// Create SSMP1-Communication-object:
-	SSMP1communication SSMP1com(_port, SSM1_CU_Engine, 0);
+	SSMP1communication SSMP1com(port, SSM1_CU_Engine, 0);
 	// Create SSMP2-Communication-object:
-	SSMP2communication SSMP2com(_port, '\x10', 0);
+	SSMP2communication SSMP2com(port, '\x10', 0);
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
@@ -503,9 +498,9 @@ void FreeSSM::dumpCUdata()
 	portsettings.databits = 8;
 	portsettings.parity = 'E';
 	portsettings.stopbits = 1;
-	if(!_port->SetPortSettings(portsettings))
+	if(!port->SetPortSettings(portsettings))
 		goto end;
-	if(!_port->GetPortSettings(&portsettings))
+	if(!port->GetPortSettings(&portsettings))
 		goto end;
 	if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
 		goto end;
@@ -540,8 +535,7 @@ void FreeSSM::dumpCUdata()
 
 end:
 	dumpfile.close();
-	delete _port;	// port will be closed in destructor of serialCOM
-	_port = NULL;
+	delete port;	// port will be closed in destructor of serialCOM
 	_dumping = false;
 }
 
