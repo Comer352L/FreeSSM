@@ -210,6 +210,11 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP
 	headerview->setResizeMode(1,QHeaderView::Fixed);
 	headerview->setResizeMode(2,QHeaderView::Fixed);
 	headerview->setResizeMode(3,QHeaderView::Fixed);
+	// Set table row resize behavior:
+	headerview = adjustments_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	/* NOTE: Current method for calculating ther nr. of needed rows 
+	 * assumes all rows to have the same constsant height */
 	// Install event-filter for adjustments-table:
 	adjustments_tableWidget->viewport()->installEventFilter(this);
 	// Disable GUI-elements:
