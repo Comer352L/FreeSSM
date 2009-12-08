@@ -353,14 +353,14 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 	rightIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/drive-harddisk.png") );
 	mergedIcon.fill(Qt::transparent);
 	QPainter painter(&mergedIcon);
-	painter.drawTiledPixmap ( 0, 0, 22, 22, leftIcon);
-	painter.drawTiledPixmap ( 32, 0, 22, 22, rightIcon);
+	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
+	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
 	QIcon saveButton_icon( mergedIcon );
 	// Create "Reset"-icon:
 	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-first.png") );
 	mergedIcon.fill(Qt::transparent);
-	painter.drawTiledPixmap ( 0, 0, 22, 22, leftIcon);
-	painter.drawTiledPixmap ( 32, 0, 22, 22, rightIcon);
+	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
+	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
 	QIcon resetButton_icon( mergedIcon );
 	// Clear Table:
 	adjustments_tableWidget->clearContents();
@@ -369,8 +369,8 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 	adjustments_tableWidget->setEnabled( enable );
 	nonPermanentInfo_label->setEnabled( enable );
 	// Increase nr. of table rows if necessary:
-	if (_maxrowsvisible < _supportedAdjustments.size())
-		adjustments_tableWidget->setRowCount( _supportedAdjustments.size() );
+	if (_supportedAdjustments.size() && (static_cast<unsigned int>(adjustments_tableWidget->rowCount()) < _supportedAdjustments.size()))
+		adjustments_tableWidget->setRowCount( _supportedAdjustments.size() + 2 );
 	// Fill Table:
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
@@ -622,14 +622,13 @@ void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 {
 	int rowheight = 0;
 	int vspace = 0;
-	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (adjustments_tableWidget->rowCount() < 1)
 		adjustments_tableWidget->setRowCount(1); // temporary create a row to get the row hight
 	rowheight = adjustments_tableWidget->rowHeight(0);
-	headerview = adjustments_tableWidget->horizontalHeader();
-	vspace = adjustments_tableWidget->viewport()->height();
+	//vspace = adjustments_tableWidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
+	vspace = adjustments_tableWidget->height() - adjustments_tableWidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	adjustments_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:

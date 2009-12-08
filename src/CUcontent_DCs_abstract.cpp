@@ -140,14 +140,13 @@ void CUcontent_DCs_abstract::setNrOfTableRows(QTableWidget *tablewidget, unsigne
 	// NOTE: this function doesn't change the table's content ! Min. 1 row !
 	int rowheight = 0;
 	int vspace = 0;
-	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (tablewidget->rowCount() < 1)
 		tablewidget->setRowCount(1); // temporary create a row to get the row hight
 	rowheight = tablewidget->rowHeight(0);
-	headerview = tablewidget->horizontalHeader();
-	vspace = tablewidget->viewport()->height();
+	//vspace = tablewidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
+	vspace = tablewidget->height() - tablewidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	tablewidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
