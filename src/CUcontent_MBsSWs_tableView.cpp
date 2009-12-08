@@ -40,6 +40,11 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	headerview->setResizeMode(2, QHeaderView::Fixed);
 	headerview->setResizeMode(3, QHeaderView::Fixed);
 	headerview->setResizeMode(4, QHeaderView::Fixed);
+	// Set table row resize behavior:
+	headerview = selectedMBsSWs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	/* NOTE: Current method for calculating ther nr. of needed rows 
+	 * assumes all rows to have the same constsant height */
 	// Set column widths (columns 2-5):
 	selectedMBsSWs_tableWidget->setColumnWidth(1, 95);
 	selectedMBsSWs_tableWidget->setColumnWidth(2, 95);
