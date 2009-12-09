@@ -58,7 +58,7 @@ and other Unix systems, too, but there is currently no offical support.
 3. REQUIREMENTS:
    - FreeSSM source code (freessm.berlios.de)
    - Qt4 >= 4.4.0 (www.trolltech.com)
-   - MinGW (only on MS Windows systems) (www.MinGW.org)
+   - MinGW (only for MS Windows; usually shipped with Qt4; see www.MinGW.org)
 
 GCC 4.1.x is recommended for compilation.
 
@@ -78,6 +78,9 @@ $ make debug
 
 Translation files:
 $ make translation
+
+NOTE (Windows only): depending on the used Qt4-version and system configuration,
+                     'mingw32-make' must be called instead of 'make'.
 
 --------------------------------------------------------------------------------
 
@@ -104,5 +107,4 @@ $ ./FreeSSM
 
 Windows:
 $ freessm
-
 
