@@ -37,7 +37,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	setWindowFlags( windowFlags() & ~Qt::WindowMaximizeButtonHint );	// only necessary for MS Windows
 	setupUiFonts();
 	// LOAD BACKGROUND PICTURE:
-	background_label->setPixmap(appsPath + "/background.jpg");
+	background_label->setPixmap(appsPath + "/background.png");
 	// SHOW PROGRAM TITEL + VERSION:
 	QFont titlefont = this->font();
 	titlefont.setPixelSize(27); // 20pts
