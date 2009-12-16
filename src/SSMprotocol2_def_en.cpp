@@ -116,7 +116,7 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "31;5;1;0;0000FB;;Throttle Motor Voltage;V;*2/25;1"
 	<< "31;6;1;0;0000FA;;Throttle Motor Duty;%;-128/128*100;0"
 	<< "31;7;1;0;00016B;;Throttle Sensor Closed Voltage;V;/50;2"
-	<< "31;8;1;1;00016A;;SI-Drive Mode;;0=---,1=S,2=S#,3=I;"
+	<< "31;8;1;1;00016A;;SI-Drive Mode;;0=---,1=S,2=S#,3=I,8=S#,16=I;"
 	<< "33;1;1;0;000107;;Exhaust Gas Temperature 2;°C;*5+200;0"
 	<< "33;2;1;0;000106;;Exhaust Gas Temperature;°C;*5+200;0"
 	<< "33;3;1;0;000105;;Fuel Pressure;kPa;*2;0"

@@ -116,7 +116,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "31;5;1;0;0000FB;;Drosselklappenmotor Spannung;V;*2/25;1"
 	<< "31;6;1;0;0000FA;;Drosselklappenmotor Arbeitszyklus;%;-128/128*100;0"
 	<< "31;7;1;0;00016B;;Drosselklappe geschlossen Spannung;V;/50;2"
-	<< "31;8;1;1;00016A;;SI-Drive Modus;;0=---,1=S,2=S#,3=I;"
+	<< "31;8;1;1;00016A;;SI-Drive Modus;;0=---,1=S,2=S#,3=I,8=S#,16=I;"
 	<< "33;1;1;0;000107;;Abgastemperatur 2;°C;*5+200;0"
 	<< "33;2;1;0;000106;;Abgastemperatur;°C;*5+200;0"
 	<< "33;3;1;0;000105;;Kraftstoffdruck;kPa;*2;0"
