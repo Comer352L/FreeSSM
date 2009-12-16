@@ -65,7 +65,8 @@ SSMprotocol2_ID::SSMprotocol2_ID()
 	<< "23;E-4AT"
 	<< "24;E-4AT"
 	<< "25;E-4AT"
-	<< "30;" + QObject::tr("Center Differential");
+	<< "30;" + QObject::tr("Center Differential")
+	<< "40;Lineartronic (CVT)";
 }
 
 
