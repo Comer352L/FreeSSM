@@ -306,31 +306,31 @@ void CUcontent_MBsSWs::setMBSWlistContent(QStringList titles, QStringList values
 
 void CUcontent_MBsSWs::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
 {
-	size_t k = 0;
+	unsigned int k = 0;
 	QTableWidgetItem *tableelement;
 	// Update min values:
-	for (k=0; k<qMin( static_cast<size_t>( minValueStrList.size()), _MBSWmetaList.size() ); k++)
+	for (k=0; k<qMin( static_cast<unsigned int>( minValueStrList.size()), _MBSWmetaList.size() ); k++)
 	{
 		tableelement = new QTableWidgetItem( minValueStrList.at(k) );
 		tableelement->setTextAlignment(Qt::AlignCenter);
 		selectedMBsSWs_tableWidget->setItem(k, 1, tableelement);
 	}
 	// Update values:
-	for (k=0; k<qMin( static_cast<size_t>( valueStrList.size()), _MBSWmetaList.size() ); k++)
+	for (k=0; k<qMin( static_cast<unsigned int>( valueStrList.size()), _MBSWmetaList.size() ); k++)
 	{
 		tableelement = new QTableWidgetItem( valueStrList.at(k) );
 		tableelement->setTextAlignment(Qt::AlignCenter);
 		selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
 	}
 	// Update max values:
-	for (k=0; k<qMin( static_cast<size_t>( maxValueStrList.size()), _MBSWmetaList.size() ); k++)
+	for (k=0; k<qMin( static_cast<unsigned int>( maxValueStrList.size()), _MBSWmetaList.size() ); k++)
 	{
 		tableelement = new QTableWidgetItem( maxValueStrList.at(k) );
 		tableelement->setTextAlignment(Qt::AlignCenter);
 		selectedMBsSWs_tableWidget->setItem(k, 3, tableelement);
 	}
 	// Update units:
-	for (k=0; k<qMin( static_cast<size_t>( unitStrList.size() ), _MBSWmetaList.size() ); k++)
+	for (k=0; k<qMin( static_cast<unsigned int>( unitStrList.size() ), _MBSWmetaList.size() ); k++)
 	{
 		tableelement = new QTableWidgetItem( unitStrList.at(k) );
 		selectedMBsSWs_tableWidget->setItem(k, 4, tableelement);
