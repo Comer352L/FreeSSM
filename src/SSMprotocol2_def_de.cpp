@@ -1022,9 +1022,27 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "00020C;000210;8;P0406;Abgasrückführung (AGR) Positionssensorschaltkreis (hoch)"
 	<< "00020D;000211;2;P2413;Hängenbleiben des Abgasrückführungsventils"
 	<< "00020D;000211;3;P1009;Wirbelsteuerventilschaltkreis (niedrig)"
+	<< "00020D;000211;4;P1607;Überwachungsstromkreis abnorm"
 	<< "00020D;000211;5;P2147;Einspritzventiltreiber (Kurzschluss nach Masse)"
 	<< "00020D;000211;6;P2010;Wirbelsteuerventilschaltkreis (hoch)"
-	<< "00020D;000211;8;P1380;Glührelaisschaltkreis (Niedrig)";
+	<< "00020D;000211;7;P0687;Ausfall des Selbstabschaltrelais für das Motor-/Antriebsstrang-Steuergerät"
+	<< "00020D;000211;8;P1380;Glührelaisschaltkreis (Niedrig)"
+	<< "000263;000268;4;P1532;Ladesteuerungssystem abnorm"
+	<< "000263;000268;5;P1531;Batteriestromsensor Schaltkreis (hoch)"
+	<< "000263;000268;6;P1530;Batteriestromsensor Schaltkreis (niedrig)"
+	<< "000263;000268;7;P0517;Batterietemperatursensor Schaltkreis (hoch)"
+	<< "000263;000268;8;P0516;Batterietemperatursensor Schaltkreis (niedrig)"
+	<< "000264;000269;8;P0161;Lambdasonde (O2-Sensor) Fehlfunktion Heizungsstromkreis (Bank 2 Sensor 2)"
+	<< "000265;00026A;1;P1468;Ölverdünnung"
+	<< "000265;00026A;2;P1467;Dieselpartikelfilter (DPF) Ascheüberfüllung"
+	<< "000265;00026A;3;P1466;Dieselpartikelfilter (DPF) Trägermaterial defekt"
+	<< "000265;00026A;4;P1465;Dieselpartikelfilter (DPF) Teilchenüberfüllung"
+	<< "000265;00026A;5;P1473;Dieselpartikelfilter (DPF) Einlass-Auslass-Differenzdrucksensor (hoch)"
+	<< "000265;00026A;6;P1472;Dieselpartikelfilter (DPF) Einlass-Auslass-Differenzdrucksensor (niedrig)"
+	<< "000265;00026A;7;P2033;Abgastemperatursensor 2 (hoch)"
+	<< "000265;00026A;8;P2032;Abgastemperatursensor 2 (niedrig)"
+	<< "000266;00026B;7;P1471;Rohrleitungsstörung stromauf vom Dieselpartikelfilter-Differentialdrucksensor"
+	<< "000266;00026B;8;P1469;Dieselpartikelfilter (DPF) Notlaufmodus";
 
 
 	// Abbruchcodes der integrierten Geschwindigkeits-Regelanlage:

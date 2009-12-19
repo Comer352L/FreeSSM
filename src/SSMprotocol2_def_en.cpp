@@ -1022,9 +1022,27 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "00020C;000210;8;P0406;Exhaust Gas Recirculation (EGR) Position Sensor Circuit (High)"
 	<< "00020D;000211;2;P2413;Exhaust Gas Recirculation (EGR) Valve Sticking"
 	<< "00020D;000211;3;P1009;Swirl Control Valve Circuit (Low)"
+	<< "00020D;000211;4;P1607;Monitoring Circuit Abnormal"
 	<< "00020D;000211;5;P2147;Injector Driver (Short-Circuit to Ground)"
 	<< "00020D;000211;6;P2010;Swirl Control Valve Circuit (High)"
-	<< "00020D;000211;8;P1380;Glow Relay Circuit (Low)";
+	<< "00020D;000211;7;P0687;Engine/Powertrain Control Module (ECM/PCM) Self-Shut Relay Failure"
+	<< "00020D;000211;8;P1380;Glow Relay Circuit (Low)"
+	<< "000263;000268;4;P1532;Charge Control System Abnormal"
+	<< "000263;000268;5;P1531;Battery Current Sensor Circuit (High)"
+	<< "000263;000268;6;P1530;Battery Current Sensor Circuit (Low)"
+	<< "000263;000268;7;P0517;Battery Temperature Sensor Circuit (High)"
+	<< "000263;000268;8;P0516;Battery Temperature Sensor Circuit (Low)"
+	<< "000264;000269;8;P0161;Oxygen O2 Sensor Heater Circuit (Bank 2 Sensor 2)"
+	<< "000265;00026A;1;P1468;Oil Dilution"
+	<< "000265;00026A;2;P1467;Diesel Particulate Filter (DPF) Ash Overfill"
+	<< "000265;00026A;3;P1466;Diesel Particulate Filter (DPF) Substrate Damaged"
+	<< "000265;00026A;4;P1465;Diesel Particulate Filter (DPF) Particulate Overfill"
+	<< "000265;00026A;5;P1473;Diesel Particulate Filter (DPF) Inlet/Outlet Pressure Deviation Sensor (High)"
+	<< "000265;00026A;6;P1472;Diesel Particulate Filter (DPF) Inlet/Outlet Pressure Deviation Sensor (Low)"
+	<< "000265;00026A;7;P2033;Exhaust Temperature Sensor 2 (high)"
+	<< "000265;00026A;8;P2032;Exhaust Temperature Sensor 2 (low)"
+	<< "000266;00026B;7;P1471;Diesel Particulate Filter (DPF) Differential Pressure Sensor Upstream Piping Trouble"
+	<< "000266;00026B;8;P1469;Diesel Particulate Filter (DPF) Limp-Home Mode";
 
 
 	// Cancel codes of the integrated Cruise Control:
