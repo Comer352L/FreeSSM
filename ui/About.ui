@@ -1,39 +1,40 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>about_Dialog</class>
- <widget class="QDialog" name="about_Dialog" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="about_Dialog">
+  <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>525</height>
+    <height>545</height>
    </rect>
   </property>
-  <property name="minimumSize" >
+  <property name="minimumSize">
    <size>
     <width>571</width>
-    <height>525</height>
+    <height>545</height>
    </size>
   </property>
-  <property name="maximumSize" >
+  <property name="maximumSize">
    <size>
     <width>571</width>
-    <height>525</height>
+    <height>545</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>About FreeSSM</string>
   </property>
-  <widget class="QLabel" name="progversion_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="progversion_label">
+   <property name="geometry">
     <rect>
      <x>20</x>
      <y>7</y>
@@ -41,45 +42,45 @@
      <height>34</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>20</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>FreeSSM</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="close_pushButton" >
-   <property name="geometry" >
+  <widget class="QPushButton" name="close_pushButton">
+   <property name="geometry">
     <rect>
      <x>216</x>
-     <y>482</y>
+     <y>502</y>
      <width>141</width>
      <height>31</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>10</pointsize>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Clos&amp;e</string>
    </property>
   </widget>
-  <widget class="QTabWidget" name="main_tabWidget" >
-   <property name="geometry" >
+  <widget class="QTabWidget" name="main_tabWidget">
+   <property name="geometry">
     <rect>
      <x>30</x>
      <y>80</y>
      <width>513</width>
-     <height>374</height>
+     <height>394</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>12</pointsize>
      <weight>50</weight>
@@ -87,34 +88,34 @@
      <kerning>true</kerning>
     </font>
    </property>
-   <property name="autoFillBackground" >
+   <property name="autoFillBackground">
     <bool>true</bool>
    </property>
-   <property name="tabShape" >
+   <property name="tabShape">
     <enum>QTabWidget::Rounded</enum>
    </property>
-   <property name="currentIndex" >
+   <property name="currentIndex">
     <number>0</number>
    </property>
-   <widget class="QWidget" name="about_tab" >
-    <attribute name="title" >
+   <widget class="QWidget" name="about_tab">
+    <attribute name="title">
      <string>&amp;About</string>
     </attribute>
-    <widget class="QLabel" name="aboutcontent_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="aboutcontent_label">
+     <property name="geometry">
       <rect>
        <x>14</x>
        <y>12</y>
        <width>477</width>
-       <height>324</height>
+       <height>344</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER® and TRIBECA® starting with model year 1999 and provides access to the engine and transmission control units.
 
 The use of this program is AT YOUR OWN RISK. The author is NOT LIABLE FOR ANY EFFECTS caused by usage, including UNEXPECTED VEHICLE BEHAVIOR or DAMAGES.
@@ -123,20 +124,20 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 PLEASE NOTE:
 This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSOCIATED COMPANY. It is a free reengineering project which is not contributed, provided or supported by any company in any way.</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
-     <property name="wordWrap" >
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="features_tab" >
-    <attribute name="title" >
+   <widget class="QWidget" name="features_tab">
+    <attribute name="title">
      <string>&amp;Features</string>
     </attribute>
-    <widget class="QLabel" name="models_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="models_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>19</y>
@@ -144,23 +145,23 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>34</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
-     <property name="wordWrap" >
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="modelstitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="modelstitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>18</y>
@@ -168,7 +169,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -176,12 +177,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Models (since MY1999):</string>
      </property>
     </widget>
-    <widget class="QLabel" name="controlunits_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="controlunits_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>64</y>
@@ -189,17 +190,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Engine, Transmission</string>
      </property>
     </widget>
-    <widget class="QLabel" name="dtcsinfo_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="dtcsinfo_label">
+     <property name="geometry">
       <rect>
        <x>288</x>
        <y>96</y>
@@ -207,17 +208,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>(Non-OBD / OBD2 / CC)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="nrofActuatortests_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="nrofActuatortests_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>192</y>
@@ -225,17 +226,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="nrofadjustmentvalues_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="nrofadjustmentvalues_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>160</y>
@@ -243,17 +244,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="systemtestsinfo_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="systemtestsinfo_label">
+     <property name="geometry">
       <rect>
        <x>250</x>
        <y>192</y>
@@ -261,17 +262,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>(Actuators / Others) (Engine only)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="adjustmentsinfo_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="adjustmentsinfo_label">
+     <property name="geometry">
       <rect>
        <x>250</x>
        <y>160</y>
@@ -279,17 +280,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>(Engine / Transmission)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="controlunitstitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="controlunitstitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>64</y>
@@ -297,7 +298,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -305,12 +306,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Control Units:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="systemteststitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="systemteststitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>192</y>
@@ -318,7 +319,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -326,12 +327,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>System Tests:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="nrofsupportedDTCs_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="nrofsupportedDTCs_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>96</y>
@@ -339,17 +340,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="dtcstitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="dtcstitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>96</y>
@@ -357,7 +358,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -365,12 +366,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Data Trouble Codes:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="adjustmentstitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="adjustmentstitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>160</y>
@@ -378,7 +379,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -386,12 +387,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Adjustment Values:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="mbsswsinfo_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="mbsswsinfo_label">
+     <property name="geometry">
       <rect>
        <x>288</x>
        <y>128</y>
@@ -399,17 +400,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>(Data / Switches)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="nrofsupportedMBsSWs_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="nrofsupportedMBsSWs_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>128</y>
@@ -417,17 +418,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="mbstitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="mbstitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>128</y>
@@ -435,7 +436,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -443,31 +444,31 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Measuring Blocks:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="infoobd2_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="infoobd2_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
-       <y>315</y>
+       <y>330</y>
        <width>471</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>FreeSSM is NO OBD-2 scan tool !</string>
      </property>
     </widget>
-    <widget class="QLabel" name="languagestitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="languagestitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>224</y>
@@ -475,7 +476,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -483,12 +484,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Program languages:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="languages_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="languages_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>224</y>
@@ -496,17 +497,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>English, German</string>
      </property>
     </widget>
-    <widget class="QLabel" name="supportedOStitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="supportedOStitle_label">
+     <property name="geometry">
       <rect>
        <x>20</x>
        <y>256</y>
@@ -514,7 +515,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
@@ -522,12 +523,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <underline>true</underline>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Operating Systems:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="supportedOS_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="supportedOS_label">
+     <property name="geometry">
       <rect>
        <x>195</x>
        <y>256</y>
@@ -535,22 +536,22 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Linux/X11, Windows</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="credits_tab" >
-    <attribute name="title" >
+   <widget class="QWidget" name="credits_tab">
+    <attribute name="title">
      <string>&amp;Credits</string>
     </attribute>
-    <widget class="QLabel" name="author_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="author_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
        <y>15</y>
@@ -558,19 +559,19 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Written by Comer352l (Copyright © 2008-2009)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="email_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="email_label">
+     <property name="geometry">
       <rect>
        <x>35</x>
        <y>40</y>
@@ -578,223 +579,280 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
-      <string>&lt;a href="mailto:comer352l@googlemail.com">Comer352l@googlemail.com&lt;/a></string>
+     <property name="text">
+      <string>&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352l@googlemail.com&lt;/a&gt;</string>
      </property>
-     <property name="openExternalLinks" >
+     <property name="openExternalLinks">
       <bool>true</bool>
      </property>
-     <property name="textInteractionFlags" >
+     <property name="textInteractionFlags">
       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
      </property>
     </widget>
-    <widget class="QLabel" name="homepageURL_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="homepageURL_label">
+     <property name="geometry">
       <rect>
        <x>170</x>
-       <y>191</y>
+       <y>215</y>
        <width>321</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
-      <string>&lt;a href="http://FreeSSM.berlios.de/">http://FreeSSM.berlios.de&lt;/a></string>
+     <property name="text">
+      <string>&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</string>
      </property>
-     <property name="openExternalLinks" >
+     <property name="openExternalLinks">
       <bool>true</bool>
      </property>
-     <property name="textInteractionFlags" >
+     <property name="textInteractionFlags">
       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
      </property>
     </widget>
-    <widget class="QLabel" name="gplinfo_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="gplinfo_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
-       <y>222</y>
+       <y>242</y>
        <width>489</width>
        <height>111</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-You should have received a copy of the GNU General Public License along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.</string>
+You should have received a copy of the GNU General Public License along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
-     <property name="wordWrap" >
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="homepagetitle_label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="homepagetitle_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
-       <y>190</y>
+       <y>215</y>
        <width>150</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Project homepage:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label" >
-     <property name="geometry" >
+    <widget class="QLabel" name="contributorMartinX_label">
+     <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>160</y>
-       <width>487</width>
-       <height>16</height>
+       <x>140</x>
+       <y>90</y>
+       <width>351</width>
+       <height>20</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
-      <string>Background picture Copyright © Antoine Giniès</string>
+     <property name="text">
+      <string>MartinX (definitions, bugfix)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2" >
-     <property name="geometry" >
+    <widget class="QLabel" name="qt4credits_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
-       <y>70</y>
+       <y>140</y>
        <width>487</width>
        <height>16</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Based on the Qt4-Framework (Copyright © Nokia Corporation)</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3" >
-     <property name="geometry" >
+    <widget class="QLabel" name="iconcredits_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>165</y>
        <width>487</width>
        <height>16</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Many icons are taken from the Oxygen and Chrytstal icon themes</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_4" >
-     <property name="geometry" >
+    <widget class="QLabel" name="fontcredits_label">
+     <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>190</y>
        <width>487</width>
        <height>16</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="text" >
-      <string>Truetype font "Liberation Sans" Copyright © Red Hat, Inc.</string>
+     <property name="text">
+      <string>Truetype font &quot;Liberation Sans&quot; Copyright © Red Hat, Inc.</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="contributors_label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Contributors:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="contributorAntoineGinies_label">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>110</y>
+       <width>351</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Antoine Giniès (background picture, Copyright ©)</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="contributorL1800Turbo_label">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>70</y>
+       <width>351</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>L1800Turbo (ECU-data, testing)</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="licence_tab" >
-    <attribute name="title" >
+   <widget class="QWidget" name="licence_tab">
+    <attribute name="title">
      <string>&amp;Licence</string>
     </attribute>
-    <widget class="QTextBrowser" name="licence_textBrowser" >
-     <property name="geometry" >
+    <widget class="QTextBrowser" name="licence_textBrowser">
+     <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
        <width>489</width>
-       <height>324</height>
+       <height>344</height>
       </rect>
      </property>
-     <property name="openExternalLinks" >
+     <property name="openExternalLinks">
       <bool>true</bool>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="changelog_tab" >
-    <attribute name="title" >
+   <widget class="QWidget" name="changelog_tab">
+    <attribute name="title">
      <string>Change&amp;log</string>
     </attribute>
-    <widget class="QTextBrowser" name="changelog_textBrowser" >
-     <property name="geometry" >
+    <widget class="QTextBrowser" name="changelog_textBrowser">
+     <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
        <width>489</width>
-       <height>325</height>
+       <height>345</height>
       </rect>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="lineWrapColumnOrWidth" >
+     <property name="lineWrapColumnOrWidth">
       <number>0</number>
      </property>
-     <property name="overwriteMode" >
+     <property name="overwriteMode">
       <bool>false</bool>
      </property>
-     <property name="textInteractionFlags" >
+     <property name="textInteractionFlags">
       <set>Qt::TextSelectableByMouse</set>
      </property>
-     <property name="openLinks" >
+     <property name="openLinks">
       <bool>false</bool>
      </property>
     </widget>
    </widget>
   </widget>
-  <widget class="QLabel" name="subtitle_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="subtitle_label">
+   <property name="geometry">
     <rect>
      <x>30</x>
      <y>48</y>
@@ -802,38 +860,38 @@ You should have received a copy of the GNU General Public License along with thi
      <height>21</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>12</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>A free diagnostic and adjustment tool for SUBARU® vehicles</string>
    </property>
-   <property name="alignment" >
+   <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
-   <property name="wordWrap" >
+   <property name="wordWrap">
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="trademarksInfo_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="trademarksInfo_label">
+   <property name="geometry">
     <rect>
      <x>30</x>
-     <y>460</y>
+     <y>480</y>
      <width>513</width>
      <height>16</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>8</pointsize>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>All trademarks are property of Fuji Heavy Industries Ltd. or their respective owners.</string>
    </property>
   </widget>
@@ -845,7 +903,7 @@ You should have received a copy of the GNU General Public License along with thi
   <tabstop>changelog_textBrowser</tabstop>
  </tabstops>
  <resources>
-  <include location="../resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc"/>
  </resources>
  <connections/>
 </ui>
