@@ -692,21 +692,21 @@ Please check current values !</translation>
         <source>
 - clears the Diagnostic Codes</source>
         <translation type="unfinished">
-- löscht die Diagnosecodes</translation>
+- clears the Diagnostic Codes</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="181"/>
         <source>
 - resets all non-permanent Adjustment Values</source>
         <translation type="unfinished">
-- setzt alle nicht-permanenten Einstellwerte zurück</translation>
+- resets all non-permanent Adjustment Values</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="183"/>
         <source>
 - resets the Control Units&apos; learning values</source>
         <translation type="unfinished">
-- setzt die Lernwerte des Steuergeräts zurück</translation>
+- resets the Control Units&apos; learning values</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="184"/>
