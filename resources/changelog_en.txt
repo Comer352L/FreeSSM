@@ -1,3 +1,17 @@
+v1.2.0 (23.12.2009):
+  - Added min/max-functionality for Measuring Blocks/Switches
+  - Measuring Blocks/Switches can now be moved up/down on the list
+    while reading is in progress
+  - Added system-ID of the new Lineartronic CVT (MY2010)
+  - 44 new Measuring Blocks and Switches (MY2009 is now complete)
+  - 18 new Diagnostic Code (MY2009 is now complete)
+  - Improved serial port hardware-/driver-compatibility
+  - Fixed setting of DTR+RTS handshaking lines on serial port
+  - Fixed background-picture not beeing displayed on some Windows systems
+  - Fixed some minor table row issues (number, height)
+  - Some minor layout- and translation-fixes
+
+
 v1.1.1 (05.05.2009):
   - Fixed a bug that caused disappearance of MB-units after reading start
   - Corrected documentation: Openport 2.0 interface does NOT work with

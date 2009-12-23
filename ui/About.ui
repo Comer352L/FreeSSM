@@ -50,7 +50,7 @@
     </font>
    </property>
    <property name="text">
-    <string>FreeSSM</string>
+    <string notr="true">FreeSSM</string>
    </property>
   </widget>
   <widget class="QPushButton" name="close_pushButton">
@@ -116,7 +116,7 @@
       </font>
      </property>
      <property name="text">
-      <string>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER® and TRIBECA® starting with model year 1999 and provides access to the engine and transmission control units.
+      <string>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
 
 The use of this program is AT YOUR OWN RISK. The author is NOT LIABLE FOR ANY EFFECTS caused by usage, including UNEXPECTED VEHICLE BEHAVIOR or DAMAGES.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of FUNCTIONALITY ON YOUR VEHICLE, MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
@@ -151,7 +151,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</string>
+      <string notr="true">LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -587,7 +587,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352l@googlemail.com&lt;/a&gt;</string>
+      <string notr="true">&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352l@googlemail.com&lt;/a&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -613,7 +613,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</string>
+      <string notr="true">&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
