@@ -1,3 +1,19 @@
+v1.2.0 (23.12.2009):
+  - Neue Min/Max-Funktion für Messwertblöcke/Schalter
+  - Messwertblöcke/Schalter können nun während des Lesens auf der
+    Liste nach oben/unten verschoben werden
+  - System-ID der neuen Lineartronic CVT (MJ2010) hinzugefügt
+  - 44 neue Messwertblöcke und Schalter (MJ2009 ist nun vollständig)
+  - 18 neue Diagnosecodes (MJ2009 ist nun vollständig)
+  - Verbesserte Kompatibilität serieller Schnittstellen-Hardware und Treibern
+  - Fehler beim Setzen der DTR+RTS-Handshaking-Leitungen der
+    seriellen Schnittstelle behoben
+  - Fehler behoben, der dazu führte, dass das Hintergrundbild auf einigen
+    Windows-Systemen nicht angezeigt wurde
+  - Einige kleinere Tabellen-Zeilen-Fehler (Anzahl, Höhe) behoben
+  - Einige kleinere Layout- und Übersetzungs-Fehler behoben
+
+
 v1.1.1 (05.05.2009):
     - Bug behoben, welcher nach dem Starten des Messwertblock-Lesens die
       Einheiten in der Tabelle verschwinden ließ
