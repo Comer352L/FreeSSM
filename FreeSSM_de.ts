@@ -138,108 +138,108 @@ Stellglied-Test konnte nicht gestartet werden.</translation>
 <context>
     <name>CUcontent_Adjustments</name>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="526"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="531"/>
         <source>Saving adjustment value to Electronic Control Unit... Please wait !      </source>
         <translation type="unfinished">Speichere Einstellwert in Steuergerät... Bitte warten !      </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="453"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="458"/>
         <source>Reset all: </source>
         <translation type="unfinished">Alle zurücksetzen: </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="582"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="587"/>
         <source>Continue ?</source>
         <translation type="unfinished">Fortfahren ?</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="582"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="587"/>
         <source>Do you really want to reset all adjustment values ?</source>
         <translation type="unfinished">Möchten Sie wirklich alle Einstellwerte zurücksetzen ?</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="583"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="588"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="584"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="589"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="594"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="599"/>
         <source>Resetting all adjustment values... Please wait !   </source>
         <translation type="unfinished">Einstellwerte werden zurückgesetzt... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="554"/>
-        <location filename="src/CUcontent_Adjustments.cpp" line="601"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="559"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="606"/>
         <source>No or invalid answer from Control Unit.</source>
         <translation type="unfinished">Keine oder fehlerhafte Antwort vom Steuergerät.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="675"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="679"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="674"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="678"/>
         <source>Communication Error:</source>
         <translation type="unfinished">Kommunikationsfehler:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="267"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="272"/>
         <source>One or more current values couldn&apos;t be scaled.</source>
         <translation type="unfinished">Einer oder mehrere aktuelle Einstellwerte konnten nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="465"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="470"/>
         <source>One or more values will not be adjustable to prevent
 wrong data being written to the Control Unit.</source>
         <translation type="unfinished">Einer odere mehrere Einstellwerte werden nicht Veränderbar sein,
 um ein Schreiben falscher Werte in das Steuergerät zu verhindern.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="567"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="572"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="567"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="572"/>
         <source>Error:
 The Control Unit didn&apos;t accept the new value !</source>
         <translation type="unfinished">Fehler:
 Das Steuergerät hat den neuen Wert nicht akzeptiert !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="570"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="575"/>
         <source>The current value couldn&apos;t be scaled.</source>
         <translation type="unfinished">Der aktuelle Einstellwert konnte nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="617"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="622"/>
         <source>One or more values couldn&apos;t be scaled.</source>
         <translation type="unfinished">Einer oder mehrere Einstellwerte konnten nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="682"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="686"/>
         <source>Calculation Error:</source>
         <translation type="unfinished">Berechnungsfehler:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="683"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="687"/>
         <source>Calculation Error</source>
         <translation type="unfinished">Berechnungsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="544"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="549"/>
         <source>The new adjustment value couldn&apos;t be scaled.</source>
         <translation type="unfinished">Der neue Einstellwert konnte nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="256"/>
-        <location filename="src/CUcontent_Adjustments.cpp" line="562"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="261"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="567"/>
         <source>[RAW]</source>
         <translation type="unfinished">[RAW]</translation>
     </message>
@@ -253,123 +253,123 @@ Das Steuergerät hat den neuen Wert nicht akzeptiert !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_abstract.cpp" line="50"/>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="250"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="249"/>
         <source>Couldn&apos;t stop Diagnostic Codes Reading.</source>
         <translation type="unfinished">Das Lesen der Diagnose-Codes konnte nicht beendet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="175"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="174"/>
         <source>not supported by ECU</source>
         <translation type="unfinished">nicht unterstützt</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="188"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="187"/>
         <source>Printing...</source>
         <translation type="unfinished">Drucke...</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="188"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="187"/>
         <source>Printing... Please wait !    </source>
         <translation type="unfinished">Drucke... Bitte warten !    </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="222"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="221"/>
         <source>Engine</source>
         <translation type="unfinished">Motor</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="257"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="256"/>
         <source>Transmission</source>
         <translation type="unfinished">Getriebe</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="260"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="259"/>
         <source>Cruise Control</source>
         <translation type="unfinished">Geschwindigkeits-Regelanlage</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="263"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="262"/>
         <source>Air Conditioning</source>
         <translation type="unfinished">Klimaanlage</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="266"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="265"/>
         <source>4 Wheel Steering</source>
         <translation type="unfinished">4-Rad-Lenkung</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="269"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="268"/>
         <source>UNKNOWN</source>
         <translation type="unfinished">UNBEKANNT</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="206"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="205"/>
         <source>Unknown (</source>
         <translation type="unfinished">Unbekannt (</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="208"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="207"/>
         <source>Query of the System-ID failed.</source>
         <translation type="unfinished">Die Abfrage der System-ID ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="238"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="237"/>
         <source>not programmed yet</source>
         <translation type="unfinished">noch nicht programmiert</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="244"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="243"/>
         <source>Couldn&apos;t restart Diagnostic Codes Reading.</source>
         <translation type="unfinished">Das Lesen der Diagnose-Codes konnte nicht wieder gestartet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="247"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="246"/>
         <source>Query of the VIN failed.</source>
         <translation type="unfinished">Die Abfrage der Fahrgestellnummer ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="254"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="253"/>
         <source>Couldn&apos;t determine if VIN-registration is supported.</source>
         <translation type="unfinished">Es konnte nicht festgestellt werden, ob das Steuergerät
 die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="276"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="275"/>
         <source>Query of the ROM-ID failed.</source>
         <translation type="unfinished">Die Abfrage der ROM-ID ist fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="273"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="272"/>
         <source>Couldn&apos;t determine Control Unit type.</source>
         <translation type="unfinished">Der Steuergerätetyp konnte nicht ermittelt werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="344"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="343"/>
         <source>Control Unit:</source>
         <translation type="unfinished">Steuergerät:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="354"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="353"/>
         <source>System Type:</source>
         <translation type="unfinished">System-Typ:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="364"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="363"/>
         <source>ROM-ID:</source>
         <translation type="unfinished">ROM-ID:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="376"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="375"/>
         <source>Registered VIN:</source>
         <translation type="unfinished">Registr. Fahrgest.-Nr.:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="442"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="441"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_abstract.cpp" line="442"/>
+        <location filename="src/CUcontent_DCs_abstract.cpp" line="441"/>
         <source>Communication Error:</source>
         <translation type="unfinished">Kommunikationsfehler:</translation>
     </message>
@@ -377,66 +377,66 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_DCs_engine</name>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="326"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="337"/>
         <source>System-Check Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Systemprüfungs-Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="64"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="330"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="75"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="341"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Kurzzeitige Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="334"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="345"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="65"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="135"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="76"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="146"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Gespeicherte Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="137"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="148"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historische Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="194"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="199"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="204"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="209"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="205"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="210"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="215"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="220"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation type="unfinished">----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="141"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="147"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="153"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="159"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="152"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="158"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="164"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="170"/>
         <source>----- Not supported by ECU -----</source>
         <translation type="unfinished">----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="252"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="272"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="374"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="263"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="283"/>
         <location filename="src/CUcontent_DCs_engine.cpp" line="385"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="396"/>
         <source>----- No Trouble Codes -----</source>
         <translation type="unfinished">----- Keine Fehlercodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="292"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="312"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="396"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="303"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="323"/>
         <location filename="src/CUcontent_DCs_engine.cpp" line="407"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="418"/>
         <source>----- No Cancel Codes -----</source>
         <translation type="unfinished">----- Keine Abbruchcodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="243"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="254"/>
         <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
         <translation type="unfinished">----- SYSTEMPRÜFUNG IST NOCH NICHT ABGESCHLOSSEN ! -----</translation>
     </message>
@@ -444,44 +444,44 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_DCs_transmission</name>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="47"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="94"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="54"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="101"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Kurzzeitige Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="96"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="103"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="48"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="99"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="55"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="106"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Gespeicherte Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="101"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="108"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation type="unfinished">Historische Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="138"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="143"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="145"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="150"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation type="unfinished">----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="105"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="111"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="112"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="118"/>
         <source>----- Not supported by ECU -----</source>
         <translation type="unfinished">----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="172"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="192"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="213"/>
-        <location filename="src/CUcontent_DCs_transmission.cpp" line="224"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="179"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="199"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="220"/>
+        <location filename="src/CUcontent_DCs_transmission.cpp" line="231"/>
         <source>----- No Trouble Codes -----</source>
         <translation type="unfinished">----- Keine Fehlercodes -----</translation>
     </message>
@@ -759,7 +759,7 @@ ZÜNDUNG verbinden/trennen !</translation>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="243"/>
         <source>Restoring Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Einstellwerte werden wiederhersgestellt... Bitte warten !</translation>
+        <translation type="unfinished">Einstellwerte werden wiederhergestellt... Bitte warten !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="217"/>
@@ -1381,95 +1381,98 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
 <context>
     <name>about_Dialog</name>
     <message>
-        <location filename="ui/About.ui" line="33"/>
+        <location filename="ui/About.ui" line="34"/>
         <source>About FreeSSM</source>
         <translation type="unfinished">Informationen über FreeSSM</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="813"/>
+        <location filename="ui/About.ui" line="871"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
         <translation type="unfinished">Ein freies Diagnose- und Adaptions-Tool für SUBARU®-Fahrzeuge</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="52"/>
-        <source>FreeSSM</source>
-        <translation type="unfinished">FreeSSM</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="309"/>
+        <location filename="ui/About.ui" line="310"/>
         <source>Control Units:</source>
         <translation type="unfinished">Steuergeräte:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="369"/>
+        <location filename="ui/About.ui" line="370"/>
         <source>Data Trouble Codes:</source>
         <translation type="unfinished">Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="447"/>
+        <location filename="ui/About.ui" line="448"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="153"/>
-        <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</source>
-        <translation type="unfinished">LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</translation>
+        <location filename="ui/About.ui" line="154"/>
+        <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</source>
+        <oldsource>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</oldsource>
+        <translation type="unfinished">LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="198"/>
+        <location filename="ui/About.ui" line="199"/>
         <source>Engine, Transmission</source>
         <translation type="unfinished">Motor, Getriebe</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="330"/>
+        <location filename="ui/About.ui" line="331"/>
         <source>System Tests:</source>
         <translation type="unfinished">System-Funktionstests:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="216"/>
+        <location filename="ui/About.ui" line="217"/>
         <source>(Non-OBD / OBD2 / CC)</source>
         <translation type="unfinished">(Non-OBD / OBD2 / GRA)</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="408"/>
+        <location filename="ui/About.ui" line="409"/>
         <source>(Data / Switches)</source>
         <translation type="unfinished">(Daten / Schalter)</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="270"/>
+        <location filename="ui/About.ui" line="271"/>
         <source>(Actuators / Others) (Engine only)</source>
         <translation type="unfinished">(Stellglieder / Andere) (nur Motor)</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="390"/>
+        <location filename="ui/About.ui" line="391"/>
         <source>Adjustment Values:</source>
         <translation type="unfinished">Einstellwerte:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="288"/>
+        <location filename="ui/About.ui" line="289"/>
         <source>(Engine / Transmission)</source>
         <translation type="unfinished">(Motor / Getriebe)</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="70"/>
+        <location filename="ui/About.ui" line="71"/>
         <source>Clos&amp;e</source>
         <translation type="unfinished">&amp;Schließen</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="101"/>
+        <location filename="ui/About.ui" line="102"/>
         <source>&amp;About</source>
         <translation type="unfinished">&amp;Über</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="118"/>
-        <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER® and TRIBECA® starting with model year 1999 and provides access to the engine and transmission control units.
+        <location filename="ui/About.ui" line="119"/>
+        <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
 
 The use of this program is AT YOUR OWN RISK. The author is NOT LIABLE FOR ANY EFFECTS caused by usage, including UNEXPECTED VEHICLE BEHAVIOR or DAMAGES.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of FUNCTIONALITY ON YOUR VEHICLE, MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 PLEASE NOTE:
 This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSOCIATED COMPANY. It is a free reengineering project which is not contributed, provided or supported by any company in any way.</source>
-        <translation type="unfinished">FreeSSM ist ein freies und einfach zu bedienendes Diagnose- und Adaptions-Tool für SUBARU®-Fahrzeuge. Zur Zeit unterstützt es die Modelle LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER® und TRIBECA® ab Modelljahr 1999 und ermöglicht den Zugriff auf Motor- und Getriebe-Steuergeräte.
+        <oldsource>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER® and TRIBECA® starting with model year 1999 and provides access to the engine and transmission control units.
+
+The use of this program is AT YOUR OWN RISK. The author is NOT LIABLE FOR ANY EFFECTS caused by usage, including UNEXPECTED VEHICLE BEHAVIOR or DAMAGES.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of FUNCTIONALITY ON YOUR VEHICLE, MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+PLEASE NOTE:
+This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSOCIATED COMPANY. It is a free reengineering project which is not contributed, provided or supported by any company in any way.</oldsource>
+        <translation type="unfinished">FreeSSM ist ein freies und einfach zu bedienendes Diagnose- und Adaptions-Tool für SUBARU®-Fahrzeuge. Zur Zeit unterstützt es die Modelle LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® ab Modelljahr 1999 und ermöglicht den Zugriff auf Motor- und Getriebe-Steuergeräte.
 
 Die Verwendung erfolgt AUF EIGENE GEFAHR. Der Autor HAFTET IN KEINER WEISE FÜR FOLGEN DER VERWENDUNG, insbesondere UNERWARTETES FAHRZEUG-VERHALTEN oder BESCHÄDIGUNGEN.
 Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.
@@ -1478,104 +1481,109 @@ BITTE BEACHTEN SIE:
 Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM SUBARU®-bezogenen Unternehmen. Es ist ein freies Reengineering-Projekt, welches in keiner Weise durch irgenwelche Firmen unterstützt wird.</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="550"/>
+        <location filename="ui/About.ui" line="551"/>
         <source>&amp;Credits</source>
         <translation type="unfinished">&amp;Credits</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="589"/>
-        <source>&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352l@googlemail.com&lt;/a&gt;</source>
-        <translation type="unfinished">&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352l@googlemail.com&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="639"/>
+        <location filename="ui/About.ui" line="640"/>
         <source>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 You should have received a copy of the GNU General Public License along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</source>
         <translation type="unfinished">Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren Version.
 Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, siehe &lt;http://www.gnu.org/licenses/&gt;.</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="665"/>
+        <location filename="ui/About.ui" line="666"/>
         <source>Project homepage:</source>
         <translation type="unfinished">Projekt-Homepage:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="747"/>
+        <location filename="ui/About.ui" line="685"/>
+        <source>MartinX (definitions, bugfix)</source>
+        <translation type="unfinished">MartinX (Definitionen, Bugfix)</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="761"/>
+        <source>Contributors:</source>
+        <translation type="unfinished">Beitragende:</translation>
+    </message>
+    <message utf8="true">
+        <location filename="ui/About.ui" line="780"/>
+        <source>Antoine Giniès (background picture, Copyright ©)</source>
+        <translation type="unfinished">Antoine Giniès (Hintergrundbild, Copyright ©)</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="799"/>
+        <source>L1800Turbo (ECU-data, testing)</source>
+        <translation type="unfinished">L1800Turbo (ECU-Daten, Tests)</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="805"/>
         <source>&amp;Licence</source>
         <translation type="unfinished">&amp;Lizenz</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="136"/>
+        <location filename="ui/About.ui" line="137"/>
         <source>&amp;Features</source>
         <translation type="unfinished">&amp;Funktionsumfang</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="180"/>
+        <location filename="ui/About.ui" line="181"/>
         <source>Models (since MY1999):</source>
         <translation type="unfinished">Modelle (seit MJ1999):</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="466"/>
+        <location filename="ui/About.ui" line="467"/>
         <source>FreeSSM is NO OBD-2 scan tool !</source>
         <translation type="unfinished">FreeSSM ist KEINE OBD-2-Software !</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="487"/>
+        <location filename="ui/About.ui" line="488"/>
         <source>Program languages:</source>
         <translation type="unfinished">Programmsprachen:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="505"/>
+        <location filename="ui/About.ui" line="506"/>
         <source>English, German</source>
         <translation type="unfinished">Englisch, Deutsch</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="765"/>
+        <location filename="ui/About.ui" line="823"/>
         <source>Change&amp;log</source>
         <translation type="unfinished">&amp;Änderungsprotokoll</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="569"/>
+        <location filename="ui/About.ui" line="570"/>
         <source>Written by Comer352l (Copyright © 2008-2009)</source>
         <translation type="unfinished">Geschrieben von Comer352l (Copyright © 2008-2009)</translation>
     </message>
-    <message>
-        <location filename="ui/About.ui" line="615"/>
-        <source>&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</source>
-        <translation type="unfinished">&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</translation>
-    </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="684"/>
-        <source>Background picture Copyright © Antoine Giniès</source>
-        <translation type="unfinished">Hintergundbild Copyright © Antoine Giniès</translation>
-    </message>
-    <message utf8="true">
-        <location filename="ui/About.ui" line="703"/>
+        <location filename="ui/About.ui" line="704"/>
         <source>Based on the Qt4-Framework (Copyright © Nokia Corporation)</source>
         <translation type="unfinished">Basiert auf dem Qt4-Framework (Copyright © Nokia Corporation)</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="722"/>
+        <location filename="ui/About.ui" line="723"/>
         <source>Many icons are taken from the Oxygen and Chrytstal icon themes</source>
         <translation type="unfinished">Viele Icons stammen aus den Oxygen und Chrytstal Icon-Sammlungen</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="741"/>
+        <location filename="ui/About.ui" line="742"/>
         <source>Truetype font &quot;Liberation Sans&quot; Copyright © Red Hat, Inc.</source>
         <translation type="unfinished">Truetype font &quot;Liberation Sans&quot; Copyright © Red Hat, Inc.</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="837"/>
+        <location filename="ui/About.ui" line="895"/>
         <source>All trademarks are property of Fuji Heavy Industries Ltd. or their respective owners.</source>
         <translation type="unfinished">Alle Handelsmarken sind Eigentum von Fuji Heavy Industries Ltd. oder ihrer jeweiligen Besitzer.</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="526"/>
+        <location filename="ui/About.ui" line="527"/>
         <source>Operating Systems:</source>
         <translation type="unfinished">Betriebssysteme:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="544"/>
+        <location filename="ui/About.ui" line="545"/>
         <source>Linux/X11, Windows</source>
         <translation type="unfinished">Linux/X11, Windows</translation>
     </message>
