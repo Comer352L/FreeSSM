@@ -1,7 +1,7 @@
 /*
  * Engine.h - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class EngineDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	EngineDialog(serialCOM *port, QString language);
+	EngineDialog(AbstractDiagInterface *interface, QString language);
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};

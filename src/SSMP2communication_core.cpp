@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.cpp - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@
 #endif
 
 
-SSMP2communication_core::SSMP2communication_core(serialCOM *port)
+SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *interface)
 {
-	_port = port;
+	_interface = interface;
 }
 
 
@@ -248,94 +248,74 @@ bool SSMP2communication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID
 
 bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
-	if (_port == NULL) return false;
+	if (_interface == NULL) return false;
 	if (outdatalen < 1) return false;
-	char outmsg[260] = {0,};	// 4 + (max.255) + 1
-	unsigned int outmsglen = 0;
+	std::vector<char> msg_buffer;
 	unsigned int k = 0;
 	// SETUP COMPLETE MESSAGE:
-	// Protocoll-header
-	outmsg[0] = '\x80';
-	outmsg[1] = ecuaddr;
-	outmsg[2] = '\xF0';
-	outmsg[3] = static_cast<char>(outdatalen);
+	// Protocol-header
+	msg_buffer.push_back('\x80');
+	msg_buffer.push_back(ecuaddr);
+	msg_buffer.push_back('\xF0');
+	msg_buffer.push_back(static_cast<char>(outdatalen));
 	// Message:
-	charcat(outmsg, outdata, 4, outdatalen);
+	for (k=0; k<outdatalen; k++)
+		msg_buffer.push_back(outdata[k]);
 	// Checksum:
-	outmsg[4+outdatalen] = calcchecksum(outmsg, 4+outdatalen);
-	// Message length:
-	outmsglen = 4 + outdatalen + 1;
+	msg_buffer.push_back( calcchecksum(&msg_buffer.at(0), 4 + outdatalen) );
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMPcore::SndRcvMessage(...):   Sending message:\n";
-	for (unsigned int k=0; k<=(outmsglen/16); k++)
+	for (unsigned int k=0; k<=(msg_buffer.size()/16); k++)
 	{
-		if (16*(k+1) <= outmsglen)
-			std::cout << "   " << libFSSM::StrToHexstr(outmsg+(k*16), 16) << '\n';
-		else if (outmsglen%16)
-			std::cout << "   " << libFSSM::StrToHexstr(outmsg+(k*16), (outmsglen%16)) << '\n';
+		if (16*(k+1) <= msg_buffer.size())
+			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), 16) << '\n';
+		else if (msg_buffer.size()%16)
+			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), (msg_buffer.size()%16)) << '\n';
 	}
 #endif
-	// CLEAR PORT BUFFERS:
-	if (!_port->ClearSendBuffer())
-	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   ClearSendBuffer() failed\n";
-#endif
-		return false;
-	}
-	if (!_port->ClearRecieveBuffer())
-	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   ClearRecieveBuffer() failed\n";
-#endif
-		return false;
-	}
 	// SEND MESSAGE:
-	if (!_port->Write(outmsg, outmsglen))
+	if (!_interface->write(msg_buffer))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Write failed\n";
 #endif
 		return false;
 	}
+	msg_buffer.clear();
 	// PREPARE FOR ANSWER:
-	char readdata[520] = {0,};	// 2*(4+255+1) = 520
-	char readdatatotal[520] = {0,};
-	unsigned int nabytes = 0;
-	unsigned int nrofbytesread = 0;
-	unsigned int nrofbytesreadtotal = 0;
+	std::vector<char> read_buffer;
 	unsigned char count = 1;	// used for timeout
 	unsigned short int inmsglen = 0;
 	// WAIT FOR HEADER OF ANSWER (+ ECHO LENGTH):
-	while ((nabytes < (outmsglen + 4)) & (count < 81))	// timout: 80*20ms = 1600ms
+	while ((msg_buffer.size() < (4u + outdatalen + 1u + 4u)) && (count < 81))	// timout: 80*20ms = 1600ms
 	{
 		waitms(20);
-		_port->GetNrOfBytesAvailable(&nabytes);	// FAIL SILENT: => nbytes=0
+		if (!_interface->read(&read_buffer))
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
+#endif
+			// NOTE: fail silent
+		}	
+		else if (read_buffer.size())
+		{
+			msg_buffer.insert(msg_buffer.end(), read_buffer.begin(), read_buffer.end());
+		}
 		count++;
 	}
 	// CHECK IF TIMEOUT:
-	if (nabytes < (outmsglen + 4))
+	if (msg_buffer.size() < (4u + outdatalen + 1u + 4u))
 	{
-#ifdef __FSSM_DEBUG__
+	#ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 1\n";
-#endif
+	#endif
 		return false;
 	}
-	nabytes = 0;
-	// READ AVAILABLE DATA (ANSWER MAY BE INCOMPLETE)
-	if (!_port->Read(520, readdata, &nrofbytesread))
-	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
-#endif
-		return false;
-	}
-	// ELIMINATE ECHO:
-	charcat(readdatatotal, readdata+outmsglen, nrofbytesreadtotal, nrofbytesread-outmsglen);
-	nrofbytesreadtotal += (nrofbytesread-outmsglen);
+	// ELIMINATE ECHO :
+	msg_buffer.erase(msg_buffer.begin(), msg_buffer.begin() + 4 + outdatalen + 1);
 	// CHECK IF PROTOCOL HEADER IS CORRECT:
-	if ((readdatatotal[0]!='\x80') || (readdatatotal[1]!='\xF0') || (readdatatotal[2]!=ecuaddr))
+	if ((msg_buffer.at(0) != '\x80') || (msg_buffer.at(1) != '\xF0') || (msg_buffer.at(2) != ecuaddr))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Invalid Protocol Header\n";
@@ -343,41 +323,38 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 		return false;
 	}
 	// CALCULATE LENGTH OF COMPLETE ANSWER MESSAGE (using length byte of header):
-	inmsglen = 4 + static_cast<unsigned char>(readdatatotal[3]) + 1;
+	inmsglen = 4 + static_cast<unsigned char>(msg_buffer.at(3)) + 1;
 	// READ REST OF THE MESSAGE:
-	if (nrofbytesreadtotal < inmsglen)	// IF ANSWER IS INCOMPLETE
+	if (msg_buffer.size() < inmsglen)	// IF ANSWER IS INCOMPLETE
 	{
-		// WAIT FOR REST OF ANSWER MESSAGE:
+		// WAIT FOR REST OF THE INCOMING MESSAGE:
 		count = 0;	// reset timout counter
-		while ( ((nrofbytesreadtotal + nabytes) < inmsglen) & (count < 27) )	// 260-4=256Bytes=533.3ms => 540ms=27*20
+		while ( (msg_buffer.size() < inmsglen) && (count < 27) )	// 260-4=256Bytes=533.3ms => 540ms=27*20
 		{
 			waitms(20);
-			_port->GetNrOfBytesAvailable(&nabytes);	// FAIL SILENT: => nbytes=0
-			count++;
-		}
-		// READ REST OF THE AVAILABLE DATA:
-		if (nabytes > 0)
-		{
-			if (!_port->Read(520, readdata, &nrofbytesread))
+			if (!_interface->read(&read_buffer))
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "SSMPcore::SndRcvMessage(...):   Read 2 failed\n";
 #endif
-				return false;
+				// NOTE: fail silent
 			}
+			else if (read_buffer.size())
+			{
+				msg_buffer.insert(msg_buffer.end(), read_buffer.begin(), read_buffer.end());
+			}
+			count++;
 		}
 		// CHECK IF MESSAGE COMPLETE:
-		if ((nrofbytesreadtotal + nabytes) != inmsglen)
+		if (msg_buffer.size() != inmsglen)
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 2\n";
 #endif
 			return false;
 		}
-		charcat(readdatatotal, readdata, nrofbytesreadtotal, nrofbytesread);
-		nrofbytesreadtotal += nrofbytesread;
 	}
-	else if (nrofbytesreadtotal > inmsglen)	// CHECK IF ANSWER IS TOO LONG
+	else if (msg_buffer.size() > inmsglen)	// CHECK IF ANSWER IS TOO LONG
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Too many bytes read\n";
@@ -385,7 +362,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 		return false;
 	}
 	// CHECK CHECKSUM:
-	if (readdatatotal[nrofbytesreadtotal-1] != calcchecksum(readdatatotal, (nrofbytesreadtotal-1)))
+	if (msg_buffer.back() != calcchecksum(&msg_buffer.at(0), (msg_buffer.size() - 1)))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Checksum Error\n";
@@ -395,16 +372,16 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 	// EXTRACT AND RETURN DATA:
 	*indatalen = inmsglen - 4 - 1;
 	for (k=0; k<*indatalen; k++)
-		indata[k] = readdatatotal[4+k];
+		indata[k] = msg_buffer.at(4+k);
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMPcore::SndRcvMessage(...):   Recieved message:\n";
 	for (unsigned int k=0; k<=(inmsglen/16); k++)
 	{
 		if (16*(k+1) <= inmsglen)
-			std::cout << "   " << libFSSM::StrToHexstr(readdatatotal+(k*16), 16) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), 16) << '\n';
 		else if (inmsglen%16)
-			std::cout << "   " << libFSSM::StrToHexstr(readdatatotal+(k*16), (inmsglen%16)) << '\n';
+			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), (inmsglen%16)) << '\n';
 	}
 #endif
 	return true;
@@ -421,15 +398,6 @@ char SSMP2communication_core::calcchecksum(char *message, unsigned int nrofbytes
 	return static_cast<char>(cs);
 }
 
-
-void SSMP2communication_core::charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b)
-{
-	unsigned int k;
-	for (k=0; k<len_b; k++)
-	{
-		chararray_a[len_a+k] = chararray_b[k];
-	}
-}
 
 
 bool SSMP2communication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)

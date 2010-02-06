@@ -1,0 +1,246 @@
+/*
+ * SerialPassThroughDiagInterface.cpp - Serial port pass-through diagnostic interface
+ *
+ * Copyright (C) 2010 Comer352l
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "SerialPassThroughDiagInterface.h"
+
+#ifdef __WIN32__
+    #define waitms(x) Sleep(x)
+#elif defined __linux__
+    #define waitms(x) usleep(1000*x)
+#else
+    #error "Operating system not supported !"
+#endif
+
+
+SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
+{
+	_port = NULL;
+	_connected = false;
+	setName("Serial Port Pass-Through");
+	setVersion("");
+}
+
+
+SerialPassThroughDiagInterface::~SerialPassThroughDiagInterface()
+{
+	disconnect();
+	close();
+}
+
+
+AbstractDiagInterface::interface_type SerialPassThroughDiagInterface::interfaceType()
+{
+	return interface_serialPassThrough;
+}
+
+
+bool SerialPassThroughDiagInterface::open( std::string name )
+{
+	if (_port)
+		return false;
+	else
+	{
+		_port = new serialCOM;
+		if (!_port->OpenPort( name ))
+		{
+			delete _port;
+			_port = NULL;
+			return false;
+		}
+		else
+			return true;
+	}
+}
+
+
+bool SerialPassThroughDiagInterface::isOpen()
+{
+	return _port;
+}
+
+
+bool SerialPassThroughDiagInterface::close()
+{
+	if (_port)
+	{
+		if (_connected)
+			disconnect();
+		if (_port->ClosePort())
+		{
+			delete _port;
+			_port = NULL;
+			return true;
+		}
+		else
+			return false;
+	}
+	else
+		return false;
+}
+
+
+bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
+{
+	if (_port && !_connected)
+	{
+		if (protocol == AbstractDiagInterface::protocol_SSM1)
+		{
+			serialCOM::dt_portsettings portsettings;
+			portsettings.baudrate = 1954;
+			portsettings.databits = 8;
+			portsettings.parity = 'E';
+			portsettings.stopbits = 1;
+			if (_port->SetPortSettings(portsettings))
+			{
+				if(!_port->GetPortSettings(&portsettings))
+					return false;
+				if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
+				{
+#ifdef __FSSM_DEBUG__
+					std::cout << "SerialPassThroughDiagInterface::connect(...):   Selected baudrate not supported (devergence > 3%)\n";
+#endif
+					return false;
+				}
+				setProtocolType( protocol );
+				_connected = true;
+				return true;
+			}
+			else
+				return false;
+		}
+		else if (protocol == AbstractDiagInterface::protocol_SSM2)
+		{
+			serialCOM::dt_portsettings portsettings;
+			portsettings.baudrate = 4800;
+			portsettings.databits = 8;
+			portsettings.parity = 'N';
+			portsettings.stopbits = 1;
+			if (_port->SetPortSettings(portsettings))
+			{
+				setProtocolType( protocol );
+				_connected = true;
+				return true;
+			}
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+		return false;
+}
+
+
+bool SerialPassThroughDiagInterface::isConnected()
+{
+	return (_port && _connected); 
+}
+
+
+bool SerialPassThroughDiagInterface::disconnect()
+{
+	if (_port)
+	{
+		_connected = false;
+		return true;
+	}
+	else
+		return false;
+}
+
+
+bool SerialPassThroughDiagInterface::read(std::vector<char> *buffer)
+{
+	if (_port && _connected)
+	{
+		unsigned int nbytes = 0;
+		if (_port->GetNrOfBytesAvailable(&nbytes) && !nbytes)
+		{
+			buffer->clear();
+			return true;
+		}
+		else
+			return _port->Read( nbytes, buffer );
+	}
+	else
+		return false;
+}
+
+
+bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
+{
+	if (_port && _connected)
+	{
+		if (!_port->ClearSendBuffer())
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "SerialPassThroughDiagInterface::write(...):   ClearSendBuffer() failed\n";
+#endif
+			return false;
+		}
+		if (protocolType() == AbstractDiagInterface::protocol_SSM2)
+		{
+			if (!_port->ClearRecieveBuffer())
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearRecieveBuffer() failed\n";
+#endif
+				return false;
+			}
+		}
+		TimeM time;
+		unsigned int t_el = 0;
+		unsigned int T_Tx_min = 0;
+		if (protocolType() == AbstractDiagInterface::protocol_SSM1)
+		{
+			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 11 / 1953.0);
+		}
+		else if (protocolType() == AbstractDiagInterface::protocol_SSM2)
+		{
+			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 10 / 4800.0);
+		}
+		time.start();
+		if (!_port->Write( buffer ))
+			return false;
+		if (T_Tx_min)
+		{
+			t_el = time.elapsed();
+			if (t_el < T_Tx_min)
+				waitms(T_Tx_min - t_el);
+		}
+		if (protocolType() != AbstractDiagInterface::protocol_SSM2)
+		{
+			if (!_port->ClearRecieveBuffer())
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearRecieveBuffer() failed\n";
+#endif
+				return false;
+			}
+		}
+		return true;
+	}
+	else
+		return false;
+}
+
+

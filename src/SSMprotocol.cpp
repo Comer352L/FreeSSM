@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 
 
-SSMprotocol::SSMprotocol(serialCOM *port, QString language)
+SSMprotocol::SSMprotocol(AbstractDiagInterface *interface, QString language)
 {
-	_port = port;
+	_interface = interface;
 	_language = language;
 	_state = state_needSetup;
 }

@@ -1,7 +1,7 @@
 /*
  * SSMP1communication_procedures.cpp - Communication procedures for the SSM1-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #endif
 
 
-SSMP1communication_procedures::SSMP1communication_procedures(serialCOM *port) : SSMP1commands(port)
+SSMP1communication_procedures::SSMP1communication_procedures(AbstractDiagInterface *interface) : SSMP1commands(interface)
 {
 	_currentaddr = -1;
 	_lastaddr = -1;
@@ -72,7 +72,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	if (!sendQueryIdCmd()) return false;
 	waitms(SSMP1_T_NEWDATA_REC_MAX);
 	// Read all data from port and return the last 3 bytes
-	if (_port->Read(1024, data) && (data->size() > 2))
+	if (_interface->read(data) && (data->size() > 2))
 	{
 		data->erase(data->begin(), data->end()-3);
 		return true;
@@ -87,7 +87,6 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 	TimeM time;
 	char hb = (_currentaddr & 0xffff) >> 8;
 	char lb = _currentaddr & 0xff;
-	unsigned int nbytes = 0;
 	std::vector<char> rbuf;
 	bool err = false;
 	time.start();
@@ -96,15 +95,11 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 		// Read out port buffer:
 		do
 		{
-			err = !_port->GetNrOfBytesAvailable(&nbytes);
-			if (!err && nbytes)
-			{
-				if (_port->Read(1024, &rbuf) && rbuf.size())
-					_recbuffer.insert(_recbuffer.end(), rbuf.begin(), rbuf.end());
-				else
-					err = true;
-			}
-		} while (!err && nbytes);
+			if (_interface->read(&rbuf) && rbuf.size())
+				_recbuffer.insert(_recbuffer.end(), rbuf.begin(), rbuf.end());
+			else
+				err = true;
+		} while (!err && rbuf.size());
 #ifdef __FSSM_DEBUG__
 		if (err)
 			std::cout << "SSMP1communication_procedures::getNextData():   communication error !";
@@ -206,20 +201,16 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 		return false;
 	if (waitforsilence)
 	{
-		unsigned int nbytes = 0;
-		unsigned int lastnbytes = 0;
+		std::vector<char> buffer;
 		TimeM time;
 		time.start();
 		do
 		{
 			waitms(10);
-			if (_port->GetNrOfBytesAvailable(&nbytes))
+			if (_interface->read(&buffer))
 			{
-				if (nbytes > lastnbytes)
-				{
-					lastnbytes = nbytes;
+				if (buffer.size())
 					norec_counter = 0;
-				}
 				else
 					norec_counter++;
 			}
@@ -232,7 +223,6 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 	}
 	if (!waitforsilence || (norec_counter >= 5))
 	{
-		_port->ClearRecieveBuffer();
 		_recbuffer.clear();
 		_currentaddr = -1;
 		_lastaddr = -1;

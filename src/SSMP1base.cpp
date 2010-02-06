@@ -1,7 +1,7 @@
 /*
  * SSMP1base.cpp - Basic definitions and commands for the SSM1-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,10 @@
 
 #include "SSMP1base.h"
 
-#ifdef __WIN32__
-    #define waitms(x) Sleep(x)
-#elif defined __linux__
-    #define waitms(x) usleep(1000*x)
-#else
-    #error "Operating system not supported !"
-#endif
 
-
-SSMP1commands::SSMP1commands(serialCOM * port)
+SSMP1commands::SSMP1commands(AbstractDiagInterface *interface)
 {
-	_port = port;
+	_interface = interface;
 }
 
 
@@ -103,22 +95,9 @@ bool SSMP1commands::sendWriteDatabyteCmd(unsigned int dataaddr, char databyte)
 
 bool SSMP1commands::sendMsg(char msg[4], unsigned char msglen)
 {
-	TimeM time;
-	unsigned int t_el = 0;
-	unsigned int T_Tx_min = static_cast<unsigned int>(1000 * msglen * 11 / 1953.0);
-	// CLEAR SEND BUFFER:
-	if (!_port->ClearSendBuffer())
-		return false;
+	std::vector<char> buffer(msg, msg + msglen);
 	// SEND MESSAGE:
-	time.start();
-	if (!_port->Write(msg, msglen))
-		return false;
-	t_el = time.elapsed();
-	if (t_el < T_Tx_min)
-		waitms(T_Tx_min - t_el);
-	// CLEAR RECIEVE BUFFER
-	if (!_port->ClearRecieveBuffer())
+	if (!_interface->write(buffer))
 		return false;
 	return true;
 }
-

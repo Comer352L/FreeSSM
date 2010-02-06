@@ -18,6 +18,8 @@ HEADERS += src/FreeSSM.h \
            src/About.h \
            src/FSSMdialogs.h \
            src/ActuatorTestDlg.h \
+           src/AbstractDiagInterface.h \
+           src/SerialPassThroughDiagInterface.h \
            src/SSMP1communication.h \
            src/SSMP1communication_procedures.h \
            src/SSMP1base.h \
@@ -51,6 +53,8 @@ SOURCES += src/main.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
            src/ActuatorTestDlg.cpp \
+           src/AbstractDiagInterface.cpp \
+           src/SerialPassThroughDiagInterface.cpp \
            src/SSMP1communication.cpp \
            src/SSMP1communication_procedures.cpp \
            src/SSMP1base.cpp \

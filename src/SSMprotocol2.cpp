@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol2::SSMprotocol2(serialCOM *port, QString language) : SSMprotocol(port, language)
+SSMprotocol2::SSMprotocol2(AbstractDiagInterface *interface, QString language) : SSMprotocol(interface, language)
 {
 	_SSMP2com = NULL;
 	resetCUdata();
@@ -143,7 +143,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	}
 	else
 		return false;
-	_SSMP2com = new SSMP2communication(_port, CUaddress);
+	_SSMP2com = new SSMP2communication(_interface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		 return false;

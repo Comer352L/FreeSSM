@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -216,18 +216,12 @@ void Preferences::interfacetest()
 	QMessageBox *msgbox;
 	FSSM_WaitMsgBox *waitmsgbox = NULL;
 	QFont msgboxfont;
-	// PREPARE SERIAL INTERCAE:
-	serialCOM *serialport = new serialCOM;
+	// PREPARE SERIAL PASS-THROUGH INTERFACE:
+	SerialPassThroughDiagInterface *interface = new SerialPassThroughDiagInterface;
 	// Open port:
-	if (serialport->OpenPort(_newportname.toStdString()))
+	if (interface->open(_newportname.toStdString()))
 	{
-		// Configure port:
-		serialCOM::dt_portsettings newportsettings;
-		newportsettings.baudrate = 4800;
-		newportsettings.databits = 8;
-		newportsettings.parity = 'N';
-		newportsettings.stopbits = 1;
-		if (!serialport->SetPortSettings(newportsettings))
+		if (!interface->connect( AbstractDiagInterface::protocol_SSM2))
 		{
 			msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Couldn't configure serial port !"), QMessageBox::Ok, this);
 			msgboxfont = msgbox->font();
@@ -237,8 +231,8 @@ void Preferences::interfacetest()
 			msgbox->exec();
 			msgbox->close();
 			delete msgbox;
-			serialport->ClosePort();
-			delete serialport;
+			interface->close();
+			delete interface;
 			return;
 		}
 	}
@@ -252,11 +246,11 @@ void Preferences::interfacetest()
 		msgbox->exec();
 		msgbox->close();
 		delete msgbox;
-		delete serialport;
+		delete interface;
 		return;
 	}
 	// SETUP SSMPcommunication object:
-	SSMP2communication *SSMP2com = new SSMP2communication(serialport, 0x10);
+	SSMP2communication *SSMP2com = new SSMP2communication(interface, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
 	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles" "\n" "OBD-Connector and switch ignition on."), QMessageBox::NoButton, this);
@@ -321,7 +315,7 @@ void Preferences::interfacetest()
 		delete SSMP2com;
 	}
 	// CLOSE SERIAL PORT
-	if (!serialport->ClosePort())
+	if (!interface->close())
 	{
 		msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Error while closing serial port !"), QMessageBox::Ok, this);
 		msgboxfont = msgbox->font();
@@ -332,7 +326,7 @@ void Preferences::interfacetest()
 		msgbox->close();
 		delete msgbox;
 	}
-	delete serialport;
+	delete interface;
 }
 
 

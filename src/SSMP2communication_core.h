@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.h - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,7 @@
 #define SSMP2COMMUNICATIONCORE_H
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
+#include "AbstractDiagInterface.h"
 #ifdef __FSSM_DEBUG__
     #include <iostream>
     #include "libFSSM.h"
@@ -39,7 +33,7 @@ class SSMP2communication_core
 {
 
 public:
-	SSMP2communication_core(serialCOM *port);
+	SSMP2communication_core(AbstractDiagInterface *interface);
 
 	bool ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data);
 	bool ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data);
@@ -48,11 +42,10 @@ public:
 	bool GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 
 private:
-	serialCOM *_port;
+	AbstractDiagInterface *_interface;
 
 	bool SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	char calcchecksum(char *message, unsigned int nrofbytes);
-	void charcat(char *chararray_a, char *chararray_b, unsigned int len_a, unsigned int len_b);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
 
 };

@@ -1,7 +1,7 @@
 /*
  * Preferences.h - Adjustment of program settings
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
+#include "SerialPassThroughDiagInterface.h"
 #include "SSMP2communication.h"
 #include "FSSMdialogs.h"
 #include "ui_Preferences.h"

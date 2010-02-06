@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.h - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,10 @@
 
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <string>
 #include <vector>
 #include <math.h>
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
 #include "libFSSM.h"
@@ -43,7 +37,7 @@ class SSMprotocol1 : public SSMprotocol
 	Q_OBJECT
 
 public:
-	SSMprotocol1(serialCOM *port, QString language="en");
+	SSMprotocol1(AbstractDiagInterface *interface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION

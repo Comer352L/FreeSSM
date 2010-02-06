@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.h - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,10 @@
 
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <string>
 #include <vector>
 #include <math.h>
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
 #include "SSMprotocol2_ID.h"
@@ -46,7 +40,7 @@ class SSMprotocol2 : public SSMprotocol, private SSMprotocol2_ID
 	Q_OBJECT
 
 public:
-	SSMprotocol2(serialCOM *port, QString language="en");
+	SSMprotocol2(AbstractDiagInterface *interface, QString language="en");
 	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);

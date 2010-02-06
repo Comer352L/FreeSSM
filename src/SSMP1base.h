@@ -1,7 +1,7 @@
 /*
  * SSMP1base.h - Basic definitions and commands for the SSM1-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,7 @@
 #define SSMP1COMMANDS_H
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-    #include "windows\TimeM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-    #include "linux/TimeM.h"
-#else
-    #error "Operating system not supported !"
-#endif
+#include "AbstractDiagInterface.h"
 
 
 /* SSM1-protocol-commands */
@@ -58,14 +50,14 @@ class SSMP1commands
 {
 
 public:
-	SSMP1commands(serialCOM * port);
+	SSMP1commands(AbstractDiagInterface *interface);
 	bool sendStopTalkingCmd();
 	bool sendQueryIdCmd();
 	bool sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr);
 	bool sendWriteDatabyteCmd(unsigned int dataaddr, char databyte);
 
 protected:
-	serialCOM * _port;
+	AbstractDiagInterface *_interface;
 
 private:
 	bool sendMsg(char msg[4], unsigned char msglen);

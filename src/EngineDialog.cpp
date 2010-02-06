@@ -1,7 +1,7 @@
 /*
  * Engine.cpp - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include "EngineDialog.h"
 
 
-EngineDialog::EngineDialog(serialCOM *port, QString language) : ControlUnitDialog(tr("Engine Control Unit"), port, language)
+EngineDialog::EngineDialog(AbstractDiagInterface *interface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), interface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;

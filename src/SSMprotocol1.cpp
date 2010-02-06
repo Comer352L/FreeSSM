@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.cpp - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol1::SSMprotocol1(serialCOM *port, QString language) : SSMprotocol(port, language)
+SSMprotocol1::SSMprotocol1(AbstractDiagInterface *interface, QString language) : SSMprotocol(interface, language)
 {
 	_SSMP1com = NULL;
 	_ID[0] = '\x0';
@@ -72,7 +72,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	}
 	else
 		return false;
-	_SSMP1com = new SSMP1communication(_port, SSM1_CU);
+	_SSMP1com = new SSMP1communication(_interface, SSM1_CU);
 	// Get control unit data:
 	if (!_SSMP1com->readID(_ID))
 		 return false;

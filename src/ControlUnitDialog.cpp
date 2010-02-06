@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.cpp - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
 #include "ControlUnitDialog.h"
 
 
-ControlUnitDialog::ControlUnitDialog(QString title, serialCOM *port, QString language)
+ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *interface, QString language)
 {
 	// *** Initialize global variables:
 	_language = language;
-	_port = port;
+	_interface = interface;
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
@@ -122,9 +122,9 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 {
 	// Probe SSM1-protocol:
-	if (configurePort(1953, 'E'))
+	if (_interface->connect(AbstractDiagInterface::protocol_SSM1))
 	{
-		_SSMPdev = new SSMprotocol1(_port, _language);
+		_SSMPdev = new SSMprotocol1(_interface, _language);
 		if (_SSMPdev->setupCUdata( CUtype ))
 		{
 			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -136,12 +136,13 @@ bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 		QTimer::singleShot(500, &el, SLOT(quit()));
 		el.exec();
 	}
+	_interface->disconnect();
 	// Probe SSM2-protocol:
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
-		if (configurePort(4800, 'N'))
+		if (_interface->connect(AbstractDiagInterface::protocol_SSM2))
 		{
-			_SSMPdev = new SSMprotocol2(_port, _language);
+			_SSMPdev = new SSMprotocol2(_interface, _language);
 			if (_SSMPdev->setupCUdata( CUtype ))
 			{
 				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -150,25 +151,9 @@ bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 			delete _SSMPdev;
 		}
 	}
+	_interface->disconnect();
 	_SSMPdev = NULL;
 	return false;
-}
-
-
-bool ControlUnitDialog::configurePort(unsigned int baud, char parity)
-{
-	serialCOM::dt_portsettings portsettings;
-	portsettings.baudrate = static_cast<double>(baud);
-	portsettings.databits = 8;
-	portsettings.parity = parity;
-	portsettings.stopbits = 1;
-	if(!_port->SetPortSettings(portsettings))
-		return false;
-	if(!_port->GetPortSettings(&portsettings))
-		return false;
-	if ((portsettings.baudrate < (0.97*baud)) || (portsettings.baudrate > (1.03*baud)))
-		return false;
-	return true;
 }
 
 

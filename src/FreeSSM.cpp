@@ -1,7 +1,7 @@
 /*
  * FreeSSM.cpp - Program main window
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -214,14 +214,14 @@ FreeSSM::~FreeSSM()
 void FreeSSM::engine()
 {
 	if (_dumping) return;
-	serialCOM *port = initPort();
-	if (port)
+	SerialPassThroughDiagInterface *interface = initInterface();
+	if (interface)
 	{
-		EngineDialog *enginedialog = new EngineDialog(port, _language);
+		EngineDialog *enginedialog = new EngineDialog(interface, _language);
 		if (!enginedialog->isHidden())
 			enginedialog->exec();
 		delete enginedialog;
-		delete port;
+		delete interface;
 	}
 }
 
@@ -229,14 +229,14 @@ void FreeSSM::engine()
 void FreeSSM::transmission()
 {
 	if (_dumping) return;
-	serialCOM *port = initPort();
-	if (port)
+	SerialPassThroughDiagInterface *interface = initInterface();
+	if (interface)
 	{
-		TransmissionDialog *transmissiondialog = new TransmissionDialog(port, _language);
+		TransmissionDialog *transmissiondialog = new TransmissionDialog(interface, _language);
 		if (!transmissiondialog->isHidden())
 			transmissiondialog->exec();
 		delete transmissiondialog;
-		delete port;
+		delete interface;
 	}
 }
 
@@ -276,7 +276,7 @@ void FreeSSM::about()
 }
 
 
-serialCOM * FreeSSM::initPort()
+SerialPassThroughDiagInterface * FreeSSM::initInterface()
 {
 	// IF NO PORT IS SELECTED YET: SELECT FIRST AVAILABLE PORT
 	if (_portname == "")
@@ -298,10 +298,10 @@ serialCOM * FreeSSM::initPort()
 			return false;
 		}
 	}
-	// Open port:
-	serialCOM *port = new serialCOM;
-	if (port->OpenPort(_portname.toStdString()))
-		return port;
+	// Open interface:
+	SerialPassThroughDiagInterface *interface = new SerialPassThroughDiagInterface;
+	if (interface->open(_portname.toStdString()))
+		return interface;
 	// Return error:
 	QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
@@ -310,7 +310,7 @@ serialCOM * FreeSSM::initPort()
 	msg.show();
 	msg.exec();
 	msg.close();
-	delete port;
+	delete interface;
 	return NULL;
 }
 
@@ -356,7 +356,6 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 
 void FreeSSM::dumpCUdata()
 {
-	serialCOM::dt_portsettings portsettings;
 	QFile dumpfile;
 	char SYS_ID[3] = {0};
 	char ROM_ID[5] = {0};
@@ -370,15 +369,14 @@ void FreeSSM::dumpCUdata()
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
-	serialCOM *port = initPort();
-	if (port)
+	SerialPassThroughDiagInterface *interface = initInterface();
+	if (interface)
 	{
-		portsettings.baudrate = 4800;
-		portsettings.databits = 8;
-		portsettings.parity = 'N';
-		portsettings.stopbits = 1;
-		if (!port->SetPortSettings(portsettings))
+		if (!interface->connect(AbstractDiagInterface::protocol_SSM2))
+		{
+			delete interface;
 			return;
+		}
 	}
 	else
 		return;
@@ -399,9 +397,9 @@ void FreeSSM::dumpCUdata()
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
 	// Create SSMP1-Communication-object:
-	SSMP1communication SSMP1com(port, SSM1_CU_Engine, 0);
+	SSMP1communication SSMP1com(interface, SSM1_CU_Engine, 0);
 	// Create SSMP2-Communication-object:
-	SSMP2communication SSMP2com(port, '\x10', 0);
+	SSMP2communication SSMP2com(interface, '\x10', 0);
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
@@ -492,17 +490,10 @@ void FreeSSM::dumpCUdata()
 	}
 	else if (dumpfile.isOpen())
 		dumpfile.write("\n---\n", 5);
+	interface->disconnect();
 	// ######## SSM1-Control-Units ########
-	// Configure Port:
-	portsettings.baudrate = 1953;
-	portsettings.databits = 8;
-	portsettings.parity = 'E';
-	portsettings.stopbits = 1;
-	if(!port->SetPortSettings(portsettings))
-		goto end;
-	if(!port->GetPortSettings(&portsettings))
-		goto end;
-	if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
+	// Configure interface:
+	if (!interface->connect(AbstractDiagInterface::protocol_SSM1))
 		goto end;
 	// Dump all SSM1-CUs:
 	for (ssm1_cu_index=SSM1_CU_Engine; ssm1_cu_index<=SSM1_CU_FourWS; ssm1_cu_index++)
@@ -532,10 +523,11 @@ void FreeSSM::dumpCUdata()
 		else if (dumpfile.isOpen())
 			dumpfile.write("\n-----\n", 7);
 	}
+	interface->disconnect();
 
 end:
 	dumpfile.close();
-	delete port;	// port will be closed in destructor of serialCOM
+	delete interface;	// will be closed in destructor
 	_dumping = false;
 }
 
