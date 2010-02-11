@@ -40,7 +40,7 @@ class SSMP1communication_procedures : private SSMP1commands
 {
 
 public:
-	SSMP1communication_procedures(AbstractDiagInterface *interface);
+	SSMP1communication_procedures(AbstractDiagInterface *diagInterface);
 	bool setAddress(SSM1_CUtype_dt cu, unsigned int addr);
 	bool getID(std::vector<char> * data);
 	bool writeDatabyte(char databyte);

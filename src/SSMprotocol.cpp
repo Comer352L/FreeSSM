@@ -21,9 +21,9 @@
 
 
 
-SSMprotocol::SSMprotocol(AbstractDiagInterface *interface, QString language)
+SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
-	_interface = interface;
+	_diagInterface = diagInterface;
 	_language = language;
 	_state = state_needSetup;
 }

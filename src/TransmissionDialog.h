@@ -36,6 +36,7 @@
 #include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 
@@ -46,7 +47,7 @@ class TransmissionDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	TransmissionDialog(AbstractDiagInterface *interface, QString language);
+	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};

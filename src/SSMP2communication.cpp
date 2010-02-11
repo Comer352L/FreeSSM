@@ -21,7 +21,7 @@
 #include "SSMP2communication.h"
 
 
-SSMP2communication::SSMP2communication(AbstractDiagInterface *interface, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(interface)
+SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
 

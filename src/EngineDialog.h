@@ -37,6 +37,7 @@
 #include "CUcontent_sysTests.h"
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 
@@ -47,7 +48,7 @@ class EngineDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	EngineDialog(AbstractDiagInterface *interface, QString language);
+	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};

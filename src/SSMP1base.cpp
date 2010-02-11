@@ -20,9 +20,9 @@
 #include "SSMP1base.h"
 
 
-SSMP1commands::SSMP1commands(AbstractDiagInterface *interface)
+SSMP1commands::SSMP1commands(AbstractDiagInterface *diagInterface)
 {
-	_interface = interface;
+	_diagInterface = diagInterface;
 }
 
 
@@ -97,7 +97,7 @@ bool SSMP1commands::sendMsg(char msg[4], unsigned char msglen)
 {
 	std::vector<char> buffer(msg, msg + msglen);
 	// SEND MESSAGE:
-	if (!_interface->write(buffer))
+	if (!_diagInterface->write(buffer))
 		return false;
 	return true;
 }

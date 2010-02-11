@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol1::SSMprotocol1(AbstractDiagInterface *interface, QString language) : SSMprotocol(interface, language)
+SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
 	_ID[0] = '\x0';
@@ -72,7 +72,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	}
 	else
 		return false;
-	_SSMP1com = new SSMP1communication(_interface, SSM1_CU);
+	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit data:
 	if (!_SSMP1com->readID(_ID))
 		 return false;

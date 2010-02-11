@@ -33,7 +33,7 @@ class SSMP2communication_core
 {
 
 public:
-	SSMP2communication_core(AbstractDiagInterface *interface);
+	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
 	bool ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data);
 	bool ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data);
@@ -42,7 +42,7 @@ public:
 	bool GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 
 private:
-	AbstractDiagInterface *_interface;
+	AbstractDiagInterface *_diagInterface;
 
 	bool SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	char calcchecksum(char *message, unsigned int nrofbytes);

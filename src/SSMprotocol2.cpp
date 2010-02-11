@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol2::SSMprotocol2(AbstractDiagInterface *interface, QString language) : SSMprotocol(interface, language)
+SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP2com = NULL;
 	resetCUdata();
@@ -143,7 +143,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	}
 	else
 		return false;
-	_SSMP2com = new SSMP2communication(_interface, CUaddress);
+	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		 return false;

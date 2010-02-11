@@ -20,7 +20,7 @@
 #include "TransmissionDialog.h"
 
 
-TransmissionDialog::TransmissionDialog(AbstractDiagInterface *interface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), interface, language)
+TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), diagInterface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;

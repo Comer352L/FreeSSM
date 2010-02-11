@@ -34,7 +34,7 @@ class SSMP1communication : public QThread, private SSMP1communication_procedures
 public:
 	enum comOp_dt {comOp_noCom, comOp_readRomId, comOp_read, comOp_write, comOp_read_p, comOp_write_p};
 
-	SSMP1communication(AbstractDiagInterface *interface, SSM1_CUtype_dt cu, unsigned char errRetries = 2);
+	SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries = 2);
 	~SSMP1communication();
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);

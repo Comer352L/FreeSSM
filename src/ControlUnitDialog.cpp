@@ -20,11 +20,11 @@
 #include "ControlUnitDialog.h"
 
 
-ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *interface, QString language)
+ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language)
 {
 	// *** Initialize global variables:
 	_language = language;
-	_interface = interface;
+	_diagInterface = diagInterface;
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
@@ -122,9 +122,9 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 {
 	// Probe SSM1-protocol:
-	if (_interface->connect(AbstractDiagInterface::protocol_SSM1))
+	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
 	{
-		_SSMPdev = new SSMprotocol1(_interface, _language);
+		_SSMPdev = new SSMprotocol1(_diagInterface, _language);
 		if (_SSMPdev->setupCUdata( CUtype ))
 		{
 			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -136,13 +136,13 @@ bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 		QTimer::singleShot(500, &el, SLOT(quit()));
 		el.exec();
 	}
-	_interface->disconnect();
+	_diagInterface->disconnect();
 	// Probe SSM2-protocol:
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
-		if (_interface->connect(AbstractDiagInterface::protocol_SSM2))
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
 		{
-			_SSMPdev = new SSMprotocol2(_interface, _language);
+			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
 			if (_SSMPdev->setupCUdata( CUtype ))
 			{
 				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -151,7 +151,7 @@ bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 			delete _SSMPdev;
 		}
 	}
-	_interface->disconnect();
+	_diagInterface->disconnect();
 	_SSMPdev = NULL;
 	return false;
 }

@@ -28,7 +28,7 @@
 #endif
 
 
-SSMP1communication_procedures::SSMP1communication_procedures(AbstractDiagInterface *interface) : SSMP1commands(interface)
+SSMP1communication_procedures::SSMP1communication_procedures(AbstractDiagInterface *diagInterface) : SSMP1commands(diagInterface)
 {
 	_currentaddr = -1;
 	_lastaddr = -1;
@@ -72,7 +72,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	if (!sendQueryIdCmd()) return false;
 	waitms(SSMP1_T_NEWDATA_REC_MAX);
 	// Read all data from port and return the last 3 bytes
-	if (_interface->read(data) && (data->size() > 2))
+	if (_diagInterface->read(data) && (data->size() > 2))
 	{
 		data->erase(data->begin(), data->end()-3);
 		return true;
@@ -95,7 +95,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 		// Read out port buffer:
 		do
 		{
-			if (_interface->read(&rbuf) && rbuf.size())
+			if (_diagInterface->read(&rbuf) && rbuf.size())
 				_recbuffer.insert(_recbuffer.end(), rbuf.begin(), rbuf.end());
 			else
 				err = true;
@@ -207,7 +207,7 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 		do
 		{
 			waitms(10);
-			if (_interface->read(&buffer))
+			if (_diagInterface->read(&buffer))
 			{
 				if (buffer.size())
 					norec_counter = 0;

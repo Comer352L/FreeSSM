@@ -35,7 +35,7 @@ class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 	Q_OBJECT
 
 public:
-	ControlUnitDialog(QString title, AbstractDiagInterface *interface, QString language);
+	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language);
 	~ControlUnitDialog();
 
 protected:
@@ -48,7 +48,7 @@ protected:
 
 private:
 	QString _language;
-	AbstractDiagInterface *_interface;
+	AbstractDiagInterface *_diagInterface;
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
 	QList<QPushButton*> _selButtons;

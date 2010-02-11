@@ -20,7 +20,7 @@
 #include "EngineDialog.h"
 
 
-EngineDialog::EngineDialog(AbstractDiagInterface *interface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), interface, language)
+EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), diagInterface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;

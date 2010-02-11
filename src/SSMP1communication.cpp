@@ -20,7 +20,7 @@
 #include "SSMP1communication.h"
 
 
-SSMP1communication::SSMP1communication(AbstractDiagInterface *interface, SSM1_CUtype_dt cu, unsigned char errRetries) : QThread(), SSMP1communication_procedures(interface)
+SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries) : QThread(), SSMP1communication_procedures(diagInterface)
 {
 	_cu = cu;
 	_errRetries = errRetries;

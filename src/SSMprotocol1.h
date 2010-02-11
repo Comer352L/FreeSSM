@@ -37,7 +37,7 @@ class SSMprotocol1 : public SSMprotocol
 	Q_OBJECT
 
 public:
-	SSMprotocol1(AbstractDiagInterface *interface, QString language="en");
+	SSMprotocol1(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION

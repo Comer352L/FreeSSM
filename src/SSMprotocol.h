@@ -129,7 +129,7 @@ public:
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
-	SSMprotocol(AbstractDiagInterface *interface, QString language="en");
+	SSMprotocol(AbstractDiagInterface *diagInterface, QString language="en");
 	virtual ~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
@@ -177,7 +177,7 @@ public:
 	virtual bool waitForIgnitionOff() = 0;
 
 protected:
-	AbstractDiagInterface *_interface;
+	AbstractDiagInterface *_diagInterface;
 	CUtype_dt _CU;
 	state_dt _state;
 	QString _language;

@@ -217,11 +217,11 @@ void Preferences::interfacetest()
 	FSSM_WaitMsgBox *waitmsgbox = NULL;
 	QFont msgboxfont;
 	// PREPARE SERIAL PASS-THROUGH INTERFACE:
-	SerialPassThroughDiagInterface *interface = new SerialPassThroughDiagInterface;
+	SerialPassThroughDiagInterface *diagInterface = new SerialPassThroughDiagInterface;
 	// Open port:
-	if (interface->open(_newportname.toStdString()))
+	if (diagInterface->open(_newportname.toStdString()))
 	{
-		if (!interface->connect( AbstractDiagInterface::protocol_SSM2))
+		if (!diagInterface->connect( AbstractDiagInterface::protocol_SSM2))
 		{
 			msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Couldn't configure serial port !"), QMessageBox::Ok, this);
 			msgboxfont = msgbox->font();
@@ -231,8 +231,8 @@ void Preferences::interfacetest()
 			msgbox->exec();
 			msgbox->close();
 			delete msgbox;
-			interface->close();
-			delete interface;
+			diagInterface->close();
+			delete diagInterface;
 			return;
 		}
 	}
@@ -246,11 +246,11 @@ void Preferences::interfacetest()
 		msgbox->exec();
 		msgbox->close();
 		delete msgbox;
-		delete interface;
+		delete diagInterface;
 		return;
 	}
 	// SETUP SSMPcommunication object:
-	SSMP2communication *SSMP2com = new SSMP2communication(interface, 0x10);
+	SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
 	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles" "\n" "OBD-Connector and switch ignition on."), QMessageBox::NoButton, this);
@@ -315,7 +315,7 @@ void Preferences::interfacetest()
 		delete SSMP2com;
 	}
 	// CLOSE SERIAL PORT
-	if (!interface->close())
+	if (!diagInterface->close())
 	{
 		msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Error while closing serial port !"), QMessageBox::Ok, this);
 		msgboxfont = msgbox->font();
@@ -326,7 +326,7 @@ void Preferences::interfacetest()
 		msgbox->close();
 		delete msgbox;
 	}
-	delete interface;
+	delete diagInterface;
 }
 
 

@@ -21,6 +21,7 @@
 #include "SSMP2communication_core.h"
 
 #ifdef __WIN32__
+    #include <windows.h>
     #define waitms(x) Sleep(x)
 #elif defined __linux__
     #define waitms(x) usleep(1000*x)
@@ -29,9 +30,9 @@
 #endif
 
 
-SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *interface)
+SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInterface)
 {
-	_interface = interface;
+	_diagInterface = diagInterface;
 }
 
 
@@ -248,7 +249,7 @@ bool SSMP2communication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID
 
 bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
-	if (_interface == NULL) return false;
+	if (_diagInterface == NULL) return false;
 	if (outdatalen < 1) return false;
 	std::vector<char> msg_buffer;
 	unsigned int k = 0;
@@ -275,7 +276,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 	}
 #endif
 	// SEND MESSAGE:
-	if (!_interface->write(msg_buffer))
+	if (!_diagInterface->write(msg_buffer))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Write failed\n";
@@ -291,7 +292,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 	while ((msg_buffer.size() < (4u + outdatalen + 1u + 4u)) && (count < 81))	// timout: 80*20ms = 1600ms
 	{
 		waitms(20);
-		if (!_interface->read(&read_buffer))
+		if (!_diagInterface->read(&read_buffer))
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
@@ -332,7 +333,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 		while ( (msg_buffer.size() < inmsglen) && (count < 27) )	// 260-4=256Bytes=533.3ms => 540ms=27*20
 		{
 			waitms(20);
-			if (!_interface->read(&read_buffer))
+			if (!_diagInterface->read(&read_buffer))
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "SSMPcore::SndRcvMessage(...):   Read 2 failed\n";
