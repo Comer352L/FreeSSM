@@ -24,7 +24,9 @@
 
 #include <QtGui>
 #include <string>
+#include "AbstractDiagInterface.h"
 #include "SerialPassThroughDiagInterface.h"
+#include "J2534DiagInterface.h"
 #include "SSMP2communication.h"
 #include "libFSSM.h"
 #include "EngineDialog.h"
@@ -41,7 +43,8 @@ class FreeSSM : public QMainWindow, private Ui::FreeSSM_MainWindow
 	Q_OBJECT
 
 private:
-	QString _portname;
+	AbstractDiagInterface::interface_type _iface_type;
+	QString _iface_filename;
 	QString _language;
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
@@ -50,7 +53,8 @@ private:
 	bool _dumping;
 
 	void setupUiFonts();
-	SerialPassThroughDiagInterface * initInterface();
+	AbstractDiagInterface * initInterface();
+	void displayErrorMsg(QString errmsg);
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 

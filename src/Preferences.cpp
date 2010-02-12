@@ -21,10 +21,12 @@
 
 
 
-Preferences::Preferences(QMainWindow *parent, QString *portname, QString language) : QDialog(parent)
+Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_type *ifacetype, QString *ifacefilename, QString language) : QDialog(parent)
 {
-	_newportname = *portname;
-	_r_portname = portname;
+	_newinterfacetype = *ifacetype;
+	_r_interfacetype = ifacetype;
+	_newinterfacefilename = *ifacefilename;
+	_r_interfacefilename = ifacefilename;
 	_language_current = language;
 	_language_old = language;
 	_confirmed = false;
@@ -40,10 +42,10 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	FreeSSM_MW_Ypos = FreeSSM_MW_geometry.y();
 	// calculate new window coordinates
 	int x, y;
-	x = ( FreeSSM_MW_Xpos  + 60);
-	y = ( FreeSSM_MW_Ypos  + 40);
+	x = (FreeSSM_MW_Xpos + 60);
+	y = (FreeSSM_MW_Ypos + 40);
 	// move window to desired coordinates
-	move ( x, y );
+	move(x, y);
 	// OUTPUT LANGUAGES:
 	if (_language_current == "en")
 	{
@@ -56,19 +58,13 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	else	// if currently selected language is invalid
 	{
 		// TRY TO GET SYSTEM LANGUAGE SETTING:
-		if ((QLocale::system().language() == QLocale::English))
-		{
-			_language_current = "en";
-			switchLanguage(0);
-			_lastlangindex = 0;
-		}
-		else if ((QLocale::system().language() == QLocale::German))
+		if (QLocale::system().language() == QLocale::German)
 		{
 			_language_current = "de";
 			switchLanguage(1);
 			_lastlangindex = 1;
 		}
-		else	// if system language settings are not available/supported
+		else	// default
 		{
 			_language_current = "en";
 			switchLanguage(0);
@@ -87,45 +83,44 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	}
 	else
 		guistyle_comboBox->setEnabled( false );
-	// GET AVAILABLE PORTS:
-	std::vector<std::string> portlist;
-	portlist = serialCOM::GetAvailablePorts();
-	// PREPARE PORTLIST FOR OUTPUT:
-	QStringList qtportlist;
-	int plindex = -1; 
-	for (unsigned int k=0; k<portlist.size(); k++)
+	// INTERFACES:
+	int if_name_index = -1;
+	if (_newinterfacetype == AbstractDiagInterface::interface_J2534) // J2534-Pass-Through
 	{
-		qtportlist += static_cast<QString>(portlist[k].c_str());
-		// CHECK IF MEMBER IS CURRENT SELECTED PORT
-		if (qtportlist[k] == *portname)
+		interfaceType_comboBox->setCurrentIndex(1);
+		selectInterfaceType(1); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
+		if_name_index = _J2534libraryPaths.indexOf(*_r_interfacefilename);
+	}
+	else	// Serial Pass-Through
+	{
+		interfaceType_comboBox->setCurrentIndex(0);
+		selectInterfaceType(0); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
+		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
+	}
+	if (if_name_index >= 0)
+	{
+		interfaceName_comboBox->setCurrentIndex(if_name_index);
+		selectInterfaceName(if_name_index);
+	}
+	else
+	{
+		if (interfaceName_comboBox->count() > 0)	// if min. 1 device available
 		{
-			plindex = k;
+			interfaceName_comboBox->setCurrentIndex(0);
+			selectInterfaceName(0);
+			*_r_interfacefilename = _newinterfacefilename;
+		}
+		else
+		{
+			_newinterfacefilename = "";
+			*_r_interfacefilename = "";
 		}
 	}
-	if (plindex == -1)	// if currently selected portname is not available
-	{
-		if (qtportlist.size() > 0)	// if min. 1 port is available
-		{
-			// select first available port:
-			_newportname = static_cast<QString>(qtportlist[0]);
-			*_r_portname = static_cast<QString>(qtportlist[0]);
-			plindex = 0;
-		}
-		else	// if no port is availbale
-		{
-			_newportname = "";	// clear port name
-			*_r_portname = "";	// clear port name (return value)
-			serialport_comboBox->setEnabled(false);		// deactivate port selection box
-			testinterface_pushButton->setEnabled(false);	// deactivate "Test Interface"-Button
-		}
-	}
-	// OUTPUT PORTS:
-	serialport_comboBox->insertItems(0, qtportlist);
-	serialport_comboBox->setCurrentIndex(plindex);
 	// CONNECT SIGNALS AND SLOTS:
 	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
 	connect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
-	connect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
+	connect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
+	connect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	connect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	connect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
 	connect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
@@ -137,7 +132,8 @@ Preferences::~Preferences()
 {
 	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
 	disconnect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
-	disconnect( serialport_comboBox, SIGNAL( activated(QString) ), this, SLOT( selectSerialPort(QString) ) );
+	disconnect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
+	disconnect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	disconnect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	disconnect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
 	disconnect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
@@ -205,9 +201,57 @@ void Preferences::switchGUIstyle(QString style)
 }
 
 
-void Preferences::selectSerialPort(QString portname)
+void Preferences::selectInterfaceType(int index)
 {
-	_newportname = portname;
+	interfaceName_comboBox->clear();
+	_J2534libraryPaths.clear();
+	_newinterfacefilename = "";
+	if (index == 0)	// Serial Pass-Through
+	{
+		_newinterfacetype = AbstractDiagInterface::interface_serialPassThrough;
+		interfaceName_label->setText(tr("Serial Port:"));
+		std::vector<std::string> portlist;
+		portlist = serialCOM::GetAvailablePorts();
+		if (portlist.size())
+		{
+			for (unsigned int k=0; k<portlist.size(); k++)
+				interfaceName_comboBox->addItem(QString::fromStdString(portlist.at(k)));
+			interfaceName_comboBox->setCurrentIndex(0);
+			selectInterfaceName(0);
+		}
+	}
+	else if (index == 1)	// J2534-Pass-Through
+	{
+		_newinterfacetype = AbstractDiagInterface::interface_J2534;
+		interfaceName_label->setText(tr("Interface-Name:"));
+		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
+		if (J2534libs.size())
+		{
+			for (unsigned int k=0; k<J2534libs.size(); k++)
+			{
+				interfaceName_comboBox->addItem(QString::fromStdString(J2534libs.at(k).name));
+				_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
+			}
+			interfaceName_comboBox->setCurrentIndex(0);
+			selectInterfaceName(0);
+		}
+	}
+	interfaceName_comboBox->setEnabled(interfaceName_comboBox->count());
+	testinterface_pushButton->setEnabled(interfaceName_comboBox->count());
+}
+
+
+void Preferences::selectInterfaceName(int index)
+{
+	if ((index < 0) || (index >= interfaceName_comboBox->count()))
+		_newinterfacefilename = "";
+	else
+	{
+		if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
+			_newinterfacefilename = _J2534libraryPaths.at(index);
+		else
+			_newinterfacefilename = interfaceName_comboBox->currentText();
+	}
 }
 
 
@@ -216,36 +260,36 @@ void Preferences::interfacetest()
 	QMessageBox *msgbox;
 	FSSM_WaitMsgBox *waitmsgbox = NULL;
 	QFont msgboxfont;
-	// PREPARE SERIAL PASS-THROUGH INTERFACE:
-	SerialPassThroughDiagInterface *diagInterface = new SerialPassThroughDiagInterface;
-	// Open port:
-	if (diagInterface->open(_newportname.toStdString()))
+	// PREPARE INTERFACE:
+	AbstractDiagInterface *diagInterface = NULL;
+	if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
 	{
-		if (!diagInterface->connect( AbstractDiagInterface::protocol_SSM2))
+		diagInterface = new SerialPassThroughDiagInterface;
+	}
+	else if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
+	{
+		diagInterface = new J2534DiagInterface;
+	}
+	else
+	{
+		displayErrorMsg(tr("The selected interface is not supported !"));
+		displayErrorMsg(tr("Internal error:\nThe interface test for the selected interface is not yet implemented.\nPlease report this as a bug."));
+		return;
+	}
+	// OPEN INTERFACE:
+	if (diagInterface->open(_newinterfacefilename.toStdString()))
+	{
+		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
 		{
-			msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Couldn't configure serial port !"), QMessageBox::Ok, this);
-			msgboxfont = msgbox->font();
-			msgboxfont.setPixelSize(12); // 9pts
-			msgbox->setFont( msgboxfont );
-			msgbox->show();
-			msgbox->exec();
-			msgbox->close();
-			delete msgbox;
+			displayErrorMsg(tr("Couldn't configure the diagnostic interface !"));
 			diagInterface->close();
 			delete diagInterface;
 			return;
 		}
 	}
-	else	// If port couldn't be opened
+	else
 	{
-		msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Couldn't open serial port !\nMaybe port is already in use by another application..."), QMessageBox::Ok, this);
-		msgboxfont = msgbox->font();
-		msgboxfont.setPixelSize(12); // 9pts
-		msgbox->setFont( msgboxfont );
-		msgbox->show();
-		msgbox->exec();
-		msgbox->close();
-		delete msgbox;
+		displayErrorMsg(tr("Couldn't open the diagnostic interface !\nMaybe the device is already in use by another application..."));
 		delete diagInterface;
 		return;
 	}
@@ -253,7 +297,7 @@ void Preferences::interfacetest()
 	SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
-	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles" "\n" "OBD-Connector and switch ignition on."), QMessageBox::NoButton, this);
+	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles\nOBD-connector and switch ignition on."), QMessageBox::NoButton, this);
 	msgbox->addButton(tr("Start"), QMessageBox::AcceptRole);
 	msgbox->addButton(tr("Cancel"), QMessageBox::RejectRole);
 	msgboxfont = msgbox->font();
@@ -272,7 +316,7 @@ void Preferences::interfacetest()
 		while ((retry==true) & (icresult==false))	// TEST LOOP
 		{
 			// OUTPUT WAIT MESSAGE:
-			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing Interface... Please wait !     "));
+			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
 			waitmsgbox->show();
 			// QUERY ANY ECU ADDRESS:
 			unsigned int addr = 0x61;
@@ -314,36 +358,29 @@ void Preferences::interfacetest()
 		// COMMUNICATION AND PORT OBJECT:
 		delete SSMP2com;
 	}
-	// CLOSE SERIAL PORT
+	// CLOSE INTERFACE:
 	if (!diagInterface->close())
-	{
-		msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), tr("Error while closing serial port !"), QMessageBox::Ok, this);
-		msgboxfont = msgbox->font();
-		msgboxfont.setPixelSize(12); // 9pts
-		msgbox->setFont( msgboxfont );
-		msgbox->show();
-		msgbox->exec();
-		msgbox->close();
-		delete msgbox;
-	}
+		displayErrorMsg(tr("Couldn't close the diagnostic interface !"));
 	delete diagInterface;
 }
 
 
 void Preferences::ok()
 {
-	// RETURN CURRENT PORTNAME:
-	*_r_portname = _newportname;
+	// RETURN CURRENT INTERFACE-TYPE AND -NAME:
+	*_r_interfacetype = _newinterfacetype;
+	*_r_interfacefilename = _newinterfacefilename;
 	// SAVE PREFERENCES TO FILE:
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
 	{
 		QString stylename = QApplication::style()->objectName();
-		// rewrite file completly:
-		prefsfile.write(_newportname.toAscii()+"\n", _newportname.length()+1);			// save portname
+		// rewrite file completely:
+		prefsfile.write(_newinterfacefilename.toAscii()+"\n", _newinterfacefilename.length()+1);	// save interface name
 		prefsfile.write(_language_current.toAscii()+"\n", _language_current.length()+1);	// save language
-		prefsfile.write(stylename.toAscii()+"\n", stylename.length()+1);	// save preferred GUI-style
-		prefsfile.close();	// close file
+		prefsfile.write(stylename.toAscii()+"\n", stylename.length()+1);			// save preferred GUI-style
+		prefsfile.write(QString::number(_newinterfacetype).toAscii()+"\n", QString::number(_newinterfacetype).size()+1); // save interface type
+		prefsfile.close();
 	}
 	else
 	{
@@ -387,6 +424,21 @@ void Preferences::closeEvent(QCloseEvent *event)
 }
 
 
+void Preferences::displayErrorMsg(QString errormsg)
+{
+	QMessageBox *msgbox;
+	QFont msgboxfont;
+	msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), errormsg, QMessageBox::Ok, this);
+	msgboxfont = msgbox->font();
+	msgboxfont.setPixelSize(12); // 9pts
+	msgbox->setFont( msgboxfont );
+	msgbox->show();
+	msgbox->exec();
+	msgbox->close();
+	delete msgbox;
+}
+
+
 void Preferences::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
@@ -416,14 +468,18 @@ void Preferences::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	language_label->setFont(font);
-	font = serialport_label->font();
+	font = guistyle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	guistyle_label->setFont(font);
-	font = serialport_label->font();
+	font = interfaceType_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	serialport_label->setFont(font);
+	interfaceType_label->setFont(font);
+	font = interfaceName_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(12);	// 9pts
+	interfaceName_label->setFont(font);
 	font = language_comboBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
@@ -432,9 +488,13 @@ void Preferences::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	guistyle_comboBox->setFont(font);
-	font = serialport_comboBox->font();
+	font = interfaceType_comboBox->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	serialport_comboBox->setFont(font);
+	interfaceType_comboBox->setFont(font);
+	font = interfaceName_comboBox->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(12);	// 9pts
+	interfaceName_comboBox->setFont(font);
 }
 

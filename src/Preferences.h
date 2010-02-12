@@ -30,7 +30,9 @@
     #error "Operating system not supported !"
 #endif
 #include <QtGui>
+#include "AbstractDiagInterface.h"
 #include "SerialPassThroughDiagInterface.h"
+#include "J2534DiagInterface.h"
 #include "SSMP2communication.h"
 #include "FSSMdialogs.h"
 #include "ui_Preferences.h"
@@ -44,25 +46,30 @@ class Preferences : public QDialog, private Ui::Preferences_Dialog
 
 private:
 	QMainWindow *_FreeSSM_MainWindow;
-	QString *_r_portname;
-	QString _newportname;
+	AbstractDiagInterface::interface_type *_r_interfacetype;
+	AbstractDiagInterface::interface_type _newinterfacetype;
+	QString *_r_interfacefilename;
+	QString _newinterfacefilename;
 	QString _language_old;
 	QString _language_current;
 	QString _style_old;
 	int _lastlangindex;
 	bool _confirmed;
+	QStringList _J2534libraryPaths;
 
+	void displayErrorMsg(QString errormsg);
 	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);
 
 public:
-	Preferences(QMainWindow *parent = 0, QString *portname = 0, QString language = 0);
+	Preferences(QMainWindow *parent = NULL, AbstractDiagInterface::interface_type *ifacetype = NULL, QString *ifacefilename = NULL, QString language = "");
 	~Preferences();
 
 public slots:
 	void switchLanguage(int langindex);
 	void switchGUIstyle(QString style);
-	void selectSerialPort(QString portname);
+	void selectInterfaceType(int index);
+	void selectInterfaceName(int index);
 	void interfacetest();
 	void ok();
 	void cancel();
