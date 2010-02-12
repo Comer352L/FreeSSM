@@ -836,19 +836,19 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="179"/>
+        <location filename="src/ControlUnitDialog.cpp" line="164"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="179"/>
+        <location filename="src/ControlUnitDialog.cpp" line="164"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="196"/>
+        <location filename="src/ControlUnitDialog.cpp" line="181"/>
         <source>Stopping Communication... Please wait !   </source>
         <translation type="unfinished">Trenne Verbindung zum Steuergerät... Bitte warten !   </translation>
     </message>
@@ -1012,26 +1012,36 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="130"/>
-        <location filename="src/FreeSSM.cpp" line="291"/>
-        <location filename="src/FreeSSM.cpp" line="306"/>
+        <location filename="src/FreeSSM.cpp" line="139"/>
+        <location filename="src/FreeSSM.cpp" line="558"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="306"/>
-        <source>Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</source>
-        <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
-Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
+        <location filename="src/FreeSSM.cpp" line="312"/>
+        <source>No interface selected !
+=&gt; Please select a dignostic interface in the preferences.</source>
+        <translation type="unfinished">Kein Interface gewählt !
+=&gt; Bitte wählen sie ein Diagnose-Interface in den Programm-Einstellungen aus.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="291"/>
-        <source>No serial port available !</source>
-        <translation type="unfinished">Kein serieller Port verfügbar !</translation>
+        <location filename="src/FreeSSM.cpp" line="327"/>
+        <source>Internal error:
+The selected interface type cannnot be initialized !
+=&gt; Please report this as a bug.</source>
+        <translation type="unfinished">Interner Fehler:
+Der gewählte Interface-Typ kann nicht initialisiert werde !
+=&gt; Bitte melden Sie dies als Programm-Fehler.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="130"/>
+        <location filename="src/FreeSSM.cpp" line="333"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
+Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
+    </message>
+    <message>
+        <location filename="src/FreeSSM.cpp" line="139"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
@@ -1140,85 +1150,107 @@ Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</transl
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="174"/>
-        <location filename="src/Preferences.cpp" line="232"/>
-        <location filename="src/Preferences.cpp" line="247"/>
-        <location filename="src/Preferences.cpp" line="326"/>
-        <location filename="src/Preferences.cpp" line="356"/>
+        <location filename="src/Preferences.cpp" line="170"/>
+        <location filename="src/Preferences.cpp" line="387"/>
+        <location filename="src/Preferences.cpp" line="431"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="247"/>
-        <source>Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</source>
-        <translation type="unfinished">Serieller Port konnte nicht geöffnet werden !
-Eventuell wird der Port bereits von einer anderen Anwendung verwendet...</translation>
+        <location filename="src/Preferences.cpp" line="212"/>
+        <source>Serial Port:</source>
+        <translation type="unfinished">Serieller Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="262"/>
+        <location filename="src/Preferences.cpp" line="226"/>
+        <source>Interface-Name:</source>
+        <translation type="unfinished">Interface-Name:</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="275"/>
+        <source>The selected interface is not supported !</source>
+        <translation type="unfinished">Das ausgewählte Diagnose-Interface wird nicht unterstützt !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="276"/>
+        <source>Internal error:
+The interface test for the selected interface is not yet implemented.
+Please report this as a bug.</source>
+        <translation type="unfinished">Interner-Fehler:
+Der Interface-Test für das gewählte Inteface wurde noch nicht implementiert.
+Bitte melden Sie dies als Programm-Fehler.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="284"/>
+        <source>Couldn&apos;t configure the diagnostic interface !</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht konfiguriert werden !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="292"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
+Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="300"/>
         <source>Please connect diagnostic interface to the vehicles
-OBD-Connector and switch ignition on.</source>
+OBD-connector and switch ignition on.</source>
         <translation type="unfinished">Diagnose-Interface mit der OBD-Buchse des Fahrzeugs
 verbinden und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="263"/>
+        <location filename="src/Preferences.cpp" line="301"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="264"/>
-        <location filename="src/Preferences.cpp" line="296"/>
+        <location filename="src/Preferences.cpp" line="302"/>
+        <location filename="src/Preferences.cpp" line="334"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="295"/>
+        <location filename="src/Preferences.cpp" line="319"/>
+        <source>Testing interface... Please wait !     </source>
+        <translation type="unfinished">Teste Interface... Bitte warten !     </translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="333"/>
         <source>Retry</source>
         <translation type="unfinished">Wiederholen</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="326"/>
-        <source>Error while closing serial port !</source>
-        <translation type="unfinished">Fehler beim Schließen des seriellen Ports !</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="174"/>
+        <location filename="src/Preferences.cpp" line="170"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="232"/>
-        <source>Couldn&apos;t configure serial port !</source>
-        <translation type="unfinished">Serieller Port konnte nicht konfiguriert werden !</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="262"/>
-        <location filename="src/Preferences.cpp" line="294"/>
-        <location filename="src/Preferences.cpp" line="310"/>
+        <location filename="src/Preferences.cpp" line="300"/>
+        <location filename="src/Preferences.cpp" line="332"/>
+        <location filename="src/Preferences.cpp" line="348"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="281"/>
-        <source>Testing Interface... Please wait !     </source>
-        <translation type="unfinished">Teste Interface... Bitte warten !     </translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="294"/>
+        <location filename="src/Preferences.cpp" line="332"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="310"/>
+        <location filename="src/Preferences.cpp" line="348"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="356"/>
+        <location filename="src/Preferences.cpp" line="363"/>
+        <source>Couldn&apos;t close the diagnostic interface !</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht geschlossen werden !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="387"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1230,48 +1262,63 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
 <context>
     <name>Preferences_Dialog</name>
     <message>
-        <location filename="ui/Preferences.ui" line="39"/>
-        <location filename="ui/Preferences.ui" line="56"/>
+        <location filename="ui/Preferences.ui" line="40"/>
+        <location filename="ui/Preferences.ui" line="57"/>
         <source>Preferences</source>
         <translation type="unfinished">Einstellungen</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="72"/>
+        <location filename="ui/Preferences.ui" line="73"/>
         <source>&amp;OK</source>
         <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="85"/>
+        <location filename="ui/Preferences.ui" line="86"/>
         <source>&amp;Cancel</source>
         <translation type="unfinished">&amp;Abbruch</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="151"/>
+        <location filename="ui/Preferences.ui" line="99"/>
+        <source>&amp;Test Diagnostic Interface</source>
+        <translation type="unfinished">Diagnose-Interface &amp;testen</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="123"/>
+        <source>Serial Pass-Through</source>
+        <translation type="unfinished">Seriell Pass-Through</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="128"/>
+        <source>SAE-J2534 Pass-Through</source>
+        <translation type="unfinished">SAE-J2534 Pass-Through</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="162"/>
         <source>Language:</source>
         <translation type="unfinished">Sprache:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="167"/>
-        <source>Serial Port:</source>
-        <translation type="unfinished">Serieller Port:</translation>
+        <location filename="ui/Preferences.ui" line="178"/>
+        <source>Interface-Name:</source>
+        <translation type="unfinished">Interface-Name:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="132"/>
+        <location filename="ui/Preferences.ui" line="307"/>
+        <source>Interface-Type:</source>
+        <translation type="unfinished">Interface-Typ:</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="143"/>
         <source>English</source>
         <translation type="unfinished">Englisch</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="137"/>
+        <location filename="ui/Preferences.ui" line="148"/>
         <source>German</source>
         <translation type="unfinished">Deutsch</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="98"/>
-        <source>      &amp;Test Diagnostic Interface       </source>
-        <translation type="unfinished">     Diagnose-Interface &amp;testen      </translation>
-    </message>
-    <message>
-        <location filename="ui/Preferences.ui" line="257"/>
+        <location filename="ui/Preferences.ui" line="268"/>
         <source>GUI-Style:</source>
         <translation type="unfinished">GUI-Style:</translation>
     </message>
