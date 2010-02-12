@@ -20,6 +20,8 @@ HEADERS += src/FreeSSM.h \
            src/ActuatorTestDlg.h \
            src/AbstractDiagInterface.h \
            src/SerialPassThroughDiagInterface.h \
+           src/J2534DiagInterface.h \
+           src/J2534.h \
            src/SSMP1communication.h \
            src/SSMP1communication_procedures.h \
            src/SSMP1base.h \
@@ -55,6 +57,7 @@ SOURCES += src/main.cpp \
            src/ActuatorTestDlg.cpp \
            src/AbstractDiagInterface.cpp \
            src/SerialPassThroughDiagInterface.cpp \
+           src/J2534DiagInterface.cpp \
            src/SSMP1communication.cpp \
            src/SSMP1communication_procedures.cpp \
            src/SSMP1base.cpp \
@@ -104,7 +107,7 @@ translation.commands = lrelease FreeSSM.pro & qmake
 QMAKE_EXTRA_TARGETS += translation
 
 # Add pre-processor-define if we compile as debug:
-CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__
+CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__ __J2534_API_DEBUG__
 
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
@@ -125,9 +128,11 @@ unix {
        DEPENDPATH += src/linux
        INCLUDEPATH += src/linux
        HEADERS += src/linux/serialCOM.h \
-                  src/linux/TimeM.h
+                  src/linux/TimeM.h \
+                  src/linux/J2534_API.h
        SOURCES += src/linux/serialCOM.cpp \
-                  src/linux/TimeM.cpp
+                  src/linux/TimeM.cpp \
+                  src/linux/J2534_API.cpp
        QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 }
 
@@ -136,9 +141,11 @@ win32 {
        DEPENDPATH += src/windows
        INCLUDEPATH += src/windows
        HEADERS += src/windows/serialCOM.h \
-                  src/windows/TimeM.h
+                  src/windows/TimeM.h \
+                  src/windows/J2534_API.h
        SOURCES += src/windows/serialCOM.cpp \
-                  src/windows/TimeM.cpp
+                  src/windows/TimeM.cpp \
+                  src/windows/J2534_API.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
 

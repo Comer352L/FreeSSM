@@ -1,5 +1,5 @@
 /*
- * AbstractDiagInterface.cpp - Abstract class for implementing automotivediagnostic interfaces
+ * AbstractDiagInterface.cpp - Abstract class for implementing automotive diagnostic interfaces
  *
  * Copyright (C) 2010 Comer352l
  *
