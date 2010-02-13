@@ -155,7 +155,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 	if (_j2534)
 	{
 		long ret = 0;
-		// Connect channel:
+		// CONNECT CHANNEL:
 		if (_j2534->libraryAPIversion() == J2534_API_v0202)
 			ret = _j2534->PassThruConnect(ISO9141, ISO9141_NO_CHECKSUM, &_ChannelID);
 		else
@@ -167,36 +167,110 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #endif
 			return false;
 		}
-		// Set Timings:
+		/* ----- SET CONFIGURATION ----- */
 		SCONFIG_LIST Input;
-		SCONFIG CfgItems[8];
+		SCONFIG CfgItems[1];
+		// Echo (MANDATORY):
 		CfgItems[0].Parameter = LOOPBACK;   // Echo off/on
 		CfgItems[0].Value = ON;
-		CfgItems[1].Parameter = P1_MAX;     // max. ECU inter-byte time [ms]
-		CfgItems[1].Value = 2;
-		CfgItems[2].Parameter = P2_MAX;     // max. ECU response time [ms] to a tester request or between ECU responses
-		CfgItems[2].Value = 10;  // laut Norm min. 0ms ODER 25ms (abhaengig von Synchronisierungsart)
-		CfgItems[3].Parameter = P3_MIN;     // min. time [ms] between end of ECU reponse and next tester request
-		CfgItems[3].Value = 10;  // laut Norm min. 55ms !
-		CfgItems[4].Parameter = P4_MIN;     // min. tester inter-byte time [ms]
-		CfgItems[4].Value = 0;  // laut Norm min. 5ms !
-		CfgItems[5].Parameter = DATA_RATE;	// only needed for 0202-API
-		CfgItems[5].Value = 4800;		// only needed for 0202-API
-		CfgItems[6].Parameter = DATA_BITS;
-		CfgItems[6].Value = 8;
-		CfgItems[7].Parameter = PARITY;
-		CfgItems[7].Value = NO_PARITY;
-		Input.NumOfParams = 8;
+		Input.NumOfParams = 1;
 		Input.ConfigPtr = CfgItems;
 		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 		if (STATUS_NOERROR != ret)
 		{
 #ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() failed: ", ret);
+			printErrorDescription("PassThruIoctl() for parameter LOOPBACK failed: ", ret);
 #endif
 			goto err_close;
 		}
-		// Apply Filter (Recieve all messages) => MANDATORY
+		// Baudrate (MANDATORY for 02.02-API only):
+		CfgItems[0].Parameter = DATA_RATE;
+		CfgItems[0].Value = 4800;
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for parameter DATARATE failed: ", ret);
+#endif
+			if (_j2534->libraryAPIversion() == J2534_API_v0202)
+				goto err_close;
+		}
+		// Timing parameters (MANDATORY):
+		// NOTE: P1_MIN, P2_MIN, P3_MAX, P4_MAX are not adjustable
+		CfgItems[0].Parameter = P4_MIN;     // min. tester inter-byte time [ms]
+		CfgItems[0].Value = 0;   // ISO-9141, ISO-14230: default 5ms
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
+#endif
+			goto err_close;
+		}
+		// Timing parameters (NOT MANDATORY):
+		// NOTE: we should be able to deal with other values
+		CfgItems[0].Parameter = P1_MAX;     // max. ECU inter-byte time [ms]
+		CfgItems[0].Value = 2;   // ISO-9141, ISO-14230 (normal timing paramter-set): 20ms
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for P1_MAX: ", ret);
+#endif
+			goto err_close;
+		}
+		CfgItems[0].Parameter = P2_MAX;     // max. ECU response time [ms] to a tester request or between ECU responses
+		CfgItems[0].Value = 3000;  // ISO-9141, ISO-14230 (normal timing paramter-set): 50ms
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for P2_MAX: ", ret);
+#endif
+			goto err_close;
+		}
+		CfgItems[0].Parameter = P3_MIN;     // min. time [ms] between end of ECU reponse and next tester request
+		CfgItems[0].Value = 10;  // ISO-9141, ISO-14230: default 55ms
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
+#endif
+			goto err_close;
+		}
+		// Data bits:
+		CfgItems[0].Parameter = DATA_BITS;
+		CfgItems[0].Value = 8;	// should be default
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for parameter DATA_BITS failed: ", ret);
+#endif
+		// Parity:
+		CfgItems[0].Parameter = PARITY;
+		CfgItems[0].Value = NO_PARITY;
+		Input.NumOfParams = 1;	// should be default
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for parameter PARITY failed: ", ret);
+#endif
+		/* END OF SET CONFIGURATION */
+		// APPLY FILTER (Recieve all messages) => MANDATORY
 		PASSTHRU_MSG MaskMsg;
 		PASSTHRU_MSG PatternMsg;
 		memset(&MaskMsg, 0, sizeof(MaskMsg));   // .Data=0-array means "do not examine any bits"
