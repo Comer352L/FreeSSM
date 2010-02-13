@@ -54,6 +54,8 @@ private:
 	unsigned long _ChannelID;
         unsigned long _FilterID;
 
+	bool ClearSendBuffer();
+	bool ClearRecieveBuffer();
 #ifdef __FSSM_DEBUG__
 	void printErrorDescription(std::string title, long ret);
 #endif

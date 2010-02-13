@@ -384,6 +384,11 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 	if (_j2534 && _connected)
 	{
 		long ret = 0;
+		// Flush buffers;
+		if (!ClearSendBuffer())
+			return false;
+		if (!ClearRecieveBuffer());
+			return false;
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
 		memset(&tx_msg, 0, sizeof(tx_msg));
@@ -411,6 +416,35 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 
 
 // Private
+
+
+bool J2534DiagInterface::ClearSendBuffer()
+{
+		long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_TX_BUFFER, (void *)NULL, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for parameter CLEAR_TX_BUFFER failed: ", ret);
+#endif
+			return false;
+		}
+		return true;
+}
+
+
+bool J2534DiagInterface::ClearRecieveBuffer()
+{
+		long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_RX_BUFFER, (void *)NULL, (void *)NULL);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruIoctl() for parameter CLEAR_RX_BUFFER failed: ", ret);
+#endif
+			return false;
+		}
+		return true;
+}
+
 
 #ifdef __FSSM_DEBUG__
 void J2534DiagInterface::printErrorDescription(std::string title, long ret)
