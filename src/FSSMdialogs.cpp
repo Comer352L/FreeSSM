@@ -82,7 +82,7 @@ void FSSM_InitStatusMsgBox::closeEvent(QCloseEvent *event)
 
 
 FSSM_WaitMsgBox::FSSM_WaitMsgBox(QWidget *parent, const QString text, const QString title) 
-				: QMessageBox(QMessageBox::NoIcon, title, text, QMessageBox::NoButton, parent)
+				: QMessageBox(QMessageBox::NoIcon, title, text + "   ", QMessageBox::NoButton, parent)
 {
 	_allow_close = false;
 	_parent = parent;

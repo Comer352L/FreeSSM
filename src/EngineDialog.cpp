@@ -184,7 +184,7 @@ void EngineDialog::DCs()
 	if (_mode == DCs_mode) return;
 	_mode = DCs_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	_content_DCs = new CUcontent_DCs_engine();
@@ -213,7 +213,7 @@ void EngineDialog::measuringblocks()
 	if (_mode == MBsSWs_mode) return;
 	_mode = MBsSWs_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	CUcontent_MBsSWs *content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
@@ -239,7 +239,7 @@ void EngineDialog::adjustments()
 	if (_mode == Adaptions_mode) return;
 	_mode = Adaptions_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	_content_Adjustments = new CUcontent_Adjustments();
@@ -262,7 +262,7 @@ void EngineDialog::systemoperationtests()
 	if (_mode == SysTests_mode) return;
 	_mode = SysTests_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	CUcontent_sysTests *content_SysTests = new CUcontent_sysTests();
@@ -295,7 +295,7 @@ void EngineDialog::clearMemory()
 	// Check result:
 	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
 	{
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !   "));
+		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
 		waitmsgbox.show();
 		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
 		waitmsgbox.close();

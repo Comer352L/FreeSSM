@@ -139,8 +139,9 @@ Actuator Test couldn&apos;t be started.</translation>
     <name>CUcontent_Adjustments</name>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="531"/>
-        <source>Saving adjustment value to Electronic Control Unit... Please wait !      </source>
-        <translation type="unfinished">Saving adjustment value to Electronic Control Unit... Please wait !      </translation>
+        <source>Saving adjustment value to Electronic Control Unit... Please wait !</source>
+        <oldsource>Saving adjustment value to Electronic Control Unit... Please wait !      </oldsource>
+        <translation type="unfinished">Saving adjustment value to Electronic Control Unit... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="458"/>
@@ -169,8 +170,9 @@ Actuator Test couldn&apos;t be started.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="599"/>
-        <source>Resetting all adjustment values... Please wait !   </source>
-        <translation type="unfinished">Resetting all adjustment values... Please wait !   </translation>
+        <source>Resetting all adjustment values... Please wait !</source>
+        <oldsource>Resetting all adjustment values... Please wait !   </oldsource>
+        <translation type="unfinished">Resetting all adjustment values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="559"/>
@@ -536,8 +538,9 @@ The Control Unit didn&apos;t accept the new value !</translation>
     <name>CUcontent_sysTests</name>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="106"/>
-        <source>Checking test mode connector... Please wait !   </source>
-        <translation type="unfinished">Checking test mode connector... Please wait !      </translation>
+        <source>Checking test mode connector... Please wait !</source>
+        <oldsource>Checking test mode connector... Please wait !   </oldsource>
+        <translation type="unfinished">Checking test mode connector... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="124"/>
@@ -545,9 +548,26 @@ The Control Unit didn&apos;t accept the new value !</translation>
         <translation type="unfinished">Actuator Test</translation>
     </message>
     <message>
+        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <source>Actuator Test couldn&apos;t be started:
+=&gt; Test mode connector is not connected !</source>
+        <translation type="unfinished">Actuator Test couldn&apos;t be started:
+=&gt; Test mode connector is not connected !</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <source>ATTENTION:
+Connect/Disconnect test mode connector
+ONLY WITH IGNITION SWITCHED OFF !</source>
+        <translation type="unfinished">ATTENTION:
+Connect/Disconnect test mode connector
+ONLY WITH IGNITION SWITCHED OFF !</translation>
+    </message>
+    <message>
         <location filename="src/CUcontent_sysTests.cpp" line="151"/>
-        <source>Testing Immobilizer Communication Line... Please wait !   </source>
-        <translation type="unfinished">Testing Immobilizer Communication Line... Please wait !   </translation>
+        <source>Testing Immobilizer Communication Line... Please wait !</source>
+        <oldsource>Testing Immobilizer Communication Line... Please wait !   </oldsource>
+        <translation type="unfinished">Testing Immobilizer Communication Line... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="182"/>
@@ -584,21 +604,6 @@ to be shorted to ground !</translation>
 to be shorted to battery (+) !</source>
         <translation type="unfinished">The Immobilizer Communication Line seems
 to be shorted to battery (+) !</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
-        <source>Actuator Test couldn&apos;t be started:
-=&gt; Test mode connector is not connected !
-
-ATTENTION:
-Connect/Disconnect test mode connector
-ONLY WITH IGNITION SWITCHED OFF !</source>
-        <translation type="unfinished">Actuator Test couldn&apos;t be started:
-=&gt; Test mode connector is not connected !
-
-ATTENTION:
-Connect/Disconnect test mode connector
-ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
 </context>
 <context>
@@ -714,6 +719,18 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <source>Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !</source>
+        <translation type="unfinished">Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <source>Please check current values !</source>
+        <translation type="unfinished">Please check current values !</translation>
+    </message>
+    <message>
         <location filename="src/ClearMemoryDlg.cpp" line="287"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Please switch ignition ON again.</translation>
@@ -742,13 +759,15 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="93"/>
-        <source>Please switch ignition OFF and be patient...   </source>
-        <translation type="unfinished">Please switch ignition OFF and be patient...   </translation>
+        <source>Please switch ignition OFF and be patient...</source>
+        <oldsource>Please switch ignition OFF and be patient...   </oldsource>
+        <translation type="unfinished">Please switch ignition OFF and be patient...</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="294"/>
-        <source>Reconnecting... Please wait !   </source>
-        <translation type="unfinished">Reconnecting... Please wait !   </translation>
+        <source>Reconnecting... Please wait !</source>
+        <oldsource>Reconnecting... Please wait !   </oldsource>
+        <translation type="unfinished">Reconnecting... Please wait !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="58"/>
@@ -757,8 +776,9 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="243"/>
-        <source>Restoring Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Restoring Adjustment Values... Please wait !   </translation>
+        <source>Restoring Adjustment Values... Please wait !</source>
+        <oldsource>Restoring Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Restoring Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="217"/>
@@ -784,17 +804,6 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
         <location filename="src/ClearMemoryDlg.cpp" line="261"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
-    </message>
-    <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
-        <source>Adjustment Value restoration failed:
-The Control Unit didn&apos;t accept some of the values !
-
-Please check current values !</source>
-        <translation type="unfinished">Adjustment Value restoration failed:
-The Control Unit didn&apos;t accept some of the values !
-
-Please check current values !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="180"/>
@@ -848,8 +857,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/ControlUnitDialog.cpp" line="181"/>
-        <source>Stopping Communication... Please wait !   </source>
-        <translation type="unfinished">Stopping Communication... Please wait !   </translation>
+        <source>Stopping Communication... Please wait !</source>
+        <oldsource>Stopping Communication... Please wait !   </oldsource>
+        <translation type="unfinished">Stopping Communication... Please wait !</translation>
     </message>
 </context>
 <context>
@@ -961,13 +971,15 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="187"/>
-        <source>Switching to Diagnostic Codes... Please wait !   </source>
-        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="216"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="220"/>
@@ -976,8 +988,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="242"/>
-        <source>Switching to Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+        <source>Switching to Adjustment Values... Please wait !</source>
+        <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="246"/>
@@ -986,8 +999,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="265"/>
-        <source>Switching to System Tests... Please wait !   </source>
-        <translation type="unfinished">Switching to System Tests... Please wait !   </translation>
+        <source>Switching to System Tests... Please wait !</source>
+        <oldsource>Switching to System Tests... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to System Tests... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="269"/>
@@ -996,8 +1010,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="298"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
+        <source>Reading Adjustment Values... Please wait !</source>
+        <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
     </message>
 </context>
 <context>
@@ -1026,10 +1041,13 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     <message>
         <location filename="src/FreeSSM.cpp" line="327"/>
         <source>Internal error:
-The selected interface type cannnot be initialized !
+The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</source>
-        <translation type="unfinished">Internal error:
+        <oldsource>Internal error:
 The selected interface type cannnot be initialized !
+=&gt; Please report this as a bug.</oldsource>
+        <translation type="unfinished">Internal error:
+The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
@@ -1174,10 +1192,13 @@ Maybe the device is already in use by another application...</translation>
         <location filename="src/Preferences.cpp" line="276"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
-Please report this as a bug.</source>
+=&gt; Please report this as a bug.</source>
+        <oldsource>Internal error:
+The interface test for the selected interface is not yet implemented.
+Please report this as a bug.</oldsource>
         <translation type="unfinished">Internal error:
 The interface test for the selected interface is not yet implemented.
-Please report this as a bug.</translation>
+=&gt; Please report this as a bug.</translation>
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="284"/>
@@ -1395,13 +1416,15 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
-        <source>Switching to Diagnostic Codes... Please wait !   </source>
-        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="177"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="181"/>
@@ -1410,8 +1433,9 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="203"/>
-        <source>Switching to Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+        <source>Switching to Adjustment Values... Please wait !</source>
+        <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="207"/>
@@ -1420,8 +1444,9 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="247"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
+        <source>Reading Adjustment Values... Please wait !</source>
+        <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
     </message>
 </context>
 <context>

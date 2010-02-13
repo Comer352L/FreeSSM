@@ -273,7 +273,7 @@ void Preferences::interfacetest()
 	else
 	{
 		displayErrorMsg(tr("The selected interface is not supported !"));
-		displayErrorMsg(tr("Internal error:\nThe interface test for the selected interface is not yet implemented.\nPlease report this as a bug."));
+		displayErrorMsg(tr("Internal error:\nThe interface test for the selected interface is not yet implemented.\n=> Please report this as a bug."));
 		return;
 	}
 	// OPEN INTERFACE:

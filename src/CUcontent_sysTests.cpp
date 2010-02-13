@@ -103,7 +103,7 @@ void CUcontent_sysTests::startActuatorTest()
 	
 	if (!_SSMPdev) return;
 	// Create wait message for test mode connecter status check:
-	FSSM_WaitMsgBox wmsgbox(this, tr("Checking test mode connector... Please wait !   "));
+	FSSM_WaitMsgBox wmsgbox(this, tr("Checking test mode connector... Please wait !"));
 	wmsgbox.show();
 	// Check test mode connecotor status:
 	if (_SSMPdev->isInTestMode(&testmode))
@@ -121,7 +121,7 @@ void CUcontent_sysTests::startActuatorTest()
 		else
 		{
 			// Error message: not in test mode
-			QMessageBox infomsgbox( QMessageBox::Critical, tr("Actuator Test"), tr("Actuator Test couldn't be started:\n=> Test mode connector is not connected !\n\nATTENTION:\nConnect/Disconnect test mode connector\nONLY WITH IGNITION SWITCHED OFF !"), QMessageBox::Ok, this);
+			QMessageBox infomsgbox( QMessageBox::Critical, tr("Actuator Test"), tr("Actuator Test couldn't be started:\n=> Test mode connector is not connected !") + "\n\n" + tr("ATTENTION:\nConnect/Disconnect test mode connector\nONLY WITH IGNITION SWITCHED OFF !"), QMessageBox::Ok, this);
 			mbfont = infomsgbox.font();
 			mbfont.setPixelSize(12); // 9pts
 			infomsgbox.setFont( mbfont );
@@ -148,7 +148,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 	
 	if (!_SSMPdev) return;
 	// Run immobilizer communication line test:
-	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !   "));
+	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !"));
 	wmsgbox.show();
 	ok = _SSMPdev->testImmobilizerCommLine(&testresult);
 	if (ok)

@@ -90,7 +90,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	QTimer::singleShot(800, &el, SLOT( quit() ));
 	el.exec();
 	// Request user to switch ignition off and wait for communication error:
-	waitmsgbox.setText(tr("Please switch ignition OFF and be patient...   "));
+	waitmsgbox.setText(tr("Please switch ignition OFF and be patient..."));
 	ok = _SSMPdev->waitForIgnitionOff();
 	// Wait 5 seconds
 	QTimer::singleShot(5000, &el, SLOT( quit() ));
@@ -240,7 +240,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 	std::vector<unsigned int> currentAdjVal;
 	bool ok = false;
 	// Restore all adjustment values:
-	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Restoring Adjustment Values... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Restoring Adjustment Values... Please wait !"));
 	waitmsgbox.show();
 	for (unsigned char m=0; m<oldAdjVal.size(); m++)
 	{
@@ -258,7 +258,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 	{
 		if (currentAdjVal != oldAdjVal)
 		{
-			QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Adjustment Value restoration failed:\nThe Control Unit didn't accept some of the values !\n\nPlease check current values !"), QMessageBox::Ok, _parent);
+			QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Adjustment Value restoration failed:\nThe Control Unit didn't accept some of the values !") + "\n\n" + tr("Please check current values !"), QMessageBox::Ok, _parent);
 			QFont msgfont = msg.font();
 			msgfont.setPixelSize(12); // 9pts
 			msg.setFont( msgfont );
@@ -291,7 +291,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu,
 	ignonmsgfont.setPixelSize(12);	// 9pts
 	ignonmsgbox.setFont( ignonmsgfont );
 	// Wait-messagebox:
-	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Reconnecting... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Reconnecting... Please wait !"));
 	while (!ok)
 	{
 		ignonmsgbox.show();

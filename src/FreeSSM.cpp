@@ -324,7 +324,7 @@ AbstractDiagInterface * FreeSSM::initInterface()
 	}
 	else
 	{
-		displayErrorMsg(tr("Internal error:\nThe selected interface type cannnot be initialized !\n=> Please report this as a bug."));
+		displayErrorMsg(tr("Internal error:\nThe selected interface type cannot be initialized !\n=> Please report this as a bug."));
 		return NULL;
 	}
 	if (diagInterface->open(_iface_filename.toStdString()))

@@ -178,7 +178,7 @@ void ControlUnitDialog::closeEvent(QCloseEvent *event)
 	if (_SSMPdev)
 	{
 		// Create wait message box:
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !   "));
+		FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !"));
 		waitmsgbox.show();
 		// Stop all permanent communication operations:
 		_SSMPdev->stopAllPermanentOperations();
