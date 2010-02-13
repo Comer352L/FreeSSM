@@ -206,38 +206,35 @@ void Preferences::selectInterfaceType(int index)
 	interfaceName_comboBox->clear();
 	_J2534libraryPaths.clear();
 	_newinterfacefilename = "";
-	if (index == 0)	// Serial Pass-Through
+	QStringList deviceNames;
+	if (index == 0)		// Serial Pass-Through
 	{
 		_newinterfacetype = AbstractDiagInterface::interface_serialPassThrough;
 		interfaceName_label->setText(tr("Serial Port:"));
-		std::vector<std::string> portlist;
-		portlist = serialCOM::GetAvailablePorts();
-		if (portlist.size())
-		{
-			for (unsigned int k=0; k<portlist.size(); k++)
-				interfaceName_comboBox->addItem(QString::fromStdString(portlist.at(k)));
-			interfaceName_comboBox->setCurrentIndex(0);
-			selectInterfaceName(0);
-		}
+		std::vector<std::string> portlist = serialCOM::GetAvailablePorts();
+		for (unsigned int k=0; k<portlist.size(); k++)
+			deviceNames.push_back(QString::fromStdString(portlist.at(k)));
 	}
 	else if (index == 1)	// J2534-Pass-Through
 	{
 		_newinterfacetype = AbstractDiagInterface::interface_J2534;
 		interfaceName_label->setText(tr("Interface-Name:"));
 		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
-		if (J2534libs.size())
+		for (unsigned int k=0; k<J2534libs.size(); k++)
 		{
-			for (unsigned int k=0; k<J2534libs.size(); k++)
-			{
-				interfaceName_comboBox->addItem(QString::fromStdString(J2534libs.at(k).name));
-				_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
-			}
-			interfaceName_comboBox->setCurrentIndex(0);
-			selectInterfaceName(0);
+			deviceNames.push_back(QString::fromStdString(J2534libs.at(k).name));
+			_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
 		}
 	}
-	interfaceName_comboBox->setEnabled(interfaceName_comboBox->count());
-	testinterface_pushButton->setEnabled(interfaceName_comboBox->count());
+	if (deviceNames.size())
+	{
+		interfaceName_comboBox->addItems(deviceNames);
+		interfaceName_comboBox->setCurrentIndex(0);
+		selectInterfaceName(0);
+	}
+	interfaceName_comboBox->setEnabled(deviceNames.size());
+	testinterface_pushButton->setEnabled(deviceNames.size());
+	// NOTE: Never put anything else than a device-file into the interfaceName_comboBox !
 }
 
 
