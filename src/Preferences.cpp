@@ -245,7 +245,12 @@ void Preferences::selectInterfaceName(int index)
 	else
 	{
 		if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
-			_newinterfacefilename = _J2534libraryPaths.at(index);
+		{
+			if (index < _J2534libraryPaths.size())
+				_newinterfacefilename = _J2534libraryPaths.at(index);
+			else	// should never happen	
+				_newinterfacefilename = "";
+		}
 		else
 			_newinterfacefilename = interfaceName_comboBox->currentText();
 	}
