@@ -22,7 +22,7 @@
 
 AbstractDiagInterface::AbstractDiagInterface()
 {
-	_protocoltype = protocol_SSM1;
+	_protocoltype = protocol_NONE;
 }
 
 

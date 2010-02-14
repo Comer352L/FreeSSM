@@ -30,7 +30,7 @@ class AbstractDiagInterface
 
 public:
 	enum interface_type { interface_serialPassThrough, interface_J2534 };
-	enum protocol_type { protocol_SSM1, protocol_SSM2 };
+	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2 };
 
 	AbstractDiagInterface();
 	virtual ~AbstractDiagInterface();

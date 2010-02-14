@@ -329,6 +329,7 @@ bool J2534DiagInterface::disconnect()
 			return false;
 		}
 		_connected = false;
+		setProtocolType( protocol_NONE );
 		return true;
 	}
 	else

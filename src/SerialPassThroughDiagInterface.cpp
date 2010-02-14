@@ -161,6 +161,7 @@ bool SerialPassThroughDiagInterface::disconnect()
 	if (_port)
 	{
 		_connected = false;
+		setProtocolType( protocol_NONE );
 		return true;
 	}
 	else
