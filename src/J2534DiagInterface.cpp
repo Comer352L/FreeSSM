@@ -286,6 +286,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			goto err_close;
 		}
 		_connected = true;
+		setProtocolType( protocol );
 		return true;
 	}
 	else
