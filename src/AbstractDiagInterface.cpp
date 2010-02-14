@@ -29,3 +29,43 @@ AbstractDiagInterface::AbstractDiagInterface()
 AbstractDiagInterface::~AbstractDiagInterface()
 {
 }
+
+
+std::string AbstractDiagInterface::name()
+{
+	return _name;
+};
+
+
+std::string AbstractDiagInterface::version()
+{
+	return _version;
+};
+
+
+AbstractDiagInterface::protocol_type AbstractDiagInterface::protocolType()
+{
+	return _protocoltype;
+};
+
+
+// PRIVATE
+
+
+void AbstractDiagInterface::setName(std::string name)
+{
+	_name = name;
+};
+
+
+void AbstractDiagInterface::setVersion(std::string version)
+{
+	_version = version;
+};
+
+
+void AbstractDiagInterface::setProtocolType(protocol_type protocoltype)
+{
+	_protocoltype = protocoltype;
+};
+

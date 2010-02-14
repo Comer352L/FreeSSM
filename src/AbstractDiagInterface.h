@@ -35,9 +35,9 @@ public:
 	AbstractDiagInterface();
 	virtual ~AbstractDiagInterface();
 	virtual interface_type interfaceType() = 0;
-	std::string name() { return _name; };
-	std::string version() { return _version; };
-	protocol_type protocolType() { return _protocoltype; };
+	std::string name();
+	std::string version();
+	protocol_type protocolType();
 	virtual bool open( std::string name ) = 0;
 	virtual bool isOpen() = 0;
 	virtual bool close() = 0;
@@ -48,9 +48,9 @@ public:
 	virtual bool write(std::vector<char> buffer) = 0;
 
 protected:
-	void setName(std::string name) { _name = name; };
-	void setVersion(std::string version) { _version = version; };
-	void setProtocolType(protocol_type protocoltype) { _protocoltype = protocoltype; };
+	void setName(std::string name);
+	void setVersion(std::string version);
+	void setProtocolType(protocol_type protocoltype);
 
 private:
 	protocol_type _protocoltype;
