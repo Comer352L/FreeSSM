@@ -387,7 +387,7 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 		// Flush buffers;
 		if (!ClearSendBuffer())
 			return false;
-		if (!ClearRecieveBuffer());
+		if (!ClearRecieveBuffer())
 			return false;
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
