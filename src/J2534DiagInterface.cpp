@@ -92,6 +92,16 @@ bool J2534DiagInterface::open( std::string name )
 			else
 				printErrorDescription("PassThruReadVersion() failed: ", ret);
 #endif
+			// Get and save device name:
+			std::vector<J2534Library> libs = J2534_API::getAvailableJ2534Libs();
+			for (unsigned int k=0; k<libs.size(); k++)
+			{
+				if (libs.at(k).path == name)
+				{
+					setName(libs.at(k).name);
+					break;
+				}
+			}
 			return true;
 		}
 		else
