@@ -1,7 +1,7 @@
 /*
  * Transmission.h - Transmission Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@
 #include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 
@@ -46,7 +47,7 @@ class TransmissionDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	TransmissionDialog(serialCOM *port, QString language);
+	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};

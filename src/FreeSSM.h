@@ -1,7 +1,7 @@
 /*
  * FreeSSM.h - Program main window
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,11 @@
 
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <QtGui>
 #include <string>
+#include "AbstractDiagInterface.h"
+#include "SerialPassThroughDiagInterface.h"
+#include "J2534DiagInterface.h"
 #include "SSMP2communication.h"
 #include "libFSSM.h"
 #include "EngineDialog.h"
@@ -47,7 +43,8 @@ class FreeSSM : public QMainWindow, private Ui::FreeSSM_MainWindow
 	Q_OBJECT
 
 private:
-	QString _portname;
+	AbstractDiagInterface::interface_type _iface_type;
+	QString _iface_filename;
 	QString _language;
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
@@ -56,7 +53,8 @@ private:
 	bool _dumping;
 
 	void setupUiFonts();
-	serialCOM * initPort();
+	AbstractDiagInterface * initInterface();
+	void displayErrorMsg(QString errmsg);
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 

@@ -1,7 +1,7 @@
 /*
  * SSMP1communication.h - Communication Thread for the old SSM-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,9 @@
 #define SSMP1COMMUNICATION_H
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <QtGui>
 #include <vector>
+#include "AbstractDiagInterface.h"
 #include "SSMP1communication_procedures.h"
 
 
@@ -40,7 +34,7 @@ class SSMP1communication : public QThread, private SSMP1communication_procedures
 public:
 	enum comOp_dt {comOp_noCom, comOp_readRomId, comOp_read, comOp_write, comOp_read_p, comOp_write_p};
 
-	SSMP1communication(serialCOM * port, SSM1_CUtype_dt cu, unsigned char errRetries = 2);
+	SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries = 2);
 	~SSMP1communication();
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);

@@ -139,8 +139,9 @@ Actuator Test couldn&apos;t be started.</translation>
     <name>CUcontent_Adjustments</name>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="531"/>
-        <source>Saving adjustment value to Electronic Control Unit... Please wait !      </source>
-        <translation type="unfinished">Saving adjustment value to Electronic Control Unit... Please wait !      </translation>
+        <source>Saving adjustment value to Electronic Control Unit... Please wait !</source>
+        <oldsource>Saving adjustment value to Electronic Control Unit... Please wait !      </oldsource>
+        <translation type="unfinished">Saving adjustment value to Electronic Control Unit... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="458"/>
@@ -169,8 +170,9 @@ Actuator Test couldn&apos;t be started.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="599"/>
-        <source>Resetting all adjustment values... Please wait !   </source>
-        <translation type="unfinished">Resetting all adjustment values... Please wait !   </translation>
+        <source>Resetting all adjustment values... Please wait !</source>
+        <oldsource>Resetting all adjustment values... Please wait !   </oldsource>
+        <translation type="unfinished">Resetting all adjustment values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_Adjustments.cpp" line="559"/>
@@ -536,8 +538,9 @@ The Control Unit didn&apos;t accept the new value !</translation>
     <name>CUcontent_sysTests</name>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="106"/>
-        <source>Checking test mode connector... Please wait !   </source>
-        <translation type="unfinished">Checking test mode connector... Please wait !      </translation>
+        <source>Checking test mode connector... Please wait !</source>
+        <oldsource>Checking test mode connector... Please wait !   </oldsource>
+        <translation type="unfinished">Checking test mode connector... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="124"/>
@@ -545,9 +548,26 @@ The Control Unit didn&apos;t accept the new value !</translation>
         <translation type="unfinished">Actuator Test</translation>
     </message>
     <message>
+        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <source>Actuator Test couldn&apos;t be started:
+=&gt; Test mode connector is not connected !</source>
+        <translation type="unfinished">Actuator Test couldn&apos;t be started:
+=&gt; Test mode connector is not connected !</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <source>ATTENTION:
+Connect/Disconnect test mode connector
+ONLY WITH IGNITION SWITCHED OFF !</source>
+        <translation type="unfinished">ATTENTION:
+Connect/Disconnect test mode connector
+ONLY WITH IGNITION SWITCHED OFF !</translation>
+    </message>
+    <message>
         <location filename="src/CUcontent_sysTests.cpp" line="151"/>
-        <source>Testing Immobilizer Communication Line... Please wait !   </source>
-        <translation type="unfinished">Testing Immobilizer Communication Line... Please wait !   </translation>
+        <source>Testing Immobilizer Communication Line... Please wait !</source>
+        <oldsource>Testing Immobilizer Communication Line... Please wait !   </oldsource>
+        <translation type="unfinished">Testing Immobilizer Communication Line... Please wait !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="182"/>
@@ -584,21 +604,6 @@ to be shorted to ground !</translation>
 to be shorted to battery (+) !</source>
         <translation type="unfinished">The Immobilizer Communication Line seems
 to be shorted to battery (+) !</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
-        <source>Actuator Test couldn&apos;t be started:
-=&gt; Test mode connector is not connected !
-
-ATTENTION:
-Connect/Disconnect test mode connector
-ONLY WITH IGNITION SWITCHED OFF !</source>
-        <translation type="unfinished">Actuator Test couldn&apos;t be started:
-=&gt; Test mode connector is not connected !
-
-ATTENTION:
-Connect/Disconnect test mode connector
-ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
 </context>
 <context>
@@ -714,6 +719,18 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <source>Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !</source>
+        <translation type="unfinished">Adjustment Value restoration failed:
+The Control Unit didn&apos;t accept some of the values !</translation>
+    </message>
+    <message>
+        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <source>Please check current values !</source>
+        <translation type="unfinished">Please check current values !</translation>
+    </message>
+    <message>
         <location filename="src/ClearMemoryDlg.cpp" line="287"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Please switch ignition ON again.</translation>
@@ -742,13 +759,15 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="93"/>
-        <source>Please switch ignition OFF and be patient...   </source>
-        <translation type="unfinished">Please switch ignition OFF and be patient...   </translation>
+        <source>Please switch ignition OFF and be patient...</source>
+        <oldsource>Please switch ignition OFF and be patient...   </oldsource>
+        <translation type="unfinished">Please switch ignition OFF and be patient...</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="294"/>
-        <source>Reconnecting... Please wait !   </source>
-        <translation type="unfinished">Reconnecting... Please wait !   </translation>
+        <source>Reconnecting... Please wait !</source>
+        <oldsource>Reconnecting... Please wait !   </oldsource>
+        <translation type="unfinished">Reconnecting... Please wait !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="58"/>
@@ -757,8 +776,9 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="243"/>
-        <source>Restoring Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Restoring Adjustment Values... Please wait !   </translation>
+        <source>Restoring Adjustment Values... Please wait !</source>
+        <oldsource>Restoring Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Restoring Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="217"/>
@@ -784,17 +804,6 @@ ONLY WITH IGNITION SWITCHED OFF !</translation>
         <location filename="src/ClearMemoryDlg.cpp" line="261"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
-    </message>
-    <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
-        <source>Adjustment Value restoration failed:
-The Control Unit didn&apos;t accept some of the values !
-
-Please check current values !</source>
-        <translation type="unfinished">Adjustment Value restoration failed:
-The Control Unit didn&apos;t accept some of the values !
-
-Please check current values !</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="180"/>
@@ -835,21 +844,22 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="179"/>
+        <location filename="src/ControlUnitDialog.cpp" line="164"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="179"/>
+        <location filename="src/ControlUnitDialog.cpp" line="164"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Communication Error:
 - No or invalid answer from ECU -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="196"/>
-        <source>Stopping Communication... Please wait !   </source>
-        <translation type="unfinished">Stopping Communication... Please wait !   </translation>
+        <location filename="src/ControlUnitDialog.cpp" line="181"/>
+        <source>Stopping Communication... Please wait !</source>
+        <oldsource>Stopping Communication... Please wait !   </oldsource>
+        <translation type="unfinished">Stopping Communication... Please wait !</translation>
     </message>
 </context>
 <context>
@@ -961,13 +971,15 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="187"/>
-        <source>Switching to Diagnostic Codes... Please wait !   </source>
-        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="216"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="220"/>
@@ -976,8 +988,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="242"/>
-        <source>Switching to Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+        <source>Switching to Adjustment Values... Please wait !</source>
+        <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="246"/>
@@ -986,8 +999,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="265"/>
-        <source>Switching to System Tests... Please wait !   </source>
-        <translation type="unfinished">Switching to System Tests... Please wait !   </translation>
+        <source>Switching to System Tests... Please wait !</source>
+        <oldsource>Switching to System Tests... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to System Tests... Please wait !</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="269"/>
@@ -996,8 +1010,9 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="298"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
+        <source>Reading Adjustment Values... Please wait !</source>
+        <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
     </message>
 </context>
 <context>
@@ -1011,26 +1026,39 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="130"/>
-        <location filename="src/FreeSSM.cpp" line="291"/>
-        <location filename="src/FreeSSM.cpp" line="306"/>
+        <location filename="src/FreeSSM.cpp" line="139"/>
+        <location filename="src/FreeSSM.cpp" line="558"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="306"/>
-        <source>Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</source>
-        <translation type="unfinished">Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</translation>
+        <location filename="src/FreeSSM.cpp" line="312"/>
+        <source>No interface selected !
+=&gt; Please select a dignostic interface in the preferences.</source>
+        <translation type="unfinished">No interface selected !
+=&gt; Please select a dignostic interface in the preferences.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="291"/>
-        <source>No serial port available !</source>
-        <translation type="unfinished">No serial port available !</translation>
+        <location filename="src/FreeSSM.cpp" line="327"/>
+        <source>Internal error:
+The selected interface type cannot be initialized !
+=&gt; Please report this as a bug.</source>
+        <oldsource>Internal error:
+The selected interface type cannnot be initialized !
+=&gt; Please report this as a bug.</oldsource>
+        <translation type="unfinished">Internal error:
+The selected interface type cannot be initialized !
+=&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="130"/>
+        <location filename="src/FreeSSM.cpp" line="333"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</source>
+        <translation type="unfinished">Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</translation>
+    </message>
+    <message>
+        <location filename="src/FreeSSM.cpp" line="139"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
@@ -1139,85 +1167,110 @@ Maybe port is already in use by another application...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="174"/>
-        <location filename="src/Preferences.cpp" line="232"/>
-        <location filename="src/Preferences.cpp" line="247"/>
-        <location filename="src/Preferences.cpp" line="326"/>
-        <location filename="src/Preferences.cpp" line="356"/>
+        <location filename="src/Preferences.cpp" line="170"/>
+        <location filename="src/Preferences.cpp" line="387"/>
+        <location filename="src/Preferences.cpp" line="431"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="247"/>
-        <source>Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</source>
-        <translation type="unfinished">Couldn&apos;t open serial port !
-Maybe port is already in use by another application...</translation>
+        <location filename="src/Preferences.cpp" line="212"/>
+        <source>Serial Port:</source>
+        <translation type="unfinished">Serial Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="262"/>
+        <location filename="src/Preferences.cpp" line="226"/>
+        <source>Interface-Name:</source>
+        <translation type="unfinished">Interface-Name:</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="275"/>
+        <source>The selected interface is not supported !</source>
+        <translation type="unfinished">The selected interface is not supported !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="276"/>
+        <source>Internal error:
+The interface test for the selected interface is not yet implemented.
+=&gt; Please report this as a bug.</source>
+        <oldsource>Internal error:
+The interface test for the selected interface is not yet implemented.
+Please report this as a bug.</oldsource>
+        <translation type="unfinished">Internal error:
+The interface test for the selected interface is not yet implemented.
+=&gt; Please report this as a bug.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="284"/>
+        <source>Couldn&apos;t configure the diagnostic interface !</source>
+        <translation type="unfinished">Couldn&apos;t configure the diagnostic interface !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="292"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</source>
+        <translation type="unfinished">Couldn&apos;t open the diagnostic interface !
+Maybe the device is already in use by another application...</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="300"/>
         <source>Please connect diagnostic interface to the vehicles
-OBD-Connector and switch ignition on.</source>
+OBD-connector and switch ignition on.</source>
         <translation type="unfinished">Please connect diagnostic interface to the vehicles
-OBD-Connector and switch ignition on.</translation>
+OBD-connector and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="263"/>
+        <location filename="src/Preferences.cpp" line="301"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="264"/>
-        <location filename="src/Preferences.cpp" line="296"/>
+        <location filename="src/Preferences.cpp" line="302"/>
+        <location filename="src/Preferences.cpp" line="334"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="295"/>
+        <location filename="src/Preferences.cpp" line="319"/>
+        <source>Testing interface... Please wait !     </source>
+        <translation type="unfinished">Testing interface... Please wait !     </translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="333"/>
         <source>Retry</source>
         <translation type="unfinished">Retry</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="326"/>
-        <source>Error while closing serial port !</source>
-        <translation type="unfinished">Error while closing serial port !</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="174"/>
+        <location filename="src/Preferences.cpp" line="170"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
 - Language file missing or damaged -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="232"/>
-        <source>Couldn&apos;t configure serial port !</source>
-        <translation type="unfinished">Couldn&apos;t configure serial port !</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="262"/>
-        <location filename="src/Preferences.cpp" line="294"/>
-        <location filename="src/Preferences.cpp" line="310"/>
+        <location filename="src/Preferences.cpp" line="300"/>
+        <location filename="src/Preferences.cpp" line="332"/>
+        <location filename="src/Preferences.cpp" line="348"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="281"/>
-        <source>Testing Interface... Please wait !     </source>
-        <translation type="unfinished">Testing Interface... Please wait !     </translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="294"/>
+        <location filename="src/Preferences.cpp" line="332"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface test failed !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="310"/>
+        <location filename="src/Preferences.cpp" line="348"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface test successful !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="356"/>
+        <location filename="src/Preferences.cpp" line="363"/>
+        <source>Couldn&apos;t close the diagnostic interface !</source>
+        <translation type="unfinished">Couldn&apos;t close the diagnostic interface !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="387"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1229,48 +1282,63 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
 <context>
     <name>Preferences_Dialog</name>
     <message>
-        <location filename="ui/Preferences.ui" line="39"/>
-        <location filename="ui/Preferences.ui" line="56"/>
+        <location filename="ui/Preferences.ui" line="40"/>
+        <location filename="ui/Preferences.ui" line="57"/>
         <source>Preferences</source>
         <translation type="unfinished">Preferences</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="72"/>
+        <location filename="ui/Preferences.ui" line="73"/>
         <source>&amp;OK</source>
         <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="85"/>
+        <location filename="ui/Preferences.ui" line="86"/>
         <source>&amp;Cancel</source>
         <translation type="unfinished">&amp;Cancel</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="151"/>
+        <location filename="ui/Preferences.ui" line="99"/>
+        <source>&amp;Test Diagnostic Interface</source>
+        <translation type="unfinished">&amp;Test Diagnostic Interface</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="123"/>
+        <source>Serial Pass-Through</source>
+        <translation type="unfinished">Serial Pass-Through</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="128"/>
+        <source>SAE-J2534 Pass-Through</source>
+        <translation type="unfinished">SAE-J2534 Pass-Through</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="162"/>
         <source>Language:</source>
         <translation type="unfinished">Language:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="167"/>
-        <source>Serial Port:</source>
-        <translation type="unfinished">Serial Port:</translation>
+        <location filename="ui/Preferences.ui" line="178"/>
+        <source>Interface-Name:</source>
+        <translation type="unfinished">Interface-Name:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="132"/>
+        <location filename="ui/Preferences.ui" line="307"/>
+        <source>Interface-Type:</source>
+        <translation type="unfinished">Interface-Type:</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="143"/>
         <source>English</source>
         <translation type="unfinished">English</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="137"/>
+        <location filename="ui/Preferences.ui" line="148"/>
         <source>German</source>
         <translation type="unfinished">German</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="98"/>
-        <source>      &amp;Test Diagnostic Interface       </source>
-        <translation type="unfinished">      &amp;Test Diagnostic Interface       </translation>
-    </message>
-    <message>
-        <location filename="ui/Preferences.ui" line="257"/>
+        <location filename="ui/Preferences.ui" line="268"/>
         <source>GUI-Style:</source>
         <translation type="unfinished">GUI-Style:</translation>
     </message>
@@ -1348,13 +1416,15 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
-        <source>Switching to Diagnostic Codes... Please wait !   </source>
-        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !   </translation>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="177"/>
-        <source>Switching to Measuring Blocks... Please wait !   </source>
-        <translation type="unfinished">Switching to Measuring Blocks... Please wait !   </translation>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="181"/>
@@ -1363,8 +1433,9 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="203"/>
-        <source>Switching to Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Switching to Adjustment Values... Please wait !   </translation>
+        <source>Switching to Adjustment Values... Please wait !</source>
+        <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="207"/>
@@ -1373,8 +1444,9 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="247"/>
-        <source>Reading Adjustment Values... Please wait !   </source>
-        <translation type="unfinished">Reading Adjustment Values... Please wait !   </translation>
+        <source>Reading Adjustment Values... Please wait !</source>
+        <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
+        <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
     </message>
 </context>
 <context>

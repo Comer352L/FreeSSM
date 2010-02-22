@@ -1,7 +1,7 @@
 /*
  * SSMP1communication.cpp - Communication Thread for the old SSM-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include "SSMP1communication.h"
 
 
-SSMP1communication::SSMP1communication(serialCOM *port, SSM1_CUtype_dt cu, unsigned char errRetries) : QThread(), SSMP1communication_procedures(port)
+SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries) : QThread(), SSMP1communication_procedures(diagInterface)
 {
 	_cu = cu;
 	_errRetries = errRetries;

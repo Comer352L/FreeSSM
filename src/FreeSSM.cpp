@@ -1,7 +1,7 @@
 /*
  * FreeSSM.cpp - Program main window
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,8 @@ FreeSSM::FreeSSM(QApplication *app)
 {
 	_qt_translator = NULL;
 	_translator = NULL;
-	_portname = "";
+	_iface_type = AbstractDiagInterface::interface_serialPassThrough;
+	_iface_filename = "";
 	_language = "";
 	_dumping = false;
 	QString appsPath( QCoreApplication::applicationDirPath() );
@@ -50,19 +51,20 @@ FreeSSM::FreeSSM(QApplication *app)
 	int y = (desktop.height() - size().height()) / 2 - 50;
 	this->move ( x, y );
 	// LOAD PREFERENCES FROM FILE:
-	QString savedportname = "";
+	QString savedinterfacefilename = "";
 	QString savedlanguage = "";
 	QString savedGUIstyle = "";
+	QString savedinterfacetype = "";
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		QByteArray line;
 		if (!prefsfile.atEnd())
 		{
-			// Load port settings:
+			// Load interface type settings:
 			line = prefsfile.readLine();
 			line.truncate(line.length()-1);	// truncate newline-character
-			savedportname = static_cast<QString>(line);
+			savedinterfacefilename = static_cast<QString>(line);
 		}
 		if (!prefsfile.atEnd())
 		{
@@ -77,6 +79,13 @@ FreeSSM::FreeSSM(QApplication *app)
 			line = prefsfile.readLine();
 			line.truncate(line.length()-1);
 			savedGUIstyle = static_cast<QString>(line);
+		}
+		if (!prefsfile.atEnd())
+		{
+			// Load interface file name settings:
+			line = prefsfile.readLine();
+			line.truncate(line.length()-1);
+			savedinterfacetype = static_cast<QString>(line);
 		}
 		prefsfile.close();
 	}
@@ -150,28 +159,47 @@ FreeSSM::FreeSSM(QApplication *app)
 			_qt_translator = NULL;
 		}
 	}
-	// GET AVAILABLE PORTS:
-	std::vector<std::string> portlist;
-	portlist = serialCOM::GetAvailablePorts();
-	// CHECK SAVED PREFERENCES AND CORRECT IF NECESSARY:
-	bool pnvalid = false;
-	for (unsigned int k=0; k<portlist.size(); k++)
+	// CHECK THE SAVED INTERFACE SETTINGS AND CORRECT IF NECESSARY:
+	else if (savedinterfacetype == QString::number(AbstractDiagInterface::interface_J2534))	// J2534-Pass-Through
 	{
-		if (savedportname == portlist[k].c_str())
+		_iface_type = AbstractDiagInterface::interface_J2534;
+		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
+		if (J2534libs.size())
 		{
-			pnvalid = true;
-			break;
+			for (unsigned int k=0; k<J2534libs.size(); k++)
+			{
+				if (savedinterfacefilename == QString::fromStdString(J2534libs.at(k).path))
+				{
+					_iface_filename = savedinterfacefilename;
+					break;
+				}
+				if (_iface_filename.isEmpty() && (J2534libs.size() > 0))
+					_iface_filename = QString::fromStdString(J2534libs.at(0).path);
+				// NOTE: otherwise _iface_filename remains empty
+			}
 		}
 	}
-	if (pnvalid == true)
-		_portname = savedportname;
-	else
+	if (_iface_filename.isEmpty() || savedinterfacetype == QString::number(AbstractDiagInterface::interface_serialPassThrough))	// Serial Pass-Through
 	{
-		if (portlist.size()>0)
-			_portname = (QString)portlist[0].c_str();
-		// otherwise portname remains empty
+		_iface_type = AbstractDiagInterface::interface_serialPassThrough;
+		std::vector<std::string> portlist;
+		portlist = serialCOM::GetAvailablePorts();
+		if (portlist.size())
+		{
+			for (unsigned int k=0; k<portlist.size(); k++)
+			{
+				if (savedinterfacefilename == QString::fromStdString(portlist.at(k)))
+				{
+					_iface_filename = savedinterfacefilename;
+					break;
+				}
+				if (_iface_filename.isEmpty() && (portlist.size() > 0))
+					_iface_filename = QString::fromStdString(portlist.at(0));
+				// NOTE: otherwise _iface_filename remains empty
+			}
+		}
 	}
-	// CREATE ACTION FOR DUMPING CONTROL UNID ID-DATA TO FILE:
+	// CREATE ACTION FOR DUMPING CONTROL UNIT ID-DATA TO FILE:
 	_dump_action = new QAction(this);
 	_dump_action->setShortcut( QKeySequence("Ctrl+Alt+Return") );
 	this->addAction(_dump_action);
@@ -214,14 +242,14 @@ FreeSSM::~FreeSSM()
 void FreeSSM::engine()
 {
 	if (_dumping) return;
-	serialCOM *port = initPort();
-	if (port)
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
 	{
-		EngineDialog *enginedialog = new EngineDialog(port, _language);
+		EngineDialog *enginedialog = new EngineDialog(diagInterface, _language);
 		if (!enginedialog->isHidden())
 			enginedialog->exec();
 		delete enginedialog;
-		delete port;
+		delete diagInterface;
 	}
 }
 
@@ -229,14 +257,14 @@ void FreeSSM::engine()
 void FreeSSM::transmission()
 {
 	if (_dumping) return;
-	serialCOM *port = initPort();
-	if (port)
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
 	{
-		TransmissionDialog *transmissiondialog = new TransmissionDialog(port, _language);
+		TransmissionDialog *transmissiondialog = new TransmissionDialog(diagInterface, _language);
 		if (!transmissiondialog->isHidden())
 			transmissiondialog->exec();
 		delete transmissiondialog;
-		delete port;
+		delete diagInterface;
 	}
 }
 
@@ -244,7 +272,7 @@ void FreeSSM::transmission()
 void FreeSSM::preferences()
 {
 	if (_dumping) return;
-	Preferences *preferencesdlg = new Preferences(this, &_portname, _language);
+	Preferences *preferencesdlg = new Preferences(this, &_iface_type, &_iface_filename, _language);
 	preferencesdlg->show();
 	connect(preferencesdlg, SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
@@ -276,41 +304,34 @@ void FreeSSM::about()
 }
 
 
-serialCOM * FreeSSM::initPort()
+AbstractDiagInterface * FreeSSM::initInterface()
 {
-	// IF NO PORT IS SELECTED YET: SELECT FIRST AVAILABLE PORT
-	if (_portname == "")
+	// Check if an interface is selected:
+	if (_iface_filename == "")
 	{
-		// Get available ports:
-		std::vector<std::string> portlist;
-		portlist = serialCOM::GetAvailablePorts();
-		if (portlist.size() > 0)
-			_portname = (QString)portlist[0].c_str();
-		else
-		{
-			QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("No serial port available !"), QMessageBox::Ok, this);
-			QFont msgfont = msg.font();
-			msgfont.setPixelSize(12); // 9pts
-			msg.setFont( msgfont );
-			msg.show();
-			msg.exec();
-			msg.close();
-			return false;
-		}
+		displayErrorMsg(tr("No interface selected !\n=> Please select a dignostic interface in the preferences."));
+		return NULL;
 	}
-	// Open port:
-	serialCOM *port = new serialCOM;
-	if (port->OpenPort(_portname.toStdString()))
-		return port;
+	// Open interface:
+	AbstractDiagInterface *diagInterface = NULL;
+	if (_iface_type == AbstractDiagInterface::interface_serialPassThrough)
+	{
+		diagInterface = new SerialPassThroughDiagInterface;
+	}
+	else if (_iface_type == AbstractDiagInterface::interface_J2534)
+	{
+		diagInterface = new J2534DiagInterface;
+	}
+	else
+	{
+		displayErrorMsg(tr("Internal error:\nThe selected interface type cannot be initialized !\n=> Please report this as a bug."));
+		return NULL;
+	}
+	if (diagInterface->open(_iface_filename.toStdString()))
+		return diagInterface;
 	// Return error:
-	QMessageBox msg( QMessageBox::Critical, tr("Error"),tr("Couldn't open serial port !" "\n" "Maybe port is already in use by another application..."), QMessageBox::Ok, this);
-	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
-	msg.setFont( msgfont );
-	msg.show();
-	msg.exec();
-	msg.close();
-	delete port;
+	displayErrorMsg(tr("Couldn't open the diagnostic interface !\nMaybe the device is already in use by another application..."));
+	delete diagInterface;
 	return NULL;
 }
 
@@ -356,7 +377,6 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 
 void FreeSSM::dumpCUdata()
 {
-	serialCOM::dt_portsettings portsettings;
 	QFile dumpfile;
 	char SYS_ID[3] = {0};
 	char ROM_ID[5] = {0};
@@ -370,15 +390,14 @@ void FreeSSM::dumpCUdata()
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
-	serialCOM *port = initPort();
-	if (port)
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
 	{
-		portsettings.baudrate = 4800;
-		portsettings.databits = 8;
-		portsettings.parity = 'N';
-		portsettings.stopbits = 1;
-		if (!port->SetPortSettings(portsettings))
+		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
+		{
+			delete diagInterface;
 			return;
+		}
 	}
 	else
 		return;
@@ -399,9 +418,9 @@ void FreeSSM::dumpCUdata()
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
 	// Create SSMP1-Communication-object:
-	SSMP1communication SSMP1com(port, SSM1_CU_Engine, 0);
+	SSMP1communication SSMP1com(diagInterface, SSM1_CU_Engine, 0);
 	// Create SSMP2-Communication-object:
-	SSMP2communication SSMP2com(port, '\x10', 0);
+	SSMP2communication SSMP2com(diagInterface, '\x10', 0);
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
@@ -492,17 +511,10 @@ void FreeSSM::dumpCUdata()
 	}
 	else if (dumpfile.isOpen())
 		dumpfile.write("\n---\n", 5);
+	diagInterface->disconnect();
 	// ######## SSM1-Control-Units ########
-	// Configure Port:
-	portsettings.baudrate = 1953;
-	portsettings.databits = 8;
-	portsettings.parity = 'E';
-	portsettings.stopbits = 1;
-	if(!port->SetPortSettings(portsettings))
-		goto end;
-	if(!port->GetPortSettings(&portsettings))
-		goto end;
-	if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
+	// Configure interface:
+	if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
 		goto end;
 	// Dump all SSM1-CUs:
 	for (ssm1_cu_index=SSM1_CU_Engine; ssm1_cu_index<=SSM1_CU_FourWS; ssm1_cu_index++)
@@ -532,11 +544,24 @@ void FreeSSM::dumpCUdata()
 		else if (dumpfile.isOpen())
 			dumpfile.write("\n-----\n", 7);
 	}
+	diagInterface->disconnect();
 
 end:
 	dumpfile.close();
-	delete port;	// port will be closed in destructor of serialCOM
+	delete diagInterface;	// will be closed in destructor
 	_dumping = false;
+}
+
+
+void FreeSSM::displayErrorMsg(QString errmsg)
+{
+	QMessageBox msg( QMessageBox::Critical, tr("Error"), errmsg, QMessageBox::Ok, this);
+	QFont msgfont = msg.font();
+	msgfont.setPixelSize(12); // 9pts
+	msg.setFont( msgfont );
+	msg.show();
+	msg.exec();
+	msg.close();
 }
 
 

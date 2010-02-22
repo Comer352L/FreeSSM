@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.h - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,9 @@
 #define CONTROLUNITDIALOG_H
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <QtGui>
 #include "ui_ControlUnitDialog.h"
+#include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
@@ -41,7 +35,7 @@ class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 	Q_OBJECT
 
 public:
-	ControlUnitDialog(QString title, serialCOM *port, QString language);
+	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language);
 	~ControlUnitDialog();
 
 protected:
@@ -54,12 +48,11 @@ protected:
 
 private:
 	QString _language;
-	serialCOM *_port;
+	AbstractDiagInterface *_diagInterface;
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
 	QList<QPushButton*> _selButtons;
 
-	bool configurePort(unsigned int baud, char parity);
 	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);
 

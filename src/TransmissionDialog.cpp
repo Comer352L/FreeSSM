@@ -1,7 +1,7 @@
 /*
  * Transmission.cpp - Transmission Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include "TransmissionDialog.h"
 
 
-TransmissionDialog::TransmissionDialog(serialCOM *port, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), port, language)
+TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), diagInterface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
@@ -143,7 +143,7 @@ void TransmissionDialog::DTCs()
 	if (_mode == DCs_mode) return;
 	_mode = DCs_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	_content_DCs = new CUcontent_DCs_transmission();
@@ -174,7 +174,7 @@ void TransmissionDialog::measuringblocks()
 	if (_mode == MBsSWs_mode) return;
 	_mode = MBsSWs_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	CUcontent_MBsSWs *content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
@@ -200,7 +200,7 @@ void TransmissionDialog::adjustments()
 	if (_mode == Adaptions_mode) return;
 	_mode = Adaptions_mode;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
 	// Create, setup and insert content-widget:
 	_content_Adjustments = new CUcontent_Adjustments();
@@ -244,7 +244,7 @@ void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 	// Check result:
 	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
 	{
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !   "));
+		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
 		waitmsgbox.show();
 		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
 		waitmsgbox.close();

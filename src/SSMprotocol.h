@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,19 +22,15 @@
 
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
+#include <QMetaType>
 #include <QString>
 #include <QStringList>
 #include <QObject>
 #include <QEventLoop>
 #include <string>
 #include <vector>
+#include <cmath>
+#include "AbstractDiagInterface.h"
 
 
 
@@ -134,7 +130,7 @@ public:
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
-	SSMprotocol(serialCOM *port, QString language="en");
+	SSMprotocol(AbstractDiagInterface *diagInterface, QString language="en");
 	virtual ~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
@@ -182,7 +178,7 @@ public:
 	virtual bool waitForIgnitionOff() = 0;
 
 protected:
-	serialCOM *_port;
+	AbstractDiagInterface *_diagInterface;
 	CUtype_dt _CU;
 	state_dt _state;
 	QString _language;
@@ -201,7 +197,7 @@ protected:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues);
+	void assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues);
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
@@ -218,7 +214,7 @@ signals:
 	void commError();
 
 protected slots:
-	void processMBSWrawData(QByteArray MBSWrawdata, int duration_ms);
+	void processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms);
 
 public slots:
 	virtual void resetCUdata() = 0;

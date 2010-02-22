@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.cpp - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol1::SSMprotocol1(serialCOM *port, QString language) : SSMprotocol(port, language)
+SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
 	_ID[0] = '\x0';
@@ -72,7 +72,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	}
 	else
 		return false;
-	_SSMP1com = new SSMP1communication(_port, SSM1_CU);
+	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit data:
 	if (!_SSMP1com->readID(_ID))
 		 return false;
@@ -288,8 +288,8 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
-		connect( _SSMP1com, SIGNAL( recievedData(QByteArray, int) ),
-			this, SLOT( processDCsRawdata(QByteArray, int) ), Qt::BlockingQueuedConnection );
+		connect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
@@ -306,8 +306,8 @@ bool SSMprotocol1::stopDCreading()
 	{
 		if (_SSMP1com->stopCommunication())
 		{
-			disconnect( _SSMP1com, SIGNAL( recievedData(QByteArray, int) ),
-				    this, SLOT( processDCsRawdata(QByteArray, int) ) );
+			disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -319,7 +319,7 @@ bool SSMprotocol1::stopDCreading()
 }
 
 
-void SSMprotocol1::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
+void SSMprotocol1::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
 {
 	QStringList DCs;
 	QStringList DCdescriptions;
@@ -374,8 +374,8 @@ bool SSMprotocol1::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 		// Save MB/SW-selection (necessary for evaluation of raw data):
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
-		connect( _SSMP1com, SIGNAL( recievedData(QByteArray, int) ),
-			this, SLOT( processMBSWrawData(QByteArray, int) ) ); 
+		connect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
 		// Emit signal:
 		emit startedMBSWreading();
 	}
@@ -392,8 +392,8 @@ bool SSMprotocol1::stopMBSWreading()
 	{
 		if (_SSMP1com->stopCommunication())
 		{
-			disconnect( _SSMP1com, SIGNAL( recievedData(QByteArray, int) ),
-				    this, SLOT( processMBSWrawData(QByteArray, int) ) );
+			disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
 			return true;

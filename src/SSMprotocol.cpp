@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,12 @@
 
 
 
-SSMprotocol::SSMprotocol(serialCOM *port, QString language)
+SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
-	_port = port;
+	_diagInterface = diagInterface;
 	_language = language;
 	_state = state_needSetup;
+	qRegisterMetaType< std::vector<char> >("std::vector<char>");
 }
 
 
@@ -249,7 +250,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 }
 
 
-void SSMprotocol::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
+void SSMprotocol::processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms)
 {
 	std::vector<unsigned int> rawValues;
 	QStringList valueStrList;
@@ -259,7 +260,7 @@ void SSMprotocol::processMBSWrawData(QByteArray MBSWrawdata, int duration_ms)
 }
 
 
-void SSMprotocol::assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues)
+void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues)
 {
 	// ***** ASSIGN RAW DATA *****:
 	unsigned int k = 0, m = 0;

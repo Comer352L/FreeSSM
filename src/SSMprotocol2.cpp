@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 
 
-SSMprotocol2::SSMprotocol2(serialCOM *port, QString language) : SSMprotocol(port, language)
+SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP2com = NULL;
 	resetCUdata();
@@ -46,10 +46,10 @@ void SSMprotocol2::resetCUdata()
 		// Disconnect communication error and data signals:
 		disconnect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-			    this, SLOT( processDCsRawdata(QByteArray, int) ) );
-		disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-			    this, SLOT( processMBSWrawData(QByteArray, int) ) );
+		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
 		// Try to stop active communication processes:
 		ok = _SSMP2com->stopCommunication();
 		if (ok && (_state == state_ActTesting))
@@ -143,7 +143,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	}
 	else
 		return false;
-	_SSMP2com = new SSMP2communication(_port, CUaddress);
+	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		 return false;
@@ -1232,8 +1232,8 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
-		connect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-			this, SLOT( processDCsRawdata(QByteArray, int) ), Qt::BlockingQueuedConnection );
+		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
@@ -1250,8 +1250,8 @@ bool SSMprotocol2::stopDCreading()
 	{
 		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-				    this, SLOT( processDCsRawdata(QByteArray, int) ) );
+			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -1263,7 +1263,7 @@ bool SSMprotocol2::stopDCreading()
 }
 
 
-void SSMprotocol2::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
+void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
 {
 	QStringList DCs;
 	QStringList DCdescriptions;
@@ -1360,8 +1360,8 @@ bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 		// Save MB/SW-selection (necessary for evaluation of raw data):
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
-		connect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-			this, SLOT( processMBSWrawData(QByteArray, int) ) ); 
+		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
 		// Emit signal:
 		emit startedMBSWreading();
 	}
@@ -1378,8 +1378,8 @@ bool SSMprotocol2::stopMBSWreading()
 	{
 		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(QByteArray, int) ),
-				    this, SLOT( processMBSWrawData(QByteArray, int) ) );
+			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
 			return true;

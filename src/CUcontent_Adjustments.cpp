@@ -528,7 +528,7 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 
 	if (!_SSMPdev) return;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !      "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !"));
 	waitmsgbox.show();
 	// Get selected Value from table:
 	cellWidget = adjustments_tableWidget->cellWidget (index, 2);
@@ -596,7 +596,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	if (uc != QMessageBox::AcceptRole)
 		return;
 	// Wait-messagebox:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Resetting all adjustment values... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Resetting all adjustment values... Please wait !"));
 	waitmsgbox.show();
 	// Reset all adjustment values:
 	for (k=0; k<_supportedAdjustments.size(); k++)
@@ -675,7 +675,7 @@ bool CUcontent_Adjustments::eventFilter(QObject *obj, QEvent *event)
 
 void CUcontent_Adjustments::communicationError(QString errstr)
 {
-	errstr = tr("Communication Error:") + ('\n') + errstr;
+	errstr = tr("Communication Error:") + '\n' + errstr;
 	errorMsg(tr("Communication Error"), errstr);
 	emit communicationError();
 }
@@ -683,7 +683,7 @@ void CUcontent_Adjustments::communicationError(QString errstr)
 
 void CUcontent_Adjustments::calculationError(QString errstr)
 {
-	errstr = tr("Calculation Error:") + ('\n') + errstr;
+	errstr = tr("Calculation Error:") + '\n' + errstr;
 	errorMsg(tr("Calculation Error"), errstr);
 	emit calculationError();
 }

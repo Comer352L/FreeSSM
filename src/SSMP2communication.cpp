@@ -1,7 +1,7 @@
 /*
  * SSMP2communication.cpp - Communication Thread for the new SSM-protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include "SSMP2communication.h"
 
 
-SSMP2communication::SSMP2communication(serialCOM *port, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(port)
+SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
 
@@ -331,7 +331,7 @@ bool SSMP2communication::doSingleCommOperation()
 
 void SSMP2communication::run()
 {
-	QByteArray rawdata;
+	std::vector<char> rawdata;
 	QTime timer;
 	int duration_ms = 0;
 	unsigned int k = 1;
@@ -460,7 +460,7 @@ void SSMP2communication::run()
 			if (permanent && (rindex == 1))
 			{
 				// CONVERT/PREPARE DATA FOR RETURNING
-				rawdata = QByteArray(rec_buf, datalen);
+				rawdata = std::vector<char>(rec_buf, rec_buf+datalen);
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:

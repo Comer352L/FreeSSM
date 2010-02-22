@@ -1,7 +1,7 @@
 /*
  * SSMP1communication_procedures.h - Communication procedures for the SSM1-protocol
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,8 @@
 
 
 #ifdef __WIN32__
-    #include "windows\serialCOM.h"
     #include "windows\TimeM.h"
 #elif defined __linux__
-    #include "linux/serialCOM.h"
     #include "linux/TimeM.h"
 #else
     #error "Operating system not supported !"
@@ -34,6 +32,7 @@
     #include <iostream>
 #endif
 #include <vector>
+#include "AbstractDiagInterface.h"
 #include "SSMP1base.h"
 
 
@@ -41,7 +40,7 @@ class SSMP1communication_procedures : private SSMP1commands
 {
 
 public:
-	SSMP1communication_procedures(serialCOM *port);
+	SSMP1communication_procedures(AbstractDiagInterface *diagInterface);
 	bool setAddress(SSM1_CUtype_dt cu, unsigned int addr);
 	bool getID(std::vector<char> * data);
 	bool writeDatabyte(char databyte);
