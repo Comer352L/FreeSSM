@@ -331,7 +331,7 @@ bool SSMP2communication::doSingleCommOperation()
 
 void SSMP2communication::run()
 {
-	QByteArray rawdata;
+	std::vector<char> rawdata;
 	QTime timer;
 	int duration_ms = 0;
 	unsigned int k = 1;
@@ -460,7 +460,7 @@ void SSMP2communication::run()
 			if (permanent && (rindex == 1))
 			{
 				// CONVERT/PREPARE DATA FOR RETURNING
-				rawdata = QByteArray(rec_buf, datalen);
+				rawdata = std::vector<char>(rec_buf, rec_buf+datalen);
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:

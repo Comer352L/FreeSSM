@@ -22,6 +22,7 @@
 
 
 
+#include <QMetaType>
 #include <QString>
 #include <QStringList>
 #include <QObject>
@@ -196,7 +197,7 @@ protected:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void assignMBSWRawData(QByteArray rawdata, std::vector<unsigned int> * mbswrawvalues);
+	void assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues);
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
@@ -213,7 +214,7 @@ signals:
 	void commError();
 
 protected slots:
-	void processMBSWrawData(QByteArray MBSWrawdata, int duration_ms);
+	void processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms);
 
 public slots:
 	virtual void resetCUdata() = 0;

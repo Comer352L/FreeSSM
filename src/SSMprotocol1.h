@@ -75,7 +75,7 @@ private:
 	void setupSupportedSWs();
 
 private slots:
-	void processDCsRawdata(QByteArray dcrawdata, int duration_ms);					// INCOMPLETE IMPLEMENTATION
+	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);					// INCOMPLETE IMPLEMENTATION
 
 public slots:
 	void resetCUdata();										// IMPLEMENTATION MISSING

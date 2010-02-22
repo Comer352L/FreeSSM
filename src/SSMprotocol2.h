@@ -109,7 +109,7 @@ private:
 	bool validateVIN(char VIN[17]);
 
 private slots:
-	void processDCsRawdata(QByteArray dcrawdata, int duration_ms);
+	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:
 	void resetCUdata();

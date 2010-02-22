@@ -74,7 +74,7 @@ private:
 	void run();
 
 signals:
-	void recievedData(QByteArray rawdata, int duration_ms);
+	void recievedData(std::vector<char> rawdata, int duration_ms);
 
 	void commError();
 
