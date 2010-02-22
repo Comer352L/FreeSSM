@@ -88,24 +88,23 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 	char hb = (_currentaddr & 0xffff) >> 8;
 	char lb = _currentaddr & 0xff;
 	std::vector<char> rbuf;
-	bool err = false;
+	bool ok = false;
 	time.start();
 	while (static_cast<unsigned int>(time.elapsed()) < timeout)
 	{
 		// Read out port buffer:
 		do
 		{
-			if (_diagInterface->read(&rbuf) && rbuf.size())
+			ok = _diagInterface->read(&rbuf);
+			if (ok && rbuf.size())
 				_recbuffer.insert(_recbuffer.end(), rbuf.begin(), rbuf.end());
-			else
-				err = true;
-		} while (!err && rbuf.size());
+		} while (ok && rbuf.size());
 #ifdef __FSSM_DEBUG__
-		if (err)
-			std::cout << "SSMP1communication_procedures::getNextData():   communication error !";
+		if (!ok)
+			std::cout << "SSMP1communication_procedures::getNextData():   communication error\n";
 #endif
 		// Try to find/get dataset:
-		if (!err && (_recbuffer.size() > 2))
+		if (ok && (_recbuffer.size() > 2))
 		{
 			// Synchronize with recieved data (if necessary):
 			if (!_sync)
@@ -150,13 +149,16 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)
-					std::cout << "SSMP1communication_procedures::getNextData():   lost synchronisation !\n";
+					std::cout << "SSMP1communication_procedures::getNextData():   lost synchronisation\n";
 #endif
 			}
 		}
 		// Delay before next iteration:
 		waitms(10);
 	}
+#ifdef __FSSM_DEBUG__
+	std::cout << "SSMP1communication_procedures::getNextData():   timeout\n";
+#endif
 	return false;
 }
 
