@@ -104,17 +104,19 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 			// Extract data from latest received dataset:
 			if (_sync && (_recbuffer.size() > 2))
 			{
-				/* NOTE: There could have been an overflow of the drivers receive-buffer !
-					 => if hb!=lb, we will get out of sync, so there is no problem
-					 => if hb==lb, we could extract wrong data !
-				*/
 				unsigned char olBytes = _recbuffer.size() % 3;
-				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;
+				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;	
 				if ((_recbuffer.at(msgStartIndex) == hb) && (_recbuffer.at(msgStartIndex+1) == lb))
 				{
-					// EXTRA-CHECK FOR ADDRESSES WITH hb=lb (a buffer-overflow could have occured !):
-					if ((hb == lb) && (_recbuffer.at(msgStartIndex+2) == hb)) // && _recbuffer.size > X
+					/* NOTE: There could have been an overflow of the drivers receive-buffer.
+						 If this is the case and we nevertheless reached this point
+						 => hb=lb
+						 => we could extract old (but correct) data
+					 */
+					// Extra-check to avoid extracting old data (if a buffer-overflow occured):
+					if (hb == _recbuffer.at(msgStartIndex+2)) // && _recbuffer.size > XXX
 					{
+						// NOTE: We could extract old (but correct) data
 						if (olBytes > 0)
 						{
 							if (_recbuffer.at(msgStartIndex+3) != hb)
@@ -127,8 +129,9 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 									_sync = false;
 							}
 						}
-						// NOTE: Same here: we may be out of snyc, but we are at least sure that the data byte is correct !
 					}
+					/* NOTE: at this point we may have lost snychronisation (due to a buffer overflow),
+						 but we are at least sure that the data byte is correct !			*/
 					// Extract data, clean up buffer:
 					if (_sync)
 					{
@@ -137,7 +140,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 						return true;
 					}
 				}
-				else	// may happen, if we got an overflow of the drivers receive-buffer
+				else	// may happen, if we got an overflow of the drivers recieve-buffer
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)
