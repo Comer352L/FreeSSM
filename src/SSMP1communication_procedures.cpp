@@ -98,18 +98,18 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 		// Try to find/get dataset:
 		if (ok && (_recbuffer.size() > 2))
 		{
-			// Synchronize with recieved data (if necessary):
+			// Synchronize with received data (if necessary):
 			if (!_sync)
-				syncToRecData();											
-			// Extract data from latest recieved dataset:
+				syncToRecData();
+			// Extract data from latest received dataset:
 			if (_sync && (_recbuffer.size() > 2))
 			{
-				/* NOTE: There could have been an overflow of the drivers recieve-buffer !
+				/* NOTE: There could have been an overflow of the drivers receive-buffer !
 					 => if hb!=lb, we will get out of sync, so there is no problem
 					 => if hb==lb, we could extract wrong data !
 				*/
 				unsigned char olBytes = _recbuffer.size() % 3;
-				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;	
+				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;
 				if ((_recbuffer.at(msgStartIndex) == hb) && (_recbuffer.at(msgStartIndex+1) == lb))
 				{
 					// EXTRA-CHECK FOR ADDRESSES WITH hb=lb (a buffer-overflow could have occured !):
@@ -137,7 +137,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 						return true;
 					}
 				}
-				else	// may happen, if we got an overflow of the drivers recieve-buffer
+				else	// may happen, if we got an overflow of the drivers receive-buffer
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)
@@ -235,7 +235,7 @@ void SSMP1communication_procedures::syncToRecData()
 	char lb_old = _lastaddr & 0xff;
 #ifdef __FSSM_DEBUG__
 	std::string syncerrstr;
-	
+
 	std::cout << "SSMP1communication_procedures::syncToRecData():   synchronization with incoming data stream ";
 #endif
 	for (int k=_recbuffer.size()-3; k>=0; k--)
@@ -258,7 +258,7 @@ void SSMP1communication_procedures::syncToRecData()
 			/* NOTE: In case of hb==lb we may still NOT be sync ! But
 				 => we are at least sure that the data byte is correct !
 				 => we can set _sync to true, because when the databyte changes to a value != hb,lb
-			         we will get the wrong address and therefore out of sync again !
+				 we will get the wrong address and therefore out of sync again !
 			 */
 			// Special cases that are only relevant during address switching: 
 			if (_addrswitch_pending && (_lastaddr > -1) && (_currentaddr != _lastaddr))	// max 2 complete old messages
@@ -276,7 +276,7 @@ void SSMP1communication_procedures::syncToRecData()
 				{
 					// Check for possible issues when 1+x bytes message-overlapping:
 					/* NOTE: Szenario: ... (D1 | A2 B2) D2 ...     with hb==D1 and lb==A2
-						  => OK, if we have recieved at least two bytes from the old message and the previous byte is !=B1				*/
+						  => OK, if we have received at least two bytes from the old message and the previous byte is !=B1 */
 					if (k>0 && _recbuffer.at(k-1) == lb_old)
 						_sync = false;
 					if (_sync && (k<5))	// 2-byte (or more) overlapping possible
@@ -287,9 +287,9 @@ void SSMP1communication_procedures::syncToRecData()
 						if ((hb == lb_old) && (_recbuffer.at(k+2) == hb))
 						{
 							/* Try to exclude overlapping by checking previous data (if available):
-								=> OK, if the previous byte has been recieved and is != A1
-								=> OK, if the 3. previous byte has been recieved and is != B1
-								=> OK, if the 4. previous byte has been recieved and is != A1		*/
+								=> OK, if the previous byte has been received and is != A1
+								=> OK, if the 3. previous byte has been received and is != B1
+								=> OK, if the 4. previous byte has been received and is != A1		*/
 							_sync = false;
 							if ((k>0) && (_recbuffer.at(k-1) != hb_old))
 								_sync = true;
@@ -311,8 +311,8 @@ void SSMP1communication_procedures::syncToRecData()
 							if ((hb_old == lb) && (_recbuffer.at(k+2) == lb_old))
 							{
 								/* Try to exclude overlapping by checking previous data (if available):
-									=> OK, if the previous byte has been recieved and is != B1
-									=> OK, if the 2. previous byte has been recieved and is != A1		*/
+									=> OK, if the previous byte has been received and is != B1
+									=> OK, if the 2. previous byte has been receeved and is != A1		*/
 								_sync = false;
 								if ((k>0) && (_recbuffer.at(k-1) != lb_old))
 									_sync = true;
@@ -336,7 +336,7 @@ void SSMP1communication_procedures::syncToRecData()
 								if ((lb_old == hb) && (_recbuffer.at(k+2) == hb_old))
 								{
 									/* Try to exclude overlapping by checking previous data (if available):
-										=> OK, if a previous byte has been recieved and is != A1		*/
+										=> OK, if a previous byte has been received and is != A1		*/
 									if (k==0 || (_recbuffer.at(k-1) == hb_old))
 									{
 										_sync = false;
