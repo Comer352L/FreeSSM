@@ -47,16 +47,8 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 	_recbuffer.clear();
 	_lastaddr = _currentaddr;
 	_currentaddr = addr;
-	if (_lastaddr > -1)
-	{
-		_addrswitch_pending = true;
-		_sync = false;
-	}
-	else
-	{
-		_addrswitch_pending = true;
-		_sync = true;
-	}
+	_addrswitch_pending = true;
+	_sync = false;
 	return true;
 }
 
