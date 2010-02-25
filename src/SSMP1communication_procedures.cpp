@@ -42,7 +42,16 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 	if (((cu != SSM1_CU_Engine) && (cu != SSM1_CU_Transmission)) && (addr > 0xFF))
 		return false;
 	if (!sendReadAddressCmd(cu, addr))
+	{
+#ifdef __FSSM_DEBUG__
+		std::cout << "SSMP1communication_procedures::setAddress(...):   sendReadAddressCmd(...) failed.\n";
+#endif
 		return false;
+	}
+#ifdef __FSSM_DEBUG__
+	else
+		std::cout << "SSMP1communication_procedures::setAddress(...):   sent read-request for address " << std::hex << std::showbase << addr << '\n';
+#endif
 	waitms(SSMP1_T_IC_WAIT);
 	_recbuffer.clear();
 	_lastaddr = _currentaddr;
@@ -61,12 +70,24 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	_currentaddr = -1;
 	_lastaddr = -1;
 	_addrswitch_pending = false;
-	if (!sendQueryIdCmd()) return false;
+	if (!sendQueryIdCmd())
+	{
+#ifdef __FSSM_DEBUG__
+		std::cout << "SSMP1communication_procedures::getID(...):   sendQueryIdCmd() failed.\n";
+#endif
+		return false;
+	}
 	waitms(SSMP1_T_NEWDATA_REC_MAX);
 	// Read all data from port and return the last 3 bytes
 	if (_diagInterface->read(data) && (data->size() > 2))
 	{
 		data->erase(data->begin(), data->end()-3);
+#ifdef __FSSM_DEBUG__
+		std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): " << std::hex << std::noshowbase
+		<< (static_cast<int>(data->at(0)) & 0xff) << " "
+		<< (static_cast<int>(data->at(1)) & 0xff) << " " 
+		<< (static_cast<int>(data->at(2)) & 0xff) << '\n';
+#endif
 		return true;
 	}
 	return false;
@@ -93,7 +114,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 		} while (ok && rbuf.size());
 #ifdef __FSSM_DEBUG__
 		if (!ok)
-			std::cout << "SSMP1communication_procedures::getNextData():   communication error\n";
+			std::cout << "SSMP1communication_procedures::getNextData(...):   communication error.\n";
 #endif
 		// Try to find/get dataset:
 		if (ok && (_recbuffer.size() > 2))
@@ -137,6 +158,10 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 					{
 						data->push_back(_recbuffer.at(msgStartIndex+2));
 						_recbuffer.erase(_recbuffer.begin(), _recbuffer.begin()+msgStartIndex+3);
+#ifdef __FSSM_DEBUG__
+						std::cout << "SSMP1communication_procedures::getNextData(...):   received data: "
+						          << std::hex << std::showbase << (static_cast<int>(data->back()) & 0xff) << '\n';
+#endif
 						return true;
 					}
 				}
@@ -144,7 +169,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)
-					std::cout << "SSMP1communication_procedures::getNextData():   lost synchronisation\n";
+					std::cout << "SSMP1communication_procedures::getNextData(...):   lost synchronisation.\n";
 #endif
 			}
 		}
@@ -152,7 +177,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 		waitms(10);
 	}
 #ifdef __FSSM_DEBUG__
-	std::cout << "SSMP1communication_procedures::getNextData():   timeout\n";
+	std::cout << "SSMP1communication_procedures::getNextData(...):   timeout.\n";
 #endif
 	return false;
 }
@@ -161,7 +186,15 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 bool SSMP1communication_procedures::writeDatabyte(char databyte)
 {
 	if (_currentaddr < 0) return false;
-	return sendWriteDatabyteCmd(_currentaddr, databyte);
+	bool success = sendWriteDatabyteCmd(_currentaddr, databyte);
+#ifdef __FSSM_DEBUG__
+	if (!success)
+		std::cout << "SSMP1communication_procedures::writeDatabyte(...):   sendWriteDatabyteCmd(...) failed.\n";
+	else
+		std::cout << "SSMP1communication_procedures::writeDatabyte(...):   sent write-request for address "
+		<< std::hex << std::showbase << _currentaddr << ": value " << (static_cast<int>(databyte) & 0xff) << '\n';
+#endif
+	return success;
 }
 
 
@@ -176,7 +209,7 @@ bool SSMP1communication_procedures::waitForDataValue(char data, unsigned int tim
 		if (!getNextData(&datawritten, timeout))
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMP1communication_procedures::waitForWriteConfirmation()   getNextData() failed !\n";
+			std::cout << "SSMP1communication_procedures::waitForDataValue(...)   getNextData(...) failed.\n";
 #endif
 			return false;
 		}
@@ -184,9 +217,14 @@ bool SSMP1communication_procedures::waitForDataValue(char data, unsigned int tim
 		if (!ok)
 			datawritten.clear();
 	} while(!ok && (time.elapsed() < timeout));
+	
 #ifdef __FSSM_DEBUG__
-	std::cout << "SSMP1communication_procedures::waitForWriteConfirmation():   the written data was not confirmed by the CU !\n";
+	if (!ok)
+		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   timeout.\n";
+	else
+		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   success.\n";
 #endif
+
 	return ok;
 }
 
@@ -195,7 +233,12 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 {
 	unsigned char norec_counter = 0;
 	if (!sendStopTalkingCmd())
+	{
+#ifdef __FSSM_DEBUG__
+		std::cout << "SSMP1communication_procedures::stopCUtalking(...):   sendStopTalkingCmd() failed.\n";
+#endif
 		return false;
+	}
 	if (waitforsilence)
 	{
 		std::vector<char> buffer;
@@ -218,6 +261,15 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 		 *   => make sure it will work with block-reads (in the future)
 		 */
 	}
+#ifdef __FSSM_DEBUG__
+	if (waitforsilence)
+	{
+		if (norec_counter < 5)
+			std::cout << "SSMP1communication_procedures::stopCUtalking(...):   timeout.\n";
+		else
+			std::cout << "SSMP1communication_procedures::stopCUtalking(...):   success.\n";
+	}
+#endif
 	if (!waitforsilence || (norec_counter >= 5))
 	{
 		_recbuffer.clear();
@@ -286,13 +338,13 @@ void SSMP1communication_procedures::syncToRecData()
 					{
 						// Check for possible issues when 2+x bytes message-overlapping:
 						/* NOTE: Szenario: ... (B1 D1 | A2) B2 D2 ...     with hb==B1 and lb==D1
-							  => OK, if databyte!=A2							*/
+							  => OK, if databyte!=A2						*/
 						if ((hb == lb_old) && (_recbuffer.at(k+2) == hb))
 						{
 							/* Try to exclude overlapping by checking previous data (if available):
 								=> OK, if the previous byte has been received and is != A1
 								=> OK, if the 3. previous byte has been received and is != B1
-								=> OK, if the 4. previous byte has been received and is != A1		*/
+								=> OK, if the 4. previous byte has been received and is != A1	*/
 							_sync = false;
 							if ((k>0) && (_recbuffer.at(k-1) != hb_old))
 								_sync = true;
@@ -310,12 +362,12 @@ void SSMP1communication_procedures::syncToRecData()
 						{
 							// Check for possible issues when 4+x bytes message-overlapping:
 							/* NOTE: Szenario: ... (D1 | A1 B1) D1 | A2 B2 D2 ...     with hb==D1 and lb==A1
-								  => OK, if databyte!=B1							*/
+								  => OK, if databyte!=B1						*/
 							if ((hb_old == lb) && (_recbuffer.at(k+2) == lb_old))
 							{
 								/* Try to exclude overlapping by checking previous data (if available):
 									=> OK, if the previous byte has been received and is != B1
-									=> OK, if the 2. previous byte has been receeved and is != A1		*/
+									=> OK, if the 2. previous byte has been receeved and is != A1	*/
 								_sync = false;
 								if ((k>0) && (_recbuffer.at(k-1) != lb_old))
 									_sync = true;
@@ -365,10 +417,6 @@ void SSMP1communication_procedures::syncToRecData()
 				_addrswitch_pending = false;
 				break;
 			}
-#ifdef __FSSM_DEBUG__
-			else
-				syncerrstr += " Need to wait for further incoming datasets.";
-#endif
 		}
 	}
 #ifdef __FSSM_DEBUG__
@@ -377,7 +425,7 @@ void SSMP1communication_procedures::syncToRecData()
 		std::cout << "failed:\n";
 		if (!syncerrstr.size())
 			syncerrstr = "Address-header not detetced.";
-		std::cout << "    => " << syncerrstr << '\n';
+		std::cout << "    => " << syncerrstr << " Need to wait for further incoming datasets.\n";
 	}
 	else
 		std::cout << "succesful.\n";
