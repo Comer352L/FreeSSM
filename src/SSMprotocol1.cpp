@@ -24,9 +24,6 @@
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
-	_ID[0] = '\x0';
-	_ID[1] = '\x0';
-	_ID[2] = '\x0';
 	resetCUdata();
 }
 
@@ -39,10 +36,49 @@ SSMprotocol1::~SSMprotocol1()
 
 void SSMprotocol1::resetCUdata()
 {
-
-	// TODO !
+	// RESET COMMUNICATION:
+	if (_SSMP1com != NULL)
+	{
+		// Disconnect communication error and data signals:
+		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+			    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+		// Try to stop active communication processes:
+		_SSMP1com->stopCommunication();
+		// NOTE: DO NOT CALL stopCommOperation() or any other communicating functions here because of possible recursions !
+		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+		delete _SSMP1com;
+		_SSMP1com = NULL;
+		// Emit stoppedXXX()-signals (_SSMP1com has been deleted, so we are sure they have finished):
+		if (_state == state_MBSWreading)
+		{
+			emit stoppedMBSWreading();
+		}
+		else if (_state == state_DCreading)
+		{
+			emit stoppedDCreading();
+		}
+	}
+	else
+		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+	// RESET ECU RAW DATA:
+	_ID[0] = '\x0';
+	_ID[1] = '\x0';
+	_ID[2] = '\x0';
+	// Reset DC-data:
+	_DTCdefs.clear();
+	// Reset MB/SW-data:
+	_supportedMBs.clear();
+	_supportedSWs.clear();
+	// *** Reset selection data ***:
+	_selectedDCgroups = noDCs_DCgroup;
+	_MBSWmetaList.clear();
+	_selMBsSWsAddr.clear();
 }
-// IMPLEMENTATION MISSING
+
 
 bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 {

@@ -76,7 +76,7 @@ void SSMprotocol2::resetCUdata()
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 		delete _SSMP2com;
 		_SSMP2com = NULL;
-		// Emit stoppedXXX()-signals (_SSMP2com has been deletet, so we are sure they have finished):
+		// Emit stoppedXXX()-signals (_SSMP2com has been deleted, so we are sure they have finished):
 		if (_state == state_MBSWreading)
 		{
 			emit stoppedMBSWreading();
