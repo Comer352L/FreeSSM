@@ -180,8 +180,6 @@ void ControlUnitDialog::closeEvent(QCloseEvent *event)
 		// Create wait message box:
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Stopping Communication... Please wait !"));
 		waitmsgbox.show();
-		// Stop all permanent communication operations:
-		_SSMPdev->stopAllPermanentOperations();
 		// Reset CU data:
 		_SSMPdev->resetCUdata();
 		// Close wait message box:
