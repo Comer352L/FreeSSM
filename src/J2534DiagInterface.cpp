@@ -145,6 +145,7 @@ bool J2534DiagInterface::close()
 		// Clean up:
 		delete _j2534;
 		_j2534 = NULL;
+		setName("J2534 Pass-Through");
 		setVersion("");
 		return true;
 	}
