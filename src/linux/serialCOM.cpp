@@ -176,7 +176,7 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		{
 			settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   ERROR:   different baud rates for transmitting and recieving detected\n";
+			std::cout << "serialCOM::GetPortSettings():   ERROR:   different baud rates for transmitting and receiving detected\n";
 #endif
 		}
 	}
@@ -1003,7 +1003,7 @@ bool serialCOM::ClearSendBuffer()
 }
 
 
-bool serialCOM::ClearRecieveBuffer()
+bool serialCOM::ClearReceiveBuffer()
 {
 	int cvTF = -1;
 	if (portisopen)
@@ -1013,7 +1013,7 @@ bool serialCOM::ClearRecieveBuffer()
 	else
 	{
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::ClearRecieveBuffer(...):   ioctl(..., TCFLSH, TCIFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
+		std::cout << "serialCOM::ClearReceiveBuffer(...):   ioctl(..., TCFLSH, TCIFLUSH) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 		return false;
 	}

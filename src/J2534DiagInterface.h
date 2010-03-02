@@ -55,7 +55,7 @@ private:
         unsigned long _FilterID;
 
 	bool ClearSendBuffer();
-	bool ClearRecieveBuffer();
+	bool ClearReceiveBuffer();
 #ifdef __FSSM_DEBUG__
 	void printErrorDescription(std::string title, long ret);
 #endif

@@ -361,7 +361,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// MORE OPTIONS:
 		newdcb.fBinary = true;	// binary mode (false is not supported by Windows)
 		newdcb.fParity = false;	// no parity checking
-		newdcb.fNull = false;	// VERY IMPORTANT: don't discard recieved zero characters
+		newdcb.fNull = false;	// VERY IMPORTANT: don't discard received zero characters
 		// FLOW CONTROL:
 		newdcb.fOutxCtsFlow = false;	// CTS disabled
 		newdcb.fOutxDsrFlow = false;	// DSR disabled
@@ -439,7 +439,7 @@ bool serialCOM::OpenPort(std::string portname)
 		std::cout << "serialCOM::OpenPort():   GetCommState(...) failed with error " << GetLastError() << "\n";
 #endif
 	settingssaved = confirm;
-	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns recieved characters):
+	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns received characters):
 	COMMTIMEOUTS timeouts = {0};
 	timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
 	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
@@ -621,7 +621,7 @@ bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesr
 	*nrofbytesread = 0;
 	if (!portisopen) return false;
 	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
-	// READ RECIEVED DATA:
+	// READ RECEIVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
 			      data,		// Pointer to data to read
 			      maxbytes,		// Number of bytes to read
@@ -653,7 +653,7 @@ bool serialCOM::ClearSendBuffer()
 }
 
 
-bool serialCOM::ClearRecieveBuffer()
+bool serialCOM::ClearReceiveBuffer()
 {
 	bool confirmPC = false;
 	if (!portisopen) return false;
@@ -661,7 +661,7 @@ bool serialCOM::ClearRecieveBuffer()
 	confirmPC = PurgeComm(hCom, PURGE_RXCLEAR);   // clears input buffer (if the device driver has one)
 #ifdef __SERIALCOM_DEBUG__
 	if (!confirmPC)
-		std::cout << "serialCOM::ClearRecieveBuffer():   PurgeComm(...) failed with error " << GetLastError() << "\n";
+		std::cout << "serialCOM::ClearReceiveBuffer():   PurgeComm(...) failed with error " << GetLastError() << "\n";
 #endif
 	return confirmPC;
 }
