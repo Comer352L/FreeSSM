@@ -85,6 +85,9 @@ QMAKE_EXTRA_TARGETS += translation
 # Add pre-processor-define if we compile as debug:
 CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__
 
+# disable gcse-optimization (regressions with gcc-versions >= 4.2)
+QMAKE_CXXFLAGS += -fno-gcse         
+
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
 win32:INSTALLDIR = $$system(echo %programfiles%)/FreeSSM
@@ -105,7 +108,6 @@ unix {
        INCLUDEPATH += src/linux
        HEADERS += src/linux/serialCOM.h
        SOURCES += src/linux/serialCOM.cpp
-       QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 }
 
 win32 {
