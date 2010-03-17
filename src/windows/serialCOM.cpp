@@ -62,14 +62,20 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			if (!strncmp((char*)Data,"COM",3))	// compares the first 3 characters
 			{
 				// CHECK IF PORT IS AVAILABLE (not in use):
-				hCom_t = CreateFileA((char*)Data,				// name of port
-							   GENERIC_READ | GENERIC_WRITE,	// read/write access
-							   0,					// must be opened with exclusive-access
-							   NULL,				// default security attributes
-							   OPEN_EXISTING,			// must use OPEN_EXISTING
-							   0,					// not overlapped I/O
-							   NULL					// must be NULL for comm devices
-							  );
+				char NTdevName[20] = "\\\\.\\";	// => "\\.\"
+				strcpy(NTdevName+4, (char*)Data);
+				/* NOTE: MS-DOS device names ("COMx") are not working reliable if x is > 9 !!!
+					=> device can not be opened (error 2 "The system cannot find the file specified.")
+					Using NT device names instead ("\\.\COMx")
+				*/
+				hCom_t = CreateFileA(NTdevName,				// device name of the port
+						     GENERIC_READ | GENERIC_WRITE,	// read/write access
+						     0,					// must be opened with exclusive-access
+						     NULL,				// default security attributes
+						     OPEN_EXISTING,			// must use OPEN_EXISTING
+						     0,					// not overlapped I/O
+						     NULL				// must be NULL for comm devices
+						    );
 				if (hCom_t != INVALID_HANDLE_VALUE)
 				{
 					ok = CloseHandle(hCom_t);
@@ -417,7 +423,13 @@ bool serialCOM::OpenPort(std::string portname)
 	bool confirm;
 	if (portisopen) return false;
 	// OPEN PORT:
-	hCom = CreateFileA(portname.c_str(),			// name of port
+	std::string NTdevName = "\\\\.\\";	// => "\\.\"
+	NTdevName += portname;
+	/* NOTE: MS-DOS device names ("COMx") are not working reliable if x is > 9 !!!
+		=> device can not be opened (error 2 "The system cannot find the file specified.")
+		Using NT device names instead ("\\.\COMx")
+	*/
+	hCom = CreateFileA(NTdevName.c_str(),			// name of port
 			   GENERIC_READ | GENERIC_WRITE,	// read/write access
 			   0,					// must be opened with exclusive-access
 			   NULL,				// default security attributes
