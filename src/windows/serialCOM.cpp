@@ -84,7 +84,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			szData = 256;			// because RegEnumValue has changed value 
 			index++;
 		}
-		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm> (automaticly included, if <vector> is included)
+		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm>
 		cv = RegCloseKey(hKey);
 #ifdef __SERIALCOM_DEBUG__
 		if (cv != ERROR_SUCCESS)

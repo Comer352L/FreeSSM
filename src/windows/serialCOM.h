@@ -34,6 +34,7 @@ extern "C"
 }
 #include <string>
 #include <vector>
+#include <algorithm>		// sort()
 #ifdef __SERIALCOM_DEBUG__
     #include <iostream>
 #endif
