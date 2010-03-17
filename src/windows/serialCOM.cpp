@@ -76,9 +76,14 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 #ifdef __SERIALCOM_DEBUG__
 					if (!ok)
 						std::cout << "serialCOM::GetAvailablePorts():   CloseHandle(...) failed with error " << GetLastError() << "\n";
+					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is available\n";
 #endif
 					portlist.push_back((char*)Data);
 				}
+#ifdef __SERIALCOM_DEBUG__
+				else
+					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is not available:   error " << GetLastError() << "\n";
+#endif
 			}
 			szValueName = 256;		// because RegEnumValue has changed value 
 			szData = 256;			// because RegEnumValue has changed value 
