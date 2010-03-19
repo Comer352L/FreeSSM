@@ -1,3 +1,8 @@
+v1.2.1 (19.03.2010):
+  - fixed a translation
+  - improved reliabilty of serial port detection on MS Windows for ports higher than COM9
+
+
 v1.2.0 (23.12.2009):
   - Added min/max-functionality for Measuring Blocks/Switches
   - Measuring Blocks/Switches can now be moved up/down on the list
