@@ -567,7 +567,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>Written by Comer352l (Copyright © 2008-2009)</string>
+      <string>Written by Comer352l (Copyright © 2008-2010)</string>
      </property>
     </widget>
     <widget class="QLabel" name="email_label">
