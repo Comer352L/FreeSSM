@@ -685,7 +685,7 @@ Please check current values !</translation>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="177"/>
         <source>The Clear Memory procedure</source>
-        <translation type="unfinished">Die Speicher-Löschprozedur</translation>
+        <translation type="unfinished">The Clear Memory procedure</translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="180"/>
