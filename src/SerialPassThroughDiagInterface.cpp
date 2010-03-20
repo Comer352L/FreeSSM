@@ -200,10 +200,10 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		}
 		if (protocolType() == AbstractDiagInterface::protocol_SSM2)
 		{
-			if (!_port->ClearRecieveBuffer())
+			if (!_port->ClearReceiveBuffer())
 			{
 #ifdef __FSSM_DEBUG__
-				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearRecieveBuffer() failed\n";
+				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearReceiveBuffer() failed\n";
 #endif
 				return false;
 			}
@@ -230,10 +230,10 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		}
 		if (protocolType() != AbstractDiagInterface::protocol_SSM2)
 		{
-			if (!_port->ClearRecieveBuffer())
+			if (!_port->ClearReceiveBuffer())
 			{
 #ifdef __FSSM_DEBUG__
-				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearRecieveBuffer() failed\n";
+				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearReceiveBuffer() failed\n";
 #endif
 				return false;
 			}

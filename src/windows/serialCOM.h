@@ -1,7 +1,7 @@
 /*
  * serialCOM.h - Serial port configuration and communication
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ extern "C"
 }
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <algorithm>		// sort()
 #ifdef __SERIALCOM_DEBUG__
     #include <iostream>
 #endif
@@ -83,7 +83,7 @@ public:
 	bool Read(unsigned int maxbytes, std::vector<char> *data);
 	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
-	bool ClearRecieveBuffer();
+	bool ClearReceiveBuffer();
 	bool SendBreak(unsigned int duration_ms);
 	bool SetBreak();
 	bool ClearBreak();

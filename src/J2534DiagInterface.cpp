@@ -145,6 +145,7 @@ bool J2534DiagInterface::close()
 		// Clean up:
 		delete _j2534;
 		_j2534 = NULL;
+		setName("J2534 Pass-Through");
 		setVersion("");
 		return true;
 	}
@@ -280,7 +281,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			printErrorDescription("PassThruIoctl() for parameter PARITY failed: ", ret);
 #endif
 		/* END OF SET CONFIGURATION */
-		// APPLY FILTER (Recieve all messages) => MANDATORY
+		// APPLY FILTER (Receive all messages) => MANDATORY
 		PASSTHRU_MSG MaskMsg;
 		PASSTHRU_MSG PatternMsg;
 		memset(&MaskMsg, 0, sizeof(MaskMsg));   // .Data=0-array means "do not examine any bits"
@@ -399,7 +400,7 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 		// Flush buffers;
 		if (!ClearSendBuffer())
 			return false;
-		if (!ClearRecieveBuffer())
+		if (!ClearReceiveBuffer())
 			return false;
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
@@ -444,7 +445,7 @@ bool J2534DiagInterface::ClearSendBuffer()
 }
 
 
-bool J2534DiagInterface::ClearRecieveBuffer()
+bool J2534DiagInterface::ClearReceiveBuffer()
 {
 		long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_RX_BUFFER, (void *)NULL, (void *)NULL);
 		if (STATUS_NOERROR != ret)

@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,29 +62,40 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			if (!strncmp((char*)Data,"COM",3))	// compares the first 3 characters
 			{
 				// CHECK IF PORT IS AVAILABLE (not in use):
-				hCom_t = CreateFileA((char*)Data,				// name of port
-							   GENERIC_READ | GENERIC_WRITE,	// read/write access
-							   0,					// must be opened with exclusive-access
-							   NULL,				// default security attributes
-							   OPEN_EXISTING,			// must use OPEN_EXISTING
-							   0,					// not overlapped I/O
-							   NULL					// must be NULL for comm devices
-							  );
+				char NTdevName[20] = "\\\\.\\";	// => "\\.\"
+				strcpy(NTdevName+4, (char*)Data);
+				/* NOTE: MS-DOS device names ("COMx") are not working reliable if x is > 9 !!!
+					=> device can not be opened (error 2 "The system cannot find the file specified.")
+					Using NT device names instead ("\\.\COMx")
+				*/
+				hCom_t = CreateFileA(NTdevName,				// device name of the port
+						     GENERIC_READ | GENERIC_WRITE,	// read/write access
+						     0,					// must be opened with exclusive-access
+						     NULL,				// default security attributes
+						     OPEN_EXISTING,			// must use OPEN_EXISTING
+						     0,					// not overlapped I/O
+						     NULL				// must be NULL for comm devices
+						    );
 				if (hCom_t != INVALID_HANDLE_VALUE)
 				{
 					ok = CloseHandle(hCom_t);
 #ifdef __SERIALCOM_DEBUG__
 					if (!ok)
 						std::cout << "serialCOM::GetAvailablePorts():   CloseHandle(...) failed with error " << GetLastError() << "\n";
+					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is available\n";
 #endif
 					portlist.push_back((char*)Data);
 				}
+#ifdef __SERIALCOM_DEBUG__
+				else
+					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is not available:   error " << GetLastError() << "\n";
+#endif
 			}
 			szValueName = 256;		// because RegEnumValue has changed value 
 			szData = 256;			// because RegEnumValue has changed value 
 			index++;
 		}
-		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm> (automaticly included, if <vector> is included)
+		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm>
 		cv = RegCloseKey(hKey);
 #ifdef __SERIALCOM_DEBUG__
 		if (cv != ERROR_SUCCESS)
@@ -361,7 +372,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		// MORE OPTIONS:
 		newdcb.fBinary = true;	// binary mode (false is not supported by Windows)
 		newdcb.fParity = false;	// no parity checking
-		newdcb.fNull = false;	// VERY IMPORTANT: don't discard recieved zero characters
+		newdcb.fNull = false;	// VERY IMPORTANT: don't discard received zero characters
 		// FLOW CONTROL:
 		newdcb.fOutxCtsFlow = false;	// CTS disabled
 		newdcb.fOutxDsrFlow = false;	// DSR disabled
@@ -412,7 +423,13 @@ bool serialCOM::OpenPort(std::string portname)
 	bool confirm;
 	if (portisopen) return false;
 	// OPEN PORT:
-	hCom = CreateFileA(portname.c_str(),			// name of port
+	std::string NTdevName = "\\\\.\\";	// => "\\.\"
+	NTdevName += portname;
+	/* NOTE: MS-DOS device names ("COMx") are not working reliable if x is > 9 !!!
+		=> device can not be opened (error 2 "The system cannot find the file specified.")
+		Using NT device names instead ("\\.\COMx")
+	*/
+	hCom = CreateFileA(NTdevName.c_str(),			// name of port
 			   GENERIC_READ | GENERIC_WRITE,	// read/write access
 			   0,					// must be opened with exclusive-access
 			   NULL,				// default security attributes
@@ -439,7 +456,7 @@ bool serialCOM::OpenPort(std::string portname)
 		std::cout << "serialCOM::OpenPort():   GetCommState(...) failed with error " << GetLastError() << "\n";
 #endif
 	settingssaved = confirm;
-	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns recieved characters):
+	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns received characters):
 	COMMTIMEOUTS timeouts = {0};
 	timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
 	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
@@ -621,7 +638,7 @@ bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesr
 	*nrofbytesread = 0;
 	if (!portisopen) return false;
 	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
-	// READ RECIEVED DATA:
+	// READ RECEIVED DATA:
 	confirmRF = ReadFile (hCom,		// Port handle
 			      data,		// Pointer to data to read
 			      maxbytes,		// Number of bytes to read
@@ -653,7 +670,7 @@ bool serialCOM::ClearSendBuffer()
 }
 
 
-bool serialCOM::ClearRecieveBuffer()
+bool serialCOM::ClearReceiveBuffer()
 {
 	bool confirmPC = false;
 	if (!portisopen) return false;
@@ -661,7 +678,7 @@ bool serialCOM::ClearRecieveBuffer()
 	confirmPC = PurgeComm(hCom, PURGE_RXCLEAR);   // clears input buffer (if the device driver has one)
 #ifdef __SERIALCOM_DEBUG__
 	if (!confirmPC)
-		std::cout << "serialCOM::ClearRecieveBuffer():   PurgeComm(...) failed with error " << GetLastError() << "\n";
+		std::cout << "serialCOM::ClearReceiveBuffer():   PurgeComm(...) failed with error " << GetLastError() << "\n";
 #endif
 	return confirmPC;
 }

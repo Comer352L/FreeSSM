@@ -118,6 +118,9 @@ DEFINES += TIXML_USE_STL
 # Add pre-processor-define if we compile as debug:
 CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__ __J2534_API_DEBUG__
 
+# disable gcse-optimization (regressions with gcc-versions >= 4.2)
+QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
+
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
 win32:INSTALLDIR = $$system(echo %programfiles%)/FreeSSM
@@ -142,7 +145,6 @@ unix {
        SOURCES += src/linux/serialCOM.cpp \
                   src/linux/TimeM.cpp \
                   src/linux/J2534_API.cpp
-       QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 }
 
 win32 {

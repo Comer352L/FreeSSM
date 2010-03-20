@@ -89,7 +89,7 @@ public:
 	bool Read(unsigned int maxbytes, std::vector<char> *data);
 	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
-	bool ClearRecieveBuffer();
+	bool ClearReceiveBuffer();
 	bool SendBreak(unsigned int duration_ms);
 	bool SetBreak();
 	bool ClearBreak();
