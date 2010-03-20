@@ -1,6 +1,7 @@
 v1.2.1 (19.03.2010):
   - Übersetzungsfehler behoben
-  - Verbesserte Zuverlässigkeit der Detektierung serieller Ports oberhalb von COM9 (MS Windows)
+  - Verbesserte Zuverlässigkeit der Detektierung serieller Ports oberhalb
+    von COM9 (MS Windows)
 
 
 v1.2.0 (23.12.2009):

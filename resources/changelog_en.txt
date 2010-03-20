@@ -1,6 +1,7 @@
 v1.2.1 (19.03.2010):
   - Fixed a translation
-  - Improved reliabilty of serial port detection on MS Windows for ports higher than COM9
+  - Improved reliabilty of serial port detection on MS Windows for ports
+    higher than COM9
 
 
 v1.2.0 (23.12.2009):
