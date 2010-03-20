@@ -22,7 +22,7 @@
 
 
 #include <QtGui>
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 
 
 class CUcontent_DCs_abstract : public QWidget
@@ -30,14 +30,13 @@ class CUcontent_DCs_abstract : public QWidget
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_abstract(QWidget *parent, SSMprotocol2 *SSMP2dev, QString progversion);
-	~CUcontent_DCs_abstract();
+	CUcontent_DCs_abstract(QWidget *parent);
+	virtual ~CUcontent_DCs_abstract();
 	bool startDCreading();
 	bool stopDCreading();
 
 protected:
-	SSMprotocol2 * _SSMP2dev;
-	QString _progversion;
+	SSMprotocol * _SSMPdev;
 	int _supportedDCgroups;
 
 	virtual void connectGUIelements() = 0;

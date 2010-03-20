@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/" >
+    <file>icons/oxygen/32x32/fork.png</file>
+    <file>icons/chrystal/22x22/input_devices_settings.png</file>
     <file>icons/freessm/24x24/reset-min-max.png</file>
     <file>icons/freessm/32x32/FreeSSM.png</file>
     <file>icons/freessm/24x24/show-max-value.png</file>

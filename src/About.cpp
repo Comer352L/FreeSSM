@@ -21,13 +21,13 @@
 #include "About.h"
 
 
-About::About(QWidget *parent, QString progversion,  QString language) : QDialog(parent)
+About::About(QWidget *parent, QString language) : QDialog(parent)
 {
 	// Setup UI:
 	setupUi(this);
 	setupUiFonts();
 	// Output title/program version:
-	progversion_label->setText(progversion_label->text() + " " + progversion);
+	progversion_label->setText(progversion_label->text() + " " + QApplication::applicationVersion());
 	// Load licence text and changelog:
 	QFile changelog_file;
 	if (language == "de")

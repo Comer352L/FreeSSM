@@ -20,7 +20,7 @@
 #include "CUcontent_DCs_engine.h"
 
 
-CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol2 *SSMP2dev, QString progversion) : CUcontent_DCs_abstract(parent, SSMP2dev, progversion)
+CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent) : CUcontent_DCs_abstract(parent)
 {
 	_obd2DTCformat = true;
 	_testMode = false;
@@ -54,6 +54,17 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent, SSMprotocol2 *SSMP2d
 	headerview = memorizedCCCCs_tableWidget->horizontalHeader();
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
+	// Set table row resize behavior:
+	headerview = currOrTempDTCs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	headerview = histOrMemDTCs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	headerview = latestCCCCs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	headerview = memorizedCCCCs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	/* NOTE: Current method for calculating ther nr. of needed rows 
+	 * assumes all rows to have the same constsant height */
 	// Install event-filter for DC-tables:
 	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);
 	histOrMemDTCs_tableWidget->viewport()->installEventFilter(this);
@@ -86,7 +97,7 @@ CUcontent_DCs_engine::~CUcontent_DCs_engine()
 }
 
 
-bool CUcontent_DCs_engine::setup()
+bool CUcontent_DCs_engine::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool TMsup = false;
@@ -96,11 +107,12 @@ bool CUcontent_DCs_engine::setup()
 	bool memCCCCs_sup = false;
 	QString title;
 
+	_SSMPdev = SSMPdev;
 	// Reset data:
 	_obd2DTCformat = true;
 	_testMode = false;
 	_DCheckActive = false;
-	_supportedDCgroups = SSMprotocol2::noDCs_DCgroup;
+	_supportedDCgroups = SSMprotocol::noDCs_DCgroup;
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
 	_histOrMemDTCs.clear();
@@ -110,21 +122,23 @@ bool CUcontent_DCs_engine::setup()
 	_memorizedCCCCs.clear();
 	_memorizedCCCCdescriptions.clear();
 	// Get CU information:
-	ok =_SSMP2dev->getSupportedDCgroups(&_supportedDCgroups);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok =_SSMPdev->getSupportedDCgroups(&_supportedDCgroups);
 	if (ok)
 	{
-		ok = _SSMP2dev->hasTestMode(&TMsup);
+		ok = _SSMPdev->hasTestMode(&TMsup);
 		if (ok && TMsup)
-			ok = _SSMP2dev->isInTestMode(&_testMode); // NOTE: CURRENTLY, THIS WILL FAIL IF DC-READING IS ALREADY IN PROGRESS
+			ok = _SSMPdev->isInTestMode(&_testMode); // NOTE: CURRENTLY, THIS WILL FAIL IF DC-READING IS ALREADY IN PROGRESS
 	}
 	if (ok)
 	{
-		if ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup))
+		if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup))
 			_obd2DTCformat = false;
-		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup));
-		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup));
-		latestCCCCs_sup = (_supportedDCgroups & SSMprotocol2::CClatestCCs_DCgroup);
-		memCCCCs_sup = (_supportedDCgroups & SSMprotocol2::CCmemorizedCCs_DCgroup);
+		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
+		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
+		latestCCCCs_sup = (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup);
+		memCCCCs_sup = (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup);
 	}
 	// Set titles of the DTC-tables
 	setTitleOfFirstDTCtable(_obd2DTCformat, _testMode);
@@ -170,10 +184,13 @@ bool CUcontent_DCs_engine::setup()
 		DCgroups_tabWidget->setTabEnabled(1, false);
 	}
 	// Connect start-slot:
-	if (ok && (_supportedDCgroups != SSMprotocol2::noDCs_DCgroup))
-		connect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
-	else
-		disconnect(_SSMP2dev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	if (_SSMPdev)
+	{
+		if (ok && (_supportedDCgroups != SSMprotocol::noDCs_DCgroup))
+			connect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+		else
+			disconnect(_SSMPdev, SIGNAL( startedDCreading() ), this, SLOT( callStart() ));
+	}
 	// Return result;
 	return ok;
 }
@@ -181,26 +198,27 @@ bool CUcontent_DCs_engine::setup()
 
 void CUcontent_DCs_engine::connectGUIelements()
 {
+	if (!_SSMPdev) return;
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup)
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
-		connect(_SSMP2dev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
+		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	}
-	if (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup)
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMP2dev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups & SSMprotocol2::CClatestCCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup)
 	{
 		updateCClatestCCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMP2dev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
+		connect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
 	}
-	if (_supportedDCgroups & SSMprotocol2::CCmemorizedCCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup)
 	{
 		updateCCmemorizedCCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
-		connect(_SSMP2dev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
+		connect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
 	}
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
@@ -211,10 +229,11 @@ void CUcontent_DCs_engine::connectGUIelements()
 
 void CUcontent_DCs_engine::disconnectGUIelements()
 {
-	disconnect(_SSMP2dev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
-	disconnect(_SSMP2dev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
-	disconnect(_SSMP2dev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
-	disconnect(_SSMP2dev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
+	if (!_SSMPdev) return;	// avoid NULL-pointer-warning-message
+	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
+	disconnect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( latestCCCCs(QStringList, QStringList) ), this, SLOT( updateCClatestCCsContent(QStringList, QStringList) ));
+	disconnect(_SSMPdev, SIGNAL( memorizedCCCCs(QStringList, QStringList) ), this, SLOT( updateCCmemorizedCCsContent(QStringList, QStringList) ));
 }
 
 
@@ -358,7 +377,7 @@ void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 	QStringList memorizedCCCCcodes = _memorizedCCCCs;
 	QStringList memorizedCCCCdescriptions = _memorizedCCCCdescriptions;
 	// Current/Temporary DTCs:
-	if ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup))
+	if ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup))
 	{
 		if (currOrTempDTCdescriptions.size() == 0)
 		{
@@ -369,7 +388,7 @@ void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 		insertDCprintTable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
 	// Historic/Memorized DTCs:
-	if ((_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup))
+	if ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup))
 	{
 		if (histOrMemDTCdescriptions.size() == 0)
 		{
@@ -380,7 +399,7 @@ void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 		insertDCprintTable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
 	// Latest Cancel Codes:
-	if (_supportedDCgroups & SSMprotocol2::CClatestCCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::CClatestCCs_DCgroup)
 	{
 		if (latestCCCCdescriptions.size() == 0)
 		{
@@ -391,7 +410,7 @@ void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 		insertDCprintTable(cursor, latestCCCCsTitle_label->text(), latestCCCCcodes, latestCCCCdescriptions);
 	}
 	// Memorized Cancel Codes:
-	if (_supportedDCgroups & SSMprotocol2::CCmemorizedCCs_DCgroup)
+	if (_supportedDCgroups & SSMprotocol::CCmemorizedCCs_DCgroup)
 	{
 		if (memorizedCCCCdescriptions.size() == 0)
 		{
@@ -410,10 +429,6 @@ void CUcontent_DCs_engine::resizeEvent(QResizeEvent *event)
 	setNrOfRowsOfAllTableWidgets();
 	// accept event:
 	event->accept();
-	/* NOTE: Switching the tabs is a "dirty" workaround for a Qt-issue:
-	 * for all tabs except the current tab, the returned table height is wrong.
-	 * Fortunately, the switch is not visible...
-	 */
 }
 
 
@@ -473,7 +488,7 @@ void CUcontent_DCs_engine::show()
 void CUcontent_DCs_engine::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_engine.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);

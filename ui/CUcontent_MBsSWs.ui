@@ -1,79 +1,73 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MBSWcontent_Form</class>
- <widget class="QWidget" name="MBSWcontent_Form" >
-  <property name="geometry" >
+ <widget class="QWidget" name="MBSWcontent_Form">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>475</width>
-    <height>200</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
   </property>
-  <property name="minimumSize" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
    <size>
-    <width>475</width>
-    <height>200</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
     <pointsize>9</pointsize>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Measuring Blocks</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>7</number>
-   </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <property name="spacing" >
-      <number>-1</number>
+    <widget class="QTabWidget" name="MBSWviews_tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="topMargin" >
+     <property name="currentIndex">
       <number>0</number>
      </property>
-     <property name="bottomMargin" >
-      <number>0</number>
-     </property>
-    </layout>
-   </item>
-   <item>
-    <widget class="QTabWidget" name="MBSWviews_tabWidget" >
-     <property name="currentIndex" >
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="table_tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="table_tab">
+      <attribute name="title">
        <string>Values Table</string>
       </attribute>
-      <layout class="QGridLayout" name="valuesTableView_gridLayout" >
-       <property name="margin" >
+      <layout class="QGridLayout" name="valuesTableView_gridLayout">
+       <property name="margin">
         <number>0</number>
        </property>
-       <property name="spacing" >
+       <property name="spacing">
         <number>11</number>
        </property>
       </layout>
      </widget>
-     <widget class="QWidget" name="curves_tab" >
-      <attribute name="title" >
-       <string>Curves</string>
+     <widget class="QWidget" name="curves_tab">
+      <attribute name="title">
+       <string>Curve Plots</string>
       </attribute>
-      <layout class="QGridLayout" name="curvesView_gridLayout" >
-       <property name="margin" >
+      <layout class="QGridLayout" name="curvesView_gridLayout">
+       <property name="margin">
         <number>0</number>
        </property>
-       <property name="spacing" >
+       <property name="spacing">
         <number>11</number>
        </property>
       </layout>
@@ -81,38 +75,35 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
       <number>10</number>
      </property>
-     <property name="topMargin" >
-      <number>8</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="mbswadd_pushButton" >
-       <property name="minimumSize" >
+      <widget class="QPushButton" name="mbswadd_pushButton">
+       <property name="minimumSize">
         <size>
          <width>40</width>
          <height>34</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>40</width>
          <height>34</height>
         </size>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset resource="../resources/FreeSSM.qrc" >
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
          <normaloff>:/icons/chrystal/32x32/add.png</normaloff>:/icons/chrystal/32x32/add.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
          <width>24</width>
          <height>24</height>
@@ -121,27 +112,27 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="mbswdelete_pushButton" >
-       <property name="minimumSize" >
+      <widget class="QPushButton" name="mbswdelete_pushButton">
+       <property name="minimumSize">
         <size>
          <width>40</width>
          <height>34</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>40</width>
          <height>34</height>
         </size>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset resource="../resources/FreeSSM.qrc" >
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
          <normaloff>:/icons/chrystal/32x32/edit_remove.png</normaloff>:/icons/chrystal/32x32/edit_remove.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
          <width>30</width>
          <height>30</height>
@@ -150,11 +141,11 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
          <height>20</height>
@@ -163,27 +154,27 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="startstopmbreading_pushButton" >
-       <property name="minimumSize" >
+      <widget class="QPushButton" name="startstopmbreading_pushButton">
+       <property name="minimumSize">
         <size>
          <width>72</width>
          <height>34</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>72</width>
          <height>34</height>
         </size>
        </property>
-       <property name="text" >
+       <property name="text">
         <string> Start  </string>
        </property>
-       <property name="icon" >
-        <iconset resource="../resources/FreeSSM.qrc" >
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
          <normaloff>:/icons/chrystal/32x32/player_play.png</normaloff>:/icons/chrystal/32x32/player_play.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
          <width>24</width>
          <height>24</height>
@@ -196,7 +187,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc"/>
  </resources>
  <connections/>
 </ui>

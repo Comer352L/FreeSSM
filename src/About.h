@@ -33,7 +33,7 @@ class About : public QDialog, private Ui::about_Dialog
 	Q_OBJECT
 
 public:
-	About(QWidget *parent = 0, QString version = "", QString language = "");
+	About(QWidget *parent = 0, QString language = "");
 
 private:
 	void setupUiFonts();

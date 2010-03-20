@@ -1,7 +1,7 @@
 /*
  * Transmission.h - Transmission Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,50 +17,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRANSMISSION_H
-#define TRANSMISSION_H
+#ifndef TRANSMISSIONDIALOG_H
+#define TRANSMISSIONDIALOG_H
 
 
-
+#ifdef __WIN32__
+    #include "windows\serialCOM.h"
+#elif defined __linux__
+    #include "linux/serialCOM.h"
+#else
+    #error "Operating system not supported !"
+#endif
 #include <QtGui>
-#include "ui_Transmission.h"
-#include "SSMprotocol2.h"
-#include "FSSMdialogs.h"
+#include "ControlUnitDialog.h"
+#include "CUinfo_Transmission.h"
 #include "CUcontent_DCs_transmission.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
+#include "FSSMdialogs.h"
+#include "AbstractDiagInterface.h"
+#include "SSMprotocol1.h"
+#include "SSMprotocol2.h"
 
 
 
-class Transmission : public QMainWindow, private Ui::Transmission_Window
+class TransmissionDialog : public ControlUnitDialog
 {
 	Q_OBJECT
 
 public:
-	Transmission(SSMprotocol2 *ssmp2dev, QString progversion = "");
-	~Transmission();
+	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
  
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
 
-	SSMprotocol2 *_SSMP2dev;
-	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
-	// Pointer to content-widges:
+	// Selection buttons:
+	QPushButton *_clearMemory2_pushButton;
+	// Info- and content-widgets:
+	CUinfo_Transmission *_infoWidget;
 	CUcontent_DCs_transmission *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
-	void runClearMemory(SSMprotocol2::CMlevel_dt level);
-	void setupUiFonts();
-	void clearContent();
-	void closeEvent(QCloseEvent *event);
+	void runClearMemory(SSMprotocol::CMlevel_dt level);
 
 private slots:
 	void DTCs();
@@ -68,7 +73,6 @@ private slots:
 	void adjustments();
 	void clearMemory();
 	void clearMemory2();
-	void communicationError(QString addstr = "");
 
 };
 

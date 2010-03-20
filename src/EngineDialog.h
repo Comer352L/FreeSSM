@@ -1,7 +1,7 @@
 /*
  * Engine.h - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,51 +17,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef ENGINEDIALOG_H
+#define ENGINEDIALOG_H
 
 
-
+#ifdef __WIN32__
+    #include "windows\serialCOM.h"
+#elif defined __linux__
+    #include "linux/serialCOM.h"
+#else
+    #error "Operating system not supported !"
+#endif
 #include <QtGui>
-#include "ui_Engine.h"
-#include "SSMprotocol2.h"
-#include "FSSMdialogs.h"
+#include "ControlUnitDialog.h"
+#include "CUinfo_Engine.h"
 #include "CUcontent_DCs_engine.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "CUcontent_sysTests.h"
 #include "ClearMemoryDlg.h"
+#include "FSSMdialogs.h"
+#include "AbstractDiagInterface.h"
+#include "SSMprotocol1.h"
+#include "SSMprotocol2.h"
 
 
 
-class Engine : public QMainWindow, private Ui::Engine_Window
+class EngineDialog : public ControlUnitDialog
 {
 	Q_OBJECT
 
 public:
-	Engine(SSMprotocol2 *ssmp2dev, QString progversion = "");
-	~Engine();
+	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
 
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3, SysTests_mode};
 
-	SSMprotocol2 *_SSMP2dev;
-	QString _progversion;
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
-	// Pointer to content-widges:
+	// Info- and content-widgets:
+	CUinfo_Engine *_infoWidget;
 	CUcontent_DCs_engine *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
-	CUcontent_sysTests *_content_SysTests;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
-	void setupUiFonts();
-	void clearContent();
-	void closeEvent(QCloseEvent *event);
 
 private slots:
 	void DCs();
@@ -69,7 +71,7 @@ private slots:
 	void adjustments();
 	void systemoperationtests();
 	void clearMemory();
-	void communicationError(QString addstr = "");
+
 };
 
 

@@ -24,7 +24,7 @@
 
 #include <QWidget>
 #include "ui_CUcontent_sysTests.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 #include "ActuatorTestDlg.h"
 #include "FSSMdialogs.h"
 
@@ -35,16 +35,16 @@ class CUcontent_sysTests : public QWidget, private Ui::sysTestsContent_Form
 	Q_OBJECT
 
 private:
-	SSMprotocol2 *_SSMP2dev;
+	SSMprotocol *_SSMPdev;
 	QStringList _actuatorTestTitles;
 
 	void setupUiFonts();
 	void communicationError(QString adstr = "");
 
 public:
-	CUcontent_sysTests(QWidget *parent, SSMprotocol2 *SSMP2dev);
+	CUcontent_sysTests(QWidget *parent = 0);
 	~CUcontent_sysTests();
-	bool setup();
+	bool setup(SSMprotocol *SSMPdev);
 
 private slots:
 	void startActuatorTest();

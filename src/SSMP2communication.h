@@ -1,7 +1,7 @@
 /*
  * SSMP2communication.h - Communication Thread for the new SSM-protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,14 +21,8 @@
 #define SSMP2COMMUNICATION_H
 
 
-#ifdef __WIN32__
-    #include "windows\serialCOM.h"
-#elif defined __linux__
-    #include "linux/serialCOM.h"
-#else
-    #error "Operating system not supported !"
-#endif
 #include <QtGui>
+#include "AbstractDiagInterface.h"
 #include "SSMP2communication_core.h"
 
 
@@ -40,7 +34,7 @@ class SSMP2communication : public QThread, private SSMP2communication_core
 public:
 	enum comOp_dt {comOp_noCom, comOp_readCUdata, comOp_readBlock, comOp_readMulti, comOp_writeBlock, comOp_writeSingle, comOp_readBlock_p, comOp_readMulti_p, comOp_writeBlock_p, comOp_writeSingle_p};
 
-	SSMP2communication(serialCOM *port, char cuaddress = '\x0', unsigned char errRetries = 2);
+	SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress = '\x0', unsigned char errRetries = 2);
 	~SSMP2communication();
 	void setCUaddress(char cuaddress);
 	void setRetriesOnError(unsigned char retries);
@@ -76,11 +70,11 @@ private:
 	char _rec_buf[256];
 	int _delay;
 
-	void run();
 	bool doSingleCommOperation();
+	void run();
 
 signals:
-	void recievedData(QByteArray rawdata, int duration_ms);
+	void recievedData(std::vector<char> rawdata, int duration_ms);
 
 	void commError();
 

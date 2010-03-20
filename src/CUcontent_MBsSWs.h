@@ -27,7 +27,7 @@
 #include "ui_CUcontent_MBsSWs.h"
 #include "CUcontent_MBsSWs_tableView.h"
 #include "AddMBsSWsDlg.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 #include "libFSSM.h"
 
 
@@ -71,30 +71,30 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(QWidget *parent, SSMprotocol2 *SSMP2dev, MBSWsettings_dt options = MBSWsettings_dt());
+	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = 0);
 	~CUcontent_MBsSWs();
-	bool setup();
+	bool setup(SSMprotocol *SSMPdev);
 	bool startMBSWreading();
 	bool stopMBSWreading();
 	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void getCurrentMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
+	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	void getSettings(MBSWsettings_dt *settings);
 
 private:
-	SSMprotocol2 *_SSMP2dev;
+	SSMprotocol *_SSMPdev;
 	QLabel *_MBSWrefreshTimeTitle_label;
 	QLabel *_MBSWrefreshTimeValue_label;
 	QPushButton *_timemode_pushButton;
 	CUcontent_MBsSWs_tableView *_valuesTableView;
-	std::vector<mbsw_dt> _supportedMBs;
-	std::vector<mbsw_dt> _supportedSWs;
+	std::vector<mb_dt> _supportedMBs;
+	std::vector<sw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;
 	QList<MBSWvalue_dt> _lastValues;
 	QList<MinMaxMBSWvalue_dt> _minmaxData;
-	QList<unsigned int> _rawValueIndexes;	/* used to assign the incoming raw values to the MBs/SWs on the (meta-/displayed-) MB/SW-list
-						   => NEDED FOR MB/SW-MOVING DURING MB/SW-READING !					*/
+	QList<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	
 	void setupTimeModeUiElements();
 	void setupUiFonts();
 	void displayMBsSWs();
@@ -109,9 +109,9 @@ private slots:
 	void processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
-	void moveupMBsSWs();
-	void movedownMBsSWs();
-	void resetMinMax();
+	void moveUpMBsSWsOnTheTable();
+	void moveDownMBsSWsOnTheTable();
+	void resetMinMaxTableValues();
 	void setDeleteButtonEnabledState();
 	void switchTimeMode();
 

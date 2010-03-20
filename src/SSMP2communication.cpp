@@ -1,7 +1,7 @@
 /*
  * SSMP2communication.cpp - Communication Thread for the new SSM-protocol
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include "SSMP2communication.h"
 
 
-SSMP2communication::SSMP2communication(serialCOM *port, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(port)
+SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
 
@@ -60,183 +60,6 @@ void SSMP2communication::setRetriesOnError(unsigned char retries)
 	_errRetries = retries;
 }
 
-
-
-void SSMP2communication::run()
-{
-	QByteArray rawdata;
-	QTime timer;
-	int duration_ms = 0;
-	unsigned int k = 1;
-	unsigned int rindex = 1;
-	unsigned char nrofReadAddr = 0;
-	char errcount = 0;
-	bool permanent = false;
-	bool op_success = false;
-	bool abort;
-	comOp_dt operation;
-	char cuaddress;
-	char padadr = '\x0';
-	unsigned char datalen = 0;
-	unsigned int dataadr[256] = {0};
-	char snd_buf[256] = {'\x0'};
-	char rec_buf[256] = {'\x0'};
-	int delay = 0;
-	unsigned char errmax = 3;
-
-	// Synchronise with main-thread:
-	_mutex.lock();
-	operation = _CommOperation;
-	cuaddress = _cuaddress;
-	padadr = _padadr;
-	datalen = _datalen;
-	for (k=0; k<datalen; k++) dataadr[k] = _dataadr[k];
-	for (k=0; k<datalen; k++) snd_buf[k] = _snd_buf[k];
-	delay = _delay;
-	errmax = _errRetries + 1;
-	_result = false;
-	_abort = false;
-	_mutex.unlock();
-#ifdef __FSSM_DEBUG__
-	// Debug-output:
-	std::string op_str = "SSMP2communication::run():   operation: ";
-	switch (operation)
-	{
-		case comOp_noCom:
-			op_str += "noCom";
-			break;
-		case comOp_readCUdata:
-			op_str += "readCUdata";
-			break;
-		case comOp_readBlock:
-			op_str += "readBlock";
-			break;
-		case comOp_readMulti:
-			op_str += "readMulti";
-			break;
-		case comOp_readBlock_p:
-			op_str += "readBlock_p";
-			break;
-		case comOp_readMulti_p:
-			op_str += "readMulti_p";
-			break;
-		case comOp_writeBlock:
-			op_str += "writeBlock";
-			break;
-		case comOp_writeSingle:
-			op_str += "writeSingle";
-			break;
-		case comOp_writeBlock_p:
-			op_str += "writeBlock_p";
-			break;
-		case comOp_writeSingle_p:
-			op_str += "writeSingle_p";
-			break;
-		default:
-			op_str += "INVALID/UNKNOWN: " + QString::number(operation).toStdString();
-	}
-	std::cout << op_str << '\n';
-#endif
-	// Preparation:
-	if ( operation==comOp_readBlock_p || operation==comOp_readMulti_p || operation==comOp_writeBlock_p || operation==comOp_writeSingle_p )
-	{
-		permanent = true;
-		timer.start();
-	}
-	// COMMUNICATION:
-	do
-	{
-		// Call SSMP-core-function:
-		switch (operation)
-		{
-			case comOp_readCUdata:// GetECUData(...)
-				op_success = GetCUdata(cuaddress, rec_buf, rec_buf+3, rec_buf+8, &datalen);
-				if (op_success) datalen += 8;
-				break;
-			case comOp_readBlock:
-			case comOp_readBlock_p:// ReadDataBlock_permanent(...)
-				op_success = ReadDataBlock(cuaddress, padadr, dataadr[0], datalen, rec_buf);
-				break;
-			case comOp_readMulti:
-			case comOp_readMulti_p:// ReadMultipleDatabytes_permanent(...)
-				// CALCULATE NR OF ADDRESSES FOR NEXT READ:
-				if (33*(rindex) <= datalen)
-					nrofReadAddr = 33;
-				else
-					nrofReadAddr = datalen%33;
-				// READ NEXT ADDRESSES:
-				op_success = ReadMultipleDatabytes(cuaddress, padadr, dataadr+((rindex-1)*33), nrofReadAddr, rec_buf+((rindex-1)*33));
-				break;
-			case comOp_writeBlock:
-			case comOp_writeBlock_p:// WriteDataBlock_permanent(...)
-				op_success = WriteDataBlock(cuaddress, dataadr[0], snd_buf, datalen, rec_buf);
-				break;
-			case comOp_writeSingle:
-			case comOp_writeSingle_p:// WriteDatabyte_permanent(...)
-				op_success = WriteDatabyte(cuaddress, dataadr[0], snd_buf[0], rec_buf);
-				break;
-			default:
-				op_success = false;
-		}
-		// Evaluate result; Prepare for next operation:
-		if (op_success)
-		{
-			// Decrease error counter:
-			if (errcount > 0)
-				errcount--;
-			// Set query-index:
-			if ((operation == comOp_readMulti_p) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
-				rindex++;
-			else
-				rindex=1;
-			// Send data to main thread:
-			if (permanent && (rindex == 1))
-			{
-				// CONVERT/PREPARE DATA FOR RETURNING
-				rawdata = QByteArray(rec_buf, datalen);
-				// GET ELAPSED TIME:
-				duration_ms = timer.restart();
-				// SEND DATA TO MAIN THREAD:
-				emit recievedData(rawdata, duration_ms);
-				// Wait for the desired delay time:
-				if (delay > 0) msleep(delay);
-			}
-		}
-		else
-		{
-			errcount++;
-#ifdef __FSSM_DEBUG__
-			std::cout << "SSMP2communication::run():   communication operation error counter=" << (int)(errcount) << '\n';
-#endif
-		}
-		// GET ABORT STATUS::
-		_mutex.lock();
-		abort = _abort;
-		_mutex.unlock();
-	} while (!abort && (errcount < errmax) && (permanent || (rindex > 1) || !op_success));
-	// Send error signal:
-	if (permanent && !abort && !op_success)
-		emit commError();
-	// Synchronise with main-thread, reset:
-	_mutex.lock();
-	if (!permanent && op_success)
-	{
-		_datalen = datalen;	// only necessary for getCUdata
-		for (k=0; k<datalen; k++) _rec_buf[k] = rec_buf[k];
-		_result = op_success;
-	}
-	_abort = false;
-	_mutex.unlock();
-	if (!permanent)
-	{
-		// Ensures that event-loop is started before finishing (should always be the case...)
-		while (!_el.isRunning())
-			msleep(10);
-	}
-#ifdef __FSSM_DEBUG__
-	std::cout << "SSMP2communication::run():   communication operation finished." << '\n';
-#endif
-}
 
 
 bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
@@ -389,17 +212,6 @@ bool SSMP2communication::writeDatabyte(unsigned int dataadr, char databyte, char
 
 
 
-bool SSMP2communication::doSingleCommOperation()
-{
-	connect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
-	start();
-	_el.exec();
-	disconnect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
-	return _result;
-}
-
-
-
 bool SSMP2communication::readDataBlock_permanent(char padadr, unsigned int dataadr, unsigned int nrofbytes, int delay)
 {
 	if (nrofbytes > 254) return false;
@@ -505,8 +317,193 @@ bool SSMP2communication::stopCommunication()
 	}
 }
 
+// PRIVATE:
+
+bool SSMP2communication::doSingleCommOperation()
+{
+	connect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
+	start();
+	_el.exec();
+	disconnect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
+	return _result;
+}
 
 
+void SSMP2communication::run()
+{
+	std::vector<char> rawdata;
+	QTime timer;
+	int duration_ms = 0;
+	unsigned int k = 1;
+	unsigned int rindex = 1;
+	unsigned char nrofReadAddr = 0;
+	char errcount = 0;
+	bool permanent = false;
+	bool op_success = false;
+	bool abort;
+	comOp_dt operation;
+	char cuaddress;
+	char padadr = '\x0';
+	unsigned char datalen = 0;
+	unsigned int dataadr[256] = {0};
+	char snd_buf[256] = {'\x0'};
+	char rec_buf[256] = {'\x0'};
+	int delay = 0;
+	unsigned char errmax = 3;
+
+	// Synchronise with main-thread:
+	_mutex.lock();
+	operation = _CommOperation;
+	cuaddress = _cuaddress;
+	padadr = _padadr;
+	datalen = _datalen;
+	for (k=0; k<datalen; k++) dataadr[k] = _dataadr[k];
+	for (k=0; k<datalen; k++) snd_buf[k] = _snd_buf[k];
+	delay = _delay;
+	errmax = _errRetries + 1;
+	_result = false;
+	_abort = false;
+	_mutex.unlock();
+#ifdef __FSSM_DEBUG__
+	// Debug-output:
+	std::string op_str = "SSMP2communication::run():   operation: ";
+	switch (operation)
+	{
+		case comOp_noCom:
+			op_str += "noCom";
+			break;
+		case comOp_readCUdata:
+			op_str += "readCUdata";
+			break;
+		case comOp_readBlock:
+			op_str += "readBlock";
+			break;
+		case comOp_readMulti:
+			op_str += "readMulti";
+			break;
+		case comOp_readBlock_p:
+			op_str += "readBlock_p";
+			break;
+		case comOp_readMulti_p:
+			op_str += "readMulti_p";
+			break;
+		case comOp_writeBlock:
+			op_str += "writeBlock";
+			break;
+		case comOp_writeSingle:
+			op_str += "writeSingle";
+			break;
+		case comOp_writeBlock_p:
+			op_str += "writeBlock_p";
+			break;
+		case comOp_writeSingle_p:
+			op_str += "writeSingle_p";
+			break;
+		default:
+			op_str += "INVALID/UNKNOWN: " + QString::number(operation).toStdString();
+	}
+	std::cout << op_str << '\n';
+#endif
+	// Preparation:
+	if ( operation==comOp_readBlock_p || operation==comOp_readMulti_p || operation==comOp_writeBlock_p || operation==comOp_writeSingle_p )
+	{
+		permanent = true;
+		timer.start();
+	}
+	// COMMUNICATION:
+	do
+	{
+		// Call SSMP-core-function:
+		switch (operation)
+		{
+			case comOp_readCUdata:// GetECUData(...)
+				op_success = GetCUdata(cuaddress, rec_buf, rec_buf+3, rec_buf+8, &datalen);
+				if (op_success) datalen += 8;
+				break;
+			case comOp_readBlock:
+			case comOp_readBlock_p:// ReadDataBlock_permanent(...)
+				op_success = ReadDataBlock(cuaddress, padadr, dataadr[0], datalen, rec_buf);
+				break;
+			case comOp_readMulti:
+			case comOp_readMulti_p:// ReadMultipleDatabytes_permanent(...)
+				// CALCULATE NR OF ADDRESSES FOR NEXT READ:
+				if (33*(rindex) <= datalen)
+					nrofReadAddr = 33;
+				else
+					nrofReadAddr = datalen%33;
+				// READ NEXT ADDRESSES:
+				op_success = ReadMultipleDatabytes(cuaddress, padadr, dataadr+((rindex-1)*33), nrofReadAddr, rec_buf+((rindex-1)*33));
+				break;
+			case comOp_writeBlock:
+			case comOp_writeBlock_p:// WriteDataBlock_permanent(...)
+				op_success = WriteDataBlock(cuaddress, dataadr[0], snd_buf, datalen, rec_buf);
+				break;
+			case comOp_writeSingle:
+			case comOp_writeSingle_p:// WriteDatabyte_permanent(...)
+				op_success = WriteDatabyte(cuaddress, dataadr[0], snd_buf[0], rec_buf);
+				break;
+			default:
+				op_success = false;
+		}
+		// Evaluate result; Prepare for next operation:
+		if (op_success)
+		{
+			// Decrease error counter:
+			if (errcount > 0)
+				errcount--;
+			// Set query-index:
+			if ((operation == comOp_readMulti_p) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
+				rindex++;
+			else
+				rindex=1;
+			// Send data to main thread:
+			if (permanent && (rindex == 1))
+			{
+				// CONVERT/PREPARE DATA FOR RETURNING
+				rawdata = std::vector<char>(rec_buf, rec_buf+datalen);
+				// GET ELAPSED TIME:
+				duration_ms = timer.restart();
+				// SEND DATA TO MAIN THREAD:
+				emit recievedData(rawdata, duration_ms);
+				// Wait for the desired delay time:
+				if (delay > 0) msleep(delay);
+			}
+		}
+		else
+		{
+			errcount++;
+#ifdef __FSSM_DEBUG__
+			std::cout << "SSMP2communication::run():   communication operation error counter=" << (int)(errcount) << '\n';
+#endif
+		}
+		// GET ABORT STATUS::
+		_mutex.lock();
+		abort = _abort;
+		_mutex.unlock();
+	} while (!abort && (errcount < errmax) && (permanent || (rindex > 1) || !op_success));
+	// Send error signal:
+	if (permanent && !abort && !op_success)
+		emit commError();
+	// Synchronise with main-thread, reset:
+	_mutex.lock();
+	if (!permanent && op_success)
+	{
+		_datalen = datalen;	// only necessary for getCUdata
+		for (k=0; k<datalen; k++) _rec_buf[k] = rec_buf[k];
+		_result = op_success;
+	}
+	_abort = false;
+	_mutex.unlock();
+	if (!permanent)
+	{
+		// Ensures that event-loop is started before finishing (should always be the case...)
+		while (!_el.isRunning())
+			msleep(10);
+	}
+#ifdef __FSSM_DEBUG__
+	std::cout << "SSMP2communication::run():   communication operation finished." << '\n';
+#endif
+}
 
 
 

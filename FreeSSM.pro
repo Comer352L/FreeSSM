@@ -12,16 +12,28 @@ INCLUDEPATH += . src
 
 # Input
 HEADERS += src/FreeSSM.h \
-           src/Engine.h \
-           src/Transmission.h \
+           src/EngineDialog.h \
+           src/TransmissionDialog.h \
            src/Preferences.h \
            src/About.h \
            src/FSSMdialogs.h \
            src/ActuatorTestDlg.h \
+           src/AbstractDiagInterface.h \
+           src/SerialPassThroughDiagInterface.h \
+           src/J2534DiagInterface.h \
+           src/J2534.h \
+           src/SSMP1communication.h \
+           src/SSMP1communication_procedures.h \
+           src/SSMP1base.h \
            src/SSMP2communication.h \
            src/SSMP2communication_core.h \
+           src/SSMprotocol.h \
+           src/SSMprotocol1.h \
            src/SSMprotocol2.h \
            src/AddMBsSWsDlg.h \
+           src/ControlUnitDialog.h \
+           src/CUinfo_Engine.h \
+           src/CUinfo_Transmission.h \
            src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
            src/CUcontent_DCs_transmission.h \
@@ -37,16 +49,27 @@ HEADERS += src/FreeSSM.h \
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
-           src/Engine.cpp \
-           src/Transmission.cpp \
+           src/EngineDialog.cpp \
+           src/TransmissionDialog.cpp \
            src/Preferences.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
            src/ActuatorTestDlg.cpp \
+           src/AbstractDiagInterface.cpp \
+           src/SerialPassThroughDiagInterface.cpp \
+           src/J2534DiagInterface.cpp \
+           src/SSMP1communication.cpp \
+           src/SSMP1communication_procedures.cpp \
+           src/SSMP1base.cpp \
            src/SSMP2communication.cpp \
            src/SSMP2communication_core.cpp \
+           src/SSMprotocol.cpp \
+           src/SSMprotocol1.cpp \
            src/SSMprotocol2.cpp \
            src/AddMBsSWsDlg.cpp \
+           src/ControlUnitDialog.cpp \
+           src/CUinfo_Engine.cpp \
+           src/CUinfo_Transmission.cpp \
            src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
            src/CUcontent_DCs_transmission.cpp \
@@ -62,9 +85,10 @@ SOURCES += src/main.cpp \
 
 FORMS +=   ui/FreeSSM.ui \
            ui/Preferences.ui \
-           ui/Engine.ui \
-           ui/Transmission.ui \
            ui/About.ui \
+           ui/ControlUnitDialog.ui \
+           ui/CUinfo_Engine.ui \
+           ui/CUinfo_Transmission.ui \
            ui/CUcontent_DCs_engine.ui \
            ui/CUcontent_DCs_transmission.ui \
            ui/CUcontent_MBsSWs.ui \
@@ -83,10 +107,10 @@ translation.commands = lrelease FreeSSM.pro & qmake
 QMAKE_EXTRA_TARGETS += translation
 
 # Add pre-processor-define if we compile as debug:
-CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__
+CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__ __J2534_API_DEBUG__
 
 # disable gcse-optimization (regressions with gcc-versions >= 4.2)
-QMAKE_CXXFLAGS += -fno-gcse         
+QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
@@ -106,16 +130,24 @@ INSTALLS += target doctarget filestarget
 unix {
        DEPENDPATH += src/linux
        INCLUDEPATH += src/linux
-       HEADERS += src/linux/serialCOM.h
-       SOURCES += src/linux/serialCOM.cpp
+       HEADERS += src/linux/serialCOM.h \
+                  src/linux/TimeM.h \
+                  src/linux/J2534_API.h
+       SOURCES += src/linux/serialCOM.cpp \
+                  src/linux/TimeM.cpp \
+                  src/linux/J2534_API.cpp
 }
 
 win32 {
        CONFIG(debug, debug|release): CONFIG += console
        DEPENDPATH += src/windows
        INCLUDEPATH += src/windows
-       HEADERS += src/windows/serialCOM.h
-       SOURCES += src/windows/serialCOM.cpp
+       HEADERS += src/windows/serialCOM.h \
+                  src/windows/TimeM.h \
+                  src/windows/J2534_API.h
+       SOURCES += src/windows/serialCOM.cpp \
+                  src/windows/TimeM.cpp \
+                  src/windows/J2534_API.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
 

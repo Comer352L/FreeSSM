@@ -191,10 +191,10 @@ void QIdPushButton::emitReleased()
 
 
 
-CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP2dev) : QWidget(parent)
+CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 {
 	QHeaderView *headerview;
-	_SSMP2dev = SSMP2dev;
+	_SSMPdev = NULL;
 	_maxrowsvisible = 0; // We don't need to calculate a value here, because we always get a resizeEvent before setting the table content
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
@@ -210,6 +210,11 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP
 	headerview->setResizeMode(1,QHeaderView::Fixed);
 	headerview->setResizeMode(2,QHeaderView::Fixed);
 	headerview->setResizeMode(3,QHeaderView::Fixed);
+	// Set table row resize behavior:
+	headerview = adjustments_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+	/* NOTE: Current method for calculating ther nr. of needed rows 
+	 * assumes all rows to have the same constsant height */
 	// Install event-filter for adjustments-table:
 	adjustments_tableWidget->viewport()->installEventFilter(this);
 	// Disable GUI-elements:
@@ -219,19 +224,21 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent, SSMprotocol2 *SSMP
 }
 
 
-
-bool CUcontent_Adjustments::setup()
+bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 {
 	std::vector<unsigned int> rawValues;
 	unsigned char k = 0;
 	bool ok = false;
 	bool calcerror = false;
 
+	_SSMPdev = SSMPdev;
 	// Reset data:
 	_supportedAdjustments.clear();
 	_newValueSelWidgetType.clear();
 	// Get supported adjustments:
-	ok = _SSMP2dev->getSupportedAdjustments(&_supportedAdjustments);
+	ok = (_SSMPdev != NULL);
+	if (ok)
+		ok = _SSMPdev->getSupportedAdjustments(&_supportedAdjustments);
 	if (ok && !_supportedAdjustments.empty())
 	{
 		// Determine the needed selection widget type for new values:
@@ -239,7 +246,7 @@ bool CUcontent_Adjustments::setup()
 		// Setup adjustments table (without current values):
 		setupAdjustmentsTable();
 		// Query current adjustment values from CU:
-		ok = _SSMP2dev->getAllAdjustmentValues(&rawValues);
+		ok = _SSMPdev->getAllAdjustmentValues(&rawValues);
 		if (ok)
 		{
 			// Scale raw values:
@@ -266,7 +273,6 @@ bool CUcontent_Adjustments::setup()
 	// Return result:
 	return ok;
 }
-
 
 
 void CUcontent_Adjustments::setupNewValueSelWidgetTypes()
@@ -305,7 +311,6 @@ void CUcontent_Adjustments::setupNewValueSelWidgetTypes()
 }
 
 
-
 void CUcontent_Adjustments::getSelectableScaledValueStrings(QString formulaStr, QStringList *selectableScaledValueStr)
 {
 	int k = 0;
@@ -325,7 +330,6 @@ void CUcontent_Adjustments::getSelectableScaledValueStrings(QString formulaStr, 
 		}
 	}
 }
-
 
 
 void CUcontent_Adjustments::setupAdjustmentsTable()
@@ -354,14 +358,14 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 	rightIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/drive-harddisk.png") );
 	mergedIcon.fill(Qt::transparent);
 	QPainter painter(&mergedIcon);
-	painter.drawTiledPixmap ( 0, 0, 22, 22, leftIcon);
-	painter.drawTiledPixmap ( 32, 0, 22, 22, rightIcon);
+	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
+	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
 	QIcon saveButton_icon( mergedIcon );
 	// Create "Reset"-icon:
 	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-first.png") );
 	mergedIcon.fill(Qt::transparent);
-	painter.drawTiledPixmap ( 0, 0, 22, 22, leftIcon);
-	painter.drawTiledPixmap ( 32, 0, 22, 22, rightIcon);
+	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
+	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
 	QIcon resetButton_icon( mergedIcon );
 	// Clear Table:
 	adjustments_tableWidget->clearContents();
@@ -370,8 +374,8 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 	adjustments_tableWidget->setEnabled( enable );
 	nonPermanentInfo_label->setEnabled( enable );
 	// Increase nr. of table rows if necessary:
-	if (_maxrowsvisible < _supportedAdjustments.size())
-		adjustments_tableWidget->setRowCount( _supportedAdjustments.size() );
+	if (_supportedAdjustments.size() && (static_cast<unsigned int>(adjustments_tableWidget->rowCount()) < _supportedAdjustments.size()))
+		adjustments_tableWidget->setRowCount( _supportedAdjustments.size() + 2 );
 	// Fill Table:
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
@@ -468,7 +472,6 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 }
 
 
-
 void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit)
 {
 	QTableWidgetItem *tableItem;
@@ -512,7 +515,6 @@ void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, 
 }
 
 
-
 void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 {
 	QWidget *cellWidget = NULL;
@@ -524,8 +526,9 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 	unsigned int controlValue_raw = 0;
 	bool ok = false;
 
+	if (!_SSMPdev) return;
 	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !      "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !"));
 	waitmsgbox.show();
 	// Get selected Value from table:
 	cellWidget = adjustments_tableWidget->cellWidget (index, 2);
@@ -547,10 +550,10 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 		return;
 	}
 	// Save new ajustment value to control unit:
-	ok = _SSMP2dev->setAdjustmentValue(index, newvalue_raw);
+	ok = _SSMPdev->setAdjustmentValue(index, newvalue_raw);
 	// To be sure: read and verify value again
 	if (ok)
-		ok = _SSMP2dev->getAdjustmentValue(index, &controlValue_raw);
+		ok = _SSMPdev->getAdjustmentValue(index, &controlValue_raw);
 	if (!ok)
 	{
 		communicationError(tr("No or invalid answer from Control Unit."));
@@ -573,13 +576,13 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 }
 
 
-
 void CUcontent_Adjustments::resetAllAdjustmentValues()
 {
 	int uc = 0;
 	unsigned char k = 0;
 	bool calcerror = false;
 
+	if (!_SSMPdev) return;
 	// Show "Confirm"-dialog:
 	QMessageBox confirmmsg( QMessageBox::Question, tr("Continue ?"), tr("Do you really want to reset all adjustment values ?"), QMessageBox::NoButton, this);
 	confirmmsg.addButton(tr("OK"), QMessageBox::AcceptRole);
@@ -593,12 +596,12 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	if (uc != QMessageBox::AcceptRole)
 		return;
 	// Wait-messagebox:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Resetting all adjustment values... Please wait !   "));
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Resetting all adjustment values... Please wait !"));
 	waitmsgbox.show();
 	// Reset all adjustment values:
 	for (k=0; k<_supportedAdjustments.size(); k++)
 	{
-		if (!_SSMP2dev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
+		if (!_SSMPdev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
 		{
 			communicationError(tr("No or invalid answer from Control Unit."));
 			return;
@@ -620,19 +623,17 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 }
 
 
-
 void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 {
 	int rowheight = 0;
 	int vspace = 0;
-	QHeaderView *headerview;
 	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (adjustments_tableWidget->rowCount() < 1)
 		adjustments_tableWidget->setRowCount(1); // temporary create a row to get the row hight
 	rowheight = adjustments_tableWidget->rowHeight(0);
-	headerview = adjustments_tableWidget->horizontalHeader();
-	vspace = adjustments_tableWidget->viewport()->height();
+	//vspace = adjustments_tableWidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
+	vspace = adjustments_tableWidget->height() - adjustments_tableWidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	adjustments_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
@@ -654,7 +655,6 @@ void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 }
 
 
-
 bool CUcontent_Adjustments::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == adjustments_tableWidget->viewport())
@@ -673,23 +673,20 @@ bool CUcontent_Adjustments::eventFilter(QObject *obj, QEvent *event)
 }
 
 
-
 void CUcontent_Adjustments::communicationError(QString errstr)
 {
-	errstr = tr("Communication Error:") + ('\n') + errstr;
+	errstr = tr("Communication Error:") + '\n' + errstr;
 	errorMsg(tr("Communication Error"), errstr);
 	emit communicationError();
 }
 
 
-
 void CUcontent_Adjustments::calculationError(QString errstr)
 {
-	errstr = tr("Calculation Error:") + ('\n') + errstr;
+	errstr = tr("Calculation Error:") + '\n' + errstr;
 	errorMsg(tr("Calculation Error"), errstr);
 	emit calculationError();
 }
-
 
 
 void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
@@ -704,11 +701,10 @@ void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
 }
 
 
-
 void CUcontent_Adjustments::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_Adjustments.h (made with QDesigner)
 	QFont contentfont = QApplication::font();
 	contentfont.setPixelSize(12);// 9pts
 	contentfont.setBold(false);

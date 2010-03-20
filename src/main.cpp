@@ -17,9 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#define FSSM_VERSION "(devel)"
+
+
 #include <QtGui>
 #include "FreeSSM.h"
-
 
 
 int main(int argc, char *argv[])
@@ -36,7 +39,9 @@ int main(int argc, char *argv[])
 			return -1;
 	}
 	fssm_lock.create(1, QSharedMemory::ReadOnly);
-	// Set Window Icon:
+	// Set application version:
+	app.setApplicationVersion(FSSM_VERSION);
+	// Set window icon:
 	app.setWindowIcon( QIcon(":/icons/freessm/32x32/FreeSSM.png") );
 	// Use Unicode UTF-8:
 	QTextCodec::setCodecForCStrings( QTextCodec::codecForName("UTF-8") );
