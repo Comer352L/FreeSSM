@@ -821,7 +821,7 @@ bool serialCOM::OpenPort(std::string portname)
 			 */
 		}
 		// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
-		confirm = SetControlLines(true, false);
+		confirm = SetControlLines(true, true);
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
 			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";

@@ -54,18 +54,15 @@ bool SerialPassThroughDiagInterface::open( std::string name )
 {
 	if (_port)
 		return false;
-	else
+	_port = new serialCOM;
+	if (_port->OpenPort( name ))
 	{
-		_port = new serialCOM;
-		if (!_port->OpenPort( name ))
-		{
-			delete _port;
-			_port = NULL;
-			return false;
-		}
-		else
+		if (_port->SetControlLines(true, false))
 			return true;
 	}
+	delete _port;
+	_port = NULL;
+	return false;
 }
 
 
@@ -87,11 +84,8 @@ bool SerialPassThroughDiagInterface::close()
 			_port = NULL;
 			return true;
 		}
-		else
-			return false;
 	}
-	else
-		return false;
+	return false;
 }
 
 

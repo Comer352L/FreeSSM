@@ -27,7 +27,7 @@ serialCOM::serialCOM()
 	portisopen = false;
 	breakset = false;
 	DTRset = true;
-	RTSset = false;
+	RTSset = true;
 	currentportname = "";
 	memset(&olddcb, 0, sizeof(DCB));
 	olddcb.DCBlength = sizeof(DCB);
