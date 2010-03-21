@@ -29,6 +29,8 @@ serialCOM::serialCOM()
 	DTRset = true;
 	RTSset = true;
 	currentportname = "";
+	read_timeout_set = false;
+	last_read_timeout = 0;
 	memset(&olddcb, 0, sizeof(DCB));
 	olddcb.DCBlength = sizeof(DCB);
 	settingssaved = false;
@@ -477,6 +479,7 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 		return false;
 	}
+	read_timeout_set = false;
 /*
 	// CLEAR BREAK (should not be necessary, because break is cancelled automatically after closing the device):
 	confirm = ClearCommBreak(hCom);
@@ -618,41 +621,106 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
+bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, std::vector<char> *data)
 {
-	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
+	if (!portisopen || (minbytes > maxbytes) || (maxbytes > INT_MAX)) // NOTE: real limit: MAXDWORD
+		return false;
 	unsigned int rdatalen = 0;
 	char *rdata = (char*) malloc(maxbytes);
 	if (rdata == NULL) return false;
-	bool ok = Read(maxbytes, rdata, &rdatalen);
+	bool ok = Read(minbytes, maxbytes, timeout, rdata, &rdatalen);
 	if (ok)	data->assign(rdata, rdata+rdatalen);
 	free(rdata);
 	return ok;
 }
 
 
-bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, char *data, unsigned int *nrofbytesread)
 {
+	*nrofbytesread = 0;
+	if (!portisopen || (minbytes > maxbytes) || (maxbytes > INT_MAX)) // NOTE: real limit: MAXDWORD
+		return false;
 	bool confirmRF = false;
 	DWORD nbr = 0;
-	*nrofbytesread = 0;
-	if (!portisopen) return false;
-	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
-	// READ RECEIVED DATA:
-	confirmRF = ReadFile (hCom,		// Port handle
-			      data,		// Pointer to data to read
-			      maxbytes,		// Number of bytes to read
-			      &nbr,		// Pointer to number of bytes read
-			      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
-			     );
-	if (confirmRF)
-		*nrofbytesread = static_cast<unsigned int>(nbr);
+	unsigned int rb_total = 0;
+	COMMTIMEOUTS timeouts = {0};
+
+	timeouts.WriteTotalTimeoutConstant = 0;
+	timeouts.WriteTotalTimeoutMultiplier = 0;
+	// --- READ MINIMUM NUMBER OF REQUESTED BYTES ---
+	if (minbytes)
+	{
+		if (!read_timeout_set || (timeout != last_read_timeout) || !last_read_timeout)
+		{
+			timeouts.ReadIntervalTimeout = 0;
+			timeouts.ReadTotalTimeoutMultiplier = 0;
+			if (timeout)
+				timeouts.ReadTotalTimeoutConstant = timeout;
+			else
+				timeouts.ReadTotalTimeoutConstant = MAXDWORD;
+			if (!SetCommTimeouts(hCom, &timeouts))
+			{
 #ifdef __SERIALCOM_DEBUG__
-	else
-		std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+				std::cout << "serialCOM::Read():   SetCommTimeouts(...) failed with error " << GetLastError() << "\n";
 #endif
-	// RETURN SUCCESS:
-	return confirmRF;
+				return false;
+			}
+			last_read_timeout = timeouts.ReadTotalTimeoutConstant;
+		}
+		// READ DATA:
+		confirmRF = ReadFile (hCom,		// Port handle
+				      data,		// Pointer to data to read
+				      minbytes,		// Number of bytes to read
+				      &nbr,		// Pointer to number of bytes read
+				      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
+				     );
+		if (confirmRF)
+			rb_total += static_cast<unsigned int>(nbr);
+		else
+		{
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+			return false;
+#endif
+		}
+	}
+	// --- READ REMAINING DATA ---
+	if (maxbytes - rb_total > 0)
+	{
+		if (minbytes || read_timeout_set)
+		{
+			timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
+			timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
+			timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
+			if (!SetCommTimeouts(hCom, &timeouts))
+			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::Read():   SetCommTimeouts(...) failed with error " << GetLastError() << "\n";
+#endif
+				return false;
+			}
+		}
+		// READ REMAINING DATA:
+		confirmRF = ReadFile (hCom,			// Port handle
+				      data,			// Pointer to data to read
+				      maxbytes - rb_total,	// Number of bytes to read
+				      &nbr,			// Pointer to number of bytes read
+				      NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
+				     );
+		if (confirmRF)
+			rb_total += nbr;
+		else
+		{
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+#endif
+			return false;
+		}
+	}
+	read_timeout_set = minbytes;
+	// Returned data:
+	*nrofbytesread = static_cast<unsigned int>(rb_total + nbr);
+	return true;
 }
 
 

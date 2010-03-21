@@ -1,7 +1,7 @@
 /*
  * serialCOM.h - Serial port configuration and communication
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,8 @@ extern "C"
 }
 #include <string>
 #include <vector>
+#include <sys/select.h>
+#include <ctime>
 #ifdef __SERIALCOM_DEBUG__
     #include <iostream>
 #endif
@@ -86,8 +88,8 @@ public:
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);
 	bool Write(char *data, unsigned int datalen);
-	bool Read(unsigned int maxbytes, std::vector<char> *data);
-	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
+	bool Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, std::vector<char> *data);
+	bool Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearReceiveBuffer();
 	bool SendBreak(unsigned int duration_ms);

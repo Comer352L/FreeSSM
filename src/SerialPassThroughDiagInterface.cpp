@@ -156,7 +156,7 @@ bool SerialPassThroughDiagInterface::read(std::vector<char> *buffer)
 			return true;
 		}
 		else
-			return _port->Read( nbytes, buffer );
+			return _port->Read( 0, nbytes, 0, buffer );
 	}
 	return false;
 }
