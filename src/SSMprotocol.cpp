@@ -95,48 +95,58 @@ bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLis
 
 bool SSMprotocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 {
+	(void)*actuatorTestTitles;
 	return false;
 }
 
 
 bool SSMprotocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 {
+	(void)*actuatorTestIndex;
 	return false;
 }
 
 
 bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
 {
+	(void)index;
+	(void)*rawValue;
 	return false;
 }
 
 
 bool SSMprotocol::getAllAdjustmentValues(std::vector<unsigned int> *rawValues)
 {
+	(void)*rawValues;
 	return false;
 }
 
 
 bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 {
+	(void)index;
+	(void)rawValue;
 	return false;
 }
 
 
 bool SSMprotocol::getVIN(QString *VIN)
 {
+	(void)*VIN;
 	return false;
 }
 
 
 bool SSMprotocol::isEngineRunning(bool *isrunning)
 {
+	(void)*isrunning;
 	return false;
 }
 
 
 bool SSMprotocol::isInTestMode(bool *testmode)
 {
+	(void)*testmode;
 	return false;
 }
 
@@ -149,11 +159,7 @@ bool SSMprotocol::restartDCreading()
 
 void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
 {
-	bool DCsAssigned[8] = {false,};
-	unsigned char setbits[8] = {0,};
-	unsigned char setbitslen = 0;
 	unsigned int k = 0;
-	unsigned char setbitsindex = 0;
 	QString ukdctitle;
 
 	DC->clear();
@@ -302,6 +308,7 @@ void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsig
 
 bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
 {
+	(void)actuatorTestIndex;
 	return false;
 }
 
