@@ -95,11 +95,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 	{
 		if (protocol == AbstractDiagInterface::protocol_SSM1)
 		{
-			serialCOM::dt_portsettings portsettings;
-			portsettings.baudrate = 1954;
-			portsettings.databits = 8;
-			portsettings.parity = 'E';
-			portsettings.stopbits = 1;
+			serialCOM::dt_portsettings portsettings(1954, 8, 'E', 1);
 			if (_port->SetPortSettings(portsettings))
 			{
 				if(!_port->GetPortSettings(&portsettings))
@@ -115,32 +111,19 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 				_connected = true;
 				return true;
 			}
-			else
-				return false;
 		}
 		else if (protocol == AbstractDiagInterface::protocol_SSM2)
 		{
-			serialCOM::dt_portsettings portsettings;
-			portsettings.baudrate = 4800;
-			portsettings.databits = 8;
-			portsettings.parity = 'N';
-			portsettings.stopbits = 1;
+			serialCOM::dt_portsettings portsettings(4800, 8, 'N', 1);
 			if (_port->SetPortSettings(portsettings))
 			{
 				setProtocolType( protocol );
 				_connected = true;
 				return true;
 			}
-			else
-				return false;
-		}
-		else
-		{
-			return false;
 		}
 	}
-	else
-		return false;
+	return false;
 }
 
 
@@ -158,8 +141,7 @@ bool SerialPassThroughDiagInterface::disconnect()
 		setProtocolType( protocol_NONE );
 		return true;
 	}
-	else
-		return false;
+	return false;
 }
 
 
@@ -176,8 +158,7 @@ bool SerialPassThroughDiagInterface::read(std::vector<char> *buffer)
 		else
 			return _port->Read( nbytes, buffer );
 	}
-	else
-		return false;
+	return false;
 }
 
 
@@ -234,8 +215,7 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		}
 		return true;
 	}
-	else
-		return false;
+	return false;
 }
 
 
