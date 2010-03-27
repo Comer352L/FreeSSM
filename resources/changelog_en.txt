@@ -1,3 +1,9 @@
+v1.2.2 (27.03.2010):
+  - Fixed a bug that caused a communication error when switching to
+    "System Tests" mode with control units that don't support actuator
+    tests
+
+
 v1.2.1 (19.03.2010):
   - Fixed a translation
   - Improved reliabilty of serial port detection on MS Windows for ports

@@ -1,7 +1,7 @@
 /*
  * FreeSSM.h - Program main window
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 
 
-#define FSSM_VERSION "v1.2.1"
+#define FSSM_VERSION "v1.2.2"
 
 
 
