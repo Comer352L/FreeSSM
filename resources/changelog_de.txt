@@ -1,3 +1,9 @@
+v1.2.2 (27.03.2010):
+  - Fehler behoben, der einen Kummunikationsfehler bei Aufruf des
+    "System-Tests"-Modus verursachte, wenn das Steuergerät keine
+    Stellglieddiagnose unterstützt
+
+
 v1.2.1 (19.03.2010):
   - Übersetzungsfehler behoben
   - Verbesserte Zuverlässigkeit der Detektierung serieller Ports oberhalb
