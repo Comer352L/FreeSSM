@@ -424,13 +424,13 @@ void SSMprotocol2::setupSupportedMBs()
 {
 	QString mbdefline;
 	QString tmpstr;
-	int tmpbytenr=0;
-	int tmpbitnr=0;
-	int tmpCUsupported=0;
-	int tmpprecision=0;
+	int tmpbytenr = 0;
+	int tmpbitnr = 0;
+	bool tmpCUsupported = false;
+	int tmpprecision = 0;
 	mb_intl_dt tmpMB;
-	bool ok;
-	int k;
+	bool ok = false;
+	int k = 0;
 
 	_supportedMBs.clear();
 	// Select definitions depending on language:
@@ -465,26 +465,26 @@ void SSMprotocol2::setupSupportedMBs()
 			{
 				// Check if MB is intended for this CU type:
 				tmpCUsupported = 0;
-				if (_CU == CUtype_Engine)	// if MB is intended for ECUs
+				tmpstr = mbdefline.section(';', 2, 2);
+				tmpCUsupported = tmpstr.toInt();
+				if (_CU == CUtype_Engine)
 				{
-					tmpstr = mbdefline.section(';', 2, 2);
-					tmpCUsupported = tmpstr.toInt();
+					tmpCUsupported = tmpstr.toUInt() & 0x01;
 				}
-				if ((!(tmpCUsupported == 1)) && (_CU == CUtype_Transmission))	// if MB is intended for TCUs (and not for ECUs)
+				else if (_CU == CUtype_Transmission)
 				{
-					tmpstr = mbdefline.section(';', 3, 3);
-					tmpCUsupported = tmpstr.toInt();
+					tmpCUsupported = tmpstr.toUInt() & 0x02;
 				}
 				if (tmpCUsupported == 1)
 				{
 					// Get memory address (low) definition:
-					tmpstr = mbdefline.section(';', 4, 4);
+					tmpstr = mbdefline.section(';', 3, 3);
 					tmpMB.adr_low = tmpstr.toUInt(&ok, 16);
 					// Check if memory address (low) is valid:
 					if (ok && (tmpMB.adr_low > 0))
 					{
 						// Get memory address (high) definition:
-						tmpstr = mbdefline.section(';', 5, 5);
+						tmpstr = mbdefline.section(';', 4, 4);
 						if (!tmpstr.isEmpty())
 							tmpMB.adr_high = tmpstr.toUInt(&ok, 16);
 						// Check if memory address (high) is unused OR valid (only 16bit MBs):
@@ -493,24 +493,24 @@ void SSMprotocol2::setupSupportedMBs()
 							if (tmpstr.isEmpty())
 								tmpMB.adr_high = 0;
 							// Get title definition:
-							tmpMB.title = mbdefline.section(';', 6, 6);
+							tmpMB.title = mbdefline.section(';', 5, 5);
 							// Check if title is available:
 							if (!tmpMB.title.isEmpty())
 							{
 								// Get scaling formula definition:
-								tmpMB.scaleformula = mbdefline.section(';', 8, 8);
+								tmpMB.scaleformula = mbdefline.section(';', 7, 7);
 								// Check if scaling formula is available:
 								if (!tmpMB.scaleformula.isEmpty())
 								{
 									// Get precision and correct if necessary:
-									tmpstr = mbdefline.section(';', 9, 9);
+									tmpstr = mbdefline.section(';', 8, 8);
 									tmpprecision = tmpstr.toInt(&ok, 10);
 									if ((ok) && (tmpprecision < 4) && (tmpprecision > -4))
 										tmpMB.precision = tmpprecision;
 									else
 										tmpMB.precision = 1;
 									// Get unit:
-									tmpMB.unit = mbdefline.section(';', 7, 7);
+									tmpMB.unit = mbdefline.section(';', 6, 6);
 									// ***** MB IS SUPPORTED BY CU AND DEFINITION IS VALID *****
 									// Put MB data on the list:
 									_supportedMBs.push_back(tmpMB);
@@ -529,12 +529,12 @@ void SSMprotocol2::setupSupportedSWs()
 {
 	QString swdefline;
 	QString tmpstr;
-	int tmpbytenr=0;
-	int tmpbitnr=0;
-	int tmpCUsupported=0;
+	int tmpbytenr = 0;
+	int tmpbitnr = 0;
+	bool tmpCUsupported = false;
 	sw_intl_dt tmpSW;
-	bool ok;
-	int k;
+	bool ok = false;
+	int k = 0;
 
 	_supportedSWs.clear();
 	// Select definitions depending on language:
@@ -569,31 +569,31 @@ void SSMprotocol2::setupSupportedSWs()
 			{
 				// Check if switch is intended for this CU type:
 				tmpCUsupported = 0;
+				tmpstr = swdefline.section(';', 2, 2);
+				tmpCUsupported = tmpstr.toInt();
 				if (_CU == CUtype_Engine)
 				{
-					tmpstr = swdefline.section(';', 2, 2);
-					tmpCUsupported = tmpstr.toInt();
+					tmpCUsupported = tmpstr.toUInt() & 0x01;
 				}
-				if ((tmpCUsupported != 1) && (_CU == CUtype_Transmission))	// if switch is intended for TCUs (and not for ECUs)
+				else if (_CU == CUtype_Transmission)
 				{
-					tmpstr = swdefline.section(';', 3, 3);
-					tmpCUsupported = tmpstr.toInt();
+					tmpCUsupported = tmpstr.toUInt() & 0x02;
 				}
 				if (tmpCUsupported == 1)
 				{
 					// Get memory address definition:
-					tmpstr = swdefline.section(';', 4, 4);
+					tmpstr = swdefline.section(';', 3, 3);
 					tmpSW.byteadr = tmpstr.toInt(&ok, 16);
 					// Check if memory address is valid:
 					if (ok && (tmpSW.byteadr > 0))
 					{
 						// Get title definition:
-						tmpSW.title = swdefline.section(';', 5, 5);
+						tmpSW.title = swdefline.section(';', 4, 4);
 						// Check if title is available:
 						if (!tmpSW.title.isEmpty())
 						{
 							// Get unit definition:
-							tmpSW.unit = swdefline.section(';', 6, 6);
+							tmpSW.unit = swdefline.section(';', 5, 5);
 							if (!tmpSW.unit.isEmpty())
 							{
 								// ***** SWITCH IS SUPPORTED BY CU AND DEFINITION IS VALID *****
