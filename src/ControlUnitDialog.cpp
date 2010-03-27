@@ -121,22 +121,10 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 
 bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 {
-	// Probe SSM1-protocol:
-	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
-	{
-		_SSMPdev = new SSMprotocol1(_diagInterface, _language);
-		if (_SSMPdev->setupCUdata( CUtype ))
-		{
-			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-			return true;
-		}
-		delete _SSMPdev;
-		// Wait 500ms:
-		QEventLoop el;
-		QTimer::singleShot(500, &el, SLOT(quit()));
-		el.exec();
-	}
-	_diagInterface->disconnect();
+	/* NOTE:  probe SSM2-protocol first !
+	   If a serial pass through (K)KL-interface is used, the interface echo could be detected as a SSM1-ROM-ID,
+	   if receive buffer flushing doesn't work reliable with the used serial port driver !
+	*/
 	// Probe SSM2-protocol:
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
@@ -149,9 +137,25 @@ bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 				return true;
 			}
 			delete _SSMPdev;
+			_diagInterface->disconnect();
+			// Wait 500ms:
+			QEventLoop el;
+			QTimer::singleShot(500, &el, SLOT(quit()));
+			el.exec();
 		}
 	}
-	_diagInterface->disconnect();
+	// Probe SSM1-protocol:
+	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
+	{
+		_SSMPdev = new SSMprotocol1(_diagInterface, _language);
+		if (_SSMPdev->setupCUdata( CUtype ))
+		{
+			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+			return true;
+		}
+		delete _SSMPdev;
+		_diagInterface->disconnect();
+	}
 	_SSMPdev = NULL;
 	return false;
 }
