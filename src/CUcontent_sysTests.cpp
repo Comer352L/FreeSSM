@@ -60,7 +60,7 @@ bool CUcontent_sysTests::setup()
 	_actuatorTestTitles.clear();
 	// Get CU-informations:
 	ok = _SSMP2dev->hasActuatorTests(&AT_sup);
-	if (ok)
+	if (ok && AT_sup)
 		ok = _SSMP2dev->getSupportedActuatorTests(&_actuatorTestTitles);
 	if (ok)
 		ok = _SSMP2dev->hasImmobilizer(&immo_sup);
