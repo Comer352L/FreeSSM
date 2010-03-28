@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -712,7 +712,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		}
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
-	return ((cIOCTL != -1) && (!serdrvaccess || (serdrvaccess && (cIOCTL_SD != -1)) || (isStdBaud && (newbaudrate!=B38400))));
+	return ((cIOCTL != -1) && (!serdrvaccess || (serdrvaccess && (cIOCTL_SD != -1)) || (isStdBaud && (newbaudrate != B38400))));
 	/* NOTE: we can tolerate a failing TIOCSSERIAL-ioctl() if the baudrate is not set to B38400,
 	 *       because the ASYNC_SPD_CUST-flag and the custom divisor are always ignored if B38400 is not set !
 	 */
@@ -821,7 +821,7 @@ bool serialCOM::OpenPort(std::string portname)
 			 */
 		}
 		// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
-		confirm = SetControlLines(true, false);
+		confirm = SetControlLines(true, true);
 #ifdef __SERIALCOM_DEBUG__
 		if (!confirm)
 			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
@@ -948,40 +948,111 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 }
 
 
-bool serialCOM::Read(unsigned int maxbytes, std::vector<char> *data)
+bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, std::vector<char> *data)
 {
-	if (maxbytes > INT_MAX) return false;	// real limit: MAXDWORD
+	if (!portisopen || (minbytes > maxbytes) || (maxbytes > INT_MAX))
+		return false;
 	unsigned int rdatalen = 0;
 	char *rdata = (char*) malloc(maxbytes);
 	if (rdata == NULL) return false;
-	bool ok = Read(maxbytes, rdata, &rdatalen);
+	bool ok = Read(minbytes, maxbytes, timeout, rdata, &rdatalen);
 	if (ok)	data->assign(rdata, rdata+rdatalen);
 	free(rdata);
 	return ok;
 }
 
 
-bool serialCOM::Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread)
+bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, char *data, unsigned int *nrofbytesread)
 {
 	int ret;
 	*nrofbytesread = 0;
-	if (portisopen == false) return false;
-	if (maxbytes > INT_MAX) return false;	// real limit: SSIZE_MAX
-	// READ AVAILABLE DATA:
-	ret = read(fd, data, maxbytes);
-	// RETURN VALUE:
-	if ((ret < 0) || (ret > static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
-	{
-		*nrofbytesread = 0;
-#ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::Read():   read(..) failed with error " << errno << " " << strerror(errno) << "\n";
-#endif
+	if (!portisopen || (minbytes > maxbytes) || (maxbytes > INT_MAX))
 		return false;
+
+	if (!minbytes)
+	{
+		ret = read(fd, data, maxbytes);
+		if ((ret >= 0) || (ret <= static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
+		{
+			*nrofbytesread = static_cast<unsigned int>(ret);
+			return true;
+		}
+		else
+		{
+			*nrofbytesread = 0;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::Read():   read(..) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+			return false;
+		}
 	}
 	else
 	{
-		*nrofbytesread = static_cast<unsigned int>(ret);
-		return true;
+		unsigned int rb_total = 0;
+		unsigned int t_remaining_ms;
+		struct timespec t_current;
+		struct timespec t_start;
+		fd_set input;
+		struct timeval sel_timeout;
+		int n = 0;
+
+		clock_gettime(CLOCK_REALTIME, &t_start);	// returns -1 on error, 0 on success
+		t_remaining_ms = timeout;
+		do
+		{
+			FD_ZERO(&input);
+			FD_SET(fd, &input);
+			// Set timeout value:
+			sel_timeout.tv_sec  = t_remaining_ms / 1000;
+			sel_timeout.tv_usec = (t_remaining_ms % 1000)*1000;
+			// Wait for data:
+			if (!timeout)
+				n = select(fd+1, &input, NULL, NULL, NULL);
+			else
+				n = select(fd+1, &input, NULL, NULL, &sel_timeout);
+			/* NOTE: ONLY ON LINUX, select() modifies timeout to reflect the time not slept */
+			// See if there was an error, read available data:
+			if (n < 0)
+			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::Read():   select(...) failed\n";
+#endif
+				return false;
+			}
+			else if (n == 0)
+			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::Read():   TIMEOUT\n";
+#endif
+				break;
+			}
+			else if (FD_ISSET(fd, &input))
+			{
+				// Read available data:
+				ret = read(fd, data+rb_total, maxbytes-rb_total);	// NOTE: returns immediately
+				if ((ret >= 0) || (ret <= static_cast<int>(maxbytes-rb_total)))	// >maxbytes: important ! => possible if fd was not open !
+				{
+					rb_total += ret;
+					if (rb_total >= maxbytes)
+					{
+						*nrofbytesread = static_cast<unsigned int>(rb_total);
+						return true;
+					}
+				}
+				else
+				{
+					*nrofbytesread = 0;
+#ifdef __SERIALCOM_DEBUG__
+					std::cout << "serialCOM::Read():   read(..) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+					return false;
+				}
+			}
+			// Get current time, calculate remaining time:
+			clock_gettime(CLOCK_REALTIME, &t_current);
+			t_remaining_ms = timeout - ((t_current.tv_sec*1000 + t_current.tv_nsec/1000000) - (t_start.tv_sec*1000 + t_start.tv_nsec/1000000)); // NOTE: overflow possible !
+		} while ((t_remaining_ms > 0) && (t_remaining_ms <= timeout) && (rb_total < minbytes)); // NOTE: 2nd check: for detecting overflow
+		return false;
 	}
 }
 

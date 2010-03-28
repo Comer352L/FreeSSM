@@ -51,6 +51,8 @@ private:
 	bool DTRset;
 	bool RTSset;
 	std::string currentportname; 
+	bool read_timeout_set;
+	unsigned int last_read_timeout;
 	DCB olddcb;		// backup of old port settings
 	bool settingssaved;
 	
@@ -80,8 +82,8 @@ public:
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);
 	bool Write(char *data, unsigned int datalen);
-	bool Read(unsigned int maxbytes, std::vector<char> *data);
-	bool Read(unsigned int maxbytes, char *data, unsigned int *nrofbytesread);
+	bool Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, std::vector<char> *data);
+	bool Read(unsigned int minbytes, unsigned int maxbytes, unsigned int timeout, char *data, unsigned int *nrofbytesread);
 	bool ClearSendBuffer();
 	bool ClearReceiveBuffer();
 	bool SendBreak(unsigned int duration_ms);

@@ -91,6 +91,10 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 		return true;
 	}
 	return false;
+	/* FIXME: We currently rely in flushing the receive buffer immediately after the request was sent.
+	          This doesn't work reliable with some serial port drivers !
+	          => Problem: the echos of ISO-KL-interfaces may be detected as SSM1-ROM-IDs.
+	*/
 }
 
 

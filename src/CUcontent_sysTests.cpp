@@ -64,7 +64,7 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	ok = (_SSMPdev != NULL);
 	if (ok)
 		ok = _SSMPdev->hasActuatorTests(&AT_sup);
-	if (ok)
+	if (ok && AT_sup)
 		ok = _SSMPdev->getSupportedActuatorTests(&_actuatorTestTitles);
 	if (ok)
 		ok = _SSMPdev->hasImmobilizer(&immo_sup);
