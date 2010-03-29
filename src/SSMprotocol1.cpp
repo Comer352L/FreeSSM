@@ -20,10 +20,13 @@
 #include "SSMprotocol1.h"
 
 
+#define	SSM1_MEM_ADDR_NONE	0xFFFFFFFF
+
 
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
+	_CMaddr = SSM1_MEM_ADDR_NONE;
 	resetCUdata();
 }
 
@@ -70,6 +73,7 @@ void SSMprotocol1::resetCUdata()
 	_ID[2] = '\x0';
 	// Reset DC-data:
 	_DTCdefs.clear();
+	_CMaddr = SSM1_MEM_ADDR_NONE;
 	// Reset MB/SW-data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
@@ -126,7 +130,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	
 	
 	/* TODO:
-		- setup Clear Memory address (and value ?)
+		- setup Clear Memory address
 		- setup test-addresses for Immobilizer-communication-line
 		- does the communication always immediately abort when ignition is switched off ?
 	*/
@@ -277,12 +281,15 @@ bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
-
-	// TODO !
-	
-return false;
+	if (_CMaddr == SSM1_MEM_ADDR_NONE) return false;
+	if (!_SSMP1com->writeAddress(_CMaddr, '\x00'))
+	{
+		resetCUdata();
+		return false;
+	}
+	return true;
 }
-// IMPLEMENTATION MISSING
+
 
 bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {

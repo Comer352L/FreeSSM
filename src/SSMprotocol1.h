@@ -56,7 +56,7 @@ public:
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
-	bool clearMemory(CMlevel_dt level, bool *success);						// IMPLEMENTATION MISSING
+	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);					// IMPLEMENTATION MISSING
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
@@ -68,6 +68,7 @@ private:
 	SSMP1communication *_SSMP1com;
 	// *** CONTROL UNIT RAW DATA ***:
 	char _ID[3];
+	unsigned int _CMaddr;
 
 	// CU-FEATURES SETUP FUNCTIONS:
 	void setupDTCdata();
@@ -75,7 +76,7 @@ private:
 	void setupSupportedSWs();
 
 private slots:
-	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);					// INCOMPLETE IMPLEMENTATION
+	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
 
 public slots:
 	void resetCUdata();										// IMPLEMENTATION MISSING
