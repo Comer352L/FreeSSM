@@ -58,7 +58,7 @@ public:
 	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);	// TODO !
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);	// TODO !
 	bool switches(std::vector<sw_intl_dt> *sws);		// TODO !
-	bool clearMemoryAddresses(std::vector<unsigned int> *addr);
+	bool clearMemoryAddress(unsigned int *addr);
 	
 private:
 	TiXmlDocument *_xmldoc;

@@ -123,15 +123,15 @@ bool SSM1definitionsInterface::year(std::string *yearstr)
 }
 
 
-bool SSM1definitionsInterface::clearMemoryAddresses(std::vector<unsigned int> *addr)
+bool SSM1definitionsInterface::clearMemoryAddress(unsigned int *addr)
 {
 	std::vector<TiXmlElement*> elements;
 	if (!_xmldoc || !_defs_for_id_b3_node) return false;
 	elements = getAllMatchingChildElements(_defs_for_id_b3_node, "CLEARMEMORYADDRESS");
-	addr->clear();
-	for (unsigned int k=0; k<elements.size(); k++)
-		addr->push_back( strtoul( elements.at(k)->GetText(), NULL, 0 ) );
+	if (elements.size() < 1) return false;
+	*addr = strtoul( elements.at(0)->GetText(), NULL, 0 );
 	return true;
+	// NOTE: multiple CM-addresses may be defined and vaild, but only one of them is needed
 }
 
 
