@@ -31,11 +31,22 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();
-	// Move window to desired coordinates
+	// Move window to desired coordinates:
 	move( 30, 30 );
 	// Set window and dialog titles:
 	setWindowTitle("FreeSSM " + QApplication::applicationVersion() + " - " + title);
 	title_label->setText(title);
+	// Apply quirk for GTK+-Layout:
+	if (QApplication::style()->objectName().toLower() == "gtk+")
+	{
+		QMargins margins;
+		margins = selection_horizontalLayout->contentsMargins();
+		margins.setTop(margins.top() + 8);
+		selection_horizontalLayout->setContentsMargins(margins);
+		margins = content_gridLayout->contentsMargins();
+		margins.setTop(margins.top() + 8);
+		content_gridLayout->setContentsMargins(margins);
+	}
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }
