@@ -113,7 +113,7 @@
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="selection_horizontalLayout">
           <property name="spacing">
            <number>0</number>
           </property>
