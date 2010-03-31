@@ -41,6 +41,13 @@ Engine::Engine(SSMprotocol2 *ssmp2dev, QString progversion)
 	// Set window title:
 	QString wintitle = "FreeSSM " + progversion + " - " + windowTitle();
 	setWindowTitle(wintitle);
+	// Apply quirk for GTK+-Layout:
+	if (QApplication::style()->objectName().toLower() == "gtk+")
+	{
+		QMargins margins = content_gridLayout->contentsMargins();
+		margins.setTop(margins.top() + 8);
+		content_gridLayout->setContentsMargins(margins);
+	}
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
 	DCs_pushButton->setChecked(true);
