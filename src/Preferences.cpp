@@ -81,7 +81,8 @@ Preferences::Preferences(QMainWindow *parent, QString *portname, QString languag
 	QStringList supStyles = QStyleFactory::keys();
 	if (supStyles.size())
 	{
-		int styleindex = supStyles.indexOf( QRegExp( _style_old, Qt::CaseInsensitive ) );
+		int styleindex = supStyles.indexOf( QRegExp( _style_old, Qt::CaseInsensitive, QRegExp::FixedString ) );
+		// NOTE: default pattern syntax QRegExp::RegExp(2) doesn't work for "gtk+"/"GTK+" !
 		guistyle_comboBox->insertItems(0, supStyles);
 		guistyle_comboBox->setCurrentIndex( styleindex );
 	}
