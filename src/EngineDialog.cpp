@@ -24,6 +24,7 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
+	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
@@ -182,11 +183,12 @@ void EngineDialog::DCs()
 	bool ok = false;
 	int DCgroups = 0;
 	if (_mode == DCs_mode) return;
-	_mode = DCs_mode;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
-	// Create, setup and insert content-widget:
+	// Save content settings:
+	saveContentSettings();
+	// Create, setup and insert new content-widget:
 	_content_DCs = new CUcontent_DCs_engine();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
@@ -199,6 +201,8 @@ void EngineDialog::DCs()
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+	// Save new mode:
+	_mode = DCs_mode;
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -211,20 +215,23 @@ void EngineDialog::measuringblocks()
 {
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
-	_mode = MBsSWs_mode;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
-	// Create, setup and insert content-widget:
-	CUcontent_MBsSWs *content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
-	setContentWidget(tr("Measuring Blocks:"), content_MBsSWs);
-	content_MBsSWs->show();
-	ok = content_MBsSWs->setup(_SSMPdev);
+	// Save content settings:
+	saveContentSettings();
+	// Create, setup and insert new content-widget:
+	_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
+	setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
+	_content_MBsSWs->show();
+	ok = _content_MBsSWs->setup(_SSMPdev);
 	if (ok)
-		ok = content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
+		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
 	// Get notification, if internal error occures:
 	if (ok)
-		connect(content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+		connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+	// Save new mode:
+	_mode = MBsSWs_mode;
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -237,17 +244,20 @@ void EngineDialog::adjustments()
 {
 	bool ok = false;
 	if (_mode == Adaptions_mode) return;
-	_mode = Adaptions_mode;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
-	// Create, setup and insert content-widget:
+	// Save content settings:
+	saveContentSettings();
+	// Create, setup and insert new content-widget:
 	_content_Adjustments = new CUcontent_Adjustments();
 	setContentWidget(tr("Adjustments:"), _content_Adjustments);
 	_content_Adjustments->show();
 	ok = _content_Adjustments->setup(_SSMPdev);
 	if (ok)
 		connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
+	// Save new mode:
+	_mode = Adaptions_mode;
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -260,11 +270,12 @@ void EngineDialog::systemoperationtests()
 {
 	bool ok = false;
 	if (_mode == SysTests_mode) return;
-	_mode = SysTests_mode;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !"));
 	waitmsgbox.show();
-	// Create, setup and insert content-widget:
+	// Save content settings:
+	saveContentSettings();
+	// Create, setup and insert new content-widget:
 	CUcontent_sysTests *content_SysTests = new CUcontent_sysTests();
 	setContentWidget(tr("System Operation Tests:"), content_SysTests);
 	content_SysTests->show();
@@ -272,6 +283,8 @@ void EngineDialog::systemoperationtests()
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
+	// Save new mode:
+	_mode = SysTests_mode;
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -309,6 +322,16 @@ void EngineDialog::clearMemory()
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit engine control unit dialog
+	}
+}
+
+
+void EngineDialog::saveContentSettings()
+{
+	if (_mode == MBsSWs_mode)
+	{
+		_content_MBsSWs->getMBSWselection(&_lastMBSWmetaList);
+		_content_MBsSWs->getSettings(&_MBSWsettings);
 	}
 }
 

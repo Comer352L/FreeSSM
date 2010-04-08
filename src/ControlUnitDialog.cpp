@@ -93,6 +93,12 @@ void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 }
 
 
+QWidget * ControlUnitDialog::contentWidget()
+{
+	return _contentWidget;
+}
+
+
 QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool checkable)
 {
 	QPushButton *button = new QPushButton(selection_groupBox);

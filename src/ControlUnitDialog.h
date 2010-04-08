@@ -45,6 +45,7 @@ protected:
 	bool probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
 	void setContentWidget(QString title, QWidget *contentwidget);
+	QWidget * contentWidget();
 
 private:
 	QString _language;
