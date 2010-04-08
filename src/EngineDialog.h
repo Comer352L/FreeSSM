@@ -59,11 +59,13 @@ private:
 	// Info- and content-widgets:
 	CUinfo_Engine *_infoWidget;
 	CUcontent_DCs_engine *_content_DCs;
+	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
+	void saveContentSettings();
 
 private slots:
 	void DCs();

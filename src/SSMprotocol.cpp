@@ -203,6 +203,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 	// ***** SETUP (BYTE-) ADDRESS LIST FOR QUERYS *****
 	unsigned int k = 0, m = 0;
 	bool newadr = true;
+	_selMBsSWsAddr.clear();
 	if (MBSWmetaList.size() == 0) return false;
 	for (k=0; k<MBSWmetaList.size(); k++)
 	{

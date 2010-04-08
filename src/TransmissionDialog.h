@@ -60,12 +60,14 @@ private:
 	// Info- and content-widgets:
 	CUinfo_Transmission *_infoWidget;
 	CUcontent_DCs_transmission *_content_DCs;
+	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
 	void setup();
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
+	void saveContentSettings();
 
 private slots:
 	void DTCs();
