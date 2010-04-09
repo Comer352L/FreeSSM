@@ -125,37 +125,39 @@ std::string serialCOM::GetPortname()
 }
 
 
-bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
+bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char *parity, float *stopbits)
 {
-	bool confirmGCS=false, cvGMbr=false;
+	/* NOTE: NULL-pointer arguments allowed ! */
+	bool cvGMbr = false;
 	bool settingsvalid = true;
 	double maxbaudrate = 0;
 	unsigned long int divisor = 0;
 	DCB currentdcb;
 	memset(&currentdcb, 0, sizeof(DCB));
 	currentdcb.DCBlength = sizeof(DCB);
-	// RESET DATA:
-	currentportsettings->baudrate = 0;
-	currentportsettings->databits = 0;
-	currentportsettings->parity = 0;
-	currentportsettings->stopbits = 0;
 	if (!portisopen) return false;
 	// REQUEST PORT SETTINGS FROM SYSTEM:
-	confirmGCS = GetCommState(hCom, &currentdcb);
-	if (confirmGCS)
+	if (!GetCommState(hCom, &currentdcb))
 	{
-		// BAUDRATE SETTINGS:
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::GetPortSettings():   GetCommState(...) failed\n";
+#endif
+		return false;
+	}
+	// BAUDRATE SETTINGS:
+	if (baudrate)
+	{
 		if (currentdcb.BaudRate != 0)
 		{
 			cvGMbr = serialCOM::GetMaxbaudrate(&maxbaudrate);
 			if (cvGMbr)
 			{
 				divisor = static_cast<unsigned long int>(round(maxbaudrate / currentdcb.BaudRate));
-				currentportsettings->baudrate = maxbaudrate / divisor;
+				*baudrate = maxbaudrate / divisor;
 			}
 			else
 			{
-				currentportsettings->baudrate = currentdcb.BaudRate;
+				*baudrate = currentdcb.BaudRate;
 #ifdef __SERIALCOM_DEBUG__
 				std::cout << "serialCOM::SetPortSettings:   unable to detect baudbase\n";
 				std::cout << "                              WARNING: reported baud rate may differ from real baudrate !\n";
@@ -164,33 +166,38 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		}
 		else
 		{
+			*baudrate = 0;
 			settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::GetPortSettings():   System reports baudrate=0\n";
 #endif
 		}
-		// DATABITS SETTINGS:
-		currentportsettings->databits = currentdcb.ByteSize;
-		// PARITY SETTINGS:
+	}
+	// DATABITS SETTINGS:
+	if (databits)
+		*databits = currentdcb.ByteSize;
+	// PARITY SETTINGS:
+	if (parity)
+	{
 		if (currentdcb.Parity == NOPARITY)
 		{
-			currentportsettings->parity = 'N';             // no parity bit
+			*parity = 'N';             // no parity bit
 		}
 		else if (currentdcb.Parity == ODDPARITY)
 		{
-			currentportsettings->parity = 'O';             // Odd
+			*parity = 'O';             // Odd
 		}
 		else if (currentdcb.Parity == EVENPARITY)
 		{
-			currentportsettings->parity = 'E';             // Even
+			*parity = 'E';             // Even
 		}
 		else if (currentdcb.Parity == MARKPARITY)
 		{
-			currentportsettings->parity = 'M';             // Mark
+			*parity = 'M';             // Mark
 		}
 		else if (currentdcb.Parity == SPACEPARITY)
 		{
-			currentportsettings->parity = 'S';             // Space
+			*parity = 'S';             // Space
 		}
 		else
 		{
@@ -199,18 +206,21 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 			std::cout << "serialCOM::GetPortSettings():   unknown parity settings\n";
 #endif
 		}
-		// STOPBITS SETTINGS:
+	}
+	// STOPBITS SETTINGS:
+	if (stopbits)
+	{
 		if (currentdcb.StopBits == ONESTOPBIT)
 		{
-			currentportsettings->stopbits = 1;
+			*stopbits = 1;
 		}
 		else if (currentdcb.StopBits == ONE5STOPBITS)
 		{
-			currentportsettings->stopbits = 1.5;
+			*stopbits = 1.5;
 		}
 		else if (currentdcb.StopBits == TWOSTOPBITS)
 		{
-			currentportsettings->stopbits = 2;
+			*stopbits = 2;
 		}
 		else
 		{
@@ -220,203 +230,195 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 #endif
 		}
 	}
-	else
-	{
-		settingsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetPortSettings():   GetCommState(...) failed\n";
-#endif
-	}
 	// RETURN SUCCESS:
-	return (confirmGCS && settingsvalid);
+	return settingsvalid;
 }
 
 
-bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
+bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char parity, float stopbits)
 {
-	bool confirmGCS=false, confirmSCS=false, nsvalid=true, cvGMbr=false;
+	bool confirmSCS=false, nsvalid=true, cvGMbr=false;
 	double maxbaudrate = 0, exactbaudrate = 0;
 	unsigned int bauddivisor = 0;
 	DCB newdcb;
 	memset(&newdcb, 0, sizeof(DCB));
 	newdcb.DCBlength = sizeof(DCB);
 	if (!portisopen) return false;
-	confirmGCS = GetCommState(hCom, &newdcb);
-	if (confirmGCS)
+	if (!GetCommState(hCom, &newdcb))
 	{
-		// SET NEW PORT SETTINGS (not all will be changed):
-		// BAUDRATE:
-		if (!(newportsettings.baudrate > 0))
-		{
-			nsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-			if (newportsettings.baudrate == 0)
-				std::cout << "serialCOM::SetPortSettings:   illegal baudrate - 0 baud not possible\n";
-			else
-				std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baud must be > 0\n";
-#endif
-		}
-		else if (newportsettings.baudrate > 115200)
-		{
-			nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baudrates above 115200 are currently not supported\n";
-#endif
-		}
-		else
-		{
-			cvGMbr = serialCOM::GetMaxbaudrate(&maxbaudrate);	// get max. available baudrate
-			if (!cvGMbr)
-			{
-				newdcb.BaudRate = static_cast<DWORD>(round(newportsettings.baudrate));	// set baud rate directly
-#ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::SetPortSettings:   unable to detect baudbase\n";
-				std::cout << "                              WARNING: reported baud rate may differ from real baudrate !\n";
-#endif
-			}
-			else
-			{
-				if (newportsettings.baudrate > maxbaudrate)
-				{
-					nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-					std::cout << "serialCOM::SetPortSettings:   baudrate exceeds capabilities of interface/driver\n";
-#endif
-				}
-				else
-				{
-					// Calculate "exact" baudrate:
-					bauddivisor = static_cast<unsigned int>(round(maxbaudrate / newportsettings.baudrate));
-					if (bauddivisor < 1) bauddivisor = 1;	// zur Sicherheit, ist eigentlich schon ausgeschlossen !
-					if (bauddivisor > 65535) bauddivisor = 65535;
-					exactbaudrate = (maxbaudrate / bauddivisor);	// Datentyp DWORD schraenkt moegliche extrem niedrige Baudraten ein !
-					/* NOTE: DO NOT ROUND HERE !
-					 * setCommState() doesn't round, it simply cuts the decimals => we get problems at e.g. 10400 baud !
-					 */
-					newdcb.BaudRate = static_cast<DWORD>(exactbaudrate);	// standard baudrates: CBR_9600, CBR_4800, ...
-				}
-			}
-		}
-		// DATABITS SETTINGS:
-		if ((newportsettings.databits >= 5) && (newportsettings.databits <= 8))
-			newdcb.ByteSize = newportsettings.databits;
-		else 
-		{
-			nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'databits'\n";
-#endif
-		}
-		// PARITY SETTINGS:
-		if (newportsettings.parity == 'N')
-		{
-			newdcb.Parity = NOPARITY;                // no parity bit
-		}
-		else if (newportsettings.parity == 'O')
-		{
-			newdcb.Parity = ODDPARITY;               // Odd
-		}
-		else if (newportsettings.parity == 'E')
-		{
-			newdcb.Parity = EVENPARITY;              // Even
-		}
-		else if (newportsettings.parity == 'M')
-		{
-			newdcb.Parity = MARKPARITY;              // Mark
-		}
-		else if (newportsettings.parity == 'S')
-		{
-			newdcb.Parity = SPACEPARITY;             // Space
-		}
-		else
-		{
-			nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'parity'\n";
-#endif
-		}
-		// STOPBIT SETTINGS:      (=> The use of 5 data bits with 2 stop bits is an invalid combination, as is 6, 7, or 8 data bits with 1.5 stop bits)
-		if (newportsettings.stopbits == 1)
-		{
-			newdcb.StopBits = ONESTOPBIT;		// 1 stop bit
-		}
-		else if (newportsettings.stopbits == 1.5)
-		{
-			if (newportsettings.databits == 5)
-				newdcb.StopBits = ONE5STOPBITS;	// 1.5 stop bits
-			else
-			{
-				nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 1.5 stopbits only allowed in combination with 5 databits\n";
-#endif
-			}
-		}
-		else if (newportsettings.stopbits == 2)
-		{
-			if (!(newportsettings.databits == 5))
-				newdcb.StopBits = TWOSTOPBITS;	// 2 stop bits
-			else
-			{
-				nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 2 stopbits not allowed in combination with 5 databits\n";
-#endif
-			}
-		}
-		else
-		{
-			nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits'\n";
-#endif
-		}
-		// MORE OPTIONS:
-		newdcb.fBinary = true;	// binary mode (false is not supported by Windows)
-		newdcb.fParity = false;	// no parity checking
-		newdcb.fNull = false;	// VERY IMPORTANT: don't discard received zero characters
-		// FLOW CONTROL:
-		newdcb.fOutxCtsFlow = false;	// CTS disabled
-		newdcb.fOutxDsrFlow = false;	// DSR disabled
-		if (DTRset)
-			newdcb.fDtrControl = DTR_CONTROL_ENABLE;	// DTR enabled = "ready"
-		else
-			newdcb.fDtrControl = DTR_CONTROL_DISABLE;	// DTR enabled = "ready"
-		if (RTSset)
-			newdcb.fRtsControl = RTS_CONTROL_ENABLE;	// RTS enabled = "request"
-		else
-			newdcb.fRtsControl = RTS_CONTROL_DISABLE;	// RTS enabled = "request"
-		// NOTE: Important: set to XXX_CONTROL_DISABLE or XXX_CONTROL_ENABLE to ensure that flow control is disabled !
-		newdcb.fDsrSensitivity = false;
-		newdcb.fOutX = false;		// XON/XOFF (for transmission) diabled
-		newdcb.fInX = false;		// XON/XOFF (for reception) diabled
-		// FLOW CONTROL DETAILS:
-		// newdcb.XonLim = 0;
-		// newdcb.XoffLim = 0;
-		newdcb.fTXContinueOnXoff = true;
-		// ERROR CONTROL:
-		newdcb.fErrorChar = false;	// character replacment on parity errors disbaled (only used, if fParity = true)
-		newdcb.fAbortOnError = false;
-		// CHARACTERS FOR FLOW/ERROR CONTROL:
-		// newdcb.XonChar;
-		// newdcb.XoffChar;
-		// newdcb.ErrorChar;
-		// newdcb.EofChar;
-		// newdcb.EvtChar;
-		// APPLY NEW PORT SETTINGS:
-		if (nsvalid)
-			confirmSCS = SetCommState(hCom, &newdcb);
-#ifdef __SERIALCOM_DEBUG__
-		if (!confirmSCS)
-			std::cout << "serialCOM::SetPortSettings():   SetCommState(...) failed\n";
-#endif
-	}
-#ifdef __SERIALCOM_DEBUG__
-	else
 		std::cout << "serialCOM::SetPortSettings():   GetCommState(...) failed\n";
 #endif
+		return false;
+	}
+	// SET NEW PORT SETTINGS (not all will be changed):
+	// BAUDRATE:
+	if (!(baudrate > 0))
+	{
+		nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		if (baudrate == 0)
+			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - 0 baud not possible\n";
+		else
+			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baud must be > 0\n";
+#endif
+	}
+	else if (baudrate > 115200)
+	{
+		nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baudrates above 115200 are currently not supported\n";
+#endif
+	}
+	else
+	{
+		cvGMbr = serialCOM::GetMaxbaudrate(&maxbaudrate);	// get max. available baudrate
+		if (!cvGMbr)
+		{
+			newdcb.BaudRate = static_cast<DWORD>(round(baudrate));	// set baud rate directly
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::SetPortSettings:   unable to detect baudbase\n";
+			std::cout << "                              WARNING: reported baud rate may differ from real baudrate !\n";
+#endif
+		}
+		else
+		{
+			if (baudrate > maxbaudrate)
+			{
+				nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::SetPortSettings:   baudrate exceeds capabilities of interface/driver\n";
+#endif
+			}
+			else
+			{
+				// Calculate "exact" baudrate:
+				bauddivisor = static_cast<unsigned int>(round(maxbaudrate / baudrate));
+				if (bauddivisor < 1) bauddivisor = 1;	// zur Sicherheit, ist eigentlich schon ausgeschlossen !
+				if (bauddivisor > 65535) bauddivisor = 65535;
+				exactbaudrate = (maxbaudrate / bauddivisor);	// Datentyp DWORD schraenkt moegliche extrem niedrige Baudraten ein !
+				/* NOTE: DO NOT ROUND HERE !
+				 * setCommState() doesn't round, it simply cuts the decimals => we get problems at e.g. 10400 baud !
+				 */
+				newdcb.BaudRate = static_cast<DWORD>(exactbaudrate);	// standard baudrates: CBR_9600, CBR_4800, ...
+			}
+		}
+	}
+	// DATABITS SETTINGS:
+	if ((databits >= 5) && (databits <= 8))
+		newdcb.ByteSize = databits;
+	else 
+	{
+		nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'databits'\n";
+#endif
+	}
+	// PARITY SETTINGS:
+	if (parity == 'N')
+	{
+		newdcb.Parity = NOPARITY;                // no parity bit
+	}
+	else if (parity == 'O')
+	{
+		newdcb.Parity = ODDPARITY;               // Odd
+	}
+	else if (parity == 'E')
+	{
+		newdcb.Parity = EVENPARITY;              // Even
+	}
+	else if (parity == 'M')
+	{
+		newdcb.Parity = MARKPARITY;              // Mark
+	}
+	else if (parity == 'S')
+	{
+		newdcb.Parity = SPACEPARITY;             // Space
+	}
+	else
+	{
+		nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'parity'\n";
+#endif
+	}
+	// STOPBIT SETTINGS:      (=> The use of 5 data bits with 2 stop bits is an invalid combination, as is 6, 7, or 8 data bits with 1.5 stop bits)
+	if (stopbits == 1)
+	{
+		newdcb.StopBits = ONESTOPBIT;		// 1 stop bit
+	}
+	else if (stopbits == 1.5)
+	{
+		if (databits == 5)
+			newdcb.StopBits = ONE5STOPBITS;	// 1.5 stop bits
+		else
+		{
+			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 1.5 stopbits only allowed in combination with 5 databits\n";
+#endif
+		}
+	}
+	else if (stopbits == 2)
+	{
+		if (databits != 5)
+			newdcb.StopBits = TWOSTOPBITS;	// 2 stop bits
+		else
+		{
+			nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits': 2 stopbits not allowed in combination with 5 databits\n";
+#endif
+		}
+	}
+	else
+	{
+		nsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+		std::cout << "serialCOM::SetPortSettings():   invalid value for parameter 'stopbits'\n";
+#endif
+	}
+	// MORE OPTIONS:
+	newdcb.fBinary = true;	// binary mode (false is not supported by Windows)
+	newdcb.fParity = false;	// no parity checking
+	newdcb.fNull = false;	// VERY IMPORTANT: don't discard received zero characters
+	// FLOW CONTROL:
+	newdcb.fOutxCtsFlow = false;	// CTS disabled
+	newdcb.fOutxDsrFlow = false;	// DSR disabled
+	if (DTRset)
+		newdcb.fDtrControl = DTR_CONTROL_ENABLE;	// DTR enabled = "ready"
+	else
+		newdcb.fDtrControl = DTR_CONTROL_DISABLE;	// DTR enabled = "ready"
+	if (RTSset)
+		newdcb.fRtsControl = RTS_CONTROL_ENABLE;	// RTS enabled = "request"
+	else
+		newdcb.fRtsControl = RTS_CONTROL_DISABLE;	// RTS enabled = "request"
+	// NOTE: Important: set to XXX_CONTROL_DISABLE or XXX_CONTROL_ENABLE to ensure that flow control is disabled !
+	newdcb.fDsrSensitivity = false;
+	newdcb.fOutX = false;		// XON/XOFF (for transmission) diabled
+	newdcb.fInX = false;		// XON/XOFF (for reception) diabled
+	// FLOW CONTROL DETAILS:
+	// newdcb.XonLim = 0;
+	// newdcb.XoffLim = 0;
+	newdcb.fTXContinueOnXoff = true;
+	// ERROR CONTROL:
+	newdcb.fErrorChar = false;	// character replacment on parity errors disbaled (only used, if fParity = true)
+	newdcb.fAbortOnError = false;
+	// CHARACTERS FOR FLOW/ERROR CONTROL:
+	// newdcb.XonChar;
+	// newdcb.XoffChar;
+	// newdcb.ErrorChar;
+	// newdcb.EofChar;
+	// newdcb.EvtChar;
+	// APPLY NEW PORT SETTINGS:
+	if (nsvalid)
+		confirmSCS = SetCommState(hCom, &newdcb);
+#ifdef __SERIALCOM_DEBUG__
+	if (!confirmSCS)
+		std::cout << "serialCOM::SetPortSettings():   SetCommState(...) failed\n";
+#endif
 	// RETURN SUCCESS:
-	return (confirmGCS && confirmSCS);
+	return confirmSCS;
 }
 
 
@@ -503,7 +505,7 @@ bool serialCOM::OpenPort(std::string portname)
 		return false;
 	}
 	// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
-	if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+	if (!SetPortSettings(9600, 8, 'N', 1))
 	{
 #ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings()\n";
