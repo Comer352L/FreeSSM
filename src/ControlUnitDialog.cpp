@@ -39,13 +39,14 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	// Apply quirk for GTK+-Layout:
 	if (QApplication::style()->objectName().toLower() == "gtk+")
 	{
-		QMargins margins;
-		margins = selection_horizontalLayout->contentsMargins();
-		margins.setTop(margins.top() + 8);
-		selection_horizontalLayout->setContentsMargins(margins);
-		margins = content_gridLayout->contentsMargins();
-		margins.setTop(margins.top() + 8);
-		content_gridLayout->setContentsMargins(margins);
+		int left = 0;
+		int top = 0;
+		int right = 0;
+		int bottom = 0;
+		selection_horizontalLayout->getContentsMargins(&left, &top, &right, &bottom);
+		selection_horizontalLayout->setContentsMargins(left, top+8, right, bottom);
+		content_gridLayout->getContentsMargins(&left, &top, &right, &bottom);
+		content_gridLayout->setContentsMargins(left, top+8, right, bottom);
 	}
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );

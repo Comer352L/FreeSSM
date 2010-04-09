@@ -95,12 +95,12 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 	{
 		if (protocol == AbstractDiagInterface::protocol_SSM1)
 		{
-			serialCOM::dt_portsettings portsettings(1954, 8, 'E', 1);
-			if (_port->SetPortSettings(portsettings))
+			if (_port->SetPortSettings(1954, 8, 'E', 1))
 			{
-				if(!_port->GetPortSettings(&portsettings))
+				double baudrate = 0;
+				if(!_port->GetPortSettings(&baudrate))
 					return false;
-				if ((portsettings.baudrate < (0.97*1953)) || (portsettings.baudrate > (1.03*1953)))
+				if ((baudrate < (0.97*1953)) || (baudrate > (1.03*1953)))
 				{
 #ifdef __FSSM_DEBUG__
 					std::cout << "SerialPassThroughDiagInterface::connect(...):   Selected baudrate not supported (devergence > 3%)\n";
@@ -114,8 +114,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 		}
 		else if (protocol == AbstractDiagInterface::protocol_SSM2)
 		{
-			serialCOM::dt_portsettings portsettings(4800, 8, 'N', 1);
-			if (_port->SetPortSettings(portsettings))
+			if (_port->SetPortSettings(4800, 8, 'N', 1))
 			{
 				setProtocolType( protocol );
 				_connected = true;

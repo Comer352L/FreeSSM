@@ -59,25 +59,13 @@ private:
 	bool GetMaxbaudrate(double *maxbaudrate);
 
 public:
-	class dt_portsettings
-	{
-	public:
-		dt_portsettings() { baudrate=9600; databits=8; parity='N'; stopbits=1; };
-		dt_portsettings(double baudrate, unsigned short databits, char parity, float stopbits)
-		                : baudrate(baudrate), databits(databits), parity(parity), stopbits(stopbits) { };
-		double baudrate;
-		unsigned short databits;
-		char parity;
-		float stopbits;
-	};
-
 	serialCOM();
 	~serialCOM();
 	static std::vector<std::string> GetAvailablePorts();
 	bool IsOpen();
 	std::string GetPortname();
-	bool GetPortSettings(serialCOM::dt_portsettings *currentportsettings);
-	bool SetPortSettings(dt_portsettings newportsettings);
+	bool GetPortSettings(double *baudrate, unsigned short *databits = NULL, char *parity = NULL, float *stopbits = NULL);
+	bool SetPortSettings(double baudrate, unsigned short databits, char parity, float stopbits);
 	bool OpenPort(std::string portname);	// returns success of operation, NOT PORT STATUS (open/closed)
 	bool ClosePort();			// returns success of operation, NOT PORT STATUS (open/closed)
 	bool Write(std::vector<char> data);

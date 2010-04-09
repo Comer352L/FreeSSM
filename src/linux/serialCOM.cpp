@@ -123,19 +123,15 @@ std::string serialCOM::GetPortname()
 }
 
 
-bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
+bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char *parity, float *stopbits)
 {
+	/* NOTE: NULL-pointer arguments allowed ! */
 	int cvIOCTL_SD = -1;	// -1=ERROR , others=OK
 	bool settingsvalid = true;
 	struct termios2 currenttio;
 	memset(&currenttio, 0, sizeof(currenttio));
-	speed_t baudrate=0;
-	unsigned int cleanedbitmask=0;
-	// Reset data:
-	currentportsettings->baudrate = 0;
-	currentportsettings->databits = 0;
-	currentportsettings->parity = 0;
-	currentportsettings->stopbits = 0;
+	speed_t baud = 0;
+	unsigned int cleanedbitmask = 0;
 	if (!portisopen) return false;
 	// Query current settings:
 	if (ioctl(fd, TCGETS2, &currenttio) == -1)
@@ -146,214 +142,226 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 		return false;
 	}
 	// BAUDRATE:
-	baudrate = currenttio.c_cflag & CBAUD;	// get baud rate
-	/* NOTE:
-	   - c_ispeed/c_ospeed is ignored by the system when setting a
-	     new termios2 with c_cflag not set to BOTHER (set to another Bxxxxx)
-	   - when getting the termios2 struct from the system, the
-	     c_ispeed/c_ospeed field SEEM to contain always the
-	     baudrate value regardless of the baud settings in c_cflag
-	     CAN WE BE SURE THAT ALL DRIVERS BEHAVE LIKE THIS ???
-	     => For now, we only trust c_ispeed/c_ospeed if c_cflag
-	     contains BOTHER
-	*/
+	if (baud)
+	{
+		baud = currenttio.c_cflag & CBAUD;	// get baud rate
+		/* NOTE:
+		- c_ispeed/c_ospeed is ignored by the system when setting a
+		new termios2 with c_cflag not set to BOTHER (set to another Bxxxxx)
+		- when getting the termios2 struct from the system, the
+		c_ispeed/c_ospeed field SEEM to contain always the
+		baudrate value regardless of the baud settings in c_cflag
+		CAN WE BE SURE THAT ALL DRIVERS BEHAVE LIKE THIS ???
+		=> For now, we only trust c_ispeed/c_ospeed if c_cflag
+		contains BOTHER
+		*/
 #ifdef __SERIALCOM_DEBUG__
-	std::cout << "serialCOM::GetPortSettings(): baudrates in struct termios2:\n";
-	std::cout << "   c_cflag & CBAUD: " << (currenttio.c_cflag & CBAUD) << '\n';
-	std::cout << "   c_ispeed: " << currenttio.c_ispeed << '\n';
-	std::cout << "   c_ospeed: " << currenttio.c_ospeed << '\n';
+		std::cout << "serialCOM::GetPortSettings(): baudrates in struct termios2:\n";
+		std::cout << "   c_cflag & CBAUD: " << (currenttio.c_cflag & CBAUD) << '\n';
+		std::cout << "   c_ispeed: " << currenttio.c_ispeed << '\n';
+		std::cout << "   c_ospeed: " << currenttio.c_ospeed << '\n';
 #endif
-	if (baudrate == BOTHER)
-	{
-		if (currenttio.c_ispeed == currenttio.c_ispeed)
+		if (baud == BOTHER)
 		{
-			currentportsettings->baudrate = currenttio.c_ispeed;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   WARNING:   baudrate is encoded with the BOTHER-method !\n => The reported baudrate may differ from the ''real'' baudrate depending on the driver !\n";
-#endif
-		}
-		else
-		{
-			settingsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   ERROR:   different baud rates for transmitting and receiving detected\n";
-#endif
-		}
-	}
-	else if (baudrate == B0)	// B0 is not allowed (=> Windows compatibility)
-	{
-		currentportsettings->baudrate = 0;
-	}
-	else if (baudrate == B50)
-	{
-		currentportsettings->baudrate = 50;
-	}
-	else if (baudrate == B75)
-	{
-		currentportsettings->baudrate = 75;
-	}
-	else if (baudrate == B110)
-	{
-		currentportsettings->baudrate = 110;
-	}
-	else if (baudrate == B134)
-	{
-		currentportsettings->baudrate = 134.5;
-	}
-	else if (baudrate == B150)
-	{
-		currentportsettings->baudrate = 150;
-	}
-	else if (baudrate == B200)
-	{
-		currentportsettings->baudrate = 200;
-	}
-	else if (baudrate == B300)
-	{
-		currentportsettings->baudrate = 300;
-	}
-	else if (baudrate == B600)
-	{
-		currentportsettings->baudrate = 600;
-	}
-	else if (baudrate == B1200)
-	{
-		currentportsettings->baudrate = 1200;
-	}
-	else if (baudrate == B1800)
-	{
-		currentportsettings->baudrate = 1800;
-	}
-	else if (baudrate == B2400)
-	{
-		currentportsettings->baudrate = 2400;
-	}
-	else if (baudrate == B4800)
-	{
-		currentportsettings->baudrate = 4800;
-	}
-	else if (baudrate == B9600)
-	{
-		currentportsettings->baudrate = 9600;
-	}
-	else if (baudrate == B19200)
-	{
-		currentportsettings->baudrate = 19200;
-	}
-	else if (baudrate == B38400)
-	{
-		if (serdrvaccess) // if we have access to the driver
-		{
-			// Get driver settings
-			struct serial_struct current_serdrvinfo;
-			memset(&current_serdrvinfo, 0, sizeof(current_serdrvinfo));
-			cvIOCTL_SD = ioctl(fd, TIOCGSERIAL, &current_serdrvinfo);
-			if (cvIOCTL_SD != -1)
+			if (currenttio.c_ispeed == currenttio.c_ispeed)
 			{
-				// Check if it is a non-standard baudrate:
-				if (current_serdrvinfo.flags != (current_serdrvinfo.flags | ASYNC_SPD_CUST))
-					currentportsettings->baudrate = 38400;
-				else
-				{
-					if (current_serdrvinfo.custom_divisor != 0)
-						currentportsettings->baudrate = ( static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
-					else
-					{
-						settingsvalid = false;
+				*baudrate = currenttio.c_ispeed;
 #ifdef __SERIALCOM_DEBUG__
-						std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
+				std::cout << "serialCOM::GetPortSettings():   WARNING:   baudrate is encoded with the BOTHER-method !\n => The reported baudrate may differ from the ''real'' baudrate depending on the driver !\n";
 #endif
-					}
-				}
 			}
-			else	// If driver settings are not available 
+			else
 			{
 				settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
+				std::cout << "serialCOM::GetPortSettings():   ERROR:   different baud rates for transmitting and receiving detected\n";
 #endif
 			}
 		}
-		else
-			currentportsettings->baudrate = 38400;
-	}
-	else if (baudrate == B57600)
-	{
-		currentportsettings->baudrate = 57600;
-	}
-	else if (baudrate == B115200)
-	{
-		currentportsettings->baudrate = 115200;
-	}
-	else
-	{
-		settingsvalid = false;
+		else if (baud == B0)	// B0 is not allowed (=> Windows compatibility)
+		{
+			*baudrate = 0;
+		}
+		else if (baud == B50)
+		{
+			*baudrate = 50;
+		}
+		else if (baud == B75)
+		{
+			*baudrate = 75;
+		}
+		else if (baud == B110)
+		{
+			*baudrate = 110;
+		}
+		else if (baud == B134)
+		{
+			*baudrate = 134.5;
+		}
+		else if (baud == B150)
+		{
+			*baudrate = 150;
+		}
+		else if (baud == B200)
+		{
+			*baudrate = 200;
+		}
+		else if (baud == B300)
+		{
+			*baudrate = 300;
+		}
+		else if (baud == B600)
+		{
+			*baudrate = 600;
+		}
+		else if (baud == B1200)
+		{
+			*baudrate = 1200;
+		}
+		else if (baud == B1800)
+		{
+			*baudrate = 1800;
+		}
+		else if (baud == B2400)
+		{
+			*baudrate = 2400;
+		}
+		else if (baud == B4800)
+		{
+			*baudrate = 4800;
+		}
+		else if (baud == B9600)
+		{
+			*baudrate = 9600;
+		}
+		else if (baud == B19200)
+		{
+			*baudrate = 19200;
+		}
+		else if (baud == B38400)
+		{
+			if (serdrvaccess) // if we have access to the driver
+			{
+				// Get driver settings
+				struct serial_struct current_serdrvinfo;
+				memset(&current_serdrvinfo, 0, sizeof(current_serdrvinfo));
+				cvIOCTL_SD = ioctl(fd, TIOCGSERIAL, &current_serdrvinfo);
+				if (cvIOCTL_SD != -1)
+				{
+					// Check if it is a non-standard baudrate:
+					if (current_serdrvinfo.flags != (current_serdrvinfo.flags | ASYNC_SPD_CUST))
+						*baudrate = 38400;
+					else
+					{
+						if (current_serdrvinfo.custom_divisor != 0)
+							*baudrate = (static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
+						else
+						{
+							settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
+							std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
 #endif
-	}
-	// DATABITS:
-	cleanedbitmask = (currenttio.c_cflag & ~CSIZE);
-	if (currenttio.c_cflag == (cleanedbitmask | CS8))
-	{
-		currentportsettings->databits = 8;
-	}
-	else if (currenttio.c_cflag == (cleanedbitmask | CS7))
-	{
-		currentportsettings->databits = 7;
-	}
-	else if (currenttio.c_cflag == (cleanedbitmask | CS6))
-	{
-		currentportsettings->databits = 6;
-	}
-	else if (currenttio.c_cflag == (cleanedbitmask | CS5))
-	{
-		currentportsettings->databits = 5;
-	}
-	else
-	{
-		settingsvalid = false;
+						}
+					}
+				}
+				else	// If driver settings are not available 
+				{
+					settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetPortSettings():   error: unknown number of databits\n";
+					std::cout << "serialCOM::GetPortSettings():   ioctl(..., TIOCGSERIAL, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
-	}
-	// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
-	if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
-		currentportsettings->parity='N';
-	else    	// if parity-flag is set
-	{
-		if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
-		{
-			if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-				currentportsettings->parity='E';
+				}
+			}
 			else
-				currentportsettings->parity='S';
+				*baudrate = 38400;
 		}
-		else	// if Odd-(Mark-) parity-flag is set
+		else if (baud == B57600)
 		{
-			if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-				currentportsettings->parity='O';
-			else
-				currentportsettings->parity='M';
+			*baudrate = 57600;
 		}
-	}
-	// STOPBITS:
-	if (currenttio.c_cflag != (currenttio.c_cflag | CSTOPB))
-		currentportsettings->stopbits = 1;
-	else
-	{
-		if (currentportsettings->databits == 5)
+		else if (baud == B115200)
 		{
-			currentportsettings->stopbits = 1.5;
-		}
-		else if (currentportsettings->databits > 5)
-		{
-			currentportsettings->stopbits = 2;
+			*baudrate = 115200;
 		}
 		else
 		{
 			settingsvalid = false;
-			currentportsettings->stopbits = 0;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
+#endif
+		}
+	}
+	// DATABITS:
+	if (databits)
+	{
+		cleanedbitmask = (currenttio.c_cflag & ~CSIZE);
+		if (currenttio.c_cflag == (cleanedbitmask | CS8))
+		{
+			*databits = 8;
+		}
+		else if (currenttio.c_cflag == (cleanedbitmask | CS7))
+		{
+			*databits = 7;
+		}
+		else if (currenttio.c_cflag == (cleanedbitmask | CS6))
+		{
+			*databits = 6;
+		}
+		else if (currenttio.c_cflag == (cleanedbitmask | CS5))
+		{
+			*databits = 5;
+		}
+		else
+		{
+			settingsvalid = false;
+#ifdef __SERIALCOM_DEBUG__
+			std::cout << "serialCOM::GetPortSettings():   error: unknown number of databits\n";
+#endif
+		}
+	}
+	// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
+	if (parity)
+	{
+		if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
+			*parity='N';
+		else    	// if parity-flag is set
+		{
+			if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
+			{
+				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
+					*parity='E';
+				else
+					*parity='S';
+			}
+			else	// if Odd-(Mark-) parity-flag is set
+			{
+				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
+					*parity='O';
+				else
+					*parity='M';
+			}
+		}
+	}
+	// STOPBITS:
+	if (stopbits)
+	{
+		if (currenttio.c_cflag != (currenttio.c_cflag | CSTOPB))
+			*stopbits = 1;
+		else
+		{
+			if (*databits == 5)
+			{
+				*stopbits = 1.5;
+			}
+			else if (*databits > 5)
+			{
+				*stopbits = 2;
+			}
+			else
+			{
+				settingsvalid = false;
+				*stopbits = 0;
+			}
 		}
 	}
 	// RETURN SUCCESS:
@@ -361,7 +369,7 @@ bool serialCOM::GetPortSettings(serialCOM::dt_portsettings *currentportsettings)
 }
 
 
-bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
+bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char parity, float stopbits)
 {
 	int cIOCTL = -1;
 	int cIOCTL_SD = -1;
@@ -390,17 +398,17 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	newtio.c_cflag = (CREAD | CLOCAL);
 	// BAUDRATE:
 	// Set new baudrate:
-	if (!(newportsettings.baudrate > 0))
+	if (!(baudrate > 0))
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-		if (newportsettings.baudrate == 0)
+		if (baudrate == 0)
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - 0 baud not possible\n";
 		else
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrate must be > 0\n";
 #endif
 	}
-	else if (newportsettings.baudrate > 115200)
+	else if (baudrate > 115200)
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -409,7 +417,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 	}
 	else
 	{
-		isStdBaud = GetStdbaudrateDCBConst(newportsettings.baudrate, &newbaudrate);
+		isStdBaud = GetStdbaudrateDCBConst(baudrate, &newbaudrate);
 		if (!isStdBaud)
 		{
 			/* NOTE: The "old" method for setting non-standrad baudrates is prefered,
@@ -420,14 +428,14 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			{
 				int customdivisor = 0;
 				double custombaudrate = 0;
-				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / newportsettings.baudrate));
+				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / baudrate));
 				if (customdivisor < 1)
 					customdivisor = 1;	// ...to be sure
 				if (customdivisor > 65535)
 					customdivisor = 65535;
 				custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
 				// Check if it is a standard baud rate now:
-				if (!GetStdbaudrateDCBConst(newportsettings.baudrate, &newbaudrate))
+				if (!GetStdbaudrateDCBConst(baudrate, &newbaudrate))
 				{
 					newbaudrate = B38400;
 					new_serdrvinfo.flags |= ASYNC_SPD_CUST;
@@ -437,8 +445,8 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			else
 			{
 				newbaudrate = BOTHER;
-				newtio.c_ispeed = round(newportsettings.baudrate);
-				newtio.c_ospeed = round(newportsettings.baudrate);
+				newtio.c_ispeed = round(baudrate);
+				newtio.c_ospeed = round(baudrate);
 				/* TODO:
 				* - DOES ioctl(..., TCSETS2, ...) ALWAYS SET THE NEAREST POSSIBLE BAUD RATE ? HOW IS "NEAREST" DEFINED (ABSOLUTE/RELATIVE ?) ?
 				* - IS THERE A MAXIMUM DEVIATION, WHICH LETS THE ioctl() FAIL IF IT IS EXCEEDED ?
@@ -451,7 +459,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		}
 	}
 	// DATABITS:
-	switch (newportsettings.databits)
+	switch (databits)
 	{
 		case 8:
 			newtio.c_cflag |= CS8;
@@ -473,29 +481,29 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 			break;
 	}
 	// PARITY:
-	if (newportsettings.parity == 'N')
+	if (parity == 'N')
 	{
 		newtio.c_cflag &= ~PARENB;	// deactivate parity (not really necessary, because c_cflag is clean)
 	}
-	else if (newportsettings.parity == 'E')
+	else if (parity == 'E')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
 		newtio.c_cflag &= ~CMSPAR;	// activate mark/space mode (not really necessary, because c_cflag is clean)
 		newtio.c_cflag &= ~PARODD;	// deactivate odd parity (not really necessary, because c_cflag is clean)
 	}
-	else if (newportsettings.parity == 'O')
+	else if (parity == 'O')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
 		newtio.c_cflag &= ~CMSPAR;	// deactivate mark/space mode (not really necessary, because c_cflag is clean)
 		newtio.c_cflag |= PARODD;	// activate odd parity
 	}
-	else if (newportsettings.parity == 'S')
+	else if (parity == 'S')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
 		newtio.c_cflag |= CMSPAR;	// activate mark/space mode
 		newtio.c_cflag &= ~PARODD;	// deactivate mark parity (not really necessary, because c_cflag is clean)
 	}
-	else if (newportsettings.parity == 'M')
+	else if (parity == 'M')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
 		newtio.c_cflag |= CMSPAR;	// activate mark/space mode
@@ -509,13 +517,13 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 #endif
 	}
 	// STOPBITS:
-	if (newportsettings.stopbits == 1)
+	if (stopbits == 1)
 	{
 		newtio.c_cflag &= ~CSTOPB;	//  (not really necessary, because c_cflag is clean)
 	}
-	else if (newportsettings.stopbits == 1.5)
+	else if (stopbits == 1.5)
 	{
-		if (newportsettings.databits == 5)
+		if (databits == 5)
 			newtio.c_cflag |= CSTOPB;
 		else
 		{
@@ -525,9 +533,9 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 #endif
 		}
 	}
-	else if (newportsettings.stopbits == 2)
+	else if (stopbits == 2)
 	{
-		if (newportsettings.databits != 5)
+		if (databits != 5)
 			newtio.c_cflag |= CSTOPB;
 		else
 		{
@@ -701,7 +709,7 @@ bool serialCOM::SetPortSettings(serialCOM::dt_portsettings newportsettings)
 		if ((cIOCTL == -1) && (!isStdBaud))
 		{
 			// Set baudrate to the nearest standard value:
-			newbaudrate = GetNearestStdBaudrate(newportsettings.baudrate);
+			newbaudrate = GetNearestStdBaudrate(baudrate);
 			newtio.c_cflag &= ~CBAUD;
 			newtio.c_cflag |= newbaudrate;
 			cIOCTL = ioctl(fd, TCSETS2, &newtio);
@@ -804,7 +812,7 @@ bool serialCOM::OpenPort(std::string portname)
 			return false;
 		}
 		// CONFIGURE COMMUNICATION, SET STANDARD PORT-SETTINGS
-		if (!SetPortSettings( dt_portsettings(9600,8,'N',1) ))
+		if (!SetPortSettings(9600, 8, 'N', 1 ))
 		{
 #ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::OpenPort():   Couldn't set standard port settings with SetPortSettings() !\n";
