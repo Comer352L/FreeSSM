@@ -193,12 +193,12 @@ bool CUcontent_DCs_engine::setup()
 void CUcontent_DCs_engine::connectGUIelements()
 {
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
-	if (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup)
+	if ((_supportedDCgroups & SSMprotocol2::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::temporaryDTCs_DCgroup))
 	{
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")), _testMode, false);
 		connect(_SSMP2dev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList, bool, bool) ));
 	}
-	if (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup)
+	if ((_supportedDCgroups & SSMprotocol2::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol2::memorizedDTCs_DCgroup))
 	{
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMP2dev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
