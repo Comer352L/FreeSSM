@@ -44,9 +44,12 @@ Engine::Engine(SSMprotocol2 *ssmp2dev, QString progversion)
 	// Apply quirk for GTK+-Layout:
 	if (QApplication::style()->objectName().toLower() == "gtk+")
 	{
-		QMargins margins = content_gridLayout->contentsMargins();
-		margins.setTop(margins.top() + 8);
-		content_gridLayout->setContentsMargins(margins);
+		int left = 0;
+		int top = 0;
+		int right = 0;
+		int bottom = 0;
+		content_gridLayout->getContentsMargins(&left, &top, &right, &bottom);
+		content_gridLayout->setContentsMargins(left, top + 8, right, bottom);
 	}
 	// Load/Show Diagnostic Code content:
 	content_groupBox->setTitle(tr("Diagnostic Codes:"));
