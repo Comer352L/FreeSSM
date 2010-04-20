@@ -142,7 +142,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 		return false;
 	}
 	// BAUDRATE:
-	if (baud)
+	if (baudrate)
 	{
 		baud = currenttio.c_cflag & CBAUD;	// get baud rate
 		/* NOTE:
