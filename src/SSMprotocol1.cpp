@@ -67,17 +67,19 @@ void SSMprotocol1::resetCUdata()
 	}
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-	// RESET ECU RAW DATA:
+	// RESET ECU DATA:
 	_ID[0] = '\x0';
 	_ID[1] = '\x0';
 	_ID[2] = '\x0';
-	// Reset DC-data:
+	// Clear system description:
+	_sysDescription.clear();
+	// Clear DC data:
 	_DTCdefs.clear();
 	_CMaddr = SSM1_MEM_ADDR_NONE;
-	// Reset MB/SW-data:
+	// Reset MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
-	// *** Reset selection data ***:
+	// Clear selection data:
 	_selectedDCgroups = noDCs_DCgroup;
 	_MBSWmetaList.clear();
 	_selMBsSWsAddr.clear();
@@ -86,6 +88,7 @@ void SSMprotocol1::resetCUdata()
 
 bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
+	std::string defsFile;
 	SSM1_CUtype_dt SSM1_CU;
 	// Reset:
 	resetCUdata();
@@ -93,10 +96,12 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	if (CU == CUtype_Engine)
 	{
 		SSM1_CU = SSM1_CU_Engine;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_ECU.xml";
 	}
 	else if (CU == CUtype_Transmission)
 	{
 		SSM1_CU = SSM1_CU_Transmission;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_TCU.xml";
 	}
 	else if (CU == CUtype_CruiseControl)
 	{
@@ -113,7 +118,7 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	else
 		return false;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
-	// Get control unit data:
+	// Get control unit ID:
 	if (!_SSMP1com->readID(_ID))
 		 return false;
 	_CU = CU;
@@ -121,13 +126,21 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	// Connect communication error signals from SSMP1communication:
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-	// Get definitions of the supported diagnostic codes:
-	setupDTCdata();
-	// Get supported MBs and SWs:
-	setupSupportedMBs();
-	setupSupportedSWs();
+	// Load control unit definitions:
+	SSM1definitionsInterface defsIface;
+	if (defsIface.selectDefinitionsFile(defsFile))
+	{
+		defsIface.setLanguage(_language.toStdString());
+		defsIface.selectID(_ID);
+		// Get system description:
+		defsIface.systemDescription(&_sysDescription);
+		// Get definitions of the supported diagnostic codes:
+		setupDTCdata();
+		// Get supported MBs and SWs:
+		setupSupportedMBs();
+		setupSupportedSWs();
+	}
 	return true;
-	
 	
 	/* TODO:
 		- setup Clear Memory address
@@ -154,13 +167,14 @@ std::string SSMprotocol1::getROMID()
 bool SSMprotocol1::getSystemDescription(QString *sysdescription)
 {
 	if (_state == state_needSetup) return false;
-
-	// TODO !
-	// => Get system description from definitions and copy to sysdescription
-
-return false;
+	if (_sysDescription.size())
+	{
+		*sysdescription = QString::fromStdString(_sysDescription);
+		return true;
+	}
+	return false;
 }
-// IMPLEMENTATION MISSING
+
 
 bool SSMprotocol1::hasOBD2system(bool *OBD2)
 {

@@ -28,6 +28,7 @@
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
+#include "SSM1definitionsInterface.h"
 #include "libFSSM.h"
 
 
@@ -44,7 +45,7 @@ public:
 	protocol_dt protocolType() { return SSM1; };
 	std::string getSysID();
 	std::string getROMID();
-	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
+	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);								// IMPLEMENTATION MISSING
@@ -68,6 +69,7 @@ private:
 	SSMP1communication *_SSMP1com;
 	// *** CONTROL UNIT RAW DATA ***:
 	char _ID[3];
+	std::string _sysDescription;
 	unsigned int _CMaddr;
 
 	// CU-FEATURES SETUP FUNCTIONS:
