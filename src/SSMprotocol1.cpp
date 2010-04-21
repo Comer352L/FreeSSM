@@ -27,6 +27,7 @@ SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString languag
 {
 	_SSMP1com = NULL;
 	_CMaddr = SSM1_MEM_ADDR_NONE;
+	_CMvalue = '\x00';
 	resetCUdata();
 }
 
@@ -76,6 +77,7 @@ void SSMprotocol1::resetCUdata()
 	// Clear DC data:
 	_DTCdefs.clear();
 	_CMaddr = SSM1_MEM_ADDR_NONE;
+	_CMvalue = '\x00';
 	// Reset MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
@@ -139,11 +141,12 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 		// Get supported MBs and SWs:
 		defsIface.measuringBlocks(&_supportedMBs);
 		defsIface.switches(&_supportedSWs);
+		// Get Clear Memory data:
+		defsIface.clearMemoryData(&_CMaddr, &_CMvalue);
 	}
 	return true;
 	
 	/* TODO:
-		- setup Clear Memory address
 		- setup test-addresses for Immobilizer-communication-line
 		- does the communication always immediately abort when ignition is switched off ?
 	*/
@@ -269,7 +272,7 @@ bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
 	if (_CMaddr == SSM1_MEM_ADDR_NONE) return false;
-	if (!_SSMP1com->writeAddress(_CMaddr, '\x00'))
+	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue))
 	{
 		resetCUdata();
 		return false;

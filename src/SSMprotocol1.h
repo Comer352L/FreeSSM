@@ -71,6 +71,7 @@ private:
 	char _ID[3];
 	std::string _sysDescription;
 	unsigned int _CMaddr;
+	char _CMvalue;
 
 private slots:
 	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
