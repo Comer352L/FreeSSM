@@ -1,7 +1,7 @@
 /*
  * SSM1definitionsInterface.h - Interface to the SSM1-definitions
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,26 +47,28 @@ public:
 class SSM1definitionsInterface
 {
 public:
-	SSM1definitionsInterface(char id[3] = NULL);
+	SSM1definitionsInterface(std::string filename = "", std::string lang = "", char id[3] = NULL);
 	bool selectDefinitionsFile(std::string filename);
+	void setLanguage(std::string lang);
 	void selectID(char id[3]);
 
 	bool systemDescription(std::string *description);
 	bool model(std::string *name);
 	bool year(std::string *yearstr);
 	
-	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);	// TODO !
-	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);	// TODO !
-	bool switches(std::vector<sw_intl_dt> *sws);		// TODO !
-	bool clearMemoryAddress(unsigned int *addr);
+	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);
+	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
+	bool switches(std::vector<sw_intl_dt> *sws);
+	bool clearMemoryData(unsigned int *address, char *value);
 	
 private:
 	TiXmlDocument *_xmldoc;
+	std::string _lang;
 	char _ID[3];
 	bool _id_set;
 	// Shortcuts to important nodes:
 	TiXmlNode *_defs_root_node;
-	TiXmlNode *_data_root_node;
+	TiXmlNode *_datacommon_root_node;
 	TiXmlNode *_defs_for_id_b1_node;
 	TiXmlNode *_defs_for_id_b2_node;
 	TiXmlNode *_defs_for_id_b3_node;
@@ -78,3 +80,4 @@ private:
 
 
 #endif
+
