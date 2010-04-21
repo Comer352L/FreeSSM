@@ -72,11 +72,6 @@ private:
 	std::string _sysDescription;
 	unsigned int _CMaddr;
 
-	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCdata();
-	void setupSupportedMBs();
-	void setupSupportedSWs();
-
 private slots:
 	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
 

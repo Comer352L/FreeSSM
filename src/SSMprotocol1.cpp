@@ -135,10 +135,10 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 		// Get system description:
 		defsIface.systemDescription(&_sysDescription);
 		// Get definitions of the supported diagnostic codes:
-		setupDTCdata();
+		defsIface.diagnosticCodes(&_DTCdefs);
 		// Get supported MBs and SWs:
-		setupSupportedMBs();
-		setupSupportedSWs();
+		defsIface.measuringBlocks(&_supportedMBs);
+		defsIface.switches(&_supportedSWs);
 	}
 	return true;
 	
@@ -234,33 +234,6 @@ bool SSMprotocol1::hasActuatorTests(bool *ATsup)
 	return true;
 }
 
-
-void SSMprotocol1::setupDTCdata()
-{
-
-	// TODO !
-	// => Get supported DTCs from definitions and save to _DTCdefs
-
-}
-// IMPLEMENTATION MISSING
-
-void SSMprotocol1::setupSupportedMBs()
-{
-
-	// TODO !
-	// => Get supported MBs from definitions and save to _supportedMBs
-
-}
-// IMPLEMENTATION MISSING
-
-void SSMprotocol1::setupSupportedSWs()
-{
-
-	// TODO !
-	// => Get supported SWs from definitions and save to _supportedSWs
-
-}
-// IMPLEMENTATION MISSING
 
 bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 {
