@@ -41,7 +41,7 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
 	pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( systemoperationtests() ) );
-	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	// Load/Show Diagnostic Code content:
 	_content_DCs = new CUcontent_DCs_engine();
@@ -150,6 +150,10 @@ void EngineDialog::setup()
 				}
 			}
 		}
+		// "Clear Memory"-support:
+		if (!_SSMPdev->hasClearMemory(&supported))
+			goto commError;
+		_clearMemory_pushButton->setEnabled(supported);
 	}
 	else // CU-connection could not be established
 		goto commError;

@@ -39,7 +39,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
 	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
-	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
@@ -102,13 +102,14 @@ void TransmissionDialog::setup()
 		if (!_SSMPdev->hasOBD2system(&supported))
 			goto commError;
 		_infoWidget->setOBD2Supported(supported);
+		// "Clear Memory"-support:
+		if (!_SSMPdev->hasClearMemory(&supported))
+			goto commError;
+		_clearMemory_pushButton->setEnabled(supported);
 		// "Clear Memory 2"-support:
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
-		if (supported)
-			_clearMemory2_pushButton->setEnabled(true);
-		else
-			_clearMemory2_pushButton->setEnabled(false);
+		_clearMemory2_pushButton->setEnabled(supported);
 	}
 	else // CU-connection could not be established
 		goto commError;
