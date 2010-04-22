@@ -251,11 +251,21 @@ bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 	int retDCgroups = 0;
 	if (_state == state_needSetup) return false;
 	if (_DTCdefs.size())
-		retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
+	{
+		retDCgroups |= currentDTCs_DCgroup;
+		for (unsigned int k=0; k<_DTCdefs.size(); k++)
+		{
+			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != SSM1_MEM_ADDR_NONE)
+			{
+				retDCgroups |= historicDTCs_DCgroup;
+				break;
+			}
+		}
+	}
 	*DCgroups = retDCgroups;
 	return true;
 }
-// CHECK: really always Current and Historic DTCs supported ?
+
 
 bool SSMprotocol1::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {

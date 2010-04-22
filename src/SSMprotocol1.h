@@ -54,7 +54,7 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	bool getSupportedDCgroups(int *DCgroups);							// CHECK
+	bool getSupportedDCgroups(int *DCgroups);
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
