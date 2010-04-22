@@ -144,6 +144,7 @@ public:
 	virtual bool hasVINsupport(bool *VINsup) = 0;
 	virtual bool hasImmobilizer(bool *ImmoSup) = 0;
 	virtual bool hasIntegratedCC(bool *CCsup) = 0;
+	virtual bool hasClearMemory(bool *CMsup) = 0;
 	virtual bool hasClearMemory2(bool *CM2sup) = 0;
 	virtual bool hasTestMode(bool *TMsup) = 0;
 	virtual bool hasActuatorTests(bool *ATsup) = 0;

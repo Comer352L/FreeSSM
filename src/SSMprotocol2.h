@@ -53,6 +53,7 @@ public:
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);
 	bool hasIntegratedCC(bool *CCsup);
+	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);

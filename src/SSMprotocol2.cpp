@@ -268,6 +268,14 @@ bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 }
 
 
+bool SSMprotocol2::hasClearMemory(bool *CMsup)
+{
+	if (_state == state_needSetup) return false;
+	*CMsup = true;
+	return true;
+}
+
+
 bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
