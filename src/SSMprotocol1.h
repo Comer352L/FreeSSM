@@ -78,7 +78,7 @@ private slots:
 	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
 
 public slots:
-	void resetCUdata();										// IMPLEMENTATION MISSING
+	void resetCUdata();
 
 };
 

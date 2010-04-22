@@ -1,5 +1,5 @@
 /*
- * SSMprotocol2.cpp - Abstract application layer for the Subaru SSM protocols
+ * SSMprotocol.cpp - Abstract application layer for the Subaru SSM protocols
  *
  * Copyright (C) 2009-2010 Comer352l
  *

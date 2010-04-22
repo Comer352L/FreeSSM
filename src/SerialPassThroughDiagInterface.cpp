@@ -95,7 +95,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 	{
 		if (protocol == AbstractDiagInterface::protocol_SSM1)
 		{
-			if (_port->SetPortSettings(1954, 8, 'E', 1))
+			if (_port->SetPortSettings(1953, 8, 'E', 1))
 			{
 				double baudrate = 0;
 				if(!_port->GetPortSettings(&baudrate))
