@@ -20,7 +20,7 @@
 #include <SSM1definitionsInterface.h>
 
 
-SSM1definitionsInterface::SSM1definitionsInterface(std::string filename, std::string lang, char id[3])
+SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 {
 	_xmldoc = NULL;
 	_defs_root_node = NULL;
@@ -30,8 +30,6 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string filename, std::st
 	_defs_for_id_b3_node = NULL;
 	_lang = lang;
 	_id_set = false;
-	selectDefinitionsFile(filename);
-	selectID(id);
 }
 
 
@@ -58,9 +56,9 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	if (elements.size() != 1)
 		goto error;
 	_datacommon_root_node = elements.at(0);
-	// Find and save definitions node for the current ID:
+	// Find and save definition nodes for the current ID:
 	if (_id_set)
-		findIDnodes();
+		selectID(_ID);
 	return true;
 	
 error:
@@ -81,23 +79,50 @@ void SSM1definitionsInterface::setLanguage(std::string lang)
 }
 
 
-void SSM1definitionsInterface::selectID(char id[3])
+bool SSM1definitionsInterface::selectID(char id[3])
 {
-	if (id)
+	std::vector<TiXmlElement*> elements;
+	std::vector<attributeCondition> attribConditions;
+	attributeCondition attribCondition;
+
+	_id_set = false;
+	_defs_for_id_b1_node = NULL;
+	_defs_for_id_b2_node = NULL;
+	_defs_for_id_b3_node = NULL;
+	if (!_defs_root_node || !_id_set)
+		return false;
+	attribCondition.name = "value";
+	attribCondition.value = "0x" + libFSSM::StrToHexstr(id, 1);
+	attribCondition.condition = attributeCondition::equal;
+	elements = getAllMatchingChildElements(_defs_root_node, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
+	if (elements.size() == 1)
 	{
-		_ID[0] = id[0];
-		_ID[1] = id[1];
-		_ID[2] = id[2];
-		_id_set = true;
-		findIDnodes();
+		_defs_for_id_b1_node = elements.at(0);
+		attribCondition.value = "0x" + libFSSM::StrToHexstr(id+1, 1);
+		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
+		if (elements.size() == 1)
+		{
+			_defs_for_id_b2_node = elements.at(0);
+			attribCondition.name = "value_start";
+			attribCondition.value = "0x" + libFSSM::StrToHexstr(id+2, 1);
+			attribCondition.condition = attributeCondition::equalOrSmaller;
+			attribConditions.push_back(attribCondition);
+			attribCondition.name = "value_end";
+			attribCondition.condition = attributeCondition::equalOrLarger;
+			attribConditions.push_back(attribCondition);
+			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
+			if (elements.size() == 1)
+			{
+				_defs_for_id_b3_node = elements.at(0);
+				_ID[0] = id[0];
+				_ID[1] = id[1];
+				_ID[2] = id[2];
+				_id_set = true;
+				return true;
+			}
+		}
 	}
-	else
-	{
-		_id_set = false;
-		_defs_for_id_b1_node = NULL;
-		_defs_for_id_b2_node = NULL;
-		_defs_for_id_b3_node = NULL;
-	}
+	return false;
 }
 
 
@@ -408,44 +433,6 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 }
 
 // PRIVATE:
-
-void SSM1definitionsInterface::findIDnodes()
-{
-	std::vector<TiXmlElement*> elements;
-	std::vector<attributeCondition> attribConditions;
-	attributeCondition attribCondition;
-
-	_defs_for_id_b1_node = NULL;
-	_defs_for_id_b2_node = NULL;
-	_defs_for_id_b3_node = NULL;
-	if (!_defs_root_node || !_id_set)
-		return;
-	attribCondition.name = "value";
-	attribCondition.value = "0x" + libFSSM::StrToHexstr(_ID, 1);
-	attribCondition.condition = attributeCondition::equal;
-	elements = getAllMatchingChildElements(_defs_root_node, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
-	if (elements.size() == 1)
-	{
-		_defs_for_id_b1_node = elements.at(0);
-		attribCondition.value = "0x" + libFSSM::StrToHexstr(_ID+1, 1);
-		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
-		if (elements.size() == 1)
-		{
-			_defs_for_id_b2_node = elements.at(0);
-			attribCondition.name = "value_start";
-			attribCondition.value = "0x" + libFSSM::StrToHexstr(_ID+2, 1);
-			attribCondition.condition = attributeCondition::equalOrSmaller;
-			attribConditions.push_back(attribCondition);
-			attribCondition.name = "value_end";
-			attribCondition.condition = attributeCondition::equalOrLarger;
-			attribConditions.push_back(attribCondition);
-			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
-			if (elements.size() == 1)
-				_defs_for_id_b3_node = elements.at(0);
-		}
-	}
-}
-
 
 std::vector<TiXmlElement*> SSM1definitionsInterface::getAllMatchingChildElements(TiXmlNode *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
 {

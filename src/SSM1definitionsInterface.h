@@ -36,7 +36,7 @@ public:
 
 	attributeCondition(std::string name="", std::string val="", condition_dt cond=equal)
 	                                        : name(name), value(val), condition(cond) {};
-	
+
 	std::string name;
 	std::string value;
 	condition_dt condition;
@@ -47,10 +47,10 @@ public:
 class SSM1definitionsInterface
 {
 public:
-	SSM1definitionsInterface(std::string filename = "", std::string lang = "", char id[3] = NULL);
+	SSM1definitionsInterface(std::string lang = "en");
 	bool selectDefinitionsFile(std::string filename);
 	void setLanguage(std::string lang);
-	void selectID(char id[3]);
+	bool selectID(char id[3]);
 
 	bool systemDescription(std::string *description);
 	bool model(std::string *name);
@@ -60,7 +60,7 @@ public:
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool clearMemoryData(unsigned int *address, char *value);
-	
+
 private:
 	TiXmlDocument *_xmldoc;
 	std::string _lang;
@@ -73,7 +73,6 @@ private:
 	TiXmlNode *_defs_for_id_b2_node;
 	TiXmlNode *_defs_for_id_b3_node;
 
-	void findIDnodes();
 	std::vector<TiXmlElement*> getAllMatchingChildElements(TiXmlNode *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
 	bool StrToDouble(std::string mystring, double *d);
 };
