@@ -40,7 +40,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
 	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows

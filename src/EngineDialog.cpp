@@ -42,7 +42,7 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 	pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( systemoperationtests() ) );
 	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	// Load/Show Diagnostic Code content:
 	_content_DCs = new CUcontent_DCs_engine();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
