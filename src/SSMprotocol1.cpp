@@ -98,12 +98,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	if (CU == CUtype_Engine)
 	{
 		SSM1_CU = SSM1_CU_Engine;
-		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_ECU.xml";
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_Engine.xml";
 	}
 	else if (CU == CUtype_Transmission)
 	{
 		SSM1_CU = SSM1_CU_Transmission;
-		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_TCU.xml";
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_Transmission.xml";
 	}
 	else if (CU == CUtype_CruiseControl)
 	{
