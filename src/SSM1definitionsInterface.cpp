@@ -89,7 +89,7 @@ bool SSM1definitionsInterface::selectID(char id[3])
 	_defs_for_id_b1_node = NULL;
 	_defs_for_id_b2_node = NULL;
 	_defs_for_id_b3_node = NULL;
-	if (!_defs_root_node || !_id_set)
+	if (!_defs_root_node)
 		return false;
 	attribCondition.name = "value";
 	attribCondition.value = "0x" + libFSSM::StrToHexstr(id, 1);
