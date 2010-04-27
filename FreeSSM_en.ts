@@ -844,19 +844,19 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="164"/>
+        <location filename="src/ControlUnitDialog.cpp" line="193"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="164"/>
+        <location filename="src/ControlUnitDialog.cpp" line="193"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Communication Error:
 - No or invalid answer from ECU -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="181"/>
+        <location filename="src/ControlUnitDialog.cpp" line="210"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation type="unfinished">Stopping Communication... Please wait !</translation>
@@ -899,117 +899,142 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
         <translation type="unfinished">Engine Control Unit</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="34"/>
+        <location filename="src/EngineDialog.cpp" line="35"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnostic Codes</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="37"/>
+        <location filename="src/EngineDialog.cpp" line="38"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="39"/>
+        <location filename="src/EngineDialog.cpp" line="40"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Adjustments</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="41"/>
+        <location filename="src/EngineDialog.cpp" line="42"/>
         <source>System &amp;Tests</source>
         <translation type="unfinished">System &amp;Tests</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="43"/>
+        <location filename="src/EngineDialog.cpp" line="44"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="47"/>
-        <location filename="src/EngineDialog.cpp" line="191"/>
+        <location filename="src/EngineDialog.cpp" line="48"/>
+        <location filename="src/EngineDialog.cpp" line="227"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnostic Codes:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="69"/>
+        <location filename="src/EngineDialog.cpp" line="70"/>
         <source>Connecting to ECU... Please wait !</source>
         <translation type="unfinished">Connecting to ECU... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="70"/>
+        <location filename="src/EngineDialog.cpp" line="71"/>
         <source>Connecting to ECU...</source>
         <translation type="unfinished">Connecting to ECU...</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="77"/>
+        <location filename="src/EngineDialog.cpp" line="79"/>
         <source>Processing ECU data... Please wait !</source>
         <translation type="unfinished">Processing ECU data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="89"/>
+        <location filename="src/EngineDialog.cpp" line="91"/>
         <source>unknown</source>
         <translation type="unfinished">unknown</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="114"/>
+        <location filename="src/EngineDialog.cpp" line="118"/>
         <source>Reading Vehicle Ident. Number... Please wait !</source>
         <translation type="unfinished">Reading Vehicle Ident. Number... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="131"/>
+        <location filename="src/EngineDialog.cpp" line="135"/>
         <source>Checking system status... Please wait !</source>
         <translation type="unfinished">Checking system status... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="144"/>
+        <location filename="src/EngineDialog.cpp" line="148"/>
         <source>Stopping actuators... Please wait !</source>
         <translation type="unfinished">Stopping actuators... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="167"/>
+        <location filename="src/EngineDialog.cpp" line="172"/>
         <source>ECU-initialisation successful !</source>
         <translation type="unfinished">ECU-initialisation successful !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="187"/>
+        <location filename="src/EngineDialog.cpp" line="188"/>
+        <source>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</source>
+        <translation type="unfinished">Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="192"/>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation type="unfinished">Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="194"/>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="221"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="216"/>
+        <location filename="src/EngineDialog.cpp" line="253"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="220"/>
+        <location filename="src/EngineDialog.cpp" line="259"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="242"/>
+        <location filename="src/EngineDialog.cpp" line="282"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="246"/>
+        <location filename="src/EngineDialog.cpp" line="288"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Adjustments:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="265"/>
+        <location filename="src/EngineDialog.cpp" line="308"/>
         <source>Switching to System Tests... Please wait !</source>
         <oldsource>Switching to System Tests... Please wait !   </oldsource>
         <translation type="unfinished">Switching to System Tests... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="269"/>
+        <location filename="src/EngineDialog.cpp" line="314"/>
         <source>System Operation Tests:</source>
         <translation type="unfinished">System Operation Tests:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="298"/>
+        <location filename="src/EngineDialog.cpp" line="345"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
@@ -1167,29 +1192,29 @@ Maybe the device is already in use by another application...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="170"/>
-        <location filename="src/Preferences.cpp" line="387"/>
-        <location filename="src/Preferences.cpp" line="431"/>
+        <location filename="src/Preferences.cpp" line="171"/>
+        <location filename="src/Preferences.cpp" line="390"/>
+        <location filename="src/Preferences.cpp" line="434"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="212"/>
+        <location filename="src/Preferences.cpp" line="214"/>
         <source>Serial Port:</source>
         <translation type="unfinished">Serial Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="226"/>
+        <location filename="src/Preferences.cpp" line="222"/>
         <source>Interface-Name:</source>
         <translation type="unfinished">Interface-Name:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="275"/>
+        <location filename="src/Preferences.cpp" line="278"/>
         <source>The selected interface is not supported !</source>
         <translation type="unfinished">The selected interface is not supported !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="276"/>
+        <location filename="src/Preferences.cpp" line="279"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</source>
@@ -1201,76 +1226,76 @@ The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="284"/>
+        <location filename="src/Preferences.cpp" line="287"/>
         <source>Couldn&apos;t configure the diagnostic interface !</source>
         <translation type="unfinished">Couldn&apos;t configure the diagnostic interface !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="292"/>
+        <location filename="src/Preferences.cpp" line="295"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</source>
         <translation type="unfinished">Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="300"/>
+        <location filename="src/Preferences.cpp" line="303"/>
         <source>Please connect diagnostic interface to the vehicles
 OBD-connector and switch ignition on.</source>
         <translation type="unfinished">Please connect diagnostic interface to the vehicles
 OBD-connector and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="301"/>
+        <location filename="src/Preferences.cpp" line="304"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="302"/>
-        <location filename="src/Preferences.cpp" line="334"/>
+        <location filename="src/Preferences.cpp" line="305"/>
+        <location filename="src/Preferences.cpp" line="337"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancel</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="319"/>
+        <location filename="src/Preferences.cpp" line="322"/>
         <source>Testing interface... Please wait !     </source>
         <translation type="unfinished">Testing interface... Please wait !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
+        <location filename="src/Preferences.cpp" line="336"/>
         <source>Retry</source>
         <translation type="unfinished">Retry</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="170"/>
+        <location filename="src/Preferences.cpp" line="171"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Error:
 - Language file missing or damaged -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="300"/>
-        <location filename="src/Preferences.cpp" line="332"/>
-        <location filename="src/Preferences.cpp" line="348"/>
+        <location filename="src/Preferences.cpp" line="303"/>
+        <location filename="src/Preferences.cpp" line="335"/>
+        <location filename="src/Preferences.cpp" line="351"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="332"/>
+        <location filename="src/Preferences.cpp" line="335"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface test failed !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="348"/>
+        <location filename="src/Preferences.cpp" line="351"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface test successful !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="363"/>
+        <location filename="src/Preferences.cpp" line="366"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation type="unfinished">Couldn&apos;t close the diagnostic interface !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="387"/>
+        <location filename="src/Preferences.cpp" line="390"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1359,91 +1384,116 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
         <translation type="unfinished">Transmission Control Unit</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="34"/>
+        <location filename="src/TransmissionDialog.cpp" line="35"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnostic Codes</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="37"/>
+        <location filename="src/TransmissionDialog.cpp" line="38"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="39"/>
+        <location filename="src/TransmissionDialog.cpp" line="40"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Adjustments</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="41"/>
+        <location filename="src/TransmissionDialog.cpp" line="42"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="43"/>
+        <location filename="src/TransmissionDialog.cpp" line="44"/>
         <source>Clear Memory 2</source>
         <translation type="unfinished">Clear Memory 2</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="48"/>
-        <location filename="src/TransmissionDialog.cpp" line="150"/>
+        <location filename="src/TransmissionDialog.cpp" line="49"/>
+        <location filename="src/TransmissionDialog.cpp" line="185"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnostic Codes:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="68"/>
+        <location filename="src/TransmissionDialog.cpp" line="69"/>
         <source>Connecting to TCU... Please wait !</source>
         <translation type="unfinished">Connecting to TCU... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="69"/>
+        <location filename="src/TransmissionDialog.cpp" line="70"/>
         <source>Connecting to TCU...</source>
         <translation type="unfinished">Connecting to TCU...</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="76"/>
+        <location filename="src/TransmissionDialog.cpp" line="78"/>
         <source>Processing TCU data... Please wait !</source>
         <translation type="unfinished">Processing TCU data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="88"/>
+        <location filename="src/TransmissionDialog.cpp" line="90"/>
         <source>unknown</source>
         <translation type="unfinished">unknown</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="126"/>
+        <location filename="src/TransmissionDialog.cpp" line="128"/>
         <source>TCU-initialisation successful !</source>
         <translation type="unfinished">TCU-initialisation successful !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
+        <source>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</source>
+        <translation type="unfinished">Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="150"/>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation type="unfinished">Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="152"/>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="179"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="177"/>
+        <location filename="src/TransmissionDialog.cpp" line="213"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="181"/>
+        <location filename="src/TransmissionDialog.cpp" line="219"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Measuring Blocks:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="203"/>
+        <location filename="src/TransmissionDialog.cpp" line="242"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Switching to Adjustment Values... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="207"/>
+        <location filename="src/TransmissionDialog.cpp" line="248"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Adjustments:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="247"/>
+        <location filename="src/TransmissionDialog.cpp" line="290"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Reading Adjustment Values... Please wait !</translation>
@@ -1624,8 +1674,9 @@ You should have received a copy of the GNU General Public License along with thi
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="570"/>
-        <source>Written by Comer352l (Copyright © 2008-2009)</source>
-        <translation type="unfinished">Written by Comer352l (Copyright © 2008-2009)</translation>
+        <source>Written by Comer352l (Copyright © 2008-2010)</source>
+        <oldsource>Written by Comer352l (Copyright © 2008-2009)</oldsource>
+        <translation type="unfinished">Written by Comer352l (Copyright © 2008-2010)</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="704"/>
