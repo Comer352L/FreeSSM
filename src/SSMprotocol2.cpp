@@ -119,13 +119,13 @@ void SSMprotocol2::resetCUdata()
 }
 
 
-bool SSMprotocol2::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 {
 	return setupCUdata(CU, false);
 }
 
 
-bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
 	bool ATsup = false;
@@ -142,19 +142,20 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 		CUaddress = '\x18';
 	}
 	else
-		return false;
+		return result_invalidCUtype;
 	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
-		 return false;
+		 return result_commError;
 	// Ensure that ignition switch is ON:
 	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
 		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
-			return false;
-		if (!(data & 0x08)) return false;
+			return result_commError;
+		if (!(data & 0x08))
+			return result_commError;
 	}
 	_CU = CU;
 	_state = state_normal;
@@ -175,7 +176,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	hasActuatorTests(&ATsup);
 	if (ATsup)
 		setupActuatorTestData();
-	return true;
+	return result_success;
 }
 
 

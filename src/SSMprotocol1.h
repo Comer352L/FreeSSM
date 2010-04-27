@@ -41,7 +41,7 @@ public:
 	SSMprotocol1(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
+	CUsetupResult_dt setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
 	protocol_dt protocolType() { return SSM1; };
 	std::string getSysID();
 	std::string getROMID();

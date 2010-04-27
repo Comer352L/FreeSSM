@@ -88,7 +88,7 @@ void SSMprotocol1::resetCUdata()
 }
 
 
-bool SSMprotocol1::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
 	std::string defsFile;
 	SSM1_CUtype_dt SSM1_CU;
@@ -118,11 +118,11 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 		SSM1_CU = SSM1_CU_FourWS;
 	}
 	else
-		return false;
+		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
 	if (!_SSMP1com->readID(_ID))
-		 return false;
+		 return result_commError;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
@@ -130,21 +130,21 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	// Load control unit definitions:
 	SSM1definitionsInterface defsIface;
-	if (defsIface.selectDefinitionsFile(defsFile))
-	{
-		defsIface.setLanguage(_language.toStdString());
-		defsIface.selectID(_ID);
-		// Get system description:
-		defsIface.systemDescription(&_sysDescription);
-		// Get definitions of the supported diagnostic codes:
-		defsIface.diagnosticCodes(&_DTCdefs);
-		// Get supported MBs and SWs:
-		defsIface.measuringBlocks(&_supportedMBs);
-		defsIface.switches(&_supportedSWs);
-		// Get Clear Memory data:
-		defsIface.clearMemoryData(&_CMaddr, &_CMvalue);
-	}
-	return true;
+	if (!defsIface.selectDefinitionsFile(defsFile))
+		return result_noDefFile;
+	defsIface.setLanguage(_language.toStdString());
+	if (!defsIface.selectID(_ID))
+		return result_noDefs;
+	// Get system description:
+	defsIface.systemDescription(&_sysDescription);
+	// Get definitions of the supported diagnostic codes:
+	defsIface.diagnosticCodes(&_DTCdefs);
+	// Get supported MBs and SWs:
+	defsIface.measuringBlocks(&_supportedMBs);
+	defsIface.switches(&_supportedSWs);
+	// Get Clear Memory data:
+	defsIface.clearMemoryData(&_CMaddr, &_CMvalue);
+	return result_success;
 	
 	/* TODO:
 		- setup test-addresses for Immobilizer-communication-line
