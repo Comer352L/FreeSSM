@@ -108,14 +108,17 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	else if (CU == CUtype_CruiseControl)
 	{
 		SSM1_CU = SSM1_CU_CruiseCtrl;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_CC.xml";
 	}
 	else if (CU == CUtype_AirCon)
 	{
 		SSM1_CU = SSM1_CU_AirCon;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AC.xml";
 	}
 	else if (CU == CUtype_FourWheelSteering)
 	{
 		SSM1_CU = SSM1_CU_FourWS;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_4WS.xml";
 	}
 	else
 		return result_invalidCUtype;
