@@ -488,19 +488,19 @@ void SSMprotocol2::setupSupportedMBs()
 				{
 					// Get memory address (low) definition:
 					tmpstr = mbdefline.section(';', 3, 3);
-					tmpMB.adr_low = tmpstr.toUInt(&ok, 16);
+					tmpMB.addr_low = tmpstr.toUInt(&ok, 16);
 					// Check if memory address (low) is valid:
-					if (ok && (tmpMB.adr_low > 0))
+					if (ok && (tmpMB.addr_low > 0))
 					{
 						// Get memory address (high) definition:
 						tmpstr = mbdefline.section(';', 4, 4);
 						if (!tmpstr.isEmpty())
-							tmpMB.adr_high = tmpstr.toUInt(&ok, 16);
+							tmpMB.addr_high = tmpstr.toUInt(&ok, 16);
 						// Check if memory address (high) is unused OR valid (only 16bit MBs):
-						if ((tmpstr.isEmpty()) || (ok && (tmpMB.adr_high > 0)))	// if valid or no high byte memory address available
+						if ((tmpstr.isEmpty()) || (ok && (tmpMB.addr_high > 0)))	// if valid or no high byte memory address available
 						{
 							if (tmpstr.isEmpty())
-								tmpMB.adr_high = 0;
+								tmpMB.addr_high = 0;
 							// Get title definition:
 							tmpMB.title = mbdefline.section(';', 5, 5);
 							// Check if title is available:
@@ -592,9 +592,9 @@ void SSMprotocol2::setupSupportedSWs()
 				{
 					// Get memory address definition:
 					tmpstr = swdefline.section(';', 3, 3);
-					tmpSW.byteadr = tmpstr.toInt(&ok, 16);
+					tmpSW.byteAddr = tmpstr.toInt(&ok, 16);
 					// Check if memory address is valid:
-					if (ok && (tmpSW.byteadr > 0))
+					if (ok && (tmpSW.byteAddr > 0))
 					{
 						// Get title definition:
 						tmpSW.title = swdefline.section(';', 4, 4);
@@ -607,7 +607,7 @@ void SSMprotocol2::setupSupportedSWs()
 							{
 								// ***** SWITCH IS SUPPORTED BY CU AND DEFINITION IS VALID *****
 								// Put switch data on the list:
-								tmpSW.bitadr = static_cast<unsigned char>(tmpbitnr);
+								tmpSW.bitAddr = static_cast<unsigned char>(tmpbitnr);
 								_supportedSWs.push_back(tmpSW);
 							}
 						}

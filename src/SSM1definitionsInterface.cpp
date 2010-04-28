@@ -319,8 +319,8 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 		if (addr > 0xffff)
 			continue;
-		mb.adr_high = (addr & 0xffff) >> 2;
-		mb.adr_low = addr & 0xff;
+		mb.addr_high = (addr & 0xffff) >> 2;
+		mb.addr_low = addr & 0xff;
 		// --- Get common data ---
 		// Find MB data:
 		TiXmlElement *MBdata_element = NULL;
@@ -383,7 +383,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 		unsigned long int byteaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 		if (byteaddr > 0xffff)
 			continue;
-		sw.byteadr = byteaddr;
+		sw.byteAddr = byteaddr;
 		// Get switches:
 		std::vector<TiXmlElement*> SW_elements;
 		SW_elements = getAllMatchingChildElements(SWblock_elements.at(b), "SW");
@@ -401,7 +401,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			unsigned long int bitaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
-			sw.bitadr = bitaddr;
+			sw.bitAddr = bitaddr;
 			// --- Get common data ---:
 			// Find SW data:
 			TiXmlElement *SWdata_element = NULL;

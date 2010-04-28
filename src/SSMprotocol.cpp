@@ -219,7 +219,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
 					// COMPARE ADDRESS:
-					if (_selMBsSWsAddr.at(m) == (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low))
+					if (_selMBsSWsAddr.at(m) == (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low))
 					{
 						newadr = false;
 						break;
@@ -230,7 +230,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 					// CHECK IF CURRENT SW IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedSWs.size()) return false;
 					// COMPARE ADDRESS:
-					if (_selMBsSWsAddr.at(m) == (_supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr))
+					if (_selMBsSWsAddr.at(m) == (_supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr))
 					{
 						newadr = false;
 						break;
@@ -244,13 +244,13 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 			if (MBSWmetaList.at(k).blockType == 0)
 			{
 				// ADD ADDRESS(ES) OF CURRENT MB TO LIST:
-				_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_low );
-				if (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high > 0)
-					_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).adr_high );
+				_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low );
+				if (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_high > 0)
+					_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_high );
 			}
 			else
 				// ADD ADDRESS OF CURRENT SW TO LIST:
-				_selMBsSWsAddr.push_back( _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteadr );
+				_selMBsSWsAddr.push_back( _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr );
 		}
 	}
 	return true;
@@ -280,12 +280,12 @@ void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsig
 			if (_MBSWmetaList.at(k).blockType == 0)
 			{
 				// COMPARE ADDRESSES:
-				if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_low)
+				if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
 					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m));
 				}
-				else if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).adr_high)
+				else if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
 					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
@@ -293,10 +293,10 @@ void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsig
 			}
 			else
 			{
-				if (_selMBsSWsAddr.at(m) == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteadr)
+				if (_selMBsSWsAddr.at(m) == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteAddr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitadr -1) ) ) )	// IF ADDRESS BIT IS SET
+					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitAddr -1) ) ) )	// IF ADDRESS BIT IS SET
 						mbswrawvalues->at(k) = 1;
 					else	// IF ADDRESS BIT IS NOT SET
 						mbswrawvalues->at(k) = 0;

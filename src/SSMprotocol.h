@@ -65,16 +65,16 @@ public:
 class  mb_intl_dt: public mb_dt
 {
 public:
-	unsigned int adr_low;
-	unsigned int adr_high;
+	unsigned int addr_low;
+	unsigned int addr_high;
 };
 
 
 class sw_intl_dt : public sw_dt
 {
 public:
-	unsigned int  byteadr;
-	unsigned char bitadr;
+	unsigned int  byteAddr;
+	unsigned char bitAddr;
 };
 
 
