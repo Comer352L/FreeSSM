@@ -78,8 +78,13 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	ROM_ID_old = _SSMP2dev->getROMID();
 	if (!ROM_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
-	if (!_SSMP2dev->getAllAdjustmentValues(&oldAdjVal))
+	if (!_SSMP2dev->getSupportedAdjustments(&supAdj))
 		return ClearMemoryDlg::CMresult_communicationError;
+	if (supAdj.size())
+	{
+		if (!_SSMP2dev->getAllAdjustmentValues(&oldAdjVal))
+			return ClearMemoryDlg::CMresult_communicationError;
+	}
 	// Clear Memory:
 	ok = _SSMP2dev->ClearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
