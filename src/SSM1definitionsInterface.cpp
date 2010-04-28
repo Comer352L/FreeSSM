@@ -172,7 +172,7 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 	TiXmlElement *addr_element;
 	if (!_defs_for_id_b3_node)
 		return false;
-	elements = getAllMatchingChildElements(_defs_for_id_b3_node, "CLEARMEMORY");
+	elements = getAllMatchingChildElements(_defs_for_id_b2_node, "CLEARMEMORY");
 	if (elements.size() != 1)
 		return false;
 	CM_element = elements.at(0);
