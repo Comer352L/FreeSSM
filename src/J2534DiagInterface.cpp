@@ -208,58 +208,58 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			if (_j2534->libraryAPIversion() == J2534_API_v0202)
 				goto err_close;
 		}
-		// Timing parameters (MANDATORY):
-		// NOTE: P1_MIN, P2_MIN, P3_MAX, P4_MAX are not adjustable
-		CfgItems[0].Parameter = P4_MIN;     // min. tester inter-byte time [ms]
-		CfgItems[0].Value = 0;   // ISO-9141, ISO-14230: default 5ms
-		Input.NumOfParams = 1;
-		Input.ConfigPtr = CfgItems;
-		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
-#endif
-			goto err_close;
-		}
-		// Timing parameters (NOT MANDATORY):
-		// NOTE: we should be able to deal with other values
+		// P1_MAX
 		CfgItems[0].Parameter = P1_MAX;     // max. ECU inter-byte time [ms]
 		CfgItems[0].Value = 2;   // ISO-9141, ISO-14230 (normal timing paramter-set): 20ms
 		Input.NumOfParams = 1;
 		Input.ConfigPtr = CfgItems;
 		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
 #ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
 			printErrorDescription("PassThruIoctl() for P1_MAX: ", ret);
 #endif
-			goto err_close;
-		}
+		// P2_MAX
+		/* NOTE:
+		 * According to ISO-9141+ISO-14230, a tester should return with a timeout error,
+		 * if no message is recieved within this period.
+		 * The ISO-9141+ISO-14230 standard value (normal timing paramter-set) is 50ms,
+		 * which is MUCH smaller than the value used for the SSM2 protocol (some seconds !).
+		 * 
+		 * It is nevertheless likely that testers will NOT timeout if this value is to small,
+		 * but respect the timeout parameter passed to PassThruReadMsgs() instead.
+		 * This behavior has been confirmed for the Tactrix OpenPort 2.0 interface, 
+		 * which doesn't support setting the P2_MAX value.
+		*/
 		CfgItems[0].Parameter = P2_MAX;     // max. ECU response time [ms] to a tester request or between ECU responses
 		CfgItems[0].Value = 3000;  // ISO-9141, ISO-14230 (normal timing paramter-set): 50ms
 		Input.NumOfParams = 1;
 		Input.ConfigPtr = CfgItems;
 		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
 #ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
 			printErrorDescription("PassThruIoctl() for P2_MAX: ", ret);
 #endif
-			goto err_close;
-		}
+		// P3_MIN
 		CfgItems[0].Parameter = P3_MIN;     // min. time [ms] between end of ECU reponse and next tester request
 		CfgItems[0].Value = 10;  // ISO-9141, ISO-14230: default 55ms
 		Input.NumOfParams = 1;
 		Input.ConfigPtr = CfgItems;
 		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
 #ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
 			printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
 #endif
-			goto err_close;
-		}
+		// P4_MIN
+		CfgItems[0].Parameter = P4_MIN;     // min. tester inter-byte time [ms]
+		CfgItems[0].Value = 0;   // ISO-9141, ISO-14230: default 5ms
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
+#endif
+		// NOTE: timing parameters P1_MIN, P2_MIN, P3_MAX, P4_MAX are not adjustable
 		// Data bits:
 		CfgItems[0].Parameter = DATA_BITS;
 		CfgItems[0].Value = 8;	// should be default
