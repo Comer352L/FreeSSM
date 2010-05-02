@@ -261,15 +261,18 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #endif
 		// NOTE: timing parameters P1_MIN, P2_MIN, P3_MAX, P4_MAX are not adjustable
 		// Data bits:
-		CfgItems[0].Parameter = DATA_BITS;
-		CfgItems[0].Value = 8;	// should be default
-		Input.NumOfParams = 1;
-		Input.ConfigPtr = CfgItems;
-		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		if (_j2534->libraryAPIversion() == J2534_API_v0404)
+		{
+			CfgItems[0].Parameter = DATA_BITS;
+			CfgItems[0].Value = 8;	// should be default
+			Input.NumOfParams = 1;
+			Input.ConfigPtr = CfgItems;
+			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
-		if (STATUS_NOERROR != ret)
-			printErrorDescription("PassThruIoctl() for parameter DATA_BITS failed: ", ret);
+			if (STATUS_NOERROR != ret)
+				printErrorDescription("PassThruIoctl() for parameter DATA_BITS failed: ", ret);
 #endif
+		}
 		// Parity:
 		CfgItems[0].Parameter = PARITY;
 		CfgItems[0].Value = NO_PARITY;
