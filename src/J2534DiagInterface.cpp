@@ -281,11 +281,13 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			printErrorDescription("PassThruIoctl() for parameter PARITY failed: ", ret);
 #endif
 		/* END OF SET CONFIGURATION */
-		// APPLY FILTER (Receive all messages) => MANDATORY
+		// APPLY FILTER (Receive all messages)
 		PASSTHRU_MSG MaskMsg;
 		PASSTHRU_MSG PatternMsg;
-		memset(&MaskMsg, 0, sizeof(MaskMsg));   // .Data=0-array means "do not examine any bits"
-		memset(&PatternMsg, 0, sizeof(PatternMsg)); // .Data must be zero, if no Data bits are examined
+		memset(&MaskMsg, 0, sizeof(MaskMsg));		// .Data=0-array means "do not examine any bits"
+		memset(&PatternMsg, 0, sizeof(PatternMsg));	// .Data must be zero, if no Data bits are examined
+		MaskMsg.DataSize = 1;
+		PatternMsg.DataSize = 1;
 		MaskMsg.ProtocolID = ISO9141;
 		PatternMsg.ProtocolID = ISO9141;
 		ret = _j2534->PassThruStartMsgFilter(_ChannelID, PASS_FILTER, &MaskMsg, &PatternMsg, NULL, &_FilterID);
