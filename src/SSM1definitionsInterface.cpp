@@ -340,9 +340,15 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 			continue;
 		mb.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
 		// Get unit:
-		tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT");
+		attribCond.value = "all";
+		tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
-			continue;
+		{
+			attribCond.value = _lang;
+			tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
+			if (tmp_elements.size() != 1)
+				continue;
+		}
 		mb.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
 		// Get formula:
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "FORMULA");
@@ -421,9 +427,14 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 				continue;
 			sw.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
 			// Get unit:
-			tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT");
+			tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
-				continue;
+			{
+				attribCond.value = "all";
+				tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
+				if (tmp_elements.size() != 1)
+					continue;
+			}
 			sw.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
 			// Add SW to the list:
 			sws->push_back(sw);
