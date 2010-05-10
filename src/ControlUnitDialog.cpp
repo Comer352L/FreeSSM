@@ -144,9 +144,9 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 	   if receive buffer flushing doesn't work reliable with the used serial port driver !
 	*/
 	SSMprotocol::CUsetupResult_dt result = SSMprotocol::result_commError;
-	// Probe SSM2-protocol:
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
+		// Probe SSM2-protocol:
 		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
 		{
 			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
@@ -158,23 +158,23 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 				delete _SSMPdev;
 				_SSMPdev = NULL;
 				_diagInterface->disconnect();
-				if (result == SSMprotocol::result_commError)
-				{
-					// Probe SSM1-protocol:
-					if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
-					{
-						_SSMPdev = new SSMprotocol1(_diagInterface, _language);
-						result = _SSMPdev->setupCUdata( CUtype );
-						if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noDefFile) || (result == SSMprotocol::result_noDefs))
-							connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-						else
-						{
-							delete _SSMPdev;
-							_SSMPdev = NULL;
-							_diagInterface->disconnect();
-						}
-					}
-				}
+			}
+		}
+	}
+	if (_SSMPdev == NULL)
+	{
+		// Probe SSM1-protocol:
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
+		{
+			_SSMPdev = new SSMprotocol1(_diagInterface, _language);
+			result = _SSMPdev->setupCUdata( CUtype );
+			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noDefFile) || (result == SSMprotocol::result_noDefs))
+				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+			else
+			{
+				delete _SSMPdev;
+				_SSMPdev = NULL;
+				_diagInterface->disconnect();
 			}
 		}
 	}
