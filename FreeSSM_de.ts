@@ -502,23 +502,23 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="57"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="921"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="923"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Aktualisierungsdauer:</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="55"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="914"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="943"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="943"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Kommunikationsfehler:
@@ -704,52 +704,52 @@ ist offenbar (nach +) kurzgeschlossen !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="179"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="284"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="289"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="196"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="201"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="197"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="202"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Adjustment Value restoration failed:
 The Control Unit didn&apos;t accept some of the values !</source>
         <translation type="unfinished">Wiederherstellung der Einstellwerte fehlgeschlagen:
 Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Please check current values !</source>
         <translation type="unfinished">Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="287"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="292"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Bitte schalten Sie die Zündung wieder EIN.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="288"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="293"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="289"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="294"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Steuergerät verlassen </translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="57"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="182"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="191"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="187"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="196"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (Stufe 2)</translation>
     </message>
@@ -759,13 +759,13 @@ Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
         <translation type="unfinished">Lösche Speicher</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="93"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="98"/>
         <source>Please switch ignition OFF and be patient...</source>
         <oldsource>Please switch ignition OFF and be patient...   </oldsource>
         <translation type="unfinished">Bitte Zündung ausschalten und warten...</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="294"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="299"/>
         <source>Reconnecting... Please wait !</source>
         <oldsource>Reconnecting... Please wait !   </oldsource>
         <translation type="unfinished">Verbindung wird wieder hergestellt... Bitte warten !</translation>
@@ -776,64 +776,64 @@ Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
         <translation type="unfinished">... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="243"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="248"/>
         <source>Restoring Adjustment Values... Please wait !</source>
         <oldsource>Restoring Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Einstellwerte werden wiederhergestellt... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="217"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="222"/>
         <source>Restore Adjustment Values ?</source>
         <translation type="unfinished">Einstellwerte wiederherstellen ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="218"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="223"/>
         <source>Shall the last Adjustment Values be restored ?</source>
         <translation type="unfinished">Sollen die letzten Einstellwerte wiederhergestellt werden ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="221"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="226"/>
         <source>Restore</source>
         <translation type="unfinished">Wiederherstellen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="222"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="227"/>
         <source>Keep default values</source>
         <translation type="unfinished">Standardwerte behalten</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>The Clear Memory procedure</source>
         <translation type="unfinished">Die Speicher-Löschprozedur</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="183"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="188"/>
         <source>
 - clears the Diagnostic Codes</source>
         <translation type="unfinished">
 - löscht sämtliche Diagnosecodes</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="189"/>
         <source>
 - resets all non-permanent Adjustment Values</source>
         <translation type="unfinished">
 - setzt alle nicht-permanenten Einstellwerte zurück</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="191"/>
         <source>
 - resets the Control Units&apos; learning values</source>
         <translation type="unfinished">
 - setzt die Lernwerte des Steuergeräts zurück</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="187"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="192"/>
         <source>
 
 Do you really want to clear the Control Units&apos; memory</source>
@@ -1194,8 +1194,8 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
     <name>Preferences</name>
     <message>
         <location filename="src/Preferences.cpp" line="171"/>
-        <location filename="src/Preferences.cpp" line="390"/>
-        <location filename="src/Preferences.cpp" line="434"/>
+        <location filename="src/Preferences.cpp" line="425"/>
+        <location filename="src/Preferences.cpp" line="469"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
@@ -1227,42 +1227,63 @@ Der Interface-Test für das gewählte Inteface wurde noch nicht implementiert.
 =&gt; Bitte melden Sie dies als Programm-Fehler.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="287"/>
-        <source>Couldn&apos;t configure the diagnostic interface !</source>
-        <translation type="unfinished">Das Diagnose-Interface konnte nicht konfiguriert werden !</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="295"/>
-        <source>Couldn&apos;t open the diagnostic interface !
-Maybe the device is already in use by another application...</source>
-        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
-Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="303"/>
-        <source>Please connect diagnostic interface to the vehicles
-OBD-connector and switch ignition on.</source>
-        <translation type="unfinished">Diagnose-Interface mit der OBD-Buchse des Fahrzeugs
-verbinden und Zündung einschalten.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="304"/>
+        <location filename="src/Preferences.cpp" line="292"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="305"/>
-        <location filename="src/Preferences.cpp" line="337"/>
+        <location filename="src/Preferences.cpp" line="293"/>
+        <location filename="src/Preferences.cpp" line="386"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="322"/>
+        <location filename="src/Preferences.cpp" line="313"/>
         <source>Testing interface... Please wait !     </source>
         <translation type="unfinished">Teste Interface... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="336"/>
+        <location filename="src/Preferences.cpp" line="354"/>
+        <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann weder für das SSM1- noch das SSM2-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="356"/>
+        <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
+        <translation type="unfinished">Das gewählte Interface unterstützt weder das SSM1- noch das SSM2-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="360"/>
+        <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
+        <translation type="unfinished">Bitte stellen sie sicher, dass das Interface korrekt angeschlossen ist und die Zündung eigeschaltet ist.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="364"/>
+        <source>WARNING:</source>
+        <translation type="unfinished">WARNUNG:</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="368"/>
+        <source>The selected serial port can not be configured for the SSM1-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann nicht für das SSM1-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="370"/>
+        <source>The selected interface does not support the SSM1-protocol.</source>
+        <translation type="unfinished">Der gewählte Interface bietet keine Unterstützung für das SSM1-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="375"/>
+        <source>The selected serial port can not be configured for the SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann nicht für das SSM2-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="377"/>
+        <source>The selected interface does not support the SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="385"/>
         <source>Retry</source>
         <translation type="unfinished">Wiederholen</translation>
     </message>
@@ -1274,29 +1295,43 @@ verbinden und Zündung einschalten.</translation>
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="303"/>
-        <location filename="src/Preferences.cpp" line="335"/>
-        <location filename="src/Preferences.cpp" line="351"/>
+        <location filename="src/Preferences.cpp" line="285"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Please make sure that the device is not in use by another application.</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
+Bitte stellen sie sicher, dass das Gerät von keiner anderen Anwendung verwendet wird.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="291"/>
+        <location filename="src/Preferences.cpp" line="381"/>
+        <location filename="src/Preferences.cpp" line="384"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="335"/>
+        <location filename="src/Preferences.cpp" line="291"/>
+        <source>Please connect diagnostic interface to the vehicles
+diagnostic connector and switch ignition on.</source>
+        <translation type="unfinished">Diagnose-Interface mit der Diagnose-Buchse des Fahrzeugs
+verbinden und Zündung einschalten.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="350"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="351"/>
+        <location filename="src/Preferences.cpp" line="348"/>
         <source>Interface test successful !</source>
         <translation type="unfinished">Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="366"/>
+        <location filename="src/Preferences.cpp" line="401"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation type="unfinished">Das Diagnose-Interface konnte nicht geschlossen werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="390"/>
+        <location filename="src/Preferences.cpp" line="425"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
