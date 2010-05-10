@@ -160,10 +160,6 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 				_diagInterface->disconnect();
 				if (result == SSMprotocol::result_commError)
 				{
-					// Wait 500ms:
-					QEventLoop el;
-					QTimer::singleShot(500, &el, SLOT(quit()));
-					el.exec();
 					// Probe SSM1-protocol:
 					if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
 					{
