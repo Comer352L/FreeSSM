@@ -1,3 +1,8 @@
+v1.2.4 (15.05.2010):
+  - Potenziellen Kommunikationsfehler beim Löschen des Speichers von
+    E-4AT-Getriebesteuergeräten MJ2005+ behoben
+  - Einheiten von 3 Schaltern der Getriebesteuerung korrogiert
+
 v1.2.3 (20.04.2010):
   - Fehler bei der Aktualiserung der Fehlercode-Tabellen in Verbindung mit
     Systemen ohne OBD2 behoben
