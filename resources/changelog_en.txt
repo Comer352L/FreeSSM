@@ -1,3 +1,8 @@
+v1.2.4 (15.05.2010):
+  - Fixed a potential communication error when clearing the memory of
+    2005+ E-4AT transmission controllers
+  - Fixed the units of 3 switches for transmission controllers
+
 v1.2.3 (20.04.2010):
   - Fixed DTC-tables not beeing updated on systems without OBD2
   - Fixed GUI-layout when using the GTK+-style
