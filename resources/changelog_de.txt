@@ -1,17 +1,27 @@
+v1.2.5 (26.05.2010):
+  - Fehler behoben, der dazu führte, dass die Fahrgestellnummer bei einigen
+    neueren Outback-Modellen und Modellen mit Dieselmotor als "noch nicht
+    registriert" ausgegeben wurde
+  - Schriftart "Liberation Sans" auf neue Version aktualisiert
+  - Layout des deutschen Änderungsprotokolls korrigiert
+
+
 v1.2.4 (15.05.2010):
   - Potenziellen Kommunikationsfehler beim Löschen des Speichers von
     E-4AT-Getriebesteuergeräten MJ2005+ behoben
   - Einheiten von 3 Schaltern der Getriebesteuerung korrigiert
 
+
 v1.2.3 (20.04.2010):
   - Fehler bei der Aktualiserung der Fehlercode-Tabellen in Verbindung mit
     Systemen ohne OBD2 behoben
   - Einige GUI-Layout-Fehler bei Verwendung des GTK+-Styles behoben
-  - Fehler bei Auswahl des GTK+-Styles in den Programmeinstellungen behoben
+  - Fehler bei Auswahl des GTK+-Styles in den Programmeinstellungen
+    behoben
 
 
 v1.2.2 (27.03.2010):
-  - Fehler behoben, der einen Kummunikationsfehler bei Aufruf des
+  - Fehler behoben, der einen Kommunikationsfehler bei Aufruf des
     "System-Tests"-Modus verursachte, wenn das Steuergerät keine
     Stellglieddiagnose unterstützt
 
