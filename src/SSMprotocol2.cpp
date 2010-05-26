@@ -1568,13 +1568,11 @@ bool SSMprotocol2::validateVIN(char VIN[17])
 	unsigned char k = 0;
 	for (k=0; k<17; k++)
 	{
-		if ((VIN[k] < '\x30') || ((VIN[k] > '\x39') && (VIN[k] < '\x41')) || (VIN[k] > '\x5A'))
-			return false;
-		if ((k==5) || (k==8) || (k>10))
+		if ((VIN[k] < '\x30') || (VIN[k] > '\x39'))	// 0-9
 		{
-			if (VIN[k] > '\x39')
+			if ((k > 10) || (VIN[k] < '\x41') || (VIN[k] > '\x5A')) // A-Z; NOTE: I,O,Q are not allowed
 				return false;
-		}	
+		}
 	}
 	return true;
 }
