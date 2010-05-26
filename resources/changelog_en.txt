@@ -1,7 +1,15 @@
+v1.2.5 (26.05.2010):
+  - Fixed VIN beeing displayed as "not registered yet" on some newer
+    Outback models and models with Diesel engines
+  - Updated font "Liberation Sans" to latest version
+  - Fixed the layout of the german changelog
+
+
 v1.2.4 (15.05.2010):
   - Fixed a potential communication error when clearing the memory of
     2005+ E-4AT transmission controllers
   - Fixed the units of 3 switches for transmission controllers
+
 
 v1.2.3 (20.04.2010):
   - Fixed DTC-tables not beeing updated on systems without OBD2
