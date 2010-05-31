@@ -292,7 +292,17 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			attribCond.condition = attributeCondition::equal;
 			tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
-				continue;
+			{
+				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				{
+					attribCond.value = "en";
+					tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
+					if (tmp_elements.size() != 1)
+						continue;
+				}
+				else
+					continue;
+			}
 			dtcblock.title[bitaddr-1] = QString::fromStdString( tmp_elements.at(0)->GetText() );
 		}
 		// Add DTC-block to the list:
@@ -345,7 +355,17 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		attribCond.value = _lang;
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
-			continue;
+		{
+			if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+			{
+				attribCond.value = "en";
+				tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
+				if (tmp_elements.size() != 1)
+					continue;
+			}
+			else
+				continue;
+		}
 		mb.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
 		// Get unit:
 		attribCond.value = "all";
@@ -355,7 +375,17 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 			attribCond.value = _lang;
 			tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
-				continue;
+			{
+				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				{
+					attribCond.value = "en";
+					tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
+					if (tmp_elements.size() != 1)
+						continue;
+				}
+				else
+					continue;
+			}
 		}
 		mb.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
 		// Get formula:
@@ -432,7 +462,17 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			attribCond.value = _lang;
 			tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
-				continue;
+			{
+				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				{
+					attribCond.value = "en";
+					tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
+					if (tmp_elements.size() != 1)
+						continue;
+				}
+				else
+					continue;
+			}
 			sw.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
 			// Get unit:
 			tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
@@ -441,7 +481,17 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 				attribCond.value = "all";
 				tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 				if (tmp_elements.size() != 1)
-					continue;
+				{
+					if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+					{
+						attribCond.value = "en";
+						tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
+						if (tmp_elements.size() != 1)
+							continue;
+					}
+					else
+						continue;
+				}
 			}
 			sw.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
 			// Add SW to the list:
