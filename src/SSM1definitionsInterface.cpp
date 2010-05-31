@@ -238,7 +238,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		}
 		else if (tmp_elements.size() == 0)
 		{
-			dtcblock.byteAddr_historicOrMemorized = 0xffffffff;	// NO ADDRESS
+			dtcblock.byteAddr_historicOrMemorized = MEMORY_ADDRESS_NONE;
 		}
 		else if (tmp_elements.size() > 1)
 		{
@@ -252,7 +252,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			else
 				dtcblock.title[k] = "UNKNOWN (Address 0x";
 			dtcblock.title[k] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
-			if (dtcblock.byteAddr_historicOrMemorized != 0xffffffff)
+			if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
 				dtcblock.title[k] += "/0x" + QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper() + " Bit " + QString::number(k+1) + ")";
 		}
 		std::vector<TiXmlElement*> DTC_elements;

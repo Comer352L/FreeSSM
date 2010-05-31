@@ -30,8 +30,11 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <limits.h>
 #include "AbstractDiagInterface.h"
 
+
+#define		MEMORY_ADDRESS_NONE	UINT_MAX
 
 
 class dc_defs_dt

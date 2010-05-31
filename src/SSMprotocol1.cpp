@@ -20,13 +20,10 @@
 #include "SSMprotocol1.h"
 
 
-#define	SSM1_MEM_ADDR_NONE	0xFFFFFFFF
-
-
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
-	_CMaddr = SSM1_MEM_ADDR_NONE;
+	_CMaddr = MEMORY_ADDRESS_NONE;
 	_CMvalue = '\x00';
 	resetCUdata();
 }
@@ -76,7 +73,7 @@ void SSMprotocol1::resetCUdata()
 	_sysDescription.clear();
 	// Clear DC data:
 	_DTCdefs.clear();
-	_CMaddr = SSM1_MEM_ADDR_NONE;
+	_CMaddr = MEMORY_ADDRESS_NONE;
 	_CMvalue = '\x00';
 	// Reset MB/SW data:
 	_supportedMBs.clear();
@@ -220,7 +217,7 @@ bool SSMprotocol1::hasIntegratedCC(bool *CCsup)
 bool SSMprotocol1::hasClearMemory(bool *CMsup)
 {
 	if (_state == state_needSetup) return false;
-	*CMsup = (_CMaddr != SSM1_MEM_ADDR_NONE);
+	*CMsup = (_CMaddr != MEMORY_ADDRESS_NONE);
 	return true;
 }
 
@@ -258,7 +255,7 @@ bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 		retDCgroups |= currentDTCs_DCgroup;
 		for (unsigned int k=0; k<_DTCdefs.size(); k++)
 		{
-			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != SSM1_MEM_ADDR_NONE)
+			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
 			{
 				retDCgroups |= historicDTCs_DCgroup;
 				break;
@@ -292,7 +289,7 @@ bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
-	if (_CMaddr == SSM1_MEM_ADDR_NONE) return false;
+	if (_CMaddr == MEMORY_ADDRESS_NONE) return false;
 	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue))
 	{
 		resetCUdata();
