@@ -35,13 +35,21 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 
 bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 {
+	std::string fn_bak;
 	std::vector<TiXmlElement*> elements;
+	TiXmlNode *root_node;
 	if (!filename.size())
 		goto error;
-	_xmldoc = new TiXmlDocument(filename);
-	TiXmlNode *root_node;
-	if (!_xmldoc->LoadFile())	// current doc is closed/deleted before !
-		goto error;
+	if (!_xmldoc)
+		_xmldoc = new TiXmlDocument();
+	else
+		fn_bak = _xmldoc->ValueStr();
+	if (!_xmldoc->LoadFile(filename)) // always closes the current document automatically !
+	{
+		// Try to teopen last document:
+		if (!fn_bak.size() || !_xmldoc->LoadFile(fn_bak))
+			goto error;
+	}
 	// Find and save node FSSM_SSM1_DEFINITIONS
 	root_node = _xmldoc->FirstChildElement("FSSM_SSM1_DEFINITIONS");
 	if (!root_node)
