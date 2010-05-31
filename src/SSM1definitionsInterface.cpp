@@ -137,9 +137,26 @@ bool SSM1definitionsInterface::selectID(char id[3])
 bool SSM1definitionsInterface::systemDescription(std::string *description)
 {
 	std::vector<TiXmlElement*> elements;
-	if (!_defs_for_id_b2_node)
-		return false;
-	elements = getAllMatchingChildElements(_defs_for_id_b2_node, "SYSTEMDESCRIPTION");
+	if (_defs_for_id_b3_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SYSTEMDESCRIPTION");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b2_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "SYSTEMDESCRIPTION");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b1_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "SYSTEMDESCRIPTION");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_root_node)
+		elements = getAllMatchingChildElements(_defs_root_node, "SYSTEMDESCRIPTION");
 	if (elements.size() != 1)
 		return false;
 	*description = elements.at(0)->GetText();
@@ -150,9 +167,26 @@ bool SSM1definitionsInterface::systemDescription(std::string *description)
 bool SSM1definitionsInterface::model(std::string *name)
 {
 	std::vector<TiXmlElement*> elements;
-	if (!_defs_for_id_b2_node)
-		return false;
-	elements = getAllMatchingChildElements(_defs_for_id_b2_node, "MODEL");
+	if (_defs_for_id_b3_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "MODEL");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b2_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "MODEL");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b1_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "MODEL");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_root_node)
+		elements = getAllMatchingChildElements(_defs_root_node, "MODEL");
 	if (elements.size() != 1)
 		return false;
 	*name = elements.at(0)->GetText();
@@ -163,9 +197,26 @@ bool SSM1definitionsInterface::model(std::string *name)
 bool SSM1definitionsInterface::year(std::string *yearstr)
 {
 	std::vector<TiXmlElement*> elements;
-	if (!_defs_for_id_b1_node)
-		return false;
-	elements = getAllMatchingChildElements(_defs_for_id_b1_node, "YEAR");
+	if (_defs_for_id_b3_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "YEAR");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b2_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "YEAR");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b1_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "YEAR");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_root_node)
+		elements = getAllMatchingChildElements(_defs_root_node, "YEAR");
 	if (elements.size() != 1)
 		return false;
 	*yearstr = elements.at(0)->GetText();
@@ -178,9 +229,26 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 	std::vector<TiXmlElement*> elements;
 	TiXmlElement *CM_element;
 	TiXmlElement *addr_element;
-	if (!_defs_for_id_b3_node)
-		return false;
-	elements = getAllMatchingChildElements(_defs_for_id_b2_node, "CLEARMEMORY");
+	if (_defs_for_id_b3_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "CLEARMEMORY");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b2_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "CLEARMEMORY");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b1_node)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "CLEARMEMORY");
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_root_node)
+		elements = getAllMatchingChildElements(_defs_root_node, "CLEARMEMORY");
 	if (elements.size() != 1)
 		return false;
 	CM_element = elements.at(0);
@@ -205,10 +273,25 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 {
 	std::vector<TiXmlElement*> DTCblock_elements;
-	if (!_defs_for_id_b3_node)
-		return false;
+	std::vector<TiXmlElement*> DTCblock_elements2;
 	dcs->clear();
-	DTCblock_elements = getAllMatchingChildElements(_defs_for_id_b3_node, "DTCBLOCK");
+	if (_defs_root_node)
+		DTCblock_elements = getAllMatchingChildElements(_defs_root_node, "DTCBLOCK");
+	if (_defs_for_id_b1_node)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "DTCBLOCK");
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
+	if (_defs_for_id_b2_node)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "DTCBLOCK");
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
+	if (_defs_for_id_b3_node)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_node, "DTCBLOCK");
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
 	for (unsigned int b=0; b<DTCblock_elements.size(); b++)
 	{
 		dc_defs_dt dtcblock;
@@ -317,10 +400,25 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	std::vector<TiXmlElement*> MB_elements;
-	if (!_defs_for_id_b3_node)
-		return false;
+	std::vector<TiXmlElement*> MB_elements2;
 	mbs->clear();
-	MB_elements = getAllMatchingChildElements(_defs_for_id_b3_node, "MB");
+	if (_defs_root_node)
+		MB_elements = getAllMatchingChildElements(_defs_root_node, "MB");
+	if (_defs_for_id_b1_node)
+	{
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "MB");
+		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
+	}
+	if (_defs_for_id_b2_node)
+	{
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "MB");
+		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
+	}
+	if (_defs_for_id_b3_node)
+	{
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b3_node, "MB");
+		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
+	}
 	for (unsigned int k=0; k<MB_elements.size(); k++)
 	{
 		std::vector<TiXmlElement*> tmp_elements;
@@ -412,10 +510,25 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
 	std::vector<TiXmlElement*> SWblock_elements;
-	if (!_defs_for_id_b3_node)
-		return false;
+	std::vector<TiXmlElement*> SWblock_elements2;
 	sws->clear();
-	SWblock_elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SWBLOCK");
+	if (_defs_root_node)
+		SWblock_elements = getAllMatchingChildElements(_defs_root_node, "SWBLOCK");
+	if (_defs_for_id_b1_node)
+	{
+		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "SWBLOCK");
+		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
+	}
+	if (_defs_for_id_b2_node)
+	{
+		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "SWBLOCK");
+		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
+	}
+	if (_defs_for_id_b3_node)
+	{
+		SWblock_elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SWBLOCK");
+		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
+	}
 	for (unsigned int b=0; b<SWblock_elements.size(); b++)
 	{
 		sw_intl_dt sw;
