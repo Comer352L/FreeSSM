@@ -321,12 +321,18 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 	if (DCgroups & currentDTCs_DCgroup)	// current DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+		{
+			if (_DTCdefs.at(k).byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+		}
 	}
 	if (DCgroups & historicDTCs_DCgroup)	// historic DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
+		{
+			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
+				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
+		}
 	}
 	// Check if min. 1 Address to read:
 	if (!DCqueryAddrList.size())
