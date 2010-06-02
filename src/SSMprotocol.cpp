@@ -245,7 +245,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 			{
 				// ADD ADDRESS(ES) OF CURRENT MB TO LIST:
 				_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low );
-				if (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_high > 0)
+				if (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_high != MEMORY_ADDRESS_NONE)
 					_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_high );
 			}
 			else

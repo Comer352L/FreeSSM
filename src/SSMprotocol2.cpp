@@ -494,13 +494,12 @@ void SSMprotocol2::setupSupportedMBs()
 					{
 						// Get memory address (high) definition:
 						tmpstr = mbdefline.section(';', 4, 4);
-						if (!tmpstr.isEmpty())
+						if (tmpstr.isEmpty())
+							tmpMB.addr_high = MEMORY_ADDRESS_NONE;
+						else
 							tmpMB.addr_high = tmpstr.toUInt(&ok, 16);
-						// Check if memory address (high) is unused OR valid (only 16bit MBs):
-						if ((tmpstr.isEmpty()) || (ok && (tmpMB.addr_high > 0)))	// if valid or no high byte memory address available
+						if (ok)
 						{
-							if (tmpstr.isEmpty())
-								tmpMB.addr_high = 0;
 							// Get title definition:
 							tmpMB.title = mbdefline.section(';', 5, 5);
 							// Check if title is available:

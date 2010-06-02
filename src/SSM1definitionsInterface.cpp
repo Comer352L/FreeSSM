@@ -435,8 +435,8 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 		if (addr > 0xffff)
 			continue;
-		mb.addr_high = (addr & 0xffff) >> 2;
-		mb.addr_low = addr & 0xff;
+		mb.addr_low = addr;
+		mb.addr_high = MEMORY_ADDRESS_NONE;
 		// --- Get common data ---
 		// Find MB data:
 		TiXmlElement *MBdata_element = NULL;
