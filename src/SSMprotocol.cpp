@@ -212,14 +212,14 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 		if (_selMBsSWsAddr.size())
 		{
 			// CHECK IF ADDRESS IS ALREADY ON THE LIST:
-			for (m=0; (m<_selMBsSWsAddr.size()); m++)
+			for (m=0; m<_selMBsSWsAddr.size(); m++)
 			{
 				if (MBSWmetaList.at(k).blockType == 0)
 				{
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
 					// COMPARE ADDRESS:
-					if (_selMBsSWsAddr.at(m) == (_supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low))
+					if (_selMBsSWsAddr.at(m) == _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low)
 					{
 						newadr = false;
 						break;
@@ -230,7 +230,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 					// CHECK IF CURRENT SW IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedSWs.size()) return false;
 					// COMPARE ADDRESS:
-					if (_selMBsSWsAddr.at(m) == (_supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr))
+					if (_selMBsSWsAddr.at(m) == _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr)
 					{
 						newadr = false;
 						break;
