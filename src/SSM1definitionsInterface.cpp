@@ -435,6 +435,19 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 		if (addr > 0xffff)
 			continue;
+		// Check for duplicate definitions (addresses):
+		bool duplicate = false;
+		for (unsigned int m=0; m<mbs->size(); m++)
+		{
+			if ((addr == mbs->at(m).addr_low) || (addr == mbs->at(m).addr_high))
+			{
+				duplicate = true;
+				mbs->erase(mbs->begin() + m);
+				break;
+			}
+		}
+		if (duplicate)
+			continue;
 		mb.addr_low = addr;
 		mb.addr_high = MEMORY_ADDRESS_NONE;
 		// --- Get common data ---
@@ -558,6 +571,20 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			unsigned long int bitaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
+			// Check for duplicate definitions (address + bit):
+			bool duplicate = false;
+			for (unsigned int s=0; s<sws->size(); s++)
+			{
+				if ((byteaddr == sws->at(s).byteAddr) && (bitaddr == sws->at(s).bitAddr))
+				{
+					duplicate = true;
+					sws->erase(sws->begin() + s);
+					break;
+				}
+			}
+			if (duplicate)
+				continue;
+			/* NOTE: switches with the same address can be defined across multiple SWBLOCKs */
 			sw.bitAddr = bitaddr;
 			// --- Get common data ---:
 			// Find SW data:
