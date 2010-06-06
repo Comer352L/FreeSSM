@@ -296,7 +296,9 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 	{
 		dc_defs_dt dtcblock;
 		std::vector<TiXmlElement*> tmp_elements;
+		bool duplicate = false;
 		// --- Get address(es) ---:
+		/* NOTE: DTCs with the same address must be defined in the same DTCBLOCK */
 		// Get address for current DTCs:
 		attributeCondition attribCond;
 		attribCond.name = "type";
@@ -308,6 +310,18 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 		if (addr > 0xffff)
 			continue;
+		// Search for duplicate block address:
+		for (unsigned int d=0; d<dcs->size(); d++)
+		{
+			if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
+			{
+				duplicate = true;
+				dcs->erase( dcs->begin() + d );
+				break;
+			}
+		}
+		if (duplicate)
+			continue;
 		dtcblock.byteAddr_currentOrTempOrLatest = addr;
 		// Get address for historic DTCs:
 		attribCond.value = "historic";
@@ -316,6 +330,18 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		{
 			addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 			if (addr > 0xffff)
+				continue;
+			// Search for duplicate block address:
+			for (unsigned int d=0; d<dcs->size(); d++)
+			{
+				if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
+				{
+					duplicate = true;
+					dcs->erase( dcs->begin() + d );
+					break;
+				}
+			}
+			if (duplicate)
 				continue;
 			dtcblock.byteAddr_historicOrMemorized = addr;
 		}
@@ -337,9 +363,11 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			dtcblock.title[k] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
 			if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
 				dtcblock.title[k] += "/0x" + QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper() + " Bit " + QString::number(k+1) + ")";
+			/* NOTE: see comments at the end of the function */
 		}
 		std::vector<TiXmlElement*> DTC_elements;
 		DTC_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "DTC");
+		char assignedBits = 0;
 		for (unsigned int k=0; k<DTC_elements.size(); k++)
 		{
 			// Get ID:
@@ -354,6 +382,20 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			unsigned long int bitaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
+			// Search for duplicate DTCs:
+			if (assignedBits == (assignedBits | (char)pow(2, bitaddr-1)))
+			{
+				// Display DTC as UNKNOWN
+				dtcblock.code[bitaddr-1] = "???";
+				if (_lang == "de")
+					dtcblock.title[bitaddr-1] = "UNBEKANNT (Adresse 0x";
+				else
+					dtcblock.title[bitaddr-1] = "UNKNOWN (Address 0x";
+				dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
+				if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
+					dtcblock.title[bitaddr-1] += "/0x" + QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper() + " Bit " + QString::number(bitaddr) + ")";
+				continue;
+			}
 			// --- Get common data ---
 			// Find DTC data:
 			TiXmlElement *DTCdata_element = NULL;
@@ -387,13 +429,14 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 					continue;
 			}
 			dtcblock.title[bitaddr-1] = QString::fromStdString( tmp_elements.at(0)->GetText() );
+			assignedBits |= (char)pow(2, bitaddr-1);
 		}
 		// Add DTC-block to the list:
 		dcs->push_back(dtcblock);
 	}
 	return true;
 	/* NOTE: - DCs with missing definitions are displayed as UNKNOWN
-		 - DCs with existing definitions and empty code- and title-fields will be ignored */
+		 - DCs with existing definitions and empty code- and title-fields are ignored */
 }
 
 
