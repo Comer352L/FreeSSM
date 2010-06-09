@@ -521,18 +521,27 @@ void FreeSSM::dumpCUdata()
 	{
 		// Select CU:
 		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );
-		// Read CU-ID:
+		// Read CU-ID(s):
 		if (SSMP1com.readID(SYS_ID))
 		{
-			if (!dumpfile.isOpen()) // if file is not opened yet
+			if (!dumpfile.isOpen())
 			{
-				// Open/Create File:
 				if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
 					goto end;
-
-			for (k=0; k<(ssm1_cu_index+2); k++)
-				dumpfile.write("\n-----\n", 7);
-
+				for (k=0; k<(ssm1_cu_index+2); k++)
+					dumpfile.write("\n-----\n", 7);
+			}
+			if (((SYS_ID[0] & '\xF0') == '\xA0') && (SYS_ID[1] == '\x10'))
+			{
+				// Read extended ID:
+				std::vector<unsigned int> addresses;
+				for (unsigned int addr=0x01; addr<=0x05; addr++)
+					addresses.push_back(addr);
+				std::vector<char> data;
+				if (!SSMP1com.readAddresses(addresses, &data))
+					goto end;
+				for (unsigned char i=0; i<5; i++)
+					ROM_ID[i] = data.at(i);
 			}
 			// *** Convert and write data to file:
 			// ID:
@@ -540,6 +549,13 @@ void FreeSSM::dumpCUdata()
 			hexstr.insert(0, "\n");
 			hexstr.push_back('\n');
 			dumpfile.write(hexstr.data(), hexstr.length());
+			// Etended ID:
+			if (((SYS_ID[0] & '\xF0') == '\xA0') && (SYS_ID[1] == '\x10'))
+			{
+				hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
+				hexstr.push_back('\n');
+				dumpfile.write(hexstr.data(), hexstr.length());
+			}
 		}
 		else if (dumpfile.isOpen())
 			dumpfile.write("\n-----\n", 7);
