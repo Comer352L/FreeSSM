@@ -66,9 +66,14 @@ void SSMprotocol1::resetCUdata()
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 	// RESET ECU DATA:
-	_ID[0] = '\x0';
-	_ID[1] = '\x0';
-	_ID[2] = '\x0';
+	_SYS_ID[0] = 0;
+	_SYS_ID[1] = 0;
+	_SYS_ID[2] = 0;
+	_ROM_ID[0] = 0;
+	_ROM_ID[1] = 0;
+	_ROM_ID[2] = 0;
+	_ROM_ID[3] = 0;
+	_ROM_ID[4] = 0;
 	// Clear system description:
 	_sysDescription.clear();
 	// Clear DC data:
@@ -121,19 +126,25 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	if (!_SSMP1com->readID(_ID))
-		 return result_commError;
+	if (!_SSMP1com->readID(_SYS_ID))
+		return result_commError;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	// Read extended ID (5-byte ROM-ID):
+	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+	{
+		if (!readExtendedID(_ROM_ID))
+			return result_commError;
+	}
 	// Load control unit definitions:
 	SSM1definitionsInterface defsIface;
 	if (!defsIface.selectDefinitionsFile(defsFile))
 		return result_noDefFile;
 	defsIface.setLanguage(_language.toStdString());
-	if (!defsIface.selectID(_ID))
+	if (!defsIface.selectID(_SYS_ID)) // TODO: Ax xx xx IDs
 		return result_noDefs;
 	// Get system description:
 	defsIface.systemDescription(&_sysDescription);
@@ -153,19 +164,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	
 }
 // INCOMPLETE IMPLEMENTATION
-
-std::string SSMprotocol1::getSysID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_ID, 3);
-}
-
-
-std::string SSMprotocol1::getROMID()
-{
-	return getSysID();
-}
-
 
 bool SSMprotocol1::getSystemDescription(QString *sysdescription)
 {
@@ -485,4 +483,17 @@ bool SSMprotocol1::waitForIgnitionOff()
 /* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
 }
 // USE SWITCH "ignition" (if exists) ?
+
+bool SSMprotocol1::readExtendedID(char ID[5])
+{
+	std::vector<unsigned int> addresses;
+	for (unsigned int addr=0x01; addr<=0x05; addr++)
+		addresses.push_back(addr);
+	std::vector<char> data;
+	if (!_SSMP1com->readAddresses(addresses, &data))
+		return false;
+	for (unsigned char i=0; i<5; i++)
+		ID[i] = data.at(i);
+	return true;
+}
 

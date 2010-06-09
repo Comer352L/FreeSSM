@@ -32,6 +32,7 @@
 #include <cmath>
 #include <limits.h>
 #include "AbstractDiagInterface.h"
+#include "libFSSM.h"
 
 
 #define		MEMORY_ADDRESS_NONE	UINT_MAX
@@ -141,8 +142,8 @@ public:
 	state_dt state();
 	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	virtual std::string getSysID() = 0;
-	virtual std::string getROMID() = 0;
+	std::string getSysID();
+	std::string getROMID();
 	virtual bool getSystemDescription(QString *sysdescription) = 0;
 	virtual bool hasOBD2system(bool *OBD2) = 0;
 	virtual bool hasVINsupport(bool *VINsup) = 0;
@@ -187,6 +188,8 @@ protected:
 	CUtype_dt _CU;
 	state_dt _state;
 	QString _language;
+	char _SYS_ID[3];
+	char _ROM_ID[5];
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
 	std::vector<dc_defs_dt> _DTCdefs;

@@ -180,20 +180,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 }
 
 
-std::string SSMprotocol2::getSysID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_SYS_ID, 3);
-}
-
-
-std::string SSMprotocol2::getROMID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_ROM_ID, 5);
-}
-
-
 bool SSMprotocol2::getSystemDescription(QString *sysdescription)
 {
 	if (_state == state_needSetup) return false;

@@ -29,7 +29,6 @@
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
 #include "SSM1definitionsInterface.h"
-#include "libFSSM.h"
 
 
 
@@ -41,10 +40,8 @@ public:
 	SSMprotocol1(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	CUsetupResult_dt setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
+	CUsetupResult_dt setupCUdata(CUtype_dt CU);							// INCOMPLETE IMPLEMENTATION
 	protocol_dt protocolType() { return SSM1; };
-	std::string getSysID();
-	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
@@ -69,10 +66,11 @@ public:
 private:
 	SSMP1communication *_SSMP1com;
 	// *** CONTROL UNIT RAW DATA ***:
-	char _ID[3];
 	std::string _sysDescription;
 	unsigned int _CMaddr;
 	char _CMvalue;
+
+	bool readExtendedID(char ID[5]);
 
 private slots:
 	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION

@@ -49,6 +49,22 @@ SSMprotocol::state_dt SSMprotocol::state()
 }
 
 
+std::string SSMprotocol::getSysID()
+{
+	if (_state == state_needSetup) return "";
+	return libFSSM::StrToHexstr(_SYS_ID, 3);
+}
+
+
+std::string SSMprotocol::getROMID()
+{
+	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+		return libFSSM::StrToHexstr(_ROM_ID, 5);
+	else
+		return getSysID();
+}
+
+
 bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 {
 	if (_state == state_needSetup) return false;
