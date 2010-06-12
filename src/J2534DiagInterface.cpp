@@ -403,9 +403,9 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 	{
 		long ret = 0;
 		// Flush buffers;
-		if (!ClearSendBuffer())
+		if (!clearSendBuffer())
 			return false;
-		if (!ClearReceiveBuffer())
+		if (!clearReceiveBuffer())
 			return false;
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
@@ -433,36 +433,34 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 }
 
 
+bool J2534DiagInterface::clearSendBuffer()
+{
+	long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_TX_BUFFER, (void *)NULL, (void *)NULL);
+	if (STATUS_NOERROR != ret)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruIoctl() for parameter CLEAR_TX_BUFFER failed: ", ret);
+#endif
+		return false;
+	}
+	return true;
+}
+
+
+bool J2534DiagInterface::clearReceiveBuffer()
+{
+	long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_RX_BUFFER, (void *)NULL, (void *)NULL);
+	if (STATUS_NOERROR != ret)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruIoctl() for parameter CLEAR_RX_BUFFER failed: ", ret);
+#endif
+		return false;
+	}
+	return true;
+}
+
 // Private
-
-
-bool J2534DiagInterface::ClearSendBuffer()
-{
-		long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_TX_BUFFER, (void *)NULL, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() for parameter CLEAR_TX_BUFFER failed: ", ret);
-#endif
-			return false;
-		}
-		return true;
-}
-
-
-bool J2534DiagInterface::ClearReceiveBuffer()
-{
-		long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_RX_BUFFER, (void *)NULL, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() for parameter CLEAR_RX_BUFFER failed: ", ret);
-#endif
-			return false;
-		}
-		return true;
-}
-
 
 #ifdef __FSSM_DEBUG__
 void J2534DiagInterface::printErrorDescription(std::string title, long ret)

@@ -49,6 +49,8 @@ public:
 	bool disconnect();
 	bool read(std::vector<char> *buffer);
 	bool write(std::vector<char> buffer);
+	bool clearSendBuffer();
+	bool clearReceiveBuffer();
 
 private:
 	serialCOM *_port;

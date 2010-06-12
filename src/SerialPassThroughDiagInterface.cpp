@@ -218,3 +218,14 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 }
 
 
+bool SerialPassThroughDiagInterface::clearSendBuffer()
+{
+	return _port->ClearSendBuffer();
+}
+
+
+bool SerialPassThroughDiagInterface::clearReceiveBuffer()
+{
+	return _port->ClearReceiveBuffer();
+}
+

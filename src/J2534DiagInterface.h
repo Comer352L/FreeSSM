@@ -46,6 +46,8 @@ public:
 	bool disconnect();
 	bool read(std::vector<char> *buffer);
 	bool write(std::vector<char> buffer);
+	bool clearSendBuffer();
+	bool clearReceiveBuffer();
 
 private:
 	J2534_API *_j2534;
@@ -54,8 +56,6 @@ private:
 	unsigned long _ChannelID;
         unsigned long _FilterID;
 
-	bool ClearSendBuffer();
-	bool ClearReceiveBuffer();
 #ifdef __FSSM_DEBUG__
 	void printErrorDescription(std::string title, long ret);
 #endif
