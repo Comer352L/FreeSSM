@@ -344,15 +344,12 @@ void SSMP1communication::run()
 		_mutex.unlock();
 	} while (!abort && (errcount < errmax) && (permanent || k>0 || !op_success));
 	// Try to stop control unit from permanent data sending:
-	if (!((operation == comOp_readRomId) && op_success))
-	{
 #ifndef __FSSM_DEBUG__
-		stopCUtalking(true);
+	stopCUtalking(true);
 #else
-		if (!stopCUtalking(true))
-			std::cout << "SSMP1communication::run():   stopCUtalking failed !\n";
+	if (!stopCUtalking(true))
+		std::cout << "SSMP1communication::run():   stopCUtalking failed !\n";
 #endif
-	}
 	// Send error signal:
 	if (permanent && !abort && !op_success)
 		emit commError();

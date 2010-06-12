@@ -70,6 +70,8 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	_currentaddr = -1;
 	_lastaddr = -1;
 	_addrswitch_pending = false;
+	if (!_diagInterface->clearReceiveBuffer())
+		goto err;
 	if (!sendQueryIdCmd())
 	{
 #ifdef __FSSM_DEBUG__
@@ -77,20 +79,32 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 #endif
 		return false;
 	}
-	waitms(SSMP1_T_NEWDATA_REC_MAX);
-	// Read all data from port and return the last 3 bytes
-	if (_diagInterface->read(data) && (data->size() > 2))
+	waitms(SSMP1_T_ID_REC_MAX);
+	if (!_diagInterface->read(&_recbuffer))
+		goto err;
+	if (_recbuffer.size() < 3)
+		goto err;
+	if (((_recbuffer.at(0) & '\xF0') == '\xA0') && (_recbuffer.at(1) == '\x01'))
 	{
-		data->erase(data->begin(), data->end()-3);
-#ifdef __FSSM_DEBUG__
-		std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): " << std::hex << std::noshowbase
-		<< (static_cast<int>(data->at(0)) & 0xff) << " "
-		<< (static_cast<int>(data->at(1)) & 0xff) << " " 
-		<< (static_cast<int>(data->at(2)) & 0xff) << '\n';
-#endif
-		return true;
+		if (_recbuffer.size() < 12)
+			goto err;
+		data->assign(_recbuffer.begin(), _recbuffer.begin()+12);
 	}
+	else
+		data->assign(_recbuffer.begin(), _recbuffer.begin()+3);
+#ifdef __FSSM_DEBUG__
+	std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): ";
+	for (unsigned char k=0; k< data->size(); k++)
+		std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff) << " ";
+	std::cout << '\n';
+#endif
+	_recbuffer.clear();
+	return true;
+
+err:
+	_recbuffer.clear();
 	return false;
+
 	/* FIXME: We currently rely in flushing the receive buffer immediately after the request was sent.
 	          This doesn't work reliable with some serial port drivers !
 	          => Problem: the echos of ISO-KL-interfaces may be detected as SSM1-ROM-IDs.
