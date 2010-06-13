@@ -79,9 +79,6 @@ public:
 
 private:
 	SSMP2communication *_SSMP2com;
-	// *** CONTROL UNIT RAW DATA ***:
-	char _flagbytes[96];
-	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;

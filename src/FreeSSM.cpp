@@ -522,7 +522,7 @@ void FreeSSM::dumpCUdata()
 		// Select CU:
 		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );
 		// Read CU-ID(s):
-		if (SSMP1com.readID(SYS_ID))
+		if (SSMP1com.getCUdata(SYS_ID, flagbytes, &nrofflagbytes))
 		{
 			if (!dumpfile.isOpen())
 			{
@@ -556,6 +556,17 @@ void FreeSSM::dumpCUdata()
 				hexstr.push_back('\n');
 				dumpfile.write(hexstr.data(), hexstr.length());
 			}
+			else
+				dumpfile.write("---\n", 4);
+			// Flagbytes:
+			if (nrofflagbytes)
+			{
+				hexstr = libFSSM::StrToHexstr(flagbytes, nrofflagbytes);
+				hexstr.push_back('\n');
+				dumpfile.write(hexstr.data(), hexstr.length());
+			}
+			else
+				dumpfile.write("---\n", 4);
 		}
 		else if (dumpfile.isOpen())
 			dumpfile.write("\n-----\n", 7);

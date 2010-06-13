@@ -54,7 +54,7 @@ SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 }
 
 
-bool SSMP1communication::readID(char *ID)
+bool SSMP1communication::getCUdata(char *ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning()) return false;
@@ -63,10 +63,12 @@ bool SSMP1communication::readID(char *ID)
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Return ROM-ID
-		ID[0] = _data.at(0);
-		ID[1] = _data.at(1);
-		ID[2] = _data.at(2);
+		// ID:
+		memcpy(ID, &_data.at(0), 3);
+		// Flagbytes:
+		*nrofflagbytes = _data.size() -3;
+		if (_data.size() > 3)
+			memcpy(flagbytes, &_data.at(3), _data.size() - 3);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;

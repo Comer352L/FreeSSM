@@ -188,8 +188,11 @@ protected:
 	CUtype_dt _CU;
 	state_dt _state;
 	QString _language;
+	// *** CONTROL UNIT RAW DATA ***:
 	char _SYS_ID[3];
 	char _ROM_ID[5];
+	char _flagbytes[96];
+	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
 	std::vector<dc_defs_dt> _DTCdefs;

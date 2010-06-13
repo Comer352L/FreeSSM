@@ -74,6 +74,8 @@ void SSMprotocol1::resetCUdata()
 	_ROM_ID[2] = 0;
 	_ROM_ID[3] = 0;
 	_ROM_ID[4] = 0;
+	memset(_flagbytes, 0, 96);
+	_nrofflagbytes = 0;
 	// Clear system description:
 	_sysDescription.clear();
 	// Clear DC data:
@@ -126,7 +128,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	if (!_SSMP1com->readID(_SYS_ID))
+	if (!_SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes))
 		return result_commError;
 	_CU = CU;
 	_state = state_normal;

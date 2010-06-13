@@ -97,7 +97,7 @@ void SSMprotocol2::resetCUdata()
 	_ROM_ID[2] = 0;
 	_ROM_ID[3] = 0;
 	_ROM_ID[4] = 0;
-	for (k=0; k<96; k++) _flagbytes[k] = 0;
+	memset(_flagbytes, 0, 96);
 	_nrofflagbytes = 0;
 	// *** RESET BASIC DATA ***:
 	// Reset DC-data:
