@@ -159,7 +159,10 @@ bool SSM1definitionsInterface::systemDescription(std::string *description)
 		elements = getAllMatchingChildElements(_defs_root_node, "SYSTEMDESCRIPTION");
 	if (elements.size() != 1)
 		return false;
-	*description = elements.at(0)->GetText();
+	const char *str = elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	*description = std::string(str);
 	return true;
 }
 
@@ -189,7 +192,10 @@ bool SSM1definitionsInterface::model(std::string *name)
 		elements = getAllMatchingChildElements(_defs_root_node, "MODEL");
 	if (elements.size() != 1)
 		return false;
-	*name = elements.at(0)->GetText();
+	const char *str = elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	*name = std::string(str);
 	return true;
 }
 
@@ -219,7 +225,10 @@ bool SSM1definitionsInterface::year(std::string *yearstr)
 		elements = getAllMatchingChildElements(_defs_root_node, "YEAR");
 	if (elements.size() != 1)
 		return false;
-	*yearstr = elements.at(0)->GetText();
+	const char *str = elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	*yearstr = std::string(str);
 	return true;
 }
 
@@ -229,6 +238,7 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 	std::vector<TiXmlElement*> elements;
 	TiXmlElement *CM_element;
 	TiXmlElement *addr_element;
+	const char *str = NULL;
 	if (_defs_for_id_b3_node)
 	{
 		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "CLEARMEMORY");
@@ -260,8 +270,14 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 	elements = getAllMatchingChildElements(CM_element, "VALUE");
 	if (elements.size() != 1)
 		return false;
-	unsigned long int addr = strtoul( addr_element->GetText(), NULL, 0 );
-	unsigned long int val = strtoul( elements.at(0)->GetText(), NULL, 0 );
+	str = addr_element->GetText();
+	if (str == NULL)
+		return false;
+	unsigned long int addr = strtoul( str, NULL, 0 );
+	str = elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	unsigned long int val = strtoul( str, NULL, 0 );
 	if ((addr > 0xffff) || (val > 0xff))
 		return false;
 	*address = addr;
@@ -274,6 +290,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 {
 	std::vector<TiXmlElement*> DTCblock_elements;
 	std::vector<TiXmlElement*> DTCblock_elements2;
+	const char *str = NULL;
 	dcs->clear();
 	if (_defs_root_node)
 		DTCblock_elements = getAllMatchingChildElements(_defs_root_node, "DTCBLOCK");
@@ -307,7 +324,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
 			continue;
-		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		unsigned long int addr = strtoul( str, NULL, 0 );
 		if (addr > 0xffff)
 			continue;
 		// Search for duplicate block address:
@@ -328,7 +348,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() == 1)
 		{
-			addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			addr = strtoul( str, NULL, 0 );
 			if (addr > 0xffff)
 				continue;
 			// Search for duplicate block address:
@@ -379,7 +402,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			tmp_elements = getAllMatchingChildElements(DTC_elements.at(k), "BIT");
 			if (tmp_elements.size() != 1)
 				continue;
-			unsigned long int bitaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			unsigned long int bitaddr = strtoul( str, NULL, 0 );
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
 			// Search for duplicate DTCs:
@@ -410,7 +436,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			tmp_elements = getAllMatchingChildElements(DTCdata_element, "CODE");
 			if (tmp_elements.size() != 1)
 				continue;
-			dtcblock.code[bitaddr-1] = QString::fromStdString( tmp_elements.at(0)->GetText() );
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			dtcblock.code[bitaddr-1] = QString( str );
 			// Get title:
 			attribCond.name = "lang";
 			attribCond.value = _lang;
@@ -428,7 +457,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 				else
 					continue;
 			}
-			dtcblock.title[bitaddr-1] = QString::fromStdString( tmp_elements.at(0)->GetText() );
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			dtcblock.title[bitaddr-1] = QString( str );
 			assignedBits |= (char)pow(2, bitaddr-1);
 		}
 		// Add DTC-block to the list:
@@ -444,6 +476,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	std::vector<TiXmlElement*> MB_elements;
 	std::vector<TiXmlElement*> MB_elements2;
+	const char *str = NULL;
 	mbs->clear();
 	if (_defs_root_node)
 		MB_elements = getAllMatchingChildElements(_defs_root_node, "MB");
@@ -475,7 +508,10 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		tmp_elements = getAllMatchingChildElements(MB_elements.at(k), "ADDRESS");
 		if (tmp_elements.size() != 1)
 			continue;
-		unsigned long int addr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		unsigned long int addr = strtoul( str, NULL, 0 );
 		if (addr > 0xffff)
 			continue;
 		// Check for duplicate definitions (addresses):
@@ -520,7 +556,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 			else
 				continue;
 		}
-		mb.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
+		mb.title = QString( tmp_elements.at(0)->GetText() );
 		// Get unit:
 		attribCond.value = "all";
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
@@ -541,17 +577,23 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 					continue;
 			}
 		}
-		mb.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
+		mb.unit = QString( tmp_elements.at(0)->GetText() );
 		// Get formula:
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "FORMULA");
 		if (tmp_elements.size() != 1)
 			continue;
-		mb.scaleformula = QString::fromStdString( tmp_elements.at(0)->GetText() );
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		mb.scaleformula = QString( str );
 		// Get precision:
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "PRECISION");
 		if (tmp_elements.size() != 1)
 			continue;
-		long int precision = strtol( tmp_elements.at(0)->GetText(), NULL, 0 );
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		long int precision = strtol( str, NULL, 0 );
 		if ((precision >= -128) && (precision <= 127))
 			mb.precision = precision;
 		else
@@ -567,6 +609,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
 	std::vector<TiXmlElement*> SWblock_elements;
 	std::vector<TiXmlElement*> SWblock_elements2;
+	const char *str = NULL;
 	sws->clear();
 	if (_defs_root_node)
 		SWblock_elements = getAllMatchingChildElements(_defs_root_node, "SWBLOCK");
@@ -593,7 +636,10 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 		tmp_elements = getAllMatchingChildElements(SWblock_elements.at(b), "ADDRESS");
 		if (tmp_elements.size() != 1)
 			continue;
-		unsigned long int byteaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		unsigned long int byteaddr = strtoul( str, NULL, 0 );
 		if (byteaddr > 0xffff)
 			continue;
 		sw.byteAddr = byteaddr;
@@ -611,7 +657,10 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			tmp_elements = getAllMatchingChildElements(SW_elements.at(k), "BIT");
 			if (tmp_elements.size() != 1)
 				continue;
-			unsigned long int bitaddr = strtoul( tmp_elements.at(0)->GetText(), NULL, 0 );
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			unsigned long int bitaddr = strtoul( str, NULL, 0 );
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
 			// Check for duplicate definitions (address + bit):
@@ -656,7 +705,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 				else
 					continue;
 			}
-			sw.title = QString::fromStdString( tmp_elements.at(0)->GetText() );
+			sw.title = QString( tmp_elements.at(0)->GetText() );
 			// Get unit:
 			tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
@@ -676,7 +725,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 						continue;
 				}
 			}
-			sw.unit = QString::fromStdString( tmp_elements.at(0)->GetText() );
+			sw.unit = QString( tmp_elements.at(0)->GetText() );
 			// Add SW to the list:
 			sws->push_back(sw);
 		}
