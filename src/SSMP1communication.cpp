@@ -332,7 +332,7 @@ void SSMP1communication::run()
 		else
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMP1communication::run():   communication operation error counter=" << (int)(errcount) << '\n';
+			std::cout << "SSMP1communication::run():   communication operation error counter=" << std::dec << (int)(errcount) << '\n';
 #endif
 			errcount++;
 			setAddr = true;	// repeat the complete procedure
