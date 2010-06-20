@@ -500,6 +500,8 @@ void SSMP2communication::run()
 		while (!_el.isRunning())
 			msleep(10);
 	}
+	else
+		_CommOperation = comOp_noCom;
 #ifdef __FSSM_DEBUG__
 	std::cout << "SSMP2communication::run():   communication operation finished." << '\n';
 #endif
