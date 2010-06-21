@@ -272,9 +272,9 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 				else
 					norec_counter++;
 			}
-		} while ((time.elapsed() < SSMP1_T_NEWDATA_REC_MAX) && (norec_counter < 5));
+		} while ((time.elapsed() < SSMP1_T_RECDATA_CHANGE_MAX) && (norec_counter < 5));
 		/* TODO:
-		 * - invastigate CU-behavior, define a T_MAX_UNTIL_SILENCE (for now, we simply use T_NEWDATA_REC_MAX)
+		 * - invastigate CU-behavior, define a T_MAX_UNTIL_SILENCE (for now, we simply use SSMP1_T_RECDATA_CHANGE_MAX)
 		 * - does the CU always complete sending the current message ? (=> 256-byte-blockrates ~ 1.5s !)
 		 *   => make sure it will work with block-reads (in the future)
 		 */

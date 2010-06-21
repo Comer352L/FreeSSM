@@ -45,7 +45,7 @@ public:
 	bool getID(std::vector<char> * data);
 	bool writeDatabyte(char databyte);
 	bool getNextData(std::vector<char> * data, unsigned int timeout = SSMP1_T_RW_REC_MAX);	/* read and process recieved data */
-	bool waitForDataValue(char data, unsigned int timeout = SSMP1_T_NEWDATA_REC_MAX);
+	bool waitForDataValue(char data, unsigned int timeout = SSMP1_T_RECDATA_CHANGE_MAX);
 	bool stopCUtalking(bool waitforsilence = false);
 
 private:
