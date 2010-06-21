@@ -517,7 +517,7 @@ void FreeSSM::dumpCUdata()
 	if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
 		goto end;
 	// Dump all SSM1-CUs:
-	for (ssm1_cu_index=SSM1_CU_Engine; ssm1_cu_index<=SSM1_CU_FourWS; ssm1_cu_index++)
+	for (ssm1_cu_index=SSM1_CU_Engine; ssm1_cu_index<=SSM1_CU_PwrSteer; ssm1_cu_index++)
 	{
 		// Select CU:
 		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );

@@ -112,23 +112,44 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	else if (CU == CUtype_CruiseControl)
 	{
 		SSM1_CU = SSM1_CU_CruiseCtrl;
-		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_CC.xml";
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_CruiseControl.xml";
 	}
 	else if (CU == CUtype_AirCon)
 	{
 		SSM1_CU = SSM1_CU_AirCon;
-		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AC.xml";
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AirConditioning.xml";
 	}
 	else if (CU == CUtype_FourWheelSteering)
 	{
 		SSM1_CU = SSM1_CU_FourWS;
-		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_4WS.xml";
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_FourWheelSteering.xml";
+	}
+	else if (CU == CUtype_ABS)
+	{
+		SSM1_CU = SSM1_CU_ABS;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_ABS.xml";
+	}
+	else if (CU == CUtype_AirSuspension)
+	{
+		SSM1_CU = SSM1_CU_AirSusp;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AirSuspension.xml";
+	}
+	else if (CU == CUtype_PowerSteering)
+	{
+		SSM1_CU = SSM1_CU_PwrSteer;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_PowerSteering.xml";
 	}
 	else
 		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	if (!_SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes))
+	bool ok = _SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes);
+	if (!ok && (CU == CUtype_AirCon))
+	{
+		_SSMP1com->selectCU(SSM1_CU_AirCon2);
+		ok = _SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes);
+	}
+	if (!ok)
 		return result_commError;
 	_CU = CU;
 	_state = state_normal;

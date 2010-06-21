@@ -31,7 +31,11 @@
 #define		SSMP1_CMD_READ_TRANSMISSION		0x45
 #define		SSMP1_CMD_READ_CRUISECONTROL		0xCC
 #define		SSMP1_CMD_READ_AIRCON			0x89
+#define		SSMP1_CMD_READ_AIRCON2			0xAC
 #define		SSMP1_CMD_READ_4WS			0x92
+#define		SSMP1_CMD_READ_ABS			0xAB
+#define		SSMP1_CMD_READ_AIRSUSP			0x66
+#define		SSMP1_CMD_READ_POWERSTEERING		0x95
 #define		SSMP1_CMD_WRITE				0xAA
 
 /* Timings/Timeouts */
@@ -42,7 +46,7 @@
 
 
 
-enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_FourWS};
+enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_AirCon2, SSM1_CU_FourWS, SSM1_CU_ABS, SSM1_CU_AirSusp, SSM1_CU_PwrSteer};
 
 
 class SSMP1commands
