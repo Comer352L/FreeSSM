@@ -29,6 +29,10 @@
 #include "libFSSM.h"
 
 
+#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.2.0"
+#define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.1.1"
+
+
 class attributeCondition
 {
 public:
@@ -49,6 +53,7 @@ class SSM1definitionsInterface
 public:
 	SSM1definitionsInterface(std::string lang = "en");
 	bool selectDefinitionsFile(std::string filename);
+	void getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);
 	bool selectID(char id[3]);
 
@@ -63,6 +68,8 @@ public:
 
 private:
 	TiXmlDocument *_xmldoc;
+	std::string _defs_version;
+	std::string _defs_format_version;
 	std::string _lang;
 	char _ID[3];
 	bool _id_set;
@@ -75,6 +82,8 @@ private:
 
 	std::vector<TiXmlElement*> getAllMatchingChildElements(TiXmlNode *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
 	bool StrToDouble(std::string mystring, double *d);
+	bool checkDefsFormatVersion(std::string version_str);
+	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);
 };
 
 

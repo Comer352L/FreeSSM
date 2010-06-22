@@ -37,6 +37,7 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 {
 	std::string fn_bak;
 	std::vector<TiXmlElement*> elements;
+	TiXmlAttribute* pAttrib = NULL;
 	TiXmlNode *root_node;
 	if (!filename.size())
 		goto error;
@@ -46,13 +47,39 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 		fn_bak = _xmldoc->ValueStr();
 	if (!_xmldoc->LoadFile(filename)) // always closes the current document automatically !
 	{
-		// Try to teopen last document:
+		// Try to reopen last document:
 		if (!fn_bak.size() || !_xmldoc->LoadFile(fn_bak))
 			goto error;
 	}
 	// Find and save node FSSM_SSM1_DEFINITIONS
 	root_node = _xmldoc->FirstChildElement("FSSM_SSM1_DEFINITIONS");
 	if (!root_node)
+		goto error;
+	// Get version infos:
+	_defs_version.clear();
+	_defs_format_version.clear();
+	pAttrib = root_node->ToElement()->FirstAttribute();
+	while (pAttrib)
+	{
+		if (std::string(pAttrib->Name()) == "version")
+		{
+			if (_defs_version.empty())
+				_defs_version = pAttrib->ValueStr();
+			else
+				goto error;
+		}
+		else if (std::string(pAttrib->Name()) == "format_version")
+		{
+			if (_defs_format_version.empty())
+				_defs_format_version = pAttrib->ValueStr();
+			else
+				goto error;
+		}
+		pAttrib=pAttrib->Next();
+	}
+	if (_defs_version.empty() || _defs_format_version.empty())
+		goto error;
+	if (!checkDefsFormatVersion(_defs_format_version))
 		goto error;
 	// Find and save node DEFINITIONS
 	elements = getAllMatchingChildElements(root_node, "DEFINITIONS");
@@ -68,16 +95,25 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	if (_id_set)
 		selectID(_ID);
 	return true;
-	
+
 error:
 	delete _xmldoc;
 	_xmldoc = NULL;
+	_defs_version.clear();
+	_defs_format_version.clear();
 	_defs_root_node = NULL;
 	_datacommon_root_node = NULL;
 	_defs_for_id_b1_node = NULL;
 	_defs_for_id_b2_node = NULL;
 	_defs_for_id_b3_node = NULL;
 	return false;
+}
+
+
+void SSM1definitionsInterface::getVersionInfos(std::string *defs_version, std::string *format_version)
+{
+	*defs_version = _defs_version;
+	*format_version = _defs_format_version;
 }
 
 
@@ -848,5 +884,75 @@ bool SSM1definitionsInterface::StrToDouble(std::string str, double *d)
 		return true;
 	}
 	return false;
+}
+
+
+bool SSM1definitionsInterface::checkDefsFormatVersion(std::string version_str)
+{
+	unsigned long int version_major = 0, version_major_min = 0, version_major_current = 0;
+	unsigned long int version_minor = 0, version_minor_min = 0, version_minor_current = 0;
+	unsigned long int version_bugfix = 0, version_bugfix_min = 0, version_bugfix_current = 0;
+	// Convert version strings to numeric data:
+	if (!versionStrToVersionNum(SSM1_DEFS_FORMAT_VERSION_MIN, &version_major_min, &version_minor_min, &version_bugfix_min))
+		return false;
+	if (!versionStrToVersionNum(SSM1_DEFS_FORMAT_VERSION_CURRENT, &version_major_current, &version_minor_current, &version_bugfix_current))
+		return false;
+	if (!versionStrToVersionNum(version_str, &version_major, &version_minor, &version_bugfix))
+		return false;
+	// Check against minimum supported version:
+	if (version_major < version_major_min)
+		return false;
+	if (version_major == version_major_min)
+	{
+		if (version_minor < version_minor_min)
+			return false;
+		if (version_minor == version_minor_min)
+		{
+			if (version_bugfix < version_bugfix_min)
+				return false;
+		}
+	}
+	// Check against current version:
+	if (version_major > version_major_current)
+		return false;
+	if (version_major == version_major_current)
+	{
+		if (version_minor > version_minor_current)
+			return false;
+		if (version_minor == version_minor_current)
+		{
+			if (version_bugfix > version_bugfix_current)
+				return false;
+		}
+	}
+	return true;
+}
+
+
+bool SSM1definitionsInterface::versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix)
+{
+	size_t dot_pos[2];
+	unsigned char num_dots = 0;
+	for (unsigned int k=0; k<version_str.size(); k++)
+	{
+		if (version_str[k] == '.')
+		{
+			if (num_dots > 1)
+				return false;
+			dot_pos[num_dots] = k;
+			num_dots++;
+		}
+		else if ((version_str[k] < '0')  && (version_str[k] > '9'))
+			return false;
+	}
+	if (num_dots != 2)
+		return false;
+	std::string version_str_major = version_str.substr(0, dot_pos[0]);
+	std::string version_str_minor = version_str.substr(dot_pos[0]+1, dot_pos[1]-dot_pos[0]-1);
+	std::string version_str_bugfix = version_str.substr(dot_pos[1]+1);
+	*version_major = strtoul(version_str_major.data(), NULL, 0);
+	*version_minor = strtoul(version_str_minor.data(), NULL, 0);
+	*version_bugfix = strtoul(version_str_bugfix.data(), NULL, 0);
+	return true;
 }
 
