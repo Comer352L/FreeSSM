@@ -151,7 +151,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 		{
 			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
 			result = _SSMPdev->setupCUdata( CUtype );
-			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noDefFile) || (result == SSMprotocol::result_noDefs))
+			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noOrInvalidDefsFile) || (result == SSMprotocol::result_noDefs))
 				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 			else
 			{
@@ -168,7 +168,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 		{
 			_SSMPdev = new SSMprotocol1(_diagInterface, _language);
 			result = _SSMPdev->setupCUdata( CUtype );
-			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noDefFile) || (result == SSMprotocol::result_noDefs))
+			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noOrInvalidDefsFile) || (result == SSMprotocol::result_noDefs))
 				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 			else
 			{

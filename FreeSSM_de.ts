@@ -845,19 +845,19 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="193"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="193"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="210"/>
+        <location filename="src/ControlUnitDialog.cpp" line="206"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation type="unfinished">Trenne Verbindung zum Steuergerät... Bitte warten !</translation>
@@ -973,10 +973,13 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
     <message>
         <location filename="src/EngineDialog.cpp" line="188"/>
         <source>Error:
-Definition file not found.
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
+        <oldsource>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
         <translation type="unfinished">Fehler:
-Definitionendatei nicht gefunden.
+Definitionendatei nicht gefunden oder fehlerhaft.
 Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
     </message>
     <message>
@@ -1053,7 +1056,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="139"/>
-        <location filename="src/FreeSSM.cpp" line="558"/>
+        <location filename="src/FreeSSM.cpp" line="585"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
@@ -1478,10 +1481,13 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
         <source>Error:
-Definition file not found.
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
+        <oldsource>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
         <translation type="unfinished">Fehler:
-Definitionendatei nicht gefunden.
+Definitionendatei nicht gefunden oder fehlerhaft.
 Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
     </message>
     <message>

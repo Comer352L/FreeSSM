@@ -72,7 +72,7 @@ void TransmissionDialog::setup()
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
 	SSMprotocol::CUsetupResult_dt init_result = probeProtocol(SSMprotocol::CUtype_Transmission);
-	if ((init_result == SSMprotocol::result_success) || (init_result == SSMprotocol::result_noDefFile) || (init_result == SSMprotocol::result_noDefs))
+	if ((init_result == SSMprotocol::result_success) || (init_result == SSMprotocol::result_noOrInvalidDefsFile) || (init_result == SSMprotocol::result_noDefs))
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
@@ -141,9 +141,9 @@ void TransmissionDialog::setup()
 			initstatusmsgbox.close();
 			// Show error message:
 			QString errtext;
-			if (init_result == SSMprotocol::result_noDefFile)
+			if (init_result == SSMprotocol::result_noOrInvalidDefsFile)
 			{
-				errtext = tr("Error:\nDefinition file not found.\nPlease make sure that FreeSSM is installed properly.");
+				errtext = tr("Error:\nNo valid definitions file found.\nPlease make sure that FreeSSM is installed properly.");
 			}
 			else if (init_result == SSMprotocol::result_noDefs)
 			{

@@ -844,19 +844,19 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="193"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error</source>
         <translation type="unfinished">Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="193"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Communication Error:
 - No or invalid answer from ECU -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="210"/>
+        <location filename="src/ControlUnitDialog.cpp" line="206"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation type="unfinished">Stopping Communication... Please wait !</translation>
@@ -972,10 +972,13 @@ Do you really want to clear the Control Unit&apos;s memory</translation>
     <message>
         <location filename="src/EngineDialog.cpp" line="188"/>
         <source>Error:
-Definition file not found.
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
-        <translation type="unfinished">Error:
+        <oldsource>Error:
 Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
+        <translation type="unfinished">Error:
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</translation>
     </message>
     <message>
@@ -1052,7 +1055,7 @@ If you want to contribute to the the project (help adding defintions), feel free
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="139"/>
-        <location filename="src/FreeSSM.cpp" line="558"/>
+        <location filename="src/FreeSSM.cpp" line="585"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
@@ -1477,10 +1480,13 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
         <source>Error:
-Definition file not found.
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
-        <translation type="unfinished">Error:
+        <oldsource>Error:
 Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
+        <translation type="unfinished">Error:
+No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</translation>
     </message>
     <message>

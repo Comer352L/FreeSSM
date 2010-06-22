@@ -165,7 +165,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	// Load control unit definitions:
 	SSM1definitionsInterface defsIface;
 	if (!defsIface.selectDefinitionsFile(defsFile))
-		return result_noDefFile;
+		return result_noOrInvalidDefsFile;
 	defsIface.setLanguage(_language.toStdString());
 	if (!defsIface.selectID(_SYS_ID)) // TODO: Ax xx xx IDs
 		return result_noDefs;
