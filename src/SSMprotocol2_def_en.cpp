@@ -189,7 +189,7 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "54;2;1;0;0001F5;;Electric Power Steering Current;A;*1;0"
 	<< "54;3;1;0;0001F0;;Boost Pressure Feedback;%;-128;0"
 	<< "54;4;1;0;0001EF;0001EE;Target Engine Speed;rpm;/4;0"
-	<< "54;5;1;0;0001ED;;Intake Air Temperature;°C;-40;0"
+	<< "54;5;1;0;0001ED;;Intake Air Temperature (combined);°C;-40;0"
 	<< "54;6;1;0;0001EC;;Common Rail Pressure;MPa;*1;0"
 	<< "54;7;1;0;0001EB;;Common Rail Target Pressure;MPa;*1;0"
 	<< "54;8;1;0;0001EA;;Exhaust Gas Recirculation (EGR) Duty;%;*1;0"

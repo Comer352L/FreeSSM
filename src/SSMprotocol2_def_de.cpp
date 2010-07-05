@@ -189,7 +189,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "54;2;1;0;0001F5;;Elektrische Servolenkung Strom;A;*1;0"
 	<< "54;3;1;0;0001F0;;Ladedruck-Rückkopplung;%;-128;0"
 	<< "54;4;1;0;0001EF;0001EE;Motor-Zieldrehzahl;U/Min;/4;0"
-	<< "54;5;1;0;0001ED;;Ansauglufttemperatur;°C;-40;0"
+	<< "54;5;1;0;0001ED;;Ansauglufttemperatur (kombiniert);°C;-40;0"
 	<< "54;6;1;0;0001EC;;Common-Rail-Druck;MPa;*1;0"
 	<< "54;7;1;0;0001EB;;Common-Rail-Zieldruck;MPa;*1;0"
 	<< "54;8;1;0;0001EA;;Abgasrückführung (AGR) Auslastung;%;*1;0"
