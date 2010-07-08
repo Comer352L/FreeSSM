@@ -286,7 +286,12 @@ void SSMP1communication::run()
 	if ((operation == comOp_write) || (operation == comOp_write_p))
 		wcdata = data;
 	if (operation == comOp_readRomId)
-		addresses.push_back(0x0000);
+	{
+		if (cu == SSM1_CU_FourWS)
+			addresses.push_back(0xffff);
+		else
+			addresses.push_back(0x8000);
+	}
 	// COMMUNICATION:
 	do
 	{
