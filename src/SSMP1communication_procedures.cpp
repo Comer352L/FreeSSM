@@ -71,7 +71,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	_lastaddr = -1;
 	_addrswitch_pending = false;
 	if (!_diagInterface->clearReceiveBuffer())
-		goto err;
+		return false;
 	if (!sendQueryIdCmd())
 	{
 #ifdef __FSSM_DEBUG__
@@ -79,11 +79,18 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 #endif
 		return false;
 	}
+	if (!_diagInterface->clearReceiveBuffer())
+		return false;
 	waitms(SSMP1_T_ID_REC_MAX);
 	if (!_diagInterface->read(&_recbuffer))
-		goto err;
+		return false;
 	if (_recbuffer.size() < 3)
 		goto err;
+	if (((_recbuffer.at(0) & '\xF0') != '\x70') && ((_recbuffer.at(0) & '\xF0') != '\xA0'))
+		goto err;
+	/* NOTE: Problem: the echo of ISO-KL-interfaces may be detected as SSM1-ID.
+		 We can not rely in flushing the receive buffer immediately after the request was sent,
+	         because this doesn't work reliable with some serial port drivers.	*/
 	if (((_recbuffer.at(0) & '\xF0') == '\xA0') && (_recbuffer.at(1) == '\x01'))
 	{
 		if (_recbuffer.size() < 12)
@@ -104,11 +111,6 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 err:
 	_recbuffer.clear();
 	return false;
-
-	/* FIXME: We currently rely in flushing the receive buffer immediately after the request was sent.
-	          This doesn't work reliable with some serial port drivers !
-	          => Problem: the echos of ISO-KL-interfaces may be detected as SSM1-ROM-IDs.
-	*/
 }
 
 
