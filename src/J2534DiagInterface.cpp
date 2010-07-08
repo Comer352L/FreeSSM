@@ -402,11 +402,6 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 	if (_j2534 && _connected)
 	{
 		long ret = 0;
-		// Flush buffers;
-		if (!clearSendBuffer())
-			return false;
-		if (!clearReceiveBuffer())
-			return false;
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
 		memset(&tx_msg, 0, sizeof(tx_msg));

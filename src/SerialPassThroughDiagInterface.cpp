@@ -165,23 +165,6 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 {
 	if (_port && _connected)
 	{
-		if (!_port->ClearSendBuffer())
-		{
-#ifdef __FSSM_DEBUG__
-			std::cout << "SerialPassThroughDiagInterface::write(...):   ClearSendBuffer() failed\n";
-#endif
-			return false;
-		}
-		if (protocolType() == AbstractDiagInterface::protocol_SSM2)
-		{
-			if (!_port->ClearReceiveBuffer())
-			{
-#ifdef __FSSM_DEBUG__
-				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearReceiveBuffer() failed\n";
-#endif
-				return false;
-			}
-		}
 		TimeM time;
 		unsigned int t_el = 0;
 		unsigned int T_Tx_min = 0;
@@ -201,16 +184,6 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 			t_el = time.elapsed();
 			if (t_el < T_Tx_min)
 				waitms(T_Tx_min - t_el);
-		}
-		if (protocolType() != AbstractDiagInterface::protocol_SSM2)
-		{
-			if (!_port->ClearReceiveBuffer())
-			{
-#ifdef __FSSM_DEBUG__
-				std::cout << "SerialPassThroughDiagInterface::write(...):   ClearReceiveBuffer() failed\n";
-#endif
-				return false;
-			}
 		}
 		return true;
 	}
