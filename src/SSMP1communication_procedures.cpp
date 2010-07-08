@@ -216,34 +216,31 @@ bool SSMP1communication_procedures::writeDatabyte(char databyte)
 }
 
 
-bool SSMP1communication_procedures::waitForDataValue(char data, unsigned int timeout)
+char SSMP1communication_procedures::waitForDataValue(char data, unsigned int timeout)
 {
-	std::vector<char> datawritten;
+	std::vector<char> datavalue;
 	TimeM time;
 	bool ok = false;
 	time.start();
 	do
 	{
-		if (!getNextData(&datawritten, timeout))
+		datavalue.clear();
+		if (!getNextData(&datavalue, timeout))
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "SSMP1communication_procedures::waitForDataValue(...)   getNextData(...) failed.\n";
 #endif
 			return false;
 		}
-		ok = (datawritten.at(0) == data);
-		if (!ok)
-			datawritten.clear();
+		ok = (datavalue.at(0) == data);
 	} while(!ok && (time.elapsed() < timeout));
-	
 #ifdef __FSSM_DEBUG__
 	if (!ok)
 		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   timeout.\n";
 	else
 		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   success.\n";
 #endif
-
-	return ok;
+	return datavalue.at(0);
 }
 
 

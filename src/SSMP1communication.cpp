@@ -102,13 +102,21 @@ bool SSMP1communication::readAddresses(std::vector<unsigned int> addr, std::vect
 }
 
 
-bool SSMP1communication::writeAddress(unsigned int addr, char databyte)
+bool SSMP1communication::writeAddress(unsigned int addr, char databyte, char *databytewritten)
 {
-	return writeAddresses(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte));
+	if (databytewritten == NULL)
+		return writeAddresses(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte));
+	else
+	{
+		std::vector<char> databyteswritten;
+		bool ok = writeAddresses(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte), &databyteswritten);
+		*databytewritten = databyteswritten.at(0);
+		return ok;
+	}
 }
 
 
-bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vector<char> data)
+bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vector<char> data, std::vector<char> *databyteswritten)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0) || (data.size()==0) || (addr.size()!=data.size())) return false;
@@ -118,6 +126,19 @@ bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 	_data = data;
 	// Communication-operation:
 	ok = doSingleCommOperation();
+	// Actually written data:
+	if (databyteswritten == NULL)
+	{
+		// Check written data:
+		unsigned int k=0;
+		while (ok && (k < _data.size()))
+		{
+			ok = (_data.at(k) == data.at(k));
+			k++;
+		}
+	}
+	else	// Pass written data:
+		*databyteswritten = _data;
 	_CommOperation = comOp_noCom;
 	return ok;
 }
@@ -212,6 +233,7 @@ void SSMP1communication::run()
 	SSM1_CUtype_dt cu;
 	std::vector<unsigned int> addresses;
 	std::vector<char> data;
+	std::vector<char> wcdata;
 	unsigned int k = 0;
 	bool setAddr = true;
 	unsigned char errmax = 3;
@@ -261,6 +283,8 @@ void SSMP1communication::run()
 		permanent = true;
 		timer.start();
 	}
+	if ((operation == comOp_write) || (operation == comOp_write_p))
+		wcdata = data;
 	if (operation == comOp_readRomId)
 		addresses.push_back(0x0000);
 	// COMMUNICATION:
@@ -293,13 +317,17 @@ void SSMP1communication::run()
 			{
 				// Write next data:
 				if (writeDatabyte(data.at(k)))
-					op_success = waitForDataValue(data.at(k));
+				{
+					wcdata.at(k) = waitForDataValue(data.at(k));
+					op_success = true;
+				}
 				else
+				{
 					op_success = false;
 #ifdef __FSSM_DEBUG__
-				if (!op_success)
 					std::cout << "SSMP1communication::run():   writeDatabyte(...) failed !\n";
 #endif
+				}
 			}
 			else if (operation == comOp_readRomId)
 			{
@@ -359,7 +387,10 @@ void SSMP1communication::run()
 	_mutex.lock();
 	if (!permanent && op_success)
 	{
-		_data = data;
+		if (operation == comOp_write)
+			_data = wcdata;
+		else
+			_data = data;
 		_result = op_success;
 	}
 	_abort = false;

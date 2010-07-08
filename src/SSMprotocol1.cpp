@@ -308,14 +308,17 @@ return false;
 
 bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
+	*success = false;
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
 	if (_CMaddr == MEMORY_ADDRESS_NONE) return false;
-	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue))
+	char bytewritten = 0;
+	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
+	*success = (bytewritten == _CMvalue);
 	return true;
 }
 

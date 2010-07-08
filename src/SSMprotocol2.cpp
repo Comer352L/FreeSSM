@@ -1103,6 +1103,7 @@ bool SSMprotocol2::isInTestMode(bool *testmode)
 
 bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 {
+	*success = false;
 	char val = 0;
 	char bytewritten = 0;
 	bool CM2sup = false;
@@ -1120,14 +1121,12 @@ bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 	{
 		return false;
 	}
-	*success = false;
 	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (bytewritten == val)
-		*success = true;
+	*success = (bytewritten == val);
 	return true;
 }
 
