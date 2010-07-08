@@ -58,6 +58,7 @@ std::string SSMprotocol::getSysID()
 
 std::string SSMprotocol::getROMID()
 {
+	if (_state == state_needSetup) return "";
 	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
 		return libFSSM::StrToHexstr(_ROM_ID, 5);
 	else
