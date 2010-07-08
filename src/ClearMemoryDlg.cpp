@@ -306,7 +306,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu,
 			return ClearMemoryDlg::CMresult_reconnectAborted;
 		// Validate CU idetification:
 		waitmsgbox.show();
-		ok = _SSMPdev->setupCUdata(cu);
+		ok = (_SSMPdev->setupCUdata(cu) == SSMprotocol::result_success);
 		if (ok)
 		{
 			ID_new = _SSMPdev->getSysID();
