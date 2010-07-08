@@ -1137,26 +1137,29 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 	bool ImmoSup = false;
 	if (_state != state_normal) return false;
 	if (!hasImmobilizer(&ImmoSup) || ImmoSup==false) return false;
-	char readcheckvalue = 0;
+	char checkvalue = 0;
 	unsigned int readcheckadr = 0x8B;
 	// Write test-pattern:
-	_SSMP2com->writeDatabyte(0xE0, '\xAA', NULL);
-	// Read result:
-	if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &readcheckvalue))
+	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
 	{
-		if (readcheckvalue == '\x01')
+		// Read result:
+		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &checkvalue))
 		{
-			*result = immoShortedToGround;
+			/* NOTE: the actually written data is NOT 0xAA ! */
+			if (checkvalue == '\x01')
+			{
+				*result = immoShortedToGround;
+			}
+			else if  (checkvalue == '\x02')
+			{
+				*result = immoShortedToBattery;
+			}
+			else
+			{
+				*result = immoNotShorted;
+			}
+			return true;
 		}
-		else if  (readcheckvalue == '\x02')
-		{
-			*result = immoShortedToBattery;
-		}
-		else
-		{
-			*result = immoNotShorted;
-		}
-		return true;
 	}
 	// Communication error:
 	resetCUdata();
