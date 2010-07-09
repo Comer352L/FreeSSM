@@ -39,13 +39,13 @@ public:
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);
 	comOp_dt getCurrentCommOperation();
-	bool readID(char *ID);
+	bool getCUdata(char *ID, char *flagbytes, unsigned char *nrofflagbytes);
 	bool readAddress(unsigned int addr, char * databyte);
 	bool readAddresses(std::vector<unsigned int> addr, std::vector<char> * data);
 	bool readAddress_permanent(unsigned int addr);
 	bool readAddresses_permanent(std::vector<unsigned int> addr);
-	bool writeAddress(unsigned int addr, char databyte);
-	bool writeAddresses(std::vector<unsigned int> addr, std::vector<char> data);
+	bool writeAddress(unsigned int addr, char databyte, char *databytewritten = NULL);
+	bool writeAddresses(std::vector<unsigned int> addr, std::vector<char> data, std::vector<char> *databyteswritten = NULL);
 	bool writeAddress_permanent(unsigned int addr, char databyte);
 	bool writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data);
 	bool stopCommunication();

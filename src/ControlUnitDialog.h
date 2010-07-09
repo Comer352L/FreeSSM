@@ -42,7 +42,7 @@ protected:
 	SSMprotocol *_SSMPdev;
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
-	bool probeProtocol(SSMprotocol::CUtype_dt CUtype);
+	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
 	void setContentWidget(QString title, QWidget *contentwidget);
 	QWidget * contentWidget();

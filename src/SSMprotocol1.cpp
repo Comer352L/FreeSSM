@@ -20,10 +20,11 @@
 #include "SSMprotocol1.h"
 
 
-
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP1com = NULL;
+	_CMaddr = MEMORY_ADDRESS_NONE;
+	_CMvalue = '\x00';
 	resetCUdata();
 }
 
@@ -64,24 +65,36 @@ void SSMprotocol1::resetCUdata()
 	}
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-	// RESET ECU RAW DATA:
-	_ID[0] = '\x0';
-	_ID[1] = '\x0';
-	_ID[2] = '\x0';
-	// Reset DC-data:
+	// RESET ECU DATA:
+	_SYS_ID[0] = 0;
+	_SYS_ID[1] = 0;
+	_SYS_ID[2] = 0;
+	_ROM_ID[0] = 0;
+	_ROM_ID[1] = 0;
+	_ROM_ID[2] = 0;
+	_ROM_ID[3] = 0;
+	_ROM_ID[4] = 0;
+	memset(_flagbytes, 0, 96);
+	_nrofflagbytes = 0;
+	// Clear system description:
+	_sysDescription.clear();
+	// Clear DC data:
 	_DTCdefs.clear();
-	// Reset MB/SW-data:
+	_CMaddr = MEMORY_ADDRESS_NONE;
+	_CMvalue = '\x00';
+	// Reset MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
-	// *** Reset selection data ***:
+	// Clear selection data:
 	_selectedDCgroups = noDCs_DCgroup;
 	_MBSWmetaList.clear();
 	_selMBsSWsAddr.clear();
 }
 
 
-bool SSMprotocol1::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
+	std::string defsFile;
 	SSM1_CUtype_dt SSM1_CU;
 	// Reset:
 	resetCUdata();
@@ -89,44 +102,85 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 	if (CU == CUtype_Engine)
 	{
 		SSM1_CU = SSM1_CU_Engine;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_Engine.xml";
 	}
 	else if (CU == CUtype_Transmission)
 	{
 		SSM1_CU = SSM1_CU_Transmission;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_Transmission.xml";
 	}
 	else if (CU == CUtype_CruiseControl)
 	{
 		SSM1_CU = SSM1_CU_CruiseCtrl;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_CruiseControl.xml";
 	}
 	else if (CU == CUtype_AirCon)
 	{
 		SSM1_CU = SSM1_CU_AirCon;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AirConditioning.xml";
 	}
 	else if (CU == CUtype_FourWheelSteering)
 	{
 		SSM1_CU = SSM1_CU_FourWS;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_FourWheelSteering.xml";
+	}
+	else if (CU == CUtype_ABS)
+	{
+		SSM1_CU = SSM1_CU_ABS;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_ABS.xml";
+	}
+	else if (CU == CUtype_AirSuspension)
+	{
+		SSM1_CU = SSM1_CU_AirSusp;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_AirSuspension.xml";
+	}
+	else if (CU == CUtype_PowerSteering)
+	{
+		SSM1_CU = SSM1_CU_PwrSteer;
+		defsFile = QCoreApplication::applicationDirPath().toStdString() + "/SSM1defs_PowerSteering.xml";
 	}
 	else
-		return false;
+		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
-	// Get control unit data:
-	if (!_SSMP1com->readID(_ID))
-		 return false;
+	// Get control unit ID:
+	bool ok = _SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes);
+	if (!ok && (CU == CUtype_AirCon))
+	{
+		_SSMP1com->selectCU(SSM1_CU_AirCon2);
+		ok = _SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes);
+	}
+	if (!ok)
+		return result_commError;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	// Read extended ID (5-byte ROM-ID):
+	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+	{
+		if (!readExtendedID(_ROM_ID))
+			return result_commError;
+	}
+	// Load control unit definitions:
+	SSM1definitionsInterface defsIface;
+	if (!defsIface.selectDefinitionsFile(defsFile))
+		return result_noOrInvalidDefsFile;
+	defsIface.setLanguage(_language.toStdString());
+	if (!defsIface.selectID(_SYS_ID)) // TODO: Ax xx xx IDs
+		return result_noDefs;
+	// Get system description:
+	defsIface.systemDescription(&_sysDescription);
 	// Get definitions of the supported diagnostic codes:
-	setupDTCdata();
+	defsIface.diagnosticCodes(&_DTCdefs);
 	// Get supported MBs and SWs:
-	setupSupportedMBs();
-	setupSupportedSWs();
-	return true;
-	
+	defsIface.measuringBlocks(&_supportedMBs);
+	defsIface.switches(&_supportedSWs);
+	// Get Clear Memory data:
+	defsIface.clearMemoryData(&_CMaddr, &_CMvalue);
+	return result_success;
 	
 	/* TODO:
-		- setup Clear Memory address (and value ?)
 		- setup test-addresses for Immobilizer-communication-line
 		- does the communication always immediately abort when ignition is switched off ?
 	*/
@@ -134,29 +188,17 @@ bool SSMprotocol1::setupCUdata(CUtype_dt CU)
 }
 // INCOMPLETE IMPLEMENTATION
 
-std::string SSMprotocol1::getSysID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_ID, 3);
-}
-
-
-std::string SSMprotocol1::getROMID()
-{
-	return getSysID();
-}
-
-
 bool SSMprotocol1::getSystemDescription(QString *sysdescription)
 {
 	if (_state == state_needSetup) return false;
-
-	// TODO !
-	// => Get system description from definitions and copy to sysdescription
-
-return false;
+	if (_sysDescription.size())
+	{
+		*sysdescription = QString::fromStdString(_sysDescription);
+		return true;
+	}
+	return false;
 }
-// IMPLEMENTATION MISSING
+
 
 bool SSMprotocol1::hasOBD2system(bool *OBD2)
 {
@@ -193,6 +235,14 @@ bool SSMprotocol1::hasIntegratedCC(bool *CCsup)
 }
 
 
+bool SSMprotocol1::hasClearMemory(bool *CMsup)
+{
+	if (_state == state_needSetup) return false;
+	*CMsup = (_CMaddr != MEMORY_ADDRESS_NONE);
+	return true;
+}
+
+
 bool SSMprotocol1::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
@@ -217,43 +267,26 @@ bool SSMprotocol1::hasActuatorTests(bool *ATsup)
 }
 
 
-void SSMprotocol1::setupDTCdata()
-{
-
-	// TODO !
-	// => Get supported DTCs from definitions and save to _DTCdefs
-
-}
-// IMPLEMENTATION MISSING
-
-void SSMprotocol1::setupSupportedMBs()
-{
-
-	// TODO !
-	// => Get supported MBs from definitions and save to _supportedMBs
-
-}
-// IMPLEMENTATION MISSING
-
-void SSMprotocol1::setupSupportedSWs()
-{
-
-	// TODO !
-	// => Get supported SWs from definitions and save to _supportedSWs
-
-}
-// IMPLEMENTATION MISSING
-
 bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
 {
 	int retDCgroups = 0;
 	if (_state == state_needSetup) return false;
 	if (_DTCdefs.size())
-		retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
+	{
+		retDCgroups |= currentDTCs_DCgroup;
+		for (unsigned int k=0; k<_DTCdefs.size(); k++)
+		{
+			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
+			{
+				retDCgroups |= historicDTCs_DCgroup;
+				break;
+			}
+		}
+	}
 	*DCgroups = retDCgroups;
 	return true;
 }
-// CHECK: really always Current and Historic DTCs supported ?
+
 
 bool SSMprotocol1::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
@@ -275,14 +308,20 @@ return false;
 
 bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
+	*success = false;
 	if (_state != state_normal) return false;
 	if (level == CMlevel_2) return false;
-
-	// TODO !
-	
-return false;
+	if (_CMaddr == MEMORY_ADDRESS_NONE) return false;
+	char bytewritten = 0;
+	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue, &bytewritten))
+	{
+		resetCUdata();
+		return false;
+	}
+	*success = (bytewritten == _CMvalue);
+	return true;
 }
-// IMPLEMENTATION MISSING
+
 
 bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {
@@ -306,12 +345,18 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 	if (DCgroups & currentDTCs_DCgroup)	// current DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+		{
+			if (_DTCdefs.at(k).byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+		}
 	}
 	if (DCgroups & historicDTCs_DCgroup)	// historic DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
+		{
+			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
+				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
+		}
 	}
 	// Check if min. 1 Address to read:
 	if (!DCqueryAddrList.size())
@@ -464,4 +509,17 @@ bool SSMprotocol1::waitForIgnitionOff()
 /* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
 }
 // USE SWITCH "ignition" (if exists) ?
+
+bool SSMprotocol1::readExtendedID(char ID[5])
+{
+	std::vector<unsigned int> addresses;
+	for (unsigned int addr=0x01; addr<=0x05; addr++)
+		addresses.push_back(addr);
+	std::vector<char> data;
+	if (!_SSMP1com->readAddresses(addresses, &data))
+		return false;
+	for (unsigned char i=0; i<5; i++)
+		ID[i] = data.at(i);
+	return true;
+}
 

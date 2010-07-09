@@ -502,23 +502,23 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="57"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="921"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="923"/>
         <source>Refresh duration:</source>
         <translation type="unfinished">Aktualisierungsdauer:</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="55"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="914"/>
         <source>Block transfer rate:   </source>
         <translation type="unfinished">Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="943"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="943"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation type="unfinished">Kommunikationsfehler:
@@ -704,52 +704,52 @@ ist offenbar (nach +) kurzgeschlossen !</translation>
 <context>
     <name>ClearMemoryDlg</name>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="179"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="284"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="289"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="196"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="201"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="197"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="202"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Adjustment Value restoration failed:
 The Control Unit didn&apos;t accept some of the values !</source>
         <translation type="unfinished">Wiederherstellung der Einstellwerte fehlgeschlagen:
 Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Please check current values !</source>
         <translation type="unfinished">Bitte überprüfen Sie die aktuellen Einstellwerte !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="287"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="292"/>
         <source>Please switch ignition ON again.</source>
         <translation type="unfinished">Bitte schalten Sie die Zündung wieder EIN.</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="288"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="293"/>
         <source>Continue</source>
         <translation type="unfinished">Weiter</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="289"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="294"/>
         <source> Leave Control Unit </source>
         <translation type="unfinished"> Steuergerät verlassen </translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="57"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="182"/>
-        <location filename="src/ClearMemoryDlg.cpp" line="191"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="187"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="196"/>
         <source> (level 2)</source>
         <translation type="unfinished"> (Stufe 2)</translation>
     </message>
@@ -759,13 +759,13 @@ Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
         <translation type="unfinished">Lösche Speicher</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="93"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="98"/>
         <source>Please switch ignition OFF and be patient...</source>
         <oldsource>Please switch ignition OFF and be patient...   </oldsource>
         <translation type="unfinished">Bitte Zündung ausschalten und warten...</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="294"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="299"/>
         <source>Reconnecting... Please wait !</source>
         <oldsource>Reconnecting... Please wait !   </oldsource>
         <translation type="unfinished">Verbindung wird wieder hergestellt... Bitte warten !</translation>
@@ -776,64 +776,64 @@ Das Steuergerät hat einige Werte nicht akzeptiert !</translation>
         <translation type="unfinished">... Bitte warten !   </translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="243"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="248"/>
         <source>Restoring Adjustment Values... Please wait !</source>
         <oldsource>Restoring Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Einstellwerte werden wiederhergestellt... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="217"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="222"/>
         <source>Restore Adjustment Values ?</source>
         <translation type="unfinished">Einstellwerte wiederherstellen ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="218"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="223"/>
         <source>Shall the last Adjustment Values be restored ?</source>
         <translation type="unfinished">Sollen die letzten Einstellwerte wiederhergestellt werden ?</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="221"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="226"/>
         <source>Restore</source>
         <translation type="unfinished">Wiederherstellen</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="222"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="227"/>
         <source>Keep default values</source>
         <translation type="unfinished">Standardwerte behalten</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="261"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="266"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="180"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="185"/>
         <source>The Clear Memory procedure</source>
         <translation type="unfinished">Die Speicher-Löschprozedur</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="183"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="188"/>
         <source>
 - clears the Diagnostic Codes</source>
         <translation type="unfinished">
 - löscht sämtliche Diagnosecodes</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="184"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="189"/>
         <source>
 - resets all non-permanent Adjustment Values</source>
         <translation type="unfinished">
 - setzt alle nicht-permanenten Einstellwerte zurück</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="186"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="191"/>
         <source>
 - resets the Control Units&apos; learning values</source>
         <translation type="unfinished">
 - setzt die Lernwerte des Steuergeräts zurück</translation>
     </message>
     <message>
-        <location filename="src/ClearMemoryDlg.cpp" line="187"/>
+        <location filename="src/ClearMemoryDlg.cpp" line="192"/>
         <source>
 
 Do you really want to clear the Control Units&apos; memory</source>
@@ -845,19 +845,19 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="164"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error</source>
         <translation type="unfinished">Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="164"/>
+        <location filename="src/ControlUnitDialog.cpp" line="189"/>
         <source>Communication Error:
 - No or invalid answer from ECU -</source>
         <translation type="unfinished">Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="181"/>
+        <location filename="src/ControlUnitDialog.cpp" line="206"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation type="unfinished">Trenne Verbindung zum Steuergerät... Bitte warten !</translation>
@@ -900,117 +900,145 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
         <translation type="unfinished">Motor-Steuergerät</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="34"/>
+        <location filename="src/EngineDialog.cpp" line="35"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnosecodes</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="37"/>
+        <location filename="src/EngineDialog.cpp" line="38"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Messwertblöcke</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="39"/>
+        <location filename="src/EngineDialog.cpp" line="40"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="41"/>
+        <location filename="src/EngineDialog.cpp" line="42"/>
         <source>System &amp;Tests</source>
         <translation type="unfinished">System-&amp;Tests</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="43"/>
+        <location filename="src/EngineDialog.cpp" line="44"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="47"/>
-        <location filename="src/EngineDialog.cpp" line="191"/>
+        <location filename="src/EngineDialog.cpp" line="48"/>
+        <location filename="src/EngineDialog.cpp" line="227"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnosecodes:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="69"/>
+        <location filename="src/EngineDialog.cpp" line="70"/>
         <source>Connecting to ECU... Please wait !</source>
         <translation type="unfinished">Verbinde mit Steuergerät... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="70"/>
+        <location filename="src/EngineDialog.cpp" line="71"/>
         <source>Connecting to ECU...</source>
         <translation type="unfinished">Verbindung herstellen...</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="77"/>
+        <location filename="src/EngineDialog.cpp" line="79"/>
         <source>Processing ECU data... Please wait !</source>
         <translation type="unfinished">Verarbeite Steuergeräte-Daten... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="89"/>
+        <location filename="src/EngineDialog.cpp" line="91"/>
         <source>unknown</source>
         <translation type="unfinished">unbekannt</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="114"/>
+        <location filename="src/EngineDialog.cpp" line="118"/>
         <source>Reading Vehicle Ident. Number... Please wait !</source>
         <translation type="unfinished">Lese Fahrgestellnummer... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="131"/>
+        <location filename="src/EngineDialog.cpp" line="135"/>
         <source>Checking system status... Please wait !</source>
         <translation type="unfinished">Prüfe Systemstatus... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="144"/>
+        <location filename="src/EngineDialog.cpp" line="148"/>
         <source>Stopping actuators... Please wait !</source>
         <translation type="unfinished">Deaktivieren der Stellglieder... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="167"/>
+        <location filename="src/EngineDialog.cpp" line="172"/>
         <source>ECU-initialisation successful !</source>
         <translation type="unfinished">ECU-Initialisierung erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="187"/>
+        <location filename="src/EngineDialog.cpp" line="188"/>
+        <source>Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</source>
+        <oldsource>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
+        <translation type="unfinished">Fehler:
+Definitionendatei nicht gefunden oder fehlerhaft.
+Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="192"/>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation type="unfinished">Fehler:
+Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
+FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
+Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht untertsützte Steuergeräte hinzuzufügen, kontaktieren Sie ruhig die Autoren.</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="194"/>
+        <source>Error</source>
+        <translation type="unfinished">Fehler</translation>
+    </message>
+    <message>
+        <location filename="src/EngineDialog.cpp" line="221"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="216"/>
+        <location filename="src/EngineDialog.cpp" line="253"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="220"/>
+        <location filename="src/EngineDialog.cpp" line="259"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="242"/>
+        <location filename="src/EngineDialog.cpp" line="282"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Einstellungen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="246"/>
+        <location filename="src/EngineDialog.cpp" line="288"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="265"/>
+        <location filename="src/EngineDialog.cpp" line="308"/>
         <source>Switching to System Tests... Please wait !</source>
         <oldsource>Switching to System Tests... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu System-Funktionstests... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="269"/>
+        <location filename="src/EngineDialog.cpp" line="314"/>
         <source>System Operation Tests:</source>
         <translation type="unfinished">System-Funktionstests:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="298"/>
+        <location filename="src/EngineDialog.cpp" line="345"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Einstellungen werden gelesen... Bitte warten !</translation>
@@ -1028,7 +1056,7 @@ Soll der Steuergeräte-Speicher wirklich gelöscht werden</translation>
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="139"/>
-        <location filename="src/FreeSSM.cpp" line="558"/>
+        <location filename="src/FreeSSM.cpp" line="585"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
@@ -1168,29 +1196,29 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="170"/>
-        <location filename="src/Preferences.cpp" line="387"/>
-        <location filename="src/Preferences.cpp" line="431"/>
+        <location filename="src/Preferences.cpp" line="171"/>
+        <location filename="src/Preferences.cpp" line="425"/>
+        <location filename="src/Preferences.cpp" line="469"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="212"/>
+        <location filename="src/Preferences.cpp" line="214"/>
         <source>Serial Port:</source>
         <translation type="unfinished">Serieller Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="226"/>
+        <location filename="src/Preferences.cpp" line="222"/>
         <source>Interface-Name:</source>
         <translation type="unfinished">Interface-Name:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="275"/>
+        <location filename="src/Preferences.cpp" line="278"/>
         <source>The selected interface is not supported !</source>
         <translation type="unfinished">Das ausgewählte Diagnose-Interface wird nicht unterstützt !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="276"/>
+        <location filename="src/Preferences.cpp" line="279"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</source>
@@ -1202,61 +1230,96 @@ Der Interface-Test für das gewählte Inteface wurde noch nicht implementiert.
 =&gt; Bitte melden Sie dies als Programm-Fehler.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="284"/>
-        <source>Couldn&apos;t configure the diagnostic interface !</source>
-        <translation type="unfinished">Das Diagnose-Interface konnte nicht konfiguriert werden !</translation>
-    </message>
-    <message>
         <location filename="src/Preferences.cpp" line="292"/>
-        <source>Couldn&apos;t open the diagnostic interface !
-Maybe the device is already in use by another application...</source>
-        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
-Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="300"/>
-        <source>Please connect diagnostic interface to the vehicles
-OBD-connector and switch ignition on.</source>
-        <translation type="unfinished">Diagnose-Interface mit der OBD-Buchse des Fahrzeugs
-verbinden und Zündung einschalten.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="301"/>
         <source>Start</source>
         <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="302"/>
-        <location filename="src/Preferences.cpp" line="334"/>
+        <location filename="src/Preferences.cpp" line="293"/>
+        <location filename="src/Preferences.cpp" line="386"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="319"/>
+        <location filename="src/Preferences.cpp" line="313"/>
         <source>Testing interface... Please wait !     </source>
         <translation type="unfinished">Teste Interface... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
+        <location filename="src/Preferences.cpp" line="354"/>
+        <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann weder für das SSM1- noch das SSM2-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="356"/>
+        <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
+        <translation type="unfinished">Das gewählte Interface unterstützt weder das SSM1- noch das SSM2-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="360"/>
+        <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
+        <translation type="unfinished">Bitte stellen sie sicher, dass das Interface korrekt angeschlossen ist und die Zündung eigeschaltet ist.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="364"/>
+        <source>WARNING:</source>
+        <translation type="unfinished">WARNUNG:</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="368"/>
+        <source>The selected serial port can not be configured for the SSM1-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann nicht für das SSM1-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="370"/>
+        <source>The selected interface does not support the SSM1-protocol.</source>
+        <translation type="unfinished">Der gewählte Interface bietet keine Unterstützung für das SSM1-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="375"/>
+        <source>The selected serial port can not be configured for the SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte serielle Port kann nicht für das SSM2-Protokoll konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="377"/>
+        <source>The selected interface does not support the SSM2-protocol.</source>
+        <translation type="unfinished">Der gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="385"/>
         <source>Retry</source>
         <translation type="unfinished">Wiederholen</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="170"/>
+        <location filename="src/Preferences.cpp" line="171"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation type="unfinished">Fehler:
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="300"/>
-        <location filename="src/Preferences.cpp" line="332"/>
-        <location filename="src/Preferences.cpp" line="348"/>
+        <location filename="src/Preferences.cpp" line="285"/>
+        <source>Couldn&apos;t open the diagnostic interface !
+Please make sure that the device is not in use by another application.</source>
+        <translation type="unfinished">Das Diagnose-Interface konnte nicht geöffnet werden !
+Bitte stellen sie sicher, dass das Gerät von keiner anderen Anwendung verwendet wird.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="291"/>
+        <location filename="src/Preferences.cpp" line="381"/>
+        <location filename="src/Preferences.cpp" line="384"/>
         <source>Interface test</source>
         <translation type="unfinished">Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="332"/>
+        <location filename="src/Preferences.cpp" line="291"/>
+        <source>Please connect diagnostic interface to the vehicles
+diagnostic connector and switch ignition on.</source>
+        <translation type="unfinished">Diagnose-Interface mit der Diagnose-Buchse des Fahrzeugs
+verbinden und Zündung einschalten.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="350"/>
         <source>Interface test failed !</source>
         <translation type="unfinished">Interface-Test fehlgeschlagen !</translation>
     </message>
@@ -1266,12 +1329,12 @@ verbinden und Zündung einschalten.</translation>
         <translation type="unfinished">Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="363"/>
+        <location filename="src/Preferences.cpp" line="401"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation type="unfinished">Das Diagnose-Interface konnte nicht geschlossen werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="387"/>
+        <location filename="src/Preferences.cpp" line="425"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1360,91 +1423,119 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
         <translation type="unfinished">Getriebe-Steuergerät</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="34"/>
+        <location filename="src/TransmissionDialog.cpp" line="35"/>
         <source>&amp;Diagnostic Codes</source>
         <translation type="unfinished">&amp;Diagnosecodes</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="37"/>
+        <location filename="src/TransmissionDialog.cpp" line="38"/>
         <source>&amp;Measuring Blocks</source>
         <translation type="unfinished">&amp;Messwertblöcke</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="39"/>
+        <location filename="src/TransmissionDialog.cpp" line="40"/>
         <source>&amp;Adjustments</source>
         <translation type="unfinished">&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="41"/>
+        <location filename="src/TransmissionDialog.cpp" line="42"/>
         <source>Clear Memory</source>
         <translation type="unfinished">Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="43"/>
+        <location filename="src/TransmissionDialog.cpp" line="44"/>
         <source>Clear Memory 2</source>
         <translation type="unfinished">Speicher Löschen 2</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="48"/>
-        <location filename="src/TransmissionDialog.cpp" line="150"/>
+        <location filename="src/TransmissionDialog.cpp" line="49"/>
+        <location filename="src/TransmissionDialog.cpp" line="185"/>
         <source>Diagnostic Codes:</source>
         <translation type="unfinished">Diagnosecodes:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="68"/>
+        <location filename="src/TransmissionDialog.cpp" line="69"/>
         <source>Connecting to TCU... Please wait !</source>
         <translation type="unfinished">Verbinde mit Steuergerät... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="69"/>
+        <location filename="src/TransmissionDialog.cpp" line="70"/>
         <source>Connecting to TCU...</source>
         <translation type="unfinished">Verbindung herstellen...</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="76"/>
+        <location filename="src/TransmissionDialog.cpp" line="78"/>
         <source>Processing TCU data... Please wait !</source>
         <translation type="unfinished">Verarbeite Steuergeräte-Daten... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="88"/>
+        <location filename="src/TransmissionDialog.cpp" line="90"/>
         <source>unknown</source>
         <translation type="unfinished">unbekannt</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="126"/>
+        <location filename="src/TransmissionDialog.cpp" line="128"/>
         <source>TCU-initialisation successful !</source>
         <translation type="unfinished">TCU-Initialisierung erfolgreich !</translation>
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="146"/>
+        <source>Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</source>
+        <oldsource>Error:
+Definition file not found.
+Please make sure that FreeSSM is installed properly.</oldsource>
+        <translation type="unfinished">Fehler:
+Definitionendatei nicht gefunden oder fehlerhaft.
+Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="150"/>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation type="unfinished">Fehler:
+Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
+FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
+Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht untertsützte Steuergeräte hinzuzufügen, kontaktieren Sie ruhig die Autoren.</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="152"/>
+        <source>Error</source>
+        <translation type="unfinished">Fehler</translation>
+    </message>
+    <message>
+        <location filename="src/TransmissionDialog.cpp" line="179"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="177"/>
+        <location filename="src/TransmissionDialog.cpp" line="213"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="181"/>
+        <location filename="src/TransmissionDialog.cpp" line="219"/>
         <source>Measuring Blocks:</source>
         <translation type="unfinished">Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="203"/>
+        <location filename="src/TransmissionDialog.cpp" line="242"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Wechsele zu Einstellungen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="207"/>
+        <location filename="src/TransmissionDialog.cpp" line="248"/>
         <source>Adjustments:</source>
         <translation type="unfinished">Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="247"/>
+        <location filename="src/TransmissionDialog.cpp" line="290"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation type="unfinished">Einstellungen werden gelesen... Bitte warten !</translation>
@@ -1626,8 +1717,9 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="570"/>
-        <source>Written by Comer352l (Copyright © 2008-2009)</source>
-        <translation type="unfinished">Geschrieben von Comer352l (Copyright © 2008-2009)</translation>
+        <source>Written by Comer352l (Copyright © 2008-2010)</source>
+        <oldsource>Written by Comer352l (Copyright © 2008-2009)</oldsource>
+        <translation type="unfinished">Geschrieben von Comer352l (Copyright © 2008-2010)</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="704"/>

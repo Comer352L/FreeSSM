@@ -56,6 +56,8 @@ private:
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
+	// Selection buttons:
+	QPushButton *_clearMemory_pushButton;
 	// Info- and content-widgets:
 	CUinfo_Engine *_infoWidget;
 	CUcontent_DCs_engine *_content_DCs;

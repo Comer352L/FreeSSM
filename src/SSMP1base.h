@@ -29,21 +29,24 @@
 #define		SSMP1_CMD_STOP_READING			0x12
 #define		SSMP1_CMD_READ_ENGINE			0x78
 #define		SSMP1_CMD_READ_TRANSMISSION		0x45
-#define		SSMP1_CMD_READ_CRUISECONTROL		0xAB
+#define		SSMP1_CMD_READ_CRUISECONTROL		0xCC
 #define		SSMP1_CMD_READ_AIRCON			0x89
+#define		SSMP1_CMD_READ_AIRCON2			0xAC
 #define		SSMP1_CMD_READ_4WS			0x92
+#define		SSMP1_CMD_READ_ABS			0xAB
+#define		SSMP1_CMD_READ_AIRSUSP			0x66
+#define		SSMP1_CMD_READ_POWERSTEERING		0x95
 #define		SSMP1_CMD_WRITE				0xAA
 
-/* Timings */
+/* Timings/Timeouts */
 #define		SSMP1_T_IC_WAIT			40	/* delay between two commands [ms] */
-#define		SSMP1_T_NEWDATA_REC_MAX		100	/* max. time until a new dataset/ROM-ID is recieved [ms] */
-
-/* Timeout */
+#define		SSMP1_T_ID_REC_MAX		300	/* max. time until the control unit ID is received */
 #define		SSMP1_T_RW_REC_MAX		1000	/* timeout for reply-message to read-/write-request [ms] */
+#define		SSMP1_T_RECDATA_CHANGE_MAX	150	/* max. time until the recieved data changes after a new request ha been sent [ms] */
 
 
 
-enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_FourWS};
+enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_AirCon2, SSM1_CU_FourWS, SSM1_CU_ABS, SSM1_CU_AirSusp, SSM1_CU_PwrSteer};
 
 
 class SSMP1commands

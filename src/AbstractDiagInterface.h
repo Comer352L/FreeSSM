@@ -46,6 +46,8 @@ public:
 	virtual bool disconnect() = 0;
 	virtual bool read(std::vector<char> *buffer) = 0;
 	virtual bool write(std::vector<char> buffer) = 0;
+	virtual bool clearSendBuffer() = 0;
+	virtual bool clearReceiveBuffer() = 0;
 
 protected:
 	void setName(std::string name);

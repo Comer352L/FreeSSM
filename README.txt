@@ -43,6 +43,10 @@ WARRANTY; without even the implied warranty of FUNCTIONALITY ON YOUR VEHICLE,
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU General Public License for more details.
 
+
+TinyXML is released under the zlib license, see src/tinyxml/readme.txt and
+www.sourceforge.net/projects/tinyxml for further informations.
+
 --------------------------------------------------------------------------------
 
 2. SUPPORTED PLATFORMS:

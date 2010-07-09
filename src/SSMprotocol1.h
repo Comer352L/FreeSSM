@@ -28,7 +28,7 @@
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
-#include "libFSSM.h"
+#include "SSM1definitionsInterface.h"
 
 
 
@@ -40,23 +40,22 @@ public:
 	SSMprotocol1(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata(CUtype_dt CU);									// INCOMPLETE IMPLEMENTATION
+	CUsetupResult_dt setupCUdata(CUtype_dt CU);							// INCOMPLETE IMPLEMENTATION
 	protocol_dt protocolType() { return SSM1; };
-	std::string getSysID();
-	std::string getROMID();
-	bool getSystemDescription(QString *sysdescription);						// IMPLEMENTATION MISSING
+	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);								// IMPLEMENTATION MISSING
 	bool hasIntegratedCC(bool *CCsup);
+	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	bool getSupportedDCgroups(int *DCgroups);							// CHECK
+	bool getSupportedDCgroups(int *DCgroups);
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
-	bool clearMemory(CMlevel_dt level, bool *success);						// IMPLEMENTATION MISSING
+	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);					// IMPLEMENTATION MISSING
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
@@ -67,18 +66,17 @@ public:
 private:
 	SSMP1communication *_SSMP1com;
 	// *** CONTROL UNIT RAW DATA ***:
-	char _ID[3];
+	std::string _sysDescription;
+	unsigned int _CMaddr;
+	char _CMvalue;
 
-	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCdata();
-	void setupSupportedMBs();
-	void setupSupportedSWs();
+	bool readExtendedID(char ID[5]);
 
 private slots:
-	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);					// INCOMPLETE IMPLEMENTATION
+	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
 
 public slots:
-	void resetCUdata();										// IMPLEMENTATION MISSING
+	void resetCUdata();
 
 };
 

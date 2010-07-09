@@ -39,8 +39,8 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
 	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
-	pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
+	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
@@ -71,7 +71,8 @@ void TransmissionDialog::setup()
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	if( probeProtocol(SSMprotocol::CUtype_Transmission) )
+	SSMprotocol::CUsetupResult_dt init_result = probeProtocol(SSMprotocol::CUtype_Transmission);
+	if ((init_result == SSMprotocol::result_success) || (init_result == SSMprotocol::result_noOrInvalidDefsFile) || (init_result == SSMprotocol::result_noDefs))
 	{
 		// Update status info message box:
 		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
@@ -94,41 +95,73 @@ void TransmissionDialog::setup()
 		_infoWidget->setTransmissionTypeText(sysdescription);
 		// Output ROM-ID:
 		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
-		// Number of supported MBs / SWs:
-		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
-			goto commError;
-		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
-		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2system(&supported))
-			goto commError;
-		_infoWidget->setOBD2Supported(supported);
-		// "Clear Memory 2"-support:
-		if (!_SSMPdev->hasClearMemory2(&supported))
-			goto commError;
-		if (supported)
-			_clearMemory2_pushButton->setEnabled(true);
+		if (init_result == SSMprotocol::result_success)
+		{
+			// Number of supported MBs / SWs:
+			if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+				goto commError;
+			_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+			// OBD2-Support:
+			if (!_SSMPdev->hasOBD2system(&supported))
+				goto commError;
+			_infoWidget->setOBD2Supported(supported);
+			// "Clear Memory"-support:
+			if (!_SSMPdev->hasClearMemory(&supported))
+				goto commError;
+			_clearMemory_pushButton->setEnabled(supported);
+			// "Clear Memory 2"-support:
+			if (!_SSMPdev->hasClearMemory2(&supported))
+				goto commError;
+			_clearMemory2_pushButton->setEnabled(supported);
+			// Start Diagnostic Codes reading:
+			if (!_content_DCs->setup(_SSMPdev))
+				goto commError;
+			if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
+				goto commError;
+			if (supDCgroups != SSMprotocol::noDCs_DCgroup)
+			{
+				if (!_content_DCs->startDCreading())
+					goto commError;
+			}
+			connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+			// Update and close status info:
+			initstatusmsgbox.setLabelText(tr("TCU-initialisation successful !"));
+			initstatusmsgbox.setValue(100);
+			QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
+			initstatusmsgbox.exec();
+			initstatusmsgbox.close();
+		}
 		else
+		{
+			// "Clear Memory"-support:
+			_clearMemory_pushButton->setEnabled(false);
+			// "Clear Memory 2"-support:
 			_clearMemory2_pushButton->setEnabled(false);
+			// Close progress dialog:
+			initstatusmsgbox.close();
+			// Show error message:
+			QString errtext;
+			if (init_result == SSMprotocol::result_noOrInvalidDefsFile)
+			{
+				errtext = tr("Error:\nNo valid definitions file found.\nPlease make sure that FreeSSM is installed properly.");
+			}
+			else if (init_result == SSMprotocol::result_noDefs)
+			{
+				errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\nFreeSSM can communiate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\nIf you want to contribute to the the project (help adding defintions), feel free to contact the authors.");
+			}
+			QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
+			QFont msgfont = msg.font();
+			msgfont.setPixelSize(12);	// 9pts
+			msg.setFont( msgfont );
+			msg.show();
+			msg.exec();
+			msg.close();
+			// Exit CU dialog:
+			close();
+		}
 	}
-	else // CU-connection could not be established
+	else // All other errors
 		goto commError;
-	// Start Diagnostic Codes reading:
-	if (!_content_DCs->setup(_SSMPdev))
-		goto commError;
-	if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
-		goto commError;
-	if (supDCgroups != SSMprotocol::noDCs_DCgroup)
-	{
-		if (!_content_DCs->startDCreading())
-			goto commError;
-	}
-	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	// Update and close status info:
-	initstatusmsgbox.setLabelText(tr("TCU-initialisation successful !"));
-	initstatusmsgbox.setValue(100);
-	QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
-	initstatusmsgbox.exec();
-	initstatusmsgbox.close();
 	return;
 
 commError:

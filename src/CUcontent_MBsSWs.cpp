@@ -435,20 +435,22 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 		else	// it is a SW
 		{
 			/* NOTE: Some switches have an inverse meaning ! (e.g. 0="High", 1="Low")
-			 *       => the < > signs tell us which of them has to be interpreted as the lower/larger one
-			 *          during the min/max value determination
+			 *       => the characters / and \ tell us which of them has to be interpreted as the lower/larger one
+			 *          during the min/max value determination (can't use < > in XML-files):
+			 *             a/b   => a smaller than b
+			 *             a\b   => a larger than b
 			 * THE MEANING DOES NOT AFFECT THE SCALING PROCESS !
 			 */ 
 			if (rawValues.at(k) == 0)
 			{
-				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('<'))
+				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('<',0,0);
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0);
 					invSWmeaning = false;
 				}
-				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('>'))
+				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('\\'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('>',0,0);
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('\\',0,0);
 					invSWmeaning = true;
 				}
 				else
@@ -460,14 +462,14 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 			}
 			else if (rawValues.at(k) == 1)
 			{
-				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('<'))
+				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('<',1,1);
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1);
 					invSWmeaning = false;
 				}
-				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('>'))
+				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('\\'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('>',1,1);
+					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('\\',1,1);
 					invSWmeaning = true;
 				}
 				else

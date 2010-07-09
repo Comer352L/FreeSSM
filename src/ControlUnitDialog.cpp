@@ -137,45 +137,48 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 }
 
 
-bool ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
+SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
 {
 	/* NOTE:  probe SSM2-protocol first !
 	   If a serial pass through (K)KL-interface is used, the interface echo could be detected as a SSM1-ROM-ID,
 	   if receive buffer flushing doesn't work reliable with the used serial port driver !
 	*/
-	// Probe SSM2-protocol:
+	SSMprotocol::CUsetupResult_dt result = SSMprotocol::result_commError;
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
+		// Probe SSM2-protocol:
 		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
 		{
 			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
-			if (_SSMPdev->setupCUdata( CUtype ))
-			{
+			result = _SSMPdev->setupCUdata( CUtype );
+			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noOrInvalidDefsFile) || (result == SSMprotocol::result_noDefs))
 				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-				return true;
+			else
+			{
+				delete _SSMPdev;
+				_SSMPdev = NULL;
+				_diagInterface->disconnect();
 			}
-			delete _SSMPdev;
-			_diagInterface->disconnect();
-			// Wait 500ms:
-			QEventLoop el;
-			QTimer::singleShot(500, &el, SLOT(quit()));
-			el.exec();
 		}
 	}
-	// Probe SSM1-protocol:
-	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
+	if (_SSMPdev == NULL)
 	{
-		_SSMPdev = new SSMprotocol1(_diagInterface, _language);
-		if (_SSMPdev->setupCUdata( CUtype ))
+		// Probe SSM1-protocol:
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
 		{
-			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-			return true;
+			_SSMPdev = new SSMprotocol1(_diagInterface, _language);
+			result = _SSMPdev->setupCUdata( CUtype );
+			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noOrInvalidDefsFile) || (result == SSMprotocol::result_noDefs))
+				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+			else
+			{
+				delete _SSMPdev;
+				_SSMPdev = NULL;
+				_diagInterface->disconnect();
+			}
 		}
-		delete _SSMPdev;
-		_diagInterface->disconnect();
 	}
-	_SSMPdev = NULL;
-	return false;
+	return result;
 }
 
 
@@ -190,7 +193,7 @@ void ControlUnitDialog::communicationError(QString addstr)
 	msg.show();
 	msg.exec();
 	msg.close();
-	// Close engine window (and delete all objects)
+	// Close dialog (and delete all objects)
 	close();
 }
 

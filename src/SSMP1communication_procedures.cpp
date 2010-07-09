@@ -70,6 +70,8 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	_currentaddr = -1;
 	_lastaddr = -1;
 	_addrswitch_pending = false;
+	if (!_diagInterface->clearReceiveBuffer())
+		return false;
 	if (!sendQueryIdCmd())
 	{
 #ifdef __FSSM_DEBUG__
@@ -77,24 +79,38 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 #endif
 		return false;
 	}
-	waitms(SSMP1_T_NEWDATA_REC_MAX);
-	// Read all data from port and return the last 3 bytes
-	if (_diagInterface->read(data) && (data->size() > 2))
+	if (!_diagInterface->clearReceiveBuffer())
+		return false;
+	waitms(SSMP1_T_ID_REC_MAX);
+	if (!_diagInterface->read(&_recbuffer))
+		return false;
+	if (_recbuffer.size() < 3)
+		goto err;
+	if (((_recbuffer.at(0) & '\xF0') != '\x70') && ((_recbuffer.at(0) & '\xF0') != '\xA0'))
+		goto err;
+	/* NOTE: Problem: the echo of ISO-KL-interfaces may be detected as SSM1-ID.
+		 We can not rely in flushing the receive buffer immediately after the request was sent,
+	         because this doesn't work reliable with some serial port drivers.	*/
+	if (((_recbuffer.at(0) & '\xF0') == '\xA0') && (_recbuffer.at(1) == '\x01'))
 	{
-		data->erase(data->begin(), data->end()-3);
-#ifdef __FSSM_DEBUG__
-		std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): " << std::hex << std::noshowbase
-		<< (static_cast<int>(data->at(0)) & 0xff) << " "
-		<< (static_cast<int>(data->at(1)) & 0xff) << " " 
-		<< (static_cast<int>(data->at(2)) & 0xff) << '\n';
-#endif
-		return true;
+		if (_recbuffer.size() < 12)
+			goto err;
+		data->assign(_recbuffer.begin(), _recbuffer.begin()+12);
 	}
+	else
+		data->assign(_recbuffer.begin(), _recbuffer.begin()+3);
+#ifdef __FSSM_DEBUG__
+	std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): ";
+	for (unsigned char k=0; k< data->size(); k++)
+		std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff) << " ";
+	std::cout << '\n';
+#endif
+	_recbuffer.clear();
+	return true;
+
+err:
+	_recbuffer.clear();
 	return false;
-	/* FIXME: We currently rely in flushing the receive buffer immediately after the request was sent.
-	          This doesn't work reliable with some serial port drivers !
-	          => Problem: the echos of ISO-KL-interfaces may be detected as SSM1-ROM-IDs.
-	*/
 }
 
 
@@ -202,34 +218,31 @@ bool SSMP1communication_procedures::writeDatabyte(char databyte)
 }
 
 
-bool SSMP1communication_procedures::waitForDataValue(char data, unsigned int timeout)
+char SSMP1communication_procedures::waitForDataValue(char data, unsigned int timeout)
 {
-	std::vector<char> datawritten;
+	std::vector<char> datavalue;
 	TimeM time;
 	bool ok = false;
 	time.start();
 	do
 	{
-		if (!getNextData(&datawritten, timeout))
+		datavalue.clear();
+		if (!getNextData(&datavalue, timeout))
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "SSMP1communication_procedures::waitForDataValue(...)   getNextData(...) failed.\n";
 #endif
 			return false;
 		}
-		ok = (datawritten.at(0) == data);
-		if (!ok)
-			datawritten.clear();
+		ok = (datavalue.at(0) == data);
 	} while(!ok && (time.elapsed() < timeout));
-	
 #ifdef __FSSM_DEBUG__
 	if (!ok)
 		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   timeout.\n";
 	else
 		std::cout << "SSMP1communication_procedures::waitForDataValue(...):   success.\n";
 #endif
-
-	return ok;
+	return datavalue.at(0);
 }
 
 
@@ -258,9 +271,9 @@ bool SSMP1communication_procedures::stopCUtalking(bool waitforsilence)
 				else
 					norec_counter++;
 			}
-		} while ((time.elapsed() < SSMP1_T_NEWDATA_REC_MAX) && (norec_counter < 5));
+		} while ((time.elapsed() < SSMP1_T_RECDATA_CHANGE_MAX) && (norec_counter < 5));
 		/* TODO:
-		 * - invastigate CU-behavior, define a T_MAX_UNTIL_SILENCE (for now, we simply use T_NEWDATA_REC_MAX)
+		 * - invastigate CU-behavior, define a T_MAX_UNTIL_SILENCE (for now, we simply use SSMP1_T_RECDATA_CHANGE_MAX)
 		 * - does the CU always complete sending the current message ? (=> 256-byte-blockrates ~ 1.5s !)
 		 *   => make sure it will work with block-reads (in the future)
 		 */

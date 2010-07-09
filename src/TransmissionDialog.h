@@ -56,6 +56,7 @@ private:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
 	// Selection buttons:
+	QPushButton *_clearMemory_pushButton;
 	QPushButton *_clearMemory2_pushButton;
 	// Info- and content-widgets:
 	CUinfo_Transmission *_infoWidget;

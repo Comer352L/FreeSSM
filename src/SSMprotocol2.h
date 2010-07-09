@@ -31,7 +31,6 @@
 #include "SSMprotocol2_ID.h"
 #include "SSMprotocol2_def_en.h"
 #include "SSMprotocol2_def_de.h"
-#include "libFSSM.h"
 
 
 
@@ -43,16 +42,15 @@ public:
 	SSMprotocol2(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool setupCUdata(CUtype_dt CU);
-	bool setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
+	CUsetupResult_dt setupCUdata(CUtype_dt CU);
+	CUsetupResult_dt setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
 	protocol_dt protocolType() { return SSM2; };
-	std::string getSysID();
-	std::string getROMID();
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);
 	bool hasIntegratedCC(bool *CCsup);
+	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
@@ -81,11 +79,6 @@ public:
 
 private:
 	SSMP2communication *_SSMP2com;
-	// *** CONTROL UNIT RAW DATA ***:
-	char _SYS_ID[3];
-	char _ROM_ID[5];
-	char _flagbytes[96];
-	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;

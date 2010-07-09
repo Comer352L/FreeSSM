@@ -69,7 +69,7 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		if (unselected)
 		{
 			// Output SW:
-			MBsSWs_listWidget->addItem(supportedSWs.at(k).title+"   ["+ supportedSWs.at(k).unit.replace('<','/').replace('>','/') +"]");
+			MBsSWs_listWidget->addItem(supportedSWs.at(k).title+"   ["+ supportedSWs.at(k).unit.replace('\\','/') +"]");
 			// Put SW to the list of unselected MBs/SWs:
 			tmpMBSWmd.nativeIndex = k;
 			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );

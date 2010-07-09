@@ -280,27 +280,15 @@ void Preferences::interfacetest()
 		return;
 	}
 	// OPEN INTERFACE:
-	if (diagInterface->open(_newinterfacefilename.toStdString()))
+	if (!diagInterface->open(_newinterfacefilename.toStdString()))
 	{
-		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
-		{
-			displayErrorMsg(tr("Couldn't configure the diagnostic interface !"));
-			diagInterface->close();
-			delete diagInterface;
-			return;
-		}
-	}
-	else
-	{
-		displayErrorMsg(tr("Couldn't open the diagnostic interface !\nMaybe the device is already in use by another application..."));
+		displayErrorMsg(tr("Couldn't open the diagnostic interface !\nPlease make sure that the device is not in use by another application."));
 		delete diagInterface;
 		return;
 	}
-	// SETUP SSMPcommunication object:
-	SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
 	// DISPLAY INFO MESSAGE:
 	int choice = QMessageBox::NoButton;
-	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles\nOBD-connector and switch ignition on."), QMessageBox::NoButton, this);
+	msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Please connect diagnostic interface to the vehicles\ndiagnostic connector and switch ignition on."), QMessageBox::NoButton, this);
 	msgbox->addButton(tr("Start"), QMessageBox::AcceptRole);
 	msgbox->addButton(tr("Cancel"), QMessageBox::RejectRole);
 	msgboxfont = msgbox->font();
@@ -314,52 +302,99 @@ void Preferences::interfacetest()
 	{
 		// START INTERFACE-TEST:
 		bool icresult = false;
-		bool retry=true;
-		choice=0;
-		while ((retry==true) & (icresult==false))	// TEST LOOP
+		bool retry = true;
+		choice = 0;
+		bool SSM1configOK = false;
+		bool SSM2configOK = false;
+		while (retry && !icresult)
 		{
+			char data = 0;
 			// OUTPUT WAIT MESSAGE:
 			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
 			waitmsgbox->show();
-			// QUERY ANY ECU ADDRESS:
-			unsigned int addr = 0x61;
-			char data = 0;
-			icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+			// SSM2:
+			SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2);
+			if (SSM2configOK)
+			{
+				SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
+				unsigned int addr = 0x61;
+				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+				delete SSMP2com;
+				diagInterface->disconnect();
+			}
+			// SSM1:
+			SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
+			if (SSM1configOK)
+			{
+				if (!icresult)
+				{
+					SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CU_Engine);
+					icresult = SSMP1com->readAddress(0x00, &data);
+					if (!icresult)
+					{
+						SSMP1com->selectCU(SSM1_CU_Transmission);
+						icresult = SSMP1com->readAddress(0x00, &data);
+						delete SSMP1com;
+					}
+				}
+				diagInterface->disconnect();
+			}
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();
 			delete waitmsgbox;
-			// OUTPUT TEST RESULT:
-			if (icresult == false)	// IF TEST FAILED
+			// DISPLAY TEST RESULT:
+			QString resultText;
+			if (icresult)
+				resultText = tr("Interface test successful !");
+			else
+				resultText = tr("Interface test failed !");
+			if (!SSM1configOK && !SSM2configOK)	// => test must have failed
 			{
-				// ERROR DIALOG:
-				msgbox = new QMessageBox( QMessageBox::Critical, tr("Interface test"), tr("Interface test failed !"), QMessageBox::NoButton, this);
+				if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+					resultText += "\n\n" + tr("The selected serial port can not be configured for the SSM1- and SSM2-protocol.");
+				else
+					resultText += "\n\n" + tr("The selected interface does not support the SSM1- and SSM2-protocol.");
+			}
+			else if (!icresult)
+			{
+				resultText += "\n\n" + tr("Please make sure that the interface is connected properly and ignition is switched ON.");
+			}
+			if (!SSM1configOK || !SSM2configOK)
+			{
+				resultText += "\n\n" + tr("WARNING:");
+				if (!SSM1configOK)
+				{
+					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+						resultText += '\n' + tr("The selected serial port can not be configured for the SSM1-protocol.");
+					else
+						resultText += '\n' + tr("The selected interface does not support the SSM1-protocol.");
+				}
+				else if (!SSM2configOK)
+				{
+					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+						resultText += '\n' + tr("The selected serial port can not be configured for the SSM2-protocol.");
+					else
+						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol.");
+				}
+			}
+			if (icresult)
+				msgbox = new QMessageBox(QMessageBox::Information, tr("Interface test"), resultText, QMessageBox::Ok, this);
+			else
+			{
+				msgbox = new QMessageBox(QMessageBox::Critical, tr("Interface test"), resultText, QMessageBox::NoButton, this);
 				msgbox->addButton(tr("Retry"), QMessageBox::AcceptRole);
 				msgbox->addButton(tr("Cancel"), QMessageBox::RejectRole);
-				msgboxfont = msgbox->font();
-				msgboxfont.setPixelSize(12); // 9pts
-				msgbox->setFont( msgboxfont );
-				msgbox->show();
-				choice = msgbox->exec();
-				msgbox->close();
-				delete msgbox;
-				if (choice != QMessageBox::AcceptRole)
-					retry=false;
 			}
-			else	// IF TEST WAS SUCCESSFUL
-			{
-				// REPORT SUCCESS:
-				msgbox = new QMessageBox( QMessageBox::Information, tr("Interface test"), tr("Interface test successful !"), QMessageBox::Ok, this);
-				msgboxfont = msgbox->font();
-				msgboxfont.setPixelSize(12); // 9pts
-				msgbox->setFont( msgboxfont );
-				msgbox->show();
-				choice = msgbox->exec();
-				msgbox->close();
-				delete msgbox;
-			}
+			msgboxfont = msgbox->font();
+			msgboxfont.setPixelSize(12); // 9pts
+			msgbox->setFont( msgboxfont );
+			msgbox->show();
+			choice = msgbox->exec();
+			msgbox->close();
+			delete msgbox;
+			if (!icresult && (choice != QMessageBox::AcceptRole))
+				retry = false;
 		}
-		// COMMUNICATION AND PORT OBJECT:
-		delete SSMP2com;
 	}
 	// CLOSE INTERFACE:
 	if (!diagInterface->close())

@@ -30,8 +30,12 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <limits.h>
 #include "AbstractDiagInterface.h"
+#include "libFSSM.h"
 
+
+#define		MEMORY_ADDRESS_NONE	UINT_MAX
 
 
 class dc_defs_dt
@@ -65,16 +69,16 @@ public:
 class  mb_intl_dt: public mb_dt
 {
 public:
-	unsigned int adr_low;
-	unsigned int adr_high;
+	unsigned int addr_low;
+	unsigned int addr_high;
 };
 
 
 class sw_intl_dt : public sw_dt
 {
 public:
-	unsigned int  byteadr;
-	unsigned char bitadr;
+	unsigned int  byteAddr;
+	unsigned char bitAddr;
 };
 
 
@@ -123,7 +127,8 @@ class SSMprotocol : public QObject
 
 public:
 	enum protocol_dt {SSM1, SSM2};
-	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering};
+	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering, CUtype_ABS, CUtype_AirSuspension, CUtype_PowerSteering};
+	enum CUsetupResult_dt {result_success, result_invalidCUtype, result_commError, result_noOrInvalidDefsFile, result_noDefs};
 	enum state_dt {state_needSetup, state_normal, state_DCreading, state_MBSWreading, state_ActTesting, state_waitingForIgnOff};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
 			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32};
@@ -134,16 +139,17 @@ public:
 	virtual ~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
 	bool CUtype(SSMprotocol::CUtype_dt *CU);
-	SSMprotocol::state_dt state();
-	virtual bool setupCUdata(CUtype_dt CU) = 0;
+	state_dt state();
+	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	virtual std::string getSysID() = 0;
-	virtual std::string getROMID() = 0;
+	std::string getSysID();
+	std::string getROMID();
 	virtual bool getSystemDescription(QString *sysdescription) = 0;
 	virtual bool hasOBD2system(bool *OBD2) = 0;
 	virtual bool hasVINsupport(bool *VINsup) = 0;
 	virtual bool hasImmobilizer(bool *ImmoSup) = 0;
 	virtual bool hasIntegratedCC(bool *CCsup) = 0;
+	virtual bool hasClearMemory(bool *CMsup) = 0;
 	virtual bool hasClearMemory2(bool *CM2sup) = 0;
 	virtual bool hasTestMode(bool *TMsup) = 0;
 	virtual bool hasActuatorTests(bool *ATsup) = 0;
@@ -182,6 +188,11 @@ protected:
 	CUtype_dt _CU;
 	state_dt _state;
 	QString _language;
+	// *** CONTROL UNIT RAW DATA ***:
+	char _SYS_ID[3];
+	char _ROM_ID[5];
+	char _flagbytes[96];
+	unsigned char _nrofflagbytes;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Diagnostic Trouble Codes:
 	std::vector<dc_defs_dt> _DTCdefs;

@@ -81,8 +81,13 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	ROM_ID_old = _SSMPdev->getROMID();
 	if (!ROM_ID_old.length())
 		return ClearMemoryDlg::CMresult_communicationError;
-	if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
+	if (!_SSMPdev->getSupportedAdjustments(&supAdj))
 		return ClearMemoryDlg::CMresult_communicationError;
+	if (supAdj.size())
+	{
+		if (!_SSMPdev->getAllAdjustmentValues(&oldAdjVal))
+			return ClearMemoryDlg::CMresult_communicationError;
+	}
 	// Clear Memory:
 	ok = _SSMPdev->clearMemory(_level, &CMsuccess);
 	if (!ok || !CMsuccess)
@@ -301,7 +306,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu,
 			return ClearMemoryDlg::CMresult_reconnectAborted;
 		// Validate CU idetification:
 		waitmsgbox.show();
-		ok = _SSMPdev->setupCUdata(cu);
+		ok = (_SSMPdev->setupCUdata(cu) == SSMprotocol::result_success);
 		if (ok)
 		{
 			ID_new = _SSMPdev->getSysID();

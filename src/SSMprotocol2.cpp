@@ -97,7 +97,7 @@ void SSMprotocol2::resetCUdata()
 	_ROM_ID[2] = 0;
 	_ROM_ID[3] = 0;
 	_ROM_ID[4] = 0;
-	for (k=0; k<96; k++) _flagbytes[k] = 0;
+	memset(_flagbytes, 0, 96);
 	_nrofflagbytes = 0;
 	// *** RESET BASIC DATA ***:
 	// Reset DC-data:
@@ -119,13 +119,13 @@ void SSMprotocol2::resetCUdata()
 }
 
 
-bool SSMprotocol2::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 {
 	return setupCUdata(CU, false);
 }
 
 
-bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	char CUaddress = 0;
 	bool ATsup = false;
@@ -142,19 +142,20 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 		CUaddress = '\x18';
 	}
 	else
-		return false;
+		return result_invalidCUtype;
 	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
-		 return false;
+		 return result_commError;
 	// Ensure that ignition switch is ON:
 	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
 		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
-			return false;
-		if (!(data & 0x08)) return false;
+			return result_commError;
+		if (!(data & 0x08))
+			return result_commError;
 	}
 	_CU = CU;
 	_state = state_normal;
@@ -175,21 +176,7 @@ bool SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 	hasActuatorTests(&ATsup);
 	if (ATsup)
 		setupActuatorTestData();
-	return true;
-}
-
-
-std::string SSMprotocol2::getSysID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_SYS_ID, 3);
-}
-
-
-std::string SSMprotocol2::getROMID()
-{
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_ROM_ID, 5);
+	return result_success;
 }
 
 
@@ -264,6 +251,14 @@ bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 	}
 	else
 		*CCsup = false;
+	return true;
+}
+
+
+bool SSMprotocol2::hasClearMemory(bool *CMsup)
+{
+	if (_state == state_needSetup) return false;
+	*CMsup = true;
 	return true;
 }
 
@@ -479,19 +474,18 @@ void SSMprotocol2::setupSupportedMBs()
 				{
 					// Get memory address (low) definition:
 					tmpstr = mbdefline.section(';', 3, 3);
-					tmpMB.adr_low = tmpstr.toUInt(&ok, 16);
+					tmpMB.addr_low = tmpstr.toUInt(&ok, 16);
 					// Check if memory address (low) is valid:
-					if (ok && (tmpMB.adr_low > 0))
+					if (ok && (tmpMB.addr_low > 0))
 					{
 						// Get memory address (high) definition:
 						tmpstr = mbdefline.section(';', 4, 4);
-						if (!tmpstr.isEmpty())
-							tmpMB.adr_high = tmpstr.toUInt(&ok, 16);
-						// Check if memory address (high) is unused OR valid (only 16bit MBs):
-						if ((tmpstr.isEmpty()) || (ok && (tmpMB.adr_high > 0)))	// if valid or no high byte memory address available
+						if (tmpstr.isEmpty())
+							tmpMB.addr_high = MEMORY_ADDRESS_NONE;
+						else
+							tmpMB.addr_high = tmpstr.toUInt(&ok, 16);
+						if (ok)
 						{
-							if (tmpstr.isEmpty())
-								tmpMB.adr_high = 0;
 							// Get title definition:
 							tmpMB.title = mbdefline.section(';', 5, 5);
 							// Check if title is available:
@@ -583,9 +577,9 @@ void SSMprotocol2::setupSupportedSWs()
 				{
 					// Get memory address definition:
 					tmpstr = swdefline.section(';', 3, 3);
-					tmpSW.byteadr = tmpstr.toInt(&ok, 16);
+					tmpSW.byteAddr = tmpstr.toInt(&ok, 16);
 					// Check if memory address is valid:
-					if (ok && (tmpSW.byteadr > 0))
+					if (ok && (tmpSW.byteAddr > 0))
 					{
 						// Get title definition:
 						tmpSW.title = swdefline.section(';', 4, 4);
@@ -598,7 +592,7 @@ void SSMprotocol2::setupSupportedSWs()
 							{
 								// ***** SWITCH IS SUPPORTED BY CU AND DEFINITION IS VALID *****
 								// Put switch data on the list:
-								tmpSW.bitadr = static_cast<unsigned char>(tmpbitnr);
+								tmpSW.bitAddr = static_cast<unsigned char>(tmpbitnr);
 								_supportedSWs.push_back(tmpSW);
 							}
 						}
@@ -1109,6 +1103,7 @@ bool SSMprotocol2::isInTestMode(bool *testmode)
 
 bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 {
+	*success = false;
 	char val = 0;
 	char bytewritten = 0;
 	bool CM2sup = false;
@@ -1126,14 +1121,12 @@ bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 	{
 		return false;
 	}
-	*success = false;
 	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (bytewritten == val)
-		*success = true;
+	*success = (bytewritten == val);
 	return true;
 }
 
@@ -1143,26 +1136,29 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 	bool ImmoSup = false;
 	if (_state != state_normal) return false;
 	if (!hasImmobilizer(&ImmoSup) || ImmoSup==false) return false;
-	char readcheckvalue = 0;
+	char checkvalue = 0;
 	unsigned int readcheckadr = 0x8B;
 	// Write test-pattern:
-	_SSMP2com->writeDatabyte(0xE0, '\xAA', NULL);
-	// Read result:
-	if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &readcheckvalue))
+	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
 	{
-		if (readcheckvalue == '\x01')
+		// Read result:
+		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &checkvalue))
 		{
-			*result = immoShortedToGround;
+			/* NOTE: the actually written data is NOT 0xAA ! */
+			if (checkvalue == '\x01')
+			{
+				*result = immoShortedToGround;
+			}
+			else if  (checkvalue == '\x02')
+			{
+				*result = immoShortedToBattery;
+			}
+			else
+			{
+				*result = immoNotShorted;
+			}
+			return true;
 		}
-		else if  (readcheckvalue == '\x02')
-		{
-			*result = immoShortedToBattery;
-		}
-		else
-		{
-			*result = immoNotShorted;
-		}
-		return true;
 	}
 	// Communication error:
 	resetCUdata();
