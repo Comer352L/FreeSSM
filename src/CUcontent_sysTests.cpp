@@ -220,7 +220,7 @@ void CUcontent_sysTests::setupUiFonts()
 void CUcontent_sysTests::communicationError(QString adstr)
 {
 	if (adstr.size() > 0) adstr.prepend('\n');
-	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from TCU -") + adstr, QMessageBox::Ok, this);
+	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:") + adstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
 	msgfont.setPixelSize(12); // 9pts
 	msg.setFont( msgfont );

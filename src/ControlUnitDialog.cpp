@@ -186,7 +186,7 @@ void ControlUnitDialog::communicationError(QString addstr)
 {
 	// Show error message
 	if (addstr.size() > 0) addstr.prepend('\n');
-	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from ECU -") + addstr, QMessageBox::Ok, this);
+	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from Control Unit -") + addstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
 	msgfont.setPixelSize(12);	// 9pts
 	msg.setFont( msgfont );

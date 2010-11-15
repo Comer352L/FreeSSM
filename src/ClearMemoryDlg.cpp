@@ -185,11 +185,11 @@ bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
 	QString confirmStr = tr("The Clear Memory procedure");
 	if (_level == SSMprotocol::CMlevel_2)
 		confirmStr.append( tr(" (level 2)") );
-	confirmStr.append( tr("\n- clears the Diagnostic Codes") );
-	confirmStr.append( tr("\n- resets all non-permanent Adjustment Values") );
+	confirmStr.append( '\n' + tr(" - clears the Diagnostic Codes") );
+	confirmStr.append( '\n' + tr(" - resets all non-permanent Adjustment Values") );
 	if ( cu_type == SSMprotocol::CUtype_Engine || ((cu_type == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
-		confirmStr.append( tr("\n- resets the Control Units' learning values") );
-	confirmStr.append( tr("\n\nDo you really want to clear the Control Units' memory") );
+		confirmStr.append( '\n' + tr(" - resets the Control Units' learning values") );
+	confirmStr.append( '\n' + '\n' + tr("Do you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol::CMlevel_2)
 	{
 		winTitle.append( " 2" );

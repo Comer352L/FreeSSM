@@ -66,8 +66,8 @@ void TransmissionDialog::setup()
 	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to TCU... Please wait !"), 0, 0, 100, this);
-	initstatusmsgbox.setWindowTitle(tr("Connecting to TCU..."));
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
+	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
@@ -75,7 +75,7 @@ void TransmissionDialog::setup()
 	if ((init_result == SSMprotocol::result_success) || (init_result == SSMprotocol::result_noOrInvalidDefsFile) || (init_result == SSMprotocol::result_noDefs))
 	{
 		// Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Processing TCU data... Please wait !"));
+		initstatusmsgbox.setLabelText(tr("Processing Control Unit data... Please wait !"));
 		initstatusmsgbox.setValue(40);
 		// Query ROM-ID:
 		ROM_ID = _SSMPdev->getROMID();
@@ -125,7 +125,7 @@ void TransmissionDialog::setup()
 			}
 			connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
 			// Update and close status info:
-			initstatusmsgbox.setLabelText(tr("TCU-initialisation successful !"));
+			initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
 			initstatusmsgbox.setValue(100);
 			QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 			initstatusmsgbox.exec();
