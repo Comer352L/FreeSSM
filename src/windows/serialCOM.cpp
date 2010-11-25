@@ -668,6 +668,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 				return false;
 			}
 			last_read_timeout = timeouts.ReadTotalTimeoutConstant;
+			read_timeout_set = true;
 		}
 		// READ DATA:
 		confirmRF = ReadFile (hCom,		// Port handle
@@ -677,7 +678,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 				      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 				     );
 		if (confirmRF)
-			rb_total += static_cast<unsigned int>(nbr);
+			rb_total += nbr;
 		else
 		{
 #ifdef __SERIALCOM_DEBUG__
@@ -701,6 +702,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 #endif
 				return false;
 			}
+			read_timeout_set = false;
 		}
 		// READ REMAINING DATA:
 		confirmRF = ReadFile (hCom,			// Port handle
@@ -719,7 +721,6 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 			return false;
 		}
 	}
-	read_timeout_set = minbytes;
 	// Returned data:
 	*nrofbytesread = static_cast<unsigned int>(rb_total);
 	return true;
