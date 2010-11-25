@@ -721,7 +721,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	}
 	read_timeout_set = minbytes;
 	// Returned data:
-	*nrofbytesread = static_cast<unsigned int>(rb_total + nbr);
+	*nrofbytesread = static_cast<unsigned int>(rb_total);
 	return true;
 }
 
