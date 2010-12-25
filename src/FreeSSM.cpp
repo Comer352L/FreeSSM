@@ -118,14 +118,20 @@ FreeSSM::FreeSSM(QApplication *app)
 	// SET TRANSLATOR AND RETRANSLATE:
 	_translator = new QTranslator;
 	bool langfileerror = false;
-	if (_language == "de")
+	langfileerror = !_translator->load("FreeSSM_" + _language + ".qm", appsPath);
+	if (langfileerror && (_language != "en"))
 	{
-		langfileerror = !_translator->load("FreeSSM_de.qm", appsPath);
-	}
-	if ((_language == "en") | (langfileerror))
-	{
+		// Fallback to English
 		_language = "en";
 		langfileerror = !_translator->load("FreeSSM_en.qm", appsPath);
+		// Display error message about missing language file:
+		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
+		QFont msgfont = msg.font();
+		msgfont.setPixelSize(12); // 9pts
+		msg.setFont( msgfont );
+		msg.show();
+		msg.exec();
+		msg.close();
 	}
 	if (!langfileerror)
 	{
@@ -136,22 +142,15 @@ FreeSSM::FreeSSM(QApplication *app)
 	{
 		delete _translator;
 		_translator = NULL;
-		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
-		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
-		msg.setFont( msgfont );
-		msg.show();
-		msg.exec();
-		msg.close();
 	}
 	// SET Qt-TRANSLATOR (if necessary and available):
-	QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-	if (qt_ts_path.isEmpty())
-		qt_ts_path = QCoreApplication::applicationDirPath();
-	if (_language == "de")
+	if (_language != "en")
 	{
+		QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+		if (qt_ts_path.isEmpty())
+			qt_ts_path = QCoreApplication::applicationDirPath();
 		_qt_translator = new QTranslator;
-		if (_qt_translator->load("qt_de_DE", qt_ts_path))
+		if (_qt_translator->load("qt_" + _language, qt_ts_path))
 			app->installTranslator(_qt_translator);
 		else
 		{
@@ -358,13 +357,13 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 		delete _qt_translator;
 		_qt_translator = NULL;
 	}
-	QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-	if (qt_ts_path.isEmpty())
-		qt_ts_path = QCoreApplication::applicationDirPath();
-	if (newlanguage=="de")
+	if (newlanguage != "en")
 	{
+		QString qt_ts_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+		if (qt_ts_path.isEmpty())
+			qt_ts_path = QCoreApplication::applicationDirPath();
 		_qt_translator = new QTranslator;
-		if (_qt_translator->load("qt_de_DE", qt_ts_path))
+		if (_qt_translator->load("qt_" + newlanguage, qt_ts_path))
 			QApplication::installTranslator(_qt_translator);
 		else
 		{
