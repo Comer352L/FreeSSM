@@ -282,14 +282,8 @@ void FreeSSM::preferences()
 
 void FreeSSM::help()
 {
-	// Get working directory:
 	QString helpurlstr( QCoreApplication::applicationDirPath() );
-	// Select help file:
-	if (_language == "de")
-		helpurlstr += "/doc/help_de.html";
-	else
-		helpurlstr += "/doc/help_en.html";
-	// Open help file in standard browswer:
+	helpurlstr += "/doc/help_" + _language + ".html";
 	QDesktopServices::openUrl( QUrl(helpurlstr) );
 }
 
