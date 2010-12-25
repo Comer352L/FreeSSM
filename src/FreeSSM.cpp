@@ -75,7 +75,7 @@ FreeSSM::FreeSSM(QApplication *app)
 		}
 		if (!prefsfile.atEnd())
 		{
-			// Load language settings:
+			// Load GUI-style settings:
 			line = prefsfile.readLine();
 			line.truncate(line.length()-1);
 			savedGUIstyle = static_cast<QString>(line);
