@@ -27,7 +27,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	_translator = NULL;
 	_iface_type = AbstractDiagInterface::interface_serialPassThrough;
 	_iface_filename = "";
-	_language = "";
+	_language = "en";	// default language
 	_dumping = false;
 	QString appsPath( QCoreApplication::applicationDirPath() );
 	// SETUP GUI:
@@ -96,24 +96,19 @@ FreeSSM::FreeSSM(QApplication *app)
 		if (qstyle)
 			QApplication::setStyle( qstyle );
 	}
-	// CHECK SAVED LANGUAGE AND CORRECT IF NECESSARY:
-	if ((savedlanguage == "en") | (savedlanguage == "de"))
-		_language = savedlanguage;
-	else
+	// CHECK SAVED LANGUAGE:
+	bool sl_valid = false;
+	QLocale loc = QLocale(savedlanguage);
+	if ((loc != QLocale::C) && (__supportedLocales.indexOf( loc ) > -1))
 	{
-		// TRY TO GET SYSTEM LANGUAGE:
-		if ((QLocale::system().language() == QLocale::English))
-		{
-			_language = "en";
-		}
-		else if ((QLocale::system().language() == QLocale::German))
-		{
-			_language = "de";
-		}
-		else	// if system language is not available/supported
-		{
-			_language = "en";
-		}
+		_language = savedlanguage;
+		sl_valid = true;
+	}
+	// TRY TO SELECT SYSTEM LANGUAGE, IF SAVED LANGUAGE IS INVALID:
+	if (!sl_valid)
+	{
+		if (__supportedLocales.indexOf( QLocale::system() ) > -1)
+			_language = QLocale::system().name().section('_', 0, 0);
 	}
 	// SET TRANSLATOR AND RETRANSLATE:
 	_translator = new QTranslator;

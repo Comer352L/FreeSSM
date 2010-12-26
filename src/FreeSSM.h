@@ -23,7 +23,7 @@
 
 
 #include <QtGui>
-#include <string>
+#include "Languages.h"
 #include "AbstractDiagInterface.h"
 #include "SerialPassThroughDiagInterface.h"
 #include "J2534DiagInterface.h"
@@ -34,7 +34,6 @@
 #include "Preferences.h"
 #include "About.h"
 #include "ui_FreeSSM.h"
-
 
 
 

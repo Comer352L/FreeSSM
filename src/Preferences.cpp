@@ -47,31 +47,16 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	// move window to desired coordinates
 	move(x, y);
 	// OUTPUT LANGUAGES:
-	if (_language_current == "en")
+	for (int k=0; k<__supportedLocales.size(); k++)
 	{
-		_lastlangindex = 0;
+		QString langname = QLocale::languageToString( __supportedLocales.at(k).language() );
+		QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+		language_comboBox->addItem( langname_tr );
 	}
-	else if (_language_current == "de")
-	{
-		_lastlangindex = 1;
-	}
-	else	// if currently selected language is invalid
-	{
-		// TRY TO GET SYSTEM LANGUAGE SETTING:
-		if (QLocale::system().language() == QLocale::German)
-		{
-			_language_current = "de";
-			switchLanguage(1);
-			_lastlangindex = 1;
-		}
-		else	// default
-		{
-			_language_current = "en";
-			switchLanguage(0);
-			_lastlangindex = 0;
-		}
-	}
+	_lastlangindex = __supportedLocales.indexOf( QLocale(_language_current) );
 	language_comboBox->setCurrentIndex(_lastlangindex);
+	/* NOTE: no need to implement fallback, selected language is always valid (has been checked/corrected at program start)
+	         Apart from that, language switching wouldn't work at this point   */
 	// GUI-STYLES:
 	_style_old = QApplication::style()->objectName();
 	QStringList supStyles = QStyleFactory::keys();
@@ -147,23 +132,27 @@ void Preferences::switchLanguage(int langindex)
 	// SET UP NEW TRANSLATOR
 	QTranslator *translator_new = new QTranslator;
 	// LOAD LANGUAGE:
-	bool langfileerror = false;
 	QString AppsPath( QCoreApplication::applicationDirPath() );
-	if (langindex == 0)		// english
+	QString langcode = __supportedLocales.at(langindex).name().section('_', 0, 0);
+	if ( translator_new->load("FreeSSM_" + langcode + ".qm", AppsPath) )
 	{
-		if ( translator_new->load("FreeSSM_en.qm", AppsPath) )
-			_language_current = "en";
-		else
-			langfileerror = true;
+		_language_current = langcode;
+		_lastlangindex = langindex;
+		// Send new language settings to FreeSSM and retranslate FreeSSM-Window:
+		emit languageSelChanged(_language_current, translator_new);
+		// Retranslate window content:
+		retranslateUi(this);
+		// Retranslate Language names in combobox:
+		language_comboBox->clear();
+		for (int k=0; k<__supportedLocales.size(); k++)
+		{
+			QString langname = QLocale::languageToString( __supportedLocales.at(k).language() );
+			QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+			language_comboBox->addItem( langname_tr );
+		}
+		language_comboBox->setCurrentIndex(langindex);
 	}
-	else if (langindex == 1)	// german
-	{
-		if ( translator_new->load("FreeSSM_de.qm", AppsPath) )
-			_language_current = "de";
-		else
-			langfileerror = true;
-	}
-	if (langfileerror)
+	else
 	{
 		// DELETE NEW TRANSLATOR AND USE OLD LANGUAGE AGAIN:
 		delete translator_new;	
@@ -176,16 +165,6 @@ void Preferences::switchLanguage(int langindex)
 		msg.exec();
 		msg.close();
 		return;
-	}
-	else	 // IF NEW LANGUAGE HAS BEEN LOADED SUCCESSFULLY:
-	{
-		_lastlangindex = langindex;
-		// Send new language settings to FreeSSM and retranslate FreeSSM-Window:
-		emit languageSelChanged(_language_current, translator_new);
-		// Retranslate window content:
-		language_comboBox->clear();	// NECESSARY SINCE Qt 4.4.0 (WORKAROUND)
-		retranslateUi(this);
-		language_comboBox->setCurrentIndex(langindex);
 	}
 }
 
@@ -447,14 +426,8 @@ void Preferences::closeEvent(QCloseEvent *event)
 	if (!_confirmed)
 	{
 		// Switch back to old translation:
-		if (_language_old == "en")
-		{
-			switchLanguage(0);
-		}
-		else if (_language_old == "de")
-		{
-			switchLanguage(1);
-		}
+		QLocale loc( _language_old );
+		switchLanguage( __supportedLocales.indexOf(loc) );
 		// Switch back to old GUI-style:
 		switchGUIstyle( _style_old );
 	}

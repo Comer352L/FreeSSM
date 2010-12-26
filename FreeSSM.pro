@@ -12,6 +12,7 @@ INCLUDEPATH += . src src/tinyxml
 
 # Input
 HEADERS += src/FreeSSM.h \
+           src/Languages.h \
            src/EngineDialog.h \
            src/TransmissionDialog.h \
            src/Preferences.h \
