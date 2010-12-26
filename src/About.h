@@ -1,7 +1,7 @@
 /*
  * About.h - Display informations about the FreeSSM software
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include <QtGui>
 #include "ui_About.h"
+#include "Languages.h"
 #include "SSMprotocol2_def_en.h"
 
 

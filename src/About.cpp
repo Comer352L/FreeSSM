@@ -1,7 +1,7 @@
 /*
  * About.cpp - Display informations about the FreeSSM software
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2010 Comer352l
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	// Setup UI:
 	setupUi(this);
 	setupUiFonts();
-	// Output title/program version:
+	// Display title/program version:
 	progversion_label->setText(progversion_label->text() + " " + QApplication::applicationVersion());
 	// Load licence text and changelog:
 	QFile changelog_file;
@@ -46,18 +46,18 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	changelog_file.close();
 	// *** Definitions:
 	SSMprotocol2_def_en ssmp_defs;
-	// Output number of supported DTCs:
+	// Display number of supported DTCs:
 	int nrofDTCs_SUB = ssmp_defs.SUBDTCrawDefs().size();
 	int nrofDTCs_OBD = ssmp_defs.OBDDTCrawDefs().size();
 	int nrofDTCs_CC = ssmp_defs.CCCCrawDefs().size();
 	QString dtcstr = QString::number( nrofDTCs_SUB ) + " / " + QString::number( nrofDTCs_OBD ) + " / " + QString::number( nrofDTCs_CC );
 	nrofsupportedDTCs_label->setText( dtcstr );
-	// Output number of supported measuring blocks / switches:
+	// Display number of supported measuring blocks / switches:
 	int nrofMBs = ssmp_defs.MBrawDefs().size();
 	int nrofSWs = ssmp_defs.SWrawDefs().size();
 	QString mbswstr = QString::number( nrofMBs ) + " / " + QString::number( nrofSWs );
 	nrofsupportedMBsSWs_label->setText( mbswstr );
-	//Output number of supported Adjustment values:
+	// Display number of supported Adjustment values:
 	int ecu_adjustments = 0;
 	int tcu_adjustments = 0;
 	QStringList adjustmentdefs = ssmp_defs.AdjustmentRawDefs();
@@ -74,10 +74,22 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	}
 	QString adjustmentsstr = QString::number( ecu_adjustments ) + " / " + QString::number( tcu_adjustments );
 	nrofadjustmentvalues_label->setText( adjustmentsstr );
-	// Output number of supported system tests:
+	// Display number of supported system tests:
 	int nrofSysTests = ssmp_defs.ActuatorRawDefs().size();
 	QString systestsstr = QString::number( nrofSysTests ) + " / 1";
 	nrofActuatortests_label->setText(systestsstr);
+	// Display supported program languages:
+	QString langstr;
+	for (int k=0; k<__supportedLocales.size(); k++)
+	{
+		QLocale locale = __supportedLocales.at(k);
+		QString langname = QLocale::languageToString( locale.language() );
+		QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+		if (k > 0)
+			langstr.append(", ");
+		langstr.append(langname_tr);
+	}
+	languages_label->setText( langstr );
 	// Connect "Close"-button:
 	connect( close_pushButton, SIGNAL( released() ), this, SLOT( close() ) ); 
 }
