@@ -406,21 +406,23 @@ void SSMprotocol1::processDCsRawdata(std::vector<char> DCrawdata, int duration_m
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
 	QStringList tmpDTCsDescriptions;
-	unsigned int DCsAddrIndex = 0;
-	unsigned int DCsAddrIndexOffset = 0;
+	unsigned int DCsRawValueIndex = 0;
 	duration_ms = 0; // to avoid compiler error
 	if (_selectedDCgroups & currentDTCs_DCgroup)
 	{
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate current/latest data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
+		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
 		{
-			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_currentOrTempOrLatest, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_currentOrTempOrLatest;
+			if (address == MEMORY_ADDRESS_NONE)
+				continue;
+			evaluateDCdataByte(address, DCrawdata.at(DCsRawValueIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCsRawValueIndex++;
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _DTCdefs.size();
 		emit currentOrTemporaryDTCs(DCs, DCdescriptions, false, false);
 	}
 	if (_selectedDCgroups & historicDTCs_DCgroup)
@@ -428,13 +430,16 @@ void SSMprotocol1::processDCsRawdata(std::vector<char> DCrawdata, int duration_m
 		DCs.clear();
 		DCdescriptions.clear();
 		// Evaluate historic/memorized data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
+		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
 		{
-			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_historicOrMemorized, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_historicOrMemorized;
+			if (address == MEMORY_ADDRESS_NONE)
+				continue;
+			evaluateDCdataByte(address, DCrawdata.at(DCsRawValueIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCsRawValueIndex++;
 			DCs += tmpDTCs;
 			DCdescriptions += tmpDTCsDescriptions;
 		}
-		DCsAddrIndexOffset += _DTCdefs.size();
 		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
 	}
 }
