@@ -347,7 +347,10 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 	}
 	for (unsigned int b=0; b<DTCblock_elements.size(); b++)
 	{
+		unsigned long int addr = MEMORY_ADDRESS_NONE;
 		dc_defs_dt dtcblock;
+		dtcblock.byteAddr_currentOrTempOrLatest = MEMORY_ADDRESS_NONE;
+		dtcblock.byteAddr_historicOrMemorized = MEMORY_ADDRESS_NONE;
 		std::vector<TiXmlElement*> tmp_elements;
 		bool duplicate = false;
 		// --- Get address(es) ---:
@@ -358,27 +361,28 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		attribCond.value = "current";
 		attribCond.condition = attributeCondition::equal;
 		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() != 1)
-			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		unsigned long int addr = strtoul( str, NULL, 0 );
-		if (addr > 0xffff)
-			continue;
-		// Search for duplicate block address:
-		for (unsigned int d=0; d<dcs->size(); d++)
+		if (tmp_elements.size() == 1)
 		{
-			if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			addr = strtoul( str, NULL, 0 );
+			if (addr > 0xffff)
+				continue;
+			// Search for duplicate block address:
+			for (unsigned int d=0; d<dcs->size(); d++)
 			{
-				duplicate = true;
-				dcs->erase( dcs->begin() + d );
-				break;
+				if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
+				{
+					duplicate = true;
+					dcs->erase( dcs->begin() + d );
+					break;
+				}
 			}
+			if (duplicate)
+				continue;
+			dtcblock.byteAddr_currentOrTempOrLatest = addr;
 		}
-		if (duplicate)
-			continue;
-		dtcblock.byteAddr_currentOrTempOrLatest = addr;
 		// Get address for historic DTCs:
 		attribCond.value = "historic";
 		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
@@ -404,14 +408,8 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 				continue;
 			dtcblock.byteAddr_historicOrMemorized = addr;
 		}
-		else if (tmp_elements.size() == 0)
-		{
-			dtcblock.byteAddr_historicOrMemorized = MEMORY_ADDRESS_NONE;
-		}
-		else if (tmp_elements.size() > 1)
-		{
+		if ((dtcblock.byteAddr_currentOrTempOrLatest == MEMORY_ADDRESS_NONE) && (dtcblock.byteAddr_historicOrMemorized == MEMORY_ADDRESS_NONE))
 			continue;
-		}
 		for (unsigned char k=0; k<8; k++)
 		{
 			dtcblock.code[k] = "???";
