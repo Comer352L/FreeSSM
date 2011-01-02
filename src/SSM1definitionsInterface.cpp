@@ -413,13 +413,16 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		for (unsigned char k=0; k<8; k++)
 		{
 			dtcblock.code[k] = "???";
-			if (_lang == "de")
-				dtcblock.title[k] = "UNBEKANNT (Adresse 0x";
-			else
-				dtcblock.title[k] = "UNKNOWN (Address 0x";
-			dtcblock.title[k] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
+			dtcblock.title[k] = "     ???     (0x";
+			if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+				dtcblock.title[k] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
 			if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-				dtcblock.title[k] += "/0x" + QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper() + " Bit " + QString::number(k+1) + ")";
+			{
+				if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+					dtcblock.title[k] += "/0x";
+				dtcblock.title[k] += QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper();
+			}
+			dtcblock.title[k] += " Bit " + QString::number(k+1) + ")";
 			/* NOTE: see comments at the end of the function */
 		}
 		std::vector<TiXmlElement*> DTC_elements;
@@ -447,13 +450,17 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			{
 				// Display DTC as UNKNOWN
 				dtcblock.code[bitaddr-1] = "???";
-				if (_lang == "de")
-					dtcblock.title[bitaddr-1] = "UNBEKANNT (Adresse 0x";
-				else
-					dtcblock.title[bitaddr-1] = "UNKNOWN (Address 0x";
-				dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
+				dtcblock.title[bitaddr-1] = "     ???     (0x";
+				if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+					dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
 				if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-					dtcblock.title[bitaddr-1] += "/0x" + QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper() + " Bit " + QString::number(bitaddr) + ")";
+				{
+					if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
+						dtcblock.title[bitaddr-1] += "/0x";
+					dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper();
+				}
+				dtcblock.title[k] += " Bit " + QString::number(bitaddr) + ")";
+				/* NOTE: see comments at the end of the function */
 				continue;
 			}
 			// --- Get common data ---
@@ -501,7 +508,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		dcs->push_back(dtcblock);
 	}
 	return true;
-	/* NOTE: - DCs with missing definitions are displayed as UNKNOWN
+	/* NOTE: - DCs with missing definitions are displayed with address byte + bit in the title field
 		 - DCs with existing definitions and empty code- and title-fields are ignored */
 }
 
