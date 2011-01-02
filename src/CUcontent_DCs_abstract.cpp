@@ -202,7 +202,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 		SYS_ID = _SSMPdev->getSysID();
 		ok = SYS_ID.length();
 		if (ok)
-			systype = tr("Unknown (") + QString::fromStdString(SYS_ID) + ")";  // NOTE: SYS_ID is always available, if CU is initialized/connection is alive
+			systype = tr("Unknown") + " (" + QString::fromStdString(SYS_ID) + ")";  // NOTE: SYS_ID is always available, if CU is initialized/connection is alive
 		else
 			errstr = tr("Query of the System-ID failed.");
 	}

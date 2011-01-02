@@ -306,8 +306,9 @@ Das Steuergerät hat den neuen Wert nicht akzeptiert !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_abstract.cpp" line="205"/>
-        <source>Unknown (</source>
-        <translation>Unbekannt (</translation>
+        <source>Unknown</source>
+        <oldsource>Unknown (</oldsource>
+        <translation>Unbekannt</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_abstract.cpp" line="207"/>
@@ -1707,11 +1708,6 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
         <location filename="ui/About.ui" line="488"/>
         <source>Program languages:</source>
         <translation>Programmsprachen:</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="506"/>
-        <source>English, German</source>
-        <translation>Englisch, Deutsch</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="823"/>

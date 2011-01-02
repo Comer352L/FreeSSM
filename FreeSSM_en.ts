@@ -306,8 +306,9 @@ The Control Unit didn&apos;t accept the new value !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_abstract.cpp" line="205"/>
-        <source>Unknown (</source>
-        <translation>Unknown (</translation>
+        <source>Unknown</source>
+        <oldsource>Unknown (</oldsource>
+        <translation>Unknown</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_abstract.cpp" line="207"/>
@@ -1706,11 +1707,6 @@ You should have received a copy of the GNU General Public License along with thi
         <location filename="ui/About.ui" line="488"/>
         <source>Program languages:</source>
         <translation>Program languages:</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="506"/>
-        <source>English, German</source>
-        <translation>English, German</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="823"/>
