@@ -189,7 +189,7 @@ bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
 	confirmStr.append( '\n' + tr(" - resets all non-permanent Adjustment Values") );
 	if ( cu_type == SSMprotocol::CUtype_Engine || ((cu_type == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
 		confirmStr.append( '\n' + tr(" - resets the Control Units' learning values") );
-	confirmStr.append( '\n' + '\n' + tr("Do you really want to clear the Control Units' memory") );
+	confirmStr.append( "\n\n" + tr("Do you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol::CMlevel_2)
 	{
 		winTitle.append( " 2" );
