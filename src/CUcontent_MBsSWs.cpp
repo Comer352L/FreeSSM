@@ -720,7 +720,10 @@ void CUcontent_MBsSWs::addMBsSWs()
 		_MBSWrefreshTimeValue_label->setText("---      ");
 		// Select new MBs/SWs:
 		if (MBSWmetaList_len_old > 0)
+		{
 			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
+			mbswdelete_pushButton->setEnabled(true);
+		}
 		// Scroll to end of the table:
 		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
 	}
@@ -728,7 +731,6 @@ void CUcontent_MBsSWs::addMBsSWs()
 	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
-		mbswdelete_pushButton->setEnabled(true);
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
