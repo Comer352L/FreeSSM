@@ -502,23 +502,23 @@ The Control Unit didn&apos;t accept the new value !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="57"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="923"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="925"/>
         <source>Refresh duration:</source>
         <translation>Refresh duration:</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="55"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="914"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="916"/>
         <source>Block transfer rate:   </source>
         <translation>Block transfer rate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:

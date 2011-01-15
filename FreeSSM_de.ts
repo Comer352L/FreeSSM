@@ -503,23 +503,23 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="57"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="923"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="925"/>
         <source>Refresh duration:</source>
         <translation>Aktualisierungsdauer:</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="55"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="914"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="916"/>
         <source>Block transfer rate:   </source>
         <translation>Block-Transferrate:   </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="945"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
