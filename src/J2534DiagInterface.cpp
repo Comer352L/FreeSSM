@@ -309,11 +309,11 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 		return false;
 
 err_close:
-	long ret = 0;
-	ret = _j2534->PassThruDisconnect(_ChannelID);
 #ifdef __FSSM_DEBUG__
-	if (STATUS_NOERROR != ret)
+	if (STATUS_NOERROR != _j2534->PassThruDisconnect(_ChannelID))
 		printErrorDescription("PassThruDisconnect() failed: ", ret);
+#else
+	_j2534->PassThruDisconnect(_ChannelID);
 #endif
 	return false;
 }

@@ -1257,6 +1257,7 @@ bool SSMprotocol2::stopDCreading()
 
 void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
 {
+	(void)duration_ms; // to avoid compiler error
 	QStringList DCs;
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
@@ -1265,7 +1266,6 @@ void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_m
 	bool DCheckActive = false;
 	unsigned int DCsAddrIndex = 0;
 	unsigned int DCsAddrIndexOffset = 0;
-	duration_ms = 0; // to avoid compiler error
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
 		if (_CU == CUtype_Engine)

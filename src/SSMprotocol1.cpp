@@ -300,7 +300,7 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 {
 	if (_state != state_normal) return false;
 
-	// TODO !
+(void)*isrunning;	// TODO !
 	
 return false;
 }
@@ -326,7 +326,7 @@ bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 
-	// TODO !
+(void)*result;	// TODO !
 
 return false;
 }
@@ -402,12 +402,12 @@ bool SSMprotocol1::stopDCreading()
 
 void SSMprotocol1::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
 {
+	(void)duration_ms; // to avoid compiler error
 	QStringList DCs;
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
 	QStringList tmpDTCsDescriptions;
 	unsigned int DCsRawValueIndex = 0;
-	duration_ms = 0; // to avoid compiler error
 	if (_selectedDCgroups & currentDTCs_DCgroup)
 	{
 		DCs.clear();
