@@ -230,14 +230,14 @@ bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 
 std::string SSMprotocol2::getSysID()
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup) return "";
 	return libFSSM::StrToHexstr(_SYS_ID, 3);
 }
 
 
 std::string SSMprotocol2::getROMID()
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup) return "";
 	return libFSSM::StrToHexstr(_ROM_ID, 5);
 }
 
@@ -1356,6 +1356,7 @@ bool SSMprotocol2::stopDCreading()
 
 void SSMprotocol2::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 {
+	(void)duration_ms; // to avoid compiler warning
 	QStringList DCs;
 	QStringList DCdescriptions;
 	QStringList tmpDTCs;
@@ -1364,7 +1365,6 @@ void SSMprotocol2::processDCsRawdata(QByteArray DCrawdata, int duration_ms)
 	bool DCheckActive = false;
 	unsigned int DCsAddrIndex = 0;
 	unsigned int DCsAddrIndexOffset = 0;
-	duration_ms = 0; // to avoid compiler error
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
 		if (_CU == ECU)
