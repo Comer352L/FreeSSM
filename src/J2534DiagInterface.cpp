@@ -310,7 +310,8 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 
 err_close:
 #ifdef __FSSM_DEBUG__
-	if (STATUS_NOERROR != _j2534->PassThruDisconnect(_ChannelID))
+	long ret = _j2534->PassThruDisconnect(_ChannelID);
+	if (STATUS_NOERROR != ret)
 		printErrorDescription("PassThruDisconnect() failed: ", ret);
 #else
 	_j2534->PassThruDisconnect(_ChannelID);
