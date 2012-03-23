@@ -146,6 +146,7 @@ unix {
        SOURCES += src/linux/serialCOM.cpp \
                   src/linux/TimeM.cpp \
                   src/linux/J2534_API.cpp
+       LIBS += -ldl -lrt
 }
 
 win32 {
