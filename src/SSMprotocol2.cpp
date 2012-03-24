@@ -165,10 +165,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
-		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
+		{
+			delete _SSMP2com;
+			_SSMP2com = NULL;
 			return result_commError;
-		if (!(data & 0x08))
-			return result_commError;
+		}
 	}
 	_CU = CU;
 	_state = state_normal;
