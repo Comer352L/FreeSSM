@@ -169,9 +169,12 @@ bool SSMprotocol2::setupCUdata(bool ignoreIgnitionOFF)
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
-		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
+		{
+			delete _SSMP2com;
+			_SSMP2com = NULL;
 			return false;
-		if (!(data & 0x08)) return false;
+		}
 	}
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
