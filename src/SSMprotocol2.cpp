@@ -143,7 +143,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	}
 	else
 		return result_invalidCUtype;
-	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
+	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress, 1);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 	{
@@ -160,6 +160,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 				return result_commError;
 		}
 	}
+	_SSMP2com->setRetriesOnError(2);
 	// Ensure that ignition switch is ON:
 	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
 	{
