@@ -127,7 +127,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
-	char CUaddress = 0;
+	char CUaddress = '\x0';
 	bool ATsup = false;
 	bool CCsup = false;
 	// Reset:
@@ -146,7 +146,20 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress);
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
-		 return result_commError;
+	{
+		_SSMP2com->setCUaddress('\x01');
+		if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+		{
+			if (CU == CUtype_Engine)
+			{
+				_SSMP2com->setCUaddress('\x02');
+				if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+					return result_commError;
+			}
+			else
+				return result_commError;
+		}
+	}
 	// Ensure that ignition switch is ON:
 	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
 	{
