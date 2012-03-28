@@ -1,7 +1,7 @@
 /*
  * FreeSSM.cpp - Program main window
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -375,6 +375,7 @@ void FreeSSM::dumpCUdata()
 	unsigned int dataaddr[17] = {0};
 	char data[17] = {0};
 	int ssm1_cu_index = SSM1_CU_Engine;
+	bool cu_resp = true;
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
@@ -412,7 +413,17 @@ void FreeSSM::dumpCUdata()
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
-	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	cu_resp = true;
+	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	{
+		SSMP2com.setCUaddress('\x01');
+		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+		{
+			SSMP2com.setCUaddress('\x02');
+			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+		}
+	}
+	if (cu_resp)
 	{
 		// Open/Create File:
 		if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -466,7 +477,13 @@ void FreeSSM::dumpCUdata()
 	// **************** TCU ***************
 	SSMP2com.setCUaddress('\x18');
 	// Read TCU data:
-	if (SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	cu_resp = true;
+	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	{
+		SSMP2com.setCUaddress('\x01');
+		cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+	}
+	if (cu_resp)
 	{
 		if (!dumpfile.isOpen()) // if file is not opened yet
 		{
