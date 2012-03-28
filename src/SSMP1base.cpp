@@ -1,7 +1,7 @@
 /*
  * SSMP1base.cpp - Basic definitions and commands for the SSM1-protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,17 +58,37 @@ bool SSMP1commands::sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr)
 	else if (cu == SSM1_CU_CruiseCtrl)
 	{
 		msg[0] = SSMP1_CMD_READ_CRUISECONTROL;
-		msglen = 3;
+		msglen = 4;
 	}
 	else if (cu == SSM1_CU_AirCon)
 	{
 		msg[0] = SSMP1_CMD_READ_AIRCON;
 		msglen = 3;
 	}
+	else if (cu == SSM1_CU_AirCon2)
+	{
+		msg[0] = SSMP1_CMD_READ_AIRCON2;
+		msglen = 4;
+	}
 	else if (cu == SSM1_CU_FourWS)
 	{
 		msg[0] = SSMP1_CMD_READ_4WS;
 		msglen = 3;
+	}
+	else if (cu == SSM1_CU_ABS)
+	{
+		msg[0] = SSMP1_CMD_READ_ABS;
+		msglen = 4;
+	}
+	else if (cu == SSM1_CU_AirSusp)
+	{
+		msg[0] = SSMP1_CMD_READ_AIRSUSP;
+		msglen = 4;
+	}
+	else if (cu == SSM1_CU_PwrSteer)
+	{
+		msg[0] = SSMP1_CMD_READ_POWERSTEERING;
+		msglen = 4;
 	}
 	else
 		return false;
