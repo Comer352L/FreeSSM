@@ -406,6 +406,12 @@ void FreeSSM::dumpCUdata()
 	}
 	filename.append(".dat");
 	dumpfile.setFileName(filename);
+	if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
+	{
+		delete diagInterface;	// will be closed in destructor
+		_dumping = false;
+		return;
+	}
 	// Create SSMP1-Communication-object:
 	SSMP1communication SSMP1com(diagInterface, SSM1_CU_Engine, 0);
 	// Create SSMP2-Communication-object:
@@ -425,9 +431,6 @@ void FreeSSM::dumpCUdata()
 	}
 	if (cu_resp)
 	{
-		// Open/Create File:
-		if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
-			goto end;
 		// *** Convert and write data to file:
 		// Sys-ID:
 		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
@@ -472,7 +475,7 @@ void FreeSSM::dumpCUdata()
 			dumpfile.write(hexstr.data(), hexstr.size());
 		}
 	}
-	else if (dumpfile.isOpen())
+	else
 		dumpfile.write("\n---\n", 5);
 	// **************** TCU ***************
 	SSMP2com.setCUaddress('\x18');
@@ -485,13 +488,6 @@ void FreeSSM::dumpCUdata()
 	}
 	if (cu_resp)
 	{
-		if (!dumpfile.isOpen()) // if file is not opened yet
-		{
-			// Open/Create File:
-			if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
-				goto end;
-			dumpfile.write("\n---\n", 5);
-		}
 		// *** Convert and write data to file:
 		// Sys-ID:
 		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
@@ -514,7 +510,7 @@ void FreeSSM::dumpCUdata()
 			dumpfile.write(hexstr.data(), hexstr.length());
 		}
 	}
-	else if (dumpfile.isOpen())
+	else
 		dumpfile.write("\n---\n", 5);
 	diagInterface->disconnect();
 	// ######## SSM1-Control-Units ########
@@ -529,13 +525,6 @@ void FreeSSM::dumpCUdata()
 		// Read CU-ID(s):
 		if (SSMP1com.getCUdata(SYS_ID, flagbytes, &nrofflagbytes))
 		{
-			if (!dumpfile.isOpen())
-			{
-				if (!dumpfile.open(QIODevice::WriteOnly | QIODevice::Text))
-					goto end;
-				for (k=0; k<(ssm1_cu_index+2); k++)
-					dumpfile.write("\n-----\n", 7);
-			}
 			if (((SYS_ID[0] & '\xF0') == '\xA0') && (SYS_ID[1] == '\x10'))
 			{
 				// Read extended ID:
@@ -573,7 +562,7 @@ void FreeSSM::dumpCUdata()
 			else
 				dumpfile.write("---\n", 4);
 		}
-		else if (dumpfile.isOpen())
+		else
 			dumpfile.write("\n-----\n", 7);
 	}
 	diagInterface->disconnect();
