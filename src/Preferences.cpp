@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -298,6 +298,16 @@ void Preferences::interfacetest()
 				SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
 				unsigned int addr = 0x61;
 				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+				if (!icresult)
+				{
+					SSMP2com->setCUaddress('\x01');
+					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+					if (!icresult)
+					{
+						SSMP2com->setCUaddress('\x02');
+						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+					}
+				}
 				delete SSMP2com;
 				diagInterface->disconnect();
 			}
