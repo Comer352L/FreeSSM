@@ -39,8 +39,6 @@ SSMP1communication_procedures::SSMP1communication_procedures(AbstractDiagInterfa
 
 bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int addr)
 {
-	if (((cu != SSM1_CU_Engine) && (cu != SSM1_CU_Transmission)) && (addr > 0xFF))
-		return false;
 	if (!sendReadAddressCmd(cu, addr))
 	{
 #ifdef __FSSM_DEBUG__
