@@ -1,7 +1,7 @@
 /*
  * SSMP2communication.h - Communication Thread for the new SSM-protocol
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,15 +40,15 @@ public:
 	void setRetriesOnError(unsigned char retries);
 
 	bool getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
-	bool readDataBlock(char padadr, unsigned int dataadr, unsigned int nrofbytes, char *data);
-	bool readMultipleDatabytes(char padadr, unsigned int dataadr[256], unsigned int datalen, char *data);
-	bool writeDataBlock(unsigned int dataadr, char *data, unsigned int datalen, char *datawritten=NULL);
-	bool writeDatabyte(unsigned int dataadr, char databyte, char *databytewritten=NULL);
+	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
+	bool readMultipleDatabytes(char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data);
+	bool writeDataBlock(unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten=NULL);
+	bool writeDatabyte(unsigned int dataaddr, char databyte, char *databytewritten=NULL);
 
-	bool readDataBlock_permanent(char padadr, unsigned int dataadr, unsigned int nrofbytes, int delay=0);
-	bool readMultipleDatabytes_permanent(char padadr, unsigned int dataadr[256], unsigned int datalen, int delay=0);
-	bool writeDataBlock_permanent(unsigned int dataadr, char *data, unsigned int datalen, int delay=0);
-	bool writeDatabyte_permanent(unsigned int dataadr, char databyte, int delay=0);
+	bool readDataBlock_permanent(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, int delay=0);
+	bool readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[256], unsigned int datalen, int delay=0);
+	bool writeDataBlock_permanent(unsigned int dataaddr, char *data, unsigned int datalen, int delay=0);
+	bool writeDatabyte_permanent(unsigned int dataaddr, char databyte, int delay=0);
 
 	comOp_dt getCurrentCommOperation();
 
@@ -63,8 +63,8 @@ private:
 	bool _abort;
 	unsigned char _errRetries;
 	// Buffers for sending/recieving data:
-	char _padadr;
-	unsigned int _dataadr[256];
+	char _padaddr;
+	unsigned int _dataaddr[256];
 	unsigned char _datalen;
 	char _snd_buf[256];
 	char _rec_buf[256];
