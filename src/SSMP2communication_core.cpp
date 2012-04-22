@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.cpp - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 
 
 
-bool SSMP2communication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
+bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
 {
 	// Send: 80 (ECUADR) F0 06  A0  00  00 01 21  (n-1)  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  E0  data_1 data_2 ... data_n  (CS)
@@ -73,7 +73,7 @@ bool SSMP2communication_core::ReadDataBlock(char ecuaddr, char padaddr, unsigned
 
 
 
-bool SSMP2communication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
+bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
 {
 	// 80 (ECUADR) F0 (2+3*n)  A8  (PADADDR)  a1_b2 a1_b1 a1_b0  a2_b2 a2_b1 a2_b0 ... an_b2 an_b1 an_b0  (CS)
 	// 80 F0 (ECUADR) (1+n)   E8  data_1 data_2 ... data_n  (CS)
@@ -112,7 +112,7 @@ bool SSMP2communication_core::ReadMultipleDatabytes(char ecuaddr, char padaddr, 
 
 
 
-bool SSMP2communication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
+bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
 {
 	// Send: 80 (ECUADR) F0 (4+n)  B0  00 01 21  data_1 data_2 ... data_n  (CS)
 	// Rcv:  80 F0 (ECUADR) (1+n)  F0  data_1 data_2 ...  (CS)
@@ -162,7 +162,7 @@ bool SSMP2communication_core::WriteDataBlock(char ecuaddr, unsigned int dataaddr
 
 
 
-bool SSMP2communication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
+bool SSMP2communication_core::WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
 {
 	// Send: 80 (ECUADR) F0 (05)  B8  00 01 21  databyte  (CS)
 	// Rcv:  80 F0 (ECUADR) (02)  F8  databyte  (CS)
@@ -207,7 +207,7 @@ bool SSMP2communication_core::WriteDatabyte(char ecuaddr, unsigned int dataaddr,
 
 
 
-bool SSMP2communication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	// Send: 80 (ECUADR) F0 01 BF (CS)
 	// Rcv:  80 F0 (ECUADR) (9+n)  FF  sysID_1 sysID_2 sysID_3 romID_1 ... romID_5 flagbyte_1 flagbyte_2 ... flagbyte_n  CS
@@ -247,13 +247,14 @@ bool SSMP2communication_core::GetCUdata(char ecuaddr, char *SYS_ID, char *ROM_ID
 
 
 
-bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
+bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
 	if (_diagInterface == NULL) return false;
 	if (outdatalen < 1) return false;
 	std::vector<char> msg_buffer;
 	unsigned int k = 0;
 	// SETUP COMPLETE MESSAGE:
+	if (ecuaddr > 0xff) return false;
 	// Protocol-header
 	msg_buffer.push_back('\x80');
 	msg_buffer.push_back(ecuaddr);
@@ -316,7 +317,7 @@ bool SSMP2communication_core::SndRcvMessage(char ecuaddr, char *outdata, unsigne
 	// ELIMINATE ECHO :
 	msg_buffer.erase(msg_buffer.begin(), msg_buffer.begin() + 4 + outdatalen + 1);
 	// CHECK IF PROTOCOL HEADER IS CORRECT:
-	if ((msg_buffer.at(0) != '\x80') || (msg_buffer.at(1) != '\xF0') || (msg_buffer.at(2) != ecuaddr))
+	if ((msg_buffer.at(0) != '\x80') || (msg_buffer.at(1) != '\xF0') || (static_cast<unsigned char>(msg_buffer.at(2)) != ecuaddr))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMPcore::SndRcvMessage(...):   Invalid Protocol Header\n";

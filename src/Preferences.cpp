@@ -300,11 +300,11 @@ void Preferences::interfacetest()
 				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 				if (!icresult)
 				{
-					SSMP2com->setCUaddress('\x01');
+					SSMP2com->setCUaddress(0x01);
 					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 					if (!icresult)
 					{
-						SSMP2com->setCUaddress('\x02');
+						SSMP2com->setCUaddress(0x02);
 						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 					}
 				}

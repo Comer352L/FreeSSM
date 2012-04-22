@@ -21,7 +21,7 @@
 #include "SSMP2communication.h"
 
 
-SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
+SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
 
@@ -48,7 +48,7 @@ SSMP2communication::~SSMP2communication()
 
 
 
-void SSMP2communication::setCUaddress(char cuaddress)
+void SSMP2communication::setCUaddress(unsigned int cuaddress)
 {
 	_cuaddress = cuaddress;
 }
@@ -342,7 +342,7 @@ void SSMP2communication::run()
 	bool op_success = false;
 	bool abort;
 	comOp_dt operation;
-	char cuaddress;
+	unsigned int cuaddress;
 	char padaddr = '\x0';
 	unsigned char datalen = 0;
 	unsigned int dataaddr[256] = {0};

@@ -34,9 +34,9 @@ class SSMP2communication : public QThread, private SSMP2communication_core
 public:
 	enum comOp_dt {comOp_noCom, comOp_readCUdata, comOp_readBlock, comOp_readMulti, comOp_writeBlock, comOp_writeSingle, comOp_readBlock_p, comOp_readMulti_p, comOp_writeBlock_p, comOp_writeSingle_p};
 
-	SSMP2communication(AbstractDiagInterface *diagInterface, char cuaddress = '\x0', unsigned char errRetries = 2);
+	SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress = 0x0, unsigned char errRetries = 2);
 	~SSMP2communication();
-	void setCUaddress(char cuaddress);
+	void setCUaddress(unsigned int cuaddress);
 	void setRetriesOnError(unsigned char retries);
 
 	bool getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
@@ -55,7 +55,7 @@ public:
 	bool stopCommunication();
 
 private:
-	char _cuaddress;
+	unsigned int _cuaddress;
 	comOp_dt _CommOperation;
 	QMutex _mutex;
 	QEventLoop _el;

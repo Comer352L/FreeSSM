@@ -415,17 +415,17 @@ void FreeSSM::dumpCUdata()
 	// Create SSMP1-Communication-object:
 	SSMP1communication SSMP1com(diagInterface, SSM1_CU_Engine, 0);
 	// Create SSMP2-Communication-object:
-	SSMP2communication SSMP2com(diagInterface, '\x10', 0);
+	SSMP2communication SSMP2com(diagInterface, 0x10, 0);
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
 	cu_resp = true;
 	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 	{
-		SSMP2com.setCUaddress('\x01');
+		SSMP2com.setCUaddress(0x01);
 		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 		{
-			SSMP2com.setCUaddress('\x02');
+			SSMP2com.setCUaddress(0x02);
 			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
 		}
 	}
@@ -478,12 +478,12 @@ void FreeSSM::dumpCUdata()
 	else
 		dumpfile.write("\n---\n", 5);
 	// **************** TCU ***************
-	SSMP2com.setCUaddress('\x18');
+	SSMP2com.setCUaddress(0x18);
 	// Read TCU data:
 	cu_resp = true;
 	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 	{
-		SSMP2com.setCUaddress('\x01');
+		SSMP2com.setCUaddress(0x01);
 		cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
 	}
 	if (cu_resp)

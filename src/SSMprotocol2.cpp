@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
-	char CUaddress = '\x0';
+	unsigned int CUaddress = 0x0;
 	bool ATsup = false;
 	bool CCsup = false;
 	// Reset:
@@ -135,11 +135,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Create SSMP2communication-object:
 	if (CU == CUtype_Engine)
 	{
-		CUaddress = '\x10';
+		CUaddress = 0x10;
 	}
 	else if (CU == CUtype_Transmission)
 	{
-		CUaddress = '\x18';
+		CUaddress = 0x18;
 	}
 	else
 		return result_invalidCUtype;
@@ -147,12 +147,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 	{
-		_SSMP2com->setCUaddress('\x01');
+		_SSMP2com->setCUaddress(0x01);
 		if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 		{
 			if (CU == CUtype_Engine)
 			{
-				_SSMP2com->setCUaddress('\x02');
+				_SSMP2com->setCUaddress(0x02);
 				if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 					return result_commError;
 			}
