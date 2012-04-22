@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.cpp - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -147,7 +147,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
 		// Probe SSM2-protocol:
-		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 		{
 			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
 			result = _SSMPdev->setupCUdata( CUtype );

@@ -156,7 +156,7 @@ bool J2534DiagInterface::close()
 
 bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 {
-	if (protocol != AbstractDiagInterface::protocol_SSM2)
+	if (protocol != AbstractDiagInterface::protocol_SSM2_ISO14230)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "Error: selected protocol is not supported\n";

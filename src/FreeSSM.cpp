@@ -382,7 +382,7 @@ void FreeSSM::dumpCUdata()
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
-		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2))
+		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 		{
 			delete diagInterface;
 			return;

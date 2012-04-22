@@ -1,7 +1,7 @@
 /*
  * SerialPassThroughDiagInterface.cpp - Serial port pass-through diagnostic interface
  *
- * Copyright (C) 2010 Comer352l
+ * Copyright (C) 2010-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 				return true;
 			}
 		}
-		else if (protocol == AbstractDiagInterface::protocol_SSM2)
+		else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
 			if (_port->SetPortSettings(4800, 8, 'N', 1))
 			{
@@ -172,7 +172,7 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		{
 			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 11 / 1953.0);
 		}
-		else if (protocolType() == AbstractDiagInterface::protocol_SSM2)
+		else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
 			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 10 / 4800.0);
 		}

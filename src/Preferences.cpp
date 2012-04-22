@@ -292,7 +292,7 @@ void Preferences::interfacetest()
 			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
 			waitmsgbox->show();
 			// SSM2:
-			SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2);
+			SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
 			if (SSM2configOK)
 			{
 				SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);

@@ -1,7 +1,7 @@
 /*
  * AbstractDiagInterface.h - Abstract class for implementing automotive diagnostic interfaces
  *
- * Copyright (C) 2010 Comer352l
+ * Copyright (C) 2010-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class AbstractDiagInterface
 
 public:
 	enum interface_type { interface_serialPassThrough, interface_J2534 };
-	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2 };
+	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2_ISO14230, protocol_SSM2_ISO15765 };
 
 	AbstractDiagInterface();
 	virtual ~AbstractDiagInterface();
