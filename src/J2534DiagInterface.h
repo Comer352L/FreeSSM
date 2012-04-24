@@ -1,7 +1,7 @@
 /*
  * J2534DiagInterface.h - J2534-pass-through diagnostic interface
  *
- * Copyright (C) 2010 Comer352l
+ * Copyright (C) 2010-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,8 @@ private:
 	bool _connected;
 	unsigned long _DeviceID;
 	unsigned long _ChannelID;
-        unsigned long _FilterID;
+        unsigned long _FilterID[10];	// SAE J2534 allows max. 10 filters
+        unsigned char _numFilters;
 
 #ifdef __FSSM_DEBUG__
 	void printErrorDescription(std::string title, long ret);
