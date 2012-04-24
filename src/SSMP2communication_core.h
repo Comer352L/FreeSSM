@@ -45,6 +45,8 @@ private:
 	AbstractDiagInterface *_diagInterface;
 
 	bool SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
+	bool receiveReplyISO14230(unsigned int ecuaddr, unsigned int outmsg_len, std::vector<char> *msg_buffer);
+	bool receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer);
 	char calcchecksum(char *message, unsigned int nrofbytes);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
 
