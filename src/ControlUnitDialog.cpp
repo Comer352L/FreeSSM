@@ -147,18 +147,28 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
 	{
 		// Probe SSM2-protocol:
-		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
+		_SSMPdev = new SSMprotocol2(_diagInterface, _language);
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
 		{
-			_SSMPdev = new SSMprotocol2(_diagInterface, _language);
 			result = _SSMPdev->setupCUdata( CUtype );
-			if ((result == SSMprotocol::result_success) || (result == SSMprotocol::result_noOrInvalidDefsFile) || (result == SSMprotocol::result_noDefs))
-				connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
-			else
-			{
-				delete _SSMPdev;
-				_SSMPdev = NULL;
+			if ((result != SSMprotocol::result_success) && (result != SSMprotocol::result_noOrInvalidDefsFile) && (result != SSMprotocol::result_noDefs))
 				_diagInterface->disconnect();
+		}
+		if (!_diagInterface->isConnected())
+		{
+		  	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
+			{
+				result = _SSMPdev->setupCUdata( CUtype );
+				if ((result != SSMprotocol::result_success) && (result != SSMprotocol::result_noOrInvalidDefsFile) && (result != SSMprotocol::result_noDefs))
+					_diagInterface->disconnect();
 			}
+		}
+		if (_diagInterface->isConnected())
+			connect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
+		else
+		{
+			delete _SSMPdev;
+			_SSMPdev = NULL;
 		}
 	}
 	if (_SSMPdev == NULL)

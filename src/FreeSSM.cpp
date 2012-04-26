@@ -375,20 +375,12 @@ void FreeSSM::dumpCUdata()
 	unsigned int dataaddr[17] = {0};
 	char data[17] = {0};
 	int ssm1_cu_index = SSM1_CU_Engine;
-	bool cu_resp = true;
+	bool cu_resp = false;
 
 	if (_dumping) return;
 	// Initialize and configure serial port:
 	AbstractDiagInterface *diagInterface = initInterface();
-	if (diagInterface)
-	{
-		if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
-		{
-			delete diagInterface;
-			return;
-		}
-	}
-	else
+	if (!diagInterface)
 		return;
 	_dumping = true;
 	// Set filename:
@@ -419,13 +411,25 @@ void FreeSSM::dumpCUdata()
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
-	cu_resp = true;
-	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 	{
-		SSMP2com.setCUaddress(0x01);
+		cu_resp = true;
 		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
 		{
-			SSMP2com.setCUaddress(0x02);
+			SSMP2com.setCUaddress(0x01);
+			if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+			{
+				SSMP2com.setCUaddress(0x02);
+				cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+			}
+		}
+	}
+	if (!cu_resp)
+	{
+		diagInterface->disconnect();
+		if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
+		{
+			SSMP2com.setCUaddress(0x7E0);
 			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
 		}
 	}
@@ -478,13 +482,28 @@ void FreeSSM::dumpCUdata()
 	else
 		dumpfile.write("\n---\n", 5);
 	// **************** TCU ***************
-	SSMP2com.setCUaddress(0x18);
 	// Read TCU data:
-	cu_resp = true;
-	if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+	cu_resp = false;
+	diagInterface->disconnect();
+	if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 	{
-		SSMP2com.setCUaddress(0x01);
-		cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+		SSMP2com.setCUaddress(0x18);
+		cu_resp = true;
+		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+		{
+			SSMP2com.setCUaddress(0x01);
+			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+		}
+	}
+	if (!cu_resp)
+	{
+		diagInterface->disconnect();
+		if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
+		{
+			SSMP2com.setCUaddress(0x7E1);
+			// Read TCU data:
+			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+		}
 	}
 	if (cu_resp)
 	{

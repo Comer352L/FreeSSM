@@ -292,10 +292,11 @@ void Preferences::interfacetest()
 			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
 			waitmsgbox->show();
 			// SSM2:
+			SSMP2communication *SSMP2com = new SSMP2communication(diagInterface);
 			SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
 			if (SSM2configOK)
 			{
-				SSMP2communication *SSMP2com = new SSMP2communication(diagInterface, 0x10);
+				SSMP2com->setCUaddress(0x10);
 				unsigned int addr = 0x61;
 				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 				if (!icresult)
@@ -308,14 +309,25 @@ void Preferences::interfacetest()
 						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 					}
 				}
-				delete SSMP2com;
 				diagInterface->disconnect();
 			}
-			// SSM1:
-			SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
-			if (SSM1configOK)
+			if (!icresult)
 			{
-				if (!icresult)
+				SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
+				if (SSM2configOK)
+				{
+					SSMP2com->setCUaddress(0x7E0);
+					unsigned int addr = 0x61;
+					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+					diagInterface->disconnect();
+				}
+			}
+			delete SSMP2com;
+			// SSM1:
+			if (!icresult)
+			{
+				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
+				if (SSM1configOK)
 				{
 					SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CU_Engine);
 					icresult = SSMP1com->readAddress(0x00, &data);
@@ -325,8 +337,8 @@ void Preferences::interfacetest()
 						icresult = SSMP1com->readAddress(0x00, &data);
 						delete SSMP1com;
 					}
+					diagInterface->disconnect();
 				}
-				diagInterface->disconnect();
 			}
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();

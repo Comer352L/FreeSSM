@@ -135,11 +135,29 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Create SSMP2communication-object:
 	if (CU == CUtype_Engine)
 	{
-		CUaddress = 0x10;
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		{
+			CUaddress = 0x10;
+		}
+		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		{
+			CUaddress = 0x7E0;
+		}
+		else
+			return result_invalidInterfaceConfig;
 	}
 	else if (CU == CUtype_Transmission)
 	{
-		CUaddress = 0x18;
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		{
+			CUaddress = 0x18;
+		}
+		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		{
+			CUaddress = 0x7E1;
+		}
+		else
+			return result_invalidInterfaceConfig;
 	}
 	else
 		return result_invalidCUtype;
@@ -147,18 +165,23 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 	{
-		_SSMP2com->setCUaddress(0x01);
-		if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
-			if (CU == CUtype_Engine)
+			_SSMP2com->setCUaddress(0x01);
+			if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
 			{
-				_SSMP2com->setCUaddress(0x02);
-				if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+				if (CU == CUtype_Engine)
+				{
+					_SSMP2com->setCUaddress(0x02);
+					if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+						return result_commError;
+				}
+				else
 					return result_commError;
 			}
-			else
-				return result_commError;
 		}
+		else
+			return result_commError;
 	}
 	_SSMP2com->setRetriesOnError(2);
 	// Ensure that ignition switch is ON:
