@@ -1041,7 +1041,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 				if ((ret >= 0) || (ret <= static_cast<int>(maxbytes-rb_total)))	// >maxbytes: important ! => possible if fd was not open !
 				{
 					rb_total += ret;
-					if (rb_total >= maxbytes)
+					if (rb_total >= minbytes)
 					{
 						*nrofbytesread = static_cast<unsigned int>(rb_total);
 						return true;
