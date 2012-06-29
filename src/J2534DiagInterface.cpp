@@ -29,6 +29,7 @@ J2534DiagInterface::J2534DiagInterface()
 	_numFilters = 0;
 	setName("J2534 Pass-Through");
 	setVersion("");
+	setProtocolBaudrate( 0 );
 }
 
 
@@ -384,6 +385,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 		}
 		_connected = true;
 		setProtocolType( protocol );
+		setProtocolBaudrate( BaudRate );
 		return true;
 	}
 	else
@@ -433,6 +435,7 @@ bool J2534DiagInterface::disconnect()
 		}
 		_connected = false;
 		setProtocolType( protocol_NONE );
+		setProtocolBaudrate( 0 );
 		return true;
 	}
 	else

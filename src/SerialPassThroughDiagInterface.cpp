@@ -34,6 +34,7 @@ SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
 	_connected = false;
 	setName("Serial Port Pass-Through");
 	setVersion("");
+	setProtocolBaudrate( 0 );
 }
 
 
@@ -108,6 +109,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 					return false;
 				}
 				setProtocolType( protocol );
+				setProtocolBaudrate( 1953 );
 				_connected = true;
 				return true;
 			}
@@ -117,6 +119,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 			if (_port->SetPortSettings(4800, 8, 'N', 1))
 			{
 				setProtocolType( protocol );
+				setProtocolBaudrate( 4800 );
 				_connected = true;
 				return true;
 			}
@@ -138,6 +141,7 @@ bool SerialPassThroughDiagInterface::disconnect()
 	{
 		_connected = false;
 		setProtocolType( protocol_NONE );
+		setProtocolBaudrate( 0 );
 		return true;
 	}
 	return false;

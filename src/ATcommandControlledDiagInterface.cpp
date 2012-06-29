@@ -44,6 +44,7 @@ ATcommandControlledDiagInterface::ATcommandControlledDiagInterface()
 	_exit = false;
 	setName("AT-command controlled");
 	setVersion("");
+	setProtocolBaudrate(0);
 }
 
 
@@ -348,6 +349,8 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 			}
 
 			// NOTE: for ISO15765, there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
+			
+			setProtocolBaudrate(500000);
 		}
 		else
 		{
@@ -384,6 +387,7 @@ bool ATcommandControlledDiagInterface::disconnect()
 			writeRead("ATPC");	// ELM327/ELM329 only
 		_connected = false;
 		setProtocolType( protocol_NONE );
+		setProtocolBaudrate( 0 );
 		return true;
 	}
 	return false;
