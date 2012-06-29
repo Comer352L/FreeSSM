@@ -54,7 +54,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			fp = readdir (dp);	// get next file in directory
 			if (fp != NULL)
 			{
-				if ((!strncmp(fp->d_name,"ttyS",4)) | (!strncmp(fp->d_name,"ttyUSB",6))) // if filename starts with "ttyS" or "ttyUSB"
+				if ((!strncmp(fp->d_name,"ttyS",4)) || (!strncmp(fp->d_name,"ttyUSB",6)) || (!strncmp(fp->d_name,"ttyACM",6))) // if filename starts with "ttyS" or "ttyUSB" or "ttyACM"
 				{
 					// CONSTRUCT FULL FILENAME:
 					strcpy(ffn, "/dev/");		// (replaces old string)
