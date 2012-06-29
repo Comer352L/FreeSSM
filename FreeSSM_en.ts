@@ -837,19 +837,19 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="189"/>
+        <location filename="src/ControlUnitDialog.cpp" line="199"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="189"/>
+        <location filename="src/ControlUnitDialog.cpp" line="199"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
 - No or invalid answer from Control Unit -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="206"/>
+        <location filename="src/ControlUnitDialog.cpp" line="216"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation>Stopping Communication... Please wait !</translation>
@@ -1052,19 +1052,19 @@ If you want to contribute to the the project (help adding defintions), feel free
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="123"/>
-        <location filename="src/FreeSSM.cpp" line="573"/>
+        <location filename="src/FreeSSM.cpp" line="611"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="300"/>
+        <location filename="src/FreeSSM.cpp" line="309"/>
         <source>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</source>
         <translation>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="315"/>
+        <location filename="src/FreeSSM.cpp" line="328"/>
         <source>Internal error:
 The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</source>
@@ -1076,7 +1076,7 @@ The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="321"/>
+        <location filename="src/FreeSSM.cpp" line="334"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</source>
         <translation>Couldn&apos;t open the diagnostic interface !
@@ -1205,29 +1205,29 @@ Maybe the device is already in use by another application...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="160"/>
-        <location filename="src/Preferences.cpp" line="404"/>
-        <location filename="src/Preferences.cpp" line="442"/>
+        <location filename="src/Preferences.cpp" line="166"/>
+        <location filename="src/Preferences.cpp" line="439"/>
+        <location filename="src/Preferences.cpp" line="477"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="193"/>
+        <location filename="src/Preferences.cpp" line="213"/>
         <source>Serial Port:</source>
         <translation>Serial Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="201"/>
+        <location filename="src/Preferences.cpp" line="199"/>
         <source>Interface-Name:</source>
         <translation>Interface-Name:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="257"/>
+        <location filename="src/Preferences.cpp" line="270"/>
         <source>The selected interface is not supported !</source>
         <translation>The selected interface is not supported !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="258"/>
+        <location filename="src/Preferences.cpp" line="271"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</source>
@@ -1239,111 +1239,111 @@ The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="271"/>
+        <location filename="src/Preferences.cpp" line="284"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="272"/>
-        <location filename="src/Preferences.cpp" line="365"/>
+        <location filename="src/Preferences.cpp" line="285"/>
+        <location filename="src/Preferences.cpp" line="400"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="292"/>
+        <location filename="src/Preferences.cpp" line="305"/>
         <source>Testing interface... Please wait !     </source>
         <translation>Testing interface... Please wait !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="333"/>
+        <location filename="src/Preferences.cpp" line="368"/>
         <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="335"/>
+        <location filename="src/Preferences.cpp" line="370"/>
         <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
         <translation>The selected interface does not support the SSM1- and SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="339"/>
+        <location filename="src/Preferences.cpp" line="374"/>
         <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
         <translation>Please make sure that the interface is connected properly and ignition is switched ON.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="343"/>
+        <location filename="src/Preferences.cpp" line="378"/>
         <source>WARNING:</source>
         <translation>WARNING:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="347"/>
+        <location filename="src/Preferences.cpp" line="382"/>
         <source>The selected serial port can not be configured for the SSM1-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM1-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="349"/>
+        <location filename="src/Preferences.cpp" line="384"/>
         <source>The selected interface does not support the SSM1-protocol.</source>
         <translation>The selected interface does not support the SSM1-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="354"/>
+        <location filename="src/Preferences.cpp" line="389"/>
         <source>The selected serial port can not be configured for the SSM2-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="356"/>
+        <location filename="src/Preferences.cpp" line="391"/>
         <source>The selected interface does not support the SSM2-protocol.</source>
         <translation>The selected interface does not support the SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="364"/>
+        <location filename="src/Preferences.cpp" line="399"/>
         <source>Retry</source>
         <translation>Retry</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="160"/>
+        <location filename="src/Preferences.cpp" line="166"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation>Error:
 - Language file missing or damaged -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="264"/>
+        <location filename="src/Preferences.cpp" line="277"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Please make sure that the device is not in use by another application.</source>
         <translation>Couldn&apos;t open the diagnostic interface !
 Please make sure that the device is not in use by another application.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="270"/>
-        <location filename="src/Preferences.cpp" line="360"/>
-        <location filename="src/Preferences.cpp" line="363"/>
+        <location filename="src/Preferences.cpp" line="283"/>
+        <location filename="src/Preferences.cpp" line="395"/>
+        <location filename="src/Preferences.cpp" line="398"/>
         <source>Interface test</source>
         <translation>Interface test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="270"/>
+        <location filename="src/Preferences.cpp" line="283"/>
         <source>Please connect diagnostic interface to the vehicles
 diagnostic connector and switch ignition on.</source>
         <translation>Please connect diagnostic interface to the vehicles
 diagnostic connector and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="329"/>
+        <location filename="src/Preferences.cpp" line="364"/>
         <source>Interface test failed !</source>
         <translation>Interface test failed !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="327"/>
+        <location filename="src/Preferences.cpp" line="362"/>
         <source>Interface test successful !</source>
         <translation>Interface test successful !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="380"/>
+        <location filename="src/Preferences.cpp" line="415"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation>Couldn&apos;t close the diagnostic interface !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="404"/>
+        <location filename="src/Preferences.cpp" line="439"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1386,22 +1386,27 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
         <translation>SAE-J2534 Pass-Through</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="152"/>
+        <location filename="ui/Preferences.ui" line="133"/>
+        <source>AT-command controlled (ELM / AGV / Diamex)</source>
+        <translation>AT-command controlled (ELM / AGV / Diamex)</translation>
+    </message>
+    <message>
+        <location filename="ui/Preferences.ui" line="157"/>
         <source>Language:</source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="168"/>
+        <location filename="ui/Preferences.ui" line="173"/>
         <source>Interface-Name:</source>
         <translation>Interface-Name:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="297"/>
+        <location filename="ui/Preferences.ui" line="302"/>
         <source>Interface-Type:</source>
         <translation>Interface-Type:</translation>
     </message>
     <message>
-        <location filename="ui/Preferences.ui" line="258"/>
+        <location filename="ui/Preferences.ui" line="263"/>
         <source>GUI-Style:</source>
         <translation>GUI-Style:</translation>
     </message>
@@ -1715,9 +1720,9 @@ You should have received a copy of the GNU General Public License along with thi
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="570"/>
-        <source>Written by Comer352l (Copyright © 2008-2010)</source>
-        <oldsource>Written by Comer352l (Copyright © 2008-2009)</oldsource>
-        <translation>Written by Comer352l (Copyright © 2008-2010)</translation>
+        <source>Written by Comer352L (Copyright © 2008-2012)</source>
+        <oldsource>Written by Comer352l (Copyright © 2008-2010)</oldsource>
+        <translation>Written by Comer352L (Copyright © 2008-2012)</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="704"/>
