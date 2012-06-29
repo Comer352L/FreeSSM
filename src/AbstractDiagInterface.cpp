@@ -56,6 +56,24 @@ AbstractDiagInterface::protocol_type AbstractDiagInterface::protocolType()
 }
 
 
+std::string AbstractDiagInterface::protocolDescription()
+{
+	switch (protocolType())
+	{
+		case protocol_NONE:
+			return "";
+		case protocol_SSM1:
+			return "SSM1 (type 1)";
+		case protocol_SSM2_ISO14230:
+			return "SSM2 / ISO-14230";
+		case protocol_SSM2_ISO15765:
+			return "SSM2 / ISO-15765";
+		default:	// BUG
+			return "UNKNOWN";
+	}
+}
+
+
 // PRIVATE
 
 
