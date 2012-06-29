@@ -29,7 +29,7 @@ class AbstractDiagInterface
 {
 
 public:
-	enum interface_type { interface_serialPassThrough, interface_J2534 };
+	enum interface_type { interface_serialPassThrough, interface_J2534, interface_ATcommandControlled };
 	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2_ISO14230, protocol_SSM2_ISO15765 };
 
 	AbstractDiagInterface();
@@ -37,6 +37,7 @@ public:
 	virtual interface_type interfaceType() = 0;
 	std::string name();
 	std::string version();
+	unsigned int protocolBaudRate();
 	protocol_type protocolType();
 	virtual bool open( std::string name ) = 0;
 	virtual bool isOpen() = 0;
@@ -53,11 +54,13 @@ protected:
 	void setName(std::string name);
 	void setVersion(std::string version);
 	void setProtocolType(protocol_type protocoltype);
+	void setProtocolBaudrate(unsigned int baudrate);
 
 private:
 	protocol_type _protocoltype;
 	std::string _name;
 	std::string _version;
+	unsigned int _protocol_baudrate;
 
 };
 

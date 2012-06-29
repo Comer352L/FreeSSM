@@ -1,7 +1,7 @@
 /*
  * Preferences.h - Adjustment of program settings
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include "Languages.h"
 #include "AbstractDiagInterface.h"
 #include "SerialPassThroughDiagInterface.h"
+#include "ATcommandControlledDiagInterface.h"
 #include "J2534DiagInterface.h"
 #include "SSMP1communication.h"
 #include "SSMP2communication.h"

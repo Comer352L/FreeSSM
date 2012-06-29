@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
+    <width>458</width>
     <height>270</height>
    </rect>
   </property>
@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>418</width>
+    <width>458</width>
     <height>270</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>418</width>
+    <width>458</width>
     <height>270</height>
    </size>
   </property>
@@ -65,7 +65,7 @@
     <rect>
      <x>25</x>
      <y>225</y>
-     <width>175</width>
+     <width>195</width>
      <height>30</height>
     </rect>
    </property>
@@ -76,9 +76,9 @@
   <widget class="QPushButton" name="cancel_pushButton">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>240</x>
      <y>225</y>
-     <width>175</width>
+     <width>195</width>
      <height>30</height>
     </rect>
    </property>
@@ -91,7 +91,7 @@
     <rect>
      <x>25</x>
      <y>177</y>
-     <width>370</width>
+     <width>410</width>
      <height>32</height>
     </rect>
    </property>
@@ -114,7 +114,7 @@
     <rect>
      <x>150</x>
      <y>113</y>
-     <width>245</width>
+     <width>285</width>
      <height>22</height>
     </rect>
    </property>
@@ -128,13 +128,18 @@
      <string>SAE-J2534 Pass-Through</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>AT-command controlled (ELM / AGV / Diamex)</string>
+    </property>
+   </item>
   </widget>
   <widget class="QComboBox" name="language_comboBox">
    <property name="geometry">
     <rect>
      <x>150</x>
      <y>49</y>
-     <width>245</width>
+     <width>285</width>
      <height>22</height>
     </rect>
    </property>
@@ -240,7 +245,7 @@
     <rect>
      <x>150</x>
      <y>81</y>
-     <width>245</width>
+     <width>285</width>
      <height>22</height>
     </rect>
    </property>
@@ -279,7 +284,7 @@
     <rect>
      <x>150</x>
      <y>145</y>
-     <width>245</width>
+     <width>285</width>
      <height>22</height>
     </rect>
    </property>

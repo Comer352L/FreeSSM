@@ -176,9 +176,12 @@ FreeSSM::FreeSSM(QApplication *app)
 		}
 		// NOTE: otherwise _iface_filename remains empty
 	}
-	else	// invalid or Serial Pass-Through
+	else	// Serial Pass-Through, AT-comand controlled (e.g. ELM, AGV, Diamex) or invalid
 	{
-		_iface_type = AbstractDiagInterface::interface_serialPassThrough;
+		if (savedinterfacetype == QString::number(AbstractDiagInterface::interface_ATcommandControlled))
+			_iface_type = AbstractDiagInterface::interface_ATcommandControlled;
+		else
+			_iface_type = AbstractDiagInterface::interface_serialPassThrough;
 		std::vector<std::string> portlist;
 		portlist = serialCOM::GetAvailablePorts();
 		if (portlist.size())
@@ -315,6 +318,10 @@ AbstractDiagInterface * FreeSSM::initInterface()
 	else if (_iface_type == AbstractDiagInterface::interface_J2534)
 	{
 		diagInterface = new J2534DiagInterface;
+	}
+	else if (_iface_type == AbstractDiagInterface::interface_ATcommandControlled)
+	{
+		diagInterface = new ATcommandControlledDiagInterface;
 	}
 	else
 	{

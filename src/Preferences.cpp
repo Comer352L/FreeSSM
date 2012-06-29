@@ -77,6 +77,12 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 		selectInterfaceType(1); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
 		if_name_index = _J2534libraryPaths.indexOf(*_r_interfacefilename);
 	}
+	else if (_newinterfacetype == AbstractDiagInterface::interface_ATcommandControlled) // AT-comand controlled (e.g. ELM, AGV, Diamex)
+	{
+		interfaceType_comboBox->setCurrentIndex(2);
+		selectInterfaceType(2); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
+		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
+	}
 	else	// Serial Pass-Through
 	{
 		interfaceType_comboBox->setCurrentIndex(0);
@@ -187,15 +193,7 @@ void Preferences::selectInterfaceType(int index)
 	_J2534libraryPaths.clear();
 	_newinterfacefilename = "";
 	QStringList deviceNames;
-	if (index == 0)		// Serial Pass-Through
-	{
-		_newinterfacetype = AbstractDiagInterface::interface_serialPassThrough;
-		interfaceName_label->setText(tr("Serial Port:"));
-		std::vector<std::string> portlist = serialCOM::GetAvailablePorts();
-		for (unsigned int k=0; k<portlist.size(); k++)
-			deviceNames.push_back(QString::fromStdString(portlist.at(k)));
-	}
-	else if (index == 1)	// J2534-Pass-Through
+	if (index == 1)	// J2534-Pass-Through
 	{
 		_newinterfacetype = AbstractDiagInterface::interface_J2534;
 		interfaceName_label->setText(tr("Interface-Name:"));
@@ -205,6 +203,17 @@ void Preferences::selectInterfaceType(int index)
 			deviceNames.push_back(QString::fromStdString(J2534libs.at(k).name));
 			_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
 		}
+	}
+	else if ((index == 0) || (index == 2))	// Serial Pass-Through or AT-comand controlled (e.g. ELM, AGV, Diamex)
+	{
+		if (index == 2)
+			_newinterfacetype = AbstractDiagInterface::interface_ATcommandControlled;
+		else	// index == 0
+			_newinterfacetype = AbstractDiagInterface::interface_serialPassThrough;
+		interfaceName_label->setText(tr("Serial Port:"));
+		std::vector<std::string> portlist = serialCOM::GetAvailablePorts();
+		for (unsigned int k=0; k<portlist.size(); k++)
+			deviceNames.push_back(QString::fromStdString(portlist.at(k)));
 	}
 	if (deviceNames.size())
 	{
@@ -251,6 +260,10 @@ void Preferences::interfacetest()
 	else if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
 	{
 		diagInterface = new J2534DiagInterface;
+	}
+	else if (_newinterfacetype == AbstractDiagInterface::interface_ATcommandControlled)
+	{
+		diagInterface = new ATcommandControlledDiagInterface;
 	}
 	else
 	{

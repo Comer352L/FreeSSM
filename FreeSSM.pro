@@ -20,6 +20,7 @@ HEADERS += src/FreeSSM.h \
            src/FSSMdialogs.h \
            src/ActuatorTestDlg.h \
            src/AbstractDiagInterface.h \
+           src/ATcommandControlledDiagInterface.h \
            src/SerialPassThroughDiagInterface.h \
            src/J2534DiagInterface.h \
            src/J2534.h \
@@ -60,6 +61,7 @@ SOURCES += src/main.cpp \
            src/FSSMdialogs.cpp \
            src/ActuatorTestDlg.cpp \
            src/AbstractDiagInterface.cpp \
+           src/ATcommandControlledDiagInterface.cpp \
            src/SerialPassThroughDiagInterface.cpp \
            src/J2534DiagInterface.cpp \
            src/SSMP1communication.cpp \
