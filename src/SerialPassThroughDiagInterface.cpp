@@ -33,7 +33,7 @@ SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
 	_port = NULL;
 	_connected = false;
 	setName("Serial Port Pass-Through");
-	setVersion("");
+	setVersion("1.0");
 	setProtocolBaudrate( 0 );
 }
 
