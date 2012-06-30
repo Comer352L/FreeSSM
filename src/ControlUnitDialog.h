@@ -23,6 +23,7 @@
 
 #include <QtGui>
 #include "ui_ControlUnitDialog.h"
+#include "DiagInterfaceStatusBar.h"
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
@@ -52,6 +53,7 @@ private:
 	AbstractDiagInterface *_diagInterface;
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
+	DiagInterfaceStatusBar *_ifstatusbar;
 	QList<QPushButton*> _selButtons;
 
 	void setupUiFonts();

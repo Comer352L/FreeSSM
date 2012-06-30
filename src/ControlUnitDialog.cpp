@@ -48,6 +48,15 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 		content_gridLayout->getContentsMargins(&left, &top, &right, &bottom);
 		content_gridLayout->setContentsMargins(left, top+8, right, bottom);
 	}
+	// Add status bar for the diagnostic interface
+	main_verticalLayout->setContentsMargins(-1, -1, -1, 4);
+	_ifstatusbar = new DiagInterfaceStatusBar(this);
+	main_verticalLayout->addWidget(_ifstatusbar);
+	_ifstatusbar->show();
+	_ifstatusbar->setInterfaceName( QString::fromStdString( diagInterface->name() ), Qt::blue );
+	_ifstatusbar->setInterfaceVersion( QString::fromStdString( diagInterface->version() ), Qt::blue );
+	_ifstatusbar->setProtocolName("---");
+	_ifstatusbar->setBaudRate("---");
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }
@@ -60,6 +69,7 @@ ControlUnitDialog::~ControlUnitDialog()
 		delete _infoWidget;
 	if (_contentWidget)
 		delete _contentWidget;
+	delete _ifstatusbar;
 	if (_SSMPdev)
 	{
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -187,6 +197,28 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 				_diagInterface->disconnect();
 			}
 		}
+	}
+	// Update diagnostic interface status bar:
+	if (_SSMPdev != NULL)
+	{
+		// Display protocol name:
+		_ifstatusbar->setProtocolName( QString::fromStdString( _diagInterface->protocolDescription() ), Qt::darkGreen );
+		// Display protocol baud rate:
+		unsigned int br = _diagInterface->protocolBaudRate();
+		QString bstr;
+		if (br <100000)
+		{
+			bstr = QString::number(br) + " baud";
+		}
+		else if (br < 100000000)
+		{
+			bstr = QString::number(br/1000.0, 'g', 5) + " Kbaud";
+		}
+		else
+		{
+			bstr = QString::number(br/1000000.0, 'g', 5) + " Mbaud";
+		}
+		_ifstatusbar->setBaudRate(bstr, Qt::darkGreen);
 	}
 	return result;
 }
