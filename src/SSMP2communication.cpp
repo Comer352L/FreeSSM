@@ -350,6 +350,7 @@ void SSMP2communication::run()
 	char rec_buf[256] = {'\x0'};
 	int delay = 0;
 	unsigned char errmax = 3;
+	const unsigned int max_bytes_per_multiread = 33;
 
 	// Synchronise with main-thread:
 	_mutex.lock();
@@ -427,12 +428,12 @@ void SSMP2communication::run()
 			case comOp_readMulti:
 			case comOp_readMulti_p:// ReadMultipleDatabytes_permanent(...)
 				// CALCULATE NR OF ADDRESSES FOR NEXT READ:
-				if (33*(rindex) <= datalen)
-					nrofReadAddr = 33;
+				if (max_bytes_per_multiread*(rindex) <= datalen)
+					nrofReadAddr = max_bytes_per_multiread;
 				else
-					nrofReadAddr = datalen%33;
+					nrofReadAddr = datalen % max_bytes_per_multiread;
 				// READ NEXT ADDRESSES:
-				op_success = ReadMultipleDatabytes(cuaddress, padaddr, dataaddr+((rindex-1)*33), nrofReadAddr, rec_buf+((rindex-1)*33));
+				op_success = ReadMultipleDatabytes(cuaddress, padaddr, dataaddr+((rindex-1)*max_bytes_per_multiread), nrofReadAddr, rec_buf+((rindex-1)*max_bytes_per_multiread));
 				break;
 			case comOp_writeBlock:
 			case comOp_writeBlock_p:// WriteDataBlock_permanent(...)
@@ -452,7 +453,7 @@ void SSMP2communication::run()
 			if (errcount > 0)
 				errcount--;
 			// Set query-index:
-			if ( ((operation == comOp_readMulti) || (operation == comOp_readMulti_p)) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
+			if ( ((operation == comOp_readMulti) || (operation == comOp_readMulti_p)) && (rindex < static_cast<unsigned int>((datalen/max_bytes_per_multiread)+1)) )
 				rindex++;
 			else
 				rindex=1;
