@@ -38,7 +38,8 @@ ATcommandControlledDiagInterface::ATcommandControlledDiagInterface()
 	_try_echo_detection = true;
 	_linefeed_enabled = false;
 	_headers_enabled = false;
-	_target_addr = 0x7E0u;
+	_source_addr = 0;
+	_target_addr = 0;
 	_flush_local_Rx_buffer = false;
 	_ready = false;
 	_exit = false;
@@ -183,7 +184,8 @@ bool ATcommandControlledDiagInterface::close()
 			_baudrate = 0;
 			_if_model = if_none;
 			_try_echo_detection = true;
-			_target_addr = 0x7E0u;
+			_source_addr = 0;
+			_target_addr = 0;
 			_flush_local_Rx_buffer = false;
 			_lastcmd.clear();
 			_RxQueue.clear();
@@ -207,17 +209,87 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 #ifdef __FSSM_DEBUG__
 			std::cout << "ATcommandControlledDiagInterface::connect():   configuring interface for SSM2 via ISO-15765...\n";
 #endif
-			std::string reply;
-			// Disable displaying message headers (CAN-ID + PCI-byte)	NOTE: processRecData() can handle both cases (on/off), but we need to know the current setting
-			reply = writeRead("ATH0");
+		}
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		else if ((protocol == AbstractDiagInterface::protocol_SSM2_ISO14230) && (_if_model == if_model_ELM327))
+		{
+			/* NOTE: The ELM327 v1.4b is currently the only known interface which is configurable for the SSM2-over-ISO14230-protocol.
+			 * BUT: the communication is extremely unstable ! It turned out that the reason is the inter-byte timing value used by the ELM327.
+			 * ECUs seem to accept 0-5ms while ISO-14230 specifies 5-20ms. The ELM327 uses a value of ~5ms.
+			 * I've contacted ELMelectronics and maybe they will add a command to adjust the timing values in future versions. */
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::connect():   configuring interface for SSM2 via ISO-14230...\n";
+#endif
+		}
+#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		else
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::connect():   the selected protocol is not supported.\n";
+#endif
+			return false;
+		}
+
+		std::string reply;
+		// Disable displaying message headers (CAN-ID + PCI-byte)	NOTE: processRecData() can handle both cases (on/off), but we need to know the current setting
+		reply = writeRead("ATH0");
+		if (reply != "OK")
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to disable message headers !\n";
+#endif
+			return false;
+		}
+		_headers_enabled = false;
+		// Enable messages with > 7 bytes
+		if (_if_model == if_model_ELM327)
+		{
+			reply = writeRead("ATAL");	// since v1.2, this is not needed anymore at least for incoming messages
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable long size messages !\n";
+#endif
+		}
+		// <<< Protocol specific setup >>>
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocol == protocol_SSM2_ISO14230)
+		{
+			// Set ISO baud rate to 4800
+			reply = writeRead("ATIB48");	// since v1.4
 			if (reply != "OK")
 			{
 #ifdef __FSSM_DEBUG__
-				std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to disable message headers !\n";
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable long size messages !\n";
 #endif
 				return false;
 			}
-			_headers_enabled = false;
+			
+			/* FIXME: SET ISO9141/ISO14230 INTER-BYTE-TIMING VALUE P4 TO 0 ms (< 5 ms) */
+			/* NOTE: The ELM327 up to v1.4b doesn't provide a command yet to adjust this value */
+			
+			// Configure Rx/Tx addresses
+			if (!changeDeviceAddresses(0xF0, 0x10, protocol))
+				return false;
+			// Set protocol ISO14230
+			reply = writeRead("ATSP5");	// NOTE: also ATSP4
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to set communication protocol to ISO14230 !\n";
+#endif
+				return false;
+			}
+			// Disable key bytes check
+			reply = writeRead("ATKW0");	// since v1.2
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable key bytes check !\n";
+#endif
+			// NOTE: for SSM2, there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
+		}
+		else if (protocol == protocol_SSM2_ISO15765)
+#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		{
 			// Enable message padding
 			if ((_if_model == if_model_AGV) || (_if_model == if_model_AGV4000B)) // AGV4000(B)+DX35+DX60/61
 				reply = writeRead("ATCA1");	// Enable "CAN-Auto-format"
@@ -227,15 +299,6 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 			if (reply != "OK")
 				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable CAN auto format (byte padding) !\n";
 #endif
-			// Enable messages with > 7 bytes
-			if (_if_model == if_model_ELM327)
-			{
-				reply = writeRead("ATAL");	// since v1.2, this is not needed anymore at least for incoming messages
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable long size messages !\n";
-#endif
-			}
 			// Disable extended CAN addressing
 			if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))	// others do not support extended addressing
 			{
@@ -246,7 +309,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 #endif
 			}
 			// Configure Rx/Tx addresses
-			if (!changeCUAddresses(_target_addr))
+			if (!changeDeviceAddresses(0x7E8, 0x7E0, protocol))
 				return false;
 			// Configure flow control
 			if ((_if_model == if_model_AGV) || (_if_model == if_model_AGV4000B)) // AGV4000(B)+AGV4500+DX35+DX60/61
@@ -279,41 +342,13 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to set flow control mode to \"fully automatic responses\". This could cause communication problems !\n";
 #endif
 			}
-			// Disable permanent wakeup messages
-			reply = writeRead("ATSW00");	// AGV4000(B)+AGV4500+DX35+DX60/61: applies to ISO9141 and ISO14230 only; ELM329 (+ELM327 ?): also applies to CAN
-#ifdef __FSSM_DEBUG__
-			if (reply != "OK")
-				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable permanent wakeup messages !\n";
-#endif
-			// Configure timeout for incoming messages
-			if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))	// not supported by AGV, Diamex interfaces
-			{
-				reply = writeRead("ATR1");	// Enable displaying of incoming messages
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable displaying of incoming messages !\n";
-#endif
-				
-				reply = writeRead("ATSTFA");	// Set maximum timeout value (0xFA=250 * 4ms=1000ms)
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to set maximum timeout value for message receiving !\n";
-#endif
-				reply = writeRead("ATAT1");	// Enable automatic adaptive timing control (level 1); ELM327: since v1.2
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable automatic adaptive timing control for receiving messges !\n";
-#endif
-			}
-			// NOTE: AGV + Diamex interfaces do not provide a possibility to adjust the timings, they use the values described in the ISO norm
 			// Set protocol ISO15765, 500kbps, 11bit-CAN-ID
 			if ((_if_model == if_model_AGV) || (_if_model == if_model_AGV4000B))
 				reply = writeRead("ATP6");	// AGV4000(B)+AGV4500+DX35+DX60/61
 			else
 				reply = writeRead("ATSP6");	// ELM327+ELM329
 			if ((reply != "OK") &&
-			    (!reply.size() || (reply.at(0) != '6') || (reply.find("15765") == std::string::npos) || (reply.find("11") == std::string::npos) || (reply.find("500") == std::string::npos))
-			   )
+			(!reply.size() || (reply.at(0) != '6') || (reply.find("15765") == std::string::npos) || (reply.find("11") == std::string::npos) || (reply.find("500") == std::string::npos)) )
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to set communication protocol to ISO15765 500kbps 8bit-ID !\n";
@@ -321,45 +356,70 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 				return false;
 			}
 			// NOTE: AGV4000(B) returns "6 = ISO 15765-4, CAN (11/500)", ELM329 returns "OK"
-			// Disable initialization	// NOTE: must be done AFTER AT(S)P
-			if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))
-			{
-				reply = writeRead("ATBI");
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable ISO15765-initialization-sequence !\n";
-#endif
-			}
-			else if (_if_model == if_model_AGV4000B)
-			{
-				reply = writeRead("ATONI1");
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable ISO15765-initialization-sequence !\n";
-#endif
-			}
-			// Disable skipping of sending data after connecting
-			if (_if_model == if_model_AGV4000B)
-			{
-				reply = writeRead("ATONR0");	
-#ifdef __FSSM_DEBUG__
-				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable skipping of sending data after connecting !\n";
-#endif
-			}
-
-			// NOTE: for ISO15765, there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
-			
-			setProtocolBaudrate(500000);
 		}
-		else
+		// <<< Continue with common setup >>>
+		// Disable permanent wakeup messages
+		reply = writeRead("ATSW00");	// AGV4000(B)+AGV4500+DX35+DX60/61: applies to ISO9141 and ISO14230 only; ELM329 (+ELM327 ?): also applies to CAN
+#ifdef __FSSM_DEBUG__
+		if (reply != "OK")
+			std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable permanent wakeup messages !\n";
+#endif
+		// Configure timeout for incoming messages
+		if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))	// not supported by AGV, Diamex interfaces
 		{
+			reply = writeRead("ATR1");	// Enable displaying of incoming messages
 #ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::connect():   the selected protocol is not supported.\n";
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable displaying of incoming messages !\n";
 #endif
-			return false;
+			reply = writeRead("ATSTFA");	// Set maximum timeout value (0xFA=250 * 4ms=1000ms)
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to set maximum timeout value for message receiving !\n";
+#endif
+			reply = writeRead("ATAT1");	// Enable automatic adaptive timing control (level 1); ELM327: since v1.2
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable automatic adaptive timing control for receiving messages !\n";
+#endif
 		}
+		// NOTE: AGV + Diamex interfaces do not provide a possibility to adjust the timings, they use the values described in the ISO norm
+		// Disable initialization	// NOTE: must be done AFTER AT(S)P
+		if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))
+		{
+			reply = writeRead("ATBI");
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable ISO15765-initialization-sequence !\n";
+#endif
+		}
+		else if (_if_model == if_model_AGV4000B)
+		{
+			reply = writeRead("ATONI1");
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable ISO15765-initialization-sequence !\n";
+#endif
+		}
+		// Disable skipping of sending data after connecting
+		if (_if_model == if_model_AGV4000B)
+		{
+			reply = writeRead("ATONR0");	
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable skipping of sending data after connecting !\n";
+#endif
+		}
+
+		// NOTE: there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
+
 		setProtocolType( protocol );
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocol == protocol_SSM2_ISO14230)
+			setProtocolBaudrate(4800);
+		else	// protocol_SSM2_ISO15765
+#endif
+			setProtocolBaudrate(500000);
 		_connected = true;
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::connect():   completed.\n";
@@ -413,14 +473,6 @@ bool ATcommandControlledDiagInterface::read(std::vector<char> *buffer)
 		*buffer = processRecData(msg);
 		if (msg.size() && !buffer->size())
 			return true;	// no data available
-		// Prepend CAN-ID:
-		char addr[4];
-		addr[0] = (_target_addr & 0xff000000) >> 24;
-		addr[1] = (_target_addr & 0xff0000) >> 16;
-		addr[2] = (_target_addr & 0xff00) >> 8;
-		addr[3] = (_target_addr & 0xff) + 8;
-		// TODO: Extend address range
-		buffer->insert(buffer->begin(), addr, addr+4);
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::read():";
 		for (unsigned int c=0; c< buffer->size(); c++)
@@ -440,10 +492,31 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 		if (buffer.size() <= 4)
 			return false;
 		// Check/Change CU address settings:
-		unsigned int t_addr = static_cast<unsigned char>(buffer.at(0))*(0xffffff+1) + static_cast<unsigned char>(buffer.at(1))*(0xffff+1) + static_cast<unsigned char>(buffer.at(2))*(0xff+1) + static_cast<unsigned char>(buffer.at(3));
-		if (t_addr != _target_addr)
+		unsigned int src_addr = 0;
+		unsigned int tgt_addr = 0;
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocolType() == protocol_SSM2_ISO14230)
 		{
-			if (!changeCUAddresses(t_addr))
+			tgt_addr = static_cast<unsigned char>(buffer.at(1));
+			src_addr = static_cast<unsigned char>(buffer.at(2));
+		}
+		else if (protocolType() == protocol_SSM2_ISO15765)
+#endif
+		{
+			tgt_addr = static_cast<unsigned char>(buffer.at(0))*(0xffffff+1) + static_cast<unsigned char>(buffer.at(1))*(0xffff+1) + static_cast<unsigned char>(buffer.at(2))*(0xff+1) + static_cast<unsigned char>(buffer.at(3));
+			if ((tgt_addr < 0x7E0) || (tgt_addr > 0x7E7))	// NOTE: currently supported: OBD2 address range for 11bit CAN-ID
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::write():   error: currently only control unit addresses from 0x7E0 to 0x7E7 are supported !\n";
+#endif
+				return false;
+			}
+			src_addr = tgt_addr + 8;	// NOTE: only for target addresses 0x7E0-0x7E7 !
+			// TODO: extend address range (needs API change)
+		}
+		if ((src_addr != _source_addr) || (tgt_addr != _target_addr))
+		{
+			if (!changeDeviceAddresses(src_addr, tgt_addr, protocolType()))
 				return false;
 		}
 #ifdef __FSSM_DEBUG__
@@ -1061,7 +1134,6 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 	}
 
 	// NOTE: data format depends on the interface header settings !
-	unsigned int num_databytes_total = 0;
 	if (lines.size() == 1)
 	{
 		// STEP 3: convert to data
@@ -1072,24 +1144,90 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 		// STEP 4: check line
 		if (_headers_enabled)
 		{
-			if (data.at(2) > 0x07)
-				return std::vector<char>();	// Error: invalid first frame indicator
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+			if (protocolType() == protocol_SSM2_ISO14230)
+			{
+				if ((static_cast<unsigned char>(data.at(0)) != 0x80) || (static_cast<unsigned char>(data.at(1)) != _source_addr) || (static_cast<unsigned char>(data.at(2)) != _target_addr) || (static_cast<unsigned char>(data.at(3)) != (data.size() - 4 - 1)))
+					return std::vector<char>();	// Error: invalid header
+				// Validate checksum
+				unsigned short int cs = 0;
+				for (unsigned int k=0; k<(data.size()-1); k++)
+					cs = (cs + data.at(k)) & 0xff;
+				if (cs != static_cast<unsigned char>(data.back()))
+					return std::vector<char>();	// Error: invalid checksum
+			}
+			else if (protocolType() == protocol_SSM2_ISO15765)
+#endif
+			{
+				if ((static_cast<unsigned char>(data.at(0)) != ((_source_addr & 0xff00) >> 8)) || (static_cast<unsigned char>(data.at(1)) != (_source_addr & 0xff)))
+					return std::vector<char>();	// Error: invalid header
+				if (data.at(2) > 0x07)
+					return std::vector<char>();	// Error: invalid first frame indicator
+			}
 		}
 		// Step 5: extract data and return data vector
-		if (!_headers_enabled)
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocolType() == protocol_SSM2_ISO14230)
 		{
-			num_databytes_total = data.size();
-			processedData.insert(processedData.end(), data.begin(), data.end());
+			if (_headers_enabled)
+			{
+				processedData.assign(data.begin(), data.end());
+			}
+			else
+			{
+				// Generate header
+				processedData.push_back('\x80');
+				processedData.push_back(_source_addr);
+				processedData.push_back(_target_addr);
+				processedData.push_back(data.size());
+				// Append data
+				processedData.insert(processedData.end(), data.begin(), data.end());
+				// Append checksum
+				unsigned short int cs = 0;
+				for (unsigned int k=0; k<processedData.size(); k++)
+					cs = (cs + processedData.at(k)) & 0xff;
+				processedData.push_back(static_cast<char>(cs));
+			}
+			// NOTE: no padding bytes for ISO14230
 		}
-		else
+		else if (protocolType() == protocol_SSM2_ISO15765)
+#endif
 		{
-			num_databytes_total = data.at(2);
-			processedData.insert(processedData.end(), data.begin()+3, data.end());
+			if (_headers_enabled)
+			{
+				// CAN-ID
+				processedData.push_back('\x00');
+				processedData.push_back('\x00');
+				processedData.insert(processedData.end(), data.begin(), data.begin() + 2);
+				// Append data
+				processedData.insert(processedData.end(), data.begin()+4, data.begin()+4 + static_cast<unsigned char>(data.at(2))); // NOTE: data includes padding bytes at the end !
+			}
+			else
+			{
+				// Generate CAN-ID
+				processedData.push_back((_source_addr & 0xff000000) >> 24);
+				processedData.push_back((_source_addr & 0xff0000) >> 16);
+				processedData.push_back((_source_addr & 0xff00) >> 8);
+				processedData.push_back(_source_addr & 0xff);
+				// Append data
+				processedData.insert(processedData.end(), data.begin(), data.end()); // NOTE: no padding bytes if header is off
+			}
 		}
 	}
-	else if (lines.size() > 1) // multiple lines (ISO15765 only)
+	else if (lines.size() > 1) // multiple lines
 	{
-		if (!_headers_enabled)	// eliminate ':' character
+		// NOTE: not needed for SSM2 over ISO-14230
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocolType() != protocol_SSM2_ISO15765)
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::processRecData():   error: multi-line data messages are currently supported for ISO-15765 only !\n";
+#endif
+			return std::vector<char>();
+		}
+#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		// Eliminate ':' characters
+		if (!_headers_enabled)
 		{
 			for (unsigned int l=0; l<lines.size(); l++)
 			{
@@ -1127,7 +1265,27 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 		 *       ALSO: there are only 4 bits reserved for numbering of the consecutive frames,
 		 *	       but more than 15 consecutive frames are possible !				*/
 		// NOTE: DO INSTEAD: check first bytes 
-		if (!_headers_enabled)
+		if (_headers_enabled)
+		{
+			if (datalines.at(0).size() < 10)	// NOTE: always 10 characters per line
+				return std::vector<char>();		// Error: invalid line size
+			if ((static_cast<unsigned char>(datalines.at(0).at(2)) & 0xf0) != 0x10)
+				return std::vector<char>();		// Error: first frame indicator must be 1y
+			for (unsigned int l=0; l<datalines.size(); l++)
+			{
+				if ((static_cast<unsigned char>(datalines.at(l).at(0)) != ((_source_addr & 0xff00) >> 8)) || (static_cast<unsigned char>(datalines.at(l).at(1)) != (_source_addr & 0xff)))
+					return std::vector<char>();		// Error: invalid device address
+				if (l > 0)
+				{
+					if ((static_cast<unsigned char>(datalines.at(l).at(2)) & 0xf0) != 0x20)
+						return std::vector<char>();	// Error: consecutive frame indicator number must be 2y
+					if ((static_cast<unsigned char>(datalines.at(l).at(2)) & 0x0f) != l)
+						return std::vector<char>();	// Error: invalid consecutive frame number
+					// NOTE: consecutive frame numbering starts with 1
+				}
+			}
+		}
+		else
 		{
 			if (datalines.at(0).size() != 2)
 				return std::vector<char>();
@@ -1140,50 +1298,47 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 				// NOTE: consecutive frame numbering starts with 0
 			}
 		}
-		else
-		{
-			if (datalines.at(0).size() < 10)	// NOTE: always 10 characters per line
-				return std::vector<char>();		// Error: invalid line size
-			if ((static_cast<unsigned char>(datalines.at(0).at(2)) & 0xf0) != 0x10)
-				return std::vector<char>();		// Error: first frame indicator must be 1y
-			for (unsigned int l=1; l<datalines.size(); l++)
-			{
-				if ((static_cast<unsigned char>(datalines.at(l).at(2)) & 0xf0) != 0x20)
-					return std::vector<char>();	// Error: consecutive frame indicator number must be 2y
-				if ((static_cast<unsigned char>(datalines.at(l).at(2)) & 0x0f) != l)
-					return std::vector<char>();	// Error: invalid consecutive frame number
-				// NOTE: consecutive frame numbering starts with 1
-			}
-		}
 		// Step 5: extract data and return data vector
+		unsigned int actual_datalen = 0;
 		if (_headers_enabled)
 		{
-			num_databytes_total = (static_cast<unsigned char>(datalines.at(0).at(2)) & 0xf)*256 + static_cast<unsigned char>(datalines.at(0).at(3));
+			// CAN-ID
+			processedData.push_back('\x00');
+			processedData.push_back('\x00');
+			processedData.push_back(datalines.at(1).at(0));
+			processedData.push_back(datalines.at(1).at(1));
+			// Append data (including padding bytes)
 			for (unsigned int l=0; l<lines.size(); l++)
 				processedData.insert(processedData.end(), datalines.at(l).begin() + 3 + (l==0), datalines.at(l).end());
+			// Calculate actual data length (without CAN-ID and PCI-byte)
+			actual_datalen = (static_cast<unsigned char>(datalines.at(0).at(2)) & 0xf)*256 + static_cast<unsigned char>(datalines.at(0).at(3));
 		}
 		else
 		{
-			num_databytes_total = static_cast<unsigned char>(datalines.at(0).at(0))*256 + static_cast<unsigned char>(datalines.at(0).at(1));
+			// Generate CAN-ID
+			processedData.push_back((_source_addr & 0xff000000) >> 24);
+			processedData.push_back((_source_addr & 0xff0000) >> 16);
+			processedData.push_back((_source_addr & 0xff00) >> 8);
+			processedData.push_back(_source_addr & 0xff);
+			// Append data (including padding bytes)
 			for (unsigned int l=1; l<datalines.size(); l++)
 				processedData.insert(processedData.end(), datalines.at(l).begin() + 1, datalines.at(l).end());
+			// Calculate actual data length (without CAN-ID and PCI-byte)
+			actual_datalen = static_cast<unsigned char>(datalines.at(0).at(0))*256 + static_cast<unsigned char>(datalines.at(0).at(1));
+		}
+		// Check if we have padding bytes and remove them
+		int paddingbytes = processedData.size() -4 - actual_datalen;
+		if (paddingbytes > 0)
+		{
+			processedData.erase(processedData.end() - paddingbytes, processedData.end());
+		}
+		else if (paddingbytes < 0)
+		{
+			return std::vector<char>();	// Error: number of extracted data bytes is wrong
 		}
 	}
 	else
 		return std::vector<char>();
-
-	// Check number of data bytes, remove padding bytes
-	int paddingbytes = processedData.size() - num_databytes_total;
-	if (paddingbytes > 0)
-	{
-		if ((lines.size() == 1) && (paddingbytes))	// NOTE: happens when headers are enabled and invalid data length bits
-			return std::vector<char>();	// Error: invalid data length bits
-		processedData.erase(processedData.end() - paddingbytes, processedData.end());
-	}
-	else if (paddingbytes < 0)
-	{
-		return std::vector<char>();	// Error: number of extracted data bytes is wrong
-	}
 
 	return processedData;
 	
@@ -1191,90 +1346,137 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 }
 
 
-bool ATcommandControlledDiagInterface::changeCUAddresses(unsigned int target_addr)
+bool ATcommandControlledDiagInterface::changeDeviceAddresses(unsigned int source_addr, unsigned int target_addr, AbstractDiagInterface::protocol_type protocol)
 {
 	std::string cmd;
 	std::string reply;
 #ifdef __FSSM_DEBUG__
-	std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   changing control unit target address to 0x" << std::hex << target_addr << "\n";
+	std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   changing device addresses to 0x" << std::hex << source_addr << " (source) and 0x" << target_addr << " (target)\n";
 #endif
-	// Check address range (currently supported: OBD2 address range for 11bit CAN-ID)
-	if ((target_addr < 0x7E0) || (target_addr > 0x7E7))
+	if (protocol == protocol_SSM2_ISO15765)
 	{
+		// Check address range (currently supported: OBD2 address range for 11bit CAN-ID)
+		if ((target_addr < 0x7E0) || (target_addr > 0x7E7))
+		{
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   error: currently only control unit addresses from 0x7E0 to 0x7E7 are supported.\n";
+			std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: currently only control unit addresses from 0x7E0 to 0x7E7 are supported.\n";
 #endif
-		return false;
-	}
-	// Configure header/CAN-ID
-	if (_if_model == if_model_AGV)
-	{
-		cmd = "ATCI";	// AGV4000+AGV4500+DX35+DX60/61
-	}
-	else if (_if_model == if_model_AGV4000B)
-	{
-		cmd = "ATCT";	// AGV4000B
-	}
-	else
-	{
-		cmd = "ATSH";	// ELM327+ELM329
-	}
-	cmd += "7E";
-	cmd += ((target_addr & 0xf) + 48);	// NOTE: do not merge these 2 lines
-	reply = writeRead(cmd);
-	if (reply != "OK")
-	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   error: failed to set CAN-ID for outgoing messages\n";
-#endif
-		return false;
-	}
-	// Set CAN-ID filter and mask
-	if (_if_model == if_model_AGV4000B)
-	{
-		cmd = "ATCR";
+			return false;
+		}
+		// Configure header/CAN-ID
+		if (_if_model == if_model_AGV)
+		{
+			cmd = "ATCI";	// AGV4000+AGV4500+DX35+DX60/61
+		}
+		else if (_if_model == if_model_AGV4000B)
+		{
+			cmd = "ATCT";	// AGV4000B
+		}
+		else
+		{
+			cmd = "ATSH";	// ELM327+ELM329
+		}
 		cmd += "7E";
-		cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>((target_addr+8) & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
-		cmd += '-';
-		cmd += "7E";
-		cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>((target_addr+8) & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
+		cmd += ((target_addr & 0xf) + 48);	// NOTE: do not merge these 2 lines
 		reply = writeRead(cmd);
 		if (reply != "OK")
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   error: failed to set CAN-ID filter address for incoming messages !\n";
+			std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed to set CAN-ID for outgoing messages !\n";
 #endif
 			return false;
 		}
+		// Set CAN-ID filter and mask
+		if (_if_model == if_model_AGV4000B)
+		{
+			cmd = "ATCR";
+			cmd += "7E";
+			cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>(source_addr & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
+			cmd += '-';
+			cmd += "7E";
+			cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>(source_addr & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
+			reply = writeRead(cmd);
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed to set CAN-ID filter address for incoming messages !\n";
+#endif
+				return false;
+			}
+		}
+		else
+		{
+			reply = writeRead("ATCM7EF");	// Set CAN-ID filter mask
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed to set CAN-ID filter mask for incoming messages !\n";
+#endif
+				return false;
+			}
+			cmd = "ATCF";
+			cmd += "7E";
+			cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>(source_addr & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
+			reply = writeRead(cmd);		// Set CAN-ID filter address
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed to set CAN-ID filter address for incoming messages !\n";
+#endif
+				return false;
+			}
+		}
+		// TODO: EXTEND ISO15765 ADDRESS RANGE
 	}
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+	else if (protocol == protocol_SSM2_ISO14230)
+	{
+		// Check address range
+		if ((source_addr > 0xff) || (target_addr > 0xff))
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: ISO14230 does not support device addresses > 0xff !\n";
+#endif
+			return false;
+		}
+		// Configure message header
+		cmd = "ATSH";
+		cmd += "80";
+		cmd += dataToHexStr(std::vector<char>(1, target_addr));
+		cmd += dataToHexStr(std::vector<char>(1, source_addr));	// NOTE: do not merge these lines
+		reply = writeRead(cmd);
+		if (reply != "OK")
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed to configure ISO14230 message header !\n";
+#endif
+			return false;
+		}
+		// Configure receive address
+		reply = writeRead("ATAR");	// enable automatic receive address configuration (based on the header settings)
+		if (reply != "OK")
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   error: failed enable automatic receive address configuration !\n";
+#endif
+			return false;
+		}
+		// NOTE: also: ATRAF0=ATSRF0 instead of ATAR
+	}
+#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
 	else
 	{
-		reply = writeRead("ATCM7EF");	// Set CAN-ID filter mask
-		if (reply != "OK")
-		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   error: failed to set CAN-ID filter mask for incoming messages !\n";
+		std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   BUG: protocol not supported !\n";
 #endif
-			return false;
-		}
-		cmd = "ATCF";
-		cmd += "7E";
-		cmd += dataToHexStr( std::vector<char>( 1, static_cast<char>((target_addr+8) & 0xff) ) ).at(1);	// NOTE: do not merge these 2 lines
-		reply = writeRead(cmd);		// Set CAN-ID filter address
-		if (reply != "OK")
-		{
-#ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   error: failed to set CAN-ID filter address for incoming messages !\n";
-#endif
-			return false;
-		}
+		return false;
 	}
 #ifdef __FSSM_DEBUG__
-	std::cout << "ATcommandControlledDiagInterface::changeCUAddresses():   successfully changed the device addresses.\n";
+	std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   successfully changed the device addresses.\n";
 #endif
+	_source_addr = source_addr;
 	_target_addr = target_addr;
 	return true;
-	// TODO: EXTEND ADDRESS RANGE
 }
 
 

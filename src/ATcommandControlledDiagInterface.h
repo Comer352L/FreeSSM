@@ -50,6 +50,10 @@
 
 
 
+//#define __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+
+
+
 class ATcommandControlledDiagInterface : public AbstractDiagInterface, private QThread
 {
 
@@ -79,6 +83,7 @@ private:
 	bool _try_echo_detection;
 	bool _linefeed_enabled;
 	bool _headers_enabled;
+	unsigned int _source_addr;
 	unsigned int _target_addr;
 	QMutex _mutex;
 	std::vector< std::string > _RxQueue;
@@ -93,7 +98,7 @@ private:
 	if_model_dt probeInterface();
 	bool configureDevice();
 	std::vector<char> processRecData(std::string datamsg);
-	bool changeCUAddresses(unsigned int target_addr);
+	bool changeDeviceAddresses(unsigned int source_addr, unsigned int target_addr, AbstractDiagInterface::protocol_type protocol);
 	bool changeInterfaceBaudRate(unsigned int baudrate);
 	std::string dataToHexStr(std::vector<char> data);
 	std::vector<char> hexStrToData(std::string hexstr);
