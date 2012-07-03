@@ -281,7 +281,7 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 		msg_buffer.push_back( calcchecksum(&msg_buffer.at(0), 4 + outdatalen) );
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
-	std::cout << "SSMPcore::SndRcvMessage(...):   Sending message:\n";
+	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:\n";
 	for (k=0; k<=(msg_buffer.size()/16); k++)
 	{
 		if (16*(k+1) <= msg_buffer.size())
@@ -294,7 +294,7 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 	if (!_diagInterface->write(msg_buffer))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Write failed\n";
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: write failed !\n";
 #endif
 		return false;
 	}
@@ -312,7 +312,7 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 	}
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
-	std::cout << "SSMPcore::SndRcvMessage(...):   Received message:\n";
+	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:\n";
 	for (k=0; k<=(msg_buffer.size()/16); k++)
 	{
 		if (16*(k+1) <= msg_buffer.size())
@@ -346,7 +346,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 		if (!_diagInterface->read(&read_buffer))
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
+			std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: failed to read (#1) from interface !\n";
 #endif
 			// NOTE: fail silent
 		}	
@@ -360,7 +360,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 	if (msg_buffer->size() < (outmsg_len + 4u))
 	{
 	#ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 1\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: timeout 1 !\n";
 	#endif
 		return false;
 	}
@@ -370,7 +370,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 	if ((msg_buffer->at(0) != '\x80') || (msg_buffer->at(1) != '\xF0') || (static_cast<unsigned char>(msg_buffer->at(2)) != ecuaddr))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Invalid Protocol Header\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: invalid protocol header !\n";
 #endif
 		return false;
 	}
@@ -387,7 +387,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 			if (!_diagInterface->read(&read_buffer))
 			{
 #ifdef __FSSM_DEBUG__
-				std::cout << "SSMPcore::SndRcvMessage(...):   Read 2 failed\n";
+				std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: failed to read (#2) from interface !\n";
 #endif
 				// NOTE: fail silent
 			}
@@ -401,7 +401,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 		if (msg_buffer->size() != inmsglen)
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMPcore::SndRcvMessage(...):   Timeout 2\n";
+			std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: timeout 2 !\n";
 #endif
 			return false;
 		}
@@ -409,7 +409,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 	else if (msg_buffer->size() > inmsglen)	// CHECK IF ANSWER IS TOO LONG
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Too many bytes read\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():  error:  too many bytes read !\n";
 #endif
 		return false;
 	}
@@ -417,7 +417,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 	if (msg_buffer->back() != calcchecksum(&msg_buffer->at(0), (msg_buffer->size() - 1)))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Checksum Error\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum !\n";
 #endif
 		return false;
 	}
@@ -436,7 +436,7 @@ bool SSMP2communication_core::receiveReplyISO15765(unsigned int ecuaddr, std::ve
 		if (!_diagInterface->read(msg_buffer))	// each successfull read corresponds to a complete ISO15765 message
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMPcore::SndRcvMessage(...):   Read 1 failed\n";
+			std::cout << "SSMP2communication_core::receiveReplyISO15765(...):   error: failed to read from interface !\n";
 #endif
 			// NOTE: fail silent
 		}
@@ -446,7 +446,7 @@ bool SSMP2communication_core::receiveReplyISO15765(unsigned int ecuaddr, std::ve
 	if (!msg_buffer->size())
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMPcore::SndRcvMessage(...):   Timeout\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO15765(...):   error: timeout while reading from interface !\n";
 #endif
 		return false;
 	}
