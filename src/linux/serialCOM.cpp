@@ -163,7 +163,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 #endif
 		if (baud == BOTHER)
 		{
-			if (currenttio.c_ispeed == currenttio.c_ispeed)
+			if (currenttio.c_ispeed == currenttio.c_ospeed)
 			{
 				*baudrate = currenttio.c_ispeed;
 #ifdef __SERIALCOM_DEBUG__
