@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -876,54 +876,56 @@ bool serialCOM::GetMaxbaudrate(double *maxbaudrate)
 	memset(&portproperties, 0, sizeof(COMMPROP));
 	*maxbaudrate = 0;
 	confirmGCP = GetCommProperties(hCom, &portproperties);
-	if (confirmGCP == false) return false;
-	if ((portproperties.dwSettableBaud & ~0x10000000) > 0x7ffff)
+	if (confirmGCP == false)
+		return false;
+	if (portproperties.dwSettableBaud > 0x7ffff) // NOTE: 0x7ffff = all values (except BOTHER) ORed
 	{
 		// unable to determine baudbase (seems to be larger than 115200)
 		baudbasedet = false;
 	}
-	else if ((portproperties.dwSettableBaud & ~0x10000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_128K) == portproperties.dwSettableBaud) // BAUD_128K = 0x10000
 	{
 		*maxbaudrate = 128000;	// ???
 #ifdef __SERIALCOM_DEBUG__
 		std::cout << "serialCOM::GetMaxbaudrate:   WARNING: unusual baudbase of 128kbps detected\n";
 #endif
 	}
-	else if ((portproperties.dwSettableBaud & ~0x20000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_115200) == portproperties.dwSettableBaud) // BAUD_115200 = 0x20000
 	{
 		*maxbaudrate = 115200;	// UART 16550(A)
 	}
-	else if ((portproperties.dwSettableBaud & ~0x40000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_57600) == portproperties.dwSettableBaud) // BAUD_57600 = 0x40000
 	{
 		*maxbaudrate = 57600;
 	}
-	/*else if ((portproperties.dwSettableBaud & ~0x8000) != portproperties.dwSettableBaud)
+	/*else if ((portproperties.dwSettableBaud | BAUD_56K) == portproperties.dwSettableBaud) // BAUD_56K = 0x8000
 	{
 		*maxbaudrate = 56000;	//  in reality, it's 57600 too !
 	}*/
-	else if ((portproperties.dwSettableBaud & ~0x4000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_38400) == portproperties.dwSettableBaud) // BAUD_38400 = 0x4000
 	{
 		*maxbaudrate = 38400;	// UART 16540
 	}
-	else if ((portproperties.dwSettableBaud & ~0x2000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_19200) == portproperties.dwSettableBaud) // BAUD_19200 = 0x2000
 	{
 		*maxbaudrate = 19200;
 	}
-	else if ((portproperties.dwSettableBaud & ~0x1000) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_14400) == portproperties.dwSettableBaud) // BAUD_14400 = 0x1000
 	{
 		*maxbaudrate = 14400;
 	}
-	else if ((portproperties.dwSettableBaud & ~0x800) != portproperties.dwSettableBaud)
+	else if ((portproperties.dwSettableBaud | BAUD_9600) == portproperties.dwSettableBaud) // BAUD_9600 = 0x800
 	{
 		*maxbaudrate = 9600;		// UART 8250
 	}
+	// NOTE: there are even smaller values defined, but even the UART 8250 supports 9600 baud...
 	else
 	{
 		// unable to determine baudbase
 		baudbasedet = false;
 	}
 	return baudbasedet;
-	/*NOTE: dwMaxBaud should contain the maximum baudrate directly (no bit-field),
+	/*NOTE: dwMaxBaud should contain the maximum baudrate only (no bit-field),
 	 * but it seems to be set to BAUD_USER always, if the device supports non-standrad-baudrates !
 	 * For example: UART16550A (max. baudrate 115200), generic driver:
 	 * dwMaxBaud is BAUD_USER instead of BAUD_115200
