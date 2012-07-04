@@ -22,10 +22,21 @@
 
 
 #include "AbstractDiagInterface.h"
+#ifdef __WIN32__
+    #include "windows\TimeM.h"
+#elif defined __linux__
+    #include "linux/TimeM.h"
+#else
+    #error "Operating system not supported !"
+#endif
 #ifdef __FSSM_DEBUG__
     #include <iostream>
     #include "libFSSM.h"
 #endif
+
+
+
+#define SSM2_READ_TIMEOUT	2000 // [ms]
 
 
 
@@ -47,6 +58,7 @@ private:
 	bool SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	bool receiveReplyISO14230(unsigned int ecuaddr, unsigned int outmsg_len, std::vector<char> *msg_buffer);
 	bool receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer);
+	bool readFromInterface(unsigned int minbytes, unsigned int timeout, std::vector<char> *buffer);
 	char calcchecksum(char *message, unsigned int nrofbytes);
 	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
 
