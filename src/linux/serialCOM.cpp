@@ -397,26 +397,30 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 #endif
 		}
 	}
-	// PARITY (NOTE:   CMSPAR NOT AVAILABLE ON ALL SYSTEMS !!!):
 	if (parity)
 	{
 		if (currenttio.c_cflag != (currenttio.c_cflag | PARENB)) // if parity-flag is not set
 			*parity='N';
 		else    	// if parity-flag is set
 		{
-			if (currenttio.c_cflag != (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is not set
+			if (currenttio.c_cflag == (currenttio.c_cflag | PARODD)) // if Odd-(Mark-) parity-flag is set
 			{
-				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-					*parity='E';
-				else
-					*parity='S';
-			}
-			else	// if Odd-(Mark-) parity-flag is set
-			{
-				if (currenttio.c_cflag != (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is not set
-					*parity='O';
-				else
+#ifdef CMSPAR
+				if (currenttio.c_cflag == (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is set
 					*parity='M';
+				else
+#endif
+					*parity='O';
+			}
+			else	// if Odd-(Mark-) parity-flag is not set
+			{
+#ifdef CMSPAR
+				if (currenttio.c_cflag == (currenttio.c_cflag | CMSPAR)) // if Space/Mark-parity-flag is set
+					*parity='S';
+				else
+
+#endif
+					*parity='E';
 			}
 		}
 	}
@@ -566,15 +570,20 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	else if (parity == 'E')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
+#ifdef CMSPAR
 		newtio.c_cflag &= ~CMSPAR;	// activate mark/space mode (not really necessary, because c_cflag is clean)
+#endif
 		newtio.c_cflag &= ~PARODD;	// deactivate odd parity (not really necessary, because c_cflag is clean)
 	}
 	else if (parity == 'O')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
+#ifdef CMSPAR
 		newtio.c_cflag &= ~CMSPAR;	// deactivate mark/space mode (not really necessary, because c_cflag is clean)
+#endif
 		newtio.c_cflag |= PARODD;	// activate odd parity
 	}
+#ifdef CMSPAR
 	else if (parity == 'S')
 	{
 		newtio.c_cflag |= PARENB;	// activate parity
@@ -587,6 +596,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		newtio.c_cflag |= CMSPAR;	// activate mark/space mode
 		newtio.c_cflag |= PARODD;	// activate mark parity
 	}
+#endif
 	else
 	{
 		settingsvalid = false;
