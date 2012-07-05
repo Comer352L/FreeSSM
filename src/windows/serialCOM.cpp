@@ -640,18 +640,20 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	unsigned int rb_total = 0;
 	COMMTIMEOUTS timeouts = {0};
 
+	*nrofbytesread = 0;
 	timeouts.WriteTotalTimeoutConstant = 0;
 	timeouts.WriteTotalTimeoutMultiplier = 0;
 	// --- READ MINIMUM NUMBER OF REQUESTED BYTES ---
 	if (minbytes)
 	{
-		if (!read_timeout_set || (timeout != last_read_timeout) || !last_read_timeout)
+		if (!read_timeout_set || !last_read_timeout || (timeout != last_read_timeout))
 		{
+			// Enable timeout for reading:
 			timeouts.ReadIntervalTimeout = 0;
 			timeouts.ReadTotalTimeoutMultiplier = 0;
 			if (timeout)
 				timeouts.ReadTotalTimeoutConstant = timeout;
-			else
+			else  // wait indefinitely
 				timeouts.ReadTotalTimeoutConstant = MAXDWORD;
 			if (!SetCommTimeouts(hCom, &timeouts))
 			{
@@ -666,25 +668,34 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		// READ DATA:
 		confirmRF = ReadFile (hCom,		// Port handle
 				      data,		// Pointer to data to read
-				      minbytes,		// Number of bytes to read
+				      minbytes,		// Max. number of bytes to read
 				      &nbr,		// Pointer to number of bytes read
 				      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 				     );
+		/* NOTE: - on timeout, ReadFile() succeeds with less bytes than requested (no error)
+		         - ReadFile() always waits the full timeout to get the number of bytes requested	*/
 		if (confirmRF)
+		{
 			rb_total += nbr;
+			if (rb_total < minbytes)
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::Read():   TIMEOUT\n";
+#endif
+		}
 		else
 		{
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+			std::cout << "serialCOM::Read():   ReadFile(...) failed with error " << GetLastError() << "\n";
 			return false;
 #endif
 		}
 	}
 	// --- READ REMAINING DATA ---
-	if (maxbytes - rb_total > 0)
+	if ((maxbytes - rb_total > 0) && (rb_total >= minbytes))
 	{
 		if (minbytes || read_timeout_set)
 		{
+			// Disable timeout for reading (let ReadFile return immediately):
 			timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
 			timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
 			timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
@@ -699,17 +710,18 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		}
 		// READ REMAINING DATA:
 		confirmRF = ReadFile (hCom,			// Port handle
-				      data,			// Pointer to data to read
-				      maxbytes - rb_total,	// Number of bytes to read
+				      data + rb_total,		// Pointer to data to read
+				      maxbytes - rb_total,	// Max. number of bytes to read
 				      &nbr,			// Pointer to number of bytes read
 				      NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
 				     );
+		// NOTE: ReadFile() returns success even if less than the number of requested bytes is read
 		if (confirmRF)
 			rb_total += nbr;
 		else
 		{
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::Read():   ReadFile(...) failed\n";
+			std::cout << "serialCOM::Read():   ReadFile(...) failed with error " << GetLastError() << "\n";
 #endif
 			return false;
 		}
@@ -717,6 +729,8 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	// Returned data:
 	*nrofbytesread = static_cast<unsigned int>(rb_total);
 	return true;
+	/* NOTE: - we always return the received bytes even if we received less than minbytes (timeout)
+	         - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
 }
 
 

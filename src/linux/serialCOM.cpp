@@ -1067,14 +1067,13 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	if (!minbytes)
 	{
 		ret = read(fd, data, maxbytes);
-		if ((ret >= 0) || (ret <= static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
+		if ((ret >= 0) && (ret <= static_cast<int>(maxbytes)))	// >maxbytes: important ! => possible if fd was not open !
 		{
 			*nrofbytesread = static_cast<unsigned int>(ret);
 			return true;
 		}
 		else
 		{
-			*nrofbytesread = 0;
 #ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::Read():   read(..) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
@@ -1084,33 +1083,43 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	else
 	{
 		unsigned int rb_total = 0;
-		unsigned int t_remaining_ms;
+		unsigned int t_remaining_ms = 0;
 		struct timespec t_current;
 		struct timespec t_start;
 		fd_set input;
 		struct timeval sel_timeout;
 		int n = 0;
 
-		clock_gettime(CLOCK_REALTIME, &t_start);	// returns -1 on error, 0 on success
-		t_remaining_ms = timeout;
+		if (timeout > 0)
+		{
+			if (clock_gettime(CLOCK_REALTIME, &t_start) != 0)	// returns -1 on error, 0 on success
+			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::Read():   clock_gettime(...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+				return false;
+			}
+			t_remaining_ms = timeout;
+		}
 		do
 		{
 			FD_ZERO(&input);
 			FD_SET(fd, &input);
-			// Set timeout value:
-			sel_timeout.tv_sec  = t_remaining_ms / 1000;
-			sel_timeout.tv_usec = (t_remaining_ms % 1000)*1000;
 			// Wait for data:
-			if (!timeout)
-				n = select(fd+1, &input, NULL, NULL, NULL);
-			else
+			if (timeout > 0)
+			{
+				sel_timeout.tv_sec  = t_remaining_ms / 1000;
+				sel_timeout.tv_usec = (t_remaining_ms % 1000)*1000;
 				n = select(fd+1, &input, NULL, NULL, &sel_timeout);
+			}
+			else // wait indefinitely
+				n = select(fd+1, &input, NULL, NULL, NULL);
 			/* NOTE: ONLY ON LINUX, select() modifies timeout to reflect the time not slept */
 			// See if there was an error, read available data:
 			if (n < 0)
 			{
 #ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::Read():   select(...) failed\n";
+				std::cout << "serialCOM::Read():   select(...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
 				return false;
 			}
@@ -1125,15 +1134,8 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 			{
 				// Read available data:
 				ret = read(fd, data+rb_total, maxbytes-rb_total);	// NOTE: returns immediately
-				if ((ret >= 0) || (ret <= static_cast<int>(maxbytes-rb_total)))	// >maxbytes: important ! => possible if fd was not open !
-				{
+				if ((ret >= 0) && (ret <= static_cast<int>(maxbytes-rb_total)))	// >maxbytes: important ! => possible if fd was not open !
 					rb_total += ret;
-					if (rb_total >= minbytes)
-					{
-						*nrofbytesread = static_cast<unsigned int>(rb_total);
-						return true;
-					}
-				}
 				else
 				{
 					*nrofbytesread = 0;
@@ -1143,12 +1145,24 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 					return false;
 				}
 			}
-			// Get current time, calculate remaining time:
-			clock_gettime(CLOCK_REALTIME, &t_current);
-			t_remaining_ms = timeout - ((t_current.tv_sec*1000 + t_current.tv_nsec/1000000) - (t_start.tv_sec*1000 + t_start.tv_nsec/1000000)); // NOTE: overflow possible !
-		} while ((t_remaining_ms > 0) && (t_remaining_ms <= timeout) && (rb_total < minbytes)); // NOTE: 2nd check: for detecting overflow
-		return false;
+			if (timeout > 0) // && (rb_total < minbytes)) // FIXME
+			{
+				// Get current time, calculate remaining time:
+				if (clock_gettime(CLOCK_REALTIME, &t_current) != 0)	// returns -1 on error, 0 on success
+				{
+#ifdef __SERIALCOM_DEBUG__
+					std::cout << "serialCOM::Read():   clock_gettime(...) failed with error " << errno << " " << strerror(errno) << "\n";
+#endif
+					return false;
+				}
+				t_remaining_ms = timeout - ((t_current.tv_sec*1000 + t_current.tv_nsec/1000000) - (t_start.tv_sec*1000 + t_start.tv_nsec/1000000)); // NOTE: overflow possible !
+			}
+		} while (((timeout == 0) || ((t_remaining_ms > 0) && (t_remaining_ms <= timeout))) && (rb_total < minbytes)); // NOTE: 2nd check of t_remaining_ms: for detecting overflow
+		*nrofbytesread = static_cast<unsigned int>(rb_total);
+		return true;
 	}
+	/* NOTE: - we always return the received bytes even if we received less than minbytes (timeout)
+	         - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
 }
 
 
