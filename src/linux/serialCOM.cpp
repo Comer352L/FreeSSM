@@ -509,13 +509,12 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			if (serdrvaccess && (cIOCTL_SD != -1))	// if we have access to serial driver
 			{
 				int customdivisor = 0;
-				double custombaudrate = 0;
 				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / baudrate));
 				if (customdivisor < 1)
 					customdivisor = 1;	// ...to be sure
 				if (customdivisor > 65535)
 					customdivisor = 65535;
-				//custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
+				//double custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
 				// Check if it is a standard baud rate now:
 				if (!GetStdbaudrateDCBConst(baudrate, &newbaudrate))
 				{
