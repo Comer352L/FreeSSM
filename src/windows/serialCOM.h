@@ -44,20 +44,6 @@ extern "C"
 class serialCOM
 {
 
-private:
-	HANDLE hCom;		// handle to port
-	bool portisopen;
-	bool breakset;
-	bool DTRset;
-	bool RTSset;
-	std::string currentportname; 
-	bool read_timeout_set;
-	unsigned int last_read_timeout;
-	DCB olddcb;		// backup of old port settings
-	bool settingssaved;
-	
-	bool GetMaxbaudrate(double *maxbaudrate);
-
 public:
 	serialCOM();
 	~serialCOM();
@@ -80,6 +66,20 @@ public:
 	bool BreakIsSet();
 	bool GetNrOfBytesAvailable(unsigned int *nbytes);
 	bool SetControlLines(bool DTR, bool RTS);
+
+private:
+	HANDLE hCom;		// handle to port
+	bool portisopen;
+	bool breakset;
+	bool DTRset;
+	bool RTSset;
+	std::string currentportname; 
+	bool read_timeout_set;
+	unsigned int last_read_timeout;
+	DCB olddcb;		// backup of old port settings
+	bool settingssaved;
+	
+	bool GetMaxbaudrate(double *maxbaudrate);
 
 };
 

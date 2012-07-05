@@ -1,7 +1,7 @@
 /*
  * serialCOM.h - Serial port configuration and communication
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,21 +48,9 @@ extern "C"
 #endif
 
 
+
 class serialCOM
 {
-
-private:
-	int fd;					// file descriptor for the port
-	bool portisopen;
-	bool breakset;
-	std::string currentportname; 
-	struct termios2 oldtio;			// backup of port settings
-	struct serial_struct old_serdrvinfo;	// backup of serial driver settings
-	bool settingssaved;
-	bool serdrvaccess;
-	
-	bool GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst);
-	speed_t GetNearestStdBaudrate(double selBaudrate);
 
 public:
 	serialCOM();
@@ -86,6 +74,25 @@ public:
 	bool BreakIsSet();
 	bool GetNrOfBytesAvailable(unsigned int *nbytes);
 	bool SetControlLines(bool DTR, bool RTS);
+
+private:
+	struct std_baudrate {
+		double value;
+		speed_t constant;
+	};
+
+	bool GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst);
+	speed_t GetNearestStdBaudrate(double selBaudrate);
+
+	int fd;					// file descriptor for the port
+	bool portisopen;
+	bool breakset;
+	std::string currentportname; 
+	struct termios2 oldtio;			// backup of port settings
+	struct serial_struct old_serdrvinfo;	// backup of serial driver settings
+	bool settingssaved;
+	bool serdrvaccess;
+	static struct std_baudrate std_baudrates[];
 
 };
 

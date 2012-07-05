@@ -253,7 +253,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	}
 	// SET NEW PORT SETTINGS (not all will be changed):
 	// BAUDRATE:
-	if (!(baudrate > 0))
+	if (baudrate <= 0)
 	{
 		nsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -261,13 +261,6 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - 0 baud not possible\n";
 		else
 			std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baud must be > 0\n";
-#endif
-	}
-	else if (baudrate > 115200)
-	{
-		nsvalid = false;
-#ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SetPortSettings:   illegal baudrate - baudrates above 115200 are currently not supported\n";
 #endif
 	}
 	else
@@ -287,16 +280,16 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			{
 				nsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::SetPortSettings:   baudrate exceeds capabilities of interface/driver\n";
+				std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - the maximum supported baud rate of this device is " << std::dec << maxbaudrate << " baud\n";
 #endif
 			}
 			else
 			{
 				// Calculate "exact" baudrate:
 				bauddivisor = static_cast<unsigned int>(round(maxbaudrate / baudrate));
-				if (bauddivisor < 1) bauddivisor = 1;	// zur Sicherheit, ist eigentlich schon ausgeschlossen !
+				if (bauddivisor < 1) bauddivisor = 1;
 				if (bauddivisor > 65535) bauddivisor = 65535;
-				exactbaudrate = (maxbaudrate / bauddivisor);	// Datentyp DWORD schraenkt moegliche extrem niedrige Baudraten ein !
+				exactbaudrate = (maxbaudrate / bauddivisor);	// data type DWORD restricts possible extremely low baud rates !
 				/* NOTE: DO NOT ROUND HERE !
 				 * setCommState() doesn't round, it simply cuts the decimals => we get problems at e.g. 10400 baud !
 				 */

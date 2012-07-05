@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -283,6 +283,84 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 		{
 			*baudrate = 115200;
 		}
+#ifdef B230400
+		else if (baud == B230400)
+		{
+			*baudrate = 230400;
+		}
+#endif
+#ifdef B460800
+		else if (baud == B460800)
+		{
+			*baudrate = 460800;
+		}
+#endif
+#ifdef B500000
+		else if (baud == B500000)
+		{
+			*baudrate = B500000;
+		}
+#endif
+#ifdef B576000
+		else if (baud == B576000)
+		{
+			*baudrate = 576000;
+		}
+#endif
+#ifdef B921600
+		else if (baud == B921600)
+		{
+			*baudrate = 921600;
+		}
+#endif
+#ifdef B1000000
+		else if (baud == B1000000)
+		{
+			*baudrate = 1000000;
+		}
+#endif
+#ifdef B1152000
+		else if (baud == B1152000)
+		{
+			*baudrate = 1152000;
+		}
+#endif
+#ifdef B1500000
+		else if (baud == B1500000)
+		{
+			*baudrate = 1500000;
+		}
+#endif
+#ifdef B2000000
+		else if (baud == B2000000)
+		{
+			*baudrate = 2000000;
+		}
+#endif
+#ifdef B2500000
+		else if (baud == B2500000)
+		{
+			*baudrate = 2500000;
+		}
+#endif
+#ifdef B3000000
+		else if (baud == B3000000)
+		{
+			*baudrate = 3000000;
+		}
+#endif
+#ifdef B3500000
+		else if (baud == B3500000)
+		{
+			*baudrate = 3500000;
+		}
+#endif
+#ifdef B4000000
+		else if (baud == B4000000)
+		{
+			*baudrate = 4000000;
+		}
+#endif
 		else
 		{
 			settingsvalid = false;
@@ -398,7 +476,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	newtio.c_cflag = (CREAD | CLOCAL);
 	// BAUDRATE:
 	// Set new baudrate:
-	if (!(baudrate > 0))
+	if (baudrate <= 0)
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -408,11 +486,11 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrate must be > 0\n";
 #endif
 	}
-	else if (baudrate > 115200)
+	else if (serdrvaccess && (cIOCTL_SD != -1) && (baudrate > new_serdrvinfo.baud_base))
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrates above 115200 are currently not supported\n";
+		std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - the maximum supported baud rate of this device is " << std::dec << new_serdrvinfo.baud_base << " baud\n";
 #endif
 	}
 	else
@@ -1250,17 +1328,73 @@ bool serialCOM::SetControlLines(bool DTR, bool RTS)
 
 // PRIVATE
 
+struct serialCOM::std_baudrate serialCOM::std_baudrates[] = {  {50, B50}
+                                                             , {75, B75}
+                                                             , {110, B110}
+                                                             , {134.5, B134}
+                                                             , {150, B150}
+                                                             , {200, B200}
+                                                             , {300, B300}
+                                                             , {600, B600}
+                                                             , {1200, B1200}
+                                                             , {1800, B1800}
+                                                             , {2400, B2400}
+                                                             , {4800, B4800}
+                                                             , {9600, B9600}
+                                                             , {19200, B19200}
+                                                             , {38400, B38400}
+                                                             , {57600, B57600}
+                                                             , {115200, B115200}
+#ifdef B230400
+                                                             , {230400, B230400}
+#endif
+#ifdef B460800
+                                                             , {460800, B460800}
+#endif
+#ifdef B500000
+                                                             , {500000, B500000}
+#endif
+#ifdef B576000
+                                                             , {576000, B576000}
+#endif
+#ifdef B921600
+                                                             , {921600, B921600}
+#endif
+#ifdef B1000000
+                                                             , {1000000, B1000000}
+#endif
+#ifdef B1152000
+                                                             , {1152000, B1152000}
+#endif
+#ifdef B1500000
+                                                             , {1500000, B1500000}
+#endif
+#ifdef B2000000
+                                                             , {2000000, B2000000}
+#endif
+#ifdef B2500000
+                                                             , {2500000, B2500000}
+#endif
+#ifdef B3000000
+                                                             , {3000000, B3000000}
+#endif
+#ifdef B3500000
+                                                             , {3500000, B3500000}
+#endif
+#ifdef B4000000
+                                                             , {4000000, B4000000}
+#endif
+                                                            };
+// B0 not used, because of Windows compatibility; B110, B134: divisor not unique 
+
+
 bool serialCOM::GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst)
 {
-	// B0 not used, because of Windows compatibility; B110, B134: divisor not unique 
-	const double stdbaudrates[] = {50,75,110,134.5,150,200,300,600,1200,1800,2400,4800,9600,19200,38400,57600,115200};
-	const speed_t stdbaudconst[] = {B50,B75,B110,B134,B150,B200,B300,B600,B1200,B1800,B2400,B4800,B9600,B19200,B38400,B57600,B115200};
-	unsigned char k;
-	for (k=0; k<17; k++)
+	for (unsigned int k=0; k<(sizeof(std_baudrates)/sizeof(std_baudrate)); k++)
 	{
-		if (stdbaudrates[k] == baudrate)
+		if (std_baudrates[k].value == baudrate)
 		{
-			*DCBbaudconst = stdbaudconst[k];
+			*DCBbaudconst = std_baudrates[k].constant;
 			return true;
 		}
 	}
@@ -1272,35 +1406,37 @@ speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 {
 	// Get nearest standard baudrate:
 	speed_t nearestBaudrate = 0;
-	const double br[17] = {50, 75, 110, 134.5, 150, 200, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
-	const speed_t bc[17] = {B50, B75, B110, B134, B150, B200, B300, B600, B1200, B1800, B2400, B4800, B9600, B19200, B38400, B57600, B115200};
-	if (selBaudrate <= br[0])
+
+	unsigned int stdbaudelements = (sizeof(std_baudrates)/sizeof(std_baudrate));
+	
+	if (selBaudrate <= std_baudrates[0].value)
 	{
-		nearestBaudrate=bc[0];
+		nearestBaudrate=std_baudrates[0].constant;
 	}
-	else if (selBaudrate >= br[16])
+	else if (selBaudrate >= std_baudrates[stdbaudelements-1].value)
 	{
-		nearestBaudrate=bc[16];
+		nearestBaudrate=std_baudrates[stdbaudelements-1].constant;
 	}
 	else
 	{
 		double q2=0;
 		double q1=0;
-		for (int b=1; b<17; b++)
+		for (unsigned int b=1; b<stdbaudelements; b++)
 		{
-			q2 = br[b] / selBaudrate; 
+			q2 = std_baudrates[b].value / selBaudrate; 
 			if (q2 >= 1)
 			{
 				// br[b-1] < baudrate < br[b]:
-				q1 = br[b-1] / selBaudrate; 
+				q1 = std_baudrates[b-1].value / selBaudrate; 
 				// compare relative baudrate deviation, select baudrate:
 				if ((q2-1) < (1-q1))
-					nearestBaudrate=bc[b];
+					nearestBaudrate=std_baudrates[b].constant;
 				else
-					nearestBaudrate=bc[b-1];
+					nearestBaudrate=std_baudrates[b-1].constant;
 				break;
 			}
 		}
 	}
 	return nearestBaudrate;
 }
+
