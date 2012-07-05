@@ -1597,6 +1597,14 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 			ttreset = BRC_HS_TIMEOUT;
 			goto err_reset_port;
 		}
+		else if (buf.size() != readlen)
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: timeout while reading from serial port !\n";
+#endif
+			ttreset = BRC_HS_TIMEOUT;
+			goto err_reset_port;
+		}
 	}
 	// Switch port baud rate
 	act_br = 4000000.0 / divisor;
@@ -1613,6 +1621,14 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: failed to read from serial port !\n";
+#endif
+		ttreset = BRC_HS_TIMEOUT;
+		goto err_reset_port;
+	}
+	else if (buf.size() != idstr.size() + 1 + _linefeed_enabled)
+	{
+#ifdef __FSSM_DEBUG__
+		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: timeout while reading from serial port !\n";
 #endif
 		ttreset = BRC_HS_TIMEOUT;
 		goto err_reset_port;
