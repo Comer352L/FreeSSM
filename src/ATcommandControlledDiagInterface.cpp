@@ -89,9 +89,9 @@ bool ATcommandControlledDiagInterface::open( std::string name )
 			return false;
 		}
 		// Probe baud rate / interface
-		const unsigned int baudrates[3] = {500000, 38400, 9600};
+		const unsigned int baudrates[4] = {500000, 38400, 9600, CUSTOM_BAUDRATE}; // NOTE: 500000 for interfaces which are connected via USB directly; CUSTOM_BAUDRATE for recovery from error
 		bool ok = false;
-		for (unsigned char bri=0; bri<3; bri++)
+		for (unsigned char bri=0; bri<4; bri++)
 		{
 			_mutex.lock();
 			ok = _port->SetPortSettings(baudrates[bri], 8, 'N', 1);
