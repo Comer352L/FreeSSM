@@ -89,7 +89,7 @@ bool ATcommandControlledDiagInterface::open( std::string name )
 			return false;
 		}
 		// Probe baud rate / interface
-		const unsigned int baudrates[3] = {115200, 38400, 9600}; // FIXME: change 115000 to 500000 (needs modifying serialCOM to support baud rates > 115200)
+		const unsigned int baudrates[3] = {500000, 38400, 9600};
 		bool ok = false;
 		for (unsigned char bri=0; bri<3; bri++)
 		{
