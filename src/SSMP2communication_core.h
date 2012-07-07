@@ -46,9 +46,9 @@ class SSMP2communication_core
 public:
 	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
-	bool ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data);
-	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data);
-	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten = NULL);
+	bool ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
+	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data);
+	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten = NULL);
 	bool WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten = NULL);
 	bool GetCUdata(unsigned int ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 

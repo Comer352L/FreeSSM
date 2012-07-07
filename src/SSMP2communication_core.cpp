@@ -37,7 +37,7 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 
 
 
-bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
+bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data)
 {
 	if ((dataaddr > 0xffffff) || (nrofbytes == 0))
 		return false;
@@ -85,7 +85,7 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 
 
 
-bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
+bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data)
 {
 	if (datalen == 0)
 		return false;
@@ -125,7 +125,7 @@ bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char p
 
 
 
-bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
+bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten)
 {
 	if ((dataaddr > 0xffffff) || (datalen == 0))
 		return false;
