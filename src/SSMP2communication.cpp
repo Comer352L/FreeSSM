@@ -31,10 +31,10 @@ SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, uns
 	_abort = false;
 	_errRetries = errRetries;
 	_padaddr = 0;
-	for (k=0; k<256; k++) _dataaddr[k] = 0;
+	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _dataaddr[k] = 0;
 	_datalen = 0;
-	for (k=0; k<256; k++) _rec_buf[k] = 0;
-	for (k=0; k<256; k++) _snd_buf[k] = 0;
+	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _rec_buf[k] = 0;
+	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _snd_buf[k] = 0;
 	_delay = 0;
 }
 
@@ -94,8 +94,21 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 {
 	bool ok = false;
 	unsigned int k = 0;
-	if (nrofbytes > 254) return false;
-	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+	{
+		return false;
+	}
+	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+	{
+		return false;
+	}
+	else
+	{
+		return false;
+	}
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning())
+		return false;
 	_CommOperation = comOp_readBlock;
 	// Prepare buffers:
 	_padaddr = padaddr;
@@ -115,11 +128,11 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 
 
 
-bool SSMP2communication::readMultipleDatabytes(char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data)
+bool SSMP2communication::readMultipleDatabytes(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data)
 {
 	bool ok = false;
 	unsigned int k = 0;
-	if (datalen > 256) return false;
+	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_readMulti;
 	// Prepare buffers:
@@ -144,8 +157,17 @@ bool SSMP2communication::writeDataBlock(unsigned int dataaddr, char *data, unsig
 {
 	bool ok = false;
 	unsigned int k = 0;
-	if (datalen > 251) return false;
-	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
+	{
+		return false;
+	}
+	else if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
+	{
+		return false;
+	}
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning())
+		return false;
 	_CommOperation = comOp_writeBlock;
 	// Prepare buffers:
 	_dataaddr[0] = dataaddr;
@@ -214,8 +236,20 @@ bool SSMP2communication::writeDatabyte(unsigned int dataaddr, char databyte, cha
 
 bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, int delay)
 {
-	if (nrofbytes > 254) return false;
-	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+	{
+		return false;
+	}
+	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+	{
+		return false;
+	}
+	else
+	{
+		return false;
+	}
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning())
+		return false;
 	_CommOperation = comOp_readBlock_p;
 	// Prepare buffers:
 	_padaddr = padaddr;
@@ -229,10 +263,10 @@ bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int data
 
 
 
-bool SSMP2communication::readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[256], unsigned int datalen, int delay)
+bool SSMP2communication::readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, int delay)
 {
 	unsigned int k = 0;
-	if (datalen > 256) return false;
+	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_readMulti_p;
 	// Prepare buffers:
@@ -250,8 +284,16 @@ bool SSMP2communication::readMultipleDatabytes_permanent(char padaddr, unsigned 
 bool SSMP2communication::writeDataBlock_permanent(unsigned int dataaddr, char *data, unsigned int datalen, int delay)
 {
 	unsigned int k = 0;
-	if (datalen > 251) return false;	// currently max. 251 bytes per write possible
-	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
+	{
+		return false;
+	}
+	else if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
+	{
+		return false;
+	}
+	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning())
+		return false;
 	_CommOperation = comOp_writeBlock_p;
 	// Prepare buffers:
 	_dataaddr[0] = dataaddr;
@@ -345,9 +387,9 @@ void SSMP2communication::run()
 	unsigned int cuaddress;
 	char padaddr = '\x0';
 	unsigned char datalen = 0;
-	unsigned int dataaddr[256] = {0};
-	char snd_buf[256] = {'\x0'};
-	char rec_buf[256] = {'\x0'};
+	unsigned int dataaddr[SSMP2COM_BUFFER_SIZE] = {0};
+	char snd_buf[SSMP2COM_BUFFER_SIZE] = {'\x0'};
+	char rec_buf[SSMP2COM_BUFFER_SIZE] = {'\x0'};
 	int delay = 0;
 	unsigned char errmax = 3;
 	const unsigned int max_bytes_per_multiread = 33;

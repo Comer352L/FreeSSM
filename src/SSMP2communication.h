@@ -27,6 +27,10 @@
 
 
 
+#define SSMP2COM_BUFFER_SIZE	256  // buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
+
+
+
 class SSMP2communication : public QThread, private SSMP2communication_core
 {
 	Q_OBJECT
@@ -41,12 +45,12 @@ public:
 
 	bool getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
-	bool readMultipleDatabytes(char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data);
+	bool readMultipleDatabytes(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
 	bool writeDataBlock(unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten=NULL);
 	bool writeDatabyte(unsigned int dataaddr, char databyte, char *databytewritten=NULL);
 
 	bool readDataBlock_permanent(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, int delay=0);
-	bool readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[256], unsigned int datalen, int delay=0);
+	bool readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, int delay=0);
 	bool writeDataBlock_permanent(unsigned int dataaddr, char *data, unsigned int datalen, int delay=0);
 	bool writeDatabyte_permanent(unsigned int dataaddr, char databyte, int delay=0);
 
@@ -64,10 +68,10 @@ private:
 	unsigned char _errRetries;
 	// Buffers for sending/recieving data:
 	char _padaddr;
-	unsigned int _dataaddr[256];
-	unsigned char _datalen;
-	char _snd_buf[256];
-	char _rec_buf[256];
+	unsigned int _dataaddr[SSMP2COM_BUFFER_SIZE];
+	unsigned int _datalen;
+	char _snd_buf[SSMP2COM_BUFFER_SIZE];
+	char _rec_buf[SSMP2COM_BUFFER_SIZE];
 	int _delay;
 
 	bool doSingleCommOperation();

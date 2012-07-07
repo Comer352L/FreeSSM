@@ -47,14 +47,15 @@ public:
 	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
 	bool ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
-	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data);
+	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int *dataaddr, unsigned int datalen, char *data);
 	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten = NULL);
 	bool WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten = NULL);
 	bool GetCUdata(unsigned int ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
 
-private:
+protected:
 	AbstractDiagInterface *_diagInterface;
 
+private:
 	bool SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	bool receiveReplyISO14230(unsigned int ecuaddr, unsigned int outmsg_len, std::vector<char> *msg_buffer);
 	bool receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer);

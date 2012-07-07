@@ -85,7 +85,7 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 
 
 
-bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned int datalen, char *data)
+bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int *dataaddr, unsigned int datalen, char *data)
 {
 	if (datalen == 0)
 		return false;
