@@ -185,7 +185,7 @@ void SSMP2communication::run()
 			if (errcount > 0)
 				errcount--;
 			// Set query-index:
-			if ( ((operation == comOp_readMulti) || (operation == comOp_readMulti_p)) && (rindex < static_cast<unsigned int>((datalen/33)+1)) )
+			if ( ((operation == comOp_readMulti) || (operation == comOp_readMulti_p)) && (rindex < static_cast<unsigned int>(((datalen+1)/33)+1)) )
 				rindex++;
 			else
 				rindex=1;
