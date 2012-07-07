@@ -41,7 +41,8 @@
 
 
 
-#define CUSTOM_BAUDRATE		57600	/* Custom baud rate (increased) for ELM327/ELM329 inerfaces */
+#define CUSTOM_BAUDRATE		57600	/* Custom baud rate (increased) for ELM327/ELM329 interfaces */
+/* NOTE: min. value = 4000000/255=15687 baud; max. value = 500000 baud */
 /* NOTE: maximum baud rate depends on the interface circuit. The datasheet says that baud rates
  *       up to 57600 should be safe, and baud rates bigger than ~120000 often do not work reliable */
 
