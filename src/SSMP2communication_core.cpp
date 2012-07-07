@@ -39,7 +39,21 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 
 bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned char nrofbytes, char *data)
 {
-	if ((dataaddr > 0xffffff) || (nrofbytes > 254)) return false;	// protocol limit (length byte): max. 254 per reply message possible !
+	if ((dataaddr > 0xffffff) || (nrofbytes == 0))
+		return false;
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+	{
+		return false;
+	}
+	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+	{
+		return false;
+	}
+	else
+	{
+		return false;
+	}
+
 	char indata[255] = {0,};
 	unsigned char indatalen = 0;
 	char querymsg[6] = {0,};
@@ -73,8 +87,11 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 
 bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int dataaddr[256], unsigned char datalen, char *data)
 {
-	if (datalen > 84) return false;	// protocol limit (length byte): (255-2)/3 = 84 addresses per message
-	// NOTE: most CUs seem to have a limit of 33 addresses per query message !
+	if (datalen == 0)
+		return false;
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 84)) // ISO14230 protocol limit: length byte in header => max. (255-2)/3 = 84 addresses per request message possible
+		return false;
+	// NOTE: Control unit have (different) limits which are lower than the theoretical max. number of addresses per request !
 	char indata[255] = {0,};
 	unsigned char indatalen = 0;
 	char querymsg[255] = {0,};
@@ -110,7 +127,10 @@ bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char p
 
 bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned char datalen, char *datawritten)
 {
-	if ((dataaddr > 0xffffff) || (datalen > 251)) return false;	// protocol limit (lengthy byte): 255-4 = 251
+	if ((dataaddr > 0xffffff) || (datalen == 0))
+		return false;
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
+		return false;
 	char indata[252] = {0,};
 	unsigned char indatalen = 0;
 	char writemsg[255] = {0,};
