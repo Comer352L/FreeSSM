@@ -81,7 +81,7 @@ bool J2534DiagInterface::open( std::string name )
 				ret = _j2534->PassThruReadVersion(_DeviceID, FirmwareVersion, DllVersion, ApiVersion);
 			if (STATUS_NOERROR == ret)
 			{
-				setVersion(std::string(FirmwareVersion) + " (API-library: " + std::string(DllVersion) +")");
+				setVersion(std::string(FirmwareVersion) + " (DLL: " + std::string(DllVersion) + ", API: " + std::string(ApiVersion) +")");
 #ifdef __FSSM_DEBUG__
 				std::cout << "Interface information:\n";
 				std::cout << "   Firmware version: " << FirmwareVersion << '\n';
