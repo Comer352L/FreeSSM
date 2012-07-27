@@ -34,7 +34,7 @@ DiagInterfaceStatusBar::DiagInterfaceStatusBar(QWidget *parent, Qt::WindowFlags 
 	_if_name_label = new QLabel(this);
 	_if_name_label->setFrameShape(QFrame::Panel);
 	_if_name_label->setFrameShadow(QFrame::Sunken);
-	_if_name_label->setFixedWidth(220);
+	_if_name_label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	_hboxlayout->addWidget(_if_name_label);
 	// Interface version
 	_if_version_title_label = new QLabel(this);
@@ -43,8 +43,7 @@ DiagInterfaceStatusBar::DiagInterfaceStatusBar(QWidget *parent, Qt::WindowFlags 
 	_if_version_label = new QLabel(this);
 	_if_version_label->setFrameShape(QFrame::Panel);
 	_if_version_label->setFrameShadow(QFrame::Sunken);
-	_if_version_label->setFixedWidth(40);
-	_if_version_label->setAlignment(Qt::AlignHCenter);
+	_if_version_label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	_hboxlayout->addWidget(_if_version_label);
 	// Horizontal spacer
 	_hboxlayout->addStretch();
@@ -87,12 +86,46 @@ DiagInterfaceStatusBar::~DiagInterfaceStatusBar()
 
 void DiagInterfaceStatusBar::setInterfaceName(QString name, QColor textcolor)
 {
+	const unsigned char add_space_right = 30;
+	int minwidth, maxwidth;
+	int indents = _if_name_label->fontMetrics().width("x"); // See documentation of QLabel::indent()
+	int horiz_margins = _if_name_label->contentsMargins().left() + _if_name_label->contentsMargins().right();
+	// Set text and text color:
 	setTextContentAndColor(_if_name_label, name, textcolor);
+	// Minimum width:
+	if (_if_name_label->fontMetrics().width(name) + indents + add_space_right < 220 - horiz_margins)
+		minwidth = _if_name_label->fontMetrics().width(name) + indents + add_space_right;
+	else
+		minwidth = 220;
+	_if_name_label->setMinimumSize(minwidth, _if_name_label->minimumHeight());
+	// Maximum width:
+	if (_if_name_label->fontMetrics().width(name) + indents + add_space_right > 220 - horiz_margins)
+		maxwidth = _if_name_label->fontMetrics().width(name) + indents + add_space_right;
+	else
+		maxwidth = 220;
+	_if_name_label->setMaximumSize(maxwidth, _if_name_label->maximumHeight());
 }
 
 void DiagInterfaceStatusBar::setInterfaceVersion(QString version, QColor textcolor)
 {
+	const unsigned char add_space_right = 30;
+	int minwidth, maxwidth;
+	int indents = _if_version_label->fontMetrics().width("x"); // See documentation of QLabel::indent()
+	int horiz_margins = _if_version_label->contentsMargins().left() + _if_version_label->contentsMargins().right();
+	// Set text and text color:
 	setTextContentAndColor(_if_version_label, version, textcolor);
+	// Minimum width:
+	if (_if_version_label->fontMetrics().width(version) + indents + indents + add_space_right < 40 - horiz_margins) 
+		minwidth = _if_version_label->fontMetrics().width(version) + indents + add_space_right;
+	else
+		minwidth = 40;
+	_if_version_label->setMinimumSize(minwidth, _if_version_label->minimumHeight());
+	// Maximum width:
+	if (_if_version_label->fontMetrics().width(version) + indents + add_space_right > 40 - horiz_margins) 
+		maxwidth = _if_version_label->fontMetrics().width(version) + indents + add_space_right;
+	else
+		maxwidth = 40;
+	_if_version_label->setMaximumSize(maxwidth, _if_version_label->maximumHeight());
 }
 
 void DiagInterfaceStatusBar::setProtocolName(QString name, QColor textcolor)
