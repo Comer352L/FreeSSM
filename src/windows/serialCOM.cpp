@@ -686,8 +686,8 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		{
 #ifdef __SERIALCOM_DEBUG__
 			std::cout << "serialCOM::Read():   ReadFile(...) failed with error " << GetLastError() << "\n";
-			return false;
 #endif
+			return false;
 		}
 	}
 	// --- READ REMAINING DATA ---
