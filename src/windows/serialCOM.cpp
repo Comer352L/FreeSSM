@@ -677,8 +677,8 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		if (confirmRF)
 		{
 			rb_total += nbr;
-			if (rb_total < minbytes)
 #ifdef __SERIALCOM_DEBUG__
+			if (rb_total < minbytes)
 				std::cout << "serialCOM::Read():   TIMEOUT\n";
 #endif
 		}
