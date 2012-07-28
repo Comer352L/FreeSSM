@@ -45,6 +45,7 @@ ATcommandControlledDiagInterface::ATcommandControlledDiagInterface()
 	_exit = false;
 	setName("AT-command controlled");
 	setVersion("");
+	setSupportedProtocols(std::vector<protocol_type>());
 	setProtocolBaudrate(0);
 }
 
@@ -191,6 +192,7 @@ bool ATcommandControlledDiagInterface::close()
 			_RxQueue.clear();
 			setName("AT-command controlled");
 			setVersion("");
+			setSupportedProtocols(std::vector<protocol_type>());
 			return true;
 		}
 	}
@@ -803,6 +805,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 	if_model_dt if_model = if_none;
 	std::string if_name;
 	std::string if_version;
+	std::vector<protocol_type> supportedProtocols;
 	reply = writeRead("ATE0", 50);	// NOTE: interface replies even if baudrate is wrong (detects unknown command and replies "?" after a timeout)
 	/* NOTE We just want to send a CR to terminate an incompletely transmitted command (e.g. due to a wrong baud rate). The reply may be garbage.
 	 * But CR also means "repeat last command" and if there is no incompletely transmitted command and we are at the right baud rate,
@@ -868,6 +871,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 		else
 			std::cout << "ATcommandControlledDiagInterface::probeInterface():   warning: interface seems to be of type AGV/Diamex, but command AT!01 is not supported !\n";
 #endif
+		supportedProtocols.push_back(protocol_SSM2_ISO15765);
 	}
 	else if (reply.find("ELM") != std::string::npos)
 	{
@@ -885,6 +889,9 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 			std::cout << "ATcommandControlledDiagInterface::probeInterface():   ELM327-interface detetced.\n";
 #endif
 			if_model = if_model_ELM327;
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+			supportedProtocols.push_back(protocol_SSM2_ISO14230);
+#endif
 		}
 		else if (reply.find("ELM329") != std::string::npos)
 		{
@@ -900,6 +907,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 #endif
 			if_model = if_model_ELM327;
 		}
+		supportedProtocols.push_back(protocol_SSM2_ISO15765);
 		// Get interface name and version
 		size_t pos_v = reply.rfind(" v");
 		size_t pos_dot = reply.rfind(".");
@@ -923,6 +931,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 	// Save interface name and version
 	setName( if_name );
 	setVersion( if_version );
+	setSupportedProtocols(supportedProtocols);
 #ifdef __FSSM_DEBUG__
 	std::cout << "ATcommandControlledDiagInterface::probeInterface():   interface name:    " << if_name << '\n';
 	std::cout << "                                                      interface version: " << if_version << '\n';

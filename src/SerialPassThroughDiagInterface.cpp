@@ -30,10 +30,23 @@
 
 SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
 {
+	std::vector<protocol_type> supportedProtocols;
+
 	_port = NULL;
 	_connected = false;
 	setName("Serial Port Pass-Through");
 	setVersion("1.0");
+	supportedProtocols.push_back(protocol_SSM1);
+	supportedProtocols.push_back(protocol_SSM2_ISO14230);
+	setSupportedProtocols(supportedProtocols);
+	/* NOTE: due to the interfaces construction, we can not know which protocol it actually supports !
+	 * One possibility would be to check for an data echo:
+	 * - SSM1-interfaces must not have an echo
+	 * - SSM2-interfaces must have an echo
+	 * Problem:
+	 * - echo test makes sense only if the interface is powered
+	 * - we still don't know if the protocol is really supported
+	 */
 	setProtocolBaudrate( 0 );
 }
 
@@ -59,6 +72,8 @@ bool SerialPassThroughDiagInterface::open( std::string name )
 	if (_port->OpenPort( name ))
 	{
 		if (_port->SetControlLines(true, false))
+			// FIXME: examine interface to find out which protocol it supports (e.g. test for echo). See comment in constructor.
+			// NOTE: we can not assume that the interface is powered (ignition switched on) !
 			return true;
 	}
 	delete _port;

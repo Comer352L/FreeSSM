@@ -93,13 +93,22 @@ bool J2534DiagInterface::open( std::string name )
 			else
 				printErrorDescription("PassThruReadVersion() failed: ", ret);
 #endif
-			// Get and save device name:
+			// Get and save library data:
 			std::vector<J2534Library> libs = J2534_API::getAvailableJ2534Libs();
 			for (unsigned int k=0; k<libs.size(); k++)
 			{
 				if (libs.at(k).path == name)
 				{
+					// Interface name
 					setName(libs.at(k).name);
+					// Supported protocols
+					std::vector<protocol_type> supportedProtocols;
+					if ((libs.at(k).protocols & PROTOCOL_FLAG_ISO9141) ||
+					    (libs.at(k).protocols & PROTOCOL_FLAG_ISO14230)   )
+						supportedProtocols.push_back(protocol_SSM2_ISO14230);
+					if (libs.at(k).protocols & PROTOCOL_FLAG_ISO15765)
+						supportedProtocols.push_back(protocol_SSM2_ISO15765);
+					setSupportedProtocols(supportedProtocols);
 					break;
 				}
 			}

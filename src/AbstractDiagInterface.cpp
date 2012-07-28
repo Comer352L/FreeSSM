@@ -44,9 +44,18 @@ std::string AbstractDiagInterface::version()
 }
 
 
-unsigned int AbstractDiagInterface::protocolBaudRate()
+std::vector<AbstractDiagInterface::protocol_type> AbstractDiagInterface::supportedProtocols()
 {
-	return _protocol_baudrate;
+	return _supportedProtocols;
+}
+
+
+std::vector<std::string> AbstractDiagInterface::supportedProtocolsDescriptions()
+{
+	std::vector<std::string> pdesclist;
+	for (unsigned char p=0; p<_supportedProtocols.size(); p++)
+		pdesclist.push_back( protocolDescription( _supportedProtocols.at(p) ) );
+	return pdesclist;
 }
 
 
@@ -58,23 +67,17 @@ AbstractDiagInterface::protocol_type AbstractDiagInterface::protocolType()
 
 std::string AbstractDiagInterface::protocolDescription()
 {
-	switch (protocolType())
-	{
-		case protocol_NONE:
-			return "";
-		case protocol_SSM1:
-			return "SSM1 (type 1)";
-		case protocol_SSM2_ISO14230:
-			return "SSM2 / ISO-14230";
-		case protocol_SSM2_ISO15765:
-			return "SSM2 / ISO-15765";
-		default:	// BUG
-			return "UNKNOWN";
-	}
+	return protocolDescription( _protocoltype );
 }
 
 
-// PRIVATE
+unsigned int AbstractDiagInterface::protocolBaudRate()
+{
+	return _protocol_baudrate;
+}
+
+
+// PROTECTED
 
 
 void AbstractDiagInterface::setName(std::string name)
@@ -89,6 +92,12 @@ void AbstractDiagInterface::setVersion(std::string version)
 }
 
 
+void AbstractDiagInterface::setSupportedProtocols(std::vector<AbstractDiagInterface::protocol_type> protocols)
+{
+	_supportedProtocols = protocols;
+}
+
+
 void AbstractDiagInterface::setProtocolType(protocol_type protocoltype)
 {
 	_protocoltype = protocoltype;
@@ -99,3 +108,25 @@ void AbstractDiagInterface::setProtocolBaudrate(unsigned int baudrate)
 {
 	_protocol_baudrate = baudrate;
 }
+
+
+// PRIVATE
+
+
+std::string AbstractDiagInterface::protocolDescription(protocol_type protocol)
+{
+	switch (protocol)
+	{
+		case protocol_NONE:
+			return "";
+		case protocol_SSM1:
+			return "SSM1 (type 1)";
+		case protocol_SSM2_ISO14230:
+			return "SSM2 / ISO-14230";
+		case protocol_SSM2_ISO15765:
+			return "SSM2 / ISO-15765";
+		default:	// BUG
+			return "UNKNOWN";
+	}
+}
+

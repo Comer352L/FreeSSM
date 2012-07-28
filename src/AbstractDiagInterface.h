@@ -30,19 +30,21 @@ class AbstractDiagInterface
 
 public:
 	enum interface_type { interface_serialPassThrough, interface_J2534, interface_ATcommandControlled };
-	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2_ISO14230, protocol_SSM2_ISO15765 }; // NOTE: when adding new protocols, also enhance protocolDescription() !
+	enum protocol_type { protocol_NONE, protocol_SSM1, protocol_SSM2_ISO14230, protocol_SSM2_ISO15765 }; // NOTE: when adding new protocols, also enhance protocolDescription(...) !
 
 	AbstractDiagInterface();
 	virtual ~AbstractDiagInterface();
 	virtual interface_type interfaceType() = 0;
-	std::string name();
-	std::string version();
-	unsigned int protocolBaudRate();
-	protocol_type protocolType();
-	std::string protocolDescription();
 	virtual bool open( std::string name ) = 0;
 	virtual bool isOpen() = 0;
 	virtual bool close() = 0;
+	std::string name();
+	std::string version();
+	std::vector<protocol_type> supportedProtocols();
+	std::vector<std::string> supportedProtocolsDescriptions();
+	protocol_type protocolType();
+	std::string protocolDescription();
+	unsigned int protocolBaudRate();
 	virtual bool connect(protocol_type protocol) = 0;
 	virtual bool isConnected() = 0;
 	virtual bool disconnect() = 0;
@@ -54,14 +56,18 @@ public:
 protected:
 	void setName(std::string name);
 	void setVersion(std::string version);
+	void setSupportedProtocols(std::vector<protocol_type> protocols);
 	void setProtocolType(protocol_type protocoltype);
 	void setProtocolBaudrate(unsigned int baudrate);
 
 private:
-	protocol_type _protocoltype;
 	std::string _name;
 	std::string _version;
+	std::vector<protocol_type> _supportedProtocols;
+	protocol_type _protocoltype;
 	unsigned int _protocol_baudrate;
+
+	std::string protocolDescription(protocol_type protocol);
 
 };
 
