@@ -295,7 +295,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			if (_j2534->libraryAPIversion() == J2534_API_v0404)
 			{
 				CfgItems[0].Parameter = DATA_BITS;
-				CfgItems[0].Value = 8;	// should be default
+				CfgItems[0].Value = DATA_BITS_8;	// should be default
 				Input.NumOfParams = 1;
 				Input.ConfigPtr = CfgItems;
 				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);

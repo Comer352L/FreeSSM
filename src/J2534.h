@@ -1,7 +1,7 @@
 /*
  * J2534.h - SAE-J2534 definitions
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@
 								// The scan tool may override this value to match the capabilities reported by the ECUs. Default value is 0. */
 #define		ISO15765_STMIN		0x1F	// 0x0-0xFF	// ISO15765 specific, the separation time for segmented transfers.
 								// The scan tool may override this value to match the capabilities reported by the ECUs. Default value is 0.
-#define		DATA_BITS		0x20
+#define		DATA_BITS		0x20	// 04.04-API only
 #define		FIVE_BAUD_MOD		0x21
 #define		BS_TX			0x22
 #define		STMIN_TX		0x23
@@ -142,6 +142,11 @@
 // Loopback setting (ioctl GET_CONFIG/SET_CONFIG: parameter LOOPBACK):
 #define		OFF				0x00
 #define		ON				0x01
+
+
+// Data bits setting (ioctl GET_CONFIG/SET_CONFIG: parameter DATA_BITS):
+#define		DATA_BITS_8			0x00
+#define		DATA_BITS_7			0x01
 
 
 // Parity setting (ioctl GET_CONFIG/SET_CONFIG: parameter PARITY):
