@@ -479,43 +479,67 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 			ret = _j2534->PassThruReadMsgs(_ChannelID, &rx_msg, &rxNumMsgs, timeout);
 			if ((STATUS_NOERROR == ret) && rxNumMsgs)
 			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "PassThruReadMsgs(): received J2534-message with protocol id 0x" << std::hex << rx_msg.ProtocolID
+				          << ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n";
+				for (unsigned int k=0; k<rx_msg.DataSize; k++)
+					std::cout << " " << std::hex << (unsigned int)(rx_msg.Data[k]);
+				std::cout << std::endl;
+#endif
 				if (rx_msg.RxStatus & TX_MSG_TYPE)
 				{
+#ifdef __FSSM_DEBUG__
 					if (rx_msg.RxStatus & TX_DONE)	// SAE J2534-1 (dec 2004): ISO-15765 only
 					{
+						std::cout << "=> message is transmit confirmation message\n";
+						continue;
+					}
+					else
+						std::cout << "=> message is loopback message\n";
+#endif
+				}
+				else
+				{
+					if (rx_msg.RxStatus & START_OF_MESSAGE)
+					{
+						/* NOTE:
+						 * - incoming (multi-frame) msg transfer has commenced (ISO-15765) /
+						 *   first byte of an incoming message has been received (ISO-9141 / ISO-14230)
+						 * - ISO-15765: message contains CAN-ID only                                   */
 #ifdef __FSSM_DEBUG__
-						std::cout << "PassThruReadMsgs(): received transmit confirmation message\n";
+						std::cout << "=> message indicates that an incoming message transfer has commenced.\n";
 #endif
 						continue;
 					}
+					if ((protocolType() == protocol_SSM2_ISO15765) && (rx_msg.RxStatus & ISO15765_PADDING_ERROR))
+					{
+						// NOTE: ISO-15765 CAN frame was received with less than 8 data bytes
 #ifdef __FSSM_DEBUG__
-					else
-						std::cout << "PassThruReadMsgs(): received loopback message\n";
+						std::cout << "=> message indicates ISO15765 padding error.\n";
 #endif
+						continue;
+					}
+					// NOTE: all other flags do not affect the transferred data or are not defined for the ISO-protocols
 				}
-				else if (rx_msg.RxStatus & START_OF_MESSAGE)
-				{
-					/* NOTE:
-					 * - incoming (multi-frame) msg transfer has commenced (ISO-15765) /
-					 *   first byte of an incoming message has been received (ISO-9141 / ISO-14230)
-					 * - ISO-15765: message contains CAN-ID only                                   */
-#ifdef __FSSM_DEBUG__
-					std::cout << "PassThruReadMsgs(): received indication message fo start of incoming message\n";
-#endif
-					continue;
-				}
-				else if ((protocolType() == protocol_SSM2_ISO15765) && (rx_msg.RxStatus & ISO15765_PADDING_ERROR))
-				{
-					// NOTE: ISO-15765 CAN frame was received with less than 8 data bytes
-#ifdef __FSSM_DEBUG__
-					std::cout << "PassThruReadMsgs(): received ISO-15765 padding error indication message.\n";
-#endif
-					continue;
-				}
-				// NOTE: all other flags do not affect the transferred data or are not defined for the ISO-protocols
 				// Extract data:
-				for (unsigned int k=0; k<rx_msg.DataSize; k++)
-					buffer->push_back(rx_msg.Data[k]);
+				if (rx_msg.DataSize > 0)
+				{
+#ifdef __FSSM_DEBUG__
+					if (rx_msg.ExtraDataIndex == 0)
+					{
+						std::cout << "WARNING: ExtraDataIndex is 0, which should be the case only for pure status messages !\n";
+					}	
+					else if (rx_msg.ExtraDataIndex < rx_msg.DataSize)
+					{
+						std::cout << "WARNING: ExtraDataIndex is not equal to DataSize !\n";
+						/* NOTE:
+						 * - SAE-J2534-1 (dec 2004): only use with J1850 PWM 
+						 * - older documents (API 02.02): also used with J1850 VPW, ISO-9141, ISO-14230 */
+					}
+#endif
+					for (unsigned int k=0; k<rx_msg.DataSize; k++)
+						buffer->push_back(rx_msg.Data[k]);
+				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs && (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230));
 		/* NOTE: For SSM2 over ISO-14230, we read all received data;
