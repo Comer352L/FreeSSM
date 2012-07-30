@@ -481,8 +481,16 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 			{
 				if (rx_msg.RxStatus & TX_MSG_TYPE)
 				{
+					if (rx_msg.RxStatus & TX_DONE)	// SAE J2534-1 (dec 2004): ISO-15765 only
+					{
 #ifdef __FSSM_DEBUG__
-					std::cout << "PassThruReadMsgs(): received transmit confirmation message\n";
+						std::cout << "PassThruReadMsgs(): received transmit confirmation message\n";
+#endif
+						continue;
+					}
+#ifdef __FSSM_DEBUG__
+					else
+						std::cout << "PassThruReadMsgs(): received loopback message\n";
 #endif
 				}
 				else if (rx_msg.RxStatus & ISO15765_FIRST_FRAME)
@@ -490,13 +498,12 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 #ifdef __FSSM_DEBUG__
 					std::cout << "PassThruReadMsgs(): received ISO-15765 first frame indication message\n";
 #endif
+					continue;
 				}
-				else	// FIXME: ARE THERE OTHER PURE STATUS MESSAGES CONTAINING DATA BYTES ?
-				{
-					// Extract data:
-					for (unsigned int k=0; k<rx_msg.DataSize; k++)
-						buffer->push_back(rx_msg.Data[k]);
-				}
+				// FIXME: ARE THERE OTHER PURE STATUS MESSAGES CONTAINING DATA BYTES ?
+				// Extract data:
+				for (unsigned int k=0; k<rx_msg.DataSize; k++)
+					buffer->push_back(rx_msg.Data[k]);
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs && (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230));
 		/* NOTE: For SSM2 over ISO-14230, we read all received data;
