@@ -182,8 +182,9 @@
 // Tx flags:
 #define		SCI_TX_VOLTAGE		0x00800000	// SCI programming: 0 = do not apply voltage after transmitting message, 1 = apply voltage(20V) after transmitting message
 #define		SCI_MODE		0x00400000
-#define		BLOCKING		0x00010000	// Tx blocking mode: 0 = non-blocking Transmit request, 1 = blocking Transmit request
-#define		TX_BLOCKING		0x00010000
+#define		BLOCKING		0x00010000	/* 02.02-API: Tx blocking mode: 0 = non-blocking transmit request, 1 = blocking transmit request
+							   04.04-API: this value is reserved for J2534-2 ! 
+							   NOTE: not really needed, instead a timeout value > 0 can be used with PassThruWriteMsgs() */
 #define		WAIT_P3_MIN_ONLY	0x00000200
 #define		CAN_29BIT_ID		0x00000100	// CAN ID Type: 0 = 11-bit, 1 = 29-bit
 #define		CAN_EXTENDED_ID		0x00000100

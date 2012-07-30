@@ -581,7 +581,7 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 			tx_msg.Data[k] = buffer[k];
 		tx_msg.DataSize = buffer.size();
 		unsigned long txNumMsgs = 1;
-		unsigned long timeout = 1000;
+		unsigned long timeout = 1000;	// wait until message has been transmitted
 		// Send message:
 		ret = _j2534->PassThruWriteMsgs(_ChannelID, &tx_msg, &txNumMsgs, timeout);
 		if (STATUS_NOERROR == ret)
