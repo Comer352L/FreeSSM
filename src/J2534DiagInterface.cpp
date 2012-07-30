@@ -500,7 +500,15 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 #endif
 					continue;
 				}
-				// FIXME: ARE THERE OTHER PURE STATUS MESSAGES CONTAINING DATA BYTES ?
+				else if ((protocolType() == protocol_SSM2_ISO15765) && (rx_msg.RxStatus & ISO15765_PADDING_ERROR))
+				{
+					// NOTE: ISO-15765 CAN frame was received with less than 8 data bytes
+#ifdef __FSSM_DEBUG__
+					std::cout << "PassThruReadMsgs(): received ISO-15765 padding error indication message.\n";
+#endif
+					continue;
+				}
+				// NOTE: all other flags do not affect the transferred data or are not defined for the ISO-protocols
 				// Extract data:
 				for (unsigned int k=0; k<rx_msg.DataSize; k++)
 					buffer->push_back(rx_msg.Data[k]);
