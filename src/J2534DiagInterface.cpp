@@ -493,10 +493,14 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 						std::cout << "PassThruReadMsgs(): received loopback message\n";
 #endif
 				}
-				else if (rx_msg.RxStatus & ISO15765_FIRST_FRAME)
+				else if (rx_msg.RxStatus & START_OF_MESSAGE)
 				{
+					/* NOTE:
+					 * - incoming (multi-frame) msg transfer has commenced (ISO-15765) /
+					 *   first byte of an incoming message has been received (ISO-9141 / ISO-14230)
+					 * - ISO-15765: message contains CAN-ID only                                   */
 #ifdef __FSSM_DEBUG__
-					std::cout << "PassThruReadMsgs(): received ISO-15765 first frame indication message\n";
+					std::cout << "PassThruReadMsgs(): received indication message fo start of incoming message\n";
 #endif
 					continue;
 				}
