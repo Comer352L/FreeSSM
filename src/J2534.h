@@ -51,7 +51,7 @@
 
 
 // Ioctl parameters for GET_CONFIG and SET_CONFIG
-#define		DATA_RATE		0x01	// 5 – 5000000 	// Baud rate value used for vehicle network. No default value specified.
+#define		DATA_RATE		0x01	// 5 – 500000 	// Baud rate value used for vehicle network. No default value specified.
 #define		LOOPBACK		0x03	// 0(OFF)/1(ON)	// 0 = Do not echo transmitted messages to the Receive queue. 1 = Echo transmitted messages to the Receive queue.
 								// Default value is 0(OFF).
 #define		NODE_ADDRESS		0x04	// 0x00-0xFF	// J1850PWM specific, physical address for node of interest in the vehicle network. Default is no nodes are recognized by scan tool.
