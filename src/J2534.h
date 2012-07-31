@@ -56,14 +56,14 @@
 								// Default value is 0(OFF).
 #define		NODE_ADDRESS		0x04	// 0x00-0xFF	// J1850PWM specific, physical address for node of interest in the vehicle network. Default is no nodes are recognized by scan tool.
 #define		NETWORK_LINE		0x05	// 0(BUS_NORMAL)/1(BUS_PLUS)/2(BUS_MINUS)	// J1850PWM specific, network line(s) active during message transfers. Default value is 0(BUS_NORMAL).
-#define		P1_MIN			0x06	// 0x0-0xFFFF	// ISO 9141 specific, min. ECU inter-byte time [ms] for responses. Default value is 0 ms.
-#define		P1_MAX			0x07	//  ? -0xFFFF	// ISO 9141 specific, max. ECU inter-byte time [ms] for responses. Default value is 20 ms.
-#define		P2_MIN			0x08	// 0x0-0xFFFF	// ISO 9141 specific, min. ECU response time [ms] to a tester request or between ECU responses. Default value is 25 ms.
-#define		P2_MAX			0x09	//  ? -0xFFFF	// ISO 9141 specific, max. ECU response time [ms] to a tester request or between ECU responses. Default value is 50 ms.
-#define		P3_MIN			0x0A	// 0x0-0xFFFF	// ISO 9141 specific, min. ECU response time [ms] between end of ECU response and next tester request. Default value is 55 ms.
-#define		P3_MAX			0x0B	// 0x0-0xFFFF	// ISO 9141 specific, max. ECU response time [ms] between end of ECU response and next tester request. Default value is 5000 ms.
-#define		P4_MIN			0x0C	// 0x0-0xFFFF	// ISO 9141 specific, min. tester inter-byte time [ms] for a request. Default value is 5 ms.
-#define		P4_MAX			0x0D	// 0x0-0xFFFF	// ISO 9141 specific, max. tester inter-byte time [ms] for a request. Default value is 20 ms.
+#define		P1_MIN			0x06	// 0x0-0xFFFF	// ISO-9141/14230 specific, min. ECU inter-byte time for responses [02.02-API: ms]. Default value is 0 ms. 04.04-API: NOT ADJUSTABLE, 0ms.
+#define		P1_MAX			0x07	//  ? -0xFFFF	// ISO-9141/14230 specific, max. ECU inter-byte time for responses [02.02-API: ms, 04.04-API: *0.5ms]. Default value is 20 ms.
+#define		P2_MIN			0x08	// 0x0-0xFFFF	// ISO-9141/14230 specific, min. ECU response time to a tester request or between ECU responses [02.02-API: ms, 04.04-API: *0.5ms]. 04.04-API: NOT ADJUSTABLE, 0ms. Default value is 25 ms.
+#define		P2_MAX			0x09	//  ? -0xFFFF	// ISO-9141/14230 specific, max. ECU response time to a tester request or between ECU responses [02.02-API: ms, 04.04-API: *0.5ms]. 04.04-API: NOT ADJUSTABLE, all messages up to P3_MIN are receoved. Default value is 50 ms.
+#define		P3_MIN			0x0A	// 0x0-0xFFFF	// ISO-9141/14230 specific, min. ECU response time between end of ECU response and next tester request [02.02-API: ms, 04.04-API: *0.5ms]. Default value is 55 ms.
+#define		P3_MAX			0x0B	// 0x0-0xFFFF	// ISO-9141/14230 specific, max. ECU response time between end of ECU response and next tester request [02.02-API: ms, 04.04-API: *0.5ms]. 04.04-API: NOT ADJUSTABLE, messages can be sent at anytime after P3_MIN. Default value is 5000 ms.
+#define		P4_MIN			0x0C	// 0x0-0xFFFF	// ISO-9141/14230 specific, min. tester inter-byte time for a request [02.02-API: ms, 04.04-API: *0.5ms]. Default value is 5 ms.
+#define		P4_MAX			0x0D	// 0x0-0xFFFF	// ISO-9141/14230 specific, max. tester inter-byte time for a request [02.02-API: ms, 04.04-API: *0.5ms]. 04.04-API: NOT ADJUSTABLE, P4_MIN is always used. Default value is 20 ms.
 #define		W1			0x0E	// 0x0-0xFFFF	// ISO 9141 specific, max. time [ms] from the address byte end to synchronization pattern start. Default value is 300 ms.
 #define		W2			0x0F	// 0x0-0xFFFF	// ISO 9141 specific, max. time [ms] from the synchronization byte end to key byte 1 start. Default value is 20 ms.
 #define		W3			0x10	// 0x0-0xFFFF	// ISO 9141 specific, max. time [ms] between key byte 1 and key byte 2. Default value is 20 ms.
