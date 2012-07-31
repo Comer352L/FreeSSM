@@ -473,7 +473,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 		buffer->clear();
 		unsigned long rxNumMsgs = 1;
 		unsigned long timeout = 0;	// return immediately
-		// Read message:
+		// Read all available messages:
 		do
 		{
 			ret = _j2534->PassThruReadMsgs(_ChannelID, &rx_msg, &rxNumMsgs, timeout);
@@ -541,10 +541,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 						buffer->push_back(rx_msg.Data[k]);
 				}
 			}
-		} while ((STATUS_NOERROR == ret) && rxNumMsgs && (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230));
-		/* NOTE: For SSM2 over ISO-14230, we read all received data;
-		   Because of the "special" timings, we can't be sure that a received message corresponds to a single+complete SSM2 message.
-		   Message detection/extraction is up to the upper layer */
+		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
 		if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret))
 			return true;
 #ifdef __FSSM_DEBUG__
