@@ -571,16 +571,18 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 				if (rx_msg.DataSize > 0)
 				{
 #ifdef __FSSM_DEBUG__
-					if (rx_msg.ExtraDataIndex == 0)
+					if ((rx_msg.ExtraDataIndex == 0) && (_j2534->libraryAPIversion() == J2534_API_v0404))
 					{
 						std::cout << "WARNING: ExtraDataIndex is 0, which should be the case only for pure status messages !\n";
-					}	
+					}
 					else if (rx_msg.ExtraDataIndex < rx_msg.DataSize)
 					{
-						std::cout << "WARNING: ExtraDataIndex is not equal to DataSize !\n";
+						if ((_j2534->libraryAPIversion() == J2534_API_v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
+						    ((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
+							std::cout << "WARNING: ExtraDataIndex is not smaller than expected !\n";
 						/* NOTE:
-						 * - SAE-J2534-1 (dec 2004): only use with J1850 PWM 
-						 * - older documents (API 02.02): also used with J1850 VPW, ISO-9141, ISO-14230 */
+						 * - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM 
+						 * - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
 					}
 #endif
 					for (unsigned int k=0; k<rx_msg.DataSize; k++)
