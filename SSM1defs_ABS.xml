@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<FSSM_SSM1_DEFINITIONS version="0.1.0" format_version="0.2.0">
+<DEFINITIONS>
+	<ID_BYTE1 value="0x76">
+		<YEAR>SEP 1997</YEAR><!-- TODO on Impreza: "1996" //-->
+		<ID_BYTE2 value="0xBB">
+			<CLEARMEMORY>
+				<ADDRESS>0x0030</ADDRESS>
+				<VALUE>0x00FF</VALUE>
+			</CLEARMEMORY>
+			
+			<MB id="MB_FR">
+				<ADDRESS>0x0021</ADDRESS>
+			</MB>
+			<MB id="MB_FL">
+				<ADDRESS>0x0022</ADDRESS>
+			</MB>	
+			<MB id="MB_RR">
+				<ADDRESS>0x0023</ADDRESS>
+			</MB>	
+			<MB id="MB_RL">
+				<ADDRESS>0x0024</ADDRESS>
+			</MB>
+			<MB id="MB_BLS">
+				<ADDRESS>0x0025</ADDRESS>
+			</MB>
+			<MB id="MB_GSENS">
+				<ADDRESS>0x0026</ADDRESS>
+			</MB>
+			
+			<SWBLOCK>
+				<ADDRESS>0x002A</ADDRESS>
+				<SW id="SW_B1">
+					<BIT>1</BIT>
+				</SW>
+				<SW id="SW_VR">
+					<BIT>2</BIT>
+				</SW>
+				<SW id="SW_MR">
+					<BIT>-3</BIT><!-- TODO Check //-->
+				</SW>
+				<SW id="SW_AT">
+					<BIT>-4</BIT><!-- TODO Check //-->
+				</SW>
+			</SWBLOCK>
+			<SWBLOCK>
+				<ADDRESS>0x002B</ADDRESS>
+				<SW id="SW_AW">
+					<BIT>-1</BIT><!-- TODO Check //-->
+				</SW>
+				<SW id="SW_VM">
+					<BIT>2</BIT>
+				</SW>
+				<SW id="SW_MM">
+					<BIT>3</BIT>
+				</SW>
+				<SW id="SW_CM">
+					<BIT>4</BIT>
+				</SW>
+			</SWBLOCK>
+			
+			
+			<MODEL>Legacy</MODEL>
+			<ID_BYTE3 value_start="0x20" value_end="0x2f">
+				<SYSTEMDESCRIPTION>FWD MT</SYSTEMDESCRIPTION>
+			</ID_BYTE3>
+			<ID_BYTE3 value_start="0x40" value_end="0x4f">
+				<SYSTEMDESCRIPTION>FWD AT</SYSTEMDESCRIPTION>
+			</ID_BYTE3>
+			<ID_BYTE3 value_start="0xa0" value_end="0xaf">
+				<SYSTEMDESCRIPTION>4WD MT</SYSTEMDESCRIPTION>
+			</ID_BYTE3>
+			<ID_BYTE3 value_start="0xc0" value_end="0xcf">
+				<SYSTEMDESCRIPTION>4WD AT</SYSTEMDESCRIPTION>
+			</ID_BYTE3>
+		</ID_BYTE2>
+	</ID_BYTE1>
+</DEFINITIONS>
+<DATA_COMMON>
+	<MB id="MB_FR">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">FR wheel speed</TITLE>
+		<TITLE lang="de">Radgeschwindigkeit VR</TITLE>
+	</MB>
+	<MB id="MB_FL">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">FL wheel speed</TITLE>
+		<TITLE lang="de">Radgeschwindigkeit VL</TITLE>
+	</MB>
+	<MB id="MB_RR">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">RR wheel speed</TITLE>
+		<TITLE lang="de">Radgeschwindigkeit HR</TITLE>
+	</MB>
+	<MB id="MB_RL">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">RL wheel speed</TITLE>
+		<TITLE lang="de">Radgeschwindigkeit HL</TITLE>
+	</MB>
+	<MB id="MB_BLS">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/255*13.33</FORMULA>
+		<PRECISION>2</PRECISION><!-- TODO Check //-->
+		<TITLE lang="en">BLS</TITLE>
+		<TITLE lang="de">BLS</TITLE>
+	</MB>
+	<MB id="MB_GSENS">
+		<UNIT lang="all"></UNIT>
+		<FORMULA>*1</FORMULA><!-- TODO Check //-->
+		<PRECISION>0</PRECISION><!-- TODO Check //-->
+		<TITLE lang="en">G-Sensor output voltage</TITLE>
+		<TITLE lang="de">GSENS</TITLE>
+	</MB>
+	
+	<SW id="SW_B1">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Stop light switch</TITLE>
+		<TITLE lang="de">Bremslichtschalter</TITLE>
+	</SW>
+	<SW id="SW_VR">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Valve relay signal</TITLE>
+		<TITLE lang="de">Signal Ventil-Relais</TITLE>
+	</SW>
+	<SW id="SW_MR">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Motor relay signal</TITLE>
+		<TITLE lang="de">Signal Pumpenmotor-Relais</TITLE>
+	</SW>
+	<SW id="SW_AT">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">AT ABS signal</TITLE>
+		<TITLE lang="de">AT ABS Signal</TITLE>
+	</SW>
+	<SW id="SW_AW">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">ABS warning light</TITLE>
+		<TITLE lang="de">ABS Warnleuchte</TITLE>
+	</SW>
+	<SW id="SW_VM">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Valve relay monitor</TITLE>
+		<TITLE lang="de">Überwachung Ventil-Relais</TITLE>
+	</SW>
+	<SW id="SW_MM">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Motor relay monitor</TITLE>
+		<TITLE lang="de">Überwachung Pumpenmotor-Relais</TITLE>
+	</SW>
+	<SW id="SW_CM">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">CCM signal</TITLE>
+		<TITLE lang="de">CCM-Signal</TITLE>
+	</SW>
+</DATA_COMMON>
+</FSSM_SSM1_DEFINITIONS>

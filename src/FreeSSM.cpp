@@ -209,6 +209,8 @@ FreeSSM::FreeSSM(QApplication *app)
 	// CONNECT SIGNALS/SLOTS:
 	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
+	connect( abs_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	connect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
 	connect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
 	connect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
 	connect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
@@ -223,6 +225,8 @@ FreeSSM::~FreeSSM()
 	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
+	disconnect( abs_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
 	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
 	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) ); 
@@ -270,6 +274,36 @@ void FreeSSM::transmission()
 		delete diagInterface;
 	}
 }
+
+void FreeSSM::abs()
+{
+	if (_dumping) return;
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
+	{
+		ABSDialog *absdialog = new ABSDialog(diagInterface, _language);
+		if (!absdialog->isHidden())
+			absdialog->exec();
+		delete absdialog;
+		delete diagInterface;
+	}
+}
+
+
+void FreeSSM::aircon()
+{
+	if (_dumping) return;
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
+	{
+		AirConDialog *aircondialog = new AirConDialog(diagInterface, _language);
+		if (!aircondialog->isHidden())
+			aircondialog->exec();
+		delete aircondialog;
+		delete diagInterface;
+	}
+}
+
 
 
 void FreeSSM::preferences()

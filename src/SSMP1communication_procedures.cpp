@@ -80,6 +80,13 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	if (!_diagInterface->clearReceiveBuffer())
 		return false;
 	waitms(SSMP1_T_ID_REC_MAX);
+
+data->clear();
+data->push_back('\x76');	// ID Byte 1
+data->push_back('\xBB');	// ID Byte 2
+data->push_back('\x20');	// ID Byte 3
+return true;
+
 	if (!_diagInterface->read(&_recbuffer))
 		return false;
 	if (_recbuffer.size() < 3)
@@ -115,6 +122,12 @@ err:
 bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsigned int timeout)
 {
 	if (_currentaddr < 0) return false;
+
+waitms(100);
+_sync = true;
+data->push_back('\xff');	// recieved data
+return true;
+
 	TimeM time;
 	char hb = (_currentaddr & 0xffff) >> 8;
 	char lb = _currentaddr & 0xff;
@@ -218,6 +231,10 @@ bool SSMP1communication_procedures::writeDatabyte(char databyte)
 
 char SSMP1communication_procedures::waitForDataValue(char data, unsigned int timeout)
 {
+
+waitms(100);
+return data;
+
 	std::vector<char> datavalue;
 	TimeM time;
 	bool ok = false;

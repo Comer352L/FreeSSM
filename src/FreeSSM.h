@@ -33,6 +33,8 @@
 #include "libFSSM.h"
 #include "EngineDialog.h"
 #include "TransmissionDialog.h"
+#include "ABSDialog.h"
+#include "AirConDialog.h"
 #include "Preferences.h"
 #include "About.h"
 #include "ui_FreeSSM.h"
@@ -66,6 +68,8 @@ public:
 private slots:
 	void engine();
 	void transmission();
+	void abs();
+	void aircon();
 	void preferences();
 	void help();
 	void about();

@@ -15,6 +15,8 @@ HEADERS += src/FreeSSM.h \
            src/Languages.h \
            src/EngineDialog.h \
            src/TransmissionDialog.h \
+           src/ABSDialog.h \
+           src/AirConDialog.h \
            src/Preferences.h \
            src/About.h \
            src/FSSMdialogs.h \
@@ -36,9 +38,13 @@ HEADERS += src/FreeSSM.h \
            src/ControlUnitDialog.h \
            src/CUinfo_Engine.h \
            src/CUinfo_Transmission.h \
+           src/CUinfo_ABS.h \
+           src/CUinfo_AirCon.h \
            src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
            src/CUcontent_DCs_transmission.h \
+           src/CUcontent_DCs_abs.h \
+           src/CUcontent_DCs_aircon.h \
            src/CUcontent_MBsSWs.h \
            src/CUcontent_MBsSWs_tableView.h \
            src/CUcontent_Adjustments.h \
@@ -57,6 +63,8 @@ SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
            src/EngineDialog.cpp \
            src/TransmissionDialog.cpp \
+           src/ABSDialog.cpp \
+           src/AirConDialog.cpp \
            src/Preferences.cpp \
            src/About.cpp \
            src/FSSMdialogs.cpp \
@@ -77,9 +85,13 @@ SOURCES += src/main.cpp \
            src/ControlUnitDialog.cpp \
            src/CUinfo_Engine.cpp \
            src/CUinfo_Transmission.cpp \
+           src/CUinfo_ABS.cpp \
+           src/CUinfo_AirCon.cpp \
            src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
            src/CUcontent_DCs_transmission.cpp \
+           src/CUcontent_DCs_abs.cpp \
+           src/CUcontent_DCs_aircon.cpp \
            src/CUcontent_MBsSWs.cpp \
            src/CUcontent_MBsSWs_tableView.cpp \
            src/CUcontent_Adjustments.cpp \
@@ -102,8 +114,12 @@ FORMS +=   ui/FreeSSM.ui \
            ui/ControlUnitDialog.ui \
            ui/CUinfo_Engine.ui \
            ui/CUinfo_Transmission.ui \
+           ui/CUinfo_ABS.ui \
+           ui/CUinfo_AirCon.ui \
            ui/CUcontent_DCs_engine.ui \
            ui/CUcontent_DCs_transmission.ui \
+           ui/CUcontent_DCs_abs.ui \
+           ui/CUcontent_DCs_aircon.ui \
            ui/CUcontent_MBsSWs.ui \
            ui/CUcontent_MBsSWs_tableView.ui \
            ui/CUcontent_Adjustments.ui \
