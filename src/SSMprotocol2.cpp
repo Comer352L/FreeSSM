@@ -24,6 +24,7 @@
 SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP2com = NULL;
+	_SSM2defsIface = NULL;
 	resetCUdata();
 }
 
@@ -116,6 +117,8 @@ void SSMprotocol2::resetCUdata()
 	_MBSWmetaList.clear();
 	_selMBsSWsAddr.clear();
 	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
+	delete _SSM2defsIface;
+	_SSM2defsIface = NULL;
 }
 
 
@@ -128,8 +131,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
-	bool ATsup = false;
-	bool CCsup = false;
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
@@ -201,20 +202,18 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Connect communication error signals from SSM2Pcommunication:
 	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	/* Get definitions for this control unit */
+	_SSM2defsIface = new SSM2definitionsInterface(_language);
 	// Get definitions of the supported diagnostic codes:
-	setupDTCdata();
-	hasIntegratedCC(&CCsup);
-	if ( CCsup )	// not necessary, because function checks this, too...
-		setupCCCCdata();
+	_SSM2defsIface->diagnosticCodes(&_DTCdefs);
+	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs);
 	// Get supported MBs and SWs:
-	setupSupportedMBs();
-	setupSupportedSWs();
+	_SSM2defsIface->measuringBlocks(&_supportedMBs);
+	_SSM2defsIface->switches(&_supportedSWs);
 	// Get supported Adaptions:
-	setupAdjustmentsData();
+	_SSM2defsIface->adjustments(&_adjustments);
 	// Get actuator test data:
-	hasActuatorTests(&ATsup);
-	if (ATsup)
-		setupActuatorTestData();
+	setupActuatorTestData();
 	return result_success;
 }
 
@@ -222,660 +221,88 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 bool SSMprotocol2::getSystemDescription(QString *sysdescription)
 {
 	if (_state == state_needSetup) return false;
-	if (_CU == CUtype_Engine)
-	{
-		return getSysDescriptionBySysID( SSMprotocol2_ID::ECU_sysID, _SYS_ID, sysdescription );
-	}
-	else if (_CU == CUtype_Transmission)
-	{
-		return getSysDescriptionBySysID( SSMprotocol2_ID::TCU_sysID, _SYS_ID, sysdescription );
-	}
-	return false;
+	return _SSM2defsIface->systemDescription(sysdescription);
 }
 
 
 bool SSMprotocol2::hasOBD2system(bool *OBD2)
 {
 	if (_state == state_needSetup) return false;
-	if (!(_flagbytes[29] & 0x80) && !(_flagbytes[28] & 0x02))
-		*OBD2 = true;
-	else
-		*OBD2 = false;
-	return true;
+	return _SSM2defsIface->hasOBD2system(OBD2);
 }
 
 
 bool SSMprotocol2::hasVINsupport(bool *VINsup)
 {
 	if (_state == state_needSetup) return false;
-	if ((_CU==CUtype_Engine) && (_nrofflagbytes > 32))
-	{
-		if (_flagbytes[36] & 0x01)
-			*VINsup = true;
-		else
-			*VINsup = false;
-	}
-	else
-		*VINsup = false;
-	return true;
+	return _SSM2defsIface->hasVINsupport(VINsup);
 }
 
 
 bool SSMprotocol2::hasImmobilizer(bool *ImmoSup)
 {
 	if (_state == state_needSetup) return false;
-	if (_CU==CUtype_Engine && (_flagbytes[11] & 0x20))
-	{
-		if (_flagbytes[28] & 0x10)
-			*ImmoSup = true;
-		else
-			*ImmoSup = false;
-	}
-	else
-		*ImmoSup = false;
-
-	return true;
+	return _SSM2defsIface->hasImmobilizer(ImmoSup);
 }
 
 
 bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 {
 	if (_state == state_needSetup) return false;
-	if ((_CU==CUtype_Engine) && (_nrofflagbytes > 32))
-	{
-		if (_flagbytes[39] & 0x01)
-			*CCsup = true;
-		else
-			*CCsup = false;
-	}
-	else
-		*CCsup = false;
-	return true;
+	return _SSM2defsIface->hasIntegratedCC(CCsup);
 }
 
 
 bool SSMprotocol2::hasClearMemory(bool *CMsup)
 {
 	if (_state == state_needSetup) return false;
-	*CMsup = true;
-	return true;
+	return _SSM2defsIface->hasClearMemory(CMsup);
 }
 
 
 bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
-	if ((_CU==CUtype_Transmission) && (_nrofflagbytes > 32))
-	{
-		if (_flagbytes[39] & 0x02)
-			*CM2sup = true;
-		else
-			*CM2sup = false;
-	}
-	else
-		*CM2sup = false;
-	return true;
+	return _SSM2defsIface->hasClearMemory2(CM2sup);
 }
 
 
 bool SSMprotocol2::hasTestMode(bool *TMsup)
 {
 	if (_state == state_needSetup) return false;
-	if ((_CU==CUtype_Engine) && (_flagbytes[11] & 0x20))
-		*TMsup = true;
-	else 
-		*TMsup = false;
-	return true;
+	return _SSM2defsIface->hasTestMode(TMsup);
 }
 
 
 bool SSMprotocol2::hasActuatorTests(bool *ATsup)
 {
-	bool TMsup = false;
-	if (!hasTestMode(&TMsup))	// includes check of _status
-		return false;
-	*ATsup = false;
-	if ((_CU==CUtype_Engine) && TMsup)
-	{
-		if (_flagbytes[28] & 0x40)
-		{
-			if (_flagbytes[0] & 0x01)
-				*ATsup = true;
-		}
-	}
-	return true;
-}
-
-
-void SSMprotocol2::setupDTCdata()
-{
-	unsigned int addr = 0;
-	// Get raw DTC-definitions:
-	QStringList rawDefs;	
-	bool obdDTCs = !(_flagbytes[29] & 0x80);
-	if (_language == "de")
-	{
-		SSMprotocol2_def_de rawdefs_de;
-		if (obdDTCs)
-			rawDefs = rawdefs_de.OBDDTCrawDefs();
-		else
-			rawDefs = rawdefs_de.SUBDTCrawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		if (obdDTCs)
-			rawDefs = rawdefs_en.OBDDTCrawDefs();
-		else
-			rawDefs = rawdefs_en.SUBDTCrawDefs();
-	}
-	// Setup data of the supported DTCs:
-	_DTCdefs.clear();
-	if (_flagbytes[29] & 0x80)
-	{
-		for (addr=0x8E; addr<=0x98; addr++)
-			addDCdefs(addr, addr+22, rawDefs, &_DTCdefs);
-		return;
-	}
-	else if ((_flagbytes[29] & 0x10) || (_flagbytes[29] & 0x40))
-	{
-		for (addr=0x8E; addr<=0xAD; addr++)
-			addDCdefs(addr, addr+32, rawDefs, &_DTCdefs);
-	}
-	if (_flagbytes[28] & 0x01)
-	{
-		for (addr=0xF0; addr<=0xF3; addr++)
-			addDCdefs(addr, addr+4, rawDefs, &_DTCdefs);
-	}
-	if (_nrofflagbytes > 32)
-	{
-		if (_flagbytes[39] & 0x80)
-		{
-			for (addr=0x123; addr<=0x12A; addr++)
-				addDCdefs(addr, addr+8, rawDefs, &_DTCdefs);
-		}
-		if (_flagbytes[39] & 0x40)
-		{
-			for (addr=0x150; addr<=0x154; addr++)
-				addDCdefs(addr, addr+5, rawDefs, &_DTCdefs);
-		}
-		if (_flagbytes[39] & 0x20)
-		{
-			for (addr=0x160; addr<=0x164; addr++)
-				addDCdefs(addr, addr+5, rawDefs, &_DTCdefs);
-		}
-		if (_flagbytes[39] & 0x10)
-		{
-			for (addr=0x174; addr<=0x17A; addr++)
-				addDCdefs(addr, addr+7, rawDefs, &_DTCdefs);
-		}
-		if (_nrofflagbytes > 48)
-		{
-			if (_flagbytes[50] & 0x40)
-			{
-				for (addr=0x1C1; addr<=0x1C6; addr++)
-					addDCdefs(addr, addr+6, rawDefs, &_DTCdefs);
-				for (addr=0x20A; addr<=0x20D; addr++)
-					addDCdefs(addr, addr+4, rawDefs, &_DTCdefs);
-			}
-			if (_flagbytes[50] & 0x20)
-			{
-				for (addr=0x263; addr<=0x267; addr++)
-					addDCdefs(addr, addr+5, rawDefs, &_DTCdefs);
-			}
-		}
-	}
-}
-
-
-void SSMprotocol2::setupCCCCdata()
-{
-	bool supported = false;
-	unsigned int addr = 0;
-	// Check if CU is equipped with CC:
-	hasIntegratedCC(&supported);
-	if (!supported) return;
-	// Get raw CCCC-definitions:
-	QStringList CCrawDefs;
-	if (_language == "de")
-	{
-		SSMprotocol2_def_de rawdefs_de;
-		CCrawDefs = rawdefs_de.CCCCrawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		CCrawDefs = rawdefs_en.CCCCrawDefs();
-	}
-	// Setup data of the supported CCCCs:
-	_CCCCdefs.clear();
-	for (addr=0x133; addr<=0x136; addr++)
-		addDCdefs(addr, addr+4, CCrawDefs,  &_CCCCdefs);
-}
-
-
-void SSMprotocol2::setupSupportedMBs()
-{
-	QString mbdefline;
-	QString tmpstr;
-	int tmpbytenr = 0;
-	int tmpbitnr = 0;
-	bool tmpCUsupported = false;
-	int tmpprecision = 0;
-	mb_intl_dt tmpMB;
-	bool ok = false;
-	int k = 0;
-
-	_supportedMBs.clear();
-	// Select definitions depending on language:
-	QStringList mbrawdata;
-	if (_language == "de")
-	{
-		SSMprotocol2_def_de rawdefs_de;
-		mbrawdata = rawdefs_de.MBrawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		mbrawdata = rawdefs_en.MBrawDefs();
-	}
-	// Assort list of supported MBs:
-	for (k=0; k<mbrawdata.size(); k++)
-	{
-		// Get flagbyte address definition:
-		mbdefline = mbrawdata.at(k);
-		tmpstr = mbdefline.section(';', 0, 0);
-		tmpbytenr = tmpstr.toInt(&ok, 10);
-		// Check if flagbyte address is defined for our CU:
-		if (ok && (tmpbytenr <= _nrofflagbytes))
-		{
-			// Get flagbit definition:
-			tmpstr = mbdefline.section(';', 1, 1);
-			tmpbitnr = tmpstr.toInt();
-			// Check if CU supports this MB (if flagbit is set):
-			if ((tmpbitnr < 1) || (tmpbitnr > 8))
-				ok = false;
-			if ((ok) && (_flagbytes[tmpbytenr-1] & static_cast<unsigned char>(pow(2, (tmpbitnr-1)))))
-			{
-				// Check if MB is intended for this CU type:
-				tmpCUsupported = 0;
-				tmpstr = mbdefline.section(';', 2, 2);
-				tmpCUsupported = tmpstr.toInt();
-				if (_CU == CUtype_Engine)
-				{
-					tmpCUsupported = tmpstr.toUInt() & 0x01;
-				}
-				else if (_CU == CUtype_Transmission)
-				{
-					tmpCUsupported = tmpstr.toUInt() & 0x02;
-				}
-				if (tmpCUsupported == 1)
-				{
-					// Get memory address (low) definition:
-					tmpstr = mbdefline.section(';', 3, 3);
-					tmpMB.addr_low = tmpstr.toUInt(&ok, 16);
-					// Check if memory address (low) is valid:
-					if (ok && (tmpMB.addr_low > 0))
-					{
-						// Get memory address (high) definition:
-						tmpstr = mbdefline.section(';', 4, 4);
-						if (tmpstr.isEmpty())
-							tmpMB.addr_high = MEMORY_ADDRESS_NONE;
-						else
-							tmpMB.addr_high = tmpstr.toUInt(&ok, 16);
-						if (ok)
-						{
-							// Get title definition:
-							tmpMB.title = mbdefline.section(';', 5, 5);
-							// Check if title is available:
-							if (!tmpMB.title.isEmpty())
-							{
-								// Get scaling formula definition:
-								tmpMB.scaleformula = mbdefline.section(';', 7, 7);
-								// Check if scaling formula is available:
-								if (!tmpMB.scaleformula.isEmpty())
-								{
-									// Get precision and correct if necessary:
-									tmpstr = mbdefline.section(';', 8, 8);
-									tmpprecision = tmpstr.toInt(&ok, 10);
-									if ((ok) && (tmpprecision < 4) && (tmpprecision > -4))
-										tmpMB.precision = tmpprecision;
-									else
-										tmpMB.precision = 1;
-									// Get unit:
-									tmpMB.unit = mbdefline.section(';', 6, 6);
-									// ***** MB IS SUPPORTED BY CU AND DEFINITION IS VALID *****
-									// Put MB data on the list:
-									_supportedMBs.push_back(tmpMB);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-
-void SSMprotocol2::setupSupportedSWs()
-{
-	QString swdefline;
-	QString tmpstr;
-	int tmpbytenr = 0;
-	int tmpbitnr = 0;
-	bool tmpCUsupported = false;
-	sw_intl_dt tmpSW;
-	bool ok = false;
-	int k = 0;
-
-	_supportedSWs.clear();
-	// Select definitions depending on language:
-	QStringList swrawdata;
-	if (_language == "de")
-	{
-		SSMprotocol2_def_de rawdefs_de;
-		swrawdata = rawdefs_de.SWrawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		swrawdata = rawdefs_en.SWrawDefs();
-	}
-	// Assort list of supported switches:
-	for (k=0; k<swrawdata.size(); k++)
-	{
-		// Get flagbyte address definition:
-		swdefline = swrawdata.at(k);
-		tmpstr = swdefline.section(';', 0, 0);
-		tmpbytenr = tmpstr.toInt(&ok, 10);
-		// Check if flagbyte address is defined for our CU:
-		if (ok && (tmpbytenr <= _nrofflagbytes))
-		{
-			// Get flagbit definition:
-			tmpstr = swdefline.section(';', 1, 1);
-			tmpbitnr = tmpstr.toInt();
-			// Check if CU supports this switch (if flagbit is set):
-			if ((tmpbitnr < 1) || (tmpbitnr > 8))
-				ok = false;
-			if ((ok) && (_flagbytes[tmpbytenr-1] & static_cast<unsigned char>(pow(2, (tmpbitnr-1)) )))
-			{
-				// Check if switch is intended for this CU type:
-				tmpCUsupported = 0;
-				tmpstr = swdefline.section(';', 2, 2);
-				tmpCUsupported = tmpstr.toInt();
-				if (_CU == CUtype_Engine)
-				{
-					tmpCUsupported = tmpstr.toUInt() & 0x01;
-				}
-				else if (_CU == CUtype_Transmission)
-				{
-					tmpCUsupported = tmpstr.toUInt() & 0x02;
-				}
-				if (tmpCUsupported == 1)
-				{
-					// Get memory address definition:
-					tmpstr = swdefline.section(';', 3, 3);
-					tmpSW.byteAddr = tmpstr.toInt(&ok, 16);
-					// Check if memory address is valid:
-					if (ok && (tmpSW.byteAddr > 0))
-					{
-						// Get title definition:
-						tmpSW.title = swdefline.section(';', 4, 4);
-						// Check if title is available:
-						if (!tmpSW.title.isEmpty())
-						{
-							// Get unit definition:
-							tmpSW.unit = swdefline.section(';', 5, 5);
-							if (!tmpSW.unit.isEmpty())
-							{
-								// ***** SWITCH IS SUPPORTED BY CU AND DEFINITION IS VALID *****
-								// Put switch data on the list:
-								tmpSW.bitAddr = static_cast<unsigned char>(tmpbitnr);
-								_supportedSWs.push_back(tmpSW);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-
-void SSMprotocol2::setupAdjustmentsData()
-{
-	QString defline = "";
-	QString tmphelpstr = "";
-	unsigned int tmpflagbyte = 0;
-	unsigned int tmpflagbit = 0;
-	unsigned int tmpsidbval = 0;
-	unsigned int tmpCU = 0;
-	adjustment_intl_dt tmpadjustment;
-	int k = 0;
-	bool ok = false;
-	bool supported = false;
-	QStringList adjustmentsrawdata;
-
-	_adjustments.clear();
-	if (_language == "de")
-	{
-		SSMprotocol2_def_de rawdefs_de;
-		adjustmentsrawdata = rawdefs_de.AdjustmentRawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		adjustmentsrawdata = rawdefs_en.AdjustmentRawDefs();
-	}
-	for (k=0; k<adjustmentsrawdata.size(); k++)
-	{
-		defline = adjustmentsrawdata.at(k);
-		tmphelpstr = defline.section(';', 0, 0);
-		supported = false;
-		if (tmphelpstr.count('-') == 1)
-		{
-			tmpflagbyte = tmphelpstr.section('-', 0, 0).toUInt(&ok, 10);
-			if (ok && (tmpflagbyte > 0) && (tmpflagbyte < _nrofflagbytes))
-			{
-				tmpflagbit = tmphelpstr.section('-', 1, 1).toUInt(&ok, 10);
-				if (ok && (tmpflagbit > 0) && (tmpflagbit < 9))
-				{
-					if (_flagbytes[tmpflagbyte-1] & static_cast<unsigned char>(pow(2,(tmpflagbit-1))))
-						supported = true;
-				}
-			}
-		}
-		else if (tmphelpstr.size() == 6)
-		{
-			tmpsidbval = tmphelpstr.mid(0, 2).toUInt(&ok, 16);
-			if (ok && (tmpsidbval == static_cast<unsigned char>(_SYS_ID[0])))
-			{
-				tmpsidbval = tmphelpstr.mid(2, 2).toUInt(&ok, 16);
-				if (ok && (tmpsidbval == static_cast<unsigned char>(_SYS_ID[1])))
-				{
-					tmpsidbval = tmphelpstr.mid(4, 2).toUInt(&ok, 16);
-					if (ok && (tmpsidbval == static_cast<unsigned char>(_SYS_ID[2])))
-						supported = true;
-				}
-			}
-		}
-		if (supported)
-		{
-			tmpCU = defline.section(';', 1, 1).toUInt(&ok, 10);
-			if (ok)
-			{
-				if ( ((_CU == CUtype_Engine) && (tmpCU == 0)) || ((_CU == CUtype_Transmission) && (tmpCU == 1)) )
-				{
-					tmpadjustment.AddrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
-					if (ok && (tmpadjustment.AddrLow > 0))
-					{
-						tmpadjustment.AddrHigh = defline.section(';', 3, 3).toUInt(&ok, 16);
-						if (!ok || (tmpadjustment.AddrHigh < 1))
-							tmpadjustment.AddrHigh = 0;
-						tmpadjustment.title = defline.section(';', 4, 4);
-						if (tmpadjustment.title.length() > 0)
-						{
-							tmpadjustment.unit = defline.section(';', 5, 5);	// may be empty
-							tmphelpstr = defline.section(';', 6, 6);
-							tmpadjustment.rawMin = tmphelpstr.toUInt(&ok, 10);
-							if (ok)
-							{
-								tmphelpstr = defline.section(';', 7, 7);
-								tmpadjustment.rawMax = tmphelpstr.toUInt(&ok, 10);
-								if (ok)
-								{
-									tmphelpstr = defline.section(';', 8, 8);
-									tmpadjustment.rawDefault = tmphelpstr.toUInt(&ok, 10);
-									if (ok)
-									{
-										tmpadjustment.formula = defline.section(';', 9, 9);
-										if (tmpadjustment.formula.length() > 0)
-										{
-											tmphelpstr = defline.section(';', 10, 10);
-											if (tmphelpstr.length() == 0)
-												tmphelpstr = "0";
-											tmpadjustment.precision = tmphelpstr.toInt(&ok, 10);
-											if (ok && (tmpadjustment.precision<=10) && (tmpadjustment.precision>=-10))
-												_adjustments.push_back(tmpadjustment);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	if (_state == state_needSetup) return false;
+	return _SSM2defsIface->hasActuatorTests(ATsup);
 }
 
 
 void SSMprotocol2::setupActuatorTestData()
 {
-	QString tmpstr = "";
-	unsigned int tmpflagbyte = 0;
-	unsigned int tmpflagbit = 0;
-	actuator_dt tmpactuator;
-	unsigned char tmpbitadr = 0;
-	bool fbvalid = true;
-	bool ok = false;
 	bool aol = false;
-	int k = 0;
-	unsigned int m = 0;
-	QStringList actuatorsrawdata;
-
-	_actuators.clear();
-	_allActByteAddr.clear();
-	if (_language == "de")
+	if (!_SSM2defsIface->actuatorTests(&_actuators))
+		return;
+	for (unsigned int n=0; n<_actuators.size(); n++)
 	{
-		SSMprotocol2_def_de rawdefs_de;
-		actuatorsrawdata = rawdefs_de.ActuatorRawDefs();
-	}
-	else
-	{
-		SSMprotocol2_def_en rawdefs_en;
-		actuatorsrawdata = rawdefs_en.ActuatorRawDefs();
-	}
-	for (k=0; k<actuatorsrawdata.size(); k++)
-	{
-		fbvalid = true;
-		tmpstr = actuatorsrawdata.at(k).section(';', 0, 0);
-		if (tmpstr.size() > 0)
+		// Check if byte address is already on the list:
+		for (unsigned int m=0; m<_allActByteAddr.size(); m++)
 		{
-			tmpflagbyte = tmpstr.toUInt();
-			if ((tmpflagbyte < 1) || (tmpflagbyte > _nrofflagbytes))
-				fbvalid = false;
-		}
-		if (fbvalid)
-		{
-			tmpstr = actuatorsrawdata.at(k).section(';', 1, 1);
-			if ((tmpstr.size() > 0) == (tmpflagbyte == 0))//Flagbit definition existiert UND zulässige Flagbytedefinition existiert
+			if (_allActByteAddr.at(m) == _actuators.at(n).byteadr)
 			{
-				fbvalid = false;
-			}
-			else if (tmpstr.size() > 0)
-			{
-				tmpflagbit = tmpstr.toUInt();
-				if ((tmpflagbit < 1) || (tmpflagbit > 8))
-					fbvalid = false;
-				else
-				{
-					// Check if flagbyte is set:
-					if (!(_flagbytes[tmpflagbyte-1] & static_cast<unsigned char>(pow(2, tmpflagbit-1))))
-						fbvalid = false;
-				}
+				aol = true;
+				break;
 			}
 		}
-		if (fbvalid)
-		{
-			tmpactuator.byteadr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
-			if (ok && (tmpactuator.byteadr > 0))
-			{
-				tmpbitadr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt();
-				if ((tmpbitadr > 0) && (tmpbitadr < 9))
-				{
-					tmpactuator.title = actuatorsrawdata.at(k).section(';', 4, 4);
-					if (tmpactuator.title.length() > 0)
-					{
-						tmpactuator.bitadr = tmpbitadr;
-						_actuators.push_back( tmpactuator );
-						// Check if byte address is already on the list:
-						for (m=0; m<_allActByteAddr.size(); m++)
-						{
-							if (_allActByteAddr.at(m) == tmpactuator.byteadr)
-							{
-								aol = true;
-								break;
-							}
-						}
-						// Put address on addresses list (if not duplicate):
-						if (!aol)
-							_allActByteAddr.push_back( tmpactuator.byteadr );
-						else
-							aol = false;
-					}
-				}
-			}
-		}
+		// Put address on addresses list (if not duplicate):
+		if (!aol)
+			_allActByteAddr.push_back( _actuators.at(n).byteadr );
+		else
+			aol = false;
 	}
-}
-
-
-void SSMprotocol2::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs)
-{
-	dc_defs_dt tmpdef;
-	QStringList tmpdefparts;
-	unsigned int tmpdtcaddr_1 = 0;
-	unsigned int tmpdtcaddr_2 = 0;
-	unsigned int tmpbitaddr = 0;
-	bool ok = false;
-
-	tmpdef.byteAddr_currentOrTempOrLatest = currOrTempOrLatestDCsAddr;
-	tmpdef.byteAddr_historicOrMemorized = histOrMemDCsAddr;
-	for (unsigned char k=0; k<8; k++)
-	{
-		tmpdef.code[k] = "???";
-		tmpdef.title[k] = "     ???     (0x" + QString::number(currOrTempOrLatestDCsAddr,16).toUpper() + "/0x" + QString::number(histOrMemDCsAddr,16).toUpper() + " Bit " + QString::number(k+1) + ")";
-	}
-	for (int m=0; m<rawDefs.size(); m++)
-	{
-		tmpdefparts = rawDefs.at(m).split(';');
-		if (tmpdefparts.size() == 5)
-		{
-			tmpdtcaddr_1 = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary/latest/D-Check DCs memory address
-			tmpdtcaddr_2 = tmpdefparts.at(1).toUInt(&ok, 16);  // historic/memorized DCs memory address
-			if ((ok) && (tmpdtcaddr_1 == currOrTempOrLatestDCsAddr) && (tmpdtcaddr_2 == histOrMemDCsAddr))
-			{
-				tmpbitaddr = tmpdefparts.at(2).toUInt(); // flagbit
-				tmpdef.code[ tmpbitaddr-1 ] = tmpdefparts.at(3);
-				tmpdef.title[ tmpbitaddr-1 ] = tmpdefparts.at(4);
-			}
-		}
-	}
-	defs->push_back(tmpdef);
-	/* NOTE:	- DCs with missing definitions are displayed with address byte + bit in the title field
-			- DCs with existing definition and empty code- AND title-fields are ignored */
 }
 
 
@@ -894,7 +321,7 @@ bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 		if (_DTCdefs.size())
 			retDCgroups |= temporaryDTCs_DCgroup | memorizedDTCs_DCgroup;
 	}
-	if (!hasIntegratedCC(&supported))
+	if (!_SSM2defsIface->hasIntegratedCC(&supported))
 		return false;
 	if (supported)
 	{
@@ -921,7 +348,7 @@ bool SSMprotocol2::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 {
 	unsigned char k = 0;
 	bool ATsup = false;
-	if (hasActuatorTests(&ATsup))
+	if (_SSM2defsIface->hasActuatorTests(&ATsup))
 	{
 		if (ATsup)
 		{
@@ -938,7 +365,7 @@ bool SSMprotocol2::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 bool SSMprotocol2::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 {
 	bool ATsup = false;
-	if (hasActuatorTests(&ATsup))
+	if (_SSM2defsIface->hasActuatorTests(&ATsup))
 	{
 		if (ATsup && (_selectedActuatorTestIndex != 255))
 		{
@@ -1070,7 +497,7 @@ bool SSMprotocol2::getVIN(QString *VIN)
 	unsigned int vinstartaddr = 0;
 	unsigned int vinaddr[17] = {0,};
 	unsigned int k = 0;
-	if (!hasVINsupport(&VINsup))
+	if (!_SSM2defsIface->hasVINsupport(&VINsup))
 		return false;
 	if (!VINsup) return false;
 	VIN->clear();
@@ -1122,7 +549,7 @@ bool SSMprotocol2::isInTestMode(bool *testmode)
 	unsigned int dataadr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
-	if (!hasTestMode(&TMsup) || !TMsup) return false;
+	if (!_SSM2defsIface->hasTestMode(&TMsup) || !TMsup) return false;
 	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
 	{
 		resetCUdata();
@@ -1149,7 +576,7 @@ bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 	}
 	else if (level == CMlevel_2)
 	{
-		if (!hasClearMemory2(&CM2sup) || CM2sup==false) return false;
+		if (!_SSM2defsIface->hasClearMemory2(&CM2sup) || CM2sup==false) return false;
 		val = 0x20;
 	}
 	else
@@ -1170,7 +597,7 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 	bool ImmoSup = false;
 	if (_state != state_normal) return false;
-	if (!hasImmobilizer(&ImmoSup) || ImmoSup==false) return false;
+	if (!_SSM2defsIface->hasImmobilizer(&ImmoSup) || ImmoSup==false) return false;
 	char checkvalue = 0;
 	unsigned int readcheckadr = 0x8B;
 	// Write test-pattern:
@@ -1211,7 +638,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (hasIntegratedCC(&CCsup))
+	if (_SSM2defsIface->hasIntegratedCC(&CCsup))
 		CCmemSup = (_flagbytes[41] & 0x04);
 	else
 		return false;
@@ -1252,10 +679,10 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );
 		}
 	}
-	// Check if min. 1 Address to read:
+	// Check if min. 1 address to read:
 	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.at(0) == 0x000061) && (DCqueryAddrList.size() < 2)))
 		return false;
-	// Start diagostic code reading:
+	// Start diagostic codes reading:
 	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
 	if (started)
 	{
@@ -1433,7 +860,7 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Validate selected test:
-	ok = hasActuatorTests(&ATsup);
+	ok = _SSM2defsIface->hasActuatorTests(&ATsup);
 	if (!ok || (ATsup == false) || (actuatorTestIndex >= _actuators.size()))
 		return false;
 	// Check if control unit is in test mode:
@@ -1521,7 +948,7 @@ bool SSMprotocol2::stopAllActuators()
 	bool enginerunning = false;
 	if (_state != state_normal) return false;
 	// Check if actuator tests are supported:
-	ok = hasActuatorTests(&ATsup);
+	ok = _SSM2defsIface->hasActuatorTests(&ATsup);
 	if (!ok || !ATsup)
 		return false;
 	// Check if control unit is in test mode:

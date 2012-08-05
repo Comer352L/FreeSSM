@@ -28,9 +28,7 @@
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
-#include "SSMprotocol2_ID.h"
-#include "SSMprotocol2_def_en.h"
-#include "SSMprotocol2_def_de.h"
+#include "SSM2definitionsInterface.h"
 
 
 
@@ -79,6 +77,7 @@ public:
 
 private:
 	SSMP2communication *_SSMP2com;
+	SSM2definitionsInterface *_SSM2defsIface;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;
@@ -90,15 +89,7 @@ private:
 	// *** Selection data ***:
 	unsigned char _selectedActuatorTestIndex;
 
-	// CU-FEATURES SETUP FUNCTIONS:
-	void setupDTCdata();
-	void setupCCCCdata();
-	void setupSupportedMBs();
-	void setupSupportedSWs();
-	void setupAdjustmentsData();
 	void setupActuatorTestData();
-	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
-	// PREPARATION AND EVALUATION FUNCTIONS:
 	bool validateVIN(char VIN[17]);
 
 private slots:
