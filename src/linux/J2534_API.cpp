@@ -47,13 +47,13 @@ J2534_API::J2534_API()
 
 J2534_API::~J2534_API()
 {
-	bool ok = false;
 	if (_J2534LIB)
 	{
-		ok = !dlclose( _J2534LIB );
 #ifdef __J2534_API_DEBUG__
-		if (!ok)
+		if (!dlclose( _J2534LIB ))
 			std::cout << "J2534interface::~J2534interface(): dlclose() failed with error " << dlerror() << "\n";
+#else
+		dlclose( _J2534LIB );
 #endif
 	}
 }
@@ -63,7 +63,6 @@ bool J2534_API::selectLibrary(std::string libPath)
 {
 	if (!libPath.size()) return false;
 	void *newJ2534LIB = NULL;
-	bool ok = false;
 	newJ2534LIB = dlopen( libPath.c_str(), RTLD_LAZY | RTLD_GLOBAL );	// RTLD_GLOBAL ???
 	if (newJ2534LIB)
 	{
@@ -72,11 +71,10 @@ bool J2534_API::selectLibrary(std::string libPath)
 		{
 #ifdef __J2534_API_DEBUG__
 			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() mehtods !\n";
-#endif
-			ok = !dlclose( newJ2534LIB );
-#ifdef __J2534_API_DEBUG__
-			if (!ok)
+			if (!dlclose( newJ2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): dlclose() failed with error " << dlerror() << "\n";
+#else
+			dlclose( newJ2534LIB );
 #endif
 			return false;
 		}
@@ -88,10 +86,11 @@ bool J2534_API::selectLibrary(std::string libPath)
 		// Close old library:
 		if (_J2534LIB)
 		{
-			ok = !dlclose( _J2534LIB );
 #ifdef __J2534_API_DEBUG__
-			if (!ok)
+			if (!dlclose( _J2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): dlclose() failed with error " << dlerror() << "\n";
+#else
+			dlclose( _J2534LIB );
 #endif
 		}
 		// Save data:
