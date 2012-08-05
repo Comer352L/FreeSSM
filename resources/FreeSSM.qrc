@@ -1,5 +1,8 @@
 <RCC>
-  <qresource prefix="/" >
+  <qresource prefix="/">
+    <file>icons/freessm/64x64/ABS.png</file>
+    <file>icons/freessm/64x64/CruiseControl.png</file>
+    <file>icons/freessm/64x64/AirCon.png</file>
     <file>icons/oxygen/32x32/fork.png</file>
     <file>icons/chrystal/22x22/input_devices_settings.png</file>
     <file>icons/freessm/24x24/reset-min-max.png</file>

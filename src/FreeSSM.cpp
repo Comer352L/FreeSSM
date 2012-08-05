@@ -209,7 +209,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	// CONNECT SIGNALS/SLOTS:
 	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
-	connect( abs_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	connect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	connect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
 	connect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
 	connect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
@@ -225,7 +225,7 @@ FreeSSM::~FreeSSM()
 	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
-	disconnect( abs_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	disconnect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
 	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
