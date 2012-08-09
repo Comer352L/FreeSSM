@@ -105,6 +105,7 @@ void SSMprotocol2::resetCUdata()
 	_DTCdefs.clear();
 	_DTC_fmt_OBD2 = false;
 	_CCCCdefs.clear();
+	_memCCs_supported = false;
 	// Reset MB/SW-data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
@@ -207,7 +208,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	_SSM2defsIface = new SSM2definitionsInterface(_language);
 	// Get definitions of the supported diagnostic codes:
 	_SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
-	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs);
+	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
 	// Get supported MBs and SWs:
 	_SSM2defsIface->measuringBlocks(&_supportedMBs);
 	_SSM2defsIface->switches(&_supportedSWs);
@@ -327,7 +328,7 @@ bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 	if (supported)
 	{
 		retDCgroups += CClatestCCs_DCgroup;
-		if (_flagbytes[41] & 0x04)
+		if (_memCCs_supported)
 			retDCgroups |= CCmemorizedCCs_DCgroup;
 	}
 	*DCgroups = retDCgroups;
@@ -634,14 +635,11 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	std::vector <unsigned int> DCqueryAddrList;
 	unsigned char k = 0;
 	bool CCsup = false;
-	bool CCmemSup = false;
 	bool started;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (_SSM2defsIface->hasIntegratedCC(&CCsup))
-		CCmemSup = (_flagbytes[41] & 0x04);
-	else
+	if (!_SSM2defsIface->hasIntegratedCC(&CCsup))
 		return false;
 	// Check argument:
 	if (DCgroups < 1 || DCgroups > 63) return false;
@@ -651,7 +649,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	{
 		if (!CCsup)
 			return false;
-		if ( (DCgroups > 31) && (!CCmemSup) )
+		if ( (DCgroups > 31) && (!_memCCs_supported) )
 			return false;
 	}
 	// Setup diagnostic codes addresses list:
@@ -674,7 +672,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 			for (k=0; k<_CCCCdefs.size(); k++)
 				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest );
 		}
-		if ((DCgroups & CCmemorizedCCs_DCgroup) && CCmemSup)	// CC memorized cancel codes
+		if ((DCgroups & CCmemorizedCCs_DCgroup) && _memCCs_supported)	// CC memorized cancel codes
 		{
 			for (k=0; k<_CCCCdefs.size(); k++)
 				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );

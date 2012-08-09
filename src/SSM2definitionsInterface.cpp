@@ -157,7 +157,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 }
 
 
-bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes)
+bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported)
 {
 	unsigned int addr = 0;
 	bool CCsup = false;
@@ -183,6 +183,7 @@ bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> 
 	// Setup data of the supported CCCCs:
 	for (addr=0x133; addr<=0x136; addr++)
 		addDCdefs(addr, addr+4, CCrawDefs, cancelCodes);
+	*memCC_supported = (_flagbytes[41] & 0x04);
 	return true;
 }
 

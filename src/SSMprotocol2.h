@@ -82,6 +82,7 @@ private:
 	bool _DTC_fmt_OBD2;
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;
+	bool _memCCs_supported;
 	// Adjustment Values:
 	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:
