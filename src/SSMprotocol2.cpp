@@ -103,6 +103,7 @@ void SSMprotocol2::resetCUdata()
 	// *** RESET BASIC DATA ***:
 	// Reset DC-data:
 	_DTCdefs.clear();
+	_DTC_fmt_OBD2 = false;
 	_CCCCdefs.clear();
 	// Reset MB/SW-data:
 	_supportedMBs.clear();
@@ -205,7 +206,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	/* Get definitions for this control unit */
 	_SSM2defsIface = new SSM2definitionsInterface(_language);
 	// Get definitions of the supported diagnostic codes:
-	_SSM2defsIface->diagnosticCodes(&_DTCdefs);
+	_SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
 	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs);
 	// Get supported MBs and SWs:
 	_SSM2defsIface->measuringBlocks(&_supportedMBs);
@@ -311,7 +312,7 @@ bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 	int retDCgroups = 0;
 	bool supported = false;
 	if (_state == state_needSetup) return false;
-	if (_flagbytes[29] & 0x80)
+	if (!_DTC_fmt_OBD2)
 	{
 		if (_DTCdefs.size())
 			retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;

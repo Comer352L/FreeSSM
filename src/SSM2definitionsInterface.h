@@ -52,7 +52,7 @@ public:
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
 
-	bool diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes);
+	bool diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2);
 	bool cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);

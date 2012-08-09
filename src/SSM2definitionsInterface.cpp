@@ -70,7 +70,7 @@ bool SSM2definitionsInterface::systemDescription(QString *description)
 }
 
 
-bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes)
+bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2)
 {
 	unsigned int addr = 0;
 	QStringList rawDefs;
@@ -80,11 +80,11 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
-	obdDTCs = !(_flagbytes[29] & 0x80);
+	*fmt_OBD2 = !(_flagbytes[29] & 0x80);
 	if (_language == "de")
 	{
 		SSMprotocol2_def_de rawdefs_de;
-		if (obdDTCs)
+		if (*fmt_OBD2)
 			rawDefs = rawdefs_de.OBDDTCrawDefs();
 		else
 			rawDefs = rawdefs_de.SUBDTCrawDefs();
@@ -92,14 +92,14 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 	else
 	{
 		SSMprotocol2_def_en rawdefs_en;
-		if (obdDTCs)
+		if (*fmt_OBD2)
 			rawDefs = rawdefs_en.OBDDTCrawDefs();
 		else
 			rawDefs = rawdefs_en.SUBDTCrawDefs();
 	}
 	// Setup data of the supported DTCs:
 	diagnosticCodes->clear();
-	if (_flagbytes[29] & 0x80)
+	if (!obdDTCs)
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 			addDCdefs(addr, addr+22, rawDefs, diagnosticCodes);
@@ -182,7 +182,7 @@ bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> 
 	}
 	// Setup data of the supported CCCCs:
 	for (addr=0x133; addr<=0x136; addr++)
-		addDCdefs(addr, addr+4, CCrawDefs,  cancelCodes);
+		addDCdefs(addr, addr+4, CCrawDefs, cancelCodes);
 	return true;
 }
 

@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.h - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,7 @@ private:
 	SSMP2communication *_SSMP2com;
 	SSM2definitionsInterface *_SSM2defsIface;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
+	bool _DTC_fmt_OBD2;
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;
 	// Adjustment Values:
