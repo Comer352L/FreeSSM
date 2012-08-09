@@ -1,7 +1,7 @@
 /*
  * SSMP1communication.h - Communication Thread for the old SSM-protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,12 +42,12 @@ public:
 	bool getCUdata(char *ID, char *flagbytes, unsigned char *nrofflagbytes);
 	bool readAddress(unsigned int addr, char * databyte);
 	bool readAddresses(std::vector<unsigned int> addr, std::vector<char> * data);
-	bool readAddress_permanent(unsigned int addr);
-	bool readAddresses_permanent(std::vector<unsigned int> addr);
+	bool readAddress_permanent(unsigned int addr, int delay=0);
+	bool readAddresses_permanent(std::vector<unsigned int> addr, int delay=0);
 	bool writeAddress(unsigned int addr, char databyte, char *databytewritten = NULL);
 	bool writeAddresses(std::vector<unsigned int> addr, std::vector<char> data, std::vector<char> *databyteswritten = NULL);
-	bool writeAddress_permanent(unsigned int addr, char databyte);
-	bool writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data);
+	bool writeAddress_permanent(unsigned int addr, char databyte, int delay=0);
+	bool writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data, int delay=0);
 	bool stopCommunication();
 
 private:
@@ -61,6 +61,7 @@ private:
 	std::vector<unsigned int> _addresses;	/* list of addresses for the read/write operation(s) */
 	std::vector<char> _data;		/* processed data from read/Rom-ID operation(s)      OR
 						   data to be written during the write operation(s)  */
+	int _delay;
 
 	bool doSingleCommOperation();
 	void run();

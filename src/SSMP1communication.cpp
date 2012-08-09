@@ -1,7 +1,7 @@
 /*
  * SSMP1communication.cpp - Communication Thread for the old SSM-protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM
 	_cu = cu;
 	_errRetries = errRetries;
 	_CommOperation = comOp_noCom;
+	_delay = 0;
 	_result = false;
 	_abort = false;
 }
@@ -144,37 +145,39 @@ bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 }
 
 
-bool SSMP1communication::readAddress_permanent(unsigned int addr)
+bool SSMP1communication::readAddress_permanent(unsigned int addr, int delay)
 {
-	return readAddresses_permanent(std::vector<unsigned int>(1,addr));
+	return readAddresses_permanent(std::vector<unsigned int>(1,addr), delay);
 }
 
 
-bool SSMP1communication::readAddresses_permanent(std::vector<unsigned int> addr)
+bool SSMP1communication::readAddresses_permanent(std::vector<unsigned int> addr, int delay)
 {
 	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0)) return false;
 	_CommOperation = comOp_read_p;
 	// Prepare buffers:
 	_addresses = addr;
+	_delay = delay;
 	// Start permanent reading:
 	start();
 	return isRunning();
 }
 
 
-bool SSMP1communication::writeAddress_permanent(unsigned int addr, char databyte)
+bool SSMP1communication::writeAddress_permanent(unsigned int addr, char databyte, int delay)
 {
-	return writeAddresses_permanent(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte));
+	return writeAddresses_permanent(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte), delay);
 }
 
 
-bool SSMP1communication::writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data)
+bool SSMP1communication::writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data, int delay)
 {
 	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0) || (data.size()==0) || (addr.size()!=data.size())) return false;
 	_CommOperation = comOp_write_p;
 	// Prepare buffers:
 	_addresses = addr;
 	_data = data;
+	_delay = delay;
 	// Start permanent writing:
 	start();
 	return isRunning();
@@ -238,6 +241,7 @@ void SSMP1communication::run()
 	bool setAddr = true;
 	unsigned char errmax = 3;
 	char errcount = 0;
+	int delay = 0;
 
 	// Synchronise with main-thread:
 	_mutex.lock();
@@ -246,6 +250,7 @@ void SSMP1communication::run()
 	addresses = _addresses;
 	data = _data;
 	errmax = _errRetries + 1;
+	delay = _delay;
 	_result = false;
 	_abort = false;
 	_mutex.unlock();
@@ -362,6 +367,8 @@ void SSMP1communication::run()
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
 				emit recievedData(data, duration_ms);
+				// Wait for the desired delay time:
+				if (delay > 0) msleep(delay);
 			}
 		}
 		else
