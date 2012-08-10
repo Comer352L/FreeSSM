@@ -206,6 +206,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
 	_SSM2defsIface = new SSM2definitionsInterface(_language);
+	_SSM2defsIface->selectControlUnitID(_CU, _SYS_ID, _ROM_ID, _flagbytes, _nrofflagbytes);
 	// Get definitions of the supported diagnostic codes:
 	_SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
 	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
