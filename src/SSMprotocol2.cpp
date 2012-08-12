@@ -177,14 +177,14 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 				{
 					_SSMP2com->setCUaddress(0x02);
 					if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
-						return result_commError;
+						goto commError;
 				}
 				else
-					return result_commError;
+					goto commError;
 			}
 		}
 		else
-			return result_commError;
+			goto commError;
 	}
 	_SSMP2com->setRetriesOnError(2);
 	// Ensure that ignition switch is ON:
@@ -193,11 +193,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
 		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
-		{
-			delete _SSMP2com;
-			_SSMP2com = NULL;
-			return result_commError;
-		}
+			goto commError;
 	}
 	_CU = CU;
 	_state = state_normal;
@@ -218,6 +214,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	// Get actuator test data:
 	setupActuatorTestData();
 	return result_success;
+	
+commError:
+	delete _SSMP2com;
+	_SSMP2com = NULL;
+	return result_commError;
 }
 
 

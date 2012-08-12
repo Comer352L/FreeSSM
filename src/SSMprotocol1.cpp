@@ -150,7 +150,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		ok = _SSMP1com->getCUdata(_SYS_ID, _flagbytes, &_nrofflagbytes);
 	}
 	if (!ok)
+	{
+		delete _SSMP1com;
+		_SSMP1com = NULL;
 		return result_commError;
+	}
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
