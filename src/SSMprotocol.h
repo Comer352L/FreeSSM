@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -144,42 +144,42 @@ public:
 	virtual protocol_dt protocolType() = 0;
 	std::string getSysID();
 	std::string getROMID();
-	virtual bool getSystemDescription(QString *sysdescription) = 0;
-	virtual bool hasOBD2system(bool *OBD2) = 0;
-	virtual bool hasVINsupport(bool *VINsup) = 0;
-	virtual bool hasImmobilizer(bool *ImmoSup) = 0;
-	virtual bool hasIntegratedCC(bool *CCsup) = 0;
+	bool getSystemDescription(QString *sysdescription);
+	bool hasOBD2system(bool *OBD2);
+	virtual bool hasVINsupport(bool *VINsup);
+	bool hasImmobilizer(bool *ImmoSup);
+	virtual bool hasIntegratedCC(bool *CCsup);
 	virtual bool hasClearMemory(bool *CMsup) = 0;
-	virtual bool hasClearMemory2(bool *CM2sup) = 0;
-	virtual bool hasTestMode(bool *TMsup) = 0;
-	virtual bool hasActuatorTests(bool *ATsup) = 0;
+	virtual bool hasClearMemory2(bool *CM2sup);
+	bool hasTestMode(bool *TMsup);
+	bool hasActuatorTests(bool *ATsup);
 	virtual bool getSupportedDCgroups(int *DCgroups) = 0;
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(std::vector<mb_dt> *supportedMBs);
 	bool getSupportedSWs(std::vector<sw_dt> *supportedSWs);
 	bool getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
-	virtual bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments) = 0;
-	virtual bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
-	virtual bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
+	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
+	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
+	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
 	// COMMUNICATION BASED FUNCTIONS:
-	virtual bool isEngineRunning(bool *isrunning) = 0;
-	virtual bool isInTestMode(bool *testmode);
 	virtual bool getVIN(QString *VIN);
-	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
-	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
-	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
-	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
-	virtual bool stopAllActuators();
 	virtual bool startDCreading(int DCgroups) = 0;
 	bool restartDCreading();
 	virtual bool stopDCreading() = 0;
 	virtual bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList) = 0;
 	bool restartMBSWreading();
 	virtual bool stopMBSWreading() = 0;
-	virtual bool startActuatorTest(unsigned char actuatorTestIndex);
-	virtual bool restartActuatorTest();
-	virtual bool stopActuatorTesting();
+	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;
+	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues) = 0;
+	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue) = 0;
+	virtual bool startActuatorTest(unsigned char actuatorTestIndex) = 0;
+	bool restartActuatorTest();
+	virtual bool stopActuatorTesting() = 0;
+	virtual bool stopAllActuators() = 0;
+	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
+	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
+	virtual bool isEngineRunning(bool *isrunning) = 0;
+	virtual bool isInTestMode(bool *testmode) = 0;
 	bool stopAllPermanentOperations();
 	virtual bool waitForIgnitionOff() = 0;
 
@@ -191,24 +191,36 @@ protected:
 	// *** CONTROL UNIT RAW DATA ***:
 	char _SYS_ID[3];
 	char _ROM_ID[5];
-	char _flagbytes[96];
-	unsigned char _nrofflagbytes;
+	QString _sysDescription;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
+	bool _has_OBD2;
+	bool _has_Immo;
+	bool _has_TestMode;
+	bool _has_ActTest;
+	bool _has_MB_engineSpeed;
+	bool _has_SW_ignition;
 	// Diagnostic Trouble Codes:
 	std::vector<dc_defs_dt> _DTCdefs;
+	bool _DTC_fmt_OBD2;
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;
-	// *** Temporary (operation related) data ***:
-	std::vector<unsigned int> _selMBsSWsAddr;
-	// *** Selection data ***:
+	// Adjustment Values:
+	std::vector<adjustment_intl_dt> _adjustments;
+	// Actuator Tests:
+	std::vector<actuator_dt> _actuators;
+	std::vector<unsigned int> _allActByteAddr;
+	// *** Selection data (temporary) ***:
 	int _selectedDCgroups;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
+	std::vector<unsigned int> _selMBsSWsAddr;
+	unsigned char _selectedActuatorTestIndex;
 
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	void assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues);
+	void setupActuatorTestAddrList();
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
@@ -226,6 +238,7 @@ signals:
 
 protected slots:
 	void processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms);
+	unsigned int processDTCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:
 	virtual void resetCUdata() = 0;

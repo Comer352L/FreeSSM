@@ -24,7 +24,6 @@
 SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
 	_SSMP2com = NULL;
-	_SSM2defsIface = NULL;
 	resetCUdata();
 }
 
@@ -90,17 +89,22 @@ void SSMprotocol2::resetCUdata()
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 	// RESET ECU RAW DATA:
-	_SYS_ID[0] = 0;
-	_SYS_ID[1] = 0;
-	_SYS_ID[2] = 0;
-	_ROM_ID[0] = 0;
-	_ROM_ID[1] = 0;
-	_ROM_ID[2] = 0;
-	_ROM_ID[3] = 0;
-	_ROM_ID[4] = 0;
-	memset(_flagbytes, 0, 96);
-	_nrofflagbytes = 0;
+	memset(_SYS_ID, 0, 3);
+	memset(_ROM_ID, 0, 5);
+	// Clear system description:
+	_sysDescription.clear();
 	// *** RESET BASIC DATA ***:
+	// Clear feature flags:
+	_has_OBD2 = false;
+	_has_Immo = false;
+	_has_TestMode = false;
+	_has_ActTest = false;
+	_has_CM = false;
+	_has_CM2 = false;
+	_has_VINsupport = false;
+	_has_integratedCC = false;
+	_has_MB_engineSpeed = false;
+	_has_SW_ignition = false;
 	// Reset DC-data:
 	_DTCdefs.clear();
 	_DTC_fmt_OBD2 = false;
@@ -119,8 +123,6 @@ void SSMprotocol2::resetCUdata()
 	_MBSWmetaList.clear();
 	_selMBsSWsAddr.clear();
 	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
-	delete _SSM2defsIface;
-	_SSM2defsIface = NULL;
 }
 
 
@@ -133,6 +135,9 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
+	char flagbytes[96];
+	unsigned char nrofflagbytes;
+	SSM2definitionsInterface *SSM2defsIface;
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
@@ -166,17 +171,17 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 		return result_invalidCUtype;
 	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress, 1);
 	// Get control unit data:
-	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
 	{
 		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
 			_SSMP2com->setCUaddress(0x01);
-			if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+			if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
 			{
 				if (CU == CUtype_Engine)
 				{
 					_SSMP2com->setCUaddress(0x02);
-					if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, _flagbytes, &_nrofflagbytes))
+					if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
 						goto commError;
 				}
 				else
@@ -188,7 +193,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	}
 	_SSMP2com->setRetriesOnError(2);
 	// Ensure that ignition switch is ON:
-	if ((_flagbytes[12] & 0x08) && !ignoreIgnitionOFF)
+	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
 	{
 		unsigned int dataaddr = 0x62;
 		char data = 0x00;
@@ -201,20 +206,28 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
-	_SSM2defsIface = new SSM2definitionsInterface(_language);
-	_SSM2defsIface->selectControlUnitID(_CU, _SYS_ID, _ROM_ID, _flagbytes, _nrofflagbytes);
-	// Get definitions of the supported diagnostic codes:
-	_SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
-	_SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
-	// Get supported MBs and SWs:
-	_SSM2defsIface->measuringBlocks(&_supportedMBs);
-	_SSM2defsIface->switches(&_supportedSWs);
-	// Get supported Adaptions:
-	_SSM2defsIface->adjustments(&_adjustments);
-	// Get actuator test data:
-	setupActuatorTestData();
+	SSM2defsIface = new SSM2definitionsInterface(_language);
+	SSM2defsIface->selectControlUnitID(_CU, _SYS_ID, _ROM_ID, flagbytes, nrofflagbytes);
+	SSM2defsIface->systemDescription(&_sysDescription);
+	SSM2defsIface->hasImmobilizer(&_has_Immo);
+	SSM2defsIface->hasTestMode(&_has_TestMode);
+	SSM2defsIface->hasActuatorTests(&_has_ActTest);
+	SSM2defsIface->hasClearMemory(&_has_CM);
+	SSM2defsIface->hasClearMemory2(&_has_CM2);
+	SSM2defsIface->hasVINsupport(&_has_VINsupport);
+	SSM2defsIface->hasIntegratedCC(&_has_integratedCC);
+	SSM2defsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
+	SSM2defsIface->hasSWignition(&_has_SW_ignition);
+	SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
+	SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
+	SSM2defsIface->measuringBlocks(&_supportedMBs);
+	SSM2defsIface->switches(&_supportedSWs);
+	SSM2defsIface->adjustments(&_adjustments);
+	SSM2defsIface->actuatorTests(&_actuators);
+	delete SSM2defsIface;
+	setupActuatorTestAddrList();
 	return result_success;
-	
+
 commError:
 	delete _SSMP2com;
 	_SSMP2com = NULL;
@@ -222,112 +235,50 @@ commError:
 }
 
 
-bool SSMprotocol2::getSystemDescription(QString *sysdescription)
-{
-	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->systemDescription(sysdescription);
-}
-
-
-bool SSMprotocol2::hasOBD2system(bool *OBD2)
-{
-	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasOBD2system(OBD2);
-}
-
-
 bool SSMprotocol2::hasVINsupport(bool *VINsup)
 {
 	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasVINsupport(VINsup);
-}
-
-
-bool SSMprotocol2::hasImmobilizer(bool *ImmoSup)
-{
-	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasImmobilizer(ImmoSup);
+	*VINsup = _has_VINsupport;
+	return true;
 }
 
 
 bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 {
 	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasIntegratedCC(CCsup);
+	*CCsup = _has_integratedCC;
+	return true;
 }
 
 
 bool SSMprotocol2::hasClearMemory(bool *CMsup)
 {
 	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasClearMemory(CMsup);
+	*CMsup = _has_CM;
+	return true;
 }
 
 
 bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasClearMemory2(CM2sup);
-}
-
-
-bool SSMprotocol2::hasTestMode(bool *TMsup)
-{
-	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasTestMode(TMsup);
-}
-
-
-bool SSMprotocol2::hasActuatorTests(bool *ATsup)
-{
-	if (_state == state_needSetup) return false;
-	return _SSM2defsIface->hasActuatorTests(ATsup);
-}
-
-
-void SSMprotocol2::setupActuatorTestData()
-{
-	bool aol = false;
-	if (!_SSM2defsIface->actuatorTests(&_actuators))
-		return;
-	for (unsigned int n=0; n<_actuators.size(); n++)
-	{
-		// Check if byte address is already on the list:
-		for (unsigned int m=0; m<_allActByteAddr.size(); m++)
-		{
-			if (_allActByteAddr.at(m) == _actuators.at(n).byteadr)
-			{
-				aol = true;
-				break;
-			}
-		}
-		// Put address on addresses list (if not duplicate):
-		if (!aol)
-			_allActByteAddr.push_back( _actuators.at(n).byteadr );
-		else
-			aol = false;
-	}
+	*CM2sup = _has_CM2;
+	return true;
 }
 
 
 bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 {
 	int retDCgroups = 0;
-	bool supported = false;
 	if (_state == state_needSetup) return false;
-	if (!_DTC_fmt_OBD2)
+	if (_DTCdefs.size())
 	{
-		if (_DTCdefs.size())
+		if (_DTC_fmt_OBD2)
+			retDCgroups |= temporaryDTCs_DCgroup | memorizedDTCs_DCgroup;
+		else
 			retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
 	}
-	else
-	{
-		if (_DTCdefs.size())
-			retDCgroups |= temporaryDTCs_DCgroup | memorizedDTCs_DCgroup;
-	}
-	if (!_SSM2defsIface->hasIntegratedCC(&supported))
-		return false;
-	if (supported)
+	if (_has_integratedCC)
 	{
 		retDCgroups += CClatestCCs_DCgroup;
 		if (_memCCs_supported)
@@ -338,44 +289,174 @@ bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 }
 
 
-bool SSMprotocol2::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
+bool SSMprotocol2::getVIN(QString *VIN)
 {
-	if (_state == state_needSetup) return false;
-	supportedAdjustments->clear();
-	for (unsigned int k=0; k<_adjustments.size(); k++)
-		supportedAdjustments->push_back( _adjustments.at(k) );
-	return true;
+	char vin[18] = {0,};
+	char vinaddrdata[4] = {0,};
+	unsigned int dataaddr[3];
+	dataaddr[0] = 0xDA;
+	dataaddr[1] = 0xDB;
+	dataaddr[2] = 0xDC;
+	unsigned int vinstartaddr = 0;
+	unsigned int vinaddr[17] = {0,};
+	unsigned int k = 0;
+	if (!_has_VINsupport)
+		return false;
+	VIN->clear();
+	if (_SSMP2com->readMultipleDatabytes(0x0, dataaddr, 3, vinaddrdata))
+	{
+		vinstartaddr = (65536 * static_cast<unsigned char>(vinaddrdata[0]))
+				+ (256 * static_cast<unsigned char>(vinaddrdata[1]))
+				+ (static_cast<unsigned char>(vinaddrdata[2]));
+		for (k=1; k<=17; k++)
+			vinaddr[k-1] = vinstartaddr+k-1;
+		if (_SSMP2com->readMultipleDatabytes(0x0, vinaddr, 17, vin))
+		{
+			if (validateVIN(vin))
+			{
+				vin[17]='\x0';
+				*VIN = static_cast<QString>(vin);
+			}
+			return true;
+		}
+	}
+	// Communication error:
+	resetCUdata();
+	return false;
 }
 
 
-bool SSMprotocol2::getSupportedActuatorTests(QStringList *actuatorTestTitles)
+bool SSMprotocol2::startDCreading(int DCgroups)
 {
+	std::vector <unsigned int> DCqueryAddrList;
 	unsigned char k = 0;
-	bool ATsup = false;
-	if (_SSM2defsIface->hasActuatorTests(&ATsup))
+	bool CCsup = false;
+	bool started;
+	// Check if another communication operation is in progress:
+	if (_state != state_normal) return false;
+	// Try to determine the supported Cruise Control Cancel Code groups:
+	if (!_has_integratedCC)
+		return false;
+	// Check argument:
+	if (DCgroups < 1 || DCgroups > 63) return false;
+	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
+		return false;
+	if (DCgroups > 15)
 	{
-		if (ATsup)
+		if (!CCsup)
+			return false;
+		if ( (DCgroups > 31) && (!_memCCs_supported) )
+			return false;
+	}
+	// Setup diagnostic codes addresses list:
+	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
+	{
+		if (_CU == CUtype_Engine)
+			DCqueryAddrList.push_back( 0x000061 );
+		for (k=0; k<_DTCdefs.size(); k++)
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+	}	
+	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
+	{
+		for (k=0; k<_DTCdefs.size(); k++)
+			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
+	}
+	if (CCsup)
+	{
+		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
 		{
-			actuatorTestTitles->clear();
-			for (k=0; k<_actuators.size(); k++)
-				actuatorTestTitles->append(_actuators.at(k).title);
+			for (k=0; k<_CCCCdefs.size(); k++)
+				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest );
+		}
+		if ((DCgroups & CCmemorizedCCs_DCgroup) && _memCCs_supported)	// CC memorized cancel codes
+		{
+			for (k=0; k<_CCCCdefs.size(); k++)
+				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );
+		}
+	}
+	// Check if min. 1 address to read:
+	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.at(0) == 0x000061) && (DCqueryAddrList.size() < 2)))
+		return false;
+	// Start diagostic codes reading:
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
+	if (started)
+	{
+		_state = state_DCreading;
+		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
+		_selectedDCgroups = DCgroups;
+		// Connect signals and slots:
+		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
+		// Emit signal:
+		emit startedDCreading();
+	}
+	else
+		resetCUdata();
+	return started;
+}
+
+
+bool SSMprotocol2::stopDCreading()
+{
+	if ((_state == state_needSetup) || (_state == state_normal)) return true;
+	if (_state == state_DCreading)
+	{
+		if (_SSMP2com->stopCommunication())
+		{
+			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+			_state = state_normal;
+			emit stoppedDCreading();
 			return true;
 		}
+		// Communication error:
+		resetCUdata();
 	}
 	return false;
 }
 
 
-bool SSMprotocol2::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
+bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 {
-	bool ATsup = false;
-	if (_SSM2defsIface->hasActuatorTests(&ATsup))
+	bool started = false;
+	if (_state != state_normal) return false;
+	// Setup list of MB/SW-addresses for SSM2Pcommunication:
+	if (!setupMBSWQueryAddrList(mbswmetaList))
+		return false;
+ 	// Start MB/SW-reading:
+	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &_selMBsSWsAddr.at(0), _selMBsSWsAddr.size());
+	if (started)
 	{
-		if (ATsup && (_selectedActuatorTestIndex != 255))
+		_state = state_MBSWreading;
+		// Save MB/SW-selection (necessary for evaluation of raw data):
+		_MBSWmetaList = mbswmetaList;
+		// Connect signals/slots:
+		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
+		// Emit signal:
+		emit startedMBSWreading();
+	}
+	else
+		resetCUdata();
+	return started;
+}
+
+
+bool SSMprotocol2::stopMBSWreading()
+{
+	if ((_state == state_needSetup) || (_state == state_normal)) return true;
+	if (_state == state_MBSWreading)
+	{
+		if (_SSMP2com->stopCommunication())
 		{
-			*actuatorTestIndex = _selectedActuatorTestIndex;
+			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+			_state = state_normal;
+			emit stoppedMBSWreading();
 			return true;
 		}
+		// Communication error:
+		resetCUdata();
 	}
 	return false;
 }
@@ -489,370 +570,8 @@ bool SSMprotocol2::setAdjustmentValue(unsigned char index, unsigned int rawValue
 }
 
 
-bool SSMprotocol2::getVIN(QString *VIN)
-{
-	bool VINsup = false;
-	char vin[18] = {0,};
-	char vinaddrdata[4] = {0,};
-	unsigned int dataaddr[3];
-	dataaddr[0] = 0xDA;
-	dataaddr[1] = 0xDB;
-	dataaddr[2] = 0xDC;
-	unsigned int vinstartaddr = 0;
-	unsigned int vinaddr[17] = {0,};
-	unsigned int k = 0;
-	if (!_SSM2defsIface->hasVINsupport(&VINsup))
-		return false;
-	if (!VINsup) return false;
-	VIN->clear();
-	if (_SSMP2com->readMultipleDatabytes(0x0, dataaddr, 3, vinaddrdata))
-	{
-		vinstartaddr = (65536 * static_cast<unsigned char>(vinaddrdata[0]))
-				+ (256 * static_cast<unsigned char>(vinaddrdata[1]))
-				+ (static_cast<unsigned char>(vinaddrdata[2]));
-		for (k=1; k<=17; k++)
-			vinaddr[k-1] = vinstartaddr+k-1;
-		if (_SSMP2com->readMultipleDatabytes(0x0, vinaddr, 17, vin))
-		{
-			if (validateVIN(vin))
-			{
-				vin[17]='\x0';
-				*VIN = static_cast<QString>(vin);
-			}
-			return true;
-		}
-	}
-	// Communication error:
-	resetCUdata();
-	return false;
-}
-
-
-bool SSMprotocol2::isEngineRunning(bool *isrunning)
-{
-	unsigned int dataadr = 0x0e;
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if (!(_flagbytes[0] & 0x01)) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
-	{
-		resetCUdata();
-		return false;
-	}
-	if (currentdatabyte > 3)
-		*isrunning = true;
-	else
-		*isrunning = false;
-	return true;
-}
-
-
-bool SSMprotocol2::isInTestMode(bool *testmode)
-{
-	bool TMsup = false;
-	unsigned int dataadr = 0x61;
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if (!_SSM2defsIface->hasTestMode(&TMsup) || !TMsup) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
-	{
-		resetCUdata();
-		return false;
-	}
-	if (currentdatabyte & 0x20)
-		*testmode = true;
-	else
-		*testmode = false;
-	return true;
-}
-
-
-bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
-{
-	*success = false;
-	char val = 0;
-	char bytewritten = 0;
-	bool CM2sup = false;
-	if (_state != state_normal) return false;
-	if (level == CMlevel_1)
-	{
-		val = 0x40;
-	}
-	else if (level == CMlevel_2)
-	{
-		if (!_SSM2defsIface->hasClearMemory2(&CM2sup) || CM2sup==false) return false;
-		val = 0x20;
-	}
-	else
-	{
-		return false;
-	}
-	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
-	{
-		resetCUdata();
-		return false;
-	}
-	*success = (bytewritten == val);
-	return true;
-}
-
-
-bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
-{
-	bool ImmoSup = false;
-	if (_state != state_normal) return false;
-	if (!_SSM2defsIface->hasImmobilizer(&ImmoSup) || ImmoSup==false) return false;
-	char checkvalue = 0;
-	unsigned int readcheckadr = 0x8B;
-	// Write test-pattern:
-	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
-	{
-		// Read result:
-		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &checkvalue))
-		{
-			/* NOTE: the actually written data is NOT 0xAA ! */
-			if (checkvalue == '\x01')
-			{
-				*result = immoShortedToGround;
-			}
-			else if  (checkvalue == '\x02')
-			{
-				*result = immoShortedToBattery;
-			}
-			else
-			{
-				*result = immoNotShorted;
-			}
-			return true;
-		}
-	}
-	// Communication error:
-	resetCUdata();
-	return false;
-}
-
-
-bool SSMprotocol2::startDCreading(int DCgroups)
-{
-	std::vector <unsigned int> DCqueryAddrList;
-	unsigned char k = 0;
-	bool CCsup = false;
-	bool started;
-	// Check if another communication operation is in progress:
-	if (_state != state_normal) return false;
-	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (!_SSM2defsIface->hasIntegratedCC(&CCsup))
-		return false;
-	// Check argument:
-	if (DCgroups < 1 || DCgroups > 63) return false;
-	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
-		return false;
-	if (DCgroups > 15)
-	{
-		if (!CCsup)
-			return false;
-		if ( (DCgroups > 31) && (!_memCCs_supported) )
-			return false;
-	}
-	// Setup diagnostic codes addresses list:
-	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
-	{
-		if (_CU == CUtype_Engine)
-			DCqueryAddrList.push_back( 0x000061 );
-		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
-	}	
-	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
-	{
-		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
-	}
-	if (CCsup)
-	{
-		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
-		{
-			for (k=0; k<_CCCCdefs.size(); k++)
-				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest );
-		}
-		if ((DCgroups & CCmemorizedCCs_DCgroup) && _memCCs_supported)	// CC memorized cancel codes
-		{
-			for (k=0; k<_CCCCdefs.size(); k++)
-				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );
-		}
-	}
-	// Check if min. 1 address to read:
-	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.at(0) == 0x000061) && (DCqueryAddrList.size() < 2)))
-		return false;
-	// Start diagostic codes reading:
-	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
-	if (started)
-	{
-		_state = state_DCreading;
-		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
-		_selectedDCgroups = DCgroups;
-		// Connect signals and slots:
-		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
-		// Emit signal:
-		emit startedDCreading();
-	}
-	else
-		resetCUdata();
-	return started;
-}
-
-
-bool SSMprotocol2::stopDCreading()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_DCreading)
-	{
-		if (_SSMP2com->stopCommunication())
-		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
-			_state = state_normal;
-			emit stoppedDCreading();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
-void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
-{
-	(void)duration_ms; // to avoid compiler error
-	QStringList DCs;
-	QStringList DCdescriptions;
-	QStringList tmpDTCs;
-	QStringList tmpDTCsDescriptions;
-	bool TestMode = false;
-	bool DCheckActive = false;
-	unsigned int DCsAddrIndex = 0;
-	unsigned int DCsAddrIndexOffset = 0;
-	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
-	{
-		if (_CU == CUtype_Engine)
-		{
-			DCsAddrIndexOffset = 1;
-			if (_flagbytes[11] & 0x20)	// Test mode supported
-			{
-				if (DCrawdata.at(0) & 0x20)
-					TestMode = true;
-			}
-			if (DCrawdata.at(0) & 0x80)
-				DCheckActive = true;
-		}
-		else
-			DCheckActive = false;
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate current/latest data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
-		{
-			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_currentOrTempOrLatest, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-		}
-		DCsAddrIndexOffset += _DTCdefs.size();
-		emit currentOrTemporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
-	}
-	if ((_selectedDCgroups & historicDTCs_DCgroup) || (_selectedDCgroups & memorizedDTCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate historic/memorized data trouble codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_DTCdefs.size(); DCsAddrIndex++)
-		{
-			evaluateDCdataByte(_DTCdefs.at(DCsAddrIndex).byteAddr_historicOrMemorized, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-		}
-		DCsAddrIndexOffset += _DTCdefs.size();
-		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
-	}
-	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate latest CC cancel codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_CCCCdefs.size(); DCsAddrIndex++)
-		{
-			evaluateDCdataByte(_CCCCdefs.at(DCsAddrIndex).byteAddr_currentOrTempOrLatest, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-		}
-		DCsAddrIndexOffset += _CCCCdefs.size();
-		emit latestCCCCs(DCs, DCdescriptions);
-	}
-	if (_selectedDCgroups == (_selectedDCgroups | CCmemorizedCCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate memorized CC cancel codes:
-		for (DCsAddrIndex=0; DCsAddrIndex<_CCCCdefs.size(); DCsAddrIndex++)
-		{
-			evaluateDCdataByte(_CCCCdefs.at(DCsAddrIndex).byteAddr_historicOrMemorized, DCrawdata.at(DCsAddrIndexOffset+DCsAddrIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-		}
-		emit memorizedCCCCs(DCs, DCdescriptions);
-	}
-}
-
-
-bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
-{
-	bool started = false;
-	if (_state != state_normal) return false;
-	// Setup list of MB/SW-addresses for SSM2Pcommunication:
-	if (!setupMBSWQueryAddrList(mbswmetaList))
-		return false;
- 	// Start MB/SW-reading:
-	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &_selMBsSWsAddr.at(0), _selMBsSWsAddr.size());
-	if (started)
-	{
-		_state = state_MBSWreading;
-		// Save MB/SW-selection (necessary for evaluation of raw data):
-		_MBSWmetaList = mbswmetaList;
-		// Connect signals/slots:
-		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
-		// Emit signal:
-		emit startedMBSWreading();
-	}
-	else
-		resetCUdata();
-	return started;
-}
-
-
-bool SSMprotocol2::stopMBSWreading()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_MBSWreading)
-	{
-		if (_SSMP2com->stopCommunication())
-		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
-			_state = state_normal;
-			emit stoppedMBSWreading();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
 bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 {
-	bool ATsup = false;
 	bool ATstarted = false;
 	bool ok = false;
 	bool testmode = false;
@@ -861,8 +580,7 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Validate selected test:
-	ok = _SSM2defsIface->hasActuatorTests(&ATsup);
-	if (!ok || (ATsup == false) || (actuatorTestIndex >= _actuators.size()))
+	if (!_has_ActTest || (actuatorTestIndex >= _actuators.size()))
 		return false;
 	// Check if control unit is in test mode:
 	ok = isInTestMode(&testmode);
@@ -903,12 +621,6 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 }
 
 
-bool SSMprotocol2::restartActuatorTest()
-{
-	return startActuatorTest(_selectedActuatorTestIndex);
-}
-
-
 bool SSMprotocol2::stopActuatorTesting()
 {
 	unsigned char k = 0;
@@ -941,16 +653,14 @@ bool SSMprotocol2::stopAllActuators()
 {
 	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol
 	// => When switching the cars ignition on (with engine off) while test mode connector is connected,
-	//    some actuator tests are started automaticly
+	//    some actuator tests are started automatically
 	unsigned char k = 0;
 	bool ok = false;
-	bool ATsup = false;
 	bool testmode = false;
 	bool enginerunning = false;
 	if (_state != state_normal) return false;
 	// Check if actuator tests are supported:
-	ok = _SSM2defsIface->hasActuatorTests(&ATsup);
-	if (!ok || !ATsup)
+	if (!_has_ActTest)
 		return false;
 	// Check if control unit is in test mode:
 	ok = isInTestMode(&testmode);
@@ -973,6 +683,107 @@ bool SSMprotocol2::stopAllActuators()
 }
 
 
+bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
+{
+	*success = false;
+	char val = 0;
+	char bytewritten = 0;
+	if (_state != state_normal) return false;
+	if (level == CMlevel_1)
+	{
+		val = 0x40;
+	}
+	else if (level == CMlevel_2)
+	{
+		if (!_has_CM2) return false;
+		val = 0x20;
+	}
+	else
+	{
+		return false;
+	}
+	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
+	{
+		resetCUdata();
+		return false;
+	}
+	*success = (bytewritten == val);
+	return true;
+}
+
+
+bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
+{
+	if (_state != state_normal) return false;
+	if (!_has_Immo) return false;
+	char checkvalue = 0;
+	unsigned int readcheckadr = 0x8B;
+	// Write test-pattern:
+	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
+	{
+		// Read result:
+		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &checkvalue))
+		{
+			/* NOTE: the actually written data is NOT 0xAA ! */
+			if (checkvalue == '\x01')
+			{
+				*result = immoShortedToGround;
+			}
+			else if  (checkvalue == '\x02')
+			{
+				*result = immoShortedToBattery;
+			}
+			else
+			{
+				*result = immoNotShorted;
+			}
+			return true;
+		}
+	}
+	// Communication error:
+	resetCUdata();
+	return false;
+}
+
+
+bool SSMprotocol2::isEngineRunning(bool *isrunning)
+{
+	unsigned int dataadr = 0x0e;
+	char currentdatabyte = 0;
+	if (_state != state_normal) return false;
+	if (!_has_MB_engineSpeed) return false;
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	{
+		resetCUdata();
+		return false;
+	}
+	if (currentdatabyte > 3)
+		*isrunning = true;
+	else
+		*isrunning = false;
+	return true;
+}
+
+
+bool SSMprotocol2::isInTestMode(bool *testmode)
+{
+	unsigned int dataadr = 0x61;
+	char currentdatabyte = 0;
+	if (_state != state_normal) return false;
+	if (!_has_TestMode) return false;
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	{
+		resetCUdata();
+		return false;
+	}
+	if (currentdatabyte & 0x20)
+		*testmode = true;
+	else
+		*testmode = false;
+	return true;
+}
+
+
 bool SSMprotocol2::waitForIgnitionOff()
 {
 	if (_state != state_normal)
@@ -980,7 +791,7 @@ bool SSMprotocol2::waitForIgnitionOff()
 	unsigned int dataaddr = 0x62;
 	_state = state_waitingForIgnOff;
 	_SSMP2com->setRetriesOnError(1);
-	if (_flagbytes[12] & 0x08)	// MB "ignition switch"
+	if (_has_SW_ignition)
 	{
 		bool ignstate = true;
 		char data = 0x00;
@@ -1012,6 +823,7 @@ bool SSMprotocol2::waitForIgnitionOff()
 /* NOTE: temporary solution, will become obsolete with new SSMP2communication */
 }
 
+// PRIVATE
 
 bool SSMprotocol2::validateVIN(char VIN[17])
 {
@@ -1026,4 +838,47 @@ bool SSMprotocol2::validateVIN(char VIN[17])
 	}
 	return true;
 }
+
+
+void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
+{
+	QStringList DCs;
+	QStringList DCdescriptions;
+	QStringList tmpDTCs;
+	QStringList tmpDTCsDescriptions;
+	unsigned int rawDataIndex = 0;
+
+	// Process DTCs raw data:
+	rawDataIndex = processDTCsRawdata(DCrawdata, duration_ms);
+	// Process CCCCs raw data:
+	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
+	{
+		DCs.clear();
+		DCdescriptions.clear();
+		// Evaluate latest CC cancel codes:
+		for (unsigned int CCCCdefs_index=0; CCCCdefs_index<_CCCCdefs.size(); CCCCdefs_index++)
+		{
+			evaluateDCdataByte(_CCCCdefs.at(CCCCdefs_index).byteAddr_currentOrTempOrLatest, DCrawdata.at(rawDataIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCs += tmpDTCs;
+			DCdescriptions += tmpDTCsDescriptions;
+			rawDataIndex++;
+		}
+		emit latestCCCCs(DCs, DCdescriptions);
+	}
+	if (_selectedDCgroups == (_selectedDCgroups | CCmemorizedCCs_DCgroup))
+	{
+		DCs.clear();
+		DCdescriptions.clear();
+		// Evaluate memorized CC cancel codes:
+		for (unsigned int CCCCdefs_index=0; CCCCdefs_index<_CCCCdefs.size(); CCCCdefs_index++)
+		{
+			evaluateDCdataByte(_CCCCdefs.at(CCCCdefs_index).byteAddr_historicOrMemorized, DCrawdata.at(rawDataIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCs += tmpDTCs;
+			DCdescriptions += tmpDTCsDescriptions;
+			rawDataIndex++;
+		}
+		emit memorizedCCCCs(DCs, DCdescriptions);
+	}
+}
+
 

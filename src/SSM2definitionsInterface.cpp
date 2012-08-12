@@ -650,6 +650,28 @@ bool SSM2definitionsInterface::hasActuatorTests(bool *ATsup)
 }
 
 
+bool SSM2definitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
+{
+	if (_nrofflagbytes < 32)
+		return false;
+	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
+		return false;
+	*EngSpeedMBsup = _flagbytes[0] & 0x01;
+	return true;
+}
+
+
+bool SSM2definitionsInterface::hasSWignition(bool *IgnSWsup)
+{
+	if (_nrofflagbytes < 32)
+		return false;
+	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
+		return false;
+	*IgnSWsup = _flagbytes[12] & 0x08;
+	return true;
+}
+
+
 // PRIVATE:
 
 void SSM2definitionsInterface::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs)

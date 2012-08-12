@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,19 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
 	_diagInterface = diagInterface;
 	_language = language;
+	_CU = CUtype_Engine;
 	_state = state_needSetup;
+	memset(_SYS_ID, 0, 3);
+	memset(_ROM_ID, 0, 5);
+	_has_OBD2 = false;
+	_has_Immo = false;
+	_has_TestMode = false;
+	_has_ActTest = false;
+	_has_MB_engineSpeed = false;
+	_has_SW_ignition = false;
+	_DTC_fmt_OBD2 = false;
+	_selectedDCgroups = noDCs_DCgroup;
+	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
 }
 
@@ -63,6 +75,74 @@ std::string SSMprotocol::getROMID()
 		return libFSSM::StrToHexstr(_ROM_ID, 5);
 	else
 		return getSysID();
+}
+
+
+bool SSMprotocol::getSystemDescription(QString *sysdescription)
+{
+	if (_state == state_needSetup) return false;
+	if (_sysDescription.size())
+	{
+		*sysdescription =_sysDescription;
+		return true;
+	}
+	return false;
+}
+
+
+bool SSMprotocol::hasOBD2system(bool *OBD2)
+{
+	if (_state == state_needSetup) return false;
+	*OBD2 = _has_OBD2;
+	return true;
+}
+
+
+bool SSMprotocol::hasVINsupport(bool *VINsup)
+{
+	if (_state == state_needSetup) return false;
+	*VINsup = false;
+	return true;
+}
+
+
+bool SSMprotocol::hasImmobilizer(bool *ImmoSup)
+{
+	if (_state == state_needSetup) return false;
+	*ImmoSup = _has_Immo;
+	return true;
+}
+
+
+bool SSMprotocol::hasIntegratedCC(bool *CCsup)
+{
+	if (_state == state_needSetup) return false;
+	*CCsup = false;
+	return true;
+}
+
+
+bool SSMprotocol::hasClearMemory2(bool *CM2sup)
+{
+	if (_state == state_needSetup) return false;
+	*CM2sup = false;
+	return true;
+}
+
+
+bool SSMprotocol::hasTestMode(bool *TMsup)
+{
+	if (_state == state_needSetup) return false;
+	*TMsup = _has_TestMode;
+	return true;
+}
+
+
+bool SSMprotocol::hasActuatorTests(bool *ATsup)
+{
+	if (_state == state_needSetup) return false;
+	*ATsup = _has_ActTest;
+	return true;
 }
 
 
@@ -110,39 +190,37 @@ bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLis
 }
 
 
+bool SSMprotocol::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
+{
+	if (_state == state_needSetup) return false;
+	supportedAdjustments->clear();
+	for (unsigned int k=0; k<_adjustments.size(); k++)
+		supportedAdjustments->push_back( _adjustments.at(k) );
+	return true;
+}
+
+
 bool SSMprotocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 {
-	(void)*actuatorTestTitles;
+	unsigned char k = 0;
+	if (_has_ActTest)
+	{
+		actuatorTestTitles->clear();
+		for (k=0; k<_actuators.size(); k++)
+			actuatorTestTitles->append(_actuators.at(k).title);
+		return true;
+	}
 	return false;
 }
 
 
 bool SSMprotocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 {
-	(void)*actuatorTestIndex;
-	return false;
-}
-
-
-bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
-{
-	(void)index;
-	(void)*rawValue;
-	return false;
-}
-
-
-bool SSMprotocol::getAllAdjustmentValues(std::vector<unsigned int> *rawValues)
-{
-	(void)*rawValues;
-	return false;
-}
-
-
-bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
-{
-	(void)index;
-	(void)rawValue;
+	if (_has_ActTest && (_selectedActuatorTestIndex != 255))
+	{
+		*actuatorTestIndex = _selectedActuatorTestIndex;
+		return true;
+	}
 	return false;
 }
 
@@ -154,23 +232,101 @@ bool SSMprotocol::getVIN(QString *VIN)
 }
 
 
-bool SSMprotocol::isEngineRunning(bool *isrunning)
-{
-	(void)*isrunning;
-	return false;
-}
-
-
-bool SSMprotocol::isInTestMode(bool *testmode)
-{
-	(void)*testmode;
-	return false;
-}
-
-
 bool SSMprotocol::restartDCreading()
 {
 	return startDCreading(_selectedDCgroups);
+}
+
+
+bool SSMprotocol::restartMBSWreading()
+{
+	return startMBSWreading(_MBSWmetaList);
+}
+
+
+bool SSMprotocol::restartActuatorTest()
+{
+	return startActuatorTest(_selectedActuatorTestIndex);
+}
+
+
+bool SSMprotocol::stopAllPermanentOperations()
+{
+	bool result = false;
+	if ((_state == state_needSetup) || (_state == state_normal))
+	{
+		result = true;
+	}
+	else if (_state == state_DCreading)
+	{
+		result = stopDCreading();
+	}
+	else if (_state == state_MBSWreading)
+	{
+		result = stopMBSWreading();
+	}
+	else if (_state == state_ActTesting)
+	{
+		result = stopActuatorTesting();
+	}
+	return result;
+}
+
+// PROTECTED / PRIVATE:
+
+unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int duration_ms)
+{
+	(void)duration_ms; // to avoid compiler error
+	QStringList DCs;
+	QStringList DCdescriptions;
+	QStringList tmpDTCs;
+	QStringList tmpDTCsDescriptions;
+	bool TestMode = false;
+	bool DCheckActive = false;
+	unsigned int rawDataIndex = 0;
+	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
+	{
+		if (_CU == CUtype_Engine && ((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+		{
+			rawDataIndex = 1;
+			if (_has_TestMode)
+				TestMode = DCrawdata.at(0) & 0x20;
+			DCheckActive = DCrawdata.at(0) & 0x80;
+		}
+		// FIXME: support test mode and D-Check status for other SSM1 control units, too
+		DCs.clear();
+		DCdescriptions.clear();
+		// Evaluate current/latest data trouble codes:
+		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
+		{
+			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_currentOrTempOrLatest;
+			if (address == MEMORY_ADDRESS_NONE)
+				continue;
+			evaluateDCdataByte(address, DCrawdata.at(rawDataIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCs += tmpDTCs;
+			DCdescriptions += tmpDTCsDescriptions;
+			rawDataIndex++;
+		}
+		emit currentOrTemporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
+	}
+	if ((_selectedDCgroups & historicDTCs_DCgroup) || (_selectedDCgroups & memorizedDTCs_DCgroup))
+	{
+		DCs.clear();
+		DCdescriptions.clear();
+		// Evaluate historic/memorized data trouble codes:
+		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
+		{
+			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_historicOrMemorized;
+			if (address == MEMORY_ADDRESS_NONE)
+				continue;
+			evaluateDCdataByte(address, DCrawdata.at(rawDataIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
+			DCs += tmpDTCs;
+			DCdescriptions += tmpDTCsDescriptions;
+			rawDataIndex++;
+		}
+		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
+	}
+	return rawDataIndex;
 }
 
 
@@ -206,12 +362,6 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std
 			}
 		}
 	}
-}
-
-
-bool SSMprotocol::restartMBSWreading()
-{
-	return startMBSWreading(_MBSWmetaList);
 }
 
 
@@ -324,53 +474,29 @@ void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsig
 }
 
 
-bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
+void SSMprotocol::setupActuatorTestAddrList()
 {
-	(void)actuatorTestIndex;
-	return false;
-}
-
-
-bool SSMprotocol::restartActuatorTest()
-{
-	return false;
-}
-
-
-bool SSMprotocol::stopActuatorTesting()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	return false;
-}
-
-
-bool SSMprotocol::stopAllActuators()
-{
-	return false;
-}
-
-
-bool SSMprotocol::stopAllPermanentOperations()
-{
-	bool result = false;
-	if ((_state == state_needSetup) || (_state == state_normal))
+	bool aol = false;
+	_allActByteAddr.clear();
+	for (unsigned int n=0; n<_actuators.size(); n++)
 	{
-		result = true;
+		// Check if byte address is already on the list:
+		for (unsigned int m=0; m<_allActByteAddr.size(); m++)
+		{
+			if (_allActByteAddr.at(m) == _actuators.at(n).byteadr)
+			{
+				aol = true;
+				break;
+			}
+		}
+		// Put address on addresses list (if not duplicate):
+		if (!aol)
+			_allActByteAddr.push_back( _actuators.at(n).byteadr );
+		else
+			aol = false;
 	}
-	else if (_state == state_DCreading)
-	{
-		result = stopDCreading();
-	}
-	else if (_state == state_MBSWreading)
-	{
-		result = stopMBSWreading();
-	}
-	else if (_state == state_ActTesting)
-	{
-		result = stopActuatorTesting();
-	}
-	return result;
 }
+
 
 
 

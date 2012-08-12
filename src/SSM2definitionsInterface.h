@@ -51,6 +51,8 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
+	bool hasMBengineSpeed(bool *EngSpeedMBsup);
+	bool hasSWignition(bool *IgnSWsup);
 
 	bool diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2);
 	bool cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported);

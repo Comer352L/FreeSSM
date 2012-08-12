@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.h - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
 #include "SSM1definitionsInterface.h"
+#include "SSM2definitionsInterface.h"
 
 
 
@@ -40,40 +41,34 @@ public:
 	SSMprotocol1(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
-	CUsetupResult_dt setupCUdata(CUtype_dt CU);							// INCOMPLETE IMPLEMENTATION
+	CUsetupResult_dt setupCUdata(CUtype_dt CU);
 	protocol_dt protocolType() { return SSM1; };
-	bool getSystemDescription(QString *sysdescription);
-	bool hasOBD2system(bool *OBD2);
-	bool hasVINsupport(bool *VINsup);
-	bool hasImmobilizer(bool *ImmoSup);								// IMPLEMENTATION MISSING
-	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);
-	bool hasClearMemory2(bool *CM2sup);
-	bool hasTestMode(bool *TMsup);
-	bool hasActuatorTests(bool *ATsup);
 	bool getSupportedDCgroups(int *DCgroups);
-	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	// COMMUNICATION BASED FUNCTIONS:
-	bool isEngineRunning(bool *isrunning);								// IMPLEMENTATION MISSING; DO WE NEED IT ?
-	bool clearMemory(CMlevel_dt level, bool *success);
-	bool testImmobilizerCommLine(immoTestResult_dt *result);					// IMPLEMENTATION MISSING
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
 	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
 	bool stopMBSWreading();
-	bool waitForIgnitionOff();									// IMPROVE ?
+	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
+	bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
+	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
+	bool startActuatorTest(unsigned char actuatorTestIndex);
+	bool stopActuatorTesting();
+	bool stopAllActuators();
+	bool clearMemory(CMlevel_dt level, bool *success);
+	bool testImmobilizerCommLine(immoTestResult_dt *result);
+	bool isEngineRunning(bool *isrunning);
+	bool isInTestMode(bool *testmode);
+	bool waitForIgnitionOff();
 
 private:
 	SSMP1communication *_SSMP1com;
-	// *** CONTROL UNIT RAW DATA ***:
-	std::string _sysDescription;
+	bool _uses_SSM2defs;
 	unsigned int _CMaddr;
 	char _CMvalue;
 
 	bool readExtendedID(char ID[5]);
-
-private slots:
-	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);				// INCOMPLETE IMPLEMENTATION
 
 public slots:
 	void resetCUdata();

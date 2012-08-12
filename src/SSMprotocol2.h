@@ -22,7 +22,6 @@
 
 
 
-#include <string>
 #include <vector>
 #include <math.h>
 #include "AbstractDiagInterface.h"
@@ -43,55 +42,40 @@ public:
 	CUsetupResult_dt setupCUdata(CUtype_dt CU);
 	CUsetupResult_dt setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
 	protocol_dt protocolType() { return SSM2; };
-	bool getSystemDescription(QString *sysdescription);
-	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
-	bool hasImmobilizer(bool *ImmoSup);
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
-	bool hasTestMode(bool *TMsup);
-	bool hasActuatorTests(bool *ATsup);
 	bool getSupportedDCgroups(int *DCgroups);
-	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
-	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
-	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
 	// COMMUNICATION BASED FUNCTIONS:
-	bool isEngineRunning(bool *isrunning);
-	bool isInTestMode(bool *testmode);
 	bool getVIN(QString *VIN);
-	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
-	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
-	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	bool clearMemory(CMlevel_dt level, bool *success);
-	bool testImmobilizerCommLine(immoTestResult_dt *result);
-	bool stopAllActuators();
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
 	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
 	bool stopMBSWreading();
+	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
+	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
+	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	bool startActuatorTest(unsigned char actuatorTestIndex);
-	bool restartActuatorTest();
 	bool stopActuatorTesting();
+	bool stopAllActuators();
+	bool clearMemory(CMlevel_dt level, bool *success);
+	bool testImmobilizerCommLine(immoTestResult_dt *result);
+	bool isEngineRunning(bool *isrunning);
+	bool isInTestMode(bool *testmode);
 	bool waitForIgnitionOff();
 
 private:
 	SSMP2communication *_SSMP2com;
-	SSM2definitionsInterface *_SSM2defsIface;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
-	bool _DTC_fmt_OBD2;
+	bool _has_CM;
+	bool _has_CM2;
+	bool _has_integratedCC;
+	bool _has_VINsupport;
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;
 	bool _memCCs_supported;
-	// Adjustment Values:
-	std::vector<adjustment_intl_dt> _adjustments;
-	// Actuator Tests:
-	std::vector<actuator_dt> _actuators;
-	std::vector<unsigned int> _allActByteAddr;
-	// *** Selection data ***:
-	unsigned char _selectedActuatorTestIndex;
 
-	void setupActuatorTestData();
 	bool validateVIN(char VIN[17]);
 
 private slots:
