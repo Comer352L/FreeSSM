@@ -702,7 +702,7 @@ void SSMprotocol2::setupAdjustmentsData()
 		if (tmphelpstr.count('-') == 1)
 		{
 			tmpflagbyte = tmphelpstr.section('-', 0, 0).toUInt(&ok, 10);
-			if (ok && (tmpflagbyte > 0) && (tmpflagbyte < _nrofflagbytes))
+			if (ok && (tmpflagbyte > 0) && (tmpflagbyte <= _nrofflagbytes))
 			{
 				tmpflagbit = tmphelpstr.section('-', 1, 1).toUInt(&ok, 10);
 				if (ok && (tmpflagbit > 0) && (tmpflagbit < 9))
