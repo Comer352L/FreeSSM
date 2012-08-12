@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2_def_de.cpp - SSM2-protocol-definitions
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -197,10 +197,10 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "55;6;0;1;0001F3;;Einstellbares Zentraldifferential (DCCD) Drehmomentverteilung;;*1;0"
 	<< "55;7;0;1;0001F2;;Längs-Beschleunigung;m/s²;s8*1.0862;2"
 	<< "55;8;0;1;0001F1;;Gier-Geschwindigkeit;Grad/s;s8*0.19118;0"
-	<< "56;1;1;0;000260;;Mengenkorrektur Zylinder #4;ms;-100/100,2"
-	<< "56;2;1;0;00025F;;Mengenkorrektur Zylinder #3;ms;-100/100,2"
-	<< "56;3;1;0;00025E;;Mengenkorrektur Zylinder #2;ms;-100/100,2"
-	<< "56;4;1;0;00025D;;Mengenkorrektur Zylinder #1;ms;-100/100,2"
+	<< "56;1;1;0;000260;;Mengenkorrektur Zylinder #4;ms;-100/100;2"
+	<< "56;2;1;0;00025F;;Mengenkorrektur Zylinder #3;ms;-100/100;2"
+	<< "56;3;1;0;00025E;;Mengenkorrektur Zylinder #2;ms;-100/100;2"
+	<< "56;4;1;0;00025D;;Mengenkorrektur Zylinder #1;ms;-100/100;2"
 	<< "56;5;1;0;000270;;Innenraumheizung;Stufe;*1;0"
 	<< "56;6;1;0;000205;000204;Kilometerstand nach Injektor-Auswechselung;km;*5;0"
 	<< "56;7;1;0;0001FB;0001FA;Kilometerstand nach Injektor-Lernen;km;*5;0"

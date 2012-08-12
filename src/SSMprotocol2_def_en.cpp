@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2_def_en.cpp - SSM2-protocol-definitions
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -197,10 +197,10 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "55;6;0;1;0001F3;;Drivers Control Center Differential (DCCD) Torque Allocation;;*1;0"
 	<< "55;7;0;1;0001F2;;Lateral G;m/s²;s8*1.0862;2"
 	<< "55;8;0;1;0001F1;;Yaw Rate;deg/s;s8*0.19118;0"
-	<< "56;1;1;0;000260;;Quantity Correction Cylinder #4;ms;-100/100,2"
-	<< "56;2;1;0;00025F;;Quantity Correction Cylinder #3;ms;-100/100,2"
-	<< "56;3;1;0;00025E;;Quantity Correction Cylinder #2;ms;-100/100,2"
-	<< "56;4;1;0;00025D;;Quantity Correction Cylinder #1;ms;-100/100,2"
+	<< "56;1;1;0;000260;;Quantity Correction Cylinder #4;ms;-100/100;2"
+	<< "56;2;1;0;00025F;;Quantity Correction Cylinder #3;ms;-100/100;2"
+	<< "56;3;1;0;00025E;;Quantity Correction Cylinder #2;ms;-100/100;2"
+	<< "56;4;1;0;00025D;;Quantity Correction Cylinder #1;ms;-100/100;2"
 	<< "56;5;1;0;000270;;Interior Heater;Steps;*1;0"
 	<< "56;6;1;0;000205;000204;Mileage after Injector Replacement;km;*5;0"
 	<< "56;7;1;0;0001FB;0001FA;Mileage after Injector Learning;km;*5;0"
