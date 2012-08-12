@@ -88,41 +88,14 @@ void SSMprotocol2::resetCUdata()
 	}
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-	// RESET ECU RAW DATA:
-	memset(_SYS_ID, 0, 3);
-	memset(_ROM_ID, 0, 5);
-	// Clear system description:
-	_sysDescription.clear();
-	// *** RESET BASIC DATA ***:
-	// Clear feature flags:
-	_has_OBD2 = false;
-	_has_Immo = false;
-	_has_TestMode = false;
-	_has_ActTest = false;
+	// Reset control unit data
+	resetCommonCUdata();
 	_has_CM = false;
 	_has_CM2 = false;
 	_has_VINsupport = false;
 	_has_integratedCC = false;
-	_has_MB_engineSpeed = false;
-	_has_SW_ignition = false;
-	// Reset DC-data:
-	_DTCdefs.clear();
-	_DTC_fmt_OBD2 = false;
 	_CCCCdefs.clear();
 	_memCCs_supported = false;
-	// Reset MB/SW-data:
-	_supportedMBs.clear();
-	_supportedSWs.clear();
-	// Reset adjustments-data:
-	_adjustments.clear();
-	// Reset actuator-test-data:
-	_actuators.clear();
-	_allActByteAddr.clear();
-	// *** Reset selection data ***:
-	_selectedDCgroups = noDCs_DCgroup;
-	_MBSWmetaList.clear();
-	_selMBsSWsAddr.clear();
-	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
 }
 
 

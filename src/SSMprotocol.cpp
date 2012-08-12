@@ -27,17 +27,7 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 	_language = language;
 	_CU = CUtype_Engine;
 	_state = state_needSetup;
-	memset(_SYS_ID, 0, 3);
-	memset(_ROM_ID, 0, 5);
-	_has_OBD2 = false;
-	_has_Immo = false;
-	_has_TestMode = false;
-	_has_ActTest = false;
-	_has_MB_engineSpeed = false;
-	_has_SW_ignition = false;
-	_DTC_fmt_OBD2 = false;
-	_selectedDCgroups = noDCs_DCgroup;
-	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
+	resetCommonCUdata();
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
 }
 
@@ -498,5 +488,34 @@ void SSMprotocol::setupActuatorTestAddrList()
 }
 
 
-
+void SSMprotocol::resetCommonCUdata()
+{
+	// RESET ECU DATA:
+	memset(_SYS_ID, 0, 3);
+	memset(_ROM_ID, 0, 5);
+	// Clear system description:
+	_sysDescription.clear();
+	_has_OBD2 = false;
+	_has_Immo = false;
+	_has_TestMode = false;
+	_has_ActTest = false;
+	_has_MB_engineSpeed = false;
+	_has_SW_ignition = false;
+	// Clear DC data:
+	_DTCdefs.clear();
+	_DTC_fmt_OBD2 = false;
+	// Clear MB/SW data:
+	_supportedMBs.clear();
+	_supportedSWs.clear();
+	// Clear adjustment values data:
+	_adjustments.clear();
+	// Clear actuator tests data:
+	_actuators.clear();
+	_allActByteAddr.clear();
+	// Clear selection data:
+	_selectedDCgroups = noDCs_DCgroup;
+	_MBSWmetaList.clear();
+	_selMBsSWsAddr.clear();
+	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
+}
 

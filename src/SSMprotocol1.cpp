@@ -63,37 +63,11 @@ void SSMprotocol1::resetCUdata()
 	}
 	else
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-	// RESET ECU DATA:
-	memset(_SYS_ID, 0, 3);
-	memset(_ROM_ID, 0, 5);
-	// Clear system description:
-	_sysDescription.clear();
-	// Clear feature flags;
+	// Reset control unit data
+	resetCommonCUdata();
 	_uses_SSM2defs = false;
-	_has_OBD2 = false;
-	_has_Immo = false;
-	_has_TestMode = false;
-	_has_ActTest = false;
-	_has_MB_engineSpeed = false;
-	_has_SW_ignition = false;
-	// Clear DC data:
-	_DTCdefs.clear();
-	_DTC_fmt_OBD2 = false;
 	_CMaddr = MEMORY_ADDRESS_NONE;
 	_CMvalue = '\x00';
-	// Clear MB/SW data:
-	_supportedMBs.clear();
-	_supportedSWs.clear();
-	// Clear adjustment values data:
-	_adjustments.clear();
-	// Clear actuator tests data:
-	_actuators.clear();
-	_allActByteAddr.clear();
-	// Clear selection data:
-	_selectedDCgroups = noDCs_DCgroup;
-	_MBSWmetaList.clear();
-	_selMBsSWsAddr.clear();
-	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
 }
 
 
@@ -163,7 +137,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return result_commError;
 	}
 	/* NOTE: no need to check the state of the ignition switch.
-	 * Power supply of these old control units is immediately cut when igition is switched of */
+	 * Power supply of these old control units is immediately cut when ignition is switched off */
 	_CU = CU;
 	_state = state_normal;
 	_uses_SSM2defs = ((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10');
