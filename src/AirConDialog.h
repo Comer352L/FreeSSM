@@ -1,5 +1,7 @@
 /*
- * AirConDialog.h - Automatic Air Conditioning Control Unit dialog
+ * AirConDialog.h - Air Conditioning Control Unit dialog
+ *
+ * Copyright (C) 2012 L1800Turbo, 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
