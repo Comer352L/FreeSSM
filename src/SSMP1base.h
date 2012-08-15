@@ -1,7 +1,7 @@
 /*
  * SSMP1base.h - Basic definitions and commands for the SSM1-protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@
 
 /* Timings/Timeouts */
 #define		SSMP1_T_IC_WAIT			40	/* delay between two commands [ms] */
-#define		SSMP1_T_ID_REC_MAX		300	/* max. time until the control unit ID is received */
+#define		SSMP1_T_ID_RECSTART_MAX		300	/* max. time [ms] until the beginning of the control unit ID is received */
 #define		SSMP1_T_RW_REC_MAX		1000	/* timeout for reply-message to read-/write-request [ms] */
-#define		SSMP1_T_RECDATA_CHANGE_MAX	150	/* max. time until the recieved data changes after a new request ha been sent [ms] */
+#define		SSMP1_T_RECDATA_CHANGE_MAX	150	/* max. time until the recieved data changes after a new request has been sent [ms] */
 
 
 

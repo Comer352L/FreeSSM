@@ -1,7 +1,7 @@
 /*
  * SSMP1communication_procedures.cpp - Communication procedures for the SSM1-protocol
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,6 +62,15 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 
 bool SSMP1communication_procedures::getID(std::vector<char> * data)
 {
+	const unsigned int t_max_total = (SSMP1_T_ID_RECSTART_MAX + 500) * 2;	// 100 bytes * (10 / 1953) ~= 500 ms
+	const unsigned char max_bytes_dropped = 15;				// NOTE: min. 12 (seen with Ax10xx TCU)
+	std::vector<char> tmpbuf;
+	unsigned char bytes_dropped = 0;
+	bool IDvalid = false;
+	bool IDconfirmed = false;
+	unsigned int cu_data_len = 0;
+	bool timeout;
+
 	if (!sendQueryIdCmd()) return false;
 	waitms(SSMP1_T_IC_WAIT);
 	_recbuffer.clear();
@@ -79,36 +88,159 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	}
 	if (!_diagInterface->clearReceiveBuffer())
 		return false;
-	waitms(SSMP1_T_ID_REC_MAX);
-	if (!_diagInterface->read(&_recbuffer))
-		return false;
-	if (_recbuffer.size() < 3)
-		goto err;
-	if (((_recbuffer.at(0) & '\xF0') != '\x70') && ((_recbuffer.at(0) & '\xF0') != '\xA0'))
-		goto err;
-	/* NOTE: Problem: the echo of ISO-KL-interfaces may be detected as SSM1-ID.
-		 We can not rely in flushing the receive buffer immediately after the request was sent,
-	         because this doesn't work reliable with some serial port drivers.	*/
-	if (((_recbuffer.at(0) & '\xF0') == '\xA0') && (_recbuffer.at(1) == '\x01'))
+	/* NOTE: Problem:
+	 * - we can not rely in buffer flushing because of driver/OS/hardware latencies and bugs
+	 * - control units need some time until they switch from sending data from the previous 
+	 *   (read address) request to sending the control unit ID (+data)
+	 */
+	TimeM time_total;
+	TimeM time_inter_byte;
+	time_total.start();
+	time_inter_byte.start();
+	do
 	{
-		if (_recbuffer.size() < 12)
-			goto err;
-		data->assign(_recbuffer.begin(), _recbuffer.begin()+12);
-	}
-	else
-		data->assign(_recbuffer.begin(), _recbuffer.begin()+3);
+		waitms(20);
+		// Read data, append to receive buffer
+		if (!_diagInterface->read(&tmpbuf))
+		{
+			_recbuffer.clear();
+			return false;
+		}
+		if (tmpbuf.size())
+		{
+			_recbuffer.insert(_recbuffer.end(), tmpbuf.begin(), tmpbuf.end());
+			// Restart inter byte timer
+			time_inter_byte.start();
+			// Validate ID (the first 3 bytes)
+			while (!IDvalid && _recbuffer.size() && (bytes_dropped < max_bytes_dropped))
+			{
+				bool drop_byte = false;
+				// Check if we have a valid ID at the beginning of the buffer
+				if ((_recbuffer.at(0) & 0xF0) == 0x70)
+				{
+					IDvalid = true;
+				}
+				else if ((_recbuffer.at(0) & 0xF0) == 0xA0)
+				{
+					if (_recbuffer.size() > 1)
+					{
+						if ((_recbuffer.at(1) == 0x01) || (_recbuffer.at(1) == 0x10))
+							IDvalid = true;
+						else
+							drop_byte = true;
+					}
+					else
+						break;
+				}
+				else
+				{
+					drop_byte = true;
+				}
+				// Drop first byte from receive buffer if it is not the beginning of a valid ID
+				if (drop_byte)
+				{
+					_recbuffer.erase(_recbuffer.begin(), _recbuffer.begin() + 1);
+					bytes_dropped++;
+				}
+			}
+			// Check for repeating byte sequence(s)
+			if (IDvalid && (_recbuffer.size() > 3))
+			{
+				unsigned int id_index = 0;
+				for (unsigned int buf_index=3; buf_index<_recbuffer.size(); buf_index++)
+				{
+					// Compare next byte:
+					if (_recbuffer.at(id_index) == _recbuffer.at(buf_index))
+					{
+						cu_data_len = buf_index - id_index;
+						id_index++;
+					}
+					else
+					{
+						cu_data_len = buf_index + 1;
+						buf_index -= id_index;
+						id_index = 0;
+					}
+					// Check if we have reached an invalid ECU data length
+					if ((cu_data_len > 3) && ((_recbuffer.at(0) & 0xF0) == 0x70))
+					{
+						// NOTE: ID must be invalid, 7x xx xx IDs are always 3 bytes long !
+						IDvalid = false;
+						// Drop first byte from receive buffer
+						_recbuffer.erase(_recbuffer.begin(), _recbuffer.begin() + 1);
+						bytes_dropped++;
+						break;
+					}
+				}
+				// Check if we have enough repetitions	// NOTE: we could do this earlier (inside the loop), but - hey - why not check ALL data we have received ?!
+				if (id_index >= 3) /* NOTE: 3 bytes should be enough. The chance that we are comparing the wrong bytes and have two identical 3 byte sequences is 1/(256^3) */
+					IDconfirmed = true;
+			}
+		}
+		// Check if timeout
+		timeout = (time_total.elapsed() > t_max_total) || (time_inter_byte.elapsed() > SSMP1_T_ID_RECSTART_MAX);
+	} while (!IDconfirmed && !timeout && (bytes_dropped < max_bytes_dropped));
+	// For control units with non-repeating data: validate ID by checking the length
+	if (!IDconfirmed && IDvalid && timeout && (bytes_dropped < max_bytes_dropped) && (_recbuffer.size() >= 3))
+	{
+		if (((_recbuffer.at(0) & 0xF0) == 0x70) && (_recbuffer.size() == 3)) // NOTE: >3 not possible at this point
+		{
+			IDconfirmed = true;
+			cu_data_len = 3;
+		}
+		else if ((_recbuffer.at(0) & 0xF0) == 0xA0)
+		{
+			if ((_recbuffer.at(1) == 0x01) && ((_recbuffer.size() == 3) || ((_recbuffer.size() >= 3+9) && (_recbuffer.size() <= 100))))
+			{
+				/* FIXME: which numbers of flagbyte are possible for these control unit ?
+				 * - are there really any control units with this ID type and no flagbytes ?
+				 * - are there really no control units with at least 1 and less than 9 flag bytes ?
+				 * - what's the maximum size ?
+				 * - are all bytes (after the ID) flagbytes ?					    */
+				IDconfirmed = true;
+				cu_data_len = _recbuffer.size();
+			}
+			else if ((_recbuffer.at(1) == 0x10) && ((_recbuffer.size() == 3) || ((_recbuffer.size() >= 3+32) && (_recbuffer.size() <= 100))))
+			{
+				/* NOTE: Some Ax 10 xx controllers send more than 32 bytes of data, but only the first 32 bytes are flag bytes:
+				 *       As long as we don't know their meaning, return them all.						*/	       
+				/* FIXME: which numbers of flagbyte are possible for these control unit ?
+				 * - what's the maximum size ?
+				 * - what's the meaning of the extra bytes ?				  */
+				IDconfirmed = true;
+				cu_data_len = _recbuffer.size();
+			}
+		}
 #ifdef __FSSM_DEBUG__
-	std::cout << "SSMP1communication_procedures::getID(...):   received ID (hex): ";
-	for (unsigned char k=0; k< data->size(); k++)
-		std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff) << " ";
-	std::cout << '\n';
+		if (IDconfirmed)
+			std::cout << "SSMP1communication_procedures::getID(...):   the control doesn't send its ID continuously, ID validated by length check.\n";
+		else
+			std::cout << "SSMP1communication_procedures::getID(...):   the control doesn't send its ID continuously, ID length check failed.\n";
 #endif
-	_recbuffer.clear();
-	return true;
+	}
+	// Extract data:
+	if (IDconfirmed)
+	{
+		data->assign(_recbuffer.begin(), _recbuffer.begin() + cu_data_len);
+#ifdef __FSSM_DEBUG__
+		std::cout << "SSMP1communication_procedures::getID(...):   received ID with length " << cu_data_len << ": ";
+		for (unsigned char k=0; k< data->size(); k++)
+			std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff);
+		std::cout << '\n';
+#endif
+	}
+#ifdef __FSSM_DEBUG__
+	else
+	{
+		if (bytes_dropped >= max_bytes_dropped)
+			std::cout << "SSMP1communication_procedures::getID(...):   failed to read ID from control unit: maximum number of non-ID-bytes reached.\n";
+		else // timeout
+			std::cout << "SSMP1communication_procedures::getID(...):   failed to read ID from control unit: timeout.\n";
+	}
+#endif
 
-err:
 	_recbuffer.clear();
-	return false;
+	return IDconfirmed;
 }
 
 
