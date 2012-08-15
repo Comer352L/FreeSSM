@@ -43,7 +43,6 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
            src/CUcontent_DCs_twoMemories.h \
-           src/CUcontent_DCs_aircon.h \
            src/CUcontent_MBsSWs.h \
            src/CUcontent_MBsSWs_tableView.h \
            src/CUcontent_Adjustments.h \
@@ -90,7 +89,6 @@ SOURCES += src/main.cpp \
            src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
            src/CUcontent_DCs_twoMemories.cpp \
-           src/CUcontent_DCs_aircon.cpp \
            src/CUcontent_MBsSWs.cpp \
            src/CUcontent_MBsSWs_tableView.cpp \
            src/CUcontent_Adjustments.cpp \
@@ -118,7 +116,6 @@ FORMS +=   ui/FreeSSM.ui \
            ui/CUinfo_AirCon.ui \
            ui/CUcontent_DCs_engine.ui \
            ui/CUcontent_DCs_twoMemories.ui \
-           ui/CUcontent_DCs_aircon.ui \
            ui/CUcontent_MBsSWs.ui \
            ui/CUcontent_MBsSWs_tableView.ui \
            ui/CUcontent_Adjustments.ui \
