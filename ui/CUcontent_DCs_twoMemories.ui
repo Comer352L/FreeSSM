@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>transmissionDCcontent_Form</class>
- <widget class="QWidget" name="transmissionDCcontent_Form">
+ <class>DCcontent_twoMemories_Form</class>
+ <widget class="QWidget" name="DCcontent_twoMemories_Form">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -45,7 +45,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Load/Show Diagnostic Code content:
-	_content_DCs = new CUcontent_DCs_transmission();
+	_content_DCs = new CUcontent_DCs_twoMemories();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
@@ -181,7 +181,7 @@ void TransmissionDialog::DTCs()
 	// Save content settings:
 	saveContentSettings();
 	// Create, setup and insert new content-widget:
-	_content_DCs = new CUcontent_DCs_transmission();
+	_content_DCs = new CUcontent_DCs_twoMemories();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	ok = _content_DCs->setup(_SSMPdev);

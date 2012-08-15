@@ -1,7 +1,7 @@
 /*
- * CUcontent_DCs_transmission.h - Widget for TCU Diagnostic Codes Reading
+ * CUcontent_DCs_twoMemories.h - Widget for Diagnostic Codes Reading with two memories
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CUCONTENT_DCS_TRANSMISSION_H
-#define CUCONTENT_DCS_TRANSMISSION_H
+#ifndef CUCONTENT_DCS_TWOMEMORIES_H
+#define CUCONTENT_DCS_TWOMEMORIES_H
 
 
 #include <QtGui>
 #include <string>
 #include "CUcontent_DCs_abstract.h"
-#include "ui_CUcontent_DCs_transmission.h"
-#include "SSMprotocol2.h"
+#include "ui_CUcontent_DCs_twoMemories.h"
+#include "SSMprotocol.h"
 
 
-class CUcontent_DCs_transmission : public CUcontent_DCs_abstract, private Ui::transmissionDCcontent_Form
+class CUcontent_DCs_twoMemories : public CUcontent_DCs_abstract, private Ui::DCcontent_twoMemories_Form
 {
 	Q_OBJECT
 
 public:
-	CUcontent_DCs_transmission(QWidget *parent = 0);
-	~CUcontent_DCs_transmission();
+	CUcontent_DCs_twoMemories(QWidget *parent = 0);
+	~CUcontent_DCs_twoMemories();
 	bool setup(SSMprotocol *SSMPdev);
 
 private:

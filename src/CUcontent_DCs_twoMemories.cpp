@@ -1,7 +1,7 @@
 /*
- * CUcontent_DCs_transmission.cpp - Widget for TCU Diagnostic Codes Reading
+ * CUcontent_DCs_twoMemories.cpp - Widget for Diagnostic Codes Reading with two memories
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CUcontent_DCs_transmission.h"
+#include "CUcontent_DCs_twoMemories.h"
 
 
-CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent) : CUcontent_DCs_abstract(parent)
+CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUcontent_DCs_abstract(parent)
 {
 	_currOrTempDTCs.clear();
 	_currOrTempDTCdescriptions.clear();
@@ -63,14 +63,14 @@ CUcontent_DCs_transmission::CUcontent_DCs_transmission(QWidget *parent) : CUcont
 }
 
 
-CUcontent_DCs_transmission::~CUcontent_DCs_transmission()
+CUcontent_DCs_twoMemories::~CUcontent_DCs_twoMemories()
 {
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	disconnectGUIelements();
 }
 
 
-bool CUcontent_DCs_transmission::setup(SSMprotocol *SSMPdev)
+bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool obd2DTCformat = true;
@@ -136,7 +136,7 @@ bool CUcontent_DCs_transmission::setup(SSMprotocol *SSMPdev)
 }
 
 
-void CUcontent_DCs_transmission::connectGUIelements()
+void CUcontent_DCs_twoMemories::connectGUIelements()
 {
 	if (!_SSMPdev) return;
 	// DTCs:   disable tables of unsupported DTCs, initial output, connect slots:
@@ -157,7 +157,7 @@ void CUcontent_DCs_transmission::connectGUIelements()
 }
 
 
-void CUcontent_DCs_transmission::disconnectGUIelements()
+void CUcontent_DCs_twoMemories::disconnectGUIelements()
 {
 	if (!_SSMPdev) return;	// avoid NULL-pointer-warning-message
 	disconnect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
@@ -165,7 +165,7 @@ void CUcontent_DCs_transmission::disconnectGUIelements()
 }
 
 
-void CUcontent_DCs_transmission::updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions)
+void CUcontent_DCs_twoMemories::updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions)
 {
 	if ((currOrTempDTCs != _currOrTempDTCs) || (currOrTempDTCdescriptions != _currOrTempDTCdescriptions))
 	{
@@ -185,7 +185,7 @@ void CUcontent_DCs_transmission::updateCurrentOrTemporaryDTCsContent(QStringList
 }
 
 
-void CUcontent_DCs_transmission::updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions)
+void CUcontent_DCs_twoMemories::updateHistoricOrMemorizedDTCsContent(QStringList histOrMemDTCs, QStringList histOrMemDTCdescriptions)
 {
 	if ((histOrMemDTCs != _histOrMemDTCs) || (histOrMemDTCdescriptions != _histOrMemDTCdescriptions))
 	{
@@ -205,7 +205,7 @@ void CUcontent_DCs_transmission::updateHistoricOrMemorizedDTCsContent(QStringLis
 }
 
 
-void CUcontent_DCs_transmission::createDCprintTables(QTextCursor cursor)
+void CUcontent_DCs_twoMemories::createDCprintTables(QTextCursor cursor)
 {
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
@@ -236,7 +236,7 @@ void CUcontent_DCs_transmission::createDCprintTables(QTextCursor cursor)
 }
 
 
-void CUcontent_DCs_transmission::resizeEvent(QResizeEvent *event)
+void CUcontent_DCs_twoMemories::resizeEvent(QResizeEvent *event)
 {
 	// Calculate and set number of table rows:
 	setNrOfTableRows(currOrTempDTCs_tableWidget, _currOrTempDTCs.size() );
@@ -246,7 +246,7 @@ void CUcontent_DCs_transmission::resizeEvent(QResizeEvent *event)
 }
 
 
-bool CUcontent_DCs_transmission::eventFilter(QObject *obj, QEvent *event)
+bool CUcontent_DCs_twoMemories::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Wheel)
 	{
@@ -270,7 +270,7 @@ bool CUcontent_DCs_transmission::eventFilter(QObject *obj, QEvent *event)
 }
 
 
-void CUcontent_DCs_transmission::setupUiFonts()
+void CUcontent_DCs_twoMemories::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
 	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_transmission.h (made with QDesigner)
