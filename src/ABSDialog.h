@@ -31,7 +31,7 @@
 #include <QtGui>
 #include "ControlUnitDialog.h"
 #include "CUinfo_ABS.h"
-#include "CUcontent_DCs_abs.h"
+#include "CUcontent_DCs_twoMemories.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
@@ -60,7 +60,7 @@ private:
 	QPushButton *_clearMemory2_pushButton;
 	// Info- and content-widgets:
 	CUinfo_ABS *_infoWidget;
-	CUcontent_DCs_abs *_content_DCs;
+	CUcontent_DCs_twoMemories *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
