@@ -42,7 +42,7 @@ void SSMprotocol1::resetCUdata()
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-			    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+			    this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
 		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
 			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
 		// Try to stop active communication processes:
@@ -284,7 +284,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
 		connect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processDCTsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
+			this, SLOT( processDTCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
