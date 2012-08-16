@@ -25,7 +25,7 @@
 #include "ABSDialog.h"
 
 
-ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("ABS Control Unit"), diagInterface, language)
+ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("ABS/VDC Control Unit"), diagInterface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
@@ -33,7 +33,7 @@ ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : C
 	_content_Adjustments = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_simple(tr("ABS"));
+	_infoWidget = new CUinfo_simple(tr("ABS/VDC"));
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
@@ -71,7 +71,7 @@ void ABSDialog::setup()
 	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ABS Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ABS/VDC Control Unit... Please wait !"), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();

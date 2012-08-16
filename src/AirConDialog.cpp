@@ -20,7 +20,7 @@
 #include "AirConDialog.h"
 
 
-AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Auto Air Conditioning Control Unit"), diagInterface, language)
+AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Air Conditioning Control Unit"), diagInterface, language)
 {
 	// *** Initialize global variables:
 	_content_DCs = NULL;
@@ -61,7 +61,7 @@ void AirConDialog::setup()
 	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Auto Air Conditioning Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Air Conditioning Control Unit... Please wait !"), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
