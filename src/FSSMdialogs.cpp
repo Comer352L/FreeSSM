@@ -33,7 +33,6 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 	newfont.setPixelSize(13); // 10pts
 	newfont.setBold( true );
 	setFont( newfont );
-	setFixedSize( 330, 70 );
 }
 
 
