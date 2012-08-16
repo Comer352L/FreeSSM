@@ -24,7 +24,7 @@ CUinfo_simple::CUinfo_simple(QString sysTitle, QWidget * parent) : QWidget(paren
 {
 	setupUi(this);
 	setupUiFonts();
-	transmissiontypetitle_label->setText(sysTitle + " Type:");
+	transmissiontypetitle_label->setText(sysTitle + " " + tr("Type") + ":");
 }
 
 

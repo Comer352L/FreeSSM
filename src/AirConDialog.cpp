@@ -27,7 +27,7 @@ AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString languag
 	_content_MBsSWs = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_simple("Air Conditioning");
+	_infoWidget = new CUinfo_simple(tr("Air Conditioning"));
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
