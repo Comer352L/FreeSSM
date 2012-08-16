@@ -37,8 +37,7 @@
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
-#include "SSMprotocol1.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 
 
 

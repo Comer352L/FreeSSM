@@ -1,7 +1,7 @@
 /*
  * Engine.h - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,8 +38,7 @@
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
-#include "SSMprotocol1.h"
-#include "SSMprotocol2.h"
+#include "SSMprotocol.h"
 
 
 
