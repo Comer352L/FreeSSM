@@ -1,7 +1,7 @@
 /*
- * CUinfo_ABS.h - Widget for displaying ABS Control Unit information
+ * CUinfo_simple.h - Basic widget for displaying Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CUINFO_ABS_H
-#define CUINFO_ABS_H
+#ifndef CUINFO_SIMPLE_H
+#define CUINFO_SIMPLE_H
 
 
 #include <QtGui>
-#include "ui_CUinfo_ABS.h"
+#include "ui_CUinfo_simple.h"
 
 
 
-class CUinfo_ABS : public QWidget, private Ui::CUinfo_ABS_Form
+class CUinfo_simple : public QWidget, private Ui::CUinfo_simple_Form
 {
 	Q_OBJECT
 
 public:
-	CUinfo_ABS(QWidget * parent = 0);
-	~CUinfo_ABS();
-	void setABSTypeText(QString Type);
+	CUinfo_simple(QString sysTitle, QWidget * parent = 0);
+	~CUinfo_simple();
+	void setSystemTypeText(QString Type);
 	void setRomIDText(QString RomID);
 	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
-	void setOBD2Supported(bool sup);
 
 private:
 	void setupUiFonts();

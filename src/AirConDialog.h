@@ -30,7 +30,7 @@
 #endif
 #include <QtGui>
 #include "ControlUnitDialog.h"
-#include "CUinfo_AirCon.h"
+#include "CUinfo_simple.h"
 #include "CUcontent_DCs_twoMemories.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
@@ -58,7 +58,7 @@ private:
 	// Selection buttons:
 	QPushButton *_clearMemory_pushButton;
 	// Info- and content-widgets:
-	CUinfo_AirCon *_infoWidget;
+	CUinfo_simple *_infoWidget;
 	CUcontent_DCs_twoMemories *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
 	// Current content/mode:

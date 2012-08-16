@@ -33,7 +33,7 @@ ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : C
 	_content_Adjustments = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_ABS();
+	_infoWidget = new CUinfo_simple("ABS");
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
@@ -97,7 +97,7 @@ void ABSDialog::setup()
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
-		_infoWidget->setABSTypeText(sysdescription);
+		_infoWidget->setSystemTypeText(sysdescription);
 		// Output ROM-ID:
 		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		if (init_result == SSMprotocol::result_success)
@@ -109,7 +109,6 @@ void ABSDialog::setup()
 			// OBD2-Support:
 			if (!_SSMPdev->hasOBD2system(&supported))
 				goto commError;
-			_infoWidget->setOBD2Supported(supported);
 			// "Clear Memory"-support:
 			if (!_SSMPdev->hasClearMemory(&supported))
 				goto commError;

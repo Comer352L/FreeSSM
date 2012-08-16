@@ -27,7 +27,7 @@ AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString languag
 	_content_MBsSWs = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_AirCon();
+	_infoWidget = new CUinfo_simple("Air Conditioning");
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
@@ -87,7 +87,7 @@ void AirConDialog::setup()
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
 		// Output system description:
-		_infoWidget->setAirConTypeText(sysdescription);
+		_infoWidget->setSystemTypeText(sysdescription);
 		// Output ROM-ID:
 		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		if (init_result == SSMprotocol::result_success)

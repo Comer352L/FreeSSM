@@ -1,7 +1,7 @@
 /*
- * CUinfo_ABS.cpp - Widget for displaying ABS Control Unit information
+ * CUinfo_simple.cpp - Basic widget for displaying Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,66 +17,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CUinfo_ABS.h"
+#include "CUinfo_simple.h"
 
 
-CUinfo_ABS::CUinfo_ABS(QWidget * parent) : QWidget(parent)
+CUinfo_simple::CUinfo_simple(QString sysTitle, QWidget * parent) : QWidget(parent)
 {
 	setupUi(this);
 	setupUiFonts();
+	transmissiontypetitle_label->setText(sysTitle + " Type:");
 }
 
 
-CUinfo_ABS::~CUinfo_ABS()
+CUinfo_simple::~CUinfo_simple()
 {
 }
 
 
-void CUinfo_ABS::setABSTypeText(QString Type)
+void CUinfo_simple::setSystemTypeText(QString Type)
 {
-	abstype_label->setText(Type);
+	transmissiontype_label->setText(Type);
 }
 
 
-void CUinfo_ABS::setRomIDText(QString RomID)
+void CUinfo_simple::setRomIDText(QString RomID)
 {
 	romID_label->setText(RomID);
 }
 
 
-void CUinfo_ABS::setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs)
+void CUinfo_simple::setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs)
 {
 	nrofdatambs_label->setText( QString::number(MBs, 10) );
 	nrofswitches_label->setText( QString::number(SWs, 10) );
 }
 
 
-void CUinfo_ABS::setOBD2Supported(bool sup)
-{
-	if (sup)
-		obd2system_label->setPixmap(QPixmap(QString::fromUtf8(":/icons/chrystal/22x22/ok.png")));
-	else
-		obd2system_label->setPixmap(QPixmap(QString::fromUtf8(":/icons/chrystal/22x22/editdelete.png")));
-}
-
-
-void CUinfo_ABS::setupUiFonts()
+void CUinfo_simple::setupUiFonts()
 {
 	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUinfo_ABS.h (made with QDesigner)
+	// OVERWRITES SETTINGS OF ui_CUinfo_Transmission.h (made with QDesigner)
 	QFont appfont = QApplication::font();
 	QFont font = this->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	this->setFont(font);
-	font = abstypetitle_label->font();
+	font = transmissiontypetitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	abstypetitle_label->setFont(font);
-	font = abstype_label->font();
+	transmissiontypetitle_label->setFont(font);
+	font = transmissiontype_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	abstype_label->setFont(font);
+	transmissiontype_label->setFont(font);
 	font = romIDtitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
@@ -105,9 +97,5 @@ void CUinfo_ABS::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	nrofswitches_label->setFont(font);
-	font = obd2systemTitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	obd2systemTitle_label->setFont(font);
 }
 
