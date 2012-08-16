@@ -229,9 +229,11 @@ void EngineDialog::DCs()
 	ok = _content_DCs->setup(_SSMPdev);
 	// Start DC-reading:
 	if (ok)
+	{
 		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
 		if (ok && DCgroups != SSMprotocol::noDCs_DCgroup)
 			ok = _content_DCs->startDCreading();
+	}
 	// Get notification, if internal error occures:
 	if (ok)
 		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
