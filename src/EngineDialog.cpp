@@ -1,7 +1,7 @@
 /*
  * Engine.cpp - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,9 +92,9 @@ void EngineDialog::setup()
 			if (SYS_ID != ROM_ID)
 				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 		}
-		// Display system description:
+		// Output system description:
 		_infoWidget->setEngineTypeText(sysdescription);
-		// Display ROM-ID:
+		// Output ROM-ID:
 		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 		if (init_result == SSMprotocol::result_success)
 		{
