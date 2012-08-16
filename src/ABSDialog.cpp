@@ -106,9 +106,6 @@ void ABSDialog::setup()
 			if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 				goto commError;
 			_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
-			// OBD2-Support:
-			if (!_SSMPdev->hasOBD2system(&supported))
-				goto commError;
 			// "Clear Memory"-support:
 			if (!_SSMPdev->hasClearMemory(&supported))
 				goto commError;
