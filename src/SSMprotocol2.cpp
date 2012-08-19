@@ -303,7 +303,6 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 {
 	std::vector <unsigned int> DCqueryAddrList;
 	unsigned char k = 0;
-	bool CCsup = false;
 	bool started;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
@@ -316,7 +315,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 		return false;
 	if (DCgroups > 15)
 	{
-		if (!CCsup)
+		if (!_has_integratedCC)
 			return false;
 		if ( (DCgroups > 31) && (!_memCCs_supported) )
 			return false;
@@ -334,7 +333,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 		for (k=0; k<_DTCdefs.size(); k++)
 			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
 	}
-	if (CCsup)
+	if (_has_integratedCC)
 	{
 		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
 		{
