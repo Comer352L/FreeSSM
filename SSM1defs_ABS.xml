@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<FSSM_SSM1_DEFINITIONS version="0.1.0" format_version="0.2.0">
+<!-- 
+	SSM1defs_ABS.xml - Definitions for Antilock Brake System
+	
+	(c) 2012 L1800Turbo
+	
+	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing freeze frame implementation
+
+
+//-->
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0x76">
 		<YEAR>SEP 1997</YEAR><!-- TODO on Impreza: "1996" //-->
@@ -37,16 +46,16 @@
 					<BIT>2</BIT>
 				</SW>
 				<SW id="SW_MR">
-					<BIT>-3</BIT><!-- TODO Check //-->
+					<BIT>3</BIT><!-- invers //-->
 				</SW>
 				<SW id="SW_AT">
-					<BIT>-4</BIT><!-- TODO Check //-->
+					<BIT>4</BIT><!-- invers //-->
 				</SW>
 			</SWBLOCK>
 			<SWBLOCK>
 				<ADDRESS>0x002B</ADDRESS>
 				<SW id="SW_AW">
-					<BIT>-1</BIT><!-- TODO Check //-->
+					<BIT>1</BIT><!-- invers //-->
 				</SW>
 				<SW id="SW_VM">
 					<BIT>2</BIT>
@@ -107,15 +116,15 @@
 	</MB>
 	<MB id="MB_BLS">
 		<UNIT lang="all">V</UNIT>
-		<FORMULA>/255*13.33</FORMULA>
-		<PRECISION>2</PRECISION><!-- TODO Check //-->
+		<FORMULA>*1961/100000</FORMULA>
+		<PRECISION>2</PRECISION>
 		<TITLE lang="en">BLS</TITLE>
 		<TITLE lang="de">BLS</TITLE>
 	</MB>
 	<MB id="MB_GSENS">
 		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA><!-- TODO Check //-->
-		<PRECISION>0</PRECISION><!-- TODO Check //-->
+		<FORMULA>*1961/100000</FORMULA>
+		<PRECISION>2</PRECISION>
 		<TITLE lang="en">G-Sensor output voltage</TITLE>
 		<TITLE lang="de">GSENS</TITLE>
 	</MB>
@@ -133,20 +142,20 @@
 		<TITLE lang="de">Signal Ventil-Relais</TITLE>
 	</SW>
 	<SW id="SW_MR">
-		<UNIT lang="en">Off/On</UNIT>
-		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="en">On\Off</UNIT>
+		<UNIT lang="de">Ein\Aus</UNIT>
 		<TITLE lang="en">Motor relay signal</TITLE>
 		<TITLE lang="de">Signal Pumpenmotor-Relais</TITLE>
 	</SW>
 	<SW id="SW_AT">
-		<UNIT lang="en">Off/On</UNIT>
-		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="en">On\Off</UNIT>
+		<UNIT lang="de">Ein\Aus</UNIT>
 		<TITLE lang="en">AT ABS signal</TITLE>
 		<TITLE lang="de">AT ABS Signal</TITLE>
 	</SW>
 	<SW id="SW_AW">
-		<UNIT lang="en">Off/On</UNIT>
-		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="en">On\Off</UNIT>
+		<UNIT lang="de">Ein\Aus</UNIT>
 		<TITLE lang="en">ABS warning light</TITLE>
 		<TITLE lang="de">ABS Warnleuchte</TITLE>
 	</SW>

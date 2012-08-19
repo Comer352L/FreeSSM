@@ -1,108 +1,142 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<FSSM_SSM1_DEFINITIONS version="0.1.0" format_version="0.2.0">
+<!-- 
+	SSM1defs_AirConditioning.xml - Definitions for Air Conditioning
+	
+	(c) 2012 L1800Turbo
+	
+	0.1.1  First example version for testing (Legacy '90/'91) without DTCs because of missing hex value implementation
+
+
+//-->
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
-	<ID_BYTE1 value="0x70">
-		<ID_BYTE2 value="0x6B">
-			<YEAR>1992</YEAR>
-			<SYSTEMDESCRIPTION>ZEXEL A/C</SYSTEMDESCRIPTION>
-			<MODEL>SVX</MODEL>
-			<ID_BYTE3 value_start="0x00" value_end="0xff">
+	<ID_BYTE1 value="0x00">
+		<ID_BYTE2 value="0x17">
+			<ID_BYTE3 value_start="0x00" value_end="0x00"><!-- TODO no real RomID, depends on SSM protocol, from CRUISE_AUTO/AC Cassette  //-->
+				<YEAR>1990</YEAR>
+				<SYSTEMDESCRIPTION>AUTO AIR</SYSTEMDESCRIPTION>
+				<MODELNAME>Legacy</MODELNAME><!-- NOTE not everything implemented yet //-->
 				<MB id="MB_Tset">
-					<ADDRESS>0x000B</ADDRESS>
+					<ADDRESS>0x0017</ADDRESS>
 				</MB>
-				<MB id="MB_Tout">
-					<ADDRESS>0x000C</ADDRESS>
+				<MB id="MB_To">
+					<ADDRESS>0x001E</ADDRESS>
 				</MB>
 				<MB id="MB_Troom">
-					<ADDRESS>0x0001</ADDRESS>
+					<ADDRESS>0x007A</ADDRESS>
 				</MB>
 				<MB id="MB_Tamb">
-					<ADDRESS>0x0002</ADDRESS>
+					<ADDRESS>0x00B2</ADDRESS>
 				</MB>
 				<MB id="MB_Tevp">
-					<ADDRESS>0x0003</ADDRESS>
-				</MB>
-				<MB id="MB_Qsun">
-					<ADDRESS>0x0004</ADDRESS>
-				</MB>
-				<MB id="MB_Tsun">
-					<ADDRESS>0x0005</ADDRESS>
+					<ADDRESS>0x00B4</ADDRESS>
 				</MB>
 				<MB id="MB_Tw">
-					<ADDRESS>0x0006</ADDRESS>
+					<ADDRESS>0x00B6</ADDRESS>
+				</MB>
+				<MB id="MB_Qsun">
+					<ADDRESS>0x00B7</ADDRESS>
 				</MB>
 				<MB id="MB_AMRset">
-					<ADDRESS>0x0007</ADDRESS>
+					<ADDRESS>0x007A</ADDRESS>
 				</MB>
-				<MB id="MB_AMRpot">
-					<ADDRESS>0x0008</ADDRESS>
+				<MB id="MB_AMRpt">
+					<ADDRESS>0x00BA</ADDRESS>
 				</MB>
-				<MB id="MB_MODEset">
-					<ADDRESS>0x0009</ADDRESS>
+				<MB id="MB_POSset">
+					<ADDRESS>0x0076</ADDRESS>
 				</MB>
-				<MB id="MB_MODEpot">
-					<ADDRESS>0x000A</ADDRESS>
+				<MB id="MB_POSpt">
+					<ADDRESS>0x0070</ADDRESS>
 				</MB>
 				<MB id="MB_BLW">
-					<ADDRESS>0x000D</ADDRESS>
+					<ADDRESS>0x0020</ADDRESS>
 				</MB>
-				<MB id="MB_Intak">
-					<ADDRESS>0x000E</ADDRESS>
-				</MB>
-				<MB id="MB_Isol">
-					<ADDRESS>0x0010</ADDRESS>
-				</MB>
-				<MB id="MB_EGItoA/C">
-					<ADDRESS>0x0011</ADDRESS>
-				</MB>
-				<MB id="MB_SW">
-					<ADDRESS>0x000F</ADDRESS>
-				</MB>
-				<SWBLOCK>
-					<ADDRESS>0015</ADDRESS>
-					<SW id="SW_LHD">
-						<BIT>1</BIT>
-					</SW>
-				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0012</ADDRESS>
-					<DTC id="DTC_0">
-						<BIT>0</BIT>
-					</DTC>
-					<DTC id="DTC_1">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_2">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_3">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_4">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_5">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_6">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_7">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
+	</ID_BYTE1>
+	<ID_BYTE1 value="0x70">
 		<ID_BYTE2 value="0x89">
 			<YEAR>1990</YEAR>
 			<SYSTEMDESCRIPTION>AUTO AIR</SYSTEMDESCRIPTION>
 			<ID_BYTE3 value_start="0x00" value_end="0xff">
-				<MODELNAME>Legacy, ...</MODELNAME>
+				<MODELNAME>Legacy</MODELNAME><!-- NOTE not everything implemented yet //-->
 				<MB id="MB_To">
 					<ADDRESS>0x0001</ADDRESS>
 				</MB>
+				<MB id="MB_Troom_0x89">
+					<ADDRESS>0x0002</ADDRESS>
+				</MB>
+				<MB id="MB_Tamb_0x89">
+					<ADDRESS>0x0009</ADDRESS>
+				</MB>
+				<MB id="MB_Tevp_0x89">
+					<ADDRESS>0x0003</ADDRESS>
+				</MB>
+				<MB id="MB_Tw_0x89">
+					<ADDRESS>0x0004</ADDRESS>
+				</MB>
+				<MB id="MB_Qsun_0x89">
+					<ADDRESS>0x0006</ADDRESS>
+				</MB>
+				<MB id="MB_Qav_0x89">
+					<ADDRESS>0x0005</ADDRESS>
+				</MB>
+				<MB id="MB_AMRset_0x89">
+					<ADDRESS>0x0007</ADDRESS>
+				</MB>
+				<MB id="MB_AMRpt_0x89">
+					<ADDRESS>0x0008</ADDRESS>
+				</MB>
+				<MB id="MB_POSset_0x89">
+					<ADDRESS>0x000C</ADDRESS>
+				</MB>
+				<MB id="MB_POSpt_0x89">
+					<ADDRESS>0x000D</ADDRESS>
+				</MB>
+				<MB id="MB_BLW_0x89">
+					<ADDRESS>0x000A</ADDRESS>
+				</MB>
+				<MB id="MB_Intak">
+					<ADDRESS>0x000E</ADDRESS>
+				</MB>
+				<MB id="MB_VSP">
+					<ADDRESS>0x000B</ADDRESS>
+				</MB>
 				
-				
+				<DTCBLOCK>
+					<ADDRESS type="current">0x000F</ADDRESS>
+					<DTC id="DTC_1">
+						<BIT></BIT><!-- TODO Hex value necessary //-->
+					</DTC>
+					<DTC id="DTC_2">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_3">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_4">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_5">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_6">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_7">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_8">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_9">
+						<BIT></BIT>
+					</DTC>
+					<DTC id="DTC_10">
+						<BIT></BIT>
+					</DTC>
+				</DTCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -110,140 +144,229 @@
 <DATA_COMMON>
 	<MB id="MB_Tset">
 		<UNIT lang="all">°C</UNIT>
-		<FORMULA>*1</FORMULA>
+		<FORMULA>+18*10/10</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Set</TITLE>
-		<TITLE lang="de">programmierte Temperatur</TITLE>
+		<TITLE lang="en">Tset</TITLE>
+		<TITLE lang="de">Tset</TITLE>
 	</MB>
-	<MB id="MB_Tout">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
+	<MB id="MB_To">
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>-25*12/10</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Outside</TITLE>
-		<TITLE lang="de">Temperature Aus</TITLE>
+		<TITLE lang="en">To</TITLE>
+		<TITLE lang="de">To</TITLE>
 	</MB>
 	<MB id="MB_Troom">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>*25-650/100</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Room</TITLE>
-		<TITLE lang="de">Temperature Zimmer</TITLE>
+		<TITLE lang="en">Troom</TITLE>
+		<TITLE lang="de">Troom</TITLE>
+	</MB>
+	<MB id="MB_Troom_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>-100*3/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">Troom</TITLE>
+		<TITLE lang="de">Troom</TITLE>
 	</MB>
 	<MB id="MB_Tamb">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>*35-2330/100</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Ambient</TITLE>
-		<TITLE lang="de">Temperatur ambient</TITLE>
+		<TITLE lang="en">Tamb</TITLE>
+		<TITLE lang="de">Tamb</TITLE>
+	</MB>
+	<MB id="MB_Tamb_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>-100*3/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">Tamb</TITLE>
+		<TITLE lang="de">Tamb</TITLE>
 	</MB>
 	<MB id="MB_Tevp">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>*35-2330/100</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Evaporator</TITLE>
-		<TITLE lang="de">Temperatur Evaporator</TITLE>
+		<TITLE lang="en">Tevp</TITLE>
+		<TITLE lang="de">Tevp</TITLE>
 	</MB>
-	<MB id="MB_Qsun">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
+	<MB id="MB_Tevp_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>-100*3/10</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Quantity of Sun</TITLE>
-		<TITLE lang="de">Sonnen</TITLE>
-	</MB>
-	<MB id="MB_Tsun">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
-		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature of Sun</TITLE>
-		<TITLE lang="de">Sonnentemperatur</TITLE>
+		<TITLE lang="en">Tevp</TITLE>
+		<TITLE lang="de">Tevp</TITLE>
 	</MB>
 	<MB id="MB_Tw">
-		<UNIT lang="all">C</UNIT>
-		<FORMULA>*1</FORMULA>
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA>*35+135/100</FORMULA>
 		<PRECISION>1</PRECISION>
-		<TITLE lang="en">Temperature Water</TITLE>
-		<TITLE lang="de">Wassertemperatur</TITLE>
+		<TITLE lang="en">Tw</TITLE>
+		<TITLE lang="de">Tw</TITLE>
+	</MB>
+	<MB id="MB_Tw_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">°C</UNIT>
+		<FORMULA></FORMULA><!-- TODO Wertetabelle! //-->
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">Tw</TITLE>
+		<TITLE lang="de">Tw</TITLE>
+	</MB>
+	<MB id="MB_Qsun">
+		<UNIT lang="all">kCal</UNIT>
+		<FORMULA>*25/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">Qsun</TITLE>
+		<TITLE lang="de">Qsun</TITLE>
+	</MB>
+	<MB id="MB_Qsun_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">kCal</UNIT>
+		<FORMULA>*508/100</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Qsun</TITLE>
+		<TITLE lang="de">Qsun</TITLE>
+	</MB>
+	<MB id="MB_Qav_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">kCal</UNIT>
+		<FORMULA>*508/100</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Qav</TITLE>
+		<TITLE lang="de">Qav</TITLE>
 	</MB>
 	<MB id="MB_AMRset">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
-		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Air Mix Door Setting</TITLE>
-		<TITLE lang="de">Air Mix Door Setting</TITLE>
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*5-140/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">AMRset</TITLE>
+		<TITLE lang="de">AMRset</TITLE>
 	</MB>
-	<MB id="MB_AMRpot">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*</FORMULA>
+	<MB id="MB_AMRset_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*100/255</FORMULA>
 		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Air Mix Door Position</TITLE>
-		<TITLE lang="de">Air Mix Door Position</TITLE>
+		<TITLE lang="en">AMRset</TITLE>
+		<TITLE lang="de">AMRset</TITLE>
 	</MB>
-	<MB id="MB_MODEset">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
-		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Mode Door Setting</TITLE>
-		<TITLE lang="de">Mode Door Setting</TITLE>
+	<MB id="MB_AMRpt">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*5-140/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">AMRpt</TITLE>
+		<TITLE lang="de">AMRpt</TITLE>
 	</MB>
-	<MB id="MB_MODEpot">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
+	<MB id="MB_AMRpt_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*100/255</FORMULA>
 		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Mode Door Position</TITLE>
-		<TITLE lang="de">Mode Door Position</TITLE>
+		<TITLE lang="en">AMRpt</TITLE>
+		<TITLE lang="de">AMRpt</TITLE>
+	</MB>
+	<MB id="MB_POSset">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*5-140/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">POSset</TITLE>
+		<TITLE lang="de">POSset</TITLE>
+	</MB>
+	<MB id="MB_POSset_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all"></UNIT>
+		<FORMULA></FORMULA><!-- TODO Labeltabelle //-->
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">POSset</TITLE>
+		<TITLE lang="de">POSset</TITLE>
+	</MB>
+	<MB id="MB_POSpt">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*5-140/10</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">POSpt</TITLE>
+		<TITLE lang="de">POSpt</TITLE>
+	</MB>
+	<MB id="MB_POSpt_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all"></UNIT>
+		<FORMULA></FORMULA><!-- TODO Labeltabelle //-->
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">POSpt</TITLE>
+		<TITLE lang="de">POSpt</TITLE>
 	</MB>
 	<MB id="MB_BLW">
 		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
+		<FORMULA>&F</FORMULA><!-- TODO CHECK //-->
 		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Blower</TITLE>
-		<TITLE lang="de">Blower</TITLE>
+		<TITLE lang="en">BLW</TITLE>
+		<TITLE lang="de">BLW</TITLE>
+	</MB>
+	<MB id="MB_BLW_0x89"><!-- for 70 89 00 //-->
+		<UNIT lang="all">V</UNIT>
+		<FORMULA></FORMULA><!-- TODO Skalierungstabelle //-->
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">BLW</TITLE>
+		<TITLE lang="de">BLW</TITLE>
 	</MB>
 	<MB id="MB_Intak">
 		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
+		<FORMULA></FORMULA><!-- TODO Labeltabelle //-->
 		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Intake Position</TITLE>
-		<TITLE lang="de">Intake Position</TITLE>
+		<TITLE lang="en">Intak</TITLE>
+		<TITLE lang="de">Intak</TITLE>
 	</MB>
-	<MB id="MB_O2_Isol">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
+	<MB id="MB_VSP">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*16/10</FORMULA>
 		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Isol</TITLE>
-		<TITLE lang="de">Isol</TITLE>
+		<TITLE lang="en">VSP</TITLE>
+		<TITLE lang="de">VSP</TITLE>
 	</MB>
-	<MB id="MB_EGItoA/C">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
-		<PRECISION>0</PRECISION>
-		<TITLE lang="en">EGItoA/C</TITLE>
-		<TITLE lang="de">EGItoA/C</TITLE>
-	</MB>
-	<MB id="MB_sw">
-		<UNIT lang="all"></UNIT>
-		<FORMULA>*1</FORMULA>
-		<PRECISION>0</PRECISION>
-		<TITLE lang="en">Switches</TITLE>
-		<TITLE lang="de">Switchen</TITLE>
-	</MB>
-	<SW id="SW_LHD">
-		<UNIT lang="all">RHD/LHD</UNIT>
-		<TITLE lang="en">Orientation</TITLE>
-		<TITLE lang="de">Orientation</TITLE>
-	</SW>
+	
 	<DTC id="DTC_1">
 		<CODE>1</CODE>
-		<TITLE lang="en">sth.</TITLE>
-		<TITLE lang="de">ganz dummer Fehler</TITLE>
+		<TITLE lang="en">1</TITLE>
+		<TITLE lang="de">1</TITLE>
 	</DTC>
-	<!-- LEGACY '90, '92 //-->
-	<MB id="MB_To">
-		<UNIT lang="all">°C</UNIT>
-		<FORMULA>*30</FORMULA>
-		<PRECISION>1</PRECISION>
-		<TITLE lang="en">To..</TITLE>
-		<TITLE lang="de">To..</TITLE>
-	</MB>
+	<DTC id="DTC_2">
+		<CODE>2</CODE>
+		<TITLE lang="en">2</TITLE>
+		<TITLE lang="de">2</TITLE>
+	</DTC>
+	<DTC id="DTC_3">
+		<CODE>3</CODE>
+		<TITLE lang="en">3</TITLE>
+		<TITLE lang="de">3</TITLE>
+	</DTC>
+	<DTC id="DTC_4">
+		<CODE>4</CODE>
+		<TITLE lang="en">4</TITLE>
+		<TITLE lang="de">4</TITLE>
+	</DTC>
+	<DTC id="DTC_5">
+		<CODE>5</CODE>
+		<TITLE lang="en">5</TITLE>
+		<TITLE lang="de">5</TITLE>
+	</DTC>
+	<DTC id="DTC_6">
+		<CODE>6</CODE>
+		<TITLE lang="en">6</TITLE>
+		<TITLE lang="de">6</TITLE>
+	</DTC>
+	<DTC id="DTC_7">
+		<CODE>7</CODE>
+		<TITLE lang="en">7</TITLE>
+		<TITLE lang="de">7</TITLE>
+	</DTC>
+	<DTC id="DTC_8">
+		<CODE>8</CODE>
+		<TITLE lang="en">8</TITLE>
+		<TITLE lang="de">8</TITLE>
+	</DTC>
+	<DTC id="DTC_9">
+		<CODE>9</CODE>
+		<TITLE lang="en">9</TITLE>
+		<TITLE lang="de">9</TITLE>
+	</DTC>
+	<DTC id="DTC_10">
+		<CODE>10</CODE>
+		<TITLE lang="en">10</TITLE>
+		<TITLE lang="de">10</TITLE>
+	</DTC>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
