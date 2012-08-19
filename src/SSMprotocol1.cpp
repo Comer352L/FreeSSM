@@ -46,8 +46,28 @@ void SSMprotocol1::resetCUdata()
 		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
 			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
 		// Try to stop active communication processes:
-		_SSMP1com->stopCommunication();
-		// NOTE: DO NOT CALL stopCommOperation() or any other communicating functions here because of possible recursions !
+		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
+		if (_SSMP1com->stopCommunication() && (_state == state_ActTesting) && _uses_SSM2defs) // TODO: other definition systems
+		{
+			char currentdatabyte = '\x0';
+			if (_SSMP1com->readAddress(0x61, &currentdatabyte))
+			{
+				// Check if test mode is active:
+				if (currentdatabyte & 0x20)
+				{
+					bool ok = false;
+					// Stop all actuator tests:
+					for (unsigned int k=0; k<_allActByteAddr.size(); k++)
+					{
+						ok =_SSMP1com->writeAddress(_allActByteAddr.at(k), 0x00);
+						if (!ok) break;
+					}
+					_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+					if (ok)
+						emit stoppedActuatorTest();
+				}
+			}
+		}
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 		delete _SSMP1com;
 		_SSMP1com = NULL;
