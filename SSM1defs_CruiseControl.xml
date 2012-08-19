@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- 
+	SSM1defs_CruiseControl.xml - Definitions for Cruise Control Unit
+	
+	(c) 2012 L1800Turbo
+	
+	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing hex value implementation
+
+
+//-->
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
+<DEFINITIONS>
+	<ID_BYTE1 value="0x74">
+		<ID_BYTE2 value="0xB4">
+			<MODEL>Impreza</MODEL>
+			<ID_BYTE3 value_start="0x00" value_end="0xff">
+				<YEAR>1996</YEAR><!-- lt. Kassette //-->
+				<SYSTEMDESCRIPTION>YEAR 1995</SYSTEMDESCRIPTION>
+				<MB id="MB_VSP">
+					<ADDRESS>0x00A6</ADDRESS>
+				</MB>
+				<MB id="MB_MSP">
+					<ADDRESS>0x00A7</ADDRESS>
+				</MB>
+				
+				<SWBLOCK>
+					<ADDRESS>0x007A</ADDRESS>
+					<SW id="SW_SE">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_RE">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_ST">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_N">
+						<BIT>3</BIT>
+					</SW>
+				</SWBLOCK>
+				
+				<DTCBLOCK>
+					<ADDRESS type="current">0x009D</ADDRESS>
+					<DTC id="DTC_0">
+						<BIT>0</BIT><!-- TODO Hex value necessary //-->
+					</DTC>
+				</DTCBLOCK>
+			</ID_BYTE3>
+		</ID_BYTE2>
+	</ID_BYTE1>
+</DEFINITIONS>
+<DATA_COMMON>
+	<MB id="MB_VSP">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Vehicle speed signal</TITLE>
+		<TITLE lang="de">Geschwindigkeitssignal</TITLE>
+	</MB>
+	<MB id="MB_MSP">
+		<UNIT lang="all">km/h</UNIT>
+		<FORMULA>*1</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Memorized cruise speed</TITLE>
+		<TITLE lang="de">gespeicherte Geschwindigkeit</TITLE>
+	</MB>
+	
+	<SW id="SW_SE">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">SET/COAST switch</TITLE>
+		<TITLE lang="de">SET/COAST-Schalter</TITLE>
+	</SW>
+	<SW id="SW_RE">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">RESUME/ACCEL switch</TITLE>
+		<TITLE lang="de">RESUME/ACCEL-Schalter</TITLE>
+	</SW>
+	<SW id="SW_ST">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Stop light switch</TITLE>
+		<TITLE lang="de">Bremslichtschalter</TITLE>
+	</SW>
+	<SW id="SW_BR">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">brake / clutch switch</TITLE>
+		<TITLE lang="de">Brems- und/oder Kupplungsschalter</TITLE>
+	</SW>
+	<SW id="SW_N">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Inhibitor switch (AT)</TITLE>
+		<TITLE lang="de">Sperrschalter (AT)</TITLE>
+	</SW>
+</DATA_COMMON>
+</FSSM_SSM1_DEFINITIONS>
