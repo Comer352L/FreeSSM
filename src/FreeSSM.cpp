@@ -210,6 +210,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
 	connect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	connect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
 	connect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
 	connect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
 	connect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
@@ -226,6 +227,7 @@ FreeSSM::~FreeSSM()
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
 	disconnect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
+	disconnect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
 	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) ); 
 	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
 	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
@@ -289,6 +291,19 @@ void FreeSSM::abs()
 	}
 }
 
+void FreeSSM::cruisecontrol()
+{
+	if (_dumping) return;
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
+	{
+		CruiseControlDialog *cruisecontroldialog = new CruiseControlDialog(diagInterface, _language);
+		if (!cruisecontroldialog->isHidden())
+			cruisecontroldialog->exec();
+		delete cruisecontroldialog;
+		delete diagInterface;
+	}
+}
 
 void FreeSSM::aircon()
 {

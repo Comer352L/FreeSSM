@@ -12,7 +12,7 @@
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
-	<ID_BYTE1 value="0x00">
+	<ID_BYTE1 value="0xBE">
 		<ID_BYTE2 value="0x00">
 			<ID_BYTE3 value_start="0x00" value_end="0x00"><!-- TODO no real RomID, depends on SSM protocol (SSM0pre88) //-->
 				<YEAR>1987</YEAR>
@@ -116,6 +116,9 @@
 					</DTC>
 					<DTC id="DTC_15_Lseries">
 						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_21">
+						<BIT>3</BIT>
 					</DTC>
 					<DTC id="DTC_22">
 						<BIT>2</BIT>
@@ -263,6 +266,9 @@
 					</DTC>
 					<DTC id="DTC_15_Lseries">
 						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_21">
+						<BIT>3</BIT>
 					</DTC>
 					<DTC id="DTC_22">
 						<BIT>2</BIT>
@@ -546,6 +552,9 @@
 					</DTC>
 					<DTC id="DTC_15_XT6">
 						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_21">
+						<BIT>3</BIT>
 					</DTC>
 					<DTC id="DTC_22">
 						<BIT>2</BIT>
@@ -842,6 +851,9 @@
 					</DTC>
 					<DTC id="DTC_15_Lseries">
 						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_21">
+						<BIT>3</BIT>
 					</DTC>
 					<DTC id="DTC_22">
 						<BIT>2</BIT>
@@ -2195,8 +2207,8 @@
 		<TITLE lang="de">Klopfsensorsignal</TITLE>
 	</SW>
 	<SW id="SW_KS_inverted">
-		<UNIT lang="en">Off\On</UNIT>
-		<UNIT lang="de">Aus\Ein</UNIT>
+		<UNIT lang="en">On\Off</UNIT>
+		<UNIT lang="de">Ein\Aus</UNIT>
 		<TITLE lang="en">Knock sensor signal</TITLE>
 		<TITLE lang="de">Klopfsensorsignal</TITLE>
 	</SW>

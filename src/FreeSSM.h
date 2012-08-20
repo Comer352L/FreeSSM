@@ -34,6 +34,7 @@
 #include "EngineDialog.h"
 #include "TransmissionDialog.h"
 #include "ABSDialog.h"
+#include "CruiseControlDialog.h"
 #include "AirConDialog.h"
 #include "Preferences.h"
 #include "About.h"
@@ -69,6 +70,7 @@ private slots:
 	void engine();
 	void transmission();
 	void abs();
+	void cruisecontrol();
 	void aircon();
 	void preferences();
 	void help();

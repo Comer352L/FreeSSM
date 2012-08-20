@@ -16,6 +16,7 @@ HEADERS += src/FreeSSM.h \
            src/EngineDialog.h \
            src/TransmissionDialog.h \
            src/ABSDialog.h \
+           src/CruiseControlDialog.h \
            src/AirConDialog.h \
            src/Preferences.h \
            src/About.h \
@@ -42,6 +43,7 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_DCs_abstract.h \
            src/CUcontent_DCs_engine.h \
            src/CUcontent_DCs_twoMemories.h \
+           src/CUcontent_DCs_stopCodes.h \
            src/CUcontent_MBsSWs.h \
            src/CUcontent_MBsSWs_tableView.h \
            src/CUcontent_Adjustments.h \
@@ -62,6 +64,7 @@ SOURCES += src/main.cpp \
            src/EngineDialog.cpp \
            src/TransmissionDialog.cpp \
            src/ABSDialog.cpp \
+           src/CruiseControlDialog.cpp \
            src/AirConDialog.cpp \
            src/Preferences.cpp \
            src/About.cpp \
@@ -87,6 +90,7 @@ SOURCES += src/main.cpp \
            src/CUcontent_DCs_abstract.cpp \
            src/CUcontent_DCs_engine.cpp \
            src/CUcontent_DCs_twoMemories.cpp \
+           src/CUcontent_DCs_stopCodes.cpp \
            src/CUcontent_MBsSWs.cpp \
            src/CUcontent_MBsSWs_tableView.cpp \
            src/CUcontent_Adjustments.cpp \
@@ -113,6 +117,7 @@ FORMS +=   ui/FreeSSM.ui \
            ui/CUinfo_simple.ui \
            ui/CUcontent_DCs_engine.ui \
            ui/CUcontent_DCs_twoMemories.ui \
+           ui/CUcontent_DCs_stopCodes.ui \
            ui/CUcontent_MBsSWs.ui \
            ui/CUcontent_MBsSWs_tableView.ui \
            ui/CUcontent_Adjustments.ui \

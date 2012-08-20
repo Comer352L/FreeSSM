@@ -167,9 +167,9 @@
       </size>
      </property>
     </widget>
-    <widget class="QPushButton" name="cruisecontrol_pushButton_2">
+    <widget class="QPushButton" name="cruisecontrol_pushButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
