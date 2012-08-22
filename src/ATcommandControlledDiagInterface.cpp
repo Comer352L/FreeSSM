@@ -1031,13 +1031,10 @@ bool ATcommandControlledDiagInterface::configureDevice()
 #endif
 	}
 	// Increase baud rate if interface supports custom baud rates
-	if ((_baudrate = 38400) && ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM327)))
+	if ((_baudrate = 38400) && ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329)))
 	{
-		if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM327))
-		{
 			if (changeInterfaceBaudRate(CUSTOM_BAUDRATE))
 				_custom_baudrate = true;
-		}
 	}
 #ifdef __FSSM_DEBUG__
 	std::cout << "ATcommandControlledDiagInterface::configureDevice():   completed.\n";
