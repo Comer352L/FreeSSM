@@ -662,6 +662,31 @@ The Control Unit didn&apos;t accept the new value !</translation>
     </message>
 </context>
 <context>
+    <name>CUcontent_DCs_stopCodes</name>
+    <message>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="45"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="82"/>
+        <source>Current Stop Code:</source>
+        <translation>Current Stop Code:</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="87"/>
+        <source>----- Not supported by ECU -----</source>
+        <translation>----- Not supported by ECU -----</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="114"/>
+        <source>----- Reading data... Please wait ! -----</source>
+        <translation>----- Reading data... Please wait ! -----</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="142"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="161"/>
+        <source>----- No valid Stop Codes -----</source>
+        <translation>----- No valid Stop Codes -----</translation>
+    </message>
+</context>
+<context>
     <name>CUcontent_DCs_transmission</name>
     <message>
         <source>Temporary Diagnostic Trouble Code(s):</source>
@@ -1170,6 +1195,128 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     </message>
 </context>
 <context>
+    <name>CruiseControlDialog</name>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="23"/>
+        <source>Cruise Control Unit</source>
+        <translation>Cruise Control Unit</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="30"/>
+        <source>Cruise Control</source>
+        <translation>Cruise Control</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="34"/>
+        <source>&amp;Diagnostic Codes</source>
+        <translation>&amp;Diagnostic Codes</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="37"/>
+        <source>&amp;Measuring Blocks</source>
+        <translation>&amp;Measuring Blocks</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="42"/>
+        <location filename="src/CruiseControlDialog.cpp" line="161"/>
+        <source>Diagnostic Codes:</source>
+        <translation>Diagnostic Codes:</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="61"/>
+        <source>Connecting to Cruise Control Unit... Please wait !</source>
+        <translation>Connecting to Cruise Control Unit... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="62"/>
+        <source>Connecting...</source>
+        <translation>Connecting...</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="70"/>
+        <source>Processing Control Unit data... Please wait !</source>
+        <translation>Processing Control Unit data... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="82"/>
+        <source>unknown</source>
+        <translation>unknown</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="108"/>
+        <source>Control Unit initialisation successful !</source>
+        <translation>Control Unit initialisation successful !</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="122"/>
+        <source>Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</source>
+        <translation>Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="126"/>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="128"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="155"/>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <translation>Switching to Diagnostic Codes... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="189"/>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <translation>Switching to Measuring Blocks... Please wait !</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="195"/>
+        <source>Measuring Blocks:</source>
+        <translation>Measuring Blocks:</translation>
+    </message>
+</context>
+<context>
+    <name>DCcontent_stopCodes_Form</name>
+    <message>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="25"/>
+        <source>Diagnostic Codes</source>
+        <translation>Diagnostic Codes</translation>
+    </message>
+    <message>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="62"/>
+        <source>Current Stop Code:</source>
+        <translation>Current Stop Code:</translation>
+    </message>
+    <message>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="94"/>
+        <source>Code:</source>
+        <translation>Code:</translation>
+    </message>
+    <message>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="99"/>
+        <source>Description:</source>
+        <translation>Description:</translation>
+    </message>
+    <message>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="152"/>
+        <source>    Print    </source>
+        <translation>    Print    </translation>
+    </message>
+</context>
+<context>
     <name>DCcontent_twoMemories_Form</name>
     <message>
         <location filename="ui/CUcontent_DCs_twoMemories.ui" line="25"/>
@@ -1377,19 +1524,19 @@ If you want to contribute to the the project (help adding defintions), feel free
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="123"/>
-        <location filename="src/FreeSSM.cpp" line="645"/>
+        <location filename="src/FreeSSM.cpp" line="660"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="343"/>
+        <location filename="src/FreeSSM.cpp" line="358"/>
         <source>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</source>
         <translation>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="362"/>
+        <location filename="src/FreeSSM.cpp" line="377"/>
         <source>Internal error:
 The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</source>
@@ -1401,7 +1548,7 @@ The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="368"/>
+        <location filename="src/FreeSSM.cpp" line="383"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</source>
         <translation>Couldn&apos;t open the diagnostic interface !
