@@ -303,9 +303,6 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	bool started;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
-	// Try to determine the supported Cruise Control Cancel Code groups:
-	if (!_has_integratedCC)
-		return false;
 	// Check argument:
 	if (DCgroups < 1 || DCgroups > 63) return false;
 	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
