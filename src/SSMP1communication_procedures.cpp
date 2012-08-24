@@ -223,7 +223,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	{
 		data->assign(_recbuffer.begin(), _recbuffer.begin() + cu_data_len);
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP1communication_procedures::getID(...):   received ID with length " << cu_data_len << ": ";
+		std::cout << "SSMP1communication_procedures::getID(...):   received ID with length " << std::dec << cu_data_len << ": ";
 		for (unsigned char k=0; k< data->size(); k++)
 			std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff);
 		std::cout << '\n';
