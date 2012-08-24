@@ -63,6 +63,7 @@ public:
 
 private:
 	QString _language;
+	bool _id_set;
 	SSMprotocol::CUtype_dt _CU;
 	char _ID1[3];
 	char _ID2[5];

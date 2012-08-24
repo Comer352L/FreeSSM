@@ -24,6 +24,7 @@
 SSM2definitionsInterface::SSM2definitionsInterface(QString language)
 {
 	_language = language;
+	_id_set = false;
 	_CU = SSMprotocol::CUtype_Engine;
 	memset(_ID1, 0, 3);
 	memset(_ID2, 0, 5);
@@ -48,14 +49,17 @@ void SSM2definitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, ch
 	_CU = cu;
 	memcpy(_ID1, id1, 3);
 	memcpy(_ID2, id2, 5);
-	memcpy(_flagbytes, flagbytes, 96);
+	memcpy(_flagbytes, flagbytes, nrofflagbytes);
+	if (nrofflagbytes < 96)
+		memset(_flagbytes, 0, 96 - nrofflagbytes);	// IMPORTANT !
 	_nrofflagbytes = nrofflagbytes;
+	_id_set = true;
 }
 
 
 bool SSM2definitionsInterface::systemDescription(QString *description)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if (_CU == SSMprotocol::CUtype_Engine)
 	{
@@ -76,7 +80,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 	QStringList rawDefs;
 	bool obdDTCs = false;
 
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -162,7 +166,6 @@ bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> 
 	unsigned int addr = 0;
 	bool CCsup = false;
 	// Check if CU is equipped with CC:
-
 	if (!hasIntegratedCC( &CCsup ))
 		return false;
 	cancelCodes->clear();
@@ -199,7 +202,7 @@ bool SSM2definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measurin
 	bool ok = false;
 	int k = 0;
 
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -290,7 +293,7 @@ bool SSM2definitionsInterface::switches(std::vector<sw_intl_dt> *switches)
 	bool ok = false;
 	int k = 0;
 
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -367,7 +370,7 @@ bool SSM2definitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adju
 	bool ok = false;
 	QStringList adjustmentsrawdata;
 
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -464,8 +467,6 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 	int k = 0;
 	QStringList actuatorsrawdata;
 
-	if (_nrofflagbytes < 32)
-		return false;
 	if (!hasActuatorTests( &ATsup ))
 		return false;
 	actuators->clear();
@@ -515,7 +516,7 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 
 bool SSM2definitionsInterface::hasOBD2system(bool *OBD2)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -529,7 +530,7 @@ bool SSM2definitionsInterface::hasOBD2system(bool *OBD2)
 
 bool SSM2definitionsInterface::hasVINsupport(bool *VINsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -548,7 +549,7 @@ bool SSM2definitionsInterface::hasVINsupport(bool *VINsup)
 
 bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -568,7 +569,7 @@ bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
 
 bool SSM2definitionsInterface::hasIntegratedCC(bool *CCsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -587,7 +588,7 @@ bool SSM2definitionsInterface::hasIntegratedCC(bool *CCsup)
 
 bool SSM2definitionsInterface::hasClearMemory(bool *CMsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -598,7 +599,7 @@ bool SSM2definitionsInterface::hasClearMemory(bool *CMsup)
 
 bool SSM2definitionsInterface::hasClearMemory2(bool *CM2sup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -617,7 +618,7 @@ bool SSM2definitionsInterface::hasClearMemory2(bool *CM2sup)
 
 bool SSM2definitionsInterface::hasTestMode(bool *TMsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -652,7 +653,7 @@ bool SSM2definitionsInterface::hasActuatorTests(bool *ATsup)
 
 bool SSM2definitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
@@ -663,7 +664,7 @@ bool SSM2definitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
 
 bool SSM2definitionsInterface::hasSWignition(bool *IgnSWsup)
 {
-	if (_nrofflagbytes < 32)
+	if (!_id_set)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
