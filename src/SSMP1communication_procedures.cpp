@@ -101,6 +101,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	{
 		waitms(20);
 		// Read data, append to receive buffer
+		tmpbuf.clear();
 		if (!_diagInterface->read(&tmpbuf))
 		{
 			_recbuffer.clear();
