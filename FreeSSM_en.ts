@@ -364,6 +364,11 @@ Actuator Test couldn&apos;t be started.</translation>
         <translation>Prepare system</translation>
     </message>
     <message>
+        <location filename="src/AirConDialog.cpp" line="64"/>
+        <source>Please switch the Air Conditioning system on.</source>
+        <translation>Please switch the Air Conditioning system on.</translation>
+    </message>
+    <message>
         <location filename="src/AirConDialog.cpp" line="66"/>
         <source>Continue</source>
         <translation>Continue</translation>
@@ -1314,6 +1319,11 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
         <location filename="src/CruiseControlDialog.cpp" line="61"/>
         <source>Prepare system</source>
         <translation>Prepare system</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="61"/>
+        <source>Please switch the Cruise Control system on.</source>
+        <translation>Please switch the Cruise Control system on.</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="63"/>

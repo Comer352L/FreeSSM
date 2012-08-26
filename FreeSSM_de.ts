@@ -364,6 +364,11 @@ Stellglied-Test konnte nicht gestartet werden.</translation>
         <translation>System vorbereiten</translation>
     </message>
     <message>
+        <location filename="src/AirConDialog.cpp" line="64"/>
+        <source>Please switch the Air Conditioning system on.</source>
+        <translation>Bitte schalten Sie die Klimaanlage ein.</translation>
+    </message>
+    <message>
         <location filename="src/AirConDialog.cpp" line="66"/>
         <source>Continue</source>
         <translation>Weiter</translation>
@@ -1311,6 +1316,11 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
         <location filename="src/CruiseControlDialog.cpp" line="61"/>
         <source>Prepare system</source>
         <translation>System vorbereiten</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="61"/>
+        <source>Please switch the Cruise Control system on.</source>
+        <translation type="unfinished">Bitte schalten Sie die Geschwindigkeitsregelanlage ein.</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="63"/>
