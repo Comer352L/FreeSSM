@@ -32,7 +32,7 @@ ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : C
 	_content_MBsSWs = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
-	_infoWidget = new CUinfo_simple(tr("ABS/VDC"));
+	_infoWidget = new CUinfo_simple();
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:

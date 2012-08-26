@@ -465,7 +465,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="enginetypetitle_label">
+  <widget class="QLabel" name="systemTypeTitle_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -483,10 +483,10 @@
     </font>
    </property>
    <property name="text">
-    <string>Engine Type:</string>
+    <string>System Type:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="enginetype_label">
+  <widget class="QLabel" name="systemType_label">
    <property name="geometry">
     <rect>
      <x>36</x>

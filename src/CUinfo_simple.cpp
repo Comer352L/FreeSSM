@@ -20,11 +20,10 @@
 #include "CUinfo_simple.h"
 
 
-CUinfo_simple::CUinfo_simple(QString sysTitle, QWidget * parent) : QWidget(parent)
+CUinfo_simple::CUinfo_simple(QWidget * parent) : QWidget(parent)
 {
 	setupUi(this);
 	setupUiFonts();
-	transmissiontypetitle_label->setText(sysTitle + " " + tr("Type") + ":");
 }
 
 
@@ -35,7 +34,7 @@ CUinfo_simple::~CUinfo_simple()
 
 void CUinfo_simple::setSystemTypeText(QString Type)
 {
-	transmissiontype_label->setText(Type);
+	systemType_label->setText(Type);
 }
 
 
@@ -61,14 +60,14 @@ void CUinfo_simple::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	this->setFont(font);
-	font = transmissiontypetitle_label->font();
+	font = systemTypeTitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	transmissiontypetitle_label->setFont(font);
-	font = transmissiontype_label->font();
+	systemTypeTitle_label->setFont(font);
+	font = systemType_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	transmissiontype_label->setFont(font);
+	systemType_label->setFont(font);
 	font = romIDtitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts

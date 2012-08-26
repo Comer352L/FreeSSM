@@ -31,7 +31,7 @@ class CUinfo_simple : public QWidget, private Ui::CUinfo_simple_Form
 	Q_OBJECT
 
 public:
-	CUinfo_simple(QString sysTitle, QWidget * parent = 0);
+	CUinfo_simple(QWidget * parent = 0);
 	~CUinfo_simple();
 	void setSystemTypeText(QString Type);
 	void setRomIDText(QString RomID);

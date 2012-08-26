@@ -1,7 +1,7 @@
 /*
  * CUinfo_Transmission.cpp - Widget for displaying Transmission Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ CUinfo_Transmission::~CUinfo_Transmission()
 
 void CUinfo_Transmission::setTransmissionTypeText(QString Type)
 {
-	transmissiontype_label->setText(Type);
+	systemType_label->setText(Type);
 }
 
 
@@ -69,14 +69,14 @@ void CUinfo_Transmission::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	this->setFont(font);
-	font = transmissiontypetitle_label->font();
+	font = systemTypeTitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	transmissiontypetitle_label->setFont(font);
-	font = transmissiontype_label->font();
+	systemTypeTitle_label->setFont(font);
+	font = systemType_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	transmissiontype_label->setFont(font);
+	systemType_label->setFont(font);
 	font = romIDtitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts

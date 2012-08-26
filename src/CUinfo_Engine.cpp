@@ -1,7 +1,7 @@
 /*
  * CUinfo_Engine.cpp - Widget for displaying Engine Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ CUinfo_Engine::~CUinfo_Engine()
 
 void CUinfo_Engine::setEngineTypeText(QString Type)
 {
-	enginetype_label->setText(Type);
+	systemType_label->setText(Type);
 }
 
 
@@ -116,14 +116,14 @@ void CUinfo_Engine::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	this->setFont(font);
-	font = enginetypetitle_label->font();
+	font = systemTypeTitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	enginetypetitle_label->setFont(font);
-	font = enginetype_label->font();
+	systemTypeTitle_label->setFont(font);
+	font = systemType_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
-	enginetype_label->setFont(font);
+	systemType_label->setFont(font);
 	font = romIDtitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
