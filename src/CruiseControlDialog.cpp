@@ -57,6 +57,22 @@ void CruiseControlDialog::setup()
 	std::vector<sw_dt> supportedSWs;
 	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
+	// Inform user that system needs to be switched on manually:
+	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Cruise Control system on."), 0, this);
+	QPushButton *button = msgbox->addButton(QMessageBox::Ok);
+	button->setText(tr("Continue"));
+	msgbox->addButton(QMessageBox::Cancel);
+	QFont msgfont = msgbox->font();
+	msgfont.setPixelSize(12);	// 9pts
+	msgbox->setFont( msgfont );
+	msgbox->show();
+	int ret = msgbox->exec();
+	delete msgbox;
+	if (ret != QMessageBox::Ok)
+	{
+		close();
+		return;
+	}
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Cruise Control Unit... Please wait !"), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
