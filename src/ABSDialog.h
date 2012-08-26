@@ -49,7 +49,7 @@ public:
 	ABSDialog(AbstractDiagInterface *diagInterface, QString language);
  
 private:
-	enum mode_dt {DCs_mode=1, MBsSWs_mode=2, Adaptions_mode=3};
+	enum mode_dt {DCs_mode=1, MBsSWs_mode=2};
 
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
@@ -60,7 +60,6 @@ private:
 	CUinfo_simple *_infoWidget;
 	CUcontent_DCs_twoMemories *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
-	CUcontent_Adjustments *_content_Adjustments;
 	// Current content/mode:
 	mode_dt _mode;
 
@@ -70,7 +69,6 @@ private:
 private slots:
 	void DTCs();
 	void measuringblocks();
-	void adjustments();
 	void clearMemory();
 
 };

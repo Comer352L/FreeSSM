@@ -30,7 +30,6 @@ ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : C
 	// *** Initialize global variables:
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
-	_content_Adjustments = NULL;
 	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
 	_infoWidget = new CUinfo_simple(tr("ABS/VDC"));
@@ -42,8 +41,6 @@ ABSDialog::ABSDialog(AbstractDiagInterface *diagInterface, QString language) : C
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DTCs() ) );
 	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
-	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
 	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
@@ -227,32 +224,6 @@ void ABSDialog::measuringblocks()
 }
 
 
-void ABSDialog::adjustments()
-{
-	bool ok = false;
-	if (_mode == Adaptions_mode) return;
-	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
-	waitmsgbox.show();
-	// Save content settings:
-	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_Adjustments = new CUcontent_Adjustments();
-	setContentWidget(tr("Adjustments:"), _content_Adjustments);
-	_content_Adjustments->show();
-	ok = _content_Adjustments->setup(_SSMPdev);
-	if (ok)
-		connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-	// Save new mode:
-	_mode = Adaptions_mode;
-	// Close wait-message:
-	waitmsgbox.close();
-	// Check for communication error:
-	if (!ok)
-		communicationError();
-}
-
-
 void ABSDialog::clearMemory()
 {
 	bool ok = false;
@@ -266,16 +237,7 @@ void ABSDialog::clearMemory()
 	// Reconnect to "communication error"-signal:
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
-	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
-	{
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
-		waitmsgbox.show();
-		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
-		waitmsgbox.close();
-		if (!ok)
-			communicationError();
-	}
-	else if (result == ClearMemoryDlg::CMresult_communicationError)
+	if (result == ClearMemoryDlg::CMresult_communicationError)
 	{
 		communicationError();
 	}
