@@ -4,68 +4,155 @@
 <context>
     <name>ABSDialog</name>
     <message>
-        <location filename="src/ABSDialog.cpp" line="28"/>
+        <source>ABS/VDC Control Unit</source>
+        <translation type="obsolete">ABS/VDC Control Unit</translation>
+    </message>
+    <message>
+        <source>ABS/VDC</source>
+        <translation type="obsolete">ABS/VDC</translation>
+    </message>
+    <message>
+        <source>&amp;Diagnostic Codes</source>
+        <translation type="obsolete">&amp;Diagnostic Codes</translation>
+    </message>
+    <message>
+        <source>&amp;Measuring Blocks</source>
+        <translation type="obsolete">&amp;Measuring Blocks</translation>
+    </message>
+    <message>
+        <source>&amp;Adjustments</source>
+        <translation type="obsolete">&amp;Adjustments</translation>
+    </message>
+    <message>
+        <source>Clear Memory</source>
+        <translation type="obsolete">Clear Memory</translation>
+    </message>
+    <message>
+        <source>Diagnostic Codes:</source>
+        <translation type="obsolete">Diagnostic Codes:</translation>
+    </message>
+    <message>
+        <source>Connecting to ABS/VDC Control Unit... Please wait !</source>
+        <translation type="obsolete">Connecting to ABS/VDC Control Unit... Please wait !</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation type="obsolete">Connecting...</translation>
+    </message>
+    <message>
+        <source>Processing Control Unit data... Please wait !</source>
+        <translation type="obsolete">Processing Control Unit data... Please wait !</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation type="obsolete">unknown</translation>
+    </message>
+    <message>
+        <source>Control Unit initialisation successful !</source>
+        <translation type="obsolete">Control Unit initialisation successful !</translation>
+    </message>
+    <message>
+        <source>Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</source>
+        <translation type="obsolete">Error:
+No valid definitions file found.
+Please make sure that FreeSSM is installed properly.</translation>
+    </message>
+    <message>
+        <source>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <translation type="obsolete">Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="obsolete">Error</translation>
+    </message>
+    <message>
+        <source>Switching to Diagnostic Codes... Please wait !</source>
+        <translation type="obsolete">Switching to Diagnostic Codes... Please wait !</translation>
+    </message>
+    <message>
+        <source>Switching to Measuring Blocks... Please wait !</source>
+        <translation type="obsolete">Switching to Measuring Blocks... Please wait !</translation>
+    </message>
+    <message>
+        <source>Measuring Blocks:</source>
+        <translation type="obsolete">Measuring Blocks:</translation>
+    </message>
+    <message>
+        <source>Switching to Adjustment Values... Please wait !</source>
+        <translation type="obsolete">Switching to Adjustment Values... Please wait !</translation>
+    </message>
+    <message>
+        <source>Adjustments:</source>
+        <translation type="obsolete">Adjustments:</translation>
+    </message>
+    <message>
+        <source>Reading Adjustment Values... Please wait !</source>
+        <translation type="obsolete">Reading Adjustment Values... Please wait !</translation>
+    </message>
+</context>
+<context>
+    <name>ABSdialog</name>
+    <message>
+        <location filename="src/ABSdialog.cpp" line="28"/>
         <source>ABS/VDC Control Unit</source>
         <translation>ABS/VDC Control Unit</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="36"/>
-        <source>ABS/VDC</source>
-        <translation>ABS/VDC</translation>
-    </message>
-    <message>
-        <location filename="src/ABSDialog.cpp" line="40"/>
+        <location filename="src/ABSdialog.cpp" line="39"/>
         <source>&amp;Diagnostic Codes</source>
         <translation>&amp;Diagnostic Codes</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="43"/>
+        <location filename="src/ABSdialog.cpp" line="42"/>
         <source>&amp;Measuring Blocks</source>
         <translation>&amp;Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="45"/>
-        <source>&amp;Adjustments</source>
-        <translation>&amp;Adjustments</translation>
-    </message>
-    <message>
-        <location filename="src/ABSDialog.cpp" line="47"/>
+        <location filename="src/ABSdialog.cpp" line="44"/>
         <source>Clear Memory</source>
         <translation>Clear Memory</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="52"/>
-        <location filename="src/ABSDialog.cpp" line="178"/>
+        <location filename="src/ABSdialog.cpp" line="49"/>
+        <location filename="src/ABSdialog.cpp" line="175"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnostic Codes:</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="72"/>
+        <location filename="src/ABSdialog.cpp" line="69"/>
         <source>Connecting to ABS/VDC Control Unit... Please wait !</source>
         <translation>Connecting to ABS/VDC Control Unit... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="73"/>
+        <location filename="src/ABSdialog.cpp" line="70"/>
         <source>Connecting...</source>
         <translation>Connecting...</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="81"/>
+        <location filename="src/ABSdialog.cpp" line="78"/>
         <source>Processing Control Unit data... Please wait !</source>
         <translation>Processing Control Unit data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="93"/>
+        <location filename="src/ABSdialog.cpp" line="90"/>
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="123"/>
+        <location filename="src/ABSdialog.cpp" line="120"/>
         <source>Control Unit initialisation successful !</source>
         <translation>Control Unit initialisation successful !</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="139"/>
+        <location filename="src/ABSdialog.cpp" line="136"/>
         <source>Error:
 No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
@@ -74,7 +161,7 @@ No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="143"/>
+        <location filename="src/ABSdialog.cpp" line="140"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
 FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
@@ -85,39 +172,24 @@ FreeSSM can communiate with the control unit, but it doesn&apos;t have the neces
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="145"/>
+        <location filename="src/ABSdialog.cpp" line="142"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="172"/>
+        <location filename="src/ABSdialog.cpp" line="169"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="206"/>
+        <location filename="src/ABSdialog.cpp" line="203"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/ABSDialog.cpp" line="212"/>
+        <location filename="src/ABSdialog.cpp" line="209"/>
         <source>Measuring Blocks:</source>
         <translation>Measuring Blocks:</translation>
-    </message>
-    <message>
-        <location filename="src/ABSDialog.cpp" line="235"/>
-        <source>Switching to Adjustment Values... Please wait !</source>
-        <translation>Switching to Adjustment Values... Please wait !</translation>
-    </message>
-    <message>
-        <location filename="src/ABSDialog.cpp" line="241"/>
-        <source>Adjustments:</source>
-        <translation>Adjustments:</translation>
-    </message>
-    <message>
-        <location filename="src/ABSDialog.cpp" line="271"/>
-        <source>Reading Adjustment Values... Please wait !</source>
-        <translation>Reading Adjustment Values... Please wait !</translation>
     </message>
 </context>
 <context>
@@ -262,9 +334,8 @@ Actuator Test couldn&apos;t be started.</translation>
         <translation>Air Conditioning Control Unit</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="30"/>
         <source>Air Conditioning</source>
-        <translation>Air Conditioning</translation>
+        <translation type="obsolete">Air Conditioning</translation>
     </message>
     <message>
         <location filename="src/AirConDialog.cpp" line="34"/>
@@ -283,37 +354,47 @@ Actuator Test couldn&apos;t be started.</translation>
     </message>
     <message>
         <location filename="src/AirConDialog.cpp" line="44"/>
-        <location filename="src/AirConDialog.cpp" line="170"/>
+        <location filename="src/AirConDialog.cpp" line="186"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnostic Codes:</translation>
     </message>
     <message>
         <location filename="src/AirConDialog.cpp" line="64"/>
+        <source>Prepare system</source>
+        <translation>Prepare system</translation>
+    </message>
+    <message>
+        <location filename="src/AirConDialog.cpp" line="66"/>
+        <source>Continue</source>
+        <translation>Continue</translation>
+    </message>
+    <message>
+        <location filename="src/AirConDialog.cpp" line="80"/>
         <source>Connecting to Air Conditioning Control Unit... Please wait !</source>
         <translation>Connecting to Air Conditioning Control Unit... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="65"/>
+        <location filename="src/AirConDialog.cpp" line="81"/>
         <source>Connecting...</source>
         <translation>Connecting...</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="73"/>
+        <location filename="src/AirConDialog.cpp" line="89"/>
         <source>Processing Control Unit data... Please wait !</source>
         <translation>Processing Control Unit data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="85"/>
+        <location filename="src/AirConDialog.cpp" line="101"/>
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="115"/>
+        <location filename="src/AirConDialog.cpp" line="131"/>
         <source>Control Unit initialisation successful !</source>
         <translation>Control Unit initialisation successful !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="131"/>
+        <location filename="src/AirConDialog.cpp" line="147"/>
         <source>Error:
 No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
@@ -322,7 +403,7 @@ No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="135"/>
+        <location filename="src/AirConDialog.cpp" line="151"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
 FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
@@ -333,22 +414,22 @@ FreeSSM can communiate with the control unit, but it doesn&apos;t have the neces
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="137"/>
+        <location filename="src/AirConDialog.cpp" line="153"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="164"/>
+        <location filename="src/AirConDialog.cpp" line="180"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="198"/>
+        <location filename="src/AirConDialog.cpp" line="214"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="204"/>
+        <location filename="src/AirConDialog.cpp" line="220"/>
         <source>Measuring Blocks:</source>
         <translation>Measuring Blocks:</translation>
     </message>
@@ -921,8 +1002,9 @@ to be shorted to battery (+) !</translation>
     </message>
     <message>
         <location filename="ui/CUinfo_Engine.ui" line="486"/>
-        <source>Engine Type:</source>
-        <translation>Engine Type:</translation>
+        <source>System Type:</source>
+        <oldsource>Engine Type:</oldsource>
+        <translation>System Type:</translation>
     </message>
     <message>
         <location filename="ui/CUinfo_Engine.ui" line="564"/>
@@ -938,9 +1020,13 @@ to be shorted to battery (+) !</translation>
 <context>
     <name>CUinfo_Transmission_Form</name>
     <message>
-        <location filename="ui/CUinfo_Transmission.ui" line="54"/>
         <source>Transmission Type:</source>
-        <translation>Transmission Type:</translation>
+        <translation type="obsolete">Transmission Type:</translation>
+    </message>
+    <message>
+        <location filename="ui/CUinfo_Transmission.ui" line="54"/>
+        <source>System Type:</source>
+        <translation>System Type:</translation>
     </message>
     <message>
         <location filename="ui/CUinfo_Transmission.ui" line="132"/>
@@ -971,17 +1057,20 @@ to be shorted to battery (+) !</translation>
 <context>
     <name>CUinfo_simple</name>
     <message>
-        <location filename="src/CUinfo_simple.cpp" line="27"/>
         <source>Type</source>
-        <translation>Type</translation>
+        <translation type="obsolete">Type</translation>
     </message>
 </context>
 <context>
     <name>CUinfo_simple_Form</name>
     <message>
-        <location filename="ui/CUinfo_simple.ui" line="54"/>
         <source>Transmission Type:</source>
-        <translation>Transmission Type:</translation>
+        <translation type="obsolete">Transmission Type:</translation>
+    </message>
+    <message>
+        <location filename="ui/CUinfo_simple.ui" line="54"/>
+        <source>System Type:</source>
+        <translation>System Type:</translation>
     </message>
     <message>
         <location filename="ui/CUinfo_simple.ui" line="132"/>
@@ -1202,9 +1291,8 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
         <translation>Cruise Control Unit</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="30"/>
         <source>Cruise Control</source>
-        <translation>Cruise Control</translation>
+        <translation type="obsolete">Cruise Control</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="34"/>
@@ -1218,37 +1306,47 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="42"/>
-        <location filename="src/CruiseControlDialog.cpp" line="161"/>
+        <location filename="src/CruiseControlDialog.cpp" line="177"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnostic Codes:</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="61"/>
+        <source>Prepare system</source>
+        <translation>Prepare system</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="63"/>
+        <source>Continue</source>
+        <translation>Continue</translation>
+    </message>
+    <message>
+        <location filename="src/CruiseControlDialog.cpp" line="77"/>
         <source>Connecting to Cruise Control Unit... Please wait !</source>
         <translation>Connecting to Cruise Control Unit... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="62"/>
+        <location filename="src/CruiseControlDialog.cpp" line="78"/>
         <source>Connecting...</source>
         <translation>Connecting...</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="70"/>
+        <location filename="src/CruiseControlDialog.cpp" line="86"/>
         <source>Processing Control Unit data... Please wait !</source>
         <translation>Processing Control Unit data... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="82"/>
+        <location filename="src/CruiseControlDialog.cpp" line="98"/>
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="108"/>
+        <location filename="src/CruiseControlDialog.cpp" line="124"/>
         <source>Control Unit initialisation successful !</source>
         <translation>Control Unit initialisation successful !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="122"/>
+        <location filename="src/CruiseControlDialog.cpp" line="138"/>
         <source>Error:
 No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
@@ -1257,7 +1355,7 @@ No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="126"/>
+        <location filename="src/CruiseControlDialog.cpp" line="142"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
 FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
@@ -1268,22 +1366,22 @@ FreeSSM can communiate with the control unit, but it doesn&apos;t have the neces
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="128"/>
+        <location filename="src/CruiseControlDialog.cpp" line="144"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="155"/>
+        <location filename="src/CruiseControlDialog.cpp" line="171"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Switching to Diagnostic Codes... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="189"/>
+        <location filename="src/CruiseControlDialog.cpp" line="205"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Switching to Measuring Blocks... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="195"/>
+        <location filename="src/CruiseControlDialog.cpp" line="211"/>
         <source>Measuring Blocks:</source>
         <translation>Measuring Blocks:</translation>
     </message>
@@ -1297,8 +1395,9 @@ If you want to contribute to the the project (help adding defintions), feel free
     </message>
     <message>
         <location filename="ui/CUcontent_DCs_stopCodes.ui" line="62"/>
-        <source>Current Stop Code:</source>
-        <translation>Current Stop Code:</translation>
+        <source>Current Stop Code(s):</source>
+        <oldsource>Current Stop Code:</oldsource>
+        <translation type="unfinished">Current Stop Code(s):</translation>
     </message>
     <message>
         <location filename="ui/CUcontent_DCs_stopCodes.ui" line="94"/>
@@ -1311,7 +1410,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <translation>Description:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="152"/>
+        <location filename="ui/CUcontent_DCs_stopCodes.ui" line="139"/>
         <source>    Print    </source>
         <translation>    Print    </translation>
     </message>
