@@ -226,7 +226,6 @@ void ABSDialog::measuringblocks()
 
 void ABSDialog::clearMemory()
 {
-	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
 	// Create "Clear Memory"-dialog:
 	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
