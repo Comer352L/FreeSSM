@@ -33,7 +33,7 @@
 #include "libFSSM.h"
 #include "EngineDialog.h"
 #include "TransmissionDialog.h"
-#include "ABSDialog.h"
+#include "ABSdialog.h"
 #include "CruiseControlDialog.h"
 #include "AirConDialog.h"
 #include "Preferences.h"

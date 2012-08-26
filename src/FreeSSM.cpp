@@ -283,7 +283,7 @@ void FreeSSM::abs()
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
-		ABSDialog *absdialog = new ABSDialog(diagInterface, _language);
+		ABSdialog *absdialog = new ABSdialog(diagInterface, _language);
 		if (!absdialog->isHidden())
 			absdialog->exec();
 		delete absdialog;
