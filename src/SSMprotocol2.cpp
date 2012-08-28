@@ -179,6 +179,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	SSM2defsIface = new SSM2definitionsInterface(_language);
 	SSM2defsIface->selectControlUnitID(_CU, _SYS_ID, _ROM_ID, flagbytes, nrofflagbytes);
 	SSM2defsIface->systemDescription(&_sysDescription);
+	SSM2defsIface->hasOBD2system(&_has_OBD2);
 	SSM2defsIface->hasImmobilizer(&_has_Immo);
 	SSM2defsIface->hasTestMode(&_has_TestMode);
 	SSM2defsIface->hasActuatorTests(&_has_ActTest);
