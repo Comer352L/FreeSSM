@@ -51,7 +51,7 @@ void SSM2definitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, ch
 	memcpy(_ID2, id2, 5);
 	memcpy(_flagbytes, flagbytes, nrofflagbytes);
 	if (nrofflagbytes < 96)
-		memset(_flagbytes, 0, 96 - nrofflagbytes);	// IMPORTANT !
+		memset(_flagbytes + nrofflagbytes, 0, 96 - nrofflagbytes);	// IMPORTANT !
 	_nrofflagbytes = nrofflagbytes;
 	_id_set = true;
 }
