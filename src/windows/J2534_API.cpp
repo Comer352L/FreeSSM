@@ -53,7 +53,7 @@ J2534_API::~J2534_API()
 		if (!FreeLibrary( _J2534LIB ))
 			std::cout << "J2534interface::~J2534interface(): FreeLibrary() failed with error " << GetLastError() << "\n";
 #else
-		FreeLibrary( _J2534LIB )
+		FreeLibrary( _J2534LIB );
 #endif
 	}
 }
