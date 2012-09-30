@@ -19,14 +19,6 @@
 
 #include "SSMP1communication_procedures.h"
 
-#ifdef __WIN32__
-    #define waitms(x) Sleep(x)
-#elif defined __linux__
-    #define waitms(x) usleep(1000*x)
-#else
-    #error "Operating system not supported !"
-#endif
-
 
 SSMP1communication_procedures::SSMP1communication_procedures(AbstractDiagInterface *diagInterface) : SSMP1commands(diagInterface)
 {

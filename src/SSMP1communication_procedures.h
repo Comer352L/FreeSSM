@@ -23,9 +23,11 @@
 
 #ifdef __WIN32__
     #include "windows\TimeM.h"
+    #define waitms(x) Sleep(x)
 #elif defined __linux__
     #include <unistd.h>
     #include "linux/TimeM.h"
+    #define waitms(x) usleep(1000*x)
 #else
     #error "Operating system not supported !"
 #endif
