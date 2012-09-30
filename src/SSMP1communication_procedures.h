@@ -24,6 +24,7 @@
 #ifdef __WIN32__
     #include "windows\TimeM.h"
 #elif defined __linux__
+    #include <unistd.h>
     #include "linux/TimeM.h"
 #else
     #error "Operating system not supported !"

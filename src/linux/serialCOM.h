@@ -33,15 +33,16 @@ extern "C"
     #include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
     #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
+    #include <sys/select.h>	// select()
     #include <linux/serial.h>	// serial port driver
     #include <limits.h>
+    #include <unistd.h>		// usleep(), isatty(), close()
     #ifdef __SERIALCOM_DEBUG__
         #include <errno.h>
     #endif
 }
 #include <string>
 #include <vector>
-#include <sys/select.h>
 #include <ctime>
 #ifdef __SERIALCOM_DEBUG__
     #include <iostream>
