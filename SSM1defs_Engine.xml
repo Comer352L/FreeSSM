@@ -7,6 +7,7 @@
 	0.1.1  First example version for testing:
 		- MPI87.5+XT, missing: TIM & O2 as switch, special routines needed
 		- SVX'92, missing: clean DTCs complete, "IN PROCESS" switch
+	0.1.2  - Additional RomIDs 723420, 7234A0, 733420, 7334A0 Legacy Turbo (incomplete)
 
 
 //-->
@@ -1918,6 +1919,777 @@
 				</DTCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
+		<ID_BYTE2 value="0x34">
+			<SYSTEMDESCRIPTION>2.0 TURBO</SYSTEMDESCRIPTION>
+			<MODEL>LEGACY</MODEL>
+			<CLEARMEMORY>
+				<ADDRESS>0x135E</ADDRESS>
+				<VALUE>0x0000</VALUE>
+			</CLEARMEMORY>
+			<ID_BYTE3 value_start="0x20" value_end="0x2F">
+				<MB id="MB_VB">
+					<ADDRESS>0x1335</ADDRESS>
+				</MB>
+				<MB id="MB_VSP">
+					<ADDRESS>0x1336</ADDRESS>
+				</MB>
+				<MB id="MB_EREV">
+					<ADDRESS>0x1338</ADDRESS>
+				</MB>
+				<MB id="MB_TW">
+					<ADDRESS>0x1337</ADDRESS>
+				</MB>
+				<MB id="MB_ADVS_NONLINEAR">
+					<ADDRESS>0x1323</ADDRESS>
+				</MB>
+				<MB id="MB_QA">
+					<ADDRESS>0x1307</ADDRESS>
+				</MB>
+				<MB id="MB_LDATA">
+					<ADDRESS>0x1305</ADDRESS>
+				</MB>
+				<MB id="MB_THV">
+					<ADDRESS>0x1329</ADDRESS>
+				</MB>
+				<MB id="MB_TIM">
+					<ADDRESS>0x1306</ADDRESS>
+				</MB>
+				<MB id="MB_ISC">
+					<ADDRESS>0x1314</ADDRESS>
+				</MB>
+				<MB id="MB_O2_R">
+					<ADDRESS>0x1310</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmax">
+					<ADDRESS>0x133A</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmin">
+					<ADDRESS>0x133B</ADDRESS>
+				</MB>
+				<MB id="MB_ALPHA_R">
+					<ADDRESS>0x133E</ADDRESS>
+				</MB>
+				<MB id="MB_RTRD">
+					<ADDRESS>0x1328</ADDRESS>
+				</MB>
+				<MB id="MB_WGC">
+					<ADDRESS>0x131E</ADDRESS>
+				</MB>
+				<MB id="MB_BARO_P">
+					<ADDRESS>0x1340</ADDRESS>
+				</MB>
+				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
+					<ADDRESS>0x1340 und 0x1341</ADDRESS>
+				</MB>//-->
+				<MB id="MB_ALT_CUT">
+					<ADDRESS>0x1342</ADDRESS>
+				</MB>
+				<SWBLOCK>
+					<ADDRESS>0x1343</ADDRESS>
+					<SW id="SW_IG">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_AT">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_UD">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_RM">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_AS">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_NT">
+						<BIT>3</BIT>
+					</SW>
+					<SW id="SW_PK">
+						<BIT>2</BIT>
+					</SW>
+					<SW id="SW_SS">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1344</ADDRESS>
+					<SW id="SW_RF">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_FP">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_KS">
+						<BIT>2</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1345</ADDRESS>
+					<SW id="SW_MC">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_IC">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>6</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x134C</ADDRESS>
+					<SW id="SW_OR">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1346</ADDRESS>
+					<ADDRESS type="historic">0x1349</ADDRESS>
+					<DTC id="DTC_57">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_42">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_43_ACCSW">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_44">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_45">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_49_SYS_ERR">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_51">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_52">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1347</ADDRESS>
+					<ADDRESS type="historic">0x134A</ADDRESS>
+					<DTC id="DTC_21">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_22">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_23_QA">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_24">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_31">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_32">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_33">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1348</ADDRESS>
+					<ADDRESS type="historic">0x134B</ADDRESS>
+					<DTC id="DTC_11">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_12">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_13_CAM">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_14">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_15">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_16">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_17">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+			</ID_BYTE3>
+			<ID_BYTE3 value_start="0xA0" value_end="0xAF">
+				<MB id="MB_VB">
+					<ADDRESS>0x1335</ADDRESS>
+				</MB>
+				<MB id="MB_VSP">
+					<ADDRESS>0x1336</ADDRESS>
+				</MB>
+				<MB id="MB_EREV">
+					<ADDRESS>0x1338</ADDRESS>
+				</MB>
+				<MB id="MB_TW">
+					<ADDRESS>0x1337</ADDRESS>
+				</MB>
+				<MB id="MB_ADVS_NONLINEAR">
+					<ADDRESS>0x1323</ADDRESS>
+				</MB>
+				<MB id="MB_QA">
+					<ADDRESS>0x1307</ADDRESS>
+				</MB>
+				<MB id="MB_LDATA">
+					<ADDRESS>0x1305</ADDRESS>
+				</MB>
+				<MB id="MB_THV">
+					<ADDRESS>0x1329</ADDRESS>
+				</MB>
+				<MB id="MB_TIM">
+					<ADDRESS>0x1306</ADDRESS>
+				</MB>
+				<MB id="MB_ISC">
+					<ADDRESS>0x1314</ADDRESS>
+				</MB>
+				<MB id="MB_O2_R">
+					<ADDRESS>0x1310</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmax">
+					<ADDRESS>0x133A</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmin">
+					<ADDRESS>0x133B</ADDRESS>
+				</MB>
+				<MB id="MB_ALPHA_R">
+					<ADDRESS>0x133E</ADDRESS>
+				</MB>
+				<MB id="MB_RTRD">
+					<ADDRESS>0x1328</ADDRESS>
+				</MB>
+				<MB id="MB_WGC">
+					<ADDRESS>0x131E</ADDRESS>
+				</MB>
+				<MB id="MB_BARO_P">
+					<ADDRESS>0x1340</ADDRESS>
+				</MB>
+				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
+					<ADDRESS>0x1340 und 0x1341</ADDRESS>
+				</MB>//-->
+				<SWBLOCK>
+					<ADDRESS>0x1343</ADDRESS>
+					<SW id="SW_IG">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_AT">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_UD">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_RM">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_NT">
+						<BIT>3</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1344</ADDRESS>
+					<SW id="SW_RF">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_FP">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_CN">
+						<BIT>3</BIT>
+					</SW>
+					<SW id="SW_KS">
+						<BIT>2</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1345</ADDRESS>
+					<SW id="SW_MC">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_IC">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>6</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x134C</ADDRESS>
+					<SW id="SW_OR">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1346</ADDRESS>
+					<ADDRESS type="historic">0x1349</ADDRESS>
+					<DTC id="DTC_42">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_44">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_45">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_49_SYS_ERR">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_51">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_52">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1347</ADDRESS>
+					<ADDRESS type="historic">0x134A</ADDRESS>
+					<DTC id="DTC_21">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_22">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_23_QA">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_24">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_31">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_32">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_33">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_35">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1348</ADDRESS>
+					<ADDRESS type="historic">0x134B</ADDRESS>
+					<DTC id="DTC_11">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_12">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_13_CAM">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_14">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_15">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_16">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_17">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+			</ID_BYTE3>
+		</ID_BYTE2>
+	</ID_BYTE1>
+	<ID_BYTE1 value="0x73">
+		<YEAR>1993</YEAR>
+		<ID_BYTE2 value="0x34">
+			<SYSTEMDESCRIPTION>2.0 TURBO</SYSTEMDESCRIPTION>
+			<MODEL>LEGACY</MODEL>
+			<CLEARMEMORY>
+				<ADDRESS>0x135E</ADDRESS>
+				<VALUE>0x0000</VALUE>
+			</CLEARMEMORY>
+			<ID_BYTE3 value_start="0x20" value_end="0x2F">
+				<MB id="MB_VB">
+					<ADDRESS>0x1335</ADDRESS>
+				</MB>
+				<MB id="MB_VSP">
+					<ADDRESS>0x1336</ADDRESS>
+				</MB>
+				<MB id="MB_EREV">
+					<ADDRESS>0x1338</ADDRESS>
+				</MB>
+				<MB id="MB_TW">
+					<ADDRESS>0x1337</ADDRESS>
+				</MB>
+				<MB id="MB_ADVS_NONLINEAR">
+					<ADDRESS>0x1323</ADDRESS>
+				</MB>
+				<MB id="MB_QA">
+					<ADDRESS>0x1307</ADDRESS>
+				</MB>
+				<MB id="MB_LDATA">
+					<ADDRESS>0x1305</ADDRESS>
+				</MB>
+				<MB id="MB_THV">
+					<ADDRESS>0x1329</ADDRESS>
+				</MB>
+				<MB id="MB_TIM">
+					<ADDRESS>0x1306</ADDRESS>
+				</MB>
+				<MB id="MB_ISC">
+					<ADDRESS>0x1314</ADDRESS>
+				</MB>
+				<MB id="MB_O2_R">
+					<ADDRESS>0x1310</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmax">
+					<ADDRESS>0x133A</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmin">
+					<ADDRESS>0x133B</ADDRESS>
+				</MB>
+				<MB id="MB_ALPHA_R">
+					<ADDRESS>0x133E</ADDRESS>
+				</MB>
+				<MB id="MB_RTRD">
+					<ADDRESS>0x1328</ADDRESS>
+				</MB>
+				<MB id="MB_WGC">
+					<ADDRESS>0x131E</ADDRESS>
+				</MB>
+				<MB id="MB_BARO_P">
+					<ADDRESS>0x1340</ADDRESS>
+				</MB>
+				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
+					<ADDRESS>0x1340 und 0x1341</ADDRESS>
+				</MB>//-->
+				<MB id="MB_ALT_CUT">
+					<ADDRESS>0x1342</ADDRESS>
+				</MB>
+				<SWBLOCK>
+					<ADDRESS>0x1343</ADDRESS>
+					<SW id="SW_IG">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_AT">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_UD">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_RM">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_AS">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_NT">
+						<BIT>3</BIT>
+					</SW>
+					<SW id="SW_PK">
+						<BIT>2</BIT>
+					</SW>
+					<SW id="SW_SS">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1344</ADDRESS>
+					<SW id="SW_RF">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_FP">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_KS">
+						<BIT>2</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1345</ADDRESS>
+					<SW id="SW_MC">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_IC">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>6</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x134C</ADDRESS>
+					<SW id="SW_OR">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1346</ADDRESS>
+					<ADDRESS type="historic">0x1349</ADDRESS>
+					<DTC id="DTC_57">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_42">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_43_ACCSW">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_44">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_45">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_49_SYS_ERR">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_51">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_52">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1347</ADDRESS>
+					<ADDRESS type="historic">0x134A</ADDRESS>
+					<DTC id="DTC_21">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_22">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_23_QA">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_24">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_31">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_32">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_33">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1348</ADDRESS>
+					<ADDRESS type="historic">0x134B</ADDRESS>
+					<DTC id="DTC_11">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_12">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_13_CAM">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_14">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_15">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_16">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_17">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+			</ID_BYTE3>
+			<ID_BYTE3 value_start="0xA0" value_end="0xAF">
+				<MB id="MB_VB">
+					<ADDRESS>0x1335</ADDRESS>
+				</MB>
+				<MB id="MB_VSP">
+					<ADDRESS>0x1336</ADDRESS>
+				</MB>
+				<MB id="MB_EREV">
+					<ADDRESS>0x1338</ADDRESS>
+				</MB>
+				<MB id="MB_TW">
+					<ADDRESS>0x1337</ADDRESS>
+				</MB>
+				<MB id="MB_ADVS_NONLINEAR">
+					<ADDRESS>0x1323</ADDRESS>
+				</MB>
+				<MB id="MB_QA">
+					<ADDRESS>0x1307</ADDRESS>
+				</MB>
+				<MB id="MB_LDATA">
+					<ADDRESS>0x1305</ADDRESS>
+				</MB>
+				<MB id="MB_THV">
+					<ADDRESS>0x1329</ADDRESS>
+				</MB>
+				<MB id="MB_TIM">
+					<ADDRESS>0x1306</ADDRESS>
+				</MB>
+				<MB id="MB_ISC">
+					<ADDRESS>0x1314</ADDRESS>
+				</MB>
+				<MB id="MB_O2_R">
+					<ADDRESS>0x1310</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmax">
+					<ADDRESS>0x133A</ADDRESS>
+				</MB>
+				<MB id="MB_O2_Rmin">
+					<ADDRESS>0x133B</ADDRESS>
+				</MB>
+				<MB id="MB_ALPHA_R">
+					<ADDRESS>0x133E</ADDRESS>
+				</MB>
+				<MB id="MB_RTRD">
+					<ADDRESS>0x1328</ADDRESS>
+				</MB>
+				<MB id="MB_WGC">
+					<ADDRESS>0x131E</ADDRESS>
+				</MB>
+				<MB id="MB_BARO_P">
+					<ADDRESS>0x1340</ADDRESS>
+				</MB>
+				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
+					<ADDRESS>0x1340 und 0x1341</ADDRESS>
+				</MB>//-->
+				<SWBLOCK>
+					<ADDRESS>0x1343</ADDRESS>
+					<SW id="SW_IG">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_AT">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_UD">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_RM">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_NT">
+						<BIT>3</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1344</ADDRESS>
+					<SW id="SW_RF">
+						<BIT>5</BIT>
+					</SW>
+					<SW id="SW_FP">
+						<BIT>4</BIT>
+					</SW>
+					<SW id="SW_CN">
+						<BIT>3</BIT>
+					</SW>
+					<SW id="SW_KS">
+						<BIT>2</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x1345</ADDRESS>
+					<SW id="SW_MC">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_IC">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>6</BIT>
+					</SW>
+				</SWBLOCK>
+				<SWBLOCK>
+					<ADDRESS>0x134C</ADDRESS>
+					<SW id="SW_OR">
+						<BIT>1</BIT>
+					</SW>
+				</SWBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1346</ADDRESS>
+					<ADDRESS type="historic">0x1349</ADDRESS>
+					<DTC id="DTC_42">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_44">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_45">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_49_SYS_ERR">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_51">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_52">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1347</ADDRESS>
+					<ADDRESS type="historic">0x134A</ADDRESS>
+					<DTC id="DTC_21">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_22">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_23_QA">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_24">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_31">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_32">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_33">
+						<BIT>7</BIT>
+					</DTC>
+					<DTC id="DTC_35">
+						<BIT>8</BIT>
+					</DTC>
+				</DTCBLOCK>
+				<DTCBLOCK>
+					<ADDRESS type="current">0x1348</ADDRESS>
+					<ADDRESS type="historic">0x134B</ADDRESS>
+					<DTC id="DTC_11">
+						<BIT>1</BIT>
+					</DTC>
+					<DTC id="DTC_12">
+						<BIT>2</BIT>
+					</DTC>
+					<DTC id="DTC_13_CAM">
+						<BIT>3</BIT>
+					</DTC>
+					<DTC id="DTC_14">
+						<BIT>4</BIT>
+					</DTC>
+					<DTC id="DTC_15">
+						<BIT>5</BIT>
+					</DTC>
+					<DTC id="DTC_16">
+						<BIT>6</BIT>
+					</DTC>
+					<DTC id="DTC_17">
+						<BIT>7</BIT>
+					</DTC>
+				</DTCBLOCK>
+			</ID_BYTE3>
+		</ID_BYTE2>
 	</ID_BYTE1>
 </DEFINITIONS>
 <DATA_COMMON>
@@ -1956,6 +2728,20 @@
 		<TITLE lang="en">Ignition advance</TITLE>
 		<TITLE lang="de">Zündverstellung</TITLE>
 	</MB>
+	<MB id="MB_ADVS_NONLINEAR">
+		<UNIT lang="all">°</UNIT>
+		<FORMULA></FORMULA><!-- TODO nicht linear! //-->
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Ignition advance</TITLE>
+		<TITLE lang="de">Zündverstellung</TITLE>
+	</MB>
+	<MB id="MB_QA">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/50</FORMULA>
+		<PRECISION>2</PRECISION>
+		<TITLE lang="en">Airflow sensor voltage</TITLE>
+		<TITLE lang="de">Luftmassenmesser Spannung</TITLE>
+	</MB>
 	<MB id="MB_QA_Lseries">
 		<UNIT lang="all">V</UNIT>
 		<FORMULA>*1953/10000</FORMULA>
@@ -1976,6 +2762,13 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Load data</TITLE>
 		<TITLE lang="de">Last-Daten</TITLE>
+	</MB>
+	<MB id="MB_THV">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/50</FORMULA>
+		<PRECISION>2</PRECISION>
+		<TITLE lang="en">Throttle sensor</TITLE>
+		<TITLE lang="de">Drosselklappensensor</TITLE>
 	</MB>
 	<MB id="MB_THV_Lseries">
 		<UNIT lang="all">V</UNIT>
@@ -2019,6 +2812,13 @@
 		<TITLE lang="en">O2 sensor voltage</TITLE>
 		<TITLE lang="de">Lambdasondenspannung</TITLE>
 	</MB>
+	<MB id="MB_O2_R">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/50</FORMULA>
+		<PRECISION>2</PRECISION>
+		<TITLE lang="en">O2 sensor voltage right</TITLE>
+		<TITLE lang="de">Lambdasondenspannung rechts</TITLE>
+	</MB>
 	<MB id="MB_O2_R_SVX">
 		<UNIT lang="all">V</UNIT>
 		<FORMULA>*5/512</FORMULA>
@@ -2026,12 +2826,26 @@
 		<TITLE lang="en">O2 sensor voltage right</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts</TITLE>
 	</MB>
+	<MB id="MB_O2_Rmax">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/50</FORMULA>
+		<PRECISION>2</PRECISION>
+		<TITLE lang="en">O2 sensor voltage right maximum</TITLE>
+		<TITLE lang="de">Lambdasondenspannung rechts Maximum</TITLE>
+	</MB>
 	<MB id="MB_O2_Rmax_SVX">
 		<UNIT lang="all">V</UNIT>
 		<FORMULA>*5/256</FORMULA>
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right maximum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts Maximum</TITLE>
+	</MB>
+	<MB id="MB_O2_Rmin">
+		<UNIT lang="all">V</UNIT>
+		<FORMULA>/50</FORMULA>
+		<PRECISION>2</PRECISION>
+		<TITLE lang="en">O2 sensor voltage right minimum</TITLE>
+		<TITLE lang="de">Lambdasondenspannung rechts Minimum</TITLE>
 	</MB>
 	<MB id="MB_O2_Rmin_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2068,6 +2882,13 @@
 		<TITLE lang="en">ALPHA correction O2 sensor</TITLE>
 		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde</TITLE>
 	</MB>
+	<MB id="MB_ALPHA_R">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>-128*100/128</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">ALPHA correction O2 sensor right</TITLE>
+		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde rechts</TITLE>
+	</MB>
 	<MB id="MB_ALPHA_R_SVX">
 		<UNIT lang="all">%</UNIT>
 		<FORMULA>-128</FORMULA>
@@ -2089,12 +2910,26 @@
 		<TITLE lang="en">Knock sensor (Turbo only)</TITLE>
 		<TITLE lang="de">Klopfsensor (nur Turbo)</TITLE>
 	</MB>
+	<MB id="MB_RTRD">
+		<UNIT lang="all">°</UNIT>
+		<FORMULA>-128/4</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Knock sensor</TITLE>
+		<TITLE lang="de">Klopfsensor</TITLE>
+	</MB>
 	<MB id="MB_RTRD_SVX">
 		<UNIT lang="all">°</UNIT>
 		<FORMULA>*1</FORMULA>
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Knock sensor</TITLE>
 		<TITLE lang="de">Klopfsensor</TITLE>
+	</MB>
+	<MB id="MB_WGC">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>*100/255</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">wastegate valve</TITLE>
+		<TITLE lang="de">Wastegate-Magnetventil</TITLE>
 	</MB>
 	<MB id="MB_WGC_Lseries">
 		<UNIT lang="all">%</UNIT>
@@ -2117,19 +2952,33 @@
 		<TITLE lang="en">Canister purge control</TITLE>
 		<TITLE lang="de">Absaug-Magnetventil</TITLE>
 	</MB>
+	<MB id="MB_BARO.P">
+		<UNIT lang="all">mmHg</UNIT>
+		<FORMULA>*8/10</FORMULA>
+		<PRECISION>0</PRECISION>
+		<TITLE lang="en">Atmospheric pressure</TITLE>
+		<TITLE lang="de">Umgebungsdruck</TITLE>
+	</MB>
 	<MB id="MB_BARO.P_SVX">
 		<UNIT lang="all">mmHg</UNIT>
 		<FORMULA>*3</FORMULA>
-		<PRECISION>2</PRECISION><!-- TODO //-->
+		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Atmospheric pressure</TITLE>
 		<TITLE lang="de">Umgebungsdruck</TITLE>
 	</MB>
 	<MB id="MB_COADJ">
 		<UNIT lang="all">kg/h</UNIT>
 		<FORMULA>-128/50</FORMULA>
-		<PRECISION>2</PRECISION><!-- TODO //-->
+		<PRECISION>0</PRECISION>
 		<TITLE lang="en">COADJ</TITLE><!-- TODO //-->
 		<TITLE lang="de">COADJ</TITLE><!-- TODO //-->
+	</MB>
+	<MB id="MB_ALT_CUT">
+		<UNIT lang="all">%</UNIT>
+		<FORMULA>/2</FORMULA>
+		<PRECISION>1</PRECISION>
+		<TITLE lang="en">ALT_CUT</TITLE><!-- TODO //-->
+		<TITLE lang="de">ALT_CUT</TITLE><!-- TODO //-->
 	</MB>
 	
 	<!-- ###################################          S W I T C H E S          ###################################  //-->
@@ -2146,12 +2995,6 @@
 		<TITLE lang="en">Fuel pump relais</TITLE>
 		<TITLE lang="de">Kraftstoffpumpenrelais</TITLE>
 	</SW>
-	<SW id="SW_CN">
-		<UNIT lang="en">Off/On</UNIT>
-		<UNIT lang="de">Aus/Ein</UNIT>
-		<TITLE lang="en">hmm..</TITLE><!-- TODO //-->
-		<TITLE lang="de">Spülluftmagnetventil</TITLE>
-	</SW>
 	<SW id="SW_AC">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
@@ -2163,6 +3006,12 @@
 		<UNIT lang="de">Aus/Ein</UNIT>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
+	</SW>
+	<SW id="SW_AR">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">air conditioning relay</TITLE>
+		<TITLE lang="de">Klimaanlagenrelais</TITLE>
 	</SW>
 	<SW id="SW_AP">
 		<UNIT lang="en">Off/On</UNIT>
@@ -2176,11 +3025,23 @@
 		<TITLE lang="en">Ignition switch</TITLE>
 		<TITLE lang="de">Zündschalter</TITLE>
 	</SW>
+	<SW id="SW_AT">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">AT</TITLE><!-- TODO //-->
+		<TITLE lang="de">AT</TITLE><!-- TODO //-->
+	</SW>
 	<SW id="SW_NT">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
 		<TITLE lang="en">Neutral switch</TITLE>
 		<TITLE lang="de">Neutralschalter</TITLE>
+	</SW>
+	<SW id="SW_SS">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">Pressure switch power steering</TITLE>
+		<TITLE lang="de">Druckschalter Servolenkung</TITLE>
 	</SW>
 	<SW id="SW_PS">
 		<UNIT lang="en">Off/On</UNIT>
@@ -2212,6 +3073,12 @@
 		<TITLE lang="en">Knock sensor signal</TITLE>
 		<TITLE lang="de">Klopfsensorsignal</TITLE>
 	</SW>
+	<SW id="SW_CN">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">hmm..</TITLE><!-- TODO //-->
+		<TITLE lang="de">Spülluftmagnetventil</TITLE>
+	</SW>
 	<SW id="SW_UD">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
@@ -2223,6 +3090,12 @@
 		<UNIT lang="de">Aus/Ein</UNIT>
 		<TITLE lang="en">Read DTC mode</TITLE>
 		<TITLE lang="de">Speicher-Lese-Modus</TITLE>
+	</SW>
+	<SW id="SW_AS">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">AS</TITLE><!-- TODO //-->
+		<TITLE lang="de">AS</TITLE><!-- TODO //-->
 	</SW>
 	<SW id="SW_TR">
 		<UNIT lang="en">Off/On</UNIT>
@@ -2271,6 +3144,30 @@
 		<UNIT lang="de">Aus/Ein</UNIT>
 		<TITLE lang="en">O2 monitor right</TITLE>
 		<TITLE lang="de">Lambdasonden-Monitor rechts</TITLE>
+	</SW>
+	<SW id="SW_MC">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">MC</TITLE><!-- TODO //-->
+		<TITLE lang="de">MC</TITLE><!-- TODO //-->
+	</SW>
+	<SW id="SW_IC">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">IC</TITLE><!-- TODO //-->
+		<TITLE lang="de">IC</TITLE><!-- TODO //-->
+	</SW>
+	<SW id="SW_BR">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">BR</TITLE><!-- TODO //-->
+		<TITLE lang="de">BR</TITLE><!-- TODO //-->
+	</SW>
+	<SW id="SW_RF">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<TITLE lang="en">RF</TITLE><!-- TODO //-->
+		<TITLE lang="de">RF</TITLE><!-- TODO //-->
 	</SW>
 	
 	
@@ -2398,22 +3295,22 @@
 		<TITLE lang="en">Crank angle sensor 2</TITLE>
 		<TITLE lang="de">Kurbelwinkelsensor 2</TITLE>
 	</DTC>
-	<DTC id="DTC_31">
+	<DTC id="DTC_31"><!-- THV //-->
 		<CODE>31</CODE>
 		<TITLE lang="en">Throttle sensor</TITLE>
 		<TITLE lang="de">Drosselklappensensor</TITLE>
 	</DTC>
-	<DTC id="DTC_32">
+	<DTC id="DTC_32"><!-- O2 //-->
 		<CODE>32</CODE>
 		<TITLE lang="en">O2 sensor</TITLE>
 		<TITLE lang="de">Lambdasonde</TITLE>
 	</DTC>
-	<DTC id="DTC_32_SVX">
+	<DTC id="DTC_32_SVX"><!-- O2 R //-->
 		<CODE>32</CODE>
 		<TITLE lang="en">O2 sensor right</TITLE>
 		<TITLE lang="de">Lambdasonde rechts</TITLE>
 	</DTC>
-	<DTC id="DTC_33">
+	<DTC id="DTC_33"><!-- VSP //-->
 		<CODE>33</CODE>
 		<TITLE lang="en">Vehicle speed sensor</TITLE>
 		<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
@@ -2423,12 +3320,12 @@
 		<TITLE lang="en">EGR valve</TITLE>
 		<TITLE lang="de">AGR-Magnetventil</TITLE>
 	</DTC>
-	<DTC id="DTC_35">
+	<DTC id="DTC_35"><!-- CPC //-->
 		<CODE>35</CODE>
 		<TITLE lang="en">Purge control solenoid valve</TITLE>
 		<TITLE lang="de">Absaug-Magnetventil</TITLE>
 	</DTC>
-	<DTC id="DTC_37">
+	<DTC id="DTC_37"><!-- O2 L //-->
 		<CODE>37</CODE>
 		<TITLE lang="en">O2 sensor left</TITLE>
 		<TITLE lang="de">Lambdasonde links</TITLE>
@@ -2448,27 +3345,37 @@
 		<TITLE lang="en">Mixture too lean or system error</TITLE>
 		<TITLE lang="de">Gemisch zu mager oder Systemfehler</TITLE>
 	</DTC>
-	<DTC id="DTC_42">
+	<DTC id="DTC_42"><!-- ID_SW //-->
 		<CODE>42</CODE>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
 	</DTC>
-	<DTC id="DTC_44">
+	<DTC id="DTC_43_ACCSW"><!-- ACCSW //-->
+		<CODE>43</CODE>
+		<TITLE lang="en">ACCSW</TITLE><!-- TODO //-->
+		<TITLE lang="de">ACCSW</TITLE><!-- TODO //-->
+	</DTC>
+	<DTC id="DTC_44"><!-- WGC //-->
 		<CODE>44</CODE>
 		<TITLE lang="en">By-pass valve (TURBO)</TITLE>
 		<TITLE lang="de">Bypass-Ventil (TURBO)</TITLE>
 	</DTC>
-	<DTC id="DTC_45">
+	<DTC id="DTC_45"><!-- P.S //-->
 		<CODE>45</CODE>
 		<TITLE lang="en">Atmospheric pressure sensor</TITLE>
 		<TITLE lang="de">Umgebungsdruck-Sensor</TITLE>
 	</DTC>
-	<DTC id="DTC_51">
+	<DTC id="DTC_49"><!-- SYS.ERR //-->
+		<CODE>49</CODE>
+		<TITLE lang="en">Internal System Error</TITLE>
+		<TITLE lang="de">interner Systemfehler</TITLE>
+	</DTC>
+	<DTC id="DTC_51"><!-- N_SW //-->
 		<CODE>51</CODE>
 		<TITLE lang="en">Neutral switch (MT)</TITLE>
 		<TITLE lang="de">Neutralschalter (MT)</TITLE>
 	</DTC>
-	<DTC id="DTC_52"><!-- not documented in US XT FSM '88 but possible //-->
+	<DTC id="DTC_52"><!-- P_SW //--><!-- not documented in US XT FSM '88 but possible //-->
 		<CODE>52</CODE>
 		<TITLE lang="en">Parking switch</TITLE>
 		<TITLE lang="de">Parkschalter</TITLE>
@@ -2482,6 +3389,11 @@
 		<CODE>56</CODE>
 		<TITLE lang="en">EGR_SYS</TITLE><!-- TODO //-->
 		<TITLE lang="de">EGR_SYS</TITLE><!-- TODO //-->
+	</DTC>
+	<DTC id="DTC_57"><!-- ALT.SYS //-->
+		<CODE>57</CODE>
+		<TITLE lang="en">ALT.SYS</TITLE><!-- TODO //-->
+		<TITLE lang="de">ALT.SYS</TITLE><!-- TODO //-->
 	</DTC>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
