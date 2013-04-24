@@ -342,7 +342,7 @@ void SSMP1communication::run()
 			else if (operation == comOp_readRomId)
 			{
 				// Get ROM-ID:
-				op_success = getID(&data);
+				op_success = getID(0, &data);
 			}
 		}
 		// Evaluate result; Prepare for next operation:

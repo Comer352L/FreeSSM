@@ -52,10 +52,10 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 }
 
 
-bool SSMP1communication_procedures::getID(std::vector<char> * data)
+bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vector<char> * data)
 {
-	const unsigned int t_max_total = (SSMP1_T_ID_RECSTART_MAX + 500) * 2;	// 100 bytes * (10 / 1953) ~= 500 ms
-	const unsigned char max_bytes_dropped = 15;				// NOTE: min. 12 (seen with Ax10xx TCU)
+	const unsigned int t_max_total = (SSMP1_T_ID_RECSTART_MAX + 1000*(3+extradatalen)*8/1953) * 2;
+	const unsigned char max_bytes_dropped = 15; // NOTE: depends on last request; min. 12 (seen with Ax10xx TCU) if last CU reply message length is 3 bytes
 	std::vector<char> tmpbuf;
 	unsigned char bytes_dropped = 0;
 	bool IDvalid = false;
@@ -63,7 +63,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	unsigned int cu_data_len = 0;
 	bool timeout;
 
-	if (!sendQueryIdCmd()) return false;
+	if (!sendQueryIdCmd(0)) return false;
 	waitms(SSMP1_T_IC_WAIT);
 	_recbuffer.clear();
 	_currentaddr = -1;
@@ -71,7 +71,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 	_addrswitch_pending = false;
 	if (!_diagInterface->clearReceiveBuffer())
 		return false;
-	if (!sendQueryIdCmd())
+	if (!sendQueryIdCmd(extradatalen))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP1communication_procedures::getID(...):   sendQueryIdCmd() failed.\n";
@@ -155,6 +155,7 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 						id_index = 0;
 					}
 					// Check if we have reached an invalid ECU data length
+					// FIXME: be more strict with CUs with Ax xx xx ID: compare cu_data_len with (3 + extradatalen)
 					if ((cu_data_len > 3) && ((_recbuffer.at(0) & 0xF0) == 0x70))
 					{
 						// NOTE: ID must be invalid, 7x xx xx IDs are always 3 bytes long !
@@ -183,23 +184,16 @@ bool SSMP1communication_procedures::getID(std::vector<char> * data)
 		}
 		else if ((_recbuffer.at(0) & 0xF0) == 0xA0)
 		{
-			if ((_recbuffer.at(1) == 0x01) && ((_recbuffer.size() == 3) || ((_recbuffer.size() >= 3+9) && (_recbuffer.size() <= 100))))
+			if ((_recbuffer.at(1) == 0x01) && ((_recbuffer.size() == 3) || ((_recbuffer.size() > 3) && (_recbuffer.size() <= 3+255))))
 			{
-				/* FIXME: which numbers of flagbyte are possible for these control unit ?
-				 * - are there really any control units with this ID type and no flagbytes ?
-				 * - are there really no control units with at least 1 and less than 9 flag bytes ?
-				 * - what's the maximum size ?
-				 * - are all bytes (after the ID) flagbytes ?					    */
+				/* FIXME: IMPROVE !
+				 * how does the number of received bytes correspond to extradatalen ?
+				 * Is it possible that controllers end more/less bytes than requested ? */
 				IDconfirmed = true;
 				cu_data_len = _recbuffer.size();
 			}
-			else if ((_recbuffer.at(1) == 0x10) && ((_recbuffer.size() == 3) || ((_recbuffer.size() >= 3+32) && (_recbuffer.size() <= 100))))
+			else if ((_recbuffer.at(1) == 0x10) && ((_recbuffer.size() == 3) || (_recbuffer.size() == (3 + extradatalen))))
 			{
-				/* NOTE: Some Ax 10 xx controllers send more than 32 bytes of data, but only the first 32 bytes are flag bytes:
-				 *       As long as we don't know their meaning, return them all.						*/	       
-				/* FIXME: which numbers of flagbyte are possible for these control unit ?
-				 * - what's the maximum size ?
-				 * - what's the meaning of the extra bytes ?				  */
 				IDconfirmed = true;
 				cu_data_len = _recbuffer.size();
 			}

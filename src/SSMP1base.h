@@ -55,7 +55,7 @@ class SSMP1commands
 public:
 	SSMP1commands(AbstractDiagInterface *diagInterface);
 	bool sendStopTalkingCmd();
-	bool sendQueryIdCmd();
+	bool sendQueryIdCmd(unsigned char extradatalen);
 	bool sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr);
 	bool sendWriteDatabyteCmd(unsigned int dataaddr, char databyte);
 
