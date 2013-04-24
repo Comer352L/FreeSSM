@@ -55,21 +55,22 @@ SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 }
 
 
-bool SSMP1communication::getCUdata(char *ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP1communication::getCUdata(unsigned char extradatareqlen, char *ID, char *extradata, unsigned char *extradatalen)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning()) return false;
 	_CommOperation = comOp_readRomId;
+	_reqsize = extradatareqlen;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
 	{
 		// ID:
 		memcpy(ID, &_data.at(0), 3);
-		// Flagbytes:
-		*nrofflagbytes = _data.size() -3;
+		// Extra data:
+		*extradatalen = _data.size() -3;
 		if (_data.size() > 3)
-			memcpy(flagbytes, &_data.at(3), _data.size() - 3);
+			memcpy(extradata, &_data.at(3), _data.size() - 3);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;
@@ -234,6 +235,7 @@ void SSMP1communication::run()
 	bool abort;
 	comOp_dt operation;
 	SSM1_CUtype_dt cu;
+	unsigned char reqsize = 0;
 	std::vector<unsigned int> addresses;
 	std::vector<char> data;
 	std::vector<char> wcdata;
@@ -247,6 +249,7 @@ void SSMP1communication::run()
 	_mutex.lock();
 	operation = _CommOperation;
 	cu = _cu;
+	reqsize = _reqsize;
 	addresses = _addresses;
 	data = _data;
 	errmax = _errRetries + 1;
@@ -342,7 +345,7 @@ void SSMP1communication::run()
 			else if (operation == comOp_readRomId)
 			{
 				// Get ROM-ID:
-				op_success = getID(0, &data);
+				op_success = getID(reqsize, &data);
 			}
 		}
 		// Evaluate result; Prepare for next operation:

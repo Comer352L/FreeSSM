@@ -604,7 +604,7 @@ void FreeSSM::dumpCUdata()
 		// Select CU:
 		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );
 		// Read CU-ID(s):
-		if (SSMP1com.getCUdata(SYS_ID, flagbytes, &nrofflagbytes))
+		if (SSMP1com.getCUdata(0, SYS_ID, flagbytes, &nrofflagbytes))
 		{
 			if (((SYS_ID[0] & '\xF0') == '\xA0') && (SYS_ID[1] == '\x10'))
 			{

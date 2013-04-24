@@ -39,7 +39,7 @@ public:
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);
 	comOp_dt getCurrentCommOperation();
-	bool getCUdata(char *ID, char *flagbytes, unsigned char *nrofflagbytes);
+	bool getCUdata(unsigned char extradatareqlen, char *ID, char *extradata, unsigned char *extradatalen);
 	bool readAddress(unsigned int addr, char * databyte);
 	bool readAddresses(std::vector<unsigned int> addr, std::vector<char> * data);
 	bool readAddress_permanent(unsigned int addr, int delay=0);
@@ -58,6 +58,7 @@ private:
 	QEventLoop _el;
 	bool _result;
 	bool _abort;
+	unsigned char _reqsize;			/* size of extra data requested with the getCUdata command */
 	std::vector<unsigned int> _addresses;	/* list of addresses for the read/write operation(s) */
 	std::vector<char> _data;		/* processed data from read/Rom-ID operation(s)      OR
 						   data to be written during the write operation(s)  */

@@ -144,11 +144,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	bool ok = _SSMP1com->getCUdata(_SYS_ID, flagbytes, &nrofflagbytes);
+	bool ok = _SSMP1com->getCUdata(0, _SYS_ID, flagbytes, &nrofflagbytes);
 	if (!ok && (CU == CUtype_AirCon))
 	{
 		_SSMP1com->selectCU(SSM1_CU_AirCon2);
-		ok = _SSMP1com->getCUdata(_SYS_ID, flagbytes, &nrofflagbytes);
+		ok = _SSMP1com->getCUdata(0, _SYS_ID, flagbytes, &nrofflagbytes);
 	}
 	if (!ok)
 	{
