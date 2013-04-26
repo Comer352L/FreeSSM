@@ -614,35 +614,37 @@ void FreeSSM::dumpCUdata()
 			hexstr.insert(0, "\n");
 			hexstr.push_back('\n');
 			dumpfile.write(hexstr.data(), hexstr.length());
-			// Extended ID:
-			if (((SYS_ID[0] & '\xF0') == '\xA0') && (SYS_ID[1] == '\x10'))
+
+			if ((SYS_ID[0] & '\xF0') == '\xA0')
 			{
-				std::vector<unsigned int> addresses;
-				for (unsigned int addr=0x01; addr<=0x05; addr++)
-					addresses.push_back(addr);
-				std::vector<char> data;
-				if (!SSMP1com.readAddresses(addresses, &data))
-					dumpfile.write("error\n", 4);
-				else
+				// ROM-ID:
+				if (SYS_ID[1] == '\x10')
 				{
-					for (unsigned char i=0; i<5; i++)
-						ROM_ID[i] = data.at(i);
-					hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
+					std::vector<unsigned int> addresses;
+					for (unsigned int addr=0x01; addr<=0x05; addr++)
+						addresses.push_back(addr);
+					std::vector<char> data;
+					if (!SSMP1com.readAddresses(addresses, &data))
+						dumpfile.write("error\n", 4);
+					else
+					{
+						for (unsigned char i=0; i<5; i++)
+							ROM_ID[i] = data.at(i);
+						hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
+						hexstr.push_back('\n');
+						dumpfile.write(hexstr.data(), hexstr.length());
+					}
+				}
+				// Flagbytes:
+				if (SSMP1com.getCUdata(32, SYS_ID, flagbytes, &nrofflagbytes))
+				{
+					hexstr = libFSSM::StrToHexstr(flagbytes, nrofflagbytes);
 					hexstr.push_back('\n');
 					dumpfile.write(hexstr.data(), hexstr.length());
 				}
+				else
+					dumpfile.write("error\n", 4);
 			}
-			else
-				dumpfile.write("---\n", 4);
-			// Flagbytes:
-			if (nrofflagbytes)
-			{
-				hexstr = libFSSM::StrToHexstr(flagbytes, nrofflagbytes);
-				hexstr.push_back('\n');
-				dumpfile.write(hexstr.data(), hexstr.length());
-			}
-			else
-				dumpfile.write("---\n", 4);
 		}
 		else
 			dumpfile.write("\n-----\n", 7);
