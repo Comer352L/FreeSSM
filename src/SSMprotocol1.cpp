@@ -167,11 +167,13 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	/* Load control unit definitions */
 	if (_uses_SSM2defs)
 	{
-		if (nrofflagbytes > 32)
-			nrofflagbytes = 32;
-		// NOTE: Some Ax 10 xx controllers send more than 32 bytes of data, but only the first 32 bytes are flag bytes.
-		// FIXME: Remove this when SSMP1communication::getCUdata(...) has been modified and handles the extra data correctly
- 		// Read extended ID (5-byte ROM-ID):
+		// Request flag bytes:
+		if (!_SSMP1com->getCUdata(32, _SYS_ID, flagbytes, &nrofflagbytes))
+		{
+			resetCUdata();
+			return result_commError;
+		}
+		// Read extended ID (5-byte ROM-ID):
 		if (!readExtendedID(_ROM_ID))
 		{
 			resetCUdata();
