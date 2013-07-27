@@ -298,7 +298,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 #ifdef B500000
 		else if (baud == B500000)
 		{
-			*baudrate = B500000;
+			*baudrate = 500000;
 		}
 #endif
 #ifdef B576000
