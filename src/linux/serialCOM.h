@@ -1,7 +1,7 @@
 /*
  * serialCOM.h - Serial port configuration and communication
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2013 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,9 @@ private:
 	struct termios2 oldtio;			// backup of port settings
 	struct serial_struct old_serdrvinfo;	// backup of serial driver settings
 	bool settingssaved;
-	bool serdrvaccess;
+	bool flag_async_low_latency_supported;
+	bool ioctl_tiocgserial_supported;
+	bool ioctl_tiocsserial_supported;
 	static struct std_baudrate std_baudrates[];
 
 };

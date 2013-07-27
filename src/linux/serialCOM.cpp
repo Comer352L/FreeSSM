@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2013 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,9 @@ serialCOM::serialCOM()
 	memset(&oldtio, 0, sizeof(oldtio));
 	memset(&old_serdrvinfo, 0, sizeof(old_serdrvinfo));
 	settingssaved = false;
-	serdrvaccess = false;
+	flag_async_low_latency_supported = false;
+	ioctl_tiocgserial_supported = false;
+	ioctl_tiocsserial_supported = false;
 }
 
 
@@ -240,7 +242,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 		}
 		else if (baud == B38400)
 		{
-			if (serdrvaccess) // if we have access to the driver
+			if (ioctl_tiocgserial_supported) // if we have access to the driver
 			{
 				// Get driver settings
 				struct serial_struct current_serdrvinfo;
@@ -249,10 +251,14 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 				if (cvIOCTL_SD != -1)
 				{
 					// Check if it is a non-standard baudrate:
-					if (current_serdrvinfo.flags != (current_serdrvinfo.flags | ASYNC_SPD_CUST))
+					if (!(current_serdrvinfo.flags & ASYNC_SPD_CUST))
 						*baudrate = 38400;
 					else
 					{
+#ifdef __SERIALCOM_DEBUG__
+						if (!ioctl_tiocsserial_supported)
+							std::cout << "serialCOM::GetPortSettings():   warning: ioctl TIOCSSERIAL not supported, but ASYNC_SPD_CUST flag set !\n";
+#endif
 						if (current_serdrvinfo.custom_divisor != 0)
 							*baudrate = (static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
 						else
@@ -463,18 +469,19 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	if (!portisopen) return false;
 	struct serial_struct new_serdrvinfo;
 	memset(&new_serdrvinfo, 0, sizeof(new_serdrvinfo));
-	if (serdrvaccess)
+	if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported)
 	{
 		// Get current port settings:
 		cIOCTL_SD = ioctl(fd, TIOCGSERIAL, &new_serdrvinfo);	// read from driver
 #ifdef __SERIALCOM_DEBUG__
 		if (cIOCTL_SD == -1)
-			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #1 failed with error " << errno << " " << strerror(errno)<< "\n";
+			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCGSERIAL, ...) #1 failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
 		// Deactivate custom baudrate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
-		new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;
+		if (flag_async_low_latency_supported)
+			new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;
 	}
 	// SET CONTROL OPTIONS:
 	newtio.c_cflag = (CREAD | CLOCAL);
@@ -490,7 +497,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrate must be > 0\n";
 #endif
 	}
-	else if (serdrvaccess && (cIOCTL_SD != -1) && (baudrate > new_serdrvinfo.baud_base))
+	else if (ioctl_tiocgserial_supported && (cIOCTL_SD != -1) && (baudrate > new_serdrvinfo.baud_base))
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -506,7 +513,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			*	 because we know the supported baudrates exactly and can select them
 			*	 according to our own startegy (=> min. relative deviation)
 			*/
-			if (serdrvaccess && (cIOCTL_SD != -1))	// if we have access to serial driver
+			if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported && (cIOCTL_SD != -1))	// if we have read+write access to serial driver
 			{
 				int customdivisor = 0;
 				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / baudrate));
@@ -770,14 +777,27 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	// SET NEW PORT SETTING:
 	if (settingsvalid == true)	// apply new settings only if they are all valid !
 	{
-		if (serdrvaccess)
+		if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported)
 		{
 			cIOCTL_SD = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings	// -1 on error
 			/* NOTE: always do this ioctl to deactivate the ASYNC_SPD_CUST if we have a standard-baudrate ! */
-#ifdef __SERIALCOM_DEBUG__
+			/* NOTE: some drivers (e.g. for many USB-serial devices) provide the TIOCGSERIAL ioctl, but no TIOCSSERIAL ioctl ! */
 			if (cIOCTL_SD == -1)
-				std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #2 failed with error " << errno << " " << strerror(errno)<< "\n";
+			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCSSERIAL, ...) #2 failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
+				if (!isStdBaud)
+				{
+#ifdef __SERIALCOM_DEBUG__
+					std::cout << "serialCOM::SetPortSettings():   fallback: trying to encode non-standard baud rate with BOTHER method.\n";
+#endif
+					/* Fallback: try to encode the non-standard baud rate  with the BOTHER method */
+					newbaudrate = BOTHER;
+					newtio.c_ispeed = round(baudrate);
+					newtio.c_ospeed = round(baudrate);
+				}
+			}
 		}
 		newtio.c_cflag &= ~CBAUD;
 		newtio.c_cflag |= newbaudrate;
@@ -807,7 +827,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		}
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
-	return ((cIOCTL != -1) && (!serdrvaccess || (serdrvaccess && (cIOCTL_SD != -1)) || (isStdBaud && (newbaudrate != B38400))));
+	return (cIOCTL != -1);
 	/* NOTE: we can tolerate a failing TIOCSSERIAL-ioctl() if the baudrate is not set to B38400,
 	 *       because the ASYNC_SPD_CUST-flag and the custom divisor are always ignored if B38400 is not set !
 	 */
@@ -862,18 +882,41 @@ bool serialCOM::OpenPort(std::string portname)
 			settingssaved = true;
 		confirm = ioctl(fd, TIOCGSERIAL, &old_serdrvinfo);	// driver settings
 		if (confirm != -1)
-			serdrvaccess = true;
+			ioctl_tiocgserial_supported = true;
 		else
-			serdrvaccess = false;
-		if (serdrvaccess)
+			ioctl_tiocgserial_supported = false;
+		ioctl_tiocsserial_supported = false;
+		flag_async_low_latency_supported = false;
+		if (ioctl_tiocgserial_supported)
 		{
 			// CHANGE DRIVER SETTINGS:
 			new_serdrvinfo = old_serdrvinfo;
 			new_serdrvinfo.flags |= ASYNC_LOW_LATENCY;		// request low latency behaviour
 			confirm = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write driver settings
+			/* NOTE: drivers should ignore ASYNC_LOW_LATENCY if they don't support it, but we don't rely on this behavior... */
+			if (confirm != -1)
+				flag_async_low_latency_supported = true;
+			else
+			{
+				// Try again without the low latency flag
+				new_serdrvinfo.flags &= ~ASYNC_LOW_LATENCY;
+				confirm = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);
+			}
+			if (confirm != -1)
+			{
+				ioctl_tiocsserial_supported = true;
 #ifdef __SERIALCOM_DEBUG__
-			if (confirm == -1)
+				if (!(new_serdrvinfo.flags & ASYNC_LOW_LATENCY))
+					std::cout << "serialCOM::OpenPort():   the driver doesn't support the ASYNC_LOW_LATENY flag\n";
+#endif
+			}
+#ifdef __SERIALCOM_DEBUG__
+			else
+			{
+	  			/* NOTE: some drivers (e.g. for many USB-serial devices) provide the TIOCGSERIAL ioctl, but no TIOCSSERIAL ioctl ! */
 				std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
+				std::cout << "serialCOM::OpenPort():   ioctl TIOCSSERIAL seems to be not supported\n";
+			}
 #endif
 		}
 /*
@@ -955,7 +998,7 @@ bool serialCOM::ClosePort()
 		std::cout << "serialCOM::ClosePort():   ioctl(..., TCFLSH, TCIOFLUSH) failed with error " << errno << "\n";
 #endif
 	// RESTORE PORT SETTINGS:
-	if (serdrvaccess)
+	if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported)
 	{
 		confirm = ioctl(fd, TIOCSSERIAL, &old_serdrvinfo);	// restore old driver settings
 #ifdef __SERIALCOM_DEBUG__
@@ -985,7 +1028,9 @@ bool serialCOM::ClosePort()
 		portisopen = false;
 		breakset = false;
 		currentportname = "";
-		serdrvaccess = false;
+		flag_async_low_latency_supported = false;
+		ioctl_tiocgserial_supported = false;
+		ioctl_tiocsserial_supported = false;
 		return true;
 	}
 	else
