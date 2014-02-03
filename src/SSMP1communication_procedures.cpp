@@ -192,7 +192,7 @@ bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vecto
 				IDconfirmed = true;
 				cu_data_len = _recbuffer.size();
 			}
-			else if ((_recbuffer.at(1) == 0x10) && ((_recbuffer.size() == 3) || (_recbuffer.size() == (3 + extradatalen))))
+			else if ((_recbuffer.at(1) == 0x10) && ((_recbuffer.size() == 3) || (_recbuffer.size() == (3 + static_cast<unsigned int>(extradatalen)))))
 			{
 				IDconfirmed = true;
 				cu_data_len = _recbuffer.size();

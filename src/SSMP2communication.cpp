@@ -65,7 +65,7 @@ void SSMP2communication::setRetriesOnError(unsigned char retries)
 bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
 {
 	bool ok = false;
-	int k = 0;
+	unsigned int k = 0;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0)) return false;
 	_CommOperation = comOp_readCUdata;
 	// Communication-operation:

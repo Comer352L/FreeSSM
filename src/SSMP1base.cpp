@@ -108,7 +108,7 @@ bool SSMP1commands::sendWriteDatabyteCmd(unsigned int dataaddr, char databyte)
 	if (dataaddr > 0xffff) return false;
 	char highbyte = (dataaddr & 0xffff) >> 8;
 	char lowbyte = dataaddr & 0xff;
-	char writemsg[4] = {SSMP1_CMD_WRITE, highbyte, lowbyte, databyte};
+	char writemsg[4] = {static_cast<char>(SSMP1_CMD_WRITE), highbyte, lowbyte, databyte};
 	return sendMsg(writemsg, 4);
 }
 
