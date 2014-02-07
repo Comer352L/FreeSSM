@@ -78,7 +78,7 @@ public:
 
 private:
 	enum if_model_dt {if_none, if_unsupported, if_model_ELM327, if_model_ELM329, if_model_AGV, if_model_AGV4000B};
-	
+
 	serialCOM *_port;
 	bool _connected;
 	float _baudrate;

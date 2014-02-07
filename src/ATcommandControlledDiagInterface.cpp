@@ -65,7 +65,7 @@ bool ATcommandControlledDiagInterface::open( std::string name )
 		if (!_port->SetControlLines(true, false))	// NOTE: ELM: enabling RTS means interrupting current operation
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::open():   warning: setting handshaking lines states failed ! This could prevent the interface from working !\n";
+			std::cout << "ATcommandControlledDiagInterface::open():   warning: setting handshaking line states failed ! This could prevent the interface from working !\n";
 #endif
 		}
 		_ready = true;
@@ -916,7 +916,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 	else	// Device unknown / unsupported
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::probeInterface():   error: unknown device detected. If this is an compatible interface an you would like to add support for it, please contact the authors. \n";
+		std::cout << "ATcommandControlledDiagInterface::probeInterface():   error: unknown device detected. If this is a compatible interface an you would like to add support for it, please contact the authors. \n";
 #endif
 		return if_unsupported;
 	}
@@ -982,13 +982,13 @@ bool ATcommandControlledDiagInterface::configureDevice()
 		reply = writeRead("ATOSY1");
 #ifdef __FSSM_DEBUG__
 		if (reply != "OK")
-			std::cout << "ATcommandControlledDiagInterface::configureDevice():   warning: failed to enable detasiled error descriptions !\n";
+			std::cout << "ATcommandControlledDiagInterface::configureDevice():   warning: failed to enable detailed error descriptions !\n";
 #endif
 		// Enable printing of detailed error descrioptions (otherwise: error numbers)
 		reply = writeRead("ATOEN0");
 #ifdef __FSSM_DEBUG__
 		if (reply != "OK")
-			std::cout << "ATcommandControlledDiagInterface::configureDevice():   warning: failed to enable detasiled error descriptions !\n";
+			std::cout << "ATcommandControlledDiagInterface::configureDevice():   warning: failed to enable detailed error descriptions !\n";
 #endif
 	}
 	// Configure interface output format
