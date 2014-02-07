@@ -245,44 +245,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 #endif
 		}
 		// <<< Protocol specific setup >>>
-#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
-		if (protocol == protocol_SSM2_ISO14230)
-		{
-			// Set ISO baud rate to 4800
-			reply = writeRead("ATIB48");	// since v1.4
-			if (reply != "OK")
-			{
-#ifdef __FSSM_DEBUG__
-				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable long size messages !\n";
-#endif
-				return false;
-			}
-			
-			/* FIXME: SET ISO9141/ISO14230 INTER-BYTE-TIMING VALUE P4 TO 0 ms (< 5 ms) */
-			/* NOTE: The ELM327 up to v1.4b doesn't provide a command yet to adjust this value */
-			
-			// Configure Rx/Tx addresses
-			if (!changeDeviceAddresses(0xF0, 0x10, protocol))
-				return false;
-			// Set protocol ISO14230
-			reply = writeRead("ATSP5");	// NOTE: also ATSP4
-			if (reply != "OK")
-			{
-#ifdef __FSSM_DEBUG__
-				std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to set communication protocol to ISO14230 !\n";
-#endif
-				return false;
-			}
-			// Disable key bytes check
-			reply = writeRead("ATKW0");	// since v1.2
-#ifdef __FSSM_DEBUG__
-			if (reply != "OK")
-				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable key bytes check !\n";
-#endif
-			// NOTE: for SSM2, there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
-		}
-		else if (protocol == protocol_SSM2_ISO15765)
-#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		if (protocol == protocol_SSM2_ISO15765)
 		{
 			// Enable message padding
 			if ((_if_model == if_model_AGV) || (_if_model == if_model_AGV4000B)) // AGV4000(B)+DX35+DX60/61
@@ -351,6 +314,43 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 			}
 			// NOTE: AGV4000(B) returns "6 = ISO 15765-4, CAN (11/500)", ELM329 returns "OK"
 		}
+#ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
+		else if (protocol == protocol_SSM2_ISO14230)
+		{
+			// Set ISO baud rate to 4800
+			reply = writeRead("ATIB48");	// since v1.4
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to enable long size messages !\n";
+#endif
+				return false;
+			}
+
+			/* FIXME: SET ISO9141/ISO14230 INTER-BYTE-TIMING VALUE P4 TO 0 ms (< 5 ms) */
+			/* NOTE: The ELM327 up to v1.4b doesn't provide a command yet to adjust this value */
+
+			// Configure Rx/Tx addresses
+			if (!changeDeviceAddresses(0xF0, 0x10, protocol))
+				return false;
+			// Set protocol ISO14230
+			reply = writeRead("ATSP5");	// NOTE: also ATSP4
+			if (reply != "OK")
+			{
+#ifdef __FSSM_DEBUG__
+				std::cout << "ATcommandControlledDiagInterface::connect():   error: failed to set communication protocol to ISO14230 !\n";
+#endif
+				return false;
+			}
+			// Disable key bytes check
+			reply = writeRead("ATKW0");	// since v1.2
+#ifdef __FSSM_DEBUG__
+			if (reply != "OK")
+				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable key bytes check !\n";
+#endif
+			// NOTE: for SSM2, there is no need to trigger a connect here, because there is no initialization sequence and no stay alive messages
+		}
+#endif // __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
 		// <<< Continue with common setup >>>
 		// Disable permanent wakeup messages
 		reply = writeRead("ATSW00");	// AGV4000(B)+AGV4500+DX35+DX60/61: applies to ISO9141 and ISO14230 only; ELM329 (+ELM327 ?): also applies to CAN
