@@ -483,20 +483,22 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 {
 	if (_port && _connected)
 	{
-		if (buffer.size() <= 4)
-			return false;
 		// Check/Change CU address settings:
 		unsigned int src_addr = 0;
 		unsigned int tgt_addr = 0;
 #ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
 		if (protocolType() == protocol_SSM2_ISO14230)
 		{
+			if (buffer.size() < 6)
+				return false;
 			tgt_addr = static_cast<unsigned char>(buffer.at(1));
 			src_addr = static_cast<unsigned char>(buffer.at(2));
 		}
 		else if (protocolType() == protocol_SSM2_ISO15765)
 #endif
 		{
+			if (buffer.size() < 5)
+				return false;
 			tgt_addr = static_cast<unsigned char>(buffer.at(0))*(0xffffff+1) + static_cast<unsigned char>(buffer.at(1))*(0xffff+1) + static_cast<unsigned char>(buffer.at(2))*(0xff+1) + static_cast<unsigned char>(buffer.at(3));
 			if ((tgt_addr < 0x7E0) || (tgt_addr > 0x7E7))	// NOTE: currently supported: OBD2 address range for 11bit CAN-ID
 			{
