@@ -521,8 +521,11 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 			std::cout << " " << std::hex << static_cast<unsigned int>(static_cast<unsigned char>(buffer.at(c)));
 		std::cout << "\n";
 #endif
-		// Strip CAN-ID (automatically prepended by interface):
+		// Strip CAN-ID / ISO-14230-Header (automatically prepended by interface):
 		buffer.erase(buffer.begin(), buffer.begin() + 4);
+		// Remove ISO-14230 checksum byte (automatically appended by interface):
+		if (protocolType() == protocol_SSM2_ISO14230)
+			buffer.pop_back();
 		// Convert data to hex-string:
 		std::string msg = dataToHexStr(buffer);
 		buffer.assign(msg.begin(), msg.end());
