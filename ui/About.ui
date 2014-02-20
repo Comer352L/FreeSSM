@@ -567,7 +567,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>Written by Comer352L (Copyright © 2008-2012)</string>
+      <string>Written by Comer352L (Copyright © 2008-2014)</string>
      </property>
     </widget>
     <widget class="QLabel" name="email_label">
@@ -613,7 +613,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string notr="true">&lt;a href=&quot;http://FreeSSM.berlios.de/&quot;&gt;http://FreeSSM.berlios.de&lt;/a&gt;</string>
+      <string notr="true">&lt;a href=&quot;https://github.com/Comer352L/FreeSSM&quot;&gt;https://github.com/Comer352L/FreeSSM&lt;/a&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
