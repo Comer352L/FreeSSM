@@ -149,7 +149,9 @@ filestarget.files = background.png LiberationSans*.ttf *.qm
 unix:filestarget.files += resources/icons/freessm/48x48/FreeSSM.png
 doctarget.path = $$INSTALLDIR/doc
 doctarget.files = doc/*
-INSTALLS += target doctarget filestarget
+defstarget.path = $$INSTALLDIR
+defstarget.files = *.xml
+INSTALLS += target doctarget defstarget filestarget
 
 
 
