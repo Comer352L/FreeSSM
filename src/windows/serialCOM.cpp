@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 	unsigned long szData = 256;		// variable that specifies the size, in bytes, of the buffer pointed to by the lpData parameter.
 	long cv;
 	HANDLE hCom_t = NULL;
-	bool ok;
 	// OPEN REGISTRY-KEY AND BROWSE ENTRYS:
 	cv = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "HARDWARE\\DEVICEMAP\\SERIALCOMM", 0, KEY_READ, &hKey);
 	if (cv == ERROR_SUCCESS) // ERROR_SUCCESS is of type long
@@ -80,9 +79,10 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 						    );
 				if (hCom_t != INVALID_HANDLE_VALUE)
 				{
-					ok = CloseHandle(hCom_t);
-#ifdef __SERIALCOM_DEBUG__
-					if (!ok)
+#ifndef __SERIALCOM_DEBUG__
+					CloseHandle(hCom_t);
+#else
+					if (!CloseHandle(hCom_t))
 						std::cout << "serialCOM::GetAvailablePorts():   CloseHandle(...) failed with error " << GetLastError() << "\n";
 					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is available\n";
 #endif
@@ -454,7 +454,7 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 	settingssaved = confirm;
 	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns received characters):
-	COMMTIMEOUTS timeouts = {0};
+	COMMTIMEOUTS timeouts;
 	timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
 	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
 	timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
@@ -638,7 +638,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	bool confirmRF = false;
 	DWORD nbr = 0;
 	unsigned int rb_total = 0;
-	COMMTIMEOUTS timeouts = {0};
+	COMMTIMEOUTS timeouts;
 
 	*nrofbytesread = 0;
 	timeouts.WriteTotalTimeoutConstant = 0;
