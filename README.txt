@@ -103,7 +103,7 @@ $ make install
 
 => the application will be installed to 
 	- Linux:	the users home-directory (/home/userXYZ/FreeSSM)
-	- Windows:	the "Program files"-folder (C:\Program files\FreeSSM)
+	- Windows:	C:\FreeSSM (can be moved after installation)
 
 Un-installation:
 
