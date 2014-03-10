@@ -1,3 +1,16 @@
+nächstes Release (aktuelle Entwicklungsversion):
+  - Experimentelle Unterstützung für J2534-Interfaces hinzugefügt
+  - Experimentelle Unterstützung für AT-Kommando-gesteuerte Interfaces hinzugefügt
+  - Experimentelle Unterstützung für SSM2 über ISO-15765 (CAN) hinzugefügt
+  - Unterstützung für das alte SSM1 Kommunikationsprotokoll hinzugefügt
+  - Grundlegende Unterstützung für zusätzliche Steuergerätetypen hinzugefügt: ABS/VDC, CC, A/C
+    (nur SSM1, Definitionen unvollständig)
+  - Unterstützung für weitere Motor- und Getriebesteuergeräte hinzugefügt
+    (OBD2 SSM1 Steuergeräte und weitere SSM2 Steuergeräteadressen)
+  - Zahlreiche interne Änderungen, Code-Überarbeitung, Modularisierung
+  - Mehrere kleinere Fehler behoben
+
+
 v1.2.5 (26.05.2010):
   - Fehler behoben, der dazu führte, dass die Fahrgestellnummer bei einigen
     neueren Outback-Modellen und Modellen mit Dieselmotor als "noch nicht

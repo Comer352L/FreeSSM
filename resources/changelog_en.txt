@@ -1,3 +1,16 @@
+next release (current development snapshot):
+  - Added experimental support for J2534 interfaces
+  - Added experimental support for AT command controlled interfaces
+  - Added experimental support for SSM2 over ISO-15765 (CAN)
+  - Added support for the old SSM1 communication protocol
+  - Added basic support for additional control units: ABS/VDC, CC, A/C
+    (SSM1 only, definitions incomplete)
+  - Added support for further engine and transmission control units 
+    (OBD2 SSM1 controllers and additional SSM2 control unit addresses)
+  - Lots of internal changes, code rework, modularization
+  - Fixed some minor bugs
+
+
 v1.2.5 (26.05.2010):
   - Fixed VIN beeing displayed as "not registered yet" on some newer
     Outback models and models with Diesel engines
