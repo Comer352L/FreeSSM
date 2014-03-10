@@ -2,103 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="de">
 <context>
-    <name>ABSDialog</name>
-    <message>
-        <source>ABS/VDC Control Unit</source>
-        <translation type="obsolete">ABS/VDC-Steuergerät</translation>
-    </message>
-    <message>
-        <source>ABS/VDC</source>
-        <translation type="obsolete">ABS/VDC</translation>
-    </message>
-    <message>
-        <source>&amp;Diagnostic Codes</source>
-        <translation type="obsolete">&amp;Diagnosecodes</translation>
-    </message>
-    <message>
-        <source>&amp;Measuring Blocks</source>
-        <translation type="obsolete">&amp;Messwertblöcke</translation>
-    </message>
-    <message>
-        <source>&amp;Adjustments</source>
-        <translation type="obsolete">&amp;Einstellungen</translation>
-    </message>
-    <message>
-        <source>Clear Memory</source>
-        <translation type="obsolete">Speicher Löschen</translation>
-    </message>
-    <message>
-        <source>Diagnostic Codes:</source>
-        <translation type="obsolete">Diagnosecodes:</translation>
-    </message>
-    <message>
-        <source>Connecting to ABS/VDC Control Unit... Please wait !</source>
-        <translation type="obsolete">Verbinde mit ABS/VDC-Steuergerät... Bitte warten !</translation>
-    </message>
-    <message>
-        <source>Connecting...</source>
-        <translation type="obsolete">Verbindung herstellen...</translation>
-    </message>
-    <message>
-        <source>Processing Control Unit data... Please wait !</source>
-        <translation type="obsolete">Verarbeite Steuergeräte-Daten... Bitte warten !</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation type="obsolete">unbekannt</translation>
-    </message>
-    <message>
-        <source>Control Unit initialisation successful !</source>
-        <translation type="obsolete">Steuergerät-Initialisierung erfolgreich !</translation>
-    </message>
-    <message>
-        <source>Error:
-No valid definitions file found.
-Please make sure that FreeSSM is installed properly.</source>
-        <translation type="obsolete">Fehler:
-Definitionendatei nicht gefunden oder fehlerhaft.
-Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
-    </message>
-    <message>
-        <source>Error:
-This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
-If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
-        <translation type="obsolete">Fehler:
-Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
-FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
-Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht untertsützte Steuergeräte hinzuzufügen, kontaktieren Sie bitte die Autoren.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Fehler</translation>
-    </message>
-    <message>
-        <source>Switching to Diagnostic Codes... Please wait !</source>
-        <translation type="obsolete">Wechsele zu Diagnosecodes... Bitte warten !</translation>
-    </message>
-    <message>
-        <source>Switching to Measuring Blocks... Please wait !</source>
-        <translation type="obsolete">Wechsele zu Messwertblöcken... Bitte warten !</translation>
-    </message>
-    <message>
-        <source>Measuring Blocks:</source>
-        <translation type="obsolete">Messwertblöcke:</translation>
-    </message>
-    <message>
-        <source>Switching to Adjustment Values... Please wait !</source>
-        <translation type="obsolete">Wechsele zu Einstellungen... Bitte warten !</translation>
-    </message>
-    <message>
-        <source>Adjustments:</source>
-        <translation type="obsolete">Einstellungen:</translation>
-    </message>
-    <message>
-        <source>Reading Adjustment Values... Please wait !</source>
-        <translation type="obsolete">Einstellungen werden gelesen... Bitte warten !</translation>
-    </message>
-</context>
-<context>
     <name>ABSdialog</name>
     <message>
         <location filename="src/ABSdialog.cpp" line="28"/>
@@ -332,10 +235,6 @@ Stellglied-Test konnte nicht gestartet werden.</translation>
         <location filename="src/AirConDialog.cpp" line="23"/>
         <source>Air Conditioning Control Unit</source>
         <translation>Klimaanlagen-Steuergerät</translation>
-    </message>
-    <message>
-        <source>Air Conditioning</source>
-        <translation type="obsolete">Klimaanlage</translation>
     </message>
     <message>
         <location filename="src/AirConDialog.cpp" line="34"/>
@@ -754,7 +653,7 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
         <location filename="src/CUcontent_DCs_stopCodes.cpp" line="45"/>
         <location filename="src/CUcontent_DCs_stopCodes.cpp" line="82"/>
         <source>Current Stop Code:</source>
-        <translation type="unfinished">Aktuelle Fehlercodes:</translation>
+        <translation>Aktuelle Fehlercodes:</translation>
     </message>
     <message>
         <location filename="src/CUcontent_DCs_stopCodes.cpp" line="87"/>
@@ -770,38 +669,7 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
         <location filename="src/CUcontent_DCs_stopCodes.cpp" line="142"/>
         <location filename="src/CUcontent_DCs_stopCodes.cpp" line="161"/>
         <source>----- No valid Stop Codes -----</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CUcontent_DCs_transmission</name>
-    <message>
-        <source>Temporary Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Kurzzeitige Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>Current Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Aktuelle Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>Memorized Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Gespeicherte Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>Historic Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Historische Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>----- Reading data... Please wait ! -----</source>
-        <translation type="obsolete">----- Daten werden gelesen... Bitte warten ! -----</translation>
-    </message>
-    <message>
-        <source>----- Not supported by ECU -----</source>
-        <translation type="obsolete">----- Nicht Unterstützt -----</translation>
-    </message>
-    <message>
-        <source>----- No Trouble Codes -----</source>
-        <translation type="obsolete">----- Keine Fehlercodes -----</translation>
+        <translation>----- Keine gültigen Stop-Codes -----</translation>
     </message>
 </context>
 <context>
@@ -1026,10 +894,6 @@ ist offenbar (nach +) kurzgeschlossen !</translation>
 <context>
     <name>CUinfo_Transmission_Form</name>
     <message>
-        <source>Transmission Type:</source>
-        <translation type="obsolete">Getriebe-Typ:</translation>
-    </message>
-    <message>
         <location filename="ui/CUinfo_Transmission.ui" line="54"/>
         <source>System Type:</source>
         <translation>Systemtyp:</translation>
@@ -1061,18 +925,7 @@ ist offenbar (nach +) kurzgeschlossen !</translation>
     </message>
 </context>
 <context>
-    <name>CUinfo_simple</name>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Typ</translation>
-    </message>
-</context>
-<context>
     <name>CUinfo_simple_Form</name>
-    <message>
-        <source>Transmission Type:</source>
-        <translation type="obsolete">Getriebe-Typ:</translation>
-    </message>
     <message>
         <location filename="ui/CUinfo_simple.ui" line="54"/>
         <source>System Type:</source>
@@ -1294,7 +1147,7 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="23"/>
         <source>Cruise Control Unit</source>
-        <translation type="unfinished">Geschwindigkeitsregelanlagen-Steuergerät</translation>
+        <translation>Geschwindigkeitsregelanlagen-Steuergerät</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="34"/>
@@ -1320,7 +1173,7 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="61"/>
         <source>Please switch the Cruise Control system on.</source>
-        <translation type="unfinished">Bitte schalten Sie die Geschwindigkeitsregelanlage ein.</translation>
+        <translation>Bitte schalten Sie die Geschwindigkeitsregelanlage ein.</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="63"/>
@@ -1330,7 +1183,7 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="77"/>
         <source>Connecting to Cruise Control Unit... Please wait !</source>
-        <translation type="unfinished">Verbinde mit Geschwindigkeitsregelanlagen-Steuergerät... Bitte warten !</translation>
+        <translation>Verbinde mit Geschwindigkeitsregelanlagen-Steuergerät... Bitte warten !</translation>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="78"/>
@@ -1404,7 +1257,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <location filename="ui/CUcontent_DCs_stopCodes.ui" line="62"/>
         <source>Current Stop Code(s):</source>
         <oldsource>Current Stop Code:</oldsource>
-        <translation type="unfinished">Aktuelle Stop-Codes:</translation>
+        <translation>Aktuelle Stop-Codes:</translation>
     </message>
     <message>
         <location filename="ui/CUcontent_DCs_stopCodes.ui" line="94"/>
@@ -1630,7 +1483,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="123"/>
-        <location filename="src/FreeSSM.cpp" line="660"/>
+        <location filename="src/FreeSSM.cpp" line="663"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -1721,33 +1574,9 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
         <translation>  &amp;Einstellungen   </translation>
     </message>
     <message>
-        <source>      &amp;Engine       </source>
-        <translation type="obsolete">        &amp;Motor        </translation>
-    </message>
-    <message>
         <location filename="ui/FreeSSM.ui" line="84"/>
         <source>Control Units:</source>
         <translation>Steuergeräte:</translation>
-    </message>
-    <message>
-        <source>        E&amp;xit            </source>
-        <translation type="obsolete">    &amp;Beenden      </translation>
-    </message>
-    <message>
-        <source>       &amp;Help           </source>
-        <translation type="obsolete">        &amp;Hilfe           </translation>
-    </message>
-    <message>
-        <source>       &amp;About         </source>
-        <translation type="obsolete">         &amp;Info           </translation>
-    </message>
-    <message>
-        <source> &amp;Transmission</source>
-        <translation type="obsolete">     &amp;Getriebe      </translation>
-    </message>
-    <message>
-        <source>  &amp;Preferences  </source>
-        <translation type="obsolete"> &amp;Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -2174,7 +2003,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Informationen über FreeSSM</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="871"/>
+        <location filename="ui/About.ui" line="1147"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
         <translation>Ein freies Diagnose- und Adaptions-Tool für SUBARU®-Fahrzeuge</translation>
     </message>
@@ -2274,41 +2103,14 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <translation>&amp;Credits</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="640"/>
-        <source>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-You should have received a copy of the GNU General Public License along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</source>
-        <translation>Dieses Programm ist freie Software. Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren Version.
-Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, siehe &lt;http://www.gnu.org/licenses/&gt;.</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="666"/>
+        <location filename="ui/About.ui" line="621"/>
         <source>Project homepage:</source>
         <translation>Projekt-Homepage:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="685"/>
-        <source>MartinX (definitions, bugfix)</source>
-        <translation>MartinX (Definitionen, Bugfix)</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="761"/>
+        <location filename="ui/About.ui" line="706"/>
         <source>Contributors:</source>
         <translation>Beitragende:</translation>
-    </message>
-    <message utf8="true">
-        <location filename="ui/About.ui" line="780"/>
-        <source>Antoine Giniès (background picture, Copyright ©)</source>
-        <translation>Antoine Giniès (Hintergrundbild, Copyright ©)</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="799"/>
-        <source>L1800Turbo (ECU-data, testing)</source>
-        <translation>L1800Turbo (ECU-Daten, Tests)</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="805"/>
-        <source>&amp;Licence</source>
-        <translation>&amp;Lizenz</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="137"/>
@@ -2330,34 +2132,108 @@ Sie sollten ein Exemplar der GNU General Public License zusammen mit diesem Prog
         <source>Program languages:</source>
         <translation>Programmsprachen:</translation>
     </message>
+    <message utf8="true">
+        <location filename="ui/About.ui" line="640"/>
+        <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
+        <translation>Basiert auf dem &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</translation>
+    </message>
     <message>
-        <location filename="ui/About.ui" line="823"/>
+        <location filename="ui/About.ui" line="662"/>
+        <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
+        <translation>Viele Icons stammen aus den &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; und &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; Icon-Sammlungen.</translation>
+    </message>
+    <message utf8="true">
+        <location filename="ui/About.ui" line="684"/>
+        <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
+        <translation>Truetype-Schrift &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
+    </message>
+    <message utf8="true">
+        <location filename="ui/About.ui" line="728"/>
+        <source>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</source>
+        <translation>L1800Turbo (SSM1 ECU Definitionen, Tests)&lt;br&gt;MartinX (SSM2 Definitionen, Bugfix)&lt;br&gt;Antoine Giniès (Hintergrundbild, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU Untersuchungen, Tests)</translation>
+    </message>
+    <message utf8="true">
+        <location filename="ui/About.ui" line="750"/>
+        <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
+        <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="759"/>
+        <source>&amp;Licenses</source>
+        <translation>&amp;Lizenzen</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="778"/>
+        <source>Qt4-Framework:</source>
+        <translation>Qt4-Framework:</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="804"/>
+        <source>Truetype font &quot;Liberation Sans&quot;: </source>
+        <translation>Truetype-Schrift &quot;Liberation Sans&quot;:</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="828"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;This program is free software:&lt;br&gt;You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.&lt;br&gt;The source code must always be provided.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Dieses Programm ist freie Software:&lt;br&gt;Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren Version.&lt;br&gt;Der Quelltext muss immer zur Verfügung gestellt werden.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="854"/>
+        <source>Crystal icon theme:</source>
+        <translation>Crystal Icon Motiv:</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="880"/>
+        <source>Oxygen icon theme:</source>
+        <translation>Oxygen Icon Motiv:</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="906"/>
+        <source>TinyXML:</source>
+        <translation>TinyXML:</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="929"/>
+        <source>&lt;a href=&quot;./licenses-3rd-party/liberation-fonts-LICENSE.txt&quot;&gt;SIL Open Font License v1.1&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/liberation-fonts-LICENSE.txt&quot;&gt;SIL Open Font Lizenz v1.1&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="958"/>
+        <source>&lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/LGPL-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt; and &lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/CC-BY-SA-3.0-LICENSE.txt&quot;&gt;CC-BY-SA-3.0 license&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/LGPL-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt; und &lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/CC-BY-SA-3.0-LICENSE.txt&quot;&gt;CC-BY-SA-3.0 Lizenz&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="987"/>
+        <source>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; and (since Qt 4.5) also the &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; und (seit Qt 4.5) auch die &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="1016"/>
+        <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB-Lizenz&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="1042"/>
+        <source>&lt;a href=&quot;./licenses-3rd-party/crystal-icons-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/crystal-icons-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="1071"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Licenses of 3rd party software and icons:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Software- und Icon-Lizenzen von Dritten:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="1093"/>
+        <source>Read the full license document</source>
+        <translation>Vollständigen Lizenztext lesen</translation>
+    </message>
+    <message>
+        <location filename="ui/About.ui" line="1099"/>
         <source>Change&amp;log</source>
         <translation>&amp;Änderungsprotokoll</translation>
     </message>
-    <message utf8="true">
-        <location filename="ui/About.ui" line="570"/>
-        <source>Written by Comer352L (Copyright © 2008-2012)</source>
-        <oldsource>Written by Comer352l (Copyright © 2008-2010)</oldsource>
-        <translation>Geschrieben von Comer352L (Copyright © 2008-2012)</translation>
-    </message>
-    <message utf8="true">
-        <location filename="ui/About.ui" line="704"/>
-        <source>Based on the Qt4-Framework (Copyright © Nokia Corporation)</source>
-        <translation>Basiert auf dem Qt4-Framework (Copyright © Nokia Corporation)</translation>
-    </message>
     <message>
-        <location filename="ui/About.ui" line="723"/>
-        <source>Many icons are taken from the Oxygen and Chrytstal icon themes</source>
-        <translation>Viele Icons stammen aus den Oxygen und Chrytstal Icon-Sammlungen</translation>
-    </message>
-    <message utf8="true">
-        <location filename="ui/About.ui" line="742"/>
-        <source>Truetype font &quot;Liberation Sans&quot; Copyright © Red Hat, Inc.</source>
-        <translation>Truetype font &quot;Liberation Sans&quot; Copyright © Red Hat, Inc.</translation>
-    </message>
-    <message>
-        <location filename="ui/About.ui" line="895"/>
+        <location filename="ui/About.ui" line="1171"/>
         <source>All trademarks are property of Fuji Heavy Industries Ltd. or their respective owners.</source>
         <translation>Alle Handelsmarken sind Eigentum von Fuji Heavy Industries Ltd. oder ihrer jeweiligen Besitzer.</translation>
     </message>
@@ -2506,37 +2382,6 @@ Entsprechende Informationen entnehmen Sie bitte dem Werkstatthandbuch.</translat
         <location filename="ui/CUcontent_sysTests.ui" line="25"/>
         <source>System Tests</source>
         <translation>System-Funktionstests</translation>
-    </message>
-</context>
-<context>
-    <name>transmissionDCcontent_Form</name>
-    <message>
-        <source>=&gt; Call &apos;&apos;Clear Memory&apos;&apos; from the &apos;&apos;Selection&apos;&apos; menu to erease all DTCs.</source>
-        <translation type="obsolete">=&gt; Die Fehlerspeicher können mit &quot;Speicher Löschen&quot; zurückgesetzt werden.</translation>
-    </message>
-    <message>
-        <source>    Print    </source>
-        <translation type="obsolete"> Drucken</translation>
-    </message>
-    <message>
-        <source>Code:</source>
-        <translation type="obsolete">Code:</translation>
-    </message>
-    <message>
-        <source>Description:</source>
-        <translation type="obsolete">Beschreibung:</translation>
-    </message>
-    <message>
-        <source>Historic/Memorized Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Historische/Gespeicherte Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>Current/Temporary Diagnostic Trouble Code(s):</source>
-        <translation type="obsolete">Aktuelle/Kurzzeitige Fehlercodes:</translation>
-    </message>
-    <message>
-        <source>Diagnostic Codes</source>
-        <translation type="obsolete">Diagnosecodes</translation>
     </message>
 </context>
 </TS>
