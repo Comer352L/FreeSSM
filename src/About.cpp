@@ -32,12 +32,12 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	QFile changelog_file;
 	if (language == "de")
 	{
-		licence_textBrowser->setSource(QUrl("qrc:/licence_de.html"));
+		licence_textBrowser->setSource(QUrl("qrc:/license_de.html"));
 		changelog_file.setFileName(":/changelog_de.txt");
 	}
 	else
 	{
-		licence_textBrowser->setSource(QUrl("qrc:/licence_en.html"));
+		licence_textBrowser->setSource(QUrl("qrc:/license_en.html"));
 		changelog_file.setFileName(":/changelog_en.txt");
 	}
 	changelog_file.open(QIODevice::ReadOnly | QIODevice::Text);
