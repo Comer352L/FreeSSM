@@ -1,7 +1,7 @@
 /*
  * About.cpp - Display informations about the FreeSSM software
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 About::About(QWidget *parent, QString language) : QDialog(parent)
 {
+	_language = language;
 	// Setup UI:
 	setupUi(this);
 	setupUiFonts();
@@ -31,15 +32,9 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	// Load licence text and changelog:
 	QFile changelog_file;
 	if (language == "de")
-	{
-		licence_textBrowser->setSource(QUrl("qrc:/license_de.html"));
 		changelog_file.setFileName(":/changelog_de.txt");
-	}
 	else
-	{
-		licence_textBrowser->setSource(QUrl("qrc:/license_en.html"));
 		changelog_file.setFileName(":/changelog_en.txt");
-	}
 	changelog_file.open(QIODevice::ReadOnly | QIODevice::Text);
 	QString changelog_content = static_cast<QString>(changelog_file.readAll());
 	changelog_textBrowser->setText(changelog_content);
@@ -90,8 +85,29 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 		langstr.append(langname_tr);
 	}
 	languages_label->setText( langstr );
-	// Connect "Close"-button:
+	// Connect buttons:
+	connect( showlicense_pushButton, SIGNAL( released() ), this, SLOT( showLicense() ) ); 
 	connect( close_pushButton, SIGNAL( released() ), this, SLOT( close() ) ); 
+}
+
+
+void About::showLicense()
+{
+	QTextBrowser *license_textBrowser = new QTextBrowser;
+	license_textBrowser->setWindowTitle("FreeSSM license text");
+	license_textBrowser->setAttribute(Qt::WA_DeleteOnClose, true);
+	// Place window in the center of the screen and resize:
+	license_textBrowser->resize(700, 500);
+	QDesktopWidget desktop;
+	int x = (desktop.width() - license_textBrowser->size().width()) / 2;
+	int y = (desktop.height() - license_textBrowser->size().height()) / 2 - 50;
+	license_textBrowser->move ( x, y );
+	// Display license text:
+	if (_language == "de")
+		license_textBrowser->setSource(QUrl("qrc:/license_de.html"));
+	else
+		license_textBrowser->setSource(QUrl("qrc:/license_en.html"));
+	license_textBrowser->show();
 }
 
 
@@ -208,10 +224,30 @@ void About::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(16);	// 12pts
 	author_label->setFont(font);
-	font = email_label->font();
+	font = contributors_label->font();
 	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	email_label->setFont(font);
+	font.setPixelSize(16);	// 12pts
+	contributors_label->setFont(font);
+	font = contributorslist_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(16);	// 12pts
+	contributorslist_label->setFont(font);
+	font = qt4credits_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(16);	// 12pts
+	qt4credits_label->setFont(font);
+	font = tinyxmlcredits_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(16);	// 12pts
+	tinyxmlcredits_label->setFont(font);
+	font = iconcredits_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(16);	// 12pts
+	iconcredits_label->setFont(font);
+	font = fontcredits_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(16);	// 12pts
+	fontcredits_label->setFont(font);
 	font = homepagetitle_label->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(16);	// 12pts
@@ -222,12 +258,56 @@ void About::setupUiFonts()
 	homepageURL_label->setFont(font);
 	font = gplinfo_label->font();
 	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
+	font.setPixelSize(16);	// 12pts
 	gplinfo_label->setFont(font);
-	font = licence_textBrowser->font();
+	font = showlicense_pushButton->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(16);	// 12pts
-	licence_textBrowser->setFont(font);
+	showlicense_pushButton->setFont(font);
+	font = thirdpartylicenses_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	thirdpartylicenses_label->setFont(font);
+	font = qt4license_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	qt4license_label->setFont(font);
+	font = qt4licensedoc_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	qt4licensedoc_label->setFont(font);
+	font = tinyxmllicense_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	tinyxmllicense_label->setFont(font);
+	font = tinyxmllicensedoc_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	tinyxmllicensedoc_label->setFont(font);
+	font = oxygeniconslicense_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	oxygeniconslicense_label->setFont(font);
+	font = oxygeniconslicensedoc_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	oxygeniconslicensedoc_label->setFont(font);
+	font = crystaliconslicense_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	crystaliconslicense_label->setFont(font);
+	font = crystaliconslicensedoc_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	crystaliconslicensedoc_label->setFont(font);
+	font = fontlicense_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	fontlicense_label->setFont(font);
+	font = fontlicensedoc_label->font();
+	font.setFamily(appfont.family());
+	font.setPixelSize(15);	// 11pts
+	fontlicensedoc_label->setFont(font);
 	font = changelog_textBrowser->font();
 	font.setFamily(appfont.family());
 	font.setPixelSize(13);	// 10pts

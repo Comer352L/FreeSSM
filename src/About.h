@@ -1,7 +1,7 @@
 /*
  * About.h - Display informations about the FreeSSM software
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,12 @@ public:
 	About(QWidget *parent = 0, QString language = "");
 
 private:
+	QString _language;
+
 	void setupUiFonts();
+
+private slots:
+	void showLicense();
 
 };
 
