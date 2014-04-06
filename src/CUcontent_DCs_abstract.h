@@ -21,7 +21,12 @@
 #define CUCONTENT_DCS_ABSTRACT_H
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
 #include <QPrinter>
 #include <QPrintDialog>
 #include "SSMprotocol.h"

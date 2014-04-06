@@ -22,7 +22,12 @@
 
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
 #include "ui_About.h"
 #include "Languages.h"
 #include "SSMprotocol2_def_en.h"
