@@ -79,7 +79,7 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	{
 		QLocale locale = __supportedLocales.at(k);
 		QString langname = QLocale::languageToString( locale.language() );
-		QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+		QString langname_tr = QCoreApplication::translate( "Language", langname.toUtf8() );
 		if (k > 0)
 			langstr.append(", ");
 		langstr.append(langname_tr);

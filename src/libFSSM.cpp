@@ -1,7 +1,7 @@
 /*
  * libFSSM.cpp - function library for FreeSSM
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 		else
 			opindexnr = nrofoperators - 1 - calcstep;
 		// EXTRACT NEXT OPERATOR:
-		opchar = formula.at( (operatorindex[opindexnr]) ).toAscii();
+		opchar = formula.at( (operatorindex[opindexnr]) ).toLatin1();
 		// GET LENGTH OF VALUE STRING:
 		if (opindexnr == (nrofoperators - 1))	// IF LAST OPERATION
 			tmpvaluestrlen = formula.size() - operatorindex[opindexnr] -1;
