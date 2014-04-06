@@ -43,8 +43,10 @@ int main(int argc, char *argv[])
 	app.setApplicationVersion(FSSM_VERSION);
 	// Set window icon:
 	app.setWindowIcon( QIcon(":/icons/freessm/32x32/FreeSSM.png") );
+#if QT_VERSION < 0x050000
 	// Use Unicode UTF-8:
 	QTextCodec::setCodecForCStrings( QTextCodec::codecForName("UTF-8") );
+#endif
 	// Get installed (system) fonts:
 	QFontDatabase fdb;
 	QStringList fontfamilies = fdb.families ( QFontDatabase::Any );
