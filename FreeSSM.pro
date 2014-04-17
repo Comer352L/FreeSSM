@@ -153,9 +153,31 @@ defstarget.path = $$INSTALLDIR/definitions
 defstarget.files = definitions/*.xml
 win32 {
   dllstarget.path = $$INSTALLDIR
-  dllstarget.files = $$[QT_INSTALL_BINS]/mingwm10.dll $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
-  CONFIG(release, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/QtCore4.dll $$[QT_INSTALL_BINS]/QtGui4.dll
-  CONFIG(debug, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/QtCored4.dll $$[QT_INSTALL_BINS]/QtGuid4.dll
+  lessThan(QT_MAJOR_VERSION, 5) {
+    # Qt4
+    dllstarget.files =                                  $$[QT_INSTALL_BINS]/mingwm10.dll \
+                                                        $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
+    CONFIG(release, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/QtCore4.dll \
+                                                        $$[QT_INSTALL_BINS]/QtGui4.dll
+    CONFIG(debug, debug|release): dllstarget.files   += $$[QT_INSTALL_BINS]/QtCored4.dll \
+                                                        $$[QT_INSTALL_BINS]/QtGuid4.dll
+  } else {
+    # Qt5
+    dllstarget.files =                                  $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \
+                                                        $$[QT_INSTALL_BINS]/libwinpthread-1.dll \
+                                                        $$[QT_INSTALL_BINS]/libstdc++-6.dll \
+                                                        $$[QT_INSTALL_BINS]/icuin51.dll \
+                                                        $$[QT_INSTALL_BINS]/icuuc51.dll \
+                                                        $$[QT_INSTALL_BINS]/icudt51.dll
+    CONFIG(release, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/Qt5Core.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5Gui.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5PrintSupport.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5Widgets.dll
+    CONFIG(debug, debug|release): dllstarget.files   += $$[QT_INSTALL_BINS]/Qt5Cored.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5Guid.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5PrintSupportd.dll \
+                                                        $$[QT_INSTALL_BINS]/Qt5Widgetsd.dll
+  }
 }
 INSTALLS += target doctarget defstarget filestarget
 win32:INSTALLS += dllstarget
