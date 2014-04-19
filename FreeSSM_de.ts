@@ -1474,7 +1474,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
 <context>
     <name>FSSM_WaitMsgBox</name>
     <message>
-        <location filename="src/FSSMdialogs.h" line="49"/>
+        <location filename="src/FSSMdialogs.h" line="54"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -2134,8 +2134,9 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="640"/>
-        <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
-        <translation>Basiert auf dem &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</translation>
+        <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
+        <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
+        <translation>Basiert auf dem &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="662"/>
@@ -2164,8 +2165,9 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
     </message>
     <message>
         <location filename="ui/About.ui" line="778"/>
-        <source>Qt4-Framework:</source>
-        <translation>Qt4-Framework:</translation>
+        <source>Qt-Framework:</source>
+        <oldsource>Qt4-Framework:</oldsource>
+        <translation>Qt-Framework:</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="804"/>

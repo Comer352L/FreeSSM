@@ -1473,7 +1473,7 @@ If you want to contribute to the the project (help adding defintions), feel free
 <context>
     <name>FSSM_WaitMsgBox</name>
     <message>
-        <location filename="src/FSSMdialogs.h" line="49"/>
+        <location filename="src/FSSMdialogs.h" line="54"/>
         <source>Please wait...</source>
         <translation>Please wait...</translation>
     </message>
@@ -2133,8 +2133,9 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="640"/>
-        <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
-        <translation>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</translation>
+        <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
+        <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
+        <translation>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="662"/>
@@ -2163,8 +2164,9 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     </message>
     <message>
         <location filename="ui/About.ui" line="778"/>
-        <source>Qt4-Framework:</source>
-        <translation>Qt4-Framework:</translation>
+        <source>Qt-Framework:</source>
+        <oldsource>Qt4-Framework:</oldsource>
+        <translation>Qt-Framework:</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="804"/>
