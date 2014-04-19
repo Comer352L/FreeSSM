@@ -258,7 +258,7 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 		}
 		else if (ValueDataType == REG_DWORD)	// 04.04-API
 		{
-			DWORD key_value = *((DWORD*)(void*)(Data));
+			DWORD key_value = (DWORD)(*Data);
 			if (key_value)
 			{
 				if (!strncmp(ValueName,"J1850VPW",7))
