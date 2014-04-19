@@ -98,7 +98,9 @@ NOTE (Windows only): depending on the used Qt-version and system configuration,
 
 5. INSTALLATION:
 
-$ make install
+$ make release-install
+or
+$ make debug-install
 
 => the application will be installed to 
 	- Linux:	the users home-directory (/home/userXYZ/FreeSSM)
@@ -106,7 +108,9 @@ $ make install
 
 Uninstallation:
 
-$ make uninstall
+$ make release-uninstall
+or
+$ make debug-uninstall
 
 --------------------------------------------------------------------------------
 
