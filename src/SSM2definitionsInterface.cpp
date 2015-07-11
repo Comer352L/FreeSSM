@@ -78,7 +78,6 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 {
 	unsigned int addr = 0;
 	QStringList rawDefs;
-	bool obdDTCs = false;
 
 	if (!_id_set)
 		return false;
@@ -103,7 +102,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 	}
 	// Setup data of the supported DTCs:
 	diagnosticCodes->clear();
-	if (!obdDTCs)
+	if (!*fmt_OBD2)
 	{
 		for (addr=0x8E; addr<=0x98; addr++)
 			addDCdefs(addr, addr+22, rawDefs, diagnosticCodes);
