@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_abstract.h - Abstract widget for Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,14 @@
 #define CUCONTENT_DCS_ABSTRACT_H
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
+#include <QPrinter>
+#include <QPrintDialog>
 #include "SSMprotocol.h"
 
 

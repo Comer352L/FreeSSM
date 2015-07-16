@@ -61,19 +61,18 @@ and other Unix systems, too, but there is currently no offical support.
 
 3. REQUIREMENTS:
    1.) FreeSSM source code (https://github.com/Comer352L/FreeSSM)
-   2.) Qt4 >= 4.4.0 (qt-project.org)
+   2.) Qt framework >= 4.4.0 (qt-project.org)
+       - Qt 4.8.5 (the latest and last release of the Qt4 framework) is recommended
+       - Qt 5 support is still experimental
        - for Windows, the MinGW-version is required (not the VS version)
-       - compilation has been tested only with Qt 4.8.x (which is the latest and 
-         also the last release of the Qt4 framework)
-       - the new Qt5 framework does NOT work !
-   3.) MinGW (only for MS Windows; usually shipped with Qt4; see www.MinGW.org)
+   3.) MinGW (only for MS Windows; usually shipped with Qt; see www.MinGW.org)
        PLEASE NOTE:
-       - the Qt 4.8.5 installer currently available at qt-project.org does
-         not include MinGW anymore. Qt 4.8 requires MinGW with g++ 4.4, which
-         is unfortunately no longer available at MinGW.org.
-       - MinGW with g++ 4.4 can be downloaded from:
+         The Qt 4.8.5 installer currently available at qt-project.org does not
+         include MinGW anymore.
+         Qt 4.8.x requires MinGW with g++ 4.4, which is unfortunately no longer
+         available at MinGW.org but can be downloaded from:
             https://piece-of-c.googlecode.com/files/MinGW-gcc440_1.zip
-       - newer MinGW versions will not work with the binary release of Qt 4.8.x
+         Newer MinGW versions will not work with the binary release of Qt 4.8.x
 
 --------------------------------------------------------------------------------
 
@@ -92,22 +91,26 @@ $ make debug
 Translation files:
 $ make translation
 
-NOTE (Windows only): depending on the used Qt4-version and system configuration,
+NOTE (Windows only): depending on the used Qt-version and system configuration,
                      'mingw32-make' must be called instead of 'make'.
 
 --------------------------------------------------------------------------------
 
 5. INSTALLATION:
 
-$ make install
+$ make release-install
+or
+$ make debug-install
 
 => the application will be installed to 
 	- Linux:	the users home-directory (/home/userXYZ/FreeSSM)
 	- Windows:	C:\FreeSSM (can be moved after installation)
 
-Un-installation:
+Uninstallation:
 
-$ make uninstall
+$ make release-uninstall
+or
+$ make debug-uninstall
 
 --------------------------------------------------------------------------------
 

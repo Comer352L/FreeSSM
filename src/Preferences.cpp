@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	for (int k=0; k<__supportedLocales.size(); k++)
 	{
 		QString langname = QLocale::languageToString( __supportedLocales.at(k).language() );
-		QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+		QString langname_tr = QCoreApplication::translate( "Language", langname.toUtf8() );
 		language_comboBox->addItem( langname_tr );
 	}
 	_lastlangindex = __supportedLocales.indexOf( QLocale(_language_current) );
@@ -153,7 +153,7 @@ void Preferences::switchLanguage(int langindex)
 		for (int k=0; k<__supportedLocales.size(); k++)
 		{
 			QString langname = QLocale::languageToString( __supportedLocales.at(k).language() );
-			QString langname_tr = QCoreApplication::translate( "Language", langname.toAscii() );
+			QString langname_tr = QCoreApplication::translate( "Language", langname.toUtf8() );
 			language_comboBox->addItem( langname_tr );
 		}
 		language_comboBox->setCurrentIndex(langindex);
@@ -428,10 +428,10 @@ void Preferences::ok()
 	{
 		QString stylename = QApplication::style()->objectName();
 		// rewrite file completely:
-		prefsfile.write(_newinterfacefilename.toAscii()+"\n", _newinterfacefilename.length()+1);	// save interface name
-		prefsfile.write(_language_current.toAscii()+"\n", _language_current.length()+1);	// save language
-		prefsfile.write(stylename.toAscii()+"\n", stylename.length()+1);			// save preferred GUI-style
-		prefsfile.write(QString::number(_newinterfacetype).toAscii()+"\n", QString::number(_newinterfacetype).size()+1); // save interface type
+		prefsfile.write(_newinterfacefilename.toUtf8() + "\n");	// save interface name
+		prefsfile.write(_language_current.toUtf8() + "\n");	// save language
+		prefsfile.write(stylename.toUtf8() + "\n");		// save preferred GUI-style
+		prefsfile.write(QString::number(_newinterfacetype).toUtf8() + "\n"); // save interface type
 		prefsfile.close();
 	}
 	else

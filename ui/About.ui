@@ -637,7 +637,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</string>
+      <string>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -775,7 +775,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>Qt4-Framework:</string>
+      <string>Qt-Framework:</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

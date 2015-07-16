@@ -1,7 +1,7 @@
 /*
  * DiagInterfaceStatusBar.h - Status bar widget for the diagnostic interface
  *
- * Copyright (C) 2012 Comer352L
+ * Copyright (C) 2012-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,12 @@
 #define DIAGINTERFACESTATUSBAR_H
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
 
 
 class DiagInterfaceStatusBar : public QWidget

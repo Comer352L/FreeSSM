@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.h - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,12 @@
 
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
 #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
 #include "CUcontent_MBsSWs_tableView.h"

@@ -1,7 +1,7 @@
 /*
  * ActuatorTestDlg.h - Actuator Test Dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2014 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,12 @@
 #define ACTUATORTESTDLG_H
 
 
-#include <QtGui>
+#include <QtGlobal>	/* required for QT_VERSION */
+#if QT_VERSION < 0x050000
+    #include <QtGui>
+#else
+    #include <QtWidgets>
+#endif
 #include "ui_ActuatorTestDlg.h"
 #include "SSMprotocol.h"
 
