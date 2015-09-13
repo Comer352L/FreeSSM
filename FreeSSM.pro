@@ -152,6 +152,7 @@ doctarget.files = doc/*
 defstarget.path = $$INSTALLDIR/definitions
 defstarget.files = definitions/*.xml
 win32 {
+  platformstarget.path = $$INSTALLDIR/platforms
   dllstarget.path = $$INSTALLDIR
   lessThan(QT_MAJOR_VERSION, 5) {
     # Qt4
@@ -177,10 +178,13 @@ win32 {
                                                         $$[QT_INSTALL_BINS]/Qt5Guid.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5PrintSupportd.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5Widgetsd.dll
+
+    CONFIG(release, debug|release): platformstarget.files = $$[QT_INSTALL_PLUGINS]/platforms/qwindows.dll
+    CONFIG(debug, debug|release): platformstarget.files   = $$[QT_INSTALL_PLUGINS]/platforms/qwindowsd.dll
   }
 }
 INSTALLS += target doctarget defstarget filestarget
-win32:INSTALLS += dllstarget
+win32:INSTALLS += dllstarget platformstarget
 
 
 
@@ -210,5 +214,3 @@ win32 {
                   src/windows/J2534_API.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
-
-
