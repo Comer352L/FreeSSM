@@ -50,7 +50,8 @@ J2534_API::~J2534_API()
 	if (_J2534LIB)
 	{
 #ifdef __J2534_API_DEBUG__
-		if (!dlclose( _J2534LIB ))
+		// On success, dlclose() returns 0; on error, it returns a nonzero value.
+		if (dlclose( _J2534LIB ))
 			std::cout << "J2534interface::~J2534interface(): dlclose() failed with error " << dlerror() << "\n";
 #else
 		dlclose( _J2534LIB );
@@ -71,7 +72,7 @@ bool J2534_API::selectLibrary(std::string libPath)
 		{
 #ifdef __J2534_API_DEBUG__
 			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() mehtods !\n";
-			if (!dlclose( newJ2534LIB ))
+			if (dlclose( newJ2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): dlclose() failed with error " << dlerror() << "\n";
 #else
 			dlclose( newJ2534LIB );
@@ -87,7 +88,7 @@ bool J2534_API::selectLibrary(std::string libPath)
 		if (_J2534LIB)
 		{
 #ifdef __J2534_API_DEBUG__
-			if (!dlclose( _J2534LIB ))
+			if (dlclose( _J2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): dlclose() failed with error " << dlerror() << "\n";
 #else
 			dlclose( _J2534LIB );
