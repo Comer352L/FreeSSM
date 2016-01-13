@@ -162,6 +162,14 @@ std::vector<J2534Library> J2534_API::getAvailableJ2534Libs()
 
 	// TODO
 
+	J2534Library lib1;
+	lib1.name = "libj2534client.so";
+	lib1.path = "/home/martin/cpp/J2534Client/libj2534client.so";
+	lib1.api = J2534_API_v0404;
+	lib1.protocols = PROTOCOL_FLAG_ISO15765 | PROTOCOL_FLAG_ISO14230 | PROTOCOL_FLAG_ISO9141;
+
+	PTlibraries.push_back(lib1);
+
 
 #ifdef __J2534_API_DEBUG__
 	printLibraryInfo(PTlibraries);
