@@ -33,6 +33,7 @@ public:
 	static bool raw2scaled(unsigned int rawValue, QString scaleformula, char precision, QString *scaledValueStr);
 	static bool scaled2raw(QString scaledValueStr, QString scaleformula, unsigned int *rawValue);
 	static std::string StrToHexstr(const char* inputstr, size_t nrbytes);
+	static std::string StrToHexstr(const std::vector<char>& data);
 
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);

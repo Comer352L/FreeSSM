@@ -324,3 +324,9 @@ std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
 	}
 	return s;
 }
+
+
+std::string libFSSM::StrToHexstr(const std::vector<char>& data)
+{
+	return StrToHexstr(data.data(), data.size());
+}
