@@ -26,6 +26,7 @@
 #include <QThread>
 #include <QMutex>
 #include "AbstractDiagInterface.h"
+#include "libFSSM.h"
 #ifdef __WIN32__
     #include "windows\serialCOM.h"
     #include "windows\TimeM.h"
@@ -104,7 +105,7 @@ private:
 	std::vector<char> processRecData(std::string datamsg);
 	bool changeDeviceAddresses(unsigned int source_addr, unsigned int target_addr, AbstractDiagInterface::protocol_type protocol);
 	bool changeInterfaceBaudRate(unsigned int baudrate);
-	std::string dataToHexStr(std::vector<char> data);
+	std::string dataToHexStr(const std::vector<char> data);
 	std::vector<char> hexStrToData(std::string hexstr);
 
 };
