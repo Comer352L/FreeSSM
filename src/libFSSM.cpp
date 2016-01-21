@@ -301,23 +301,32 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 }
 
 
-std::string libFSSM::StrToHexstr(char *inputstr, unsigned int nrbytes)
+// hexadecimal digits
+constexpr static char hexdigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+constexpr static char nibble_hexdigit(uint8_t value)
 {
-	std::string hexstr = "";
-	unsigned short int charval = 0;
-	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	unsigned int bc = 1;
-	for (bc=0; bc<nrbytes; bc++)
+	return hexdigits[value & 0xF];
+}
+
+std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
+{
+	if (inputstr == nullptr)
+		return std::string{};
+	constexpr char delimiter = ' ';
+	const size_t strlength = 3 * nrbytes - 1;
+	std::string s(strlength, delimiter);
+	for (size_t i = 0, bc = 0; bc < nrbytes; ++bc, i += 2)
 	{
-		charval = static_cast<unsigned char>(inputstr[bc]);
-		hexstr.push_back(hexsigns[charval/16]);
-		hexstr.push_back(hexsigns[charval % 16]);
-		if (bc != nrbytes - 1)
-			hexstr.push_back(' ');
+		const auto charval = static_cast<uint8_t>(inputstr[bc]);
+		s.at(i++) = nibble_hexdigit(charval / 16);
+		s.at(i) = nibble_hexdigit(charval % 16);
 	}
-	return hexstr;
+	return s;
 }
 
 
-
-
+std::string libFSSM::StrToHexstr(const std::vector<char>& data)
+{
+	return StrToHexstr(data.data(), data.size());
+}
