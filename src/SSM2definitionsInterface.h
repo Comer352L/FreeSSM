@@ -1,5 +1,5 @@
 /*
- * SSM2definitionsInterface.h - Interface to the SSM1-definitions
+ * SSM2definitionsInterface.h - Interface to the SSM2-definitions
  *
  * Copyright (C) 2008-2012 Comer352L
  *

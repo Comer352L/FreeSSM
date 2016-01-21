@@ -81,7 +81,7 @@ control unit but not to the transmission's control unit ?</a></p>
 not supported ?</a></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>4.) <a href="#4">Why does FreeSSM not show the 
-control unit spare part number or informations about the software version ?</a></p>
+control unit spare part number or information about the software version ?</a></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>5.) <a href="#5">
 Why does the engine control unit support OBD2, but the transmission control unit doesn't ?
@@ -125,13 +125,13 @@ What kind of interface do I need ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software works with all 
 ISO-9141-2-/ISO-14230-1-compliant (K/L- and KK/L-) interfaces, that serve as 
-simple voltage level converters ("Dump"-interface) or have a "pass-through"-mode.<br>
+simple voltage level converters ("dumb" interface) or have a "pass-through"-mode.<br>
 The interface must be selectable through a serial port, which also includes USB-interfaces 
 whose driver provides a virtual serial port (e.g. interfaces with FTDI-USB-chip).<br>
 <br>
 This is a (incomplete) list of interfaces that should work with FreeSSM (no guarantee !):<br>
 - all interfaces that work with VW-Tool and VAG-COM up to version 311.3 (409)<br>
-- openPort-interface 1.2/1.3 (not 2.0 !)<br>
+- Tactrix® Openport interface 1.2/1.3 (not 2.0 !)<br>
 - interfaces with AGV2055, AGV3000, AGV3001, AGV3100, AGV4000, AGV4500 chipset that provide
   a switch to activate the "transit mode" (e.g. OBD-Diag®-interfaces)<br>
 - "Jeff Noxons" interface (-design)<br>
@@ -151,7 +151,7 @@ Diagnostic Codes may not be displayed as plaintext.<br>
 Vehicles up to model year 1998 as well as the models SVX®, Justy®, Libero® and Vivio® 
 are not supported.<br>
 The model years 1999+2000 must be regarded as transition period. According to present 
-obersvations (european models), access to the engine control unit of the models 
+observations (European models), access to the engine control unit of the models
 Legacy®/Liberty®/Outback®/Baja® is already possible since model year 1999, while most
 of the Impreza®-models and a few of the Foresters® are supported from model year 2000 on.<br>
 Transmission control units are not supported before model year 2000, in most cases 
@@ -183,7 +183,7 @@ communication protocols and are also connected through other diagnostic lines
 with different electric attributes.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=4></a><strong>4.)
-Why does FreeSSM not show the control unit spare part number or informations 
+Why does FreeSSM not show the control unit spare part number or information 
 about the software version ?</strong>
 </p>
 
@@ -196,7 +196,7 @@ can have different part numbers and may be equipped with different software vers
 Why does the engine control unit support OBD2, but the transmission control unit doesn't ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>OBD2 is a &quot;functional&quot; system 
-that incorporates informations and functionalites from different control units.
+that incorporates information and functionalities from different control units.
 The FreeSSM &quot;OBD2-System&quot;-information only states, that the corresponding 
 control unit takes part in this system.
 In older vehicles, only the engine controller is involved in the OBD2-system.</p>
@@ -215,7 +215,7 @@ Why does FreeSSM display different titles/descriptions for some Data Trouble Cod
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>Some of the old 
 2-digit-SUBARU®-DTCs (control units without OBD2-support) are used 
 multiple times with different meanings.<br>
-FreeSSM can distinguish them and diplays the right title/description.</p>
+FreeSSM can distinguish them and displays the right title/description.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=8></a><strong>8.)
 What does &quot;non-permanent&quot; mean in reference to the Adjustment Values ?
@@ -234,7 +234,7 @@ What is the "test mode connector" and where can it be found ?
 unit (ECU) goes into a special operating mode (test mode). Several automatic test routines are running 
 and special tests (like the actuator on/off test) can be performed.<br>
 Furthermore, the engine is operated with different parameters and usually parts of the 
-body electric (e.g. central locking) are decommissioned. That's why the test mode conncetor 
+body electric (e.g. central locking) are decommissioned. That's why the test mode connector 
 is also known as "delivery mode connector".<br>
 It is always located in the area of the dashboard and the legroom, the exact position depends on the model.<br>
 <br>
@@ -294,8 +294,8 @@ Why does &quot;Clear Memory&quot; not clear all Diagnostic Codes in some cases ?
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>There are two possible reasons:<br>
 a.) the problem/malfunction that caused the diagnostic code to be stored still exists 
-(immediate redetection)<br>
-b.) on newer vehicles, some (emmission related) diagnostic codes can not be cleared at 
+(immediate re-detection)<br>
+b.) on newer vehicles, some (emission related) diagnostic codes can not be cleared at 
 manufacturer level. They have to be cleared in the OBD2-system, for which an additional 
 OBD2-Scantool is needed.<br>
 <strong>PLEASE NOTE: FreeSSM IS NO OBD2-Scantool !</strong></p>
@@ -312,8 +312,8 @@ between engine/transmission control unit and the diagnostic equipment.</p>
 Will development of FreeSSM go on ?</strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>That's the plan.
-The latest version is always available at <a href="http://freessm.berlios.de/">
-<span style=" text-decoration: underline; color:#0000ff;">http://freessm.berlios.de</span></a>.</p>
+The latest version is always available at <a href="http://github.com/Comer352L/FreeSSM/">
+<span style=" text-decoration: underline; color:#0000ff;">http://github.com/Comer352L/FreeSSM/</span></a>.</p>
 </p>
 
 <div class=MsoNormal align=center style='text-align:center'>
