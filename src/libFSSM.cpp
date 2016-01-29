@@ -302,23 +302,23 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 
 
 // hexadecimal digits
-constexpr static char hexdigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+static char hexdigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-constexpr static char nibble_hexdigit(uint8_t value)
+static char nibble_hexdigit(unsigned char value)
 {
 	return hexdigits[value & 0xF];
 }
 
 std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
 {
-	if (inputstr == nullptr)
+	if (inputstr == NULL)
 		return std::string{};
-	constexpr char delimiter = ' ';
+	const char delimiter = ' ';
 	const size_t strlength = 3 * nrbytes - 1;
 	std::string s(strlength, delimiter);
 	for (size_t i = 0, bc = 0; bc < nrbytes; ++bc, i += 2)
 	{
-		const auto charval = static_cast<uint8_t>(inputstr[bc]);
+		const unsigned char charval = static_cast<unsigned char>(inputstr[bc]);
 		s.at(i++) = nibble_hexdigit(charval / 16);
 		s.at(i) = nibble_hexdigit(charval % 16);
 	}
