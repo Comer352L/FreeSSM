@@ -468,10 +468,7 @@ bool ATcommandControlledDiagInterface::read(std::vector<char> *buffer)
 		if (msg.size() && !buffer->size())
 			return true;	// no data available
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::read():";
-		for (unsigned int c=0; c< buffer->size(); c++)
-			std::cout << " " << std::hex << static_cast<unsigned int>(static_cast<unsigned char>(buffer->at(c)));
-		std::cout << "\n";
+		std::cout << "ATcommandControlledDiagInterface::read():" << libFSSM::StrToHexstr(*buffer) << "\n";
 #endif
 		return true;
 	}
@@ -516,10 +513,7 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 				return false;
 		}
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::write():";
-		for (unsigned int c=0; c<buffer.size(); c++)
-			std::cout << " " << std::hex << static_cast<unsigned int>(static_cast<unsigned char>(buffer.at(c)));
-		std::cout << "\n";
+		std::cout << "ATcommandControlledDiagInterface::write():" << libFSSM::StrToHexstr(buffer) << "\n";
 #endif
 		// Strip CAN-ID / ISO-14230-Header (automatically prepended by interface):
 		buffer.erase(buffer.begin(), buffer.begin() + 4);
@@ -1694,22 +1688,10 @@ err:
 }
 
 
-std::string ATcommandControlledDiagInterface::dataToHexStr(std::vector<char> data)
+std::string ATcommandControlledDiagInterface::dataToHexStr(const std::vector<char> data)
 {
-	std::string hexstr;
-	unsigned short int charval = 0;
-	unsigned char hexsigns[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	unsigned int bc = 1;
-	for (bc=0; bc<data.size(); bc++)
-	{
-		charval = static_cast<unsigned char>(data.at(bc));
-		hexstr += hexsigns[charval/16];
-		hexstr += hexsigns[charval % 16];
-		// separate bytes with space	// optional, not necessarily needed
-		if (bc != data.size() - 1)
-			hexstr += ' ';
-	}
-	return hexstr;
+	// separate bytes with space, optional, not necessarily needed
+	return libFSSM::StrToHexstr(data);
 }
 
 
