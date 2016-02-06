@@ -71,7 +71,7 @@ bool J2534_API::selectLibrary(std::string libPath)
 		if (!dlsym( newJ2534LIB, "PassThruConnect" ) || !dlsym( newJ2534LIB, "PassThruDisconnect" ))
 		{
 #ifdef __J2534_API_DEBUG__
-			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() mehtods !\n";
+			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() methods !\n";
 			if (dlclose( newJ2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): dlclose() failed with error " << dlerror() << "\n";
 #else
@@ -158,23 +158,106 @@ void J2534_API::assignJ2534fcns()
 
 std::vector<J2534Library> J2534_API::getAvailableJ2534Libs()
 {
-	std::vector<J2534Library> PTlibraries;
+	// HACK
+	const std::string libsDefXmlFile = "./definitions/J2534Libs.xml";
 
-
-	// TODO
-
-	J2534Library lib1;
-	lib1.name = "libj2534client.so";
-	lib1.path = "/home/martin/cpp/J2534Client/libj2534client.so";
-	lib1.api = J2534_API_v0404;
-	lib1.protocols = PROTOCOL_FLAG_ISO15765 | PROTOCOL_FLAG_ISO14230 | PROTOCOL_FLAG_ISO9141;
-
-	PTlibraries.push_back(lib1);
-
+	std::vector<J2534Library> PTlibraries = parseJ2534LibsXml(libsDefXmlFile);
 
 #ifdef __J2534_API_DEBUG__
-	printLibraryInfo(PTlibraries);
+	J2534misc::printLibraryInfo(PTlibraries);
 #endif
+	return PTlibraries;
+}
+
+std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDefXmlFile)
+{
+	std::vector<J2534Library> PTlibraries;
+
+	TiXmlDocument xmldoc = TiXmlDocument();
+#ifdef __J2534_API_DEBUG__
+	std::cout << "Trying to load J2534 library definitions XML file: \"" << libsDefXmlFile << "\"\n";
+#endif
+	if (xmldoc.LoadFile(libsDefXmlFile)) {
+#ifdef __J2534_API_DEBUG__
+		std::cout << "Parsing J2534 library definitions XML data...\n";
+#endif
+		TiXmlNode* rootnode = xmldoc.FirstChildElement("J2534LIBS");
+		if (!rootnode)
+			goto error;
+
+		TiXmlNode* libnode = rootnode->FirstChild("J2534LIB");
+
+		while (libnode) {
+			TiXmlAttribute* attrib = libnode->ToElement()->FirstAttribute();
+
+			J2534Library lib;
+			std::string api_str;
+			while (attrib)
+			{
+				if (std::string(attrib->Name()) == "name")
+				{
+					if (lib.name.empty())
+						lib.name = attrib->ValueStr();
+					else
+						goto error;
+				}
+				else if (std::string(attrib->Name()) == "path")
+				{
+					if (lib.path.empty())
+						lib.path = attrib->ValueStr();
+					else
+						goto error;
+				}
+				else if (std::string(attrib->Name()) == "api")
+				{
+					if (api_str.empty())
+						api_str = attrib->ValueStr();
+					else
+						goto error;
+				}
+				attrib=attrib->Next();
+			}	// while (attrib)
+
+			if (lib.name.empty()) {
+				std::cout << "J2534LIB: attribute 'name' missing!\n";
+				goto error;
+			}
+			if (lib.path.empty()) {
+				std::cout << "J2534LIB: attribute 'path' missing!\n";
+				goto error;
+			}
+			if (api_str.empty()) {
+				std::cout << "J2534LIB: attribute 'api' missing!\n";
+				goto error;
+			}
+			lib.api = J2534misc::parseApiVersion(api_str);
+			if (lib.api == J2534_API_UNDEFINED) {
+				std::cout << "J2534LIB: unknown 'api': \"" << api_str << "\", assuming \"" << J2534misc::apiVersionToStr(J2534_API_v0404) << "\"\n";
+				lib.api = J2534_API_v0404;
+			}
+
+			TiXmlNode* protocolsnode = libnode->FirstChild("PROTOCOLS");
+			if (!protocolsnode) {
+				std::cout << "J2534LIB: element 'PROTOCOLS' missing!\n";
+				goto error;
+			}
+
+			TiXmlElement* protocolelement = protocolsnode->FirstChildElement("PROTOCOL");
+			while (protocolelement) {
+				std::string protocolstr(protocolelement->GetText());
+				lib.protocols = J2534_protocol_flags(lib.protocols | J2534misc::parseProtocol(protocolstr));
+				protocolelement = protocolelement->NextSiblingElement();
+			}
+
+			PTlibraries.push_back(lib);
+			libnode = libnode->NextSibling();
+		}	// while (libnode)
+	}
+	else {
+		std::cout << "J2534 library definitions XML file not found: \"" << libsDefXmlFile << "\"\n";
+	}
+
+error:
 	return PTlibraries;
 }
 
@@ -313,47 +396,3 @@ long J2534_API::PassThruSetProgrammingVoltage(unsigned long DeviceID, unsigned l
 	if (!_PassThruSetProgrammingVoltage_0404) return J2534API_ERROR_FCN_NOT_SUPPORTED;
 	return _PassThruSetProgrammingVoltage_0404(DeviceID, PinNumber, Voltage);
 }
-
-
-#ifdef __J2534_API_DEBUG__
-void J2534_API::printLibraryInfo(std::vector<J2534Library> PTlibraries)
-{
-	if (PTlibraries.size())
-		std::cout << "Found " << PTlibraries.size() << " registered J2534-libraries:\n";
-	else
-		std::cout << "No J2534-libraries found.\n";
-	for (unsigned int k=0; k<PTlibraries.size(); k++)
-	{
-		std::cout << "  Name:        " << PTlibraries.at(k).name << '\n';
-		std::cout << "  Path:        " << PTlibraries.at(k).path << '\n';
-		std::cout << "  API-version: ";
-		if (PTlibraries.at(k).api == J2534_API_v0202)
-			std::cout << "02.02\n";
-		else
-			std::cout << "04.04\n";
-		std::cout << "  Protocols:   ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_J1850VPW)
-			std::cout << "J1850VPW ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_J1850PWM)
-			std::cout << "J1850PWM ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO9141)
-			std::cout << "ISO9141 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO14230)
-			std::cout << "ISO14230 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_CAN)
-			std::cout << "CAN ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO15765)
-			std::cout << "ISO15765 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_A_ENGINE)
-			std::cout << "SCI_A_ENGINE ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_A_TRANS)
-			std::cout << "SCI_A_TRANS ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_B_ENGINE)
-			std::cout << "SCI_B_ENGINE ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_B_TRANS)
-			std::cout << "SCI_B_TRANS ";
-		std::cout << "\n\n";
-	}
-}
-#endif
-

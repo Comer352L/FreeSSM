@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!--
+	J2534Libs.xml - Define J2534-libraries for Linux
+
+	(c) 2016 MartinX
+
+-->
+<J2534LIBS>
+<!--
+	<J2534LIB name="libj2534.so" api="02.02" path="./libj2534_v0202.so" >
+		<PROTOCOLS>
+			<PROTOCOL>ISO9141</PROTOCOL>
+		</PROTOCOLS>
+	</J2534LIB>
+-->
+	<J2534LIB name="libj2534.so" api="04.04" path="./libj2534.so" >
+		<PROTOCOLS>
+			<PROTOCOL>ISO15765</PROTOCOL>
+			<PROTOCOL>ISO14230</PROTOCOL>
+			<PROTOCOL>ISO9141</PROTOCOL>
+		</PROTOCOLS>
+	</J2534LIB>
+</J2534LIBS>
