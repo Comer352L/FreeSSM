@@ -33,6 +33,9 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 	_unselectedMBsSWs_metaList.clear();
 	// Setup GUI:
 	setupUi(this);
+	// enable maximize and minimize buttons
+	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
+	setWindowFlags( Qt::Window );
 	setupUiFonts();
 	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs:
 	tmpMBSWmd.blockType = 0;

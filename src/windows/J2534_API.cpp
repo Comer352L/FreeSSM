@@ -70,7 +70,7 @@ bool J2534_API::selectLibrary(std::string libPath)
 		if (!GetProcAddress( newJ2534LIB, "PassThruConnect" ) || !GetProcAddress( newJ2534LIB, "PassThruDisconnect" ))
 		{
 #ifdef __J2534_API_DEBUG__
-			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() mehtods !\n";
+			std::cout << "J2534interface::selectLibrary(): Error: the library doesn't provide the PassThruConnect(), and/or PassThruDisconnect() methods !\n";
 			if (!FreeLibrary( newJ2534LIB ))
 				std::cout << "J2534interface::selectLibrary(): FreeLibrary() failed with error " << GetLastError() << "\n";
 #else
@@ -198,7 +198,7 @@ std::vector<J2534Library> J2534_API::getAvailableJ2534Libs()
 #ifdef __J2534_API_DEBUG__
 	if (ret != ERROR_SUCCESS)
 		std::cout << "J2534interface::getAvailableJ2534Libs():   RegCloseKey(hKey1) failed with error " << ret << "\n";
-	printLibraryInfo(PTlibraries);
+	J2534misc::printLibraryInfo(PTlibraries);
 #endif
 	return PTlibraries;
 }
@@ -232,7 +232,9 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 			}
 			else if (!strncmp(ValueName,"ProtocolsSupported",18))	// 02.02-API
 			{
+				PTlib.api = J2534_API_v0202;
 				std::string protocol_str = (char*)(Data);
+				// TODO split string, then use loop using existing parse function instead
 				if (protocol_str.find("J1850VPW") != std::string::npos)
 					PTlib.protocols |= PROTOCOL_FLAG_J1850VPW;
 				if (protocol_str.find("J1850PWM") != std::string::npos)
@@ -253,54 +255,16 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_ENGINE;
 				if (protocol_str.find("SCI_B_TRANS") != std::string::npos)
 					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_TRANS;
-				PTlib.api = J2534_API_v0202;
 			}
 		}
 		else if (ValueDataType == REG_DWORD)	// 04.04-API
 		{
+			PTlib.api = J2534_API_v0404;
 			DWORD key_value = (DWORD)(*Data);
 			if (key_value)
 			{
-				if (!strncmp(ValueName,"J1850VPW",7))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_J1850VPW;;
-				}
-				else if (!strncmp(ValueName,"J1850PWM", 7))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_J1850PWM;
-				}
-				else if (!strncmp(ValueName,"ISO9141", 7))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_ISO9141;
-				}
-				else if (!strncmp(ValueName,"ISO14230", 8))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_ISO14230;
-				}
-				else if (!strncmp(ValueName,"ISO15765", 8))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_ISO15765;
-				}
-				else if (!strncmp(ValueName,"CAN", 3))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_CAN;
-				}
-				else if (!strncmp(ValueName,"SCI_A_ENGINE", 12))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_A_ENGINE;
-				}
-				else if (!strncmp(ValueName,"SCI_A_TRANS", 11))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_A_TRANS;
-				}
-				else if (!strncmp(ValueName,"SCI_B_ENGINE", 12))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_ENGINE;
-				}
-				else if (!strncmp(ValueName,"SCI_B_TRANS", 11))
-				{
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_TRANS;
-				}
+				std::string protocol_str = (char*)(ValueName);
+				PTlib.protocols = J2534_protocol_flags(PTlib.protocols | J2534misc::parseProtocol(protocol_str));
 			}
 		}
 		szValueName = 256;	// because RegEnumValue has changed value !
@@ -469,47 +433,3 @@ long J2534_API::PassThruSetProgrammingVoltage(unsigned long DeviceID, unsigned l
 	if (!_PassThruSetProgrammingVoltage_0404) return J2534API_ERROR_FCN_NOT_SUPPORTED;
 	return _PassThruSetProgrammingVoltage_0404(DeviceID, PinNumber, Voltage);
 }
-
-
-#ifdef __J2534_API_DEBUG__
-void J2534_API::printLibraryInfo(std::vector<J2534Library> PTlibraries)
-{
-	if (PTlibraries.size())
-		std::cout << "Found " << PTlibraries.size() << " registered J2534-libraries:\n";
-	else
-		std::cout << "No J2534-libraries found.\n";
-	for (unsigned int k=0; k<PTlibraries.size(); k++)
-	{
-		std::cout << "  Name:        " << PTlibraries.at(k).name << '\n';
-		std::cout << "  Path:        " << PTlibraries.at(k).path << '\n';
-		std::cout << "  API-version: ";
-		if (PTlibraries.at(k).api == J2534_API_v0202)
-			std::cout << "02.02\n";
-		else
-			std::cout << "04.04\n";
-		std::cout << "  Protocols:   ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_J1850VPW)
-			std::cout << "J1850VPW ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_J1850PWM)
-			std::cout << "J1850PWM ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO9141)
-			std::cout << "ISO9141 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO14230)
-			std::cout << "ISO14230 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_CAN)
-			std::cout << "CAN ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_ISO15765)
-			std::cout << "ISO15765 ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_A_ENGINE)
-			std::cout << "SCI_A_ENGINE ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_A_TRANS)
-			std::cout << "SCI_A_TRANS ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_B_ENGINE)
-			std::cout << "SCI_B_ENGINE ";
-		if (PTlibraries.at(k).protocols & PROTOCOL_FLAG_SCI_B_TRANS)
-			std::cout << "SCI_B_TRANS ";
-		std::cout << "\n\n";
-	}
-}
-#endif
-

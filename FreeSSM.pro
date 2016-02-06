@@ -25,6 +25,7 @@ HEADERS += src/FreeSSM.h \
            src/SerialPassThroughDiagInterface.h \
            src/J2534DiagInterface.h \
            src/J2534.h \
+           src/J2534misc.h \
            src/SSMP1communication.h \
            src/SSMP1communication_procedures.h \
            src/SSMP1base.h \
@@ -72,6 +73,7 @@ SOURCES += src/main.cpp \
            src/ATcommandControlledDiagInterface.cpp \
            src/SerialPassThroughDiagInterface.cpp \
            src/J2534DiagInterface.cpp \
+           src/J2534misc.cpp \
            src/SSMP1communication.cpp \
            src/SSMP1communication_procedures.cpp \
            src/SSMP1base.cpp \
@@ -214,3 +216,10 @@ win32 {
                   src/windows/J2534_API.cpp
        RC_FILE = resources/FreeSSM_WinAppIcon.rc
 }
+
+DISTFILES += \
+    definitions/J2534Libs.xml \
+    definitions/SSM1defs_ABS.xml \
+    definitions/SSM1defs_AirConditioning.xml \
+    definitions/SSM1defs_CruiseControl.xml \
+    definitions/SSM1defs_Engine.xml

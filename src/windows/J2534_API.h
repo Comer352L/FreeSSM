@@ -24,9 +24,6 @@
 //#define __J2534_API_DEBUG__
 
 
-#ifdef __J2534_API_DEBUG__
-    #include <iostream>
-#endif
 #include <string>
 #include <vector>
 #include "..\J2534.h"
@@ -35,40 +32,7 @@ extern "C"
 {
     #include "windows.h"
 }
-
-
-#define		J2534API_ERROR_FCN_NOT_SUPPORTED	-1
-#define		J2534API_ERROR_INVALID_LIBRARY		-2
-
-
-enum J2534_API_version {J2534_API_v0202, J2534_API_v0404};
-
-
-enum J2534_protocol_flags
-{
-	PROTOCOL_FLAG_J1850VPW     = 0x01,
-	PROTOCOL_FLAG_J1850PWM     = 0x02,
-	PROTOCOL_FLAG_ISO9141      = 0x04,
-	PROTOCOL_FLAG_ISO14230     = 0x08,
-	PROTOCOL_FLAG_CAN          = 0x10,
-	PROTOCOL_FLAG_ISO15765     = 0x20,
-	PROTOCOL_FLAG_SCI_A_ENGINE = 0x40,
-	PROTOCOL_FLAG_SCI_A_TRANS  = 0x80,
-	PROTOCOL_FLAG_SCI_B_ENGINE = 0x100,
-	PROTOCOL_FLAG_SCI_B_TRANS  = 0x200,
-};
-
-
-class J2534Library
-{
-public:
-	std::string path;
-	std::string name;
-	unsigned long protocols;
-	J2534_API_version api;
-
-	J2534Library() { protocols = 0; api = J2534_API_v0404; api = J2534_API_v0404; };
-};
+#include "J2534misc.h"
 
 
 class J2534_API
@@ -125,9 +89,6 @@ private:
 
 	void assignJ2534fcns();
 	static std::vector<J2534Library> searchLibValuesRecursive(HKEY hKey, std::vector<J2534Library> PTlibs);
-#ifdef __J2534_API_DEBUG__
-	static void printLibraryInfo(std::vector<J2534Library> PTlibraries);
-#endif
 
 };
 
