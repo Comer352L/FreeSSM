@@ -312,7 +312,7 @@ static char nibble_hexdigit(unsigned char value)
 std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
 {
 	if (inputstr == NULL)
-		return std::string{};
+		return std::string();
 	const char delimiter = ' ';
 	const size_t strlength = 3 * nrbytes - 1;
 	std::string s(strlength, delimiter);
