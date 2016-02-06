@@ -31,6 +31,9 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	// Setup GUI:
 	setupUi(this);
 	setupUiFonts();
+	// enable maximize and minimize buttons
+	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
+	setWindowFlags( Qt::Window );
 	// Move window to desired coordinates:
 	move( 30, 30 );
 	// Set window and dialog titles:
