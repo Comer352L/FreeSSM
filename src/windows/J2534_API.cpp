@@ -236,25 +236,25 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 				std::string protocol_str = (char*)(Data);
 				// TODO split string, then use loop using existing parse function instead
 				if (protocol_str.find("J1850VPW") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_J1850VPW;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_J1850VPW);
 				if (protocol_str.find("J1850PWM") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_J1850PWM;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_J1850PWM);
 				if (protocol_str.find("ISO9141") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_ISO9141;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO9141);
 				if (protocol_str.find("ISO14230") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_ISO14230;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO14230);
 				if (protocol_str.find("ISO15765") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_ISO15765;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO15765);
 				if (protocol_str.find("CAN") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_CAN;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_CAN);
 				if (protocol_str.find("SCI_A_ENGINE") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_A_ENGINE;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_A_ENGINE);
 				if (protocol_str.find("SCI_A_TRANS") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_A_TRANS;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_A_TRANS);
 				if (protocol_str.find("SCI_B_ENGINE") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_ENGINE;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_B_ENGINE);
 				if (protocol_str.find("SCI_B_TRANS") != std::string::npos)
-					PTlib.protocols |= PROTOCOL_FLAG_SCI_B_TRANS;
+					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_B_TRANS);
 			}
 		}
 		else if (ValueDataType == REG_DWORD)	// 04.04-API
