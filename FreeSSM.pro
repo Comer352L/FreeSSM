@@ -152,7 +152,7 @@ unix:filestarget.files += resources/icons/freessm/48x48/FreeSSM.png
 doctarget.path = $$INSTALLDIR/doc
 doctarget.files = doc/*
 defstarget.path = $$INSTALLDIR/definitions
-defstarget.files = definitions/*.xml
+defstarget.files = definitions/SSM1defs_*.xml
 win32 {
   platformstarget.path = $$INSTALLDIR/platforms
   dllstarget.path = $$INSTALLDIR
@@ -184,6 +184,9 @@ win32 {
     CONFIG(release, debug|release): platformstarget.files = $$[QT_INSTALL_PLUGINS]/platforms/qwindows.dll
     CONFIG(debug, debug|release): platformstarget.files   = $$[QT_INSTALL_PLUGINS]/platforms/qwindowsd.dll
   }
+}
+unix {
+    defstarget.files += definitions/J2534libs.xml
 }
 INSTALLS += target doctarget defstarget filestarget
 win32:INSTALLS += dllstarget platformstarget
