@@ -200,8 +200,12 @@ void Preferences::selectInterfaceType(int index)
 		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
 		for (unsigned int k=0; k<J2534libs.size(); k++)
 		{
-			deviceNames.push_back(QString::fromStdString(J2534libs.at(k).name));
-			_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
+			QFile file(QString::fromStdString(J2534libs.at(k).path));
+			if (file.exists())
+			{
+				deviceNames.push_back(QString::fromStdString(J2534libs.at(k).name));
+				_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
+			}
 		}
 	}
 	else if ((index == 0) || (index == 2))	// Serial Pass-Through or AT-comand controlled (e.g. ELM, AGV, Diamex)
