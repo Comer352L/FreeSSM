@@ -45,12 +45,14 @@ public:
 	void scrollMBSWtable(unsigned int rowindex);
 
 private:
+	enum Column { col_title, col_min, col_current, col_max, col_unit };
 	unsigned int _nrofMBsSWs;
 	unsigned int _maxrowsvisible;
 
 	void setupUiFonts();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
+	void updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::AlignmentFlag alignment);
 
 private slots:
 	void setMoveButtonsEnabledState();

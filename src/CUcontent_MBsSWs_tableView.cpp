@@ -35,21 +35,21 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	mbswmovedown_pushButton->setEnabled( false );
 	// Set table column resize behavior:
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	headerview->setResizeMode(0, QHeaderView::Stretch);
-	headerview->setResizeMode(1, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
-	headerview->setResizeMode(2, QHeaderView::Fixed);
-	headerview->setResizeMode(3, QHeaderView::Fixed);
-	headerview->setResizeMode(4, QHeaderView::Fixed);
+	headerview->setResizeMode(col_title, QHeaderView::Stretch);
+	headerview->setResizeMode(col_min, QHeaderView::Fixed); // resize doesn't work correctly in this constellation (Qt-bug)
+	headerview->setResizeMode(col_current, QHeaderView::Fixed);
+	headerview->setResizeMode(col_max, QHeaderView::Fixed);
+	headerview->setResizeMode(col_unit, QHeaderView::Fixed);
 	// Set table row resize behavior:
 	headerview = selectedMBsSWs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
 	/* NOTE: Current method for calculating ther nr. of needed rows 
 	 * assumes all rows to have the same constsant height */
 	// Set column widths (columns 2-5):
-	selectedMBsSWs_tableWidget->setColumnWidth(1, 95);
-	selectedMBsSWs_tableWidget->setColumnWidth(2, 95);
-	selectedMBsSWs_tableWidget->setColumnWidth(3, 95);
-	selectedMBsSWs_tableWidget->setColumnWidth(4, 58);
+	selectedMBsSWs_tableWidget->setColumnWidth(col_min, 95);
+	selectedMBsSWs_tableWidget->setColumnWidth(col_current, 95);
+	selectedMBsSWs_tableWidget->setColumnWidth(col_max, 95);
+	selectedMBsSWs_tableWidget->setColumnWidth(col_unit, 58);
 	// Install event-filter for MB/SW-table:
 	selectedMBsSWs_tableWidget->viewport()->installEventFilter(this);
 	// (Un)check min/max toggle-buttons:
@@ -122,40 +122,29 @@ void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringL
 	updateMBSWvalues(values, minValues, maxValues, units);
 }
 
+void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::AlignmentFlag alignment = Qt::AlignCenter)
+{
+	const unsigned int rowcount = std::min(static_cast<unsigned int>(data.size()), _nrofMBsSWs);
+	for (unsigned int row = 0; row < rowcount; ++row) {
+		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
+		if (tableelement) {
+			tableelement->setText(data.at(row));
+		} else {
+			tableelement = new QTableWidgetItem(data.at(row));
+			tableelement->setTextAlignment(alignment);
+			selectedMBsSWs_tableWidget->setItem(row, col, tableelement);
+		}
+	}
+}
 
 void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
 {
-	unsigned int k = 0;
-	QTableWidgetItem *tableelement;
-	// Update min values:
-	for (k=0; k<qMin(static_cast<unsigned int>(minValueStrList.size()), _nrofMBsSWs); k++)
-	{
-		tableelement = new QTableWidgetItem( minValueStrList.at(k) );
-		tableelement->setTextAlignment(Qt::AlignCenter);
-		selectedMBsSWs_tableWidget->setItem(k, 1, tableelement);
-	}
-	// Update values:
-	for (k=0; k<qMin(static_cast<unsigned int>(valueStrList.size()), _nrofMBsSWs); k++)
-	{
-		tableelement = new QTableWidgetItem( valueStrList.at(k) );
-		tableelement->setTextAlignment(Qt::AlignCenter);
-		selectedMBsSWs_tableWidget->setItem(k, 2, tableelement);
-	}
-	// Update max values:
-	for (k=0; k<qMin(static_cast<unsigned int>(maxValueStrList.size()), _nrofMBsSWs); k++)
-	{
-		tableelement = new QTableWidgetItem( maxValueStrList.at(k) );
-		tableelement->setTextAlignment(Qt::AlignCenter);
-		selectedMBsSWs_tableWidget->setItem(k, 3, tableelement);
-	}
-	// Update units:
-	for (k=0; k<qMin(static_cast<unsigned int>(unitStrList.size()), _nrofMBsSWs); k++)
-	{
-		tableelement = new QTableWidgetItem( unitStrList.at(k) );
-		selectedMBsSWs_tableWidget->setItem(k, 4, tableelement);
-	}
+	updateMBColumn(minValueStrList, col_min);
+	updateMBColumn(valueStrList, col_current);
+	updateMBColumn(maxValueStrList, col_max);
+	updateMBColumn(unitStrList, col_unit, Qt::AlignLeft);
 	/* NOTE: The units can change during MB/SW-reading !:
-	 *       If a MB/SW cannot be scaled (e.g. due to unexpected raw values, incomplete/invalid defintions),
+	 *       If a MB/SW cannot be scaled (e.g. due to unexpected raw values, incomplete/invalid definitions),
 	 *       the raw value is displayed instead and the unit is switched to [RAW] (MBs) or [BIN] (SWs).
 	 */
 }
@@ -194,18 +183,18 @@ void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 void CUcontent_MBsSWs_tableView::toggleMinColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(1);
+		selectedMBsSWs_tableWidget->showColumn(col_min);
 	else
-		selectedMBsSWs_tableWidget->hideColumn(1);
+		selectedMBsSWs_tableWidget->hideColumn(col_min);
 }
 
 
 void CUcontent_MBsSWs_tableView::toggleMaxColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(3);
+		selectedMBsSWs_tableWidget->showColumn(col_max);
 	else
-		selectedMBsSWs_tableWidget->hideColumn(3);
+		selectedMBsSWs_tableWidget->hideColumn(col_max);
 }
 
 
@@ -252,7 +241,7 @@ void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> 
 
 void CUcontent_MBsSWs_tableView::selectMBSWtableRows(unsigned int start, unsigned int end)
 {
-	QTableWidgetSelectionRange selrange(start, 0, end, 4);
+	QTableWidgetSelectionRange selrange(start, col_title, end, col_unit);
 	selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
 }
 
