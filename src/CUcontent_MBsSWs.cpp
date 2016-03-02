@@ -403,13 +403,12 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	bool newMin = false;
 	bool newMax = false;
 	// List output
-	unsigned int tablePosIndex = 0;
 	QStringList minValueStrList;
 	QStringList valueStrList;
 	QStringList maxValueStrList;
 	QStringList unitStrList;
 
-	// Prepare string-lists for vlaues-table-output (fill with empty strings up to the needed size):
+	// Prepare string-lists for values-table-output (fill with empty strings up to the needed size):
 	for (unsigned int s=0; s<rawValues.size(); s++)
 	{
 		minValueStrList << "";
@@ -421,16 +420,15 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
 		// Get table-position-index for current MB/SW:
-		tablePosIndex = _tableRowPosIndexes.at(k);
+		const unsigned int tablePosIndex = _tableRowPosIndexes.at(k);
+		const unsigned int nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 		// ******** SCALE MB/SW ********:
 		// Scale raw values:
 		if (_MBSWmetaList.at(k).blockType == 0) // if it is a MB
 		{
-			scalingSuccessful = libFSSM::raw2scaled( rawValues.at(k), _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).scaleformula, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).precision, &scaledValueStr);
-			if (scalingSuccessful)
-				unitStrList.replace(tablePosIndex, _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).unit);
-			else
-				unitStrList.replace(tablePosIndex, "[RAW]");
+			const mb_dt& mb = _supportedMBs.at(nativeIndex);
+			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
+			unitStrList.replace(tablePosIndex, scalingSuccessful ? mb.unit : "[RAW]");
 		}
 		else	// it is a SW
 		{
@@ -440,17 +438,18 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 			 *             a/b   => a smaller than b
 			 *             a\b   => a larger than b
 			 * THE MEANING DOES NOT AFFECT THE SCALING PROCESS !
-			 */ 
+			 */
+			const sw_dt& sw = _supportedSWs.at(nativeIndex);
 			if (rawValues.at(k) == 0)
 			{
-				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
+				if (sw.unit.contains('/'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',0,0);
+					scaledValueStr = sw.unit.section('/',0,0);
 					invSWmeaning = false;
 				}
-				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('\\'))
+				else if (sw.unit.contains('\\'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('\\',0,0);
+					scaledValueStr = sw.unit.section('\\',0,0);
 					invSWmeaning = true;
 				}
 				else
@@ -462,14 +461,14 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 			}
 			else if (rawValues.at(k) == 1)
 			{
-				if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('/'))
+				if (sw.unit.contains('/'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('/',1,1);
+					scaledValueStr = sw.unit.section('/',1,1);
 					invSWmeaning = false;
 				}
-				else if (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.contains('\\'))
+				else if (sw.unit.contains('\\'))
 				{
-					scaledValueStr = _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).unit.section('\\',1,1);
+					scaledValueStr = sw.unit.section('\\',1,1);
 					invSWmeaning = true;
 				}
 				else
