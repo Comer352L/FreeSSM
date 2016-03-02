@@ -222,7 +222,7 @@ protected:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues);
+	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);
 	void setupActuatorTestAddrList();
 	void resetCommonCUdata();
 
@@ -231,7 +231,7 @@ signals:
 	void historicOrMemorizedDTCs(QStringList historicDTCs, QStringList historicDTCsDescriptions);
 	void latestCCCCs(QStringList currentCCCCs, QStringList currentCCCCsDescriptions);
 	void memorizedCCCCs(QStringList historicCCCCs, QStringList historicCCCCsDescriptions);
-	void newMBSWrawValues(std::vector<unsigned int> rawValues, int duration_ms);
+	void newMBSWrawValues(const std::vector<unsigned int>& rawValues, int duration_ms);
 	void startedDCreading();
 	void startedMBSWreading();
 	void startedActuatorTest();
@@ -241,7 +241,7 @@ signals:
 	void commError();
 
 protected slots:
-	void processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms);
+	void processMBSWrawData(const std::vector<char>& MBSWrawdata, int duration_ms);
 	unsigned int processDTCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:

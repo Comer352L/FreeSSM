@@ -111,7 +111,7 @@ private slots:
 	void startstopMBsSWsButtonPressed();
 	void callStart();
 	void callStop();
-	void processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms);
+	void processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
 	void moveUpMBsSWsOnTheTable();

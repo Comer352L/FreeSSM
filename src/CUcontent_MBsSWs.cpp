@@ -74,7 +74,7 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	if (_SSMPdev)
 	{
 		_SSMPdev->stopMBSWreading();
-		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
 		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 		disconnect( _SSMPdev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 	}
@@ -338,7 +338,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	// Clear refresh-time-information:
 	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Connect signals and slots:
-	connect( _SSMPdev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+	connect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
 	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 	// Disable add/delete buttons:
 	mbswdelete_pushButton->setEnabled(false);
@@ -363,7 +363,7 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 			connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
 			return false;
 		}
-		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(std::vector<unsigned int>, int) ), this, SLOT( processMBSWRawValues(std::vector<unsigned int>, int) ) );
+		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
 		connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 	}
 	// Set text+icon of start/stop-button:
@@ -380,7 +380,7 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 }
 
 
-void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues, int refreshduration_ms)
+void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms)
 {
 	QString defstr;
 	QString rvstr;
@@ -421,7 +421,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 	{
 		// Get table-position-index for current MB/SW:
 		const unsigned int tablePosIndex = _tableRowPosIndexes.at(k);
-		const unsigned int nativeIndex = _MBSWmetaList.at(k).nativeIndex;
+		const size_t nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 		// ******** SCALE MB/SW ********:
 		// Scale raw values:
 		if (_MBSWmetaList.at(k).blockType == blockType_MB)

@@ -414,53 +414,52 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 }
 
 
-void SSMprotocol::processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms)
+void SSMprotocol::processMBSWrawData(const std::vector<char>& MBSWrawdata, int duration_ms)
 {
-	std::vector<unsigned int> rawValues;
-	QStringList valueStrList;
-	QStringList unitStrList;
-	assignMBSWRawData( MBSWrawdata, &rawValues );
+	std::vector<unsigned int> rawValues = assignMBSWRawData(MBSWrawdata);
 	emit newMBSWrawValues(rawValues, duration_ms);
 }
 
 
-void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues)
+std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>& rawdata)
 {
 	// ***** ASSIGN RAW DATA *****:
 	unsigned int k = 0, m = 0;
-	mbswrawvalues->clear();
-	mbswrawvalues->resize(_MBSWmetaList.size(), 0);
+	std::vector<unsigned int> mbswrawvalues(_MBSWmetaList.size());
 	for (m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
 	{
 		for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 		{
+			const size_t nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 			if (_MBSWmetaList.at(k).blockType == blockType_MB)
 			{
+				mb_intl_dt& mb = _supportedMBs.at(nativeIndex );
 				// COMPARE ADDRESSES:
-				if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_low)
+				if (_selMBsSWsAddr.at(m) == mb.addr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
-					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m));
+					mbswrawvalues.at(k) += static_cast<unsigned char>(rawdata.at(m));
 				}
-				else if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_high)
+				else if (_selMBsSWsAddr.at(m) == mb.addr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
-					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
+					mbswrawvalues.at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
 				}
 			}
 			else
 			{
-				if (_selMBsSWsAddr.at(m) == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteAddr)
+				if (_selMBsSWsAddr.at(m) == _supportedSWs.at(nativeIndex).byteAddr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitAddr -1) ) ) )	// IF ADDRESS BIT IS SET
-						mbswrawvalues->at(k) = 1;
+					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at(nativeIndex).bitAddr -1) ) ) )	// IF ADDRESS BIT IS SET
+						mbswrawvalues.at(k) = 1;
 					else	// IF ADDRESS BIT IS NOT SET
-						mbswrawvalues->at(k) = 0;
+						mbswrawvalues.at(k) = 0;
 				}
 			}
 		}
 	}
+	return mbswrawvalues;
 }
 
 

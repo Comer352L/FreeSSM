@@ -45,7 +45,7 @@ void SSMprotocol2::resetCUdata()
 		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
 			    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
 		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+				this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
 		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
 		if (_SSMP2com->stopCommunication() && (_state == state_ActTesting))
@@ -399,7 +399,7 @@ bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
 		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
+			this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Emit signal:
 		emit startedMBSWreading();
 	}
@@ -417,7 +417,7 @@ bool SSMprotocol2::stopMBSWreading()
 		if (_SSMP2com->stopCommunication())
 		{
 			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+					this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
 			return true;
