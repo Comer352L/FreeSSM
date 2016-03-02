@@ -148,7 +148,7 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	// Check if the selected MBs/SWs are available:
 	for (k=0; k<MBSWmetaList.size(); k++)
 	{
-		if (MBSWmetaList.at(k).blockType == 0)
+		if (MBSWmetaList.at(k).blockType == blockType_MB)
 		{
 			if (MBSWmetaList.at(k).nativeIndex > (_supportedMBs.size()-1))
 				return false;
@@ -221,7 +221,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		// Get MB/SW-index:
 		listPosIndex = _tableRowPosIndexes.at(k);
 		// Title:
-		if (_MBSWmetaList.at(k).blockType == 0)	// MB
+		if (_MBSWmetaList.at(k).blockType == blockType_MB)
 			titles.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
 		else	// SW
 			titles.replace( listPosIndex, _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
@@ -237,7 +237,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		}
 		else
 		{
-			if (_MBSWmetaList.at(k).blockType == 0)	// MB
+			if (_MBSWmetaList.at(k).blockType == blockType_MB)
 				units.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
 		}
 		// Last min/max value strings:
@@ -424,7 +424,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 		const unsigned int nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 		// ******** SCALE MB/SW ********:
 		// Scale raw values:
-		if (_MBSWmetaList.at(k).blockType == 0) // if it is a MB
+		if (_MBSWmetaList.at(k).blockType == blockType_MB)
 		{
 			const mb_dt& mb = _supportedMBs.at(nativeIndex);
 			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
@@ -593,7 +593,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(std::vector<unsigned int> rawValues,
 				}
 				/* NOTE: only compare scaled values, if BOTH (min/max and current) are numeric ! */
 				// Compare current value with last min/max values:
-				if ( (_MBSWmetaList.at(k).blockType == 1) && scalingSuccessful && invSWmeaning)
+				if ( (_MBSWmetaList.at(k).blockType == blockType_SW) && scalingSuccessful && invSWmeaning)
 				{
 					// Inverse comparison:
 					newMin = (currentMinCompValue > lastMinCompValue);

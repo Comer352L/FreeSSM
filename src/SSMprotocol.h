@@ -38,6 +38,9 @@
 #define		MEMORY_ADDRESS_NONE	UINT_MAX
 
 
+enum BlockType { blockType_MB, blockType_SW };
+
+
 class dc_defs_dt
 {
 public:
@@ -85,7 +88,7 @@ public:
 class MBSWmetadata_dt
 {
 public:
-	bool blockType;
+	BlockType blockType;
 	unsigned int nativeIndex;
 };
 
