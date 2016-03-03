@@ -423,38 +423,41 @@ void SSMprotocol::processMBSWrawData(const std::vector<char>& MBSWrawdata, int d
 
 std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>& rawdata)
 {
-	// ***** ASSIGN RAW DATA *****:
-	unsigned int k = 0, m = 0;
 	std::vector<unsigned int> mbswrawvalues(_MBSWmetaList.size());
-	for (m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
+
+	for (size_t m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
 	{
-		for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
+		const unsigned int address = _selMBsSWsAddr.at(m);
+		const unsigned char rawbyte = static_cast<unsigned char>(rawdata.at(m));
+
+		for (size_t k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 		{
-			const size_t nativeIndex = _MBSWmetaList.at(k).nativeIndex;
-			if (_MBSWmetaList.at(k).blockType == blockType_MB)
+			const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
+			unsigned int& rawvalue = mbswrawvalues.at(k);
+
+			if (metadata.blockType == blockType_MB)
 			{
-				mb_intl_dt& mb = _supportedMBs.at(nativeIndex );
+				mb_intl_dt& mb = _supportedMBs.at(metadata.nativeIndex);
 				// COMPARE ADDRESSES:
-				if (_selMBsSWsAddr.at(m) == mb.addr_low)
+				if (address == mb.addr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
-					mbswrawvalues.at(k) += static_cast<unsigned char>(rawdata.at(m));
+					rawvalue += rawbyte;
 				}
-				else if (_selMBsSWsAddr.at(m) == mb.addr_high)
+				else if (address == mb.addr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
-					mbswrawvalues.at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
+					rawvalue += rawbyte << 8;
 				}
 			}
 			else
 			{
-				if (_selMBsSWsAddr.at(m) == _supportedSWs.at(nativeIndex).byteAddr)
+				sw_intl_dt& sw = _supportedSWs.at(metadata.nativeIndex);
+				if (address == sw.byteAddr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at(nativeIndex).bitAddr -1) ) ) )	// IF ADDRESS BIT IS SET
-						mbswrawvalues.at(k) = 1;
-					else	// IF ADDRESS BIT IS NOT SET
-						mbswrawvalues.at(k) = 0;
+					const unsigned char bitmask = 1 << (sw.bitAddr - 1);
+					rawvalue = (rawbyte & bitmask) ? 1 : 0;
 				}
 			}
 		}
