@@ -24,7 +24,7 @@
 #include <QtGui>
 #include "AbstractDiagInterface.h"
 #include "SSMP2communication_core.h"
-
+#include "SSMCUdata.h"
 
 
 #define SSMP2COM_BUFFER_SIZE	256  // buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
@@ -43,7 +43,7 @@ public:
 	void setCUaddress(unsigned int cuaddress);
 	void setRetriesOnError(unsigned char retries);
 
-	bool getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
+	bool getCUdata(SSMCUdata& cuData);
 	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
 	bool readMultipleDatabytes(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
 	bool writeDataBlock(unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten=NULL);
@@ -78,7 +78,7 @@ private:
 	void run();
 
 signals:
-	void recievedData(std::vector<char> rawdata, int duration_ms);
+	void receivedData(const std::vector<char>& rawdata, int duration_ms);
 
 	void commError();
 

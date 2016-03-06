@@ -51,18 +51,24 @@ SSMprotocol::state_dt SSMprotocol::state()
 }
 
 
-std::string SSMprotocol::getSysID()
+bool SSMprotocol::uses_SSM2defs() const
 {
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_SYS_ID, 3);
+	return _ssmCUdata.uses_SSM2defs();
 }
 
 
-std::string SSMprotocol::getROMID()
+std::string SSMprotocol::getSysID() const
 {
 	if (_state == state_needSetup) return "";
-	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
-		return libFSSM::StrToHexstr(_ROM_ID, 5);
+	return libFSSM::StrToHexstr(_ssmCUdata.SYS_ID);
+}
+
+
+std::string SSMprotocol::getROMID() const
+{
+	if (_state == state_needSetup) return "";
+	if (uses_SSM2defs())
+		return libFSSM::StrToHexstr(_ssmCUdata.ROM_ID);
 	else
 		return getSysID();
 }
@@ -276,7 +282,7 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 	unsigned int rawDataIndex = 0;
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
-		if (_CU == CUtype_Engine && ((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+		if (_CU == CUtype_Engine && _ssmCUdata.uses_SSM2defs())
 		{
 			rawDataIndex = 1;
 			if (_has_TestMode)
@@ -493,8 +499,7 @@ void SSMprotocol::setupActuatorTestAddrList()
 void SSMprotocol::resetCommonCUdata()
 {
 	// RESET ECU DATA:
-	memset(_SYS_ID, 0, 3);
-	memset(_ROM_ID, 0, 5);
+	_ssmCUdata.clear();
 	// Clear system description:
 	_sysDescription.clear();
 	_has_OBD2 = false;

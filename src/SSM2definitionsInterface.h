@@ -39,7 +39,7 @@ public:
 	~SSM2definitionsInterface();
 
 	void setLanguage(QString lang);
-	void selectControlUnitID(SSMprotocol::CUtype_dt cu, char id1[3], char id2[5], char flagbytes[96], unsigned char nrofflagbytes);
+	void selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata);
 
 	bool systemDescription(QString *description);
 
@@ -65,10 +65,7 @@ private:
 	QString _language;
 	bool _id_set;
 	SSMprotocol::CUtype_dt _CU;
-	char _ID1[3];
-	char _ID2[5];
-	char _flagbytes[96];
-	unsigned char _nrofflagbytes;
+	SSMCUdata _ssmCUdata;
 
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
 

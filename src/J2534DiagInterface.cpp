@@ -528,9 +528,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 #ifdef __FSSM_DEBUG__
 				std::cout << "PassThruReadMsgs(): received J2534-message with protocol id 0x" << std::hex << rx_msg.ProtocolID
 				          << ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n";
-				for (unsigned int k=0; k<rx_msg.DataSize; k++)
-					std::cout << " " << std::hex << (unsigned int)(rx_msg.Data[k]);
-				std::cout << std::endl;
+				std::cout << libFSSM::StrToMultiLineHexstr(rx_msg.Data, rx_msg.DataSize);
 #endif
 				if (rx_msg.RxStatus & TX_MSG_TYPE)
 				{

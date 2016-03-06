@@ -48,7 +48,7 @@ public:
 	// COMMUNICATION BASED FUNCTIONS:
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
-	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
+	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
@@ -68,7 +68,7 @@ private:
 	unsigned int _CMaddr;
 	char _CMvalue;
 
-	bool readExtendedID(char ID[5]);
+	bool readExtendedID(std::vector<char>& ID);
 
 public slots:
 	void resetCUdata();

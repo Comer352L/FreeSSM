@@ -62,28 +62,16 @@ void SSMP2communication::setRetriesOnError(unsigned char retries)
 
 
 
-bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication::getCUdata(SSMCUdata& cuData)
 {
+	cuData.clear();
 	bool ok = false;
-	unsigned int k = 0;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0)) return false;
 	_CommOperation = comOp_readCUdata;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
-	{
-		// Return System-ID:
-		SYS_ID[0] = _rec_buf[0];
-		SYS_ID[1] = _rec_buf[1];
-		SYS_ID[2] = _rec_buf[2];
-		// Return ROM-ID
-		for (k=0; k<5; k++)
-			ROM_ID[k] = _rec_buf[3+k];
-		// Return flagbytes:
-		for (k=0; k<(_datalen - 8); k++)
-			flagbytes[k] = _rec_buf[8+k];
-		*nrofflagbytes = _datalen - 8;
-	}
+		cuData.from_SSMP2(_rec_buf, _datalen);
 	_CommOperation = comOp_noCom;
 	return ok;
 }
@@ -118,7 +106,7 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Assign recieved data:
+		// Assign received data:
 		for (k=0; k<nrofbytes; k++)
 			data[k] = _rec_buf[k];
 	}
@@ -143,7 +131,7 @@ bool SSMP2communication::readMultipleDatabytes(char padaddr, unsigned int dataad
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Assign recieved data:
+		// Assign received data:
 		for (k=0; k<datalen; k++)
 			data[k] = _rec_buf[k];
 	}
@@ -177,7 +165,7 @@ bool SSMP2communication::writeDataBlock(unsigned int dataaddr, char *data, unsig
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Check/assign recieved data:
+		// Check/assign received data:
 		if (datawritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
@@ -215,7 +203,7 @@ bool SSMP2communication::writeDatabyte(unsigned int dataaddr, char databyte, cha
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Check/assign recieved data:
+		// Check/assign received data:
 		if (databytewritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
@@ -460,8 +448,7 @@ void SSMP2communication::run()
 		switch (operation)
 		{
 			case comOp_readCUdata:// GetECUData(...)
-				op_success = GetCUdata(cuaddress, rec_buf, rec_buf+3, rec_buf+8, &datalen);
-				if (op_success) datalen += 8;
+				op_success = GetCUdata(cuaddress, rec_buf, &datalen);
 				break;
 			case comOp_readBlock:
 			case comOp_readBlock_p:// ReadDataBlock_permanent(...)
@@ -507,7 +494,7 @@ void SSMP2communication::run()
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
-				emit recievedData(rawdata, duration_ms);
+				emit receivedData(rawdata, duration_ms);
 				// Wait for the desired delay time:
 				if (delay > 0) msleep(delay);
 			}

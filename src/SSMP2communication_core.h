@@ -22,6 +22,7 @@
 
 
 #include "AbstractDiagInterface.h"
+#include "SSMCUdata.h"
 #ifdef __WIN32__
     #include "windows\TimeM.h"
     #define waitms(x) Sleep(x)
@@ -53,7 +54,7 @@ public:
 	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int *dataaddr, unsigned int datalen, char *data);
 	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten = NULL);
 	bool WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten = NULL);
-	bool GetCUdata(unsigned int ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
+	bool GetCUdata(unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize);
 
 protected:
 	AbstractDiagInterface *_diagInterface;

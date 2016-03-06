@@ -35,6 +35,10 @@ public:
 	static bool scaled2raw(QString scaledValueStr, QString scaleformula, unsigned int *rawValue);
 	static std::string StrToHexstr(const char* inputstr, size_t nrbytes);
 	static std::string StrToHexstr(const std::vector<char>& data);
+	static std::string StrToMultiLineHexstr(const char* data, size_t nrbytes, size_t bytesperline = 16, const std::string& lineprefix = "");
+	static std::string StrToMultiLineHexstr(const unsigned char* data, size_t nrbytes, size_t bytesperline = 16, const std::string& lineprefix = "");
+	static std::string StrToMultiLineHexstr(const std::vector<char>& data, size_t bytesperline = 16, const std::string& lineprefix = "");
+	static std::string StrToMultiLineHexstr(const std::vector<unsigned char>& data, size_t bytesperline = 16, const std::string& lineprefix = "");
 
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);

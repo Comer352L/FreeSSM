@@ -25,6 +25,7 @@
 #include <vector>
 #include "AbstractDiagInterface.h"
 #include "SSMP1communication_procedures.h"
+#include "SSMCUdata.h"
 
 
 class SSMP1communication : public QThread, private SSMP1communication_procedures
@@ -39,9 +40,9 @@ public:
 	void selectCU(SSM1_CUtype_dt cu);
 	void setRetriesOnError(unsigned char retries);
 	comOp_dt getCurrentCommOperation();
-	bool getCUdata(unsigned char extradatareqlen, char *ID, char *extradata, unsigned char *extradatalen);
+	bool getCUdata(unsigned char extradatareqlen, SSMCUdata& cuData);
 	bool readAddress(unsigned int addr, char * databyte);
-	bool readAddresses(std::vector<unsigned int> addr, std::vector<char> * data);
+	bool readAddresses(const std::vector<unsigned int>& addr, std::vector<char> * data);
 	bool readAddress_permanent(unsigned int addr, int delay=0);
 	bool readAddresses_permanent(std::vector<unsigned int> addr, int delay=0);
 	bool writeAddress(unsigned int addr, char databyte, char *databytewritten = NULL);
@@ -68,7 +69,7 @@ private:
 	void run();
 
 signals:
-	void recievedData(std::vector<char> rawdata, int duration_ms);
+	void receivedData(const std::vector<char>& rawdata, int duration_ms);
 	void commError();
 
 };

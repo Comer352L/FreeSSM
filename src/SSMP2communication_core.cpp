@@ -210,13 +210,10 @@ bool SSMP2communication_core::WriteDatabyte(unsigned int ecuaddr, unsigned int d
 
 
 
-bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize)
 {
-	*nrofflagbytes=0;
-	char indata[255] = {0,};
-	unsigned char indatalen = 0;
-	char reqmsg = '\x0';
-	unsigned char k = 0;
+	*cuDataSize = 0;
+	char reqmsg = 0;
 	// Request command byte
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 	{
@@ -228,28 +225,24 @@ bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *SYS_ID, char
 	}
 	else
 		return false;
-	// SEND MESSAGE + RECIEVE ANSWER:
+
+	// SEND MESSAGE + RECEIVE ANSWER:
+	char indata[255] = {0,};
+	unsigned char indatalen = 0;
 	if (SndRcvMessage(ecuaddr, &reqmsg, 1, indata, &indatalen))
 	{
 		// CHECK MESSAGE LENGTH:
+		// usual flagbytes sizes: 32, 48, 96
+		// i.e. ResponseCommand[1] + SYSID[3] + ROMID[5] + flagbytes[96] = 105 bytes total
 		if ((indatalen == 41) || (indatalen == 57) || (indatalen == 105))
 		{
 			// CHECK DATA:
 			if (((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (indata[0] == '\xFF'))
-			    || ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (indata[0] == '\xEA')))
+				|| ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (indata[0] == '\xEA')))
 			{
-				// EXTRACT CU DATA:
-				SYS_ID[0] = indata[1];
-				SYS_ID[1] = indata[2];
-				SYS_ID[2] = indata[3];
-				ROM_ID[0] = indata[4];
-				ROM_ID[1] = indata[5];
-				ROM_ID[2] = indata[6];
-				ROM_ID[3] = indata[7];
-				ROM_ID[4] = indata[8];
-				*nrofflagbytes = indatalen-9;
-				for (k=0; k<*nrofflagbytes; k++)
-					flagbytes[k] = indata[9+k];
+				const std::size_t size = indatalen - 1;
+				std::copy(&indata[1], &indata[size + 1], cuData);
+				*cuDataSize = size;
 				return true;
 			}
 		}
@@ -293,13 +286,7 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:\n";
-	for (k=0; k<=(msg_buffer.size()/16); k++)
-	{
-		if (16*(k+1) <= msg_buffer.size())
-			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), 16) << '\n';
-		else if (msg_buffer.size()%16)
-			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), (msg_buffer.size()%16)) << '\n';
-	}
+	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
 	// SEND MESSAGE:
 	if (!_diagInterface->write(msg_buffer))
@@ -324,13 +311,7 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:\n";
-	for (k=0; k<=(msg_buffer.size()/16); k++)
-	{
-		if (16*(k+1) <= msg_buffer.size())
-			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), 16) << '\n';
-		else if (msg_buffer.size()%16)
-			std::cout << "   " << libFSSM::StrToHexstr(&msg_buffer.at(k*16), (msg_buffer.size()%16)) << '\n';
-	}
+	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
 	// MESSAGE LENGTH:
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)

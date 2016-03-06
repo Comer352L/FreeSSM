@@ -123,7 +123,7 @@ void SSM1definitionsInterface::setLanguage(std::string lang)
 }
 
 
-bool SSM1definitionsInterface::selectID(char id[3])
+bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 {
 	std::vector<TiXmlElement*> elements;
 	std::vector<attributeCondition> attribConditions;
@@ -136,19 +136,19 @@ bool SSM1definitionsInterface::selectID(char id[3])
 	if (!_defs_root_node)
 		return false;
 	attribCondition.name = "value";
-	attribCondition.value = "0x" + libFSSM::StrToHexstr(id, 1);
+	attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(0), 1);
 	attribCondition.condition = attributeCondition::equal;
 	elements = getAllMatchingChildElements(_defs_root_node, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
 	if (elements.size() == 1)
 	{
 		_defs_for_id_b1_node = elements.at(0);
-		attribCondition.value = "0x" + libFSSM::StrToHexstr(id+1, 1);
+		attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(1), 1);
 		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
 		if (elements.size() == 1)
 		{
 			_defs_for_id_b2_node = elements.at(0);
 			attribCondition.name = "value_start";
-			attribCondition.value = "0x" + libFSSM::StrToHexstr(id+2, 1);
+			attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(2), 1);
 			attribCondition.condition = attributeCondition::equalOrSmaller;
 			attribConditions.push_back(attribCondition);
 			attribCondition.name = "value_end";
@@ -158,9 +158,7 @@ bool SSM1definitionsInterface::selectID(char id[3])
 			if (elements.size() == 1)
 			{
 				_defs_for_id_b3_node = elements.at(0);
-				_ID[0] = id[0];
-				_ID[1] = id[1];
-				_ID[2] = id[2];
+				_ID = id;
 				_id_set = true;
 				return true;
 			}

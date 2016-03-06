@@ -33,6 +33,7 @@
 #include <limits.h>
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"
+#include "SSMCUdata.h"
 
 
 #define		MEMORY_ADDRESS_NONE	UINT_MAX
@@ -145,8 +146,9 @@ public:
 	state_dt state();
 	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	std::string getSysID();
-	std::string getROMID();
+	bool uses_SSM2defs() const;
+	std::string getSysID() const;
+	std::string getROMID() const;
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	virtual bool hasVINsupport(bool *VINsup);
@@ -169,7 +171,7 @@ public:
 	virtual bool startDCreading(int DCgroups) = 0;
 	bool restartDCreading();
 	virtual bool stopDCreading() = 0;
-	virtual bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList) = 0;
+	virtual bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList) = 0;
 	bool restartMBSWreading();
 	virtual bool stopMBSWreading() = 0;
 	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;
@@ -192,8 +194,7 @@ protected:
 	state_dt _state;
 	QString _language;
 	// *** CONTROL UNIT RAW DATA ***:
-	char _SYS_ID[3];
-	char _ROM_ID[5];
+	SSMCUdata _ssmCUdata;
 	QString _sysDescription;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_OBD2;

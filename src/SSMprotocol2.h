@@ -51,7 +51,7 @@ public:
 	bool getVIN(QString *VIN);
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
-	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
+	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
@@ -79,7 +79,7 @@ private:
 	bool validateVIN(char VIN[17]);
 
 private slots:
-	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);
+	void processDCsRawdata(const std::vector<char>& dcrawdata, int duration_ms);
 
 public slots:
 	void resetCUdata();

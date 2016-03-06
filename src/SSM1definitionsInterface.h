@@ -39,7 +39,7 @@ public:
 	enum condition_dt {equal, smaller, larger, equalOrSmaller, equalOrLarger};
 
 	attributeCondition(std::string name="", std::string val="", condition_dt cond=equal)
-	                                        : name(name), value(val), condition(cond) {};
+		: name(name), value(val), condition(cond) {}
 
 	std::string name;
 	std::string value;
@@ -55,7 +55,7 @@ public:
 	bool selectDefinitionsFile(std::string filename);
 	void getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);
-	bool selectID(char id[3]);
+	bool selectID(const std::vector<char>& id);
 
 	bool systemDescription(std::string *description);
 	bool model(std::string *name);
@@ -71,7 +71,7 @@ private:
 	std::string _defs_version;
 	std::string _defs_format_version;
 	std::string _lang;
-	char _ID[3];
+	std::vector<char> _ID;
 	bool _id_set;
 	// Shortcuts to important nodes:
 	TiXmlNode *_defs_root_node;

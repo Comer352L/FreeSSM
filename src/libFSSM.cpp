@@ -304,15 +304,15 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 // hexadecimal digits
 static char hexdigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-static char nibble_hexdigit(unsigned char value)
+static char nibble_hexdigit(const unsigned char value)
 {
 	return hexdigits[value & 0xF];
 }
 
-std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
+std::string libFSSM::StrToHexstr(const char* inputstr, const size_t nrbytes)
 {
 	if (inputstr == NULL)
-		return std::string();
+		return "";
 	const char delimiter = ' ';
 	const size_t strlength = 3 * nrbytes - 1;
 	std::string s(strlength, delimiter);
@@ -329,4 +329,37 @@ std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
 std::string libFSSM::StrToHexstr(const std::vector<char>& data)
 {
 	return StrToHexstr(data.data(), data.size());
+}
+
+
+std::string libFSSM::StrToMultiLineHexstr(const char* const data, const size_t nrbytes, const size_t bytesperline, const std::string& lineprefix)
+{
+	if (data == NULL || !bytesperline)
+		return "";
+	// estimate length for performance, not exact, can be slightly larger than necessary
+	const size_t strlength = lineprefix.length() * (1 + (nrbytes / bytesperline)) + 3 * nrbytes;
+
+	std::string s (strlength, '\0');
+	s.clear();
+	for (size_t current_line_bytes, i = 0; (current_line_bytes = std::min(bytesperline, nrbytes - i)) > 0; i += current_line_bytes) {
+		s += lineprefix;
+		s += StrToHexstr(&data[i], current_line_bytes);
+		s += '\n';
+	}
+	return s;
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const std::vector<char>& data, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(data.data(), data.size(), bytesperline, lineprefix);
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const unsigned char* const data, const size_t nrbytes, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data), nrbytes, bytesperline, lineprefix);
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const std::vector<unsigned char>& data, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data.data()), data.size(), bytesperline, lineprefix);
 }

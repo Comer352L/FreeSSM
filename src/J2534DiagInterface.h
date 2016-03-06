@@ -30,6 +30,9 @@
 #else
     #error "Operating system not supported !"
 #endif
+#ifdef __FSSM_DEBUG__
+	#include "libFSSM.h"
+#endif
 
 class J2534DiagInterface : public AbstractDiagInterface
 {

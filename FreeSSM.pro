@@ -50,6 +50,7 @@ HEADERS += src/FreeSSM.h \
            src/DiagInterfaceStatusBar.h \
            src/SSM1definitionsInterface.h \
            src/SSM2definitionsInterface.h \
+           src/SSMCUdata.h \
            src/SSMprotocol2_ID.h \
            src/SSMprotocol2_def_en.h \
            src/SSMprotocol2_def_de.h \
@@ -98,6 +99,7 @@ SOURCES += src/main.cpp \
            src/DiagInterfaceStatusBar.cpp \
            src/SSM1definitionsInterface.cpp \
            src/SSM2definitionsInterface.cpp \
+           src/SSMCUdata.cpp \
            src/SSMprotocol2_ID.cpp \
            src/SSMprotocol2_def_en.cpp \
            src/SSMprotocol2_def_de.cpp \

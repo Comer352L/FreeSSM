@@ -42,9 +42,9 @@ void SSMprotocol2::resetCUdata()
 		// Disconnect communication error and data signals:
 		disconnect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
-		disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+		disconnect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+				this, SLOT( processDCsRawdata(const std::vector<char>&, int) ) );
+		disconnect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 				this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
 		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
@@ -105,8 +105,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
-	char flagbytes[96];
-	unsigned char nrofflagbytes;
 	SSM2definitionsInterface *SSM2defsIface;
 	// Reset:
 	resetCUdata();
@@ -141,17 +139,17 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 		return result_invalidCUtype;
 	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress, 1);
 	// Get control unit data:
-	if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
+	if (!_SSMP2com->getCUdata(_ssmCUdata))
 	{
 		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
 			_SSMP2com->setCUaddress(0x01);
-			if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
+			if (!_SSMP2com->getCUdata(_ssmCUdata))
 			{
 				if (CU == CUtype_Engine)
 				{
 					_SSMP2com->setCUaddress(0x02);
-					if (!_SSMP2com->getCUdata(_SYS_ID, _ROM_ID, flagbytes, &nrofflagbytes))
+					if (!_SSMP2com->getCUdata(_ssmCUdata))
 						goto commError;
 				}
 				else
@@ -161,6 +159,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 		else
 			goto commError;
 	}
+
 	_SSMP2com->setRetriesOnError(2);
 	// Ensure that ignition switch is ON:
 	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
@@ -177,7 +176,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
 	SSM2defsIface = new SSM2definitionsInterface(_language);
-	SSM2defsIface->selectControlUnitID(_CU, _SYS_ID, _ROM_ID, flagbytes, nrofflagbytes);
+	SSM2defsIface->selectControlUnitID(_CU, _ssmCUdata);
 	SSM2defsIface->systemDescription(&_sysDescription);
 	SSM2defsIface->hasOBD2system(&_has_OBD2);
 	SSM2defsIface->hasImmobilizer(&_has_Immo);
@@ -352,8 +351,8 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
-		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
+		connect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+			this, SLOT( processDCsRawdata(const std::vector<char>&, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
@@ -370,8 +369,8 @@ bool SSMprotocol2::stopDCreading()
 	{
 		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+			disconnect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+					this, SLOT( processDCsRawdata(const std::vector<char>&, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -383,7 +382,7 @@ bool SSMprotocol2::stopDCreading()
 }
 
 
-bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
+bool SSMprotocol2::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
 {
 	bool started = false;
 	if (_state != state_normal) return false;
@@ -398,7 +397,7 @@ bool SSMprotocol2::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 		// Save MB/SW-selection (necessary for evaluation of raw data):
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
-		connect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+		connect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 			this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Emit signal:
 		emit startedMBSWreading();
@@ -416,7 +415,7 @@ bool SSMprotocol2::stopMBSWreading()
 	{
 		if (_SSMP2com->stopCommunication())
 		{
-			disconnect( _SSMP2com, SIGNAL( recievedData(std::vector<char>, int) ),
+			disconnect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 					this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
@@ -807,7 +806,7 @@ bool SSMprotocol2::validateVIN(char VIN[17])
 }
 
 
-void SSMprotocol2::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
+void SSMprotocol2::processDCsRawdata(const std::vector<char>& DCrawdata, int duration_ms)
 {
 	QStringList DCs;
 	QStringList DCdescriptions;
