@@ -27,7 +27,9 @@
 #include <math.h>
 
 
-
+/*!
+ * \brief Function library
+ */
 class libFSSM
 {
 public:
@@ -45,6 +47,16 @@ public:
 	static unsigned int parseUInt24BigEndian(const char* const data);
 	static unsigned int parseUInt32BigEndian(const unsigned char* const data);
 	static unsigned int parseUInt32BigEndian(const char* const data);
+
+	/*!
+	 * \brief check if data is equal
+	 *
+	 * \param a pointer to data #1
+	 * \param b pointer to data #2
+	 * \param len number of bytes to compare
+	 * \return true if data is equal
+	 */
+	static bool data_equal(const char* a, const char* b, unsigned int len);
 
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);

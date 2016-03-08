@@ -127,12 +127,7 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 				if (datawritten == NULL)
 				{
 					// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-					for (unsigned int k=0; k<datalen; k++)
-					{
-						if (data[k] != indata[1+k])
-						return false;
-					}
-					return true;
+					return libFSSM::data_equal(data, indata + 1, datalen);
 				}
 				else
 				{
@@ -443,7 +438,7 @@ bool SSMP2communication_core::readFromInterface(unsigned int minbytes, unsigned 
 			std::cout << "SSMP2communication_core::readFromInterface():   error: failed to read from interface !\n";
 #endif
 			// NOTE: fail silent
-		}	
+		}
 		else if (read_buffer.size())
 		{
 			buffer->insert(buffer->end(), read_buffer.begin(), read_buffer.end());
@@ -468,18 +463,3 @@ char SSMP2communication_core::calcchecksum(char *message, unsigned int nrofbytes
 		cs += message[k];
 	return static_cast<char>(cs);
 }
-
-
-
-bool SSMP2communication_core::charcmp(char *chararray_a, char *chararray_b, unsigned int len)
-{
-	unsigned int k;
-	for (k=0; k<len; k++)
-	{
-		if (chararray_a[k] != chararray_b[k])
-		return false;
-	}
-	return true;
-}
-
-

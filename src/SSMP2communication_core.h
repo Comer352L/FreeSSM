@@ -65,8 +65,6 @@ private:
 	bool receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer);
 	bool readFromInterface(unsigned int minbytes, unsigned int timeout, std::vector<char> *buffer);
 	char calcchecksum(char *message, unsigned int nrofbytes);
-	bool charcmp(char *chararray_a, char *chararray_b, unsigned int len);
-
 };
 
 

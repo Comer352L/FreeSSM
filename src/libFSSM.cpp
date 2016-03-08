@@ -228,7 +228,7 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 		}
 		else if (!formula.at(charindex).isDigit())
 		{
- 				if (charindex == formula.size()) return false;
+				if (charindex == formula.size()) return false;
 				if (!( (formula.at(charindex) == '.') && formula.at(charindex-1).isDigit() && formula.at(charindex+1).isDigit() ))
 					return false;
 		}
@@ -402,4 +402,19 @@ unsigned int libFSSM::parseUInt32BigEndian(const unsigned char* const data)
 unsigned int libFSSM::parseUInt32BigEndian(const char* const data)
 {
 	return parseUInt32BigEndian(reinterpret_cast<const unsigned char*>(data));
+}
+
+
+bool libFSSM::data_equal(const char * a, const char* b, const unsigned int len)
+{
+	// memcmp is like strcmp
+	return !memcmp(a, b, len);
+	/* // equivalent to:
+	for (unsigned int k=0; k<len; k++)
+	{
+		if (a[k] != b[k])
+			return false;
+	}
+	return true;
+	*/
 }

@@ -82,7 +82,7 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 {
 	bool ok = false;
 	unsigned int k = 0;
-	
+
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
 	{
 		return false;
@@ -165,14 +165,7 @@ bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char*
 		if (datawritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-			for (unsigned int k=0; k<datalen; k++)
-			{
-				if (_rec_buf[k] != data[k])
-				{
-					ok = false;
-					break;
-				}
-			}
+			ok = libFSSM::data_equal(_rec_buf, data, datalen);
 		}
 		else
 		{
@@ -539,7 +532,7 @@ TODO:
 */
 
 /*
-NOTE: 
+NOTE:
  - signal commError() is only emmited for permanent communication operations (success of single operation can be checked with the boolean return value)
  - for all write-operations (calls of SSMPcommunication_core-functions), we always read the bytes that were actually written (even if the public SSMPcommunication-functions are called with a NULL-pointer for the written data). Otherwise, a negative result in run() (op_success == false) could also mean that other data have been written...
  */
