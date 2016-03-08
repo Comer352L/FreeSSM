@@ -1202,10 +1202,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 			else
 			{
 				// Generate CAN-ID
-				processedData.push_back((_source_addr & 0xff000000) >> 24);
-				processedData.push_back((_source_addr & 0xff0000) >> 16);
-				processedData.push_back((_source_addr & 0xff00) >> 8);
-				processedData.push_back(_source_addr & 0xff);
+				libFSSM::push_back_UInt32BigEndian(processedData, _source_addr);
 				// Append data
 				processedData.insert(processedData.end(), data.begin(), data.end()); // NOTE: no padding bytes if header is off
 			}
@@ -1313,10 +1310,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 		else
 		{
 			// Generate CAN-ID
-			processedData.push_back((_source_addr & 0xff000000) >> 24);
-			processedData.push_back((_source_addr & 0xff0000) >> 16);
-			processedData.push_back((_source_addr & 0xff00) >> 8);
-			processedData.push_back(_source_addr & 0xff);
+			libFSSM::push_back_UInt32BigEndian(processedData, _source_addr);
 			// Append data (including padding bytes)
 			for (unsigned int l=1; l<datalines.size(); l++)
 				processedData.insert(processedData.end(), datalines.at(l).begin() + 1, datalines.at(l).end());

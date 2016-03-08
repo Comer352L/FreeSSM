@@ -363,3 +363,43 @@ std::string libFSSM::StrToMultiLineHexstr(const std::vector<unsigned char>& data
 {
 	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data.data()), data.size(), bytesperline, lineprefix);
 }
+
+
+void libFSSM::setUInt24BigEndian(char* data, const unsigned int value)
+{
+	data[0] = value >> 16;
+	data[1] = value >> 8;
+	data[2] = value;
+}
+
+
+void libFSSM::push_back_UInt32BigEndian(std::vector<char>& v, const unsigned int value)
+{
+	v.push_back(value >> 24);
+	v.push_back(value >> 16);
+	v.push_back(value >> 8);
+	v.push_back(value);
+}
+
+
+unsigned int libFSSM::parseUInt24BigEndian(const unsigned char* const data)
+{
+	return data[0] << 16 | data[1] << 8 | data[2];
+}
+
+unsigned int libFSSM::parseUInt24BigEndian(const char* const data)
+{
+	return parseUInt24BigEndian(reinterpret_cast<const unsigned char*>(data));
+}
+
+
+unsigned int libFSSM::parseUInt32BigEndian(const unsigned char* const data)
+{
+	// gcc -O2 will translate this to a single BSWAP instruction, supported since Intel 486
+	return data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+}
+
+unsigned int libFSSM::parseUInt32BigEndian(const char* const data)
+{
+	return parseUInt32BigEndian(reinterpret_cast<const unsigned char*>(data));
+}

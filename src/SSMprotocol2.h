@@ -28,6 +28,7 @@
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
 #include "SSM2definitionsInterface.h"
+#include "libFSSM.h"
 
 
 

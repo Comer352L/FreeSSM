@@ -261,30 +261,24 @@ bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
 
 bool SSMprotocol2::getVIN(QString *VIN)
 {
-	char vin[18] = {0,};
+	const int VINlength = 17;
+	static const unsigned int dataaddr[3] = {0xDA, 0xDB, 0xDC};
+	char vin[VINlength + 1] = {0,};
 	char vinaddrdata[4] = {0,};
-	unsigned int dataaddr[3];
-	dataaddr[0] = 0xDA;
-	dataaddr[1] = 0xDB;
-	dataaddr[2] = 0xDC;
-	unsigned int vinstartaddr = 0;
-	unsigned int vinaddr[17] = {0,};
-	unsigned int k = 0;
+	unsigned int vinaddr[VINlength] = {0,};
 	if (!_has_VINsupport)
 		return false;
 	VIN->clear();
 	if (_SSMP2com->readMultipleDatabytes(0x0, dataaddr, 3, vinaddrdata))
 	{
-		vinstartaddr = (65536 * static_cast<unsigned char>(vinaddrdata[0]))
-				+ (256 * static_cast<unsigned char>(vinaddrdata[1]))
-				+ (static_cast<unsigned char>(vinaddrdata[2]));
-		for (k=1; k<=17; k++)
-			vinaddr[k-1] = vinstartaddr+k-1;
-		if (_SSMP2com->readMultipleDatabytes(0x0, vinaddr, 17, vin))
+		vinaddr[0] = libFSSM::parseUInt24BigEndian(vinaddrdata);
+		for (unsigned int k=1; k<VINlength; k++)
+			vinaddr[k] = vinaddr[0] + k;
+		if (_SSMP2com->readMultipleDatabytes(0x0, vinaddr, VINlength, vin))
 		{
 			if (validateVIN(vin))
 			{
-				vin[17]='\x0';
+				vin[VINlength]='\x0';
 				*VIN = static_cast<QString>(vin);
 			}
 			return true;

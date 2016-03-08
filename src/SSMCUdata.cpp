@@ -48,18 +48,15 @@ void SSMCUdata::from_SSMP2(const char* const data, const std::size_t size)
 
 	if (size < offset_SYS_ID + SYS_ID_size)
 		return;
-	SYS_ID.resize(SYS_ID_size);
-	std::copy(data + offset_SYS_ID, data + offset_SYS_ID + SYS_ID_size, SYS_ID.begin());
+	SYS_ID.assign(data + offset_SYS_ID, data + offset_SYS_ID + SYS_ID_size);
 
 	if (size < offset_ROM_ID + ROM_ID_size)
 		return;
-	ROM_ID.resize(ROM_ID_size);
-	std::copy(data + offset_ROM_ID, data + offset_ROM_ID + ROM_ID_size, ROM_ID.begin());
+	ROM_ID.assign(data + offset_ROM_ID, data + offset_ROM_ID + ROM_ID_size);
 
 	if (size <= offset_flagbytes)
 		return;
-	flagbytes.resize(size - offset_flagbytes);
-	std::copy(data + offset_flagbytes, data + size, flagbytes.begin());
+	flagbytes.assign(data + offset_flagbytes, data + size);
 }
 
 
@@ -72,13 +69,11 @@ void SSMCUdata::from_SSMP1(const char* const data, const std::size_t size)
 
 	if (size < offset_SYS_ID + SYS_ID_size)
 		return;
-	SYS_ID.resize(SYS_ID_size);
-	std::copy(data + offset_SYS_ID, data + offset_SYS_ID + SYS_ID_size, SYS_ID.begin());
+	SYS_ID.assign(data + offset_SYS_ID, data + offset_SYS_ID + SYS_ID_size);
 
 	if (size <= offset_flagbytes)
 		return;
-	flagbytes.resize(size - offset_flagbytes);
-	std::copy(data + offset_flagbytes, data + size, flagbytes.begin());
+	flagbytes.assign(data + offset_flagbytes, data + size);
 }
 
 

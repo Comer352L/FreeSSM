@@ -28,7 +28,7 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 
 
 
-bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data)
+bool SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, char *data)
 {
 	if ((dataaddr > 0xffffff) || (nrofbytes == 0))
 		return false;
@@ -48,15 +48,12 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 	char indata[255] = {0,};
 	unsigned char indatalen = 0;
 	char querymsg[6] = {0,};
-	unsigned int k;
 	// SETUP MESSAGE (without Header+Checksum):
 	querymsg[0] = '\xA0';
 	querymsg[1] = padaddr;
-	querymsg[2] = (dataaddr & 0xffffff) >> 16;
-	querymsg[3] = (dataaddr & 0xffff) >> 8;
-	querymsg[4] = dataaddr & 0xff;
+	libFSSM::setUInt24BigEndian(querymsg + 2, dataaddr);
 	querymsg[5] = nrofbytes - 1;
-	// SEND MESSAGE + RECIEVE ANSWER:
+	// SEND MESSAGE + RECEIVE ANSWER:
 	if (SndRcvMessage(ecuaddr, querymsg, 6, indata, &indatalen))
 	{
 		// CHECK DATA:
@@ -65,8 +62,7 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 			if (indata[0] == '\xE0')
 			{
 				// EXTRACT DATA:
-				for (k=0; k<nrofbytes; k++)
-					data[k] = indata[1+k];
+				std::copy(indata + 1, indata + 1 + nrofbytes, data);
 				return true;
 			}
 		}
@@ -76,7 +72,7 @@ bool SSMP2communication_core::ReadDataBlock(unsigned int ecuaddr, char padaddr, 
 
 
 
-bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int *dataaddr, unsigned int datalen, char *data)
+bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr[], const unsigned int datalen, char* data)
 {
 	if (datalen == 0)
 		return false;
@@ -91,24 +87,15 @@ bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char p
 	querymsg[0] = '\xA8';
 	querymsg[1] = padaddr;
 	for (k=0; k<datalen; k++)
-	{
-		querymsg[2+k*3] = (dataaddr[k] & 0xffffff) >> 16;
-		querymsg[3+k*3] = (dataaddr[k] & 0xffff) >> 8;
-		querymsg[4+k*3] = dataaddr[k] & 0xff;
-	}
-	// SEND MESSAGE + RECIEVE ANSWER:
+		libFSSM::setUInt24BigEndian(querymsg + 2 + k*3, dataaddr[k]);
+	// SEND MESSAGE + RECEIVE ANSWER:
 	if (SndRcvMessage(ecuaddr, querymsg, (2+3*datalen), indata, &indatalen))
 	{
 		// CHECK DATA:
-		if (indatalen == (datalen+1))
-		{
-			if (indata[0] == '\xE8')
-			{
-				// EXTRACT DATA:
-				for (k=0; k<datalen; k++)
-					data[k] = indata[1+k];
-				return true;
-			}
+		if (indatalen == datalen+1 && indata[0] == '\xE8') {
+			// EXTRACT DATA:
+			std::copy(indata + 1, indata + 1 + datalen, data);
+			return true;
 		}
 	}
 	return false;
@@ -116,7 +103,7 @@ bool SSMP2communication_core::ReadMultipleDatabytes(unsigned int ecuaddr, char p
 
 
 
-bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten)
+bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const char *data, const unsigned int datalen, char* datawritten)
 {
 	if ((dataaddr > 0xffffff) || (datalen == 0))
 		return false;
@@ -125,15 +112,11 @@ bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int 
 	char indata[252] = {0,};
 	unsigned char indatalen = 0;
 	char writemsg[255] = {0,};
-	unsigned int k = 0;
 	// SETUP MESSAGE:
 	writemsg[0] = '\xB0';
-	writemsg[1] = (dataaddr & 0xffffff) >> 16;
-	writemsg[2] = (dataaddr & 0xffff) >> 8;
-	writemsg[3] = dataaddr & 0xff;
-	for (k=0; k<datalen; k++)
-		writemsg[4+k] = data[k];
-	// SEND MESSAGE + RECIEVE ANSWER:
+	libFSSM::setUInt24BigEndian(writemsg + 1, dataaddr);
+	std::copy(data, data + datalen, writemsg + 4);
+	// SEND MESSAGE + RECEIVE ANSWER:
 	if (SndRcvMessage(ecuaddr, writemsg, (4+datalen), indata, &indatalen))
 	{
 		// CHECK DATA:
@@ -144,7 +127,7 @@ bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int 
 				if (datawritten == NULL)
 				{
 					// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-					for (k=0; k<datalen; k++)
+					for (unsigned int k=0; k<datalen; k++)
 					{
 						if (data[k] != indata[1+k])
 						return false;
@@ -154,8 +137,7 @@ bool SSMP2communication_core::WriteDataBlock(unsigned int ecuaddr, unsigned int 
 				else
 				{
 					// EXTRACT AND RETURN WRITTEN DATA:
-					for (k=0; k<datalen; k++)
-						datawritten[k] = indata[1+k];
+					std::copy(indata + 1, indata + 1 + datalen, datawritten);
 					return true;
 					// NOTE: NECESSARY FOR SOME OPERATIONS, WHERE THE ACTUALLY WRITTEN DATA IS DIFFERENT TO THE DATA SENT OUT
 				}
@@ -175,11 +157,9 @@ bool SSMP2communication_core::WriteDatabyte(unsigned int ecuaddr, unsigned int d
 	char writemsg[5] = {0,};
 	// SETUP MESSAGE (without Header+Checksum):
 	writemsg[0] = '\xB8';
-	writemsg[1] = (dataaddr & 0xffffff) >> 16;
-	writemsg[2] = (dataaddr & 0xffff) >> 8;
-	writemsg[3] = dataaddr & 0xff;
+	libFSSM::setUInt24BigEndian(writemsg + 1, dataaddr);
 	writemsg[4] = databyte;
-	// SEND MESSAGE + RECIEVE ANSWER:
+	// SEND MESSAGE + RECEIVE ANSWER:
 	if (SndRcvMessage(ecuaddr, writemsg, 5, indata, &indatalen))
 	{
 		// CHECK DATA:
@@ -215,16 +195,11 @@ bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *cuData, unsi
 	*cuDataSize = 0;
 	char reqmsg = 0;
 	// Request command byte
-	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-	{
-		reqmsg = '\xBF';
+	switch(_diagInterface->protocolType()) {
+	case AbstractDiagInterface::protocol_SSM2_ISO14230: reqmsg = '\xBF'; break;
+	case AbstractDiagInterface::protocol_SSM2_ISO15765:	reqmsg = '\xAA'; break;
+	default: return false;
 	}
-	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
-	{
-		reqmsg = '\xAA';
-	}
-	else
-		return false;
 
 	// SEND MESSAGE + RECEIVE ANSWER:
 	char indata[255] = {0,};
@@ -240,9 +215,8 @@ bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *cuData, unsi
 			if (((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (indata[0] == '\xFF'))
 				|| ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (indata[0] == '\xEA')))
 			{
-				const std::size_t size = indatalen - 1;
-				std::copy(&indata[1], &indata[size + 1], cuData);
-				*cuDataSize = size;
+				std::copy(indata + 1, indata + indatalen, cuData);
+				*cuDataSize = indatalen - 1;
 				return true;
 			}
 		}
@@ -252,42 +226,42 @@ bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *cuData, unsi
 
 
 
-bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen)
+bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const char *outdata, const unsigned char outdatalen, char *indata, unsigned char *indatalen)
 {
 	if (_diagInterface == NULL) return false;
 	if (outdatalen < 1) return false;
-	std::vector<char> msg_buffer;
-	unsigned int k = 0;
+	std::vector<char> msg_buffer(outdatalen + 5);
+	msg_buffer.resize(0);
 	// SETUP COMPLETE MESSAGE:
 	// Protocol-header
-	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-	{
-	  	if (ecuaddr > 0xff) return false;
+	switch(_diagInterface->protocolType()) {
+	case AbstractDiagInterface::protocol_SSM2_ISO14230:
+		if (ecuaddr > 0xff) return false;
+		// header, 4 bytes
 		msg_buffer.push_back('\x80');
 		msg_buffer.push_back(ecuaddr);
 		msg_buffer.push_back('\xF0');
 		msg_buffer.push_back(static_cast<char>(outdatalen));
-	}
-	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
-	{
-		msg_buffer.push_back((ecuaddr & 0xffffffff) >> 24);
-		msg_buffer.push_back((ecuaddr & 0xffffff) >> 16);
-		msg_buffer.push_back((ecuaddr & 0xffff) >> 8);
-		msg_buffer.push_back(ecuaddr & 0xff);
-	}
-	else
+		break;
+	case AbstractDiagInterface::protocol_SSM2_ISO15765:
+		// CAN-ID, 4 bytes
+		libFSSM::push_back_UInt32BigEndian(msg_buffer, ecuaddr);
+		break;
+	default:
 		return false;
+	}
 	// Message:
-	for (k=0; k<outdatalen; k++)
-		msg_buffer.push_back(outdata[k]);
+	msg_buffer.insert(msg_buffer.end(), outdata, outdata + outdatalen);
 	// Checksum (SSM2 over ISO-14230 only):
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		msg_buffer.push_back( calcchecksum(&msg_buffer.at(0), 4 + outdatalen) );
+
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:\n";
 	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
+
 	// SEND MESSAGE:
 	if (!_diagInterface->write(msg_buffer))
 	{
@@ -308,19 +282,28 @@ bool SSMP2communication_core::SndRcvMessage(unsigned int ecuaddr, char *outdata,
 		if (!receiveReplyISO15765(ecuaddr, &msg_buffer))
 			return false;
 	}
+
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:\n";
 	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
 	// MESSAGE LENGTH:
-	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+	switch(_diagInterface->protocolType()) {
+	case AbstractDiagInterface::protocol_SSM2_ISO14230:
+		// ignore SSM2_header[4] and checksum[1]
+		std::copy(msg_buffer.begin() + 4, msg_buffer.end() - 1, indata);
 		*indatalen = msg_buffer.size() - 4 - 1;
-	else
+		break;
+	case AbstractDiagInterface::protocol_SSM2_ISO15765:
+		// ignore CAN-ID[4]
+		std::copy(msg_buffer.begin() + 4, msg_buffer.end(), indata);
 		*indatalen = msg_buffer.size() - 4;
-	// EXTRACT AND RETURN DATA:
-	for (k=0; k<*indatalen; k++)
-		indata[k] = msg_buffer.at(4+k);
+		break;
+	default:
+		*indatalen = 0;
+		return false;
+	}
 	return true;
 }
 
@@ -432,13 +415,11 @@ bool SSMP2communication_core::receiveReplyISO15765(unsigned int ecuaddr, std::ve
 	// READ MESSAGE
 	if (!readFromInterface(5, SSM2_READ_TIMEOUT, msg_buffer)) // NOTE: we always get complete messages from the interfaces (as long as minbytes is > 0) !
 		return false;
+
 	// CHECK CAN-IDENTIFIER (IF POSSIBLE)
 	if (ecuaddr == (ecuaddr & 0x7EF)) // ISO15765-4 11 bit CAN IDs for physical addressing
 	{
-		unsigned int msgaddr =  ((static_cast<unsigned char>(msg_buffer->at(0)) << 24)
-				       + (static_cast<unsigned char>(msg_buffer->at(1)) << 16)
-				       + (static_cast<unsigned char>(msg_buffer->at(2)) << 8)
-				       +  static_cast<unsigned char>(msg_buffer->at(3)));
+		unsigned int msgaddr = libFSSM::parseUInt32BigEndian(&msg_buffer->at(0));
 		if (msgaddr != (ecuaddr + 8))
 			return false;
 	}
@@ -482,10 +463,9 @@ bool SSMP2communication_core::readFromInterface(unsigned int minbytes, unsigned 
 
 char SSMP2communication_core::calcchecksum(char *message, unsigned int nrofbytes)
 {
-	unsigned short int cs = 0;
-	unsigned int k;
-	for (k=0; k<nrofbytes; k++)
-		cs = (cs + message[k]) & 0xff;
+	unsigned char cs = 0;
+	for (unsigned int k=0; k<nrofbytes; k++)
+		cs += message[k];
 	return static_cast<char>(cs);
 }
 

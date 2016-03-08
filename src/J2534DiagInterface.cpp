@@ -516,7 +516,6 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 		}
 		else
 			return false;
-		buffer->clear();
 		unsigned long rxNumMsgs = 1;
 		unsigned long timeout = 0;	// return immediately
 		// Read all available messages:
@@ -527,8 +526,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "PassThruReadMsgs(): received J2534-message with protocol id 0x" << std::hex << rx_msg.ProtocolID
-				          << ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n";
-				std::cout << libFSSM::StrToMultiLineHexstr(rx_msg.Data, rx_msg.DataSize);
+					<< ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n"
+					<< libFSSM::StrToMultiLineHexstr(rx_msg.Data, rx_msg.DataSize);
 #endif
 				if (rx_msg.RxStatus & TX_MSG_TYPE)
 				{
@@ -576,15 +575,15 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 					else if (rx_msg.ExtraDataIndex < rx_msg.DataSize)
 					{
 						if ((_j2534->libraryAPIversion() == J2534_API_v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
-						    ((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
+							((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
 							std::cout << "WARNING: ExtraDataIndex is not smaller than expected !\n";
 						/* NOTE:
-						 * - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM 
+						 * - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
 						 * - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
 					}
 #endif
-					for (unsigned int k=0; k<rx_msg.DataSize; k++)
-						buffer->push_back(rx_msg.Data[k]);
+					buffer->reserve(rx_msg.DataSize);
+					buffer->assign(rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
 				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
@@ -609,19 +608,18 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
 		memset(&tx_msg, 0, sizeof(tx_msg));
-		if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-		{ 
+		switch(protocolType()) {
+		case AbstractDiagInterface::protocol_SSM2_ISO14230:
 			tx_msg.ProtocolID = ISO9141;
-		}
-		else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
-		{
+			break;
+		case AbstractDiagInterface::protocol_SSM2_ISO15765:
 			tx_msg.ProtocolID = ISO15765;
 			tx_msg.TxFlags = ISO15765_FRAME_PAD;
-		}
-		else
+			break;
+		default:
 			return false;
-		for (unsigned int k=0; k<buffer.size(); k++)
-			tx_msg.Data[k] = buffer[k];
+		}
+		std::copy(buffer.begin(), buffer.end(), tx_msg.Data);
 		tx_msg.DataSize = buffer.size();
 		unsigned long txNumMsgs = 1;
 		unsigned long timeout = 1000;	// wait until message has been transmitted

@@ -432,7 +432,6 @@ void FreeSSM::dumpCUdata()
 	QFile dumpfile;
 	SSMCUdata ssmCUdata;
 	std::string hexstr = "";
-	unsigned char k = 0;
 
 	unsigned int dataaddr[VINlength] = {0};
 	char data[VINlength] = {0};
@@ -513,10 +512,8 @@ void FreeSSM::dumpCUdata()
 				hexstr.push_back('\n');
 				dumpfile.write(hexstr.data(), hexstr.length());
 
-				dataaddr[0] = (65536 * static_cast<unsigned char>(data[0]))
-						+ (256 * static_cast<unsigned char>(data[1]))
-						+ (static_cast<unsigned char>(data[2]));
-				for (k=1; k<VINlength; k++)
+				dataaddr[0] = libFSSM::parseUInt24BigEndian(data);
+				for (unsigned char k=1; k<VINlength; k++)
 					dataaddr[k] = dataaddr[0]+k;
 				if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, VINlength, data))
 				{

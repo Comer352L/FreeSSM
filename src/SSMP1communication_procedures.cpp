@@ -302,7 +302,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 						return true;
 					}
 				}
-				else	// may happen, if we got an overflow of the drivers recieve-buffer
+				else	// may happen, if we got an overflow of the drivers receive-buffer
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)

@@ -23,6 +23,7 @@
 
 #include "AbstractDiagInterface.h"
 #include "SSMCUdata.h"
+#include "libFSSM.h"
 #ifdef __WIN32__
     #include "windows\TimeM.h"
     #define waitms(x) Sleep(x)
@@ -35,7 +36,6 @@
 #endif
 #ifdef __FSSM_DEBUG__
     #include <iostream>
-    #include "libFSSM.h"
 #endif
 
 
@@ -51,8 +51,8 @@ public:
 	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
 	bool ReadDataBlock(unsigned int ecuaddr, char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
-	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, unsigned int *dataaddr, unsigned int datalen, char *data);
-	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten = NULL);
+	bool ReadMultipleDatabytes(unsigned int ecuaddr, char padaddr, const unsigned int dataaddr[], unsigned int datalen, char* data);
+	bool WriteDataBlock(unsigned int ecuaddr, unsigned int dataaddr, const char *data, unsigned int datalen, char *datawritten = NULL);
 	bool WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten = NULL);
 	bool GetCUdata(unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize);
 
@@ -60,7 +60,7 @@ protected:
 	AbstractDiagInterface *_diagInterface;
 
 private:
-	bool SndRcvMessage(unsigned int ecuaddr, char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
+	bool SndRcvMessage(unsigned int ecuaddr, const char *outdata, unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	bool receiveReplyISO14230(unsigned int ecuaddr, unsigned int outmsg_len, std::vector<char> *msg_buffer);
 	bool receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer);
 	bool readFromInterface(unsigned int minbytes, unsigned int timeout, std::vector<char> *buffer);
