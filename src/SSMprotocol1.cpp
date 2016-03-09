@@ -515,8 +515,8 @@ bool SSMprotocol1::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
-	char databyte = static_cast<char>(pow(2, _actuators.at(actuatorTestIndex).bitadr - 1));
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitadr - 1));
 	// Stop all actuator tests:
 	for (k=0; k<_allActByteAddr.size(); k++)
 	{

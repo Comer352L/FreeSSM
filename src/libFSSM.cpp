@@ -71,7 +71,7 @@ bool libFSSM::raw2scaledByDirectAssociation(unsigned int rawValue, QString scale
 bool libFSSM::raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue)
 {
 	if (scaleformula.size() < 1) return false;
-	*scaledValue = rawValue;
+	double value_in = rawValue;
 	// CHECK IF FORMULA BEGINS WITH A VALID DATA TYPE MODIFIER:
 	if (scaleformula.startsWith("s", Qt::CaseInsensitive))
 	{
@@ -91,12 +91,12 @@ bool libFSSM::raw2scaledByCalculation(unsigned int rawValue, QString scaleformul
 		{
 			return false;
 		}
-		// INTERPRETE AS SIGNED:
-		if (rawValue > pow(2,bitsize-1) - 1)	// if MSB is set
-			*scaledValue = rawValue - pow(2, bitsize); // substract (half of range + 1)
+		// INTERPRET AS SIGNED:
+		if ( rawValue >= static_cast<unsigned int>(1 << (bitsize - 1)) )	// if MSB is set
+			value_in = static_cast<int>(rawValue) - (1 << bitsize); // substract (half of range + 1)
 	}
 	// SCALE:
-	return scale(*scaledValue, scaleformula, false, scaledValue);
+	return scale(value_in, scaleformula, false, scaledValue);
 }
 
 
@@ -179,7 +179,7 @@ bool libFSSM::scaled2rawByCalculation(double scaledValue, QString scaleformula, 
 	{
 		// CONVERT TO UNSIGNED RAW VALUE:
 		if (wval < 0)
-			wval += pow(2, bitsize);
+			wval += 1 << bitsize;
 	}
 	// PROCESS/CONVERT/VALIDATE SCALED VALUE:
 	wval = round(wval);

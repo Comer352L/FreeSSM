@@ -328,15 +328,12 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 
 void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
 {
-	unsigned int k = 0;
-	QString ukdctitle;
-
 	DC->clear();
 	DCdescription->clear();
 	if (DCrawdata == 0) return;
 	// Search definitions:
 	dc_defs_dt def;
-	for (k=0; k<DCdefs.size(); k++)
+	for (size_t k=0; k<DCdefs.size(); k++)
 	{
 		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteadr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteadr))
 		{
@@ -347,7 +344,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std
 	// Assign codes and descriptions:
 	for (unsigned char flagbit=0; flagbit<8; flagbit++)
 	{
-		if (DCrawdata & static_cast<char>(pow(2, flagbit)))
+		if (DCrawdata & static_cast<char>(1 << flagbit))
 		{
 			// Check if DC is to be ignored:
 			// NOTE: DCs with existing definition and empty code- and title-fields must be ignored !

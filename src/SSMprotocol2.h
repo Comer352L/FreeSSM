@@ -23,7 +23,6 @@
 
 
 #include <vector>
-#include <math.h>
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
@@ -42,7 +41,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(CUtype_dt CU);
 	CUsetupResult_dt setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
-	protocol_dt protocolType() { return SSM2; };
+	protocol_dt protocolType() { return SSM2; }
 	bool hasVINsupport(bool *VINsup);
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);

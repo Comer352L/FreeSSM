@@ -536,7 +536,6 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 	bool ok = false;
 	bool testmode = false;
 	bool running = false;
-	unsigned char k = 0;
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
 	// Validate selected test:
@@ -553,10 +552,10 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
-	char databyte = static_cast<char>(pow(2, _actuators.at(actuatorTestIndex).bitadr - 1));
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitadr - 1));
 	// Stop all actuator tests:
-	for (k=0; k<_allActByteAddr.size(); k++)
+	for (size_t k=0; k<_allActByteAddr.size(); k++)
 	{
 		if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{
@@ -583,14 +582,13 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 
 bool SSMprotocol2::stopActuatorTesting()
 {
-	unsigned char k = 0;
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;
 	if (_state == state_ActTesting)
 	{
 		if (_SSMP2com->stopCommunication())
 		{
 			// Stop all actuator tests:
-			for (k=0; k<_allActByteAddr.size(); k++)
+			for (size_t k=0; k<_allActByteAddr.size(); k++)
 			{
 				if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 				{
@@ -614,7 +612,6 @@ bool SSMprotocol2::stopAllActuators()
 	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol
 	// => When switching the cars ignition on (with engine off) while test mode connector is connected,
 	//    some actuator tests are started automatically
-	unsigned char k = 0;
 	bool ok = false;
 	bool testmode = false;
 	bool enginerunning = false;
@@ -631,7 +628,7 @@ bool SSMprotocol2::stopAllActuators()
 	if (!ok || enginerunning)
 		return false;
 	// Stop all actuator tests:
-	for (k=0; k<_allActByteAddr.size(); k++)
+	for (size_t k=0; k<_allActByteAddr.size(); k++)
 	{
 		if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
 		{

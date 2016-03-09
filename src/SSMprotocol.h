@@ -29,7 +29,6 @@
 #include <QEventLoop>
 #include <string>
 #include <vector>
-#include <cmath>
 #include <limits.h>
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"

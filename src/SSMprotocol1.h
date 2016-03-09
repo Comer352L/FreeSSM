@@ -24,7 +24,6 @@
 
 #include <string>
 #include <vector>
-#include <math.h>
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
@@ -42,7 +41,7 @@ public:
 	~SSMprotocol1();
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(CUtype_dt CU);
-	protocol_dt protocolType() { return SSM1; };
+	protocol_dt protocolType() { return SSM1; }
 	bool hasClearMemory(bool *CMsup);
 	bool getSupportedDCgroups(int *DCgroups);
 	// COMMUNICATION BASED FUNCTIONS:

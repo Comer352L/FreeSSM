@@ -444,7 +444,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			if ((bitaddr < 1) || (bitaddr > 8))
 				continue;
 			// Search for duplicate DTCs:
-			if (assignedBits == (assignedBits | (char)pow(2, bitaddr-1)))
+			if (assignedBits == (assignedBits | static_cast<char>(1 << (bitaddr-1))))
 			{
 				// Display DTC as UNKNOWN
 				dtcblock.code[bitaddr-1] = "???";
@@ -500,7 +500,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			if (str == NULL)
 				continue;
 			dtcblock.title[bitaddr-1] = QString( str );
-			assignedBits |= (char)pow(2, bitaddr-1);
+			assignedBits |= static_cast<char>(1 << (bitaddr-1));
 		}
 		// Add DTC-block to the list:
 		dcs->push_back(dtcblock);
