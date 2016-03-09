@@ -398,7 +398,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 		// Disable skipping of sending data after connecting
 		if (_if_model == if_model_AGV4000B)
 		{
-			reply = writeRead("ATONR0");	
+			reply = writeRead("ATONR0");
 #ifdef __FSSM_DEBUG__
 			if (reply != "OK")
 				std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable skipping of sending data after connecting !\n";
@@ -425,7 +425,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 
 bool ATcommandControlledDiagInterface::isConnected()
 {
-	return (_port && _connected); 
+	return (_port && _connected);
 }
 
 
@@ -608,7 +608,7 @@ void ATcommandControlledDiagInterface::run()
 							 */
 						}
 						// Elimiate preceeding CR and LF:
-						/* NOTE: This is not only to delete CR and LF between echo and reply 
+						/* NOTE: This is not only to delete CR and LF between echo and reply
 						   In some cases, the interface sends replies with preceeding CR (+LF) (e.g. ELM327: reply to command ATD) */
 						while (rec_buffer.size() && ((rec_buffer.at(0) == '\r') || (rec_buffer.at(0) == '\n')))
 							rec_buffer.erase(rec_buffer.begin(), rec_buffer.begin() + 1);
@@ -640,7 +640,7 @@ void ATcommandControlledDiagInterface::run()
 						// Extract message
 						/* NOTE: We don't extract empty messages !
 						 * This would make things much more difficult and so far there is no known situation where an interface
-						 * sends such a message (althought there is at least one case where the interface expects to receive an 
+						 * sends such a message (althought there is at least one case where the interface expects to receive an
 						 * empty message from us (ELM327/329 baud rate switching procedure) !)										 */
 						if (lend_pos != std::string::npos)
 						{
@@ -729,7 +729,7 @@ std::string ATcommandControlledDiagInterface::writeRead(std::string command, uns
 			_RxQueue.erase(_RxQueue.begin(), _RxQueue.begin()+1);
 		}
 		_mutex.unlock();
-	} while ((time.elapsed() < timeout) && !reply.size());	
+	} while ((time.elapsed() < timeout) && !reply.size());
 	if (!reply.size())
 	{
 		_mutex.lock();
@@ -1085,7 +1085,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 	   BUS INIT: ...OK					slow init (triggert with command ATSI)
 	   BUS INIT: ERROR					fast init
 	   BUS INIT: OK						fast init (triggert with command ATFI)
-	   SEARCHING...[NL]UNABLE TO CONNECT		
+	   SEARCHING...[NL]UNABLE TO CONNECT
 	   SEARCHING...[NL][DATA]
 	*/
 	if ((lines.at(0).find("BUS INIT: ") == 0) || (lines.at(0).find("SEARCHING") == 0))
@@ -1147,10 +1147,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 				if ((static_cast<unsigned char>(data.at(0)) != 0x80) || (static_cast<unsigned char>(data.at(1)) != _source_addr) || (static_cast<unsigned char>(data.at(2)) != _target_addr) || (static_cast<unsigned char>(data.at(3)) != (data.size() - 4 - 1)))
 					return std::vector<char>();	// Error: invalid header
 				// Validate checksum
-				unsigned short int cs = 0;
-				for (unsigned int k=0; k<(data.size()-1); k++)
-					cs = (cs + data.at(k)) & 0xff;
-				if (cs != static_cast<unsigned char>(data.back()))
+				if (libFSSM::calcchecksum(data.data(), data.size() - 1) != data.back())
 					return std::vector<char>();	// Error: invalid checksum
 			}
 			else if (protocolType() == protocol_SSM2_ISO15765)
@@ -1180,10 +1177,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 				// Append data
 				processedData.insert(processedData.end(), data.begin(), data.end());
 				// Append checksum
-				unsigned short int cs = 0;
-				for (unsigned int k=0; k<processedData.size(); k++)
-					cs = (cs + processedData.at(k)) & 0xff;
-				processedData.push_back(static_cast<char>(cs));
+				processedData.push_back(libFSSM::calcchecksum(processedData.data(), processedData.size()));
 			}
 			// NOTE: no padding bytes for ISO14230
 		}
@@ -1258,7 +1252,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 		 *       but ISO-15765 says that messages have to arrive in the right order (at least the consecutive frames)
 		 *       ALSO: there are only 4 bits reserved for numbering of the consecutive frames,
 		 *	       but more than 15 consecutive frames are possible !				*/
-		// NOTE: DO INSTEAD: check first bytes 
+		// NOTE: DO INSTEAD: check first bytes
 		if (_headers_enabled)
 		{
 			if (datalines.at(0).size() < 10)	// NOTE: always 10 characters per line
@@ -1332,7 +1326,7 @@ std::vector<char> ATcommandControlledDiagInterface::processRecData(std::string d
 		return std::vector<char>();
 
 	return processedData;
-	
+
 	/* NOTE: there's a big potential for optimizations, but we want to keep the code readable (and understandable) */
 }
 
@@ -1513,11 +1507,11 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   interface does not support custom baud rates.\n";
 			return false;
 		}
-		else	
+		else
 			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   warning: command ATBRT failed !\n";
 	}
 #endif
-	// Send baud rate change request to interface 
+	// Send baud rate change request to interface
 	/* NOTE: PROBLEM: interface does not terminate messages with an empty line during baud rate switching process,
 	 * so message extraction in run() doesn't work and writeRead() fails
 	 * We could modify run() to temporarily extract single lines as messages, but that seems to be overkill. */
@@ -1745,7 +1739,7 @@ std::vector<char> ATcommandControlledDiagInterface::hexStrToData(std::string hex
 				data.push_back(byteval);
 				byteval = 0;
 			}
-		}		
+		}
 	}
 	return data;
 }

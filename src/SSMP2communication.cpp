@@ -24,18 +24,16 @@
 SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
-
-	unsigned int k = 0;
 	_CommOperation = comOp_noCom;
 	_result = false;
 	_abort = false;
 	_errRetries = errRetries;
 	_padaddr = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _dataaddr[k] = 0;
 	_datalen = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _rec_buf[k] = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _snd_buf[k] = 0;
 	_delay = 0;
+	std::fill_n(_dataaddr, SSMP2COM_BUFFER_SIZE, 0);
+	std::fill_n(_rec_buf, SSMP2COM_BUFFER_SIZE, 0);
+	std::fill_n(_snd_buf, SSMP2COM_BUFFER_SIZE, 0);
 }
 
 
@@ -81,7 +79,6 @@ bool SSMP2communication::getCUdata(SSMCUdata& cuData)
 bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data)
 {
 	bool ok = false;
-	unsigned int k = 0;
 
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
 	{
@@ -107,8 +104,7 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 	if (ok)
 	{
 		// Assign received data:
-		for (k=0; k<nrofbytes; k++)
-			data[k] = _rec_buf[k];
+		std::copy(_rec_buf, _rec_buf + nrofbytes, data);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;

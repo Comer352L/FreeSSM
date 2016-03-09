@@ -22,17 +22,18 @@
 
 
 #ifdef __WIN32__
-    #include "windows\TimeM.h"
-    #define waitms(x) Sleep(x)
+	#include "windows\TimeM.h"
+	#define waitms(x) Sleep(x)
 #elif defined __linux__
-    #include <unistd.h>
-    #include "linux/TimeM.h"
-    #define waitms(x) usleep(1000*x)
+	#include <unistd.h>
+	#include "linux/TimeM.h"
+	#define waitms(x) usleep(1000*x)
 #else
-    #error "Operating system not supported !"
+	#error "Operating system not supported !"
 #endif
 #ifdef __FSSM_DEBUG__
-    #include <iostream>
+	#include "libFSSM.h"
+	#include <iostream>
 #endif
 #include <vector>
 #include "AbstractDiagInterface.h"

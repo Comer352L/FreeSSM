@@ -82,12 +82,12 @@ bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, 
 	char indata[255] = {0,};
 	unsigned char indatalen = 0;
 	char querymsg[255] = {0,};
-	unsigned int k = 0;
 	// SETUP MESSAGE:
 	querymsg[0] = '\xA8';
 	querymsg[1] = padaddr;
-	for (k=0; k<datalen; k++)
+	for (unsigned int k=0; k<datalen; k++) {
 		libFSSM::setUInt24BigEndian(querymsg + 2 + k*3, dataaddr[k]);
+	}
 	// SEND MESSAGE + RECEIVE ANSWER:
 	if (SndRcvMessage(ecuaddr, querymsg, (2+3*datalen), indata, &indatalen))
 	{
@@ -249,7 +249,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 	msg_buffer.insert(msg_buffer.end(), outdata, outdata + outdatalen);
 	// Checksum (SSM2 over ISO-14230 only):
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-		msg_buffer.push_back( calcchecksum(&msg_buffer.at(0), 4 + outdatalen) );
+		msg_buffer.push_back( libFSSM::calcchecksum(msg_buffer.data(), msg_buffer.size()) );
 
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
@@ -354,7 +354,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 		return false;
 	}
 	// CHECK MESSAGE CHECKSUM:
-	if (msg_buffer->at(msglen-1) != calcchecksum(&msg_buffer->at(0), msglen - 1))
+	if (msg_buffer->at(msglen-1) != libFSSM::calcchecksum(&msg_buffer->at(0), msglen - 1))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#1) !\n";
@@ -393,7 +393,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 		return false;
 	}
 	// CHECK CHECKSUM:
-	if (msg_buffer->back() != calcchecksum(&msg_buffer->at(0), (msg_buffer->size() - 1)))
+	if (msg_buffer->back() != libFSSM::calcchecksum(msg_buffer->data(), msg_buffer->size() - 1))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#2) !\n";
@@ -452,14 +452,4 @@ bool SSMP2communication_core::readFromInterface(unsigned int minbytes, unsigned 
 		return false;
 	}
 	return true;
-}
-
-
-
-char SSMP2communication_core::calcchecksum(char *message, unsigned int nrofbytes)
-{
-	unsigned char cs = 0;
-	for (unsigned int k=0; k<nrofbytes; k++)
-		cs += message[k];
-	return static_cast<char>(cs);
 }

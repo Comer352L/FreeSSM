@@ -418,3 +418,12 @@ bool libFSSM::data_equal(const char * a, const char* b, const unsigned int len)
 	return true;
 	*/
 }
+
+
+char libFSSM::calcchecksum(const char *message, const unsigned int nrofbytes)
+{
+	unsigned char cs = 0;
+	for (unsigned int k=0; k<nrofbytes; k++)
+		cs += message[k];
+	return static_cast<char>(cs);
+}

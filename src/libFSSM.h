@@ -58,6 +58,15 @@ public:
 	 */
 	static bool data_equal(const char* a, const char* b, unsigned int len);
 
+	/*!
+	 * \brief Calculate SSM2 checksum.
+	 *
+	 * \param message pointer to data bytes
+	 * \param nrofbytes byte count
+	 * \return
+	 */
+	static char calcchecksum(const char *message, unsigned int nrofbytes);
+
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);
 	static bool raw2scaledByDirectAssociation(unsigned int rawValue, QString scaleformula, QString *scaledValueStr);
