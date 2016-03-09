@@ -22,7 +22,7 @@
 
 
 AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,
-                           std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
+						   std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
 {
 	unsigned int k=0;
 	unsigned int m=0;
@@ -130,9 +130,9 @@ void AddMBsSWsDlg::setAddButtonEnableStatus()
 }
 
 
-bool AddMBsSWsDlg::rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B) 
-{ 
-	return mi_A.row() < mi_B.row(); 
+bool AddMBsSWsDlg::rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B)
+{
+	return mi_A.row() < mi_B.row();
 }
 
 

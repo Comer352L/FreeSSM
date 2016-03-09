@@ -24,9 +24,9 @@
 
 #include <QtGlobal>	/* required for QT_VERSION */
 #if QT_VERSION < 0x050000
-    #include <QtGui>
+	#include <QtGui>
 #else
-    #include <QtWidgets>
+	#include <QtWidgets>
 #endif
 #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
@@ -99,7 +99,7 @@ private:
 	QList<MBSWvalue_dt> _lastValues;
 	QList<MinMaxMBSWvalue_dt> _minmaxData;
 	QList<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
-	
+
 	void setupTimeModeUiElements();
 	void setupUiFonts();
 	void displayMBsSWs();

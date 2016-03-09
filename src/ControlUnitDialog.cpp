@@ -169,7 +169,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 		}
 		if (!_diagInterface->isConnected())
 		{
-		  	if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
+			if (_diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 			{
 				result = _SSMPdev->setupCUdata( CUtype );
 				if ((result != SSMprotocol::result_success) && (result != SSMprotocol::result_noOrInvalidDefsFile) && (result != SSMprotocol::result_noDefs))

@@ -21,8 +21,8 @@
 
 
 FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText,
-					     int minimum, int maximum, QWidget * parent, Qt::WindowFlags f)
-					    : QProgressDialog(labelText, cancelButtonText, minimum, maximum, parent, f)
+						 int minimum, int maximum, QWidget * parent, Qt::WindowFlags f)
+						: QProgressDialog(labelText, cancelButtonText, minimum, maximum, parent, f)
 {
 	_allow_close = false;
 	_parent = parent;
@@ -80,7 +80,7 @@ void FSSM_InitStatusMsgBox::closeEvent(QCloseEvent *event)
 
 
 
-FSSM_WaitMsgBox::FSSM_WaitMsgBox(QWidget *parent, const QString text, const QString title) 
+FSSM_WaitMsgBox::FSSM_WaitMsgBox(QWidget *parent, const QString text, const QString title)
 				: QMessageBox(QMessageBox::NoIcon, title, text + "   ", QMessageBox::NoButton, parent)
 {
 	_allow_close = false;

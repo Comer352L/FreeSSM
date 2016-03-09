@@ -784,7 +784,7 @@ std::vector<TiXmlElement*> SSM1definitionsInterface::getAllMatchingChildElements
 	double attr_d_val = 0;
 	bool attribOK = false;
 	unsigned int attribsOK = 0;
-	for (pChild = pParent->FirstChildElement(elementName); pChild != 0; pChild = pChild->NextSibling(elementName)) 
+	for (pChild = pParent->FirstChildElement(elementName); pChild != 0; pChild = pChild->NextSibling(elementName))
 	{
 		pElement = pChild->ToElement();
 		if (pElement)

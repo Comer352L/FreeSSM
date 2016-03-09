@@ -56,7 +56,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	_lastlangindex = __supportedLocales.indexOf( QLocale(_language_current) );
 	language_comboBox->setCurrentIndex(_lastlangindex);
 	/* NOTE: no need to implement fallback, selected language is always valid (has been checked/corrected at program start)
-	         Apart from that, language switching wouldn't work at this point   */
+			 Apart from that, language switching wouldn't work at this point   */
 	// GUI-STYLES:
 	_style_old = QApplication::style()->objectName();
 	QStringList supStyles = QStyleFactory::keys();
@@ -161,7 +161,7 @@ void Preferences::switchLanguage(int langindex)
 	else
 	{
 		// DELETE NEW TRANSLATOR AND USE OLD LANGUAGE AGAIN:
-		delete translator_new;	
+		delete translator_new;
 		language_comboBox->setCurrentIndex(_lastlangindex);
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
@@ -241,7 +241,7 @@ void Preferences::selectInterfaceName(int index)
 		{
 			if (index < _J2534libraryPaths.size())
 				_newinterfacefilename = _J2534libraryPaths.at(index);
-			else	// should never happen	
+			else	// should never happen
 				_newinterfacefilename = "";
 		}
 		else

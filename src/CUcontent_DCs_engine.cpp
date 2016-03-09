@@ -63,7 +63,7 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent) : CUcontent_DCs_abst
 	headerview->setResizeMode(QHeaderView::Fixed);
 	headerview = memorizedCCCCs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
-	/* NOTE: Current method for calculating ther nr. of needed rows 
+	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for DC-tables:
 	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);
@@ -476,7 +476,7 @@ void CUcontent_DCs_engine::show()
 	QWidget::show();
 	// Set nr of rows of all table widgets:
 	setNrOfRowsOfAllTableWidgets();
-	/* NOTE: this has do be done because QTableWidget::hight() returns wrong values 
+	/* NOTE: this has do be done because QTableWidget::hight() returns wrong values
 	 * while table-widgets were not visible yet (but already set up !)
 	 * This seems to be a Qt-Bug (found in 4.4.1); This seems to happen only in combination
 	 * with a QTabWidget...

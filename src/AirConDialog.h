@@ -22,11 +22,11 @@
 
 
 #ifdef __WIN32__
-    #include "windows\serialCOM.h"
+	#include "windows\serialCOM.h"
 #elif defined __linux__
-    #include "linux/serialCOM.h"
+	#include "linux/serialCOM.h"
 #else
-    #error "Operating system not supported !"
+	#error "Operating system not supported !"
 #endif
 #include <QtGui>
 #include "ControlUnitDialog.h"
@@ -47,7 +47,7 @@ class AirConDialog : public ControlUnitDialog
 
 public:
 	AirConDialog(AbstractDiagInterface *diagInterface, QString language);
- 
+
 private:
 	enum mode_dt {DCs_mode=1, MBsSWs_mode=2};
 

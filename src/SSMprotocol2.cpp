@@ -315,7 +315,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 			DCqueryAddrList.push_back( 0x000061 );
 		for (k=0; k<_DTCdefs.size(); k++)
 			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
-	}	
+	}
 	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
 		for (k=0; k<_DTCdefs.size(); k++)
@@ -383,7 +383,7 @@ bool SSMprotocol2::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmeta
 	// Setup list of MB/SW-addresses for SSM2Pcommunication:
 	if (!setupMBSWQueryAddrList(mbswmetaList))
 		return false;
- 	// Start MB/SW-reading:
+	// Start MB/SW-reading:
 	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &_selMBsSWsAddr.at(0), _selMBsSWsAddr.size());
 	if (started)
 	{

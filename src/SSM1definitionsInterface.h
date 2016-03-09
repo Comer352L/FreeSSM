@@ -60,7 +60,7 @@ public:
 	bool systemDescription(std::string *description);
 	bool model(std::string *name);
 	bool year(std::string *yearstr);
-	
+
 	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);

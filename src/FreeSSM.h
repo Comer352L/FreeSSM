@@ -66,7 +66,7 @@ private:
 public:
 	FreeSSM(QApplication *app = 0);
 	~FreeSSM();
- 
+
 private slots:
 	void engine();
 	void transmission();

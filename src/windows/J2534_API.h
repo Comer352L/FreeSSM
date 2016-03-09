@@ -30,7 +30,7 @@
 #include <cstring>		// memset(), strcpy(), ...
 extern "C"
 {
-    #include "windows.h"
+	#include "windows.h"
 }
 #include "J2534misc.h"
 

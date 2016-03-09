@@ -100,7 +100,7 @@ void CUcontent_sysTests::startActuatorTest()
 	unsigned char actuatorTestNr = 0;
 	bool testmode = false;
 	QFont mbfont;
-	
+
 	if (!_SSMPdev) return;
 	// Create wait message for test mode connecter status check:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Checking test mode connector... Please wait !"));
@@ -145,7 +145,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 	QFont msgfont;
 	QString resultInfo = "";
 	QMessageBox::Icon msgboxicon = QMessageBox::NoIcon;
-	
+
 	if (!_SSMPdev) return;
 	// Run immobilizer communication line test:
 	FSSM_WaitMsgBox wmsgbox(this, tr("Testing Immobilizer Communication Line... Please wait !"));

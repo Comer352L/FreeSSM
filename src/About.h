@@ -24,9 +24,9 @@
 
 #include <QtGlobal>	/* required for QT_VERSION */
 #if QT_VERSION < 0x050000
-    #include <QtGui>
+	#include <QtGui>
 #else
-    #include <QtWidgets>
+	#include <QtWidgets>
 #endif
 #include "ui_About.h"
 #include "Languages.h"

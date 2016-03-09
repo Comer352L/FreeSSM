@@ -138,7 +138,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 
 bool SerialPassThroughDiagInterface::isConnected()
 {
-	return (_port && _connected); 
+	return (_port && _connected);
 }
 
 

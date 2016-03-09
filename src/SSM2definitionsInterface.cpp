@@ -228,7 +228,7 @@ bool SSM2definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measurin
 		// Check if MB is intended for this CU type:
 		tmpstr = mbdefline.section(';', 2, 2);
 		if (!((_CU == SSMprotocol::CUtype_Engine) && (tmpstr.toUInt() & 0x01)) &&
-		    !((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
+			!((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
 			continue;
 		// Get memory address (low) definition:
 		tmpstr = mbdefline.section(';', 3, 3);
@@ -317,7 +317,7 @@ bool SSM2definitionsInterface::switches(std::vector<sw_intl_dt> *switches)
 		// Check if switch is intended for this CU type:
 		tmpstr = swdefline.section(';', 2, 2);
 		if (!((_CU == SSMprotocol::CUtype_Engine) && (tmpstr.toUInt() & 0x01)) &&
-		    !((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
+			!((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
 			continue;
 		// Get memory address definition:
 		tmpstr = swdefline.section(';', 3, 3);

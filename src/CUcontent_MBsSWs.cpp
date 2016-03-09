@@ -57,7 +57,7 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
 	_MBSWrefreshTimeValue_label->setText("---      ");
 	// Connect signals and slots:
-	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	connect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
 	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveUpMBsSWsOnTheTable() ) );
@@ -78,7 +78,7 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
 		disconnect( _SSMPdev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
 	}
-	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) ); 
+	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	disconnect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	disconnect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
 	disconnect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveUpMBsSWsOnTheTable() ) );
@@ -164,7 +164,7 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	// Clear last values:
 	_lastValues.clear();
 	_minmaxData.clear();
-	// Setup table position indexes:	
+	// Setup table position indexes:
 	for (k=0; k<MBSWmetaList.size(); k++)
 		_tableRowPosIndexes.push_back(k);
 	// Update MB/SW table content:
@@ -485,14 +485,14 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 				 * => handling this theoretical case would be too complicated...
 				 *    => display the raw value (although it is definitely wrong)
 				 *       => in combination with the display unit [BIN], the user should notice
-                                 *          that something is going wrong...
+								 *          that something is going wrong...
 				 */
 				scalingSuccessful = false;
 				scaledValueStr = "";
 			}
 			// Add unit string to the output list:
 			if (!scalingSuccessful/*((rawValues.at(rvIndex)==0) || (rawValues.at(rvIndex) == 1)) && scaledValueStr.isEmpty()*/) // if we have a valid raw value but scaling failed
-				unitStrList.replace(tablePosIndex, "[BIN]"); // display a unit, to signal that the displayed value is unscaled 
+				unitStrList.replace(tablePosIndex, "[BIN]"); // display a unit, to signal that the displayed value is unscaled
 			else
 				unitStrList.replace(tablePosIndex, "");
 		}
@@ -502,7 +502,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		else
 			valueStrList.replace( tablePosIndex, QString::number( rawValues.at(k) ) );
 		// ******** CHECK FOR NEW MIN/MAX VALUE ********:
-		/* NOTE:   
+		/* NOTE:
 		 * - MB/SW scaled values can be NUMERIC VALUES or STRINGS or even BOTH MIXED (for different raw values)
 		 * - scaled numeric values DO NOT necessarily grow with increasing raw values
 		 * => STRATEGY:
@@ -529,7 +529,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		if (!noLastMinMaxValue && !_minmaxData.at(k).disabled)
 		{
 			if ( (!scalingSuccessful && (!_minmaxData.at(k).minScaledValueStr.isEmpty() || !_minmaxData.at(k).maxScaledValueStr.isEmpty())) ||
-			     (scalingSuccessful && (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty())) )
+				 (scalingSuccessful && (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty())) )
 			{
 				_minmaxData[k].disabled = true;
 				_minmaxData[k].minScaledValueStr = "";	// important !
@@ -636,7 +636,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		else if (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty()) // if min/max is not disabled an we have unscaled min/max values
 		{
 			/* NOTE: min/max scaled value strings should BOTH be empty in this case
-			         (otherwise min/max would have been disabled before !) */
+					 (otherwise min/max would have been disabled before !) */
 			// Display raw min/max values:
 			minValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).minRawValue) );
 			maxValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).maxRawValue) );
@@ -805,9 +805,9 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 		return;	// Cancel, if moving up is not possible
 	if ((selectedMBSWIndexes.at(0) + nrofSelRows) > _MBSWmetaList.size()) // if selection exceed the end of the list
 		nrofSelRows = _MBSWmetaList.size() - selectedMBSWIndexes.at(0);
-	// NOTE: IN FACT WE ARE MOVING 1 ROW DOWN... 
+	// NOTE: IN FACT WE ARE MOVING 1 ROW DOWN...
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
-	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;	
+	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;
 	rowToMoveDownTargetIndex = selectedMBSWIndexes.at(nrofSelRows-1);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
 	for (k=0; k<_tableRowPosIndexes.size(); k++)
@@ -841,7 +841,7 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible
-	// NOTE: IN FACT WE ARE MOVING 1 ROW UP... 
+	// NOTE: IN FACT WE ARE MOVING 1 ROW UP...
 	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
 	rowToMoveUpIndex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1;
 	rowToMoveUpTargetIndex = selectedMBSWIndexes.at(0);

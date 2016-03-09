@@ -29,23 +29,23 @@
 #include <cstdlib>		// malloc()/free()
 extern "C"
 {
-    #include <asm/termbits.h>	// terminal control definitions (linux)
-    #include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
-    #include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
-    #include <sys/ioctl.h>	// ioctl => for access to serial port driver
-    #include <sys/select.h>	// select()
-    #include <linux/serial.h>	// serial port driver
-    #include <limits.h>
-    #include <unistd.h>		// usleep(), isatty(), close()
-    #ifdef __SERIALCOM_DEBUG__
-        #include <errno.h>
-    #endif
+	#include <asm/termbits.h>	// terminal control definitions (linux)
+	#include <fcntl.h>		// File control definitions => fcntl() in fcn OpenPort()
+	#include <dirent.h>		// definition of dirent-structure for access to directories => used in fcn GetAvailablePort()
+	#include <sys/ioctl.h>	// ioctl => for access to serial port driver
+	#include <sys/select.h>	// select()
+	#include <linux/serial.h>	// serial port driver
+	#include <limits.h>
+	#include <unistd.h>		// usleep(), isatty(), close()
+	#ifdef __SERIALCOM_DEBUG__
+		#include <errno.h>
+	#endif
 }
 #include <string>
 #include <vector>
 #include <ctime>
 #ifdef __SERIALCOM_DEBUG__
-    #include <iostream>
+	#include <iostream>
 #endif
 
 
@@ -88,7 +88,7 @@ private:
 	int fd;					// file descriptor for the port
 	bool portisopen;
 	bool breakset;
-	std::string currentportname; 
+	std::string currentportname;
 	struct termios2 oldtio;			// backup of port settings
 	struct serial_struct old_serdrvinfo;	// backup of serial driver settings
 	bool settingssaved;

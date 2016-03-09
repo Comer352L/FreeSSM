@@ -29,14 +29,14 @@
 #include <cstdlib>		// malloc()/free()
 extern "C"
 {
-    #include <windows.h>
-    #include <limits.h>
+	#include <windows.h>
+	#include <limits.h>
 }
 #include <string>
 #include <vector>
 #include <algorithm>		// sort()
 #ifdef __SERIALCOM_DEBUG__
-    #include <iostream>
+	#include <iostream>
 #endif
 
 
@@ -73,12 +73,12 @@ private:
 	bool breakset;
 	bool DTRset;
 	bool RTSset;
-	std::string currentportname; 
+	std::string currentportname;
 	bool read_timeout_set;
 	unsigned int last_read_timeout;
 	DCB olddcb;		// backup of old port settings
 	bool settingssaved;
-	
+
 	bool GetMaxbaudrate(double *maxbaudrate);
 
 };

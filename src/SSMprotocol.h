@@ -50,8 +50,8 @@ public:
 	QString code[8];
 	QString title[8];
 };
-  
-  
+
+
 class  mb_dt
 {
 public:

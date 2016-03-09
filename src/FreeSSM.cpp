@@ -224,14 +224,14 @@ FreeSSM::FreeSSM(QApplication *app)
 FreeSSM::~FreeSSM()
 {
 	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
-	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
-	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
+	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
+	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
 	disconnect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	disconnect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
-	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) ); 
-	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
-	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
-	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) ); 
+	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
+	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
+	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
+	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	delete _dump_action;
 	delete _progtitle_label;
@@ -390,9 +390,9 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 {
 	// Uninstall and delete current translator:
 	if (_translator != NULL)
-	{ 
+	{
 		QApplication::removeTranslator(_translator);
-		delete _translator; 
+		delete _translator;
 		_translator = NULL;
 	}
 	// Save new language settings:

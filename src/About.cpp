@@ -86,8 +86,8 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	}
 	languages_label->setText( langstr );
 	// Connect buttons:
-	connect( showlicense_pushButton, SIGNAL( released() ), this, SLOT( showLicense() ) ); 
-	connect( close_pushButton, SIGNAL( released() ), this, SLOT( close() ) ); 
+	connect( showlicense_pushButton, SIGNAL( released() ), this, SLOT( showLicense() ) );
+	connect( close_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }
 
 

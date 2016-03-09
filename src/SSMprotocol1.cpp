@@ -42,7 +42,7 @@ void SSMprotocol1::resetCUdata()
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-			    this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+				this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
 		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 				this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
@@ -296,7 +296,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 			if (_DTCdefs.at(k).byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
 				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
 		}
-	}	
+	}
 	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
 		for (unsigned int k=0; k<_DTCdefs.size(); k++)
@@ -335,7 +335,7 @@ bool SSMprotocol1::stopDCreading()
 		if (_SSMP1com->stopCommunication())
 		{
 			disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-				    this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+					this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -667,7 +667,7 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 	if (!_uses_SSM2defs)	// FIXME: other defintion types
 		return false;
 	if (!_has_MB_engineSpeed) return false;
-	
+
 	if (!_SSMP1com->readAddress(0x0e, &currentdatabyte))
 	{
 		resetCUdata();
