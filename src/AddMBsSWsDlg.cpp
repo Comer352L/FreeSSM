@@ -45,15 +45,17 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		for (m=0; m<(_MBSWmetaList->size()); m++)
 		{
 			if ((_MBSWmetaList->at(m).blockType == blockType_MB) && (_MBSWmetaList->at(m).nativeIndex == k))
+			{
 				unselected = false;
+				break;
+			}
 		}
 		if (unselected)
 		{
+			const auto& mb = supportedMBs.at(k);
 			// Output MB:
-			if (supportedMBs.at(k).unit.isEmpty())
-				MBsSWs_listWidget->addItem(supportedMBs.at(k).title);
-			else
-				MBsSWs_listWidget->addItem(supportedMBs.at(k).title+"   ["+ supportedMBs.at(k).unit+"]");
+			const QString label = !mb.unit.isEmpty() ? mb.title + "   [" + mb.unit + "]" : mb.title;
+			MBsSWs_listWidget->addItem(label);
 			// Put MB to the list of unselected MBs/SWs:
 			tmpMBSWmd.nativeIndex = k;
 			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
@@ -67,12 +69,16 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		for (m=0; m<(_MBSWmetaList->size()); m++)
 		{
 			if ((_MBSWmetaList->at(m).blockType == blockType_SW) && (_MBSWmetaList->at(m).nativeIndex == k))
+			{
 				unselected = false;
+				break;
+			}
 		}
 		if (unselected)
 		{
 			// Output SW:
-			MBsSWs_listWidget->addItem(supportedSWs.at(k).title+"   ["+ supportedSWs.at(k).unit.replace('\\','/') +"]");
+			auto& sw = supportedSWs.at(k);
+			MBsSWs_listWidget->addItem(sw.title+"   ["+ sw.unit.replace('\\','/') +"]");
 			// Put SW to the list of unselected MBs/SWs:
 			tmpMBSWmd.nativeIndex = k;
 			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
@@ -97,15 +103,13 @@ AddMBsSWsDlg::~AddMBsSWsDlg()
 
 void AddMBsSWsDlg::add()
 {
-	int index = 0;
-	int k = 0;
 	disconnect(add_pushButton, SIGNAL( pressed() ), this, SLOT( add() )); // bugfix !
 	QItemSelectionModel *selModel = MBsSWs_listWidget->selectionModel();
 	QModelIndexList MIlist = selModel->selectedRows();
-	qSort(MIlist.begin(), MIlist.end(), rowIndexLessThan);	// since Qt 4.4.1, we have to sort the the QModelIndexes...
-	for (k=0; k<MIlist.size(); k++)
+	std::sort(MIlist.begin(), MIlist.end(), rowIndexLessThan);	// since Qt 4.4.1, we have to sort the QModelIndexes...
+	for (const auto& mi : MIlist)
 	{
-		index = MIlist.at(k).row();
+		int index = mi.row();
 		_MBSWmetaList->push_back( _unselectedMBsSWs_metaList.at(index) );
 	}
 	close();
@@ -120,13 +124,9 @@ void AddMBsSWsDlg::cancel()
 
 void AddMBsSWsDlg::setAddButtonEnableStatus()
 {
-	QList<QListWidgetItem*> selitemslist;
-	selitemslist = MBsSWs_listWidget->selectedItems();
-	// NOTE: retuns the nr. of selected cells, NOT THE NR. OF ROWS ! Empty cells are not included !
-	if (selitemslist.size() < 1)
-		add_pushButton->setEnabled(false);
-	else
-		add_pushButton->setEnabled(true);
+	const QList<QListWidgetItem*> selitemslist = MBsSWs_listWidget->selectedItems();
+	// NOTE: returns the nr. of selected cells, NOT THE NR. OF ROWS ! Empty cells are not included !
+	add_pushButton->setEnabled(selitemslist.size() > 0);
 }
 
 

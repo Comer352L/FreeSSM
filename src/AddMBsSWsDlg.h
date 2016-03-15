@@ -22,6 +22,7 @@
 
 
 
+#include <algorithm>
 #include <QtGui>
 #include "ui_AddMBsSWsDlg.h"
 #include "SSMprotocol2.h"

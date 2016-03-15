@@ -157,9 +157,7 @@ bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 bool SSMprotocol::getSupportedMBs(std::vector<mb_dt> *supportedMBs)
 {
 	if (_state == state_needSetup) return false;
-	supportedMBs->clear();
-	for (unsigned int k=0; k<_supportedMBs.size(); k++)
-		supportedMBs->push_back( _supportedMBs.at(k) );
+	supportedMBs->assign(begin(_supportedMBs), end(_supportedMBs));
 	return true;
 }
 
@@ -167,9 +165,7 @@ bool SSMprotocol::getSupportedMBs(std::vector<mb_dt> *supportedMBs)
 bool SSMprotocol::getSupportedSWs(std::vector<sw_dt> *supportedSWs)
 {
 	if (_state == state_needSetup) return false;
-	supportedSWs->clear();
-	for (unsigned int k=0; k<_supportedSWs.size(); k++)
-		supportedSWs->push_back( _supportedSWs.at(k) );
+	supportedSWs->assign(begin(_supportedSWs), end(_supportedSWs));
 	return true;
 }
 
@@ -189,21 +185,17 @@ bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLis
 bool SSMprotocol::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
 	if (_state == state_needSetup) return false;
-	supportedAdjustments->clear();
-	for (unsigned int k=0; k<_adjustments.size(); k++)
-		supportedAdjustments->push_back( _adjustments.at(k) );
+	supportedAdjustments->assign(begin(_adjustments), end(_adjustments));
 	return true;
 }
 
 
 bool SSMprotocol::getSupportedActuatorTests(QStringList *actuatorTestTitles)
 {
-	unsigned char k = 0;
 	if (_has_ActTest)
 	{
 		actuatorTestTitles->clear();
-		for (k=0; k<_actuators.size(); k++)
-			actuatorTestTitles->append(_actuators.at(k).title);
+		std::for_each(begin(_actuators), end(_actuators), [actuatorTestTitles](actuator_dt a) { actuatorTestTitles->push_back(a.title); } );
 		return true;
 	}
 	return false;

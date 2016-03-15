@@ -56,7 +56,6 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	bool ok = false;
 	bool AT_sup = false;
 	bool immo_sup = false;
-	unsigned char k = 0;
 
 	_SSMPdev = SSMPdev;
 	_actuatorTestTitles.clear();
@@ -73,15 +72,13 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	// Display actuator test list content:
 	if (AT_sup)
 	{
-		// Fill cctuator list:
-		for (k=0; k<_actuatorTestTitles.size(); k++)
-			actuators_listWidget->addItem( _actuatorTestTitles[k] );
-		// Select first actuator on the list:
 		if (_actuatorTestTitles.size() > 0)
+		{
+			actuators_listWidget->addItems(_actuatorTestTitles);
 			actuators_listWidget->setCurrentRow(0);
+		}
 	}
-	else
-		actuators_listWidget->clear();
+
 	// Enable/Disable GUI-elements:
 	actuatorlistTitle_label->setEnabled( AT_sup );
 	actuators_listWidget->setEnabled( AT_sup );

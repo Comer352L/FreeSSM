@@ -382,8 +382,6 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 
 void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms)
 {
-	QString defstr;
-	QString rvstr;
 	bool scalingSuccessful = false;
 	QString scaledValueStr;
 	unsigned int k = 0;

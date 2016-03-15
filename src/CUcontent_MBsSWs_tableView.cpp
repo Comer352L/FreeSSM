@@ -200,23 +200,18 @@ bool CUcontent_MBsSWs_tableView::maxValuesEnabled()
 
 void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes)
 {
-	int k=0;
-	int m=0;
-	int rows=0;
 	// GET INDEXES OF SELECTED ROWS:
 	selectedMBSWIndexes->clear();
-	QList<QTableWidgetSelectionRange> selectedRanges;
-	selectedRanges = selectedMBsSWs_tableWidget->selectedRanges();
-	for (k=0; k<selectedRanges.size(); k++)
+	for (const auto& range : selectedMBsSWs_tableWidget->selectedRanges())
 	{
-		rows = selectedRanges.at(k).bottomRow() - selectedRanges.at(k).topRow() + 1;
-		for (m=0; m<rows; m++)
+		const int rows = range.rowCount();
+		for (int m=0; m<rows; m++)
 		{
-			if (static_cast<unsigned int>(selectedRanges.at(k).topRow() + m) < _nrofMBsSWs)
-				selectedMBSWIndexes->push_back(selectedRanges.at(k).topRow() + m);
+			if (static_cast<unsigned int>(range.topRow() + m) < _nrofMBsSWs)
+				selectedMBSWIndexes->push_back(range.topRow() + m);
 		}
 	}
-	qSort(selectedMBSWIndexes->begin(), selectedMBSWIndexes->end());
+	std::sort(selectedMBSWIndexes->begin(), selectedMBSWIndexes->end());
 	/* NOTE: This function must return sorted indexes (from min to max) !
 	   At least for the QAbstractItemView::ContiguousSelction selection mode,
 	   QTableWidget::selectedRanges() seems to return always sorted indexes.
