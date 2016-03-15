@@ -96,9 +96,9 @@ private:
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
 	bool _timemode;
 	int _lastrefreshduration_ms;
-	QList<MBSWvalue_dt> _lastValues;
-	QList<MinMaxMBSWvalue_dt> _minmaxData;
-	QList<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	std::vector<MBSWvalue_dt> _lastValues;
+	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
+	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
 
 	void setupTimeModeUiElements();
 	void setupUiFonts();

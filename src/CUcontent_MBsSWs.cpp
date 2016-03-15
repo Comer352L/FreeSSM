@@ -207,7 +207,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 	unsigned int k=0;
 	unsigned int listPosIndex = 0;
 	// Prepare string-lists (fill with empty strings up to needed size):
-	for (int s=0; s<_tableRowPosIndexes.size(); s++)
+	for (size_t s=0; s<_tableRowPosIndexes.size(); s++)
 	{
 		titles << "";
 		minvalues << "";
@@ -559,7 +559,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 					newMinMaxDataset.minScaledValueStr = "";
 					newMinMaxDataset.maxScaledValueStr = "";
 				}
-				_minmaxData.append( newMinMaxDataset );
+				_minmaxData.push_back(newMinMaxDataset);
 			}
 			else
 			{
@@ -655,7 +655,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			else
 				newValueDataset.scaledStr = "";
 			newValueDataset.unitStr = unitStrList.at(tablePosIndex);
-			_lastValues.append( newValueDataset );
+			_lastValues.push_back(newValueDataset);
 		}
 		else
 		{
@@ -710,7 +710,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		_minmaxData.clear();
 		// Add new table-position-indexes:
 		for (k=MBSWmetaList_len_old; k<_MBSWmetaList.size(); k++)
-			_tableRowPosIndexes.append(k);
+			_tableRowPosIndexes.push_back(k);
 		// Update MB/SW table content:
 		displayMBsSWs();
 		// Clear time information:
@@ -760,9 +760,9 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 			_MBSWmetaList.erase(_MBSWmetaList.begin() + k);
 			// DELETE LAST VALUE, MIN-/MAX-DATA AND PLOT DATA:
 			if (_lastValues.size())
-				_lastValues.removeAt(k);
+				_lastValues.erase(_lastValues.begin() + k);
 			if (_minmaxData.size())
-				_minmaxData.removeAt(k);
+				_minmaxData.erase(_minmaxData.begin() + k);
 			// DELETE TABLE POSITION INDEX:
 			_tableRowPosIndexes.erase(_tableRowPosIndexes.begin() + k);
 		}
@@ -792,7 +792,6 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	int nrofSelRows = 0;
 	unsigned int rowToMoveDownIndex = 0;
 	unsigned int rowToMoveDownTargetIndex = 0;
-	int k = 0;
 	// GET SELECTED ROWS:
 	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	nrofSelRows = selectedMBSWIndexes.size();
@@ -806,7 +805,7 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;
 	rowToMoveDownTargetIndex = selectedMBSWIndexes.at(nrofSelRows-1);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
-	for (k=0; k<_tableRowPosIndexes.size(); k++)
+	for (size_t k=0; k<_tableRowPosIndexes.size(); k++)
 	{
 		if ((_tableRowPosIndexes.at(k) > rowToMoveDownIndex) && (_tableRowPosIndexes.at(k) <= rowToMoveDownTargetIndex))
 		{
@@ -830,7 +829,6 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 {
 	unsigned int rowToMoveUpIndex = 0;
 	unsigned int rowToMoveUpTargetIndex = 0;
-	int k = 0;
 	// GET SELECTED ROWS:
 	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	// CHECK AND CORRECT SELECTED ROWS:
@@ -841,7 +839,7 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	rowToMoveUpIndex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1;
 	rowToMoveUpTargetIndex = selectedMBSWIndexes.at(0);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
-	for (k=0; k<_tableRowPosIndexes.size(); k++)
+	for (size_t k=0; k<_tableRowPosIndexes.size(); k++)
 	{
 		if ((_tableRowPosIndexes.at(k) >= rowToMoveUpTargetIndex) && (_tableRowPosIndexes.at(k) < rowToMoveUpIndex))
 		{
@@ -869,14 +867,14 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 	// Delete min/max values:
 	_minmaxData.clear();
 	// Setup new min/max values and output data:
-	for (int k=0; k<_lastValues.size(); k++)
+	for (size_t k=0; k<_lastValues.size(); k++)
 	{
 		// Set min/max values to current value:
 		newMinMaxDataset.minRawValue = _lastValues.at(k).rawValue;
 		newMinMaxDataset.maxRawValue = _lastValues.at(k).rawValue;
 		newMinMaxDataset.minScaledValueStr = _lastValues.at(k).scaledStr;
 		newMinMaxDataset.maxScaledValueStr = _lastValues.at(k).scaledStr;
-		_minmaxData.append( newMinMaxDataset );
+		_minmaxData.push_back(newMinMaxDataset);
 		// Get min/max value string and unit for output:
 		if (_lastValues.at(k).scaledStr.isEmpty())
 			lastValueStr.append( QString::number(_lastValues.at(k).rawValue) );
