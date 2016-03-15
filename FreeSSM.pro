@@ -143,6 +143,8 @@ greaterThan(QT_MAJOR_VERSION, 4): DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x0400
 
 # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
+# language standard; requires c++11: range-for loop, constexpr, auto, initializer list, lambda expression, std::array, ...
+QMAKE_CXXFLAGS += -std=c++11
 
 # Installation
 unix:INSTALLDIR = $$system(echo ~)/FreeSSM
