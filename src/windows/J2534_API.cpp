@@ -24,7 +24,7 @@
 J2534_API::J2534_API()
 {
 	_J2534LIB = NULL;
-	_api_version = J2534_API_v0404;
+	_api_version = J2534_API_version::v0404;
 	_PassThruOpen = NULL;
 	_PassThruClose = NULL;
 	_PassThruConnect_0202 = NULL;
@@ -80,9 +80,9 @@ bool J2534_API::selectLibrary(std::string libPath)
 		}
 		// Check API-version of the library:
 		if (!GetProcAddress( newJ2534LIB, "PassThruOpen" ) || !GetProcAddress( newJ2534LIB, "PassThruClose" ))
-			_api_version = J2534_API_v0202;
+			_api_version = J2534_API_version::v0202;
 		else
-			_api_version = J2534_API_v0404;
+			_api_version = J2534_API_version::v0404;
 		// Close old library:
 		if (_J2534LIB)
 		{
@@ -125,7 +125,7 @@ void J2534_API::assignJ2534fcns()
 {
 	_PassThruOpen = reinterpret_cast< J2534_PassThruOpen >( GetProcAddress( _J2534LIB, "PassThruOpen" ) );
 	_PassThruClose = reinterpret_cast< J2534_PassThruClose >( GetProcAddress( _J2534LIB, "PassThruClose" ) );
-	if (_api_version == J2534_API_v0202)
+	if (_api_version == J2534_API_version::v0202)
 	{
 		_PassThruConnect_0202 = reinterpret_cast< J2534_PassThruConnect_0202 >( GetProcAddress( _J2534LIB, "PassThruConnect" ) );
 		_PassThruReadVersion_0202 = reinterpret_cast< J2534_PassThruReadVersion_0202 >( GetProcAddress( _J2534LIB, "PassThruReadVersion" ) );
@@ -210,7 +210,7 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 	DWORD index = 0;
 	char KeyName[256] = "";
 	J2534Library PTlib;
-	PTlib.api = J2534_API_v0404;
+	PTlib.api = J2534_API_version::v0404;
 	char ValueName[256] = "";
 	unsigned long szValueName = 256;// variable that specifies the size (in characters, including the terminating null char) of the buffer pointed to by the "ValueName" parameter.
 	unsigned char Data[256] = "";	// buffer that receives the data for the value entry. This parameter can be NULL if the data is not required
@@ -232,39 +232,39 @@ std::vector<J2534Library> J2534_API::searchLibValuesRecursive(HKEY hKey, std::ve
 			}
 			else if (!strncmp(ValueName,"ProtocolsSupported",18))	// 02.02-API
 			{
-				PTlib.api = J2534_API_v0202;
+				PTlib.api = J2534_API_version::v0202;
 				std::string protocol_str = (char*)(Data);
 				// TODO split string, then use loop using existing parse function instead
 				if (protocol_str.find("J1850VPW") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_J1850VPW);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::j1850vpw;
 				if (protocol_str.find("J1850PWM") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_J1850PWM);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::j1850pwm;
 				if (protocol_str.find("ISO9141") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO9141);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::iso9141;
 				if (protocol_str.find("ISO14230") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO14230);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::iso14230;
 				if (protocol_str.find("ISO15765") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_ISO15765);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::iso15765;
 				if (protocol_str.find("CAN") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_CAN);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::can;
 				if (protocol_str.find("SCI_A_ENGINE") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_A_ENGINE);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::sci_a_engine;
 				if (protocol_str.find("SCI_A_TRANS") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_A_TRANS);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::sci_a_trans;
 				if (protocol_str.find("SCI_B_ENGINE") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_B_ENGINE);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::sci_b_engine;
 				if (protocol_str.find("SCI_B_TRANS") != std::string::npos)
-					PTlib.protocols = J2534_protocol_flags(PTlib.protocols | PROTOCOL_FLAG_SCI_B_TRANS);
+					PTlib.protocols = PTlib.protocols | J2534_protocol_flags::sci_b_trans;
 			}
 		}
 		else if (ValueDataType == REG_DWORD)	// 04.04-API
 		{
-			PTlib.api = J2534_API_v0404;
+			PTlib.api = J2534_API_version::v0404;
 			DWORD key_value = (DWORD)(*Data);
 			if (key_value)
 			{
 				std::string protocol_str = (char*)(ValueName);
-				PTlib.protocols = J2534_protocol_flags(PTlib.protocols | J2534misc::parseProtocol(protocol_str));
+				PTlib.protocols = PTlib.protocols | J2534misc::parseProtocol(protocol_str);
 			}
 		}
 		szValueName = 256;	// because RegEnumValue has changed value !

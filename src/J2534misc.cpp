@@ -29,75 +29,69 @@ static std::string toupper(const std::string& s)
 	return result;
 }
 
-const std::map<std::string, J2534_protocol_flags> J2534misc::protocolsMap = initProtocolsMap();
-
-const std::map<std::string, J2534_protocol_flags> J2534misc::initProtocolsMap()
-{
-	std::map<std::string, J2534_protocol_flags> m;
-	m["J1850VPW"] = PROTOCOL_FLAG_J1850VPW;
-	m["J1850PWM"] = PROTOCOL_FLAG_J1850PWM;
-	m["ISO9141"] = PROTOCOL_FLAG_ISO9141;
-	m["ISO14230"] = PROTOCOL_FLAG_ISO14230;
-	m["CAN"] = PROTOCOL_FLAG_CAN;
-	m["ISO15765"] = PROTOCOL_FLAG_ISO15765;
-	m["SCI_A_ENGINE"] = PROTOCOL_FLAG_SCI_A_ENGINE;
-	m["SCI_A_TRANS"] = PROTOCOL_FLAG_SCI_A_TRANS;
-	m["SCI_B_ENGINE"] = PROTOCOL_FLAG_SCI_B_ENGINE;
-	m["SCI_B_TRANS"] = PROTOCOL_FLAG_SCI_B_TRANS;
-	return m;
-}
-
-std::vector<std::string> J2534misc::protocolsToStr(const J2534_protocol_flags pflags)
-{
-	std::vector<std::string> vs;
-	for(std::map<std::string, J2534_protocol_flags>::const_iterator it = protocolsMap.begin(); it != protocolsMap.end(); ++it) {
-		if (pflags & (*it).second)
-			vs.push_back((*it).first);
-	}
-	return vs;
-}
+const std::map<std::string, J2534_protocol_flags> J2534misc::protocolsMap {
+	{"J1850VPW", J2534_protocol_flags::j1850vpw},
+	{"J1850PWM", J2534_protocol_flags::j1850pwm},
+	{"ISO9141", J2534_protocol_flags::iso9141},
+	{"ISO14230", J2534_protocol_flags::iso14230},
+	{"CAN", J2534_protocol_flags::can},
+	{"ISO15765", J2534_protocol_flags::iso15765},
+	{"SCI_A_ENGINE", J2534_protocol_flags::sci_a_engine},
+	{"SCI_A_TRANS", J2534_protocol_flags::sci_a_trans},
+	{"SCI_B_ENGINE", J2534_protocol_flags::sci_b_engine},
+	{"SCI_B_TRANS", J2534_protocol_flags::sci_b_trans},
+};
 
 J2534_protocol_flags J2534misc::parseProtocol(const std::string& s)
 {
-	std::string key = toupper(s);
-	std::map<std::string, J2534_protocol_flags>::const_iterator it = protocolsMap.find(key);
-	return (it != protocolsMap.end()) ? (*it).second : J2534_protocol_flags(0);
+	const std::string key = toupper(s);
+	const auto it = protocolsMap.find(key);
+	return (it != protocolsMap.end()) ? it->second : J2534_protocol_flags(0);
 }
 
 J2534_API_version J2534misc::parseApiVersion(const std::string& s)
 {
-	if (s == "02.02") return J2534_API_v0202;
-	if (s == "04.04") return J2534_API_v0404;
-	return J2534_API_UNDEFINED;
+	if (s == "02.02") return J2534_API_version::v0202;
+	if (s == "04.04") return J2534_API_version::v0404;
+	return J2534_API_version::undefined;
 }
 
 std::string J2534misc::apiVersionToStr(const J2534_API_version api)
 {
 	switch(api) {
-	case J2534_API_v0202 : return "02.02";
-	case J2534_API_v0404 : return "04.04";
+	case J2534_API_version::v0202 : return "02.02";
+	case J2534_API_version::v0404 : return "04.04";
 	default: return "UNDEFINED";
 	}
 }
 
 #ifdef __J2534_API_DEBUG__
+std::vector<std::string> J2534misc::protocolsToStrings(const J2534_protocol_flags pflags)
+{
+	std::vector<std::string> vs;
+	for (const auto& pair : protocolsMap) {
+		if (bool(pflags & pair.second))
+			vs.push_back(pair.first);
+	}
+	return vs;
+}
+
 void J2534misc::printLibraryInfo(const std::vector<J2534Library>& PTlibraries)
 {
-	const size_t libcount = PTlibraries.size();
+	const auto libcount = PTlibraries.size();
 	if (libcount)
 		std::cout << "Found " << libcount << " registered J2534-libraries:\n";
 	else
 		std::cout << "No J2534-libraries found.\n";
 
-	for (size_t k = 0; k < libcount; ++k)
+	for (const auto& lib : PTlibraries)
 	{
-		const J2534Library& lib = PTlibraries.at(k);
 		std::cout << "\n  Name:        " << lib.name;
 		std::cout << "\n  Path:        " << lib.path;
 		std::cout << "\n  API-version: " << apiVersionToStr(lib.api);
 		std::cout << "\n  Protocols:   ";
 
-		std::vector<std::string> protocolStrings = protocolsToStr(lib.protocols);
+		const auto protocolStrings = protocolsToStrings(lib.protocols);
 		for(size_t i = 0; i < protocolStrings.size(); ++i) {
 			if (i)
 				std::cout << " ";

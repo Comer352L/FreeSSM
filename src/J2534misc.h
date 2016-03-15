@@ -33,48 +33,57 @@
 #define		J2534API_ERROR_INVALID_LIBRARY		-2
 
 
-enum J2534_API_version {J2534_API_UNDEFINED, J2534_API_v0202, J2534_API_v0404};
+enum class J2534_API_version {undefined, v0202, v0404};
 
-enum J2534_protocol_flags
+// cannot use ALL_CAPS because of macros in J2534.h
+enum class J2534_protocol_flags
 {
-	PROTOCOL_FLAG_J1850VPW     = 0x01,
-	PROTOCOL_FLAG_J1850PWM     = 0x02,
-	PROTOCOL_FLAG_ISO9141      = 0x04,
-	PROTOCOL_FLAG_ISO14230     = 0x08,
-	PROTOCOL_FLAG_CAN          = 0x10,
-	PROTOCOL_FLAG_ISO15765     = 0x20,
-	PROTOCOL_FLAG_SCI_A_ENGINE = 0x40,
-	PROTOCOL_FLAG_SCI_A_TRANS  = 0x80,
-	PROTOCOL_FLAG_SCI_B_ENGINE = 0x100,
-	PROTOCOL_FLAG_SCI_B_TRANS  = 0x200,
+	j1850vpw     = 0x01,
+	j1850pwm     = 0x02,
+	iso9141      = 0x04,
+	iso14230     = 0x08,
+	can          = 0x10,
+	iso15765     = 0x20,
+	sci_a_engine = 0x40,
+	sci_a_trans  = 0x80,
+	sci_b_engine = 0x100,
+	sci_b_trans  = 0x200,
 };
+
+constexpr J2534_protocol_flags operator&(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
+{
+	return J2534_protocol_flags(static_cast<unsigned int>(f1) & static_cast<unsigned int>(f2));
+}
+
+constexpr J2534_protocol_flags operator|(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
+{
+	return J2534_protocol_flags(static_cast<unsigned int>(f1) | static_cast<unsigned int>(f2));
+}
+
+
 
 class J2534Library
 {
 public:
 	std::string path;
 	std::string name;
-	J2534_protocol_flags protocols;
-	J2534_API_version api;
-
-	J2534Library() { protocols = J2534_protocol_flags(0); api = J2534_API_v0404; }
+	J2534_protocol_flags protocols {J2534_protocol_flags(0)};
+	J2534_API_version api {J2534_API_version::v0404};
 };
 
 class J2534misc {
 public:
 	static J2534_protocol_flags parseProtocol(const std::string& s);
-	static std::vector<std::string> protocolsToStr(const J2534_protocol_flags pflags);
 	static J2534_API_version parseApiVersion(const std::string& s);
 	static std::string apiVersionToStr(const J2534_API_version api);
 
 #ifdef __J2534_API_DEBUG__
+	static std::vector<std::string> protocolsToStrings(const J2534_protocol_flags pflags);
 	static void printLibraryInfo(const std::vector<J2534Library>& PTlibraries);
 #endif
 
 private:
 	const static std::map<std::string, J2534_protocol_flags> protocolsMap;
-
-	static const std::map<std::string, J2534_protocol_flags> initProtocolsMap();
 };
 
 #endif

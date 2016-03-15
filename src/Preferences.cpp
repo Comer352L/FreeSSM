@@ -197,14 +197,13 @@ void Preferences::selectInterfaceType(int index)
 	{
 		_newinterfacetype = AbstractDiagInterface::interface_J2534;
 		interfaceName_label->setText(tr("Interface-Name:"));
-		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
-		for (unsigned int k=0; k<J2534libs.size(); k++)
+		for (const auto& lib : J2534_API::getAvailableJ2534Libs())
 		{
-			QFile file(QString::fromStdString(J2534libs.at(k).path));
+			QFile file(QString::fromStdString(lib.path));
 			if (file.exists())
 			{
-				deviceNames.push_back(QString::fromStdString(J2534libs.at(k).name));
-				_J2534libraryPaths.push_back(QString::fromStdString(J2534libs.at(k).path));
+				deviceNames.push_back(QString::fromStdString(lib.name));
+				_J2534libraryPaths.push_back(QString::fromStdString(lib.path));
 			}
 		}
 	}

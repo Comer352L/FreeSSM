@@ -157,14 +157,14 @@ FreeSSM::FreeSSM(QApplication *app)
 	if (savedinterfacetype == QString::number(AbstractDiagInterface::interface_J2534))	// J2534-Pass-Through
 	{
 		_iface_type = AbstractDiagInterface::interface_J2534;
-		std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
+		const auto J2534libs = J2534_API::getAvailableJ2534Libs();
 		if (J2534libs.size())
 		{
 			if (!savedinterfacefilename.isEmpty())
 			{
-				for (unsigned int k=0; k<J2534libs.size(); k++)
+				for (const auto& lib : J2534libs)
 				{
-					if (savedinterfacefilename == QString::fromStdString(J2534libs.at(k).path))
+					if (savedinterfacefilename == QString::fromStdString(lib.path))
 					{
 						_iface_filename = savedinterfacefilename;
 						break;
