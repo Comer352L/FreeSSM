@@ -147,8 +147,7 @@ void CUcontent_MBsSWs_tableView::clearMBSWlistContent()
 
 void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 {
-	QList<unsigned int> selectedMBSWIndexes;
-	getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() < 1)
 	{
 		mbswmovedown_pushButton->setEnabled(false);
@@ -198,20 +197,23 @@ bool CUcontent_MBsSWs_tableView::maxValuesEnabled()
 }
 
 
-void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes)
+std::vector<unsigned int> CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows() const
 {
 	// GET INDEXES OF SELECTED ROWS:
-	selectedMBSWIndexes->clear();
-	for (const auto& range : selectedMBsSWs_tableWidget->selectedRanges())
+	std::vector<unsigned int> selectedMBSWIndexes;
+	const QList<QTableWidgetSelectionRange> ranges = selectedMBsSWs_tableWidget->selectedRanges();
+	for (const auto& range : ranges)
 	{
 		const int rows = range.rowCount();
+		const int topRow = range.topRow();
 		for (int m=0; m<rows; m++)
 		{
-			if (static_cast<unsigned int>(range.topRow() + m) < _nrofMBsSWs)
-				selectedMBSWIndexes->push_back(range.topRow() + m);
+			const unsigned int index = topRow + m;
+			if (index < _nrofMBsSWs)
+				selectedMBSWIndexes.push_back(index);
 		}
 	}
-	std::sort(selectedMBSWIndexes->begin(), selectedMBSWIndexes->end());
+	std::sort(selectedMBSWIndexes.begin(), selectedMBSWIndexes.end());
 	/* NOTE: This function must return sorted indexes (from min to max) !
 	   At least for the QAbstractItemView::ContiguousSelction selection mode,
 	   QTableWidget::selectedRanges() seems to return always sorted indexes.
@@ -219,6 +221,7 @@ void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> 
 	   the returned indexes, so we can NOT assume that they are and will
 	   ever be sorted in future Qt-versions !
 	 */
+	return selectedMBSWIndexes;
 }
 
 

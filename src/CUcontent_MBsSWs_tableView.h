@@ -40,7 +40,7 @@ public:
 	void clearMBSWlistContent();
 	bool minValuesEnabled();
 	bool maxValuesEnabled();
-	void getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes);
+	std::vector<unsigned int> getSelectedTableWidgetRows() const;
 	void selectMBSWtableRows(unsigned int start, unsigned int end);
 	void scrollMBSWtable(unsigned int rowindex);
 

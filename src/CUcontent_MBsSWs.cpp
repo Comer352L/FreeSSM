@@ -737,12 +737,11 @@ void CUcontent_MBsSWs::addMBsSWs()
 
 void CUcontent_MBsSWs::deleteMBsSWs()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int startindex = 0;
 	unsigned int endindex = 0;
 	unsigned int k = 0;
 	// GET INDEXES OF SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() < 1) return;
 	// CHECK AND CORRECT START AND END INDEXES:
 	startindex = selectedMBSWIndexes.at(0);
@@ -790,13 +789,12 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 
 void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	int nrofSelRows = 0;
 	unsigned int rowToMoveDownIndex = 0;
 	unsigned int rowToMoveDownTargetIndex = 0;
 	int k = 0;
 	// GET SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	nrofSelRows = selectedMBSWIndexes.size();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((nrofSelRows < 1) || (selectedMBSWIndexes.at(0) < 1) || (1 + selectedMBSWIndexes.at(0) > _MBSWmetaList.size()))
@@ -830,12 +828,11 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 
 void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int rowToMoveUpIndex = 0;
 	unsigned int rowToMoveUpTargetIndex = 0;
 	int k = 0;
 	// GET SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible
@@ -894,9 +891,9 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 
 void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 {
-	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading) return;
-	QList<unsigned int> selectedMBSWIndexes;
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
+		return;
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() < 1)
 		mbswdelete_pushButton->setEnabled(false);
 	else
