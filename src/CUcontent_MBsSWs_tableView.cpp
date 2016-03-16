@@ -144,25 +144,6 @@ void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStr
 	 */
 }
 
-/* // Display type as text
-void CUcontent_MBsSWs_tableView::updateTypesColumn(const std::vector<BlockType>& types, Qt::Alignment alignment)
-{
-	constexpr int col = static_cast<int>(Column::type);
-	const unsigned int rowcount = std::min(static_cast<unsigned int>(types.size()), _nrofMBsSWs);
-	for (unsigned int row = 0; row < rowcount; ++row) {
-		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
-		const QString label = types.at(row) == BlockType::MB ? "MB" : "SW";
-		if (tableelement) {
-			tableelement->setText(label);
-		} else {
-			tableelement = new QTableWidgetItem(label);
-			tableelement->setTextAlignment(alignment);
-			selectedMBsSWs_tableWidget->setItem(row, col, tableelement);
-		}
-	}
-}
-*/
-
 void CUcontent_MBsSWs_tableView::updateTypesColumn(const std::vector<BlockType>& types)
 {
 	constexpr int col = static_cast<int>(Column::type);
