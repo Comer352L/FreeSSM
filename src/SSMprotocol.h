@@ -38,7 +38,7 @@
 #define		MEMORY_ADDRESS_NONE	UINT_MAX
 
 
-enum BlockType { blockType_MB, blockType_SW };
+enum class BlockType { MB, SW };
 
 
 class dc_defs_dt

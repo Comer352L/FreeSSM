@@ -81,7 +81,7 @@ public:
 	bool setup(SSMprotocol *SSMPdev);
 	bool startMBSWreading();
 	bool stopMBSWreading();
-	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
+	bool setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
 	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	void getSettings(MBSWsettings_dt *settings);
 

@@ -25,6 +25,7 @@
 #include <QtGui>
 #include <QtGlobal>
 #include "ui_CUcontent_MBsSWs_tableView.h"
+#include "SSMprotocol.h"
 
 
 
@@ -35,7 +36,7 @@ class CUcontent_MBsSWs_tableView : public QWidget, private Ui::MBSWtable_Form
 public:
 	CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin=true, bool showMax=true);
 	~CUcontent_MBsSWs_tableView();
-	void setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
+	void setMBSWlistContent(const std::vector<BlockType>& types, QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
 	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
 	void clearMBSWlistContent();
 	bool minValuesEnabled() const;
@@ -45,8 +46,10 @@ public:
 	void scrollMBSWtable(unsigned int rowindex);
 
 private:
-	enum class Column { title, min, current, max, unit };
+	enum class Column { type, title, min, current, max, unit };
 
+	QIcon iconMB;
+	QIcon iconSW;
 	unsigned int _nrofMBsSWs;
 	unsigned int _maxrowsvisible;
 
@@ -54,6 +57,7 @@ private:
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment = Qt::AlignCenter);
+	void updateTypesColumn(const std::vector<BlockType>& types);
 
 private slots:
 	void setMoveButtonsEnabledState();

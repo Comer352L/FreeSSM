@@ -139,25 +139,26 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 }
 
 
-bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList)
+bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
 {
-	unsigned int k = 0;
 	// Check if MBSW-reading (and monitoring !) is in progress:
 	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size())))
 		return false;
 	// Check if the selected MBs/SWs are available:
-	for (k=0; k<MBSWmetaList.size(); k++)
+	for (const MBSWmetadata_dt& metadata : MBSWmetaList)
 	{
-		if (MBSWmetaList.at(k).blockType == blockType_MB)
+		unsigned int count = 0;
+		switch(metadata.blockType)
 		{
-			if (MBSWmetaList.at(k).nativeIndex > (_supportedMBs.size()-1))
-				return false;
+		case BlockType::MB:
+			count = _supportedMBs.size();
+			break;
+		case BlockType::SW:
+			count = _supportedSWs.size();
+			break;
 		}
-		else
-		{
-			if (MBSWmetaList.at(k).nativeIndex > (_supportedSWs.size()-1))
-				return false;
-		}
+		if (metadata.nativeIndex >= count)
+			return false;
 	}
 	// Save MB/SW-list:
 	_MBSWmetaList = MBSWmetaList;
@@ -165,8 +166,9 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	_lastValues.clear();
 	_minmaxData.clear();
 	// Setup table position indexes:
-	for (k=0; k<MBSWmetaList.size(); k++)
+	for (size_t k=0; k<MBSWmetaList.size(); k++)
 		_tableRowPosIndexes.push_back(k);
+
 	// Update MB/SW table content:
 	displayMBsSWs();
 	// Clear time information:
@@ -188,10 +190,10 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 
 void CUcontent_MBsSWs::getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
 {
-	unsigned int k = 0;
 	// Return the MBSW-metalist re-ordered according to their positions on the values-table-widget:
-	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(_MBSWmetaList);
-	for (k=0; k<_MBSWmetaList.size(); k++)
+	const size_t count = _MBSWmetaList.size();
+	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(count);
+	for (size_t k=0; k<count; k++)
 		orderedMBSWmetalist.at(_tableRowPosIndexes.at(k)) = _MBSWmetaList.at(k);
 	*MBSWmetaList = orderedMBSWmetalist;
 }
@@ -199,13 +201,13 @@ void CUcontent_MBsSWs::getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLi
 
 void CUcontent_MBsSWs::displayMBsSWs()
 {
+	const auto itemcount = _tableRowPosIndexes.size();
+	std::vector<BlockType> types(itemcount, BlockType::MB);
 	QStringList titles;
 	QStringList minvalues;
 	QStringList values;
 	QStringList maxvalues;
 	QStringList units;
-	unsigned int k=0;
-	unsigned int listPosIndex = 0;
 	// Prepare string-lists (fill with empty strings up to needed size):
 	for (size_t s=0; s<_tableRowPosIndexes.size(); s++)
 	{
@@ -216,18 +218,25 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		units << "";
 	}
 	// Fill string-lists for output:
-	for (k=0; k<_MBSWmetaList.size(); k++)
+	for (size_t k=0; k<_MBSWmetaList.size(); k++)
 	{
 		// Get MB/SW-index:
-		listPosIndex = _tableRowPosIndexes.at(k);
+		const auto listPosIndex = _tableRowPosIndexes.at(k);
+		const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
 		// Title:
-		if (_MBSWmetaList.at(k).blockType == blockType_MB)
-			titles.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
-		else	// SW
-			titles.replace( listPosIndex, _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
+		switch(metadata.blockType)
+		{
+		case BlockType::MB:
+			titles.replace( listPosIndex, _supportedMBs.at(metadata.nativeIndex).title );
+			break;
+		case BlockType::SW:
+			titles.replace( listPosIndex, _supportedSWs.at(metadata.nativeIndex).title );
+			types.at(listPosIndex) = BlockType::SW;
+			break;
+		}
 		// Value and unit strings:
 		// NOTE: _lastValues can be empty !
-		if (static_cast<unsigned int>(_lastValues.size()) > k)
+		if (_lastValues.size() > k)
 		{
 			if (_lastValues.at(k).scaledStr.isEmpty())
 				values.replace( listPosIndex, QString::number(_lastValues.at(k).rawValue) );
@@ -237,12 +246,12 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		}
 		else
 		{
-			if (_MBSWmetaList.at(k).blockType == blockType_MB)
-				units.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
+			if (metadata.blockType == BlockType::MB)
+				units.replace( listPosIndex, _supportedMBs.at(metadata.nativeIndex).unit );
 		}
 		// Last min/max value strings:
 		// NOTE: _minmaxData can be empty !
-		if (static_cast<unsigned int>(_minmaxData.size()) > k)
+		if (_minmaxData.size() > k)
 		{
 			if (!_minmaxData.at(k).disabled)
 			{
@@ -258,7 +267,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		}
 	}
 	// Display MBs/SWs
-	_valuesTableView->setMBSWlistContent(titles, values, minvalues, maxvalues, units);
+	_valuesTableView->setMBSWlistContent(types, titles, values, minvalues, maxvalues, units);
 }
 
 
@@ -422,7 +431,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		const size_t nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 		// ******** SCALE MB/SW ********:
 		// Scale raw values:
-		if (_MBSWmetaList.at(k).blockType == blockType_MB)
+		if (_MBSWmetaList.at(k).blockType == BlockType::MB)
 		{
 			const mb_dt& mb = _supportedMBs.at(nativeIndex);
 			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
@@ -510,7 +519,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		// Check if we already have min+max values, try to convert last min/max values and current value to (scaled) numeric values:
 		isLastMinValueNumeric = false;
 		isLastMaxValueNumeric = false;
-		if (k >= static_cast<unsigned int>(_minmaxData.size()))	// if no last min/max values available
+		if (k >= _minmaxData.size())	// if no last min/max values available
 			noLastMinMaxValue = true;
 		else
 		{
@@ -591,7 +600,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 				}
 				/* NOTE: only compare scaled values, if BOTH (min/max and current) are numeric ! */
 				// Compare current value with last min/max values:
-				if ( (_MBSWmetaList.at(k).blockType == blockType_SW) && scalingSuccessful && invSWmeaning)
+				if ( (_MBSWmetaList.at(k).blockType == BlockType::SW) && scalingSuccessful && invSWmeaning)
 				{
 					// Inverse comparison:
 					newMin = (currentMinCompValue > lastMinCompValue);
@@ -646,7 +655,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			maxValueStrList.replace( tablePosIndex, _minmaxData.at(k).maxScaledValueStr );
 		}
 		// ******** Save current value data ********:
-		if (k >= static_cast<unsigned int>(_lastValues.size()))
+		if (k >= _lastValues.size())
 		{
 			MBSWvalue_dt newValueDataset;
 			newValueDataset.rawValue = rawValues.at(k);

@@ -24,8 +24,6 @@
 AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,
 						   std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
 {
-	unsigned int k=0;
-	unsigned int m=0;
 	bool unselected = false;
 	MBSWmetadata_dt tmpMBSWmd;
 
@@ -38,13 +36,14 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
 	setWindowFlags( Qt::Window );
 	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs:
-	tmpMBSWmd.blockType = blockType_MB;
-	for (k=0; k<supportedMBs.size(); k++)
+	tmpMBSWmd.blockType = BlockType::MB;
+	for (size_t k = 0; k < supportedMBs.size(); ++k)
 	{
 		unselected = true;
-		for (m=0; m<(_MBSWmetaList->size()); m++)
+		for (size_t m = 0; m < _MBSWmetaList->size(); ++m)
 		{
-			if ((_MBSWmetaList->at(m).blockType == blockType_MB) && (_MBSWmetaList->at(m).nativeIndex == k))
+			const MBSWmetadata_dt& metadata = _MBSWmetaList->at(m);
+			if (metadata.blockType == BlockType::MB && metadata.nativeIndex == k)
 			{
 				unselected = false;
 				break;
@@ -62,13 +61,14 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		}
 	}
 	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) SWs:
-	tmpMBSWmd.blockType = blockType_SW;
-	for (k=0; k<supportedSWs.size(); k++)
+	tmpMBSWmd.blockType = BlockType::SW;
+	for (size_t k=0; k < supportedSWs.size(); ++k)
 	{
 		unselected = true;
-		for (m=0; m<(_MBSWmetaList->size()); m++)
+		for (size_t m = 0; m < _MBSWmetaList->size(); ++m)
 		{
-			if ((_MBSWmetaList->at(m).blockType == blockType_SW) && (_MBSWmetaList->at(m).nativeIndex == k))
+			const MBSWmetadata_dt& metadata = _MBSWmetaList->at(m);
+			if (metadata.blockType == BlockType::SW && metadata.nativeIndex == k)
 			{
 				unselected = false;
 				break;

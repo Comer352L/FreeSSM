@@ -366,7 +366,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 			// CHECK IF ADDRESS IS ALREADY ON THE LIST:
 			for (m=0; m<_selMBsSWsAddr.size(); m++)
 			{
-				if (MBSWmetaList.at(k).blockType == blockType_MB)
+				if (MBSWmetaList.at(k).blockType == BlockType::MB)
 				{
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
@@ -393,7 +393,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 		// ADD ADDRESS TO QUERY-LIST IF IT IS NEW:
 		if (newadr)
 		{
-			if (MBSWmetaList.at(k).blockType == blockType_MB)
+			if (MBSWmetaList.at(k).blockType == BlockType::MB)
 			{
 				// ADD ADDRESS(ES) OF CURRENT MB TO LIST:
 				_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low );
@@ -430,7 +430,7 @@ std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>
 			const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
 			unsigned int& rawvalue = mbswrawvalues.at(k);
 
-			if (metadata.blockType == blockType_MB)
+			if (metadata.blockType == BlockType::MB)
 			{
 				mb_intl_dt& mb = _supportedMBs.at(metadata.nativeIndex);
 				// COMPARE ADDRESSES:

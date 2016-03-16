@@ -44,5 +44,7 @@
     <file>icons/oxygen/32x32/system-shutdown.png</file>
     <file>icons/freessm/64x64/Engine.png</file>
     <file>icons/freessm/64x64/Transmission.png</file>
+    <file>icons/freessm/32x32/MB.png</file>
+    <file>icons/freessm/32x32/SW.png</file>
   </qresource>
 </RCC>
