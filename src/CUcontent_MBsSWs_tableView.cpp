@@ -35,11 +35,11 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	mbswmovedown_pushButton->setEnabled( false );
 	// Set table column resize behavior:
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	headerview->setResizeMode(col_title, QHeaderView::Stretch);
-	headerview->setResizeMode(col_min, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_current, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_max, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_unit, QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
+	headerview->setSectionResizeMode(static_cast<int>(Column::min), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::current), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::max), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
 	// Set table row resize behavior:
 	headerview = selectedMBsSWs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
@@ -83,7 +83,8 @@ void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringL
 	// Delete table content:
 	selectedMBsSWs_tableWidget->clearContents();
 	// Save nr of MBs/Sws:
-	_nrofMBsSWs = qMax( qMax( qMax( qMax( values.size(), minValues.size() ), maxValues.size() ), titles.size() ), units.size() );
+	_nrofMBsSWs = std::max({ titles.size(), values.size(), minValues.size(), maxValues.size(), units.size() });
+
 	// Set number of rows and vertical scroll bar policy:
 	if (_nrofMBsSWs >= _maxrowsvisible)
 	{
@@ -105,7 +106,7 @@ void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringL
 		selectedMBsSWs_tableWidget->scrollToTop();
 	}
 	// *** Fill table ***:
-	updateMBColumn(titles, col_title, Qt::AlignLeft | Qt::AlignVCenter);
+	updateMBColumn(titles, Column::title, Qt::AlignLeft | Qt::AlignVCenter);
 	// current/min/max values, units:
 	updateMBSWvalues(values, minValues, maxValues, units);
 }
@@ -114,23 +115,23 @@ void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsS
 {
 	const unsigned int rowcount = std::min(static_cast<unsigned int>(data.size()), _nrofMBsSWs);
 	for (unsigned int row = 0; row < rowcount; ++row) {
-		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
+		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, static_cast<int>(col));
 		if (tableelement) {
 			tableelement->setText(data.at(row));
 		} else {
 			tableelement = new QTableWidgetItem(data.at(row));
 			tableelement->setTextAlignment(alignment);
-			selectedMBsSWs_tableWidget->setItem(row, col, tableelement);
+			selectedMBsSWs_tableWidget->setItem(row, static_cast<int>(col), tableelement);
 		}
 	}
 }
 
 void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
 {
-	updateMBColumn(minValueStrList, col_min);
-	updateMBColumn(valueStrList, col_current);
-	updateMBColumn(maxValueStrList, col_max);
-	updateMBColumn(unitStrList, col_unit, Qt::AlignLeft | Qt::AlignVCenter);
+	updateMBColumn(minValueStrList, Column::min);
+	updateMBColumn(valueStrList, Column::current);
+	updateMBColumn(maxValueStrList, Column::max);
+	updateMBColumn(unitStrList, Column::unit, Qt::AlignLeft | Qt::AlignVCenter);
 	/* NOTE: The units can change during MB/SW-reading !:
 	 *       If a MB/SW cannot be scaled (e.g. due to unexpected raw values, incomplete/invalid definitions),
 	 *       the raw value is displayed instead and the unit is switched to [RAW] (MBs) or [BIN] (SWs).
@@ -170,28 +171,28 @@ void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 void CUcontent_MBsSWs_tableView::toggleMinColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(col_min);
+		selectedMBsSWs_tableWidget->showColumn(static_cast<int>(Column::min));
 	else
-		selectedMBsSWs_tableWidget->hideColumn(col_min);
+		selectedMBsSWs_tableWidget->hideColumn(static_cast<int>(Column::min));
 }
 
 
 void CUcontent_MBsSWs_tableView::toggleMaxColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(col_max);
+		selectedMBsSWs_tableWidget->showColumn(static_cast<int>(Column::max));
 	else
-		selectedMBsSWs_tableWidget->hideColumn(col_max);
+		selectedMBsSWs_tableWidget->hideColumn(static_cast<int>(Column::max));
 }
 
 
-bool CUcontent_MBsSWs_tableView::minValuesEnabled()
+bool CUcontent_MBsSWs_tableView::minValuesEnabled() const
 {
 	return showMin_pushButton->isChecked();
 }
 
 
-bool CUcontent_MBsSWs_tableView::maxValuesEnabled()
+bool CUcontent_MBsSWs_tableView::maxValuesEnabled() const
 {
 	return showMax_pushButton->isChecked();
 }
@@ -227,7 +228,7 @@ std::vector<unsigned int> CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows
 
 void CUcontent_MBsSWs_tableView::selectMBSWtableRows(unsigned int start, unsigned int end)
 {
-	QTableWidgetSelectionRange selrange(start, col_title, end, col_unit);
+	QTableWidgetSelectionRange selrange(start, static_cast<int>(Column::title), end, static_cast<int>(Column::unit));
 	selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
 }
 

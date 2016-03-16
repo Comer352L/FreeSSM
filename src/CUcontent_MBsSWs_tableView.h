@@ -38,14 +38,15 @@ public:
 	void setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
 	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
 	void clearMBSWlistContent();
-	bool minValuesEnabled();
-	bool maxValuesEnabled();
+	bool minValuesEnabled() const;
+	bool maxValuesEnabled() const;
 	std::vector<unsigned int> getSelectedTableWidgetRows() const;
 	void selectMBSWtableRows(unsigned int start, unsigned int end);
 	void scrollMBSWtable(unsigned int rowindex);
 
 private:
-	enum Column { col_title, col_min, col_current, col_max, col_unit };
+	enum class Column { title, min, current, max, unit };
+
 	unsigned int _nrofMBsSWs;
 	unsigned int _maxrowsvisible;
 
