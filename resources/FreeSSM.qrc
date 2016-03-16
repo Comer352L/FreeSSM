@@ -1,50 +1,50 @@
 <RCC>
   <qresource prefix="/">
-    <file>icons/freessm/64x64/ABS.png</file>
-    <file>icons/freessm/64x64/CruiseControl.png</file>
-    <file>icons/freessm/64x64/AirCon.png</file>
-    <file>icons/oxygen/32x32/fork.png</file>
-    <file>icons/chrystal/22x22/input_devices_settings.png</file>
-    <file>icons/freessm/24x24/reset-min-max.png</file>
-    <file>icons/freessm/32x32/FreeSSM.png</file>
-    <file>icons/freessm/24x24/show-max-value.png</file>
-    <file>icons/freessm/24x24/show-min-value.png</file>
-    <file>icons/oxygen/22x22/preferences-desktop-theme.png</file>
-    <file>icons/oxygen/22x22/go-first.png</file>
-    <file>icons/oxygen/22x22/go-next.png</file>
-    <file>icons/oxygen/22x22/drive-harddisk.png</file>
-    <file>icons/oxygen/22x22/view-history.png</file>
-    <file>icons/oxygen/16x16/chronometer.png</file>
-    <file>icons/chrystal/32x32/edit_remove.png</file>
-    <file>license_de.html</file>
-    <file>license_en.html</file>
     <file>changelog_de.txt</file>
     <file>changelog_en.txt</file>
-    <file>icons/chrystal/22x22/hardware.png</file>
-    <file>icons/oxygen/22x22/preferences-desktop-locale.png</file>
-    <file>icons/chrystal/32x32/input_devices_settings.png</file>
-    <file>icons/chrystal/22x22/klaptop.png</file>
-    <file>icons/oxygen/22x22/applications-utilities.png</file>
-    <file>icons/chrystal/22x22/messagebox_warning.png</file>
     <file>icons/chrystal/22x22/configure.png</file>
-    <file>icons/chrystal/22x22/eraser.png</file>
     <file>icons/chrystal/22x22/editdelete.png</file>
+    <file>icons/chrystal/22x22/eraser.png</file>
+    <file>icons/chrystal/22x22/hardware.png</file>
+    <file>icons/chrystal/22x22/input_devices_settings.png</file>
+    <file>icons/chrystal/22x22/klaptop.png</file>
+    <file>icons/chrystal/22x22/messagebox_warning.png</file>
     <file>icons/chrystal/22x22/ok.png</file>
     <file>icons/chrystal/32x32/1downarrow.png</file>
     <file>icons/chrystal/32x32/1uparrow.png</file>
-    <file>icons/chrystal/32x32/player_play.png</file>
-    <file>icons/chrystal/32x32/player_stop.png</file>
     <file>icons/chrystal/32x32/add.png</file>
     <file>icons/chrystal/32x32/cancel.png</file>
-    <file>icons/chrystal/48x48/fileprint.png</file>
+    <file>icons/chrystal/32x32/edit_remove.png</file>
     <file>icons/chrystal/32x32/fileprint.png</file>
+    <file>icons/chrystal/32x32/input_devices_settings.png</file>
+    <file>icons/chrystal/32x32/player_play.png</file>
+    <file>icons/chrystal/32x32/player_stop.png</file>
+    <file>icons/chrystal/48x48/fileprint.png</file>
+    <file>icons/freessm/24x24/reset-min-max.png</file>
+    <file>icons/freessm/24x24/show-max-value.png</file>
+    <file>icons/freessm/24x24/show-min-value.png</file>
+    <file>icons/freessm/32x32/FreeSSM.png</file>
+    <file>icons/freessm/32x32/MB.png</file>
+    <file>icons/freessm/32x32/SW.png</file>
+    <file>icons/freessm/64x64/ABS.png</file>
+    <file>icons/freessm/64x64/AirCon.png</file>
+    <file>icons/freessm/64x64/CruiseControl.png</file>
+    <file>icons/freessm/64x64/Engine.png</file>
+    <file>icons/freessm/64x64/Transmission.png</file>
+    <file>icons/oxygen/16x16/chronometer.png</file>
+    <file>icons/oxygen/22x22/applications-utilities.png</file>
+    <file>icons/oxygen/22x22/drive-harddisk.png</file>
+    <file>icons/oxygen/22x22/go-first.png</file>
+    <file>icons/oxygen/22x22/go-next.png</file>
+    <file>icons/oxygen/22x22/preferences-desktop-locale.png</file>
+    <file>icons/oxygen/22x22/preferences-desktop-theme.png</file>
+    <file>icons/oxygen/22x22/view-history.png</file>
+    <file>icons/oxygen/32x32/fork.png</file>
     <file>icons/oxygen/32x32/help-about.png</file>
     <file>icons/oxygen/32x32/help-browser.png</file>
     <file>icons/oxygen/32x32/preferences-system.png</file>
     <file>icons/oxygen/32x32/system-shutdown.png</file>
-    <file>icons/freessm/64x64/Engine.png</file>
-    <file>icons/freessm/64x64/Transmission.png</file>
-    <file>icons/freessm/32x32/MB.png</file>
-    <file>icons/freessm/32x32/SW.png</file>
+    <file>license_de.html</file>
+    <file>license_en.html</file>
   </qresource>
 </RCC>
