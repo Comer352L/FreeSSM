@@ -24,14 +24,8 @@
 CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : QWidget(parent)
 {
 	_SSMPdev = NULL;
-	_supportedMBs.clear();
-	_supportedSWs.clear();
-	_MBSWmetaList.clear();
 	_timemode = settings.timeMode;
 	_lastrefreshduration_ms = 0;
-	_lastValues.clear();
-	_minmaxData.clear();
-	_tableRowPosIndexes.clear();
 
 	// Setup GUI:
 	setupUi(this);
@@ -188,14 +182,14 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 }
 
 
-void CUcontent_MBsSWs::getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
+std::vector<MBSWmetadata_dt> CUcontent_MBsSWs::getMBSWselection() const
 {
 	// Return the MBSW-metalist re-ordered according to their positions on the values-table-widget:
 	const size_t count = _MBSWmetaList.size();
 	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(count);
 	for (size_t k=0; k<count; k++)
 		orderedMBSWmetalist.at(_tableRowPosIndexes.at(k)) = _MBSWmetaList.at(k);
-	*MBSWmetaList = orderedMBSWmetalist;
+	return orderedMBSWmetalist;
 }
 
 
@@ -934,11 +928,13 @@ void CUcontent_MBsSWs::switchTimeMode()
 }
 
 
-void CUcontent_MBsSWs::getSettings(MBSWsettings_dt *settings)
+MBSWsettings_dt CUcontent_MBsSWs::getSettings() const
 {
-	settings->timeMode = _timemode;
-	settings->minValuesEnabled = _valuesTableView->minValuesEnabled();
-	settings->maxValuesEnabled = _valuesTableView->maxValuesEnabled();
+	MBSWsettings_dt s;
+	s.timeMode = _timemode;
+	s.minValuesEnabled = _valuesTableView->minValuesEnabled();
+	s.maxValuesEnabled = _valuesTableView->maxValuesEnabled();
+	return s;
 }
 
 

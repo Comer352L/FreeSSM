@@ -39,8 +39,7 @@
 class MBSWvalue_dt
 {
 public:
-	MBSWvalue_dt() { rawValue=0; };
-	unsigned int rawValue;
+	unsigned int rawValue {0};
 	QString scaledStr;
 	QString unitStr;
 };
@@ -50,10 +49,9 @@ public:
 class MinMaxMBSWvalue_dt
 {
 public:
-	MinMaxMBSWvalue_dt() { disabled=false; minRawValue=0; minRawValue=0; };
-	bool disabled;
-	double minRawValue;
-	double maxRawValue;
+	bool disabled {false};
+	double minRawValue {0};
+	double maxRawValue {0};
 	QString minScaledValueStr;
 	QString maxScaledValueStr;
 };
@@ -63,10 +61,9 @@ public:
 class MBSWsettings_dt
 {
 public:
-	MBSWsettings_dt() { timeMode=0; minValuesEnabled=1; maxValuesEnabled=1; };
-	bool timeMode;
-	bool minValuesEnabled;
-	bool maxValuesEnabled;
+	bool timeMode {false};
+	bool minValuesEnabled {true};
+	bool maxValuesEnabled {true};
 };
 
 
@@ -76,14 +73,14 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = 0);
+	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = nullptr);
 	~CUcontent_MBsSWs();
 	bool setup(SSMprotocol *SSMPdev);
 	bool startMBSWreading();
 	bool stopMBSWreading();
 	bool setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
-	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
-	void getSettings(MBSWsettings_dt *settings);
+	std::vector<MBSWmetadata_dt> getMBSWselection() const;
+	MBSWsettings_dt getSettings() const;
 
 private:
 	SSMprotocol *_SSMPdev;
