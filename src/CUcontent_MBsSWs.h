@@ -83,6 +83,8 @@ public:
 	MBSWsettings_dt getSettings() const;
 
 private:
+	const static QString DefaultTimeValStr;
+
 	SSMprotocol *_SSMPdev;
 	QLabel *_MBSWrefreshTimeTitle_label;
 	QLabel *_MBSWrefreshTimeValue_label;
@@ -100,7 +102,9 @@ private:
 	void setupTimeModeUiElements();
 	void setupUiFonts();
 	void displayMBsSWs();
+	void updateRefreshTimeTitle();
 	void updateTimeInfo(int refreshduration_ms);
+	void clearRefreshTime();
 	void communicationError(QString addstr);
 	void resizeEvent(QResizeEvent *event);
 

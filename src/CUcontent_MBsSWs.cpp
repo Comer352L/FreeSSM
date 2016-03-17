@@ -21,6 +21,8 @@
 
 
 
+const QString CUcontent_MBsSWs::DefaultTimeValStr {"---"};
+
 CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : QWidget(parent)
 {
 	_SSMPdev = NULL;
@@ -44,12 +46,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	mbswdelete_pushButton->setEnabled( false );
 	MBSWviews_tabWidget->setTabEnabled(1, false);
 	_valuesTableView->setEnabled(false);
-	// Set content of time refresh-time labels:
-	if (_timemode)
-		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
-	else
-		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	updateRefreshTimeTitle();
+	clearRefreshTime();
 	// Connect signals and slots:
 	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
@@ -109,7 +107,7 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	_minmaxData.clear();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Output titles and units of the selcted MBs/SWs
 	displayMBsSWs();
 	// *** Enable/Disable all GUI-elements:
@@ -166,7 +164,7 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 	// Update MB/SW table content:
 	displayMBsSWs();
 	// Clear time information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Activate/deactivate buttons:
 	if (_MBSWmetaList.size() > 0)
 	{
@@ -339,7 +337,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	// Clear values in MB/SW-table:
 	displayMBsSWs();
 	// Clear refresh-time-information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Connect signals and slots:
 	connect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
 	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
@@ -679,21 +677,33 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 
 void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 {
-	double secs_ilen = 0;
-	double datarate = 0;
-
 	_lastrefreshduration_ms = refreshduration_ms; // save last refresh duration
-	QString timeValStr = "";
+	QString timeValStr;
 	// Output refresh duration:
-	secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
-	if (_timemode == 0)
+	const double secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
+	if (!_timemode)
 		timeValStr = QString::number(secs_ilen, 'f', 3) + " s";
 	else
 	{
-		datarate = _MBSWmetaList.size() / secs_ilen;
+		double datarate = _MBSWmetaList.size() / secs_ilen;
 		timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 	}
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
+}
+
+
+void CUcontent_MBsSWs::updateRefreshTimeTitle()
+{
+	if (_timemode)
+		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:"));
+	else
+		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
+}
+
+
+void CUcontent_MBsSWs::clearRefreshTime()
+{
+	_MBSWrefreshTimeValue_label->setText(DefaultTimeValStr);
 }
 
 
@@ -717,7 +727,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		// Update MB/SW table content:
 		displayMBsSWs();
 		// Clear time information:
-		_MBSWrefreshTimeValue_label->setText("---      ");
+		clearRefreshTime();
 		// Select new MBs/SWs:
 		if (MBSWmetaList_len_old > 0)
 		{
@@ -777,7 +787,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	// UPDATE MB/SW TABLE CONTENT:
 	displayMBsSWs();
 	// Clear time information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// ACTIVATE/DEACTIVATE BUTTONS:
 	if (_MBSWmetaList.empty())
 	{
@@ -904,11 +914,11 @@ void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 
 void CUcontent_MBsSWs::switchTimeMode()
 {
-	QString timeValStr = "---      ";
+	QString timeValStr = DefaultTimeValStr;
 	_timemode = !_timemode;
+	updateRefreshTimeTitle();
 	if (_timemode)
 	{
-		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
 		if (_lastrefreshduration_ms > 0)
 		{
 			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
@@ -917,7 +927,6 @@ void CUcontent_MBsSWs::switchTimeMode()
 	}
 	else
 	{
-		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
 		if (_lastrefreshduration_ms > 0)
 		{
 			double sec = static_cast<double>(_lastrefreshduration_ms) / 1000;
@@ -952,11 +961,18 @@ void CUcontent_MBsSWs::communicationError(QString addstr)
 }
 
 
+constexpr int offsetRightTimeTitle = 244;
+constexpr int offsetRightTimeValue = 100;
+constexpr int offsetRightTimeModeButton = 29;
+constexpr int offsetDownTimeLabel = 3;
+constexpr int offsetDownTimeModeButton = 1;
+constexpr int heightLabel = 16;
+
 void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 {
-	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
-	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-29, 1);
+	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
+	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
+	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
 	event->accept();
 }
 
@@ -965,17 +981,18 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 {
 	_MBSWrefreshTimeTitle_label = new QLabel("", this);
 	_MBSWrefreshTimeTitle_label->setFixedWidth(140);
-	_MBSWrefreshTimeTitle_label->setFixedHeight(16);
+	_MBSWrefreshTimeTitle_label->setFixedHeight(heightLabel);
+	_MBSWrefreshTimeTitle_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	_MBSWrefreshTimeValue_label = new QLabel("", this);
-	_MBSWrefreshTimeValue_label->setFixedWidth(55);
-	_MBSWrefreshTimeValue_label->setFixedHeight(16);
+	_MBSWrefreshTimeValue_label->setFixedWidth(70);
+	_MBSWrefreshTimeValue_label->setFixedHeight(heightLabel);
 	_timemode_pushButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/oxygen/16x16/chronometer.png")), "", this);
 	_timemode_pushButton->setFixedWidth(20);
 	_timemode_pushButton->setFixedHeight(20);
 	_timemode_pushButton->setIconSize(QSize(12,12));
-	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
-	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-29, 1);
+	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
+	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
+	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
 	_MBSWrefreshTimeTitle_label->show();
 	_MBSWrefreshTimeValue_label->show();
 	_timemode_pushButton->show();
@@ -1001,4 +1018,3 @@ void CUcontent_MBsSWs::setupUiFonts()
 	// Tab widget:
 	MBSWviews_tabWidget->setFont(contentfont);
 }
-
