@@ -195,20 +195,14 @@ void CUcontent_MBsSWs::displayMBsSWs()
 {
 	const auto itemcount = _tableRowPosIndexes.size();
 	std::vector<BlockType> types(itemcount, BlockType::MB);
-	QStringList titles;
-	QStringList minvalues;
-	QStringList values;
-	QStringList maxvalues;
-	QStringList units;
 	// Prepare string-lists (fill with empty strings up to needed size):
-	for (size_t s=0; s<_tableRowPosIndexes.size(); s++)
-	{
-		titles << "";
-		minvalues << "";
-		values << "";
-		maxvalues << "";
-		units << "";
-	}
+	QStringList titles;
+	libFSSM::fill_n_QStringList(titles, itemcount);
+	QStringList minvalues(titles);
+	QStringList values(titles);
+	QStringList maxvalues(titles);
+	QStringList units(titles);
+
 	// Fill string-lists for output:
 	for (size_t k=0; k<_MBSWmetaList.size(); k++)
 	{
@@ -230,11 +224,12 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		// NOTE: _lastValues can be empty !
 		if (_lastValues.size() > k)
 		{
-			if (_lastValues.at(k).scaledStr.isEmpty())
-				values.replace( listPosIndex, QString::number(_lastValues.at(k).rawValue) );
+			const auto& lastValue = _lastValues.at(k);
+			if (lastValue.scaledStr.isEmpty())
+				values.replace( listPosIndex, QString::number(lastValue.rawValue) );
 			else
-				values.replace( listPosIndex, _lastValues.at(k).scaledStr );
-			units.replace( listPosIndex, _lastValues.at(k).unitStr );
+				values.replace( listPosIndex, lastValue.scaledStr );
+			units.replace( listPosIndex, lastValue.unitStr );
 		}
 		else
 		{
@@ -402,19 +397,12 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 	bool newMin = false;
 	bool newMax = false;
 	// List output
-	QStringList minValueStrList;
-	QStringList valueStrList;
-	QStringList maxValueStrList;
-	QStringList unitStrList;
-
 	// Prepare string-lists for values-table-output (fill with empty strings up to the needed size):
-	for (unsigned int s=0; s<rawValues.size(); s++)
-	{
-		minValueStrList << "";
-		valueStrList << "";
-		maxValueStrList << "";
-		unitStrList << "";
-	}
+	QStringList valueStrList;
+	libFSSM::fill_n_QStringList(valueStrList, rawValues.size());
+	QStringList minValueStrList(valueStrList);
+	QStringList maxValueStrList(valueStrList);
+	QStringList unitStrList(valueStrList);
 	// Process raw values
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
@@ -694,10 +682,7 @@ void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 
 void CUcontent_MBsSWs::updateRefreshTimeTitle()
 {
-	if (_timemode)
-		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:"));
-	else
-		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
+	_MBSWrefreshTimeTitle_label->setText(tr(_timemode ? "Block transfer rate:" : "Refresh duration:"));
 }
 
 
@@ -876,24 +861,23 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 {
 	QStringList lastValueStr;
 	QStringList lastUnitStr;
-	MinMaxMBSWvalue_dt newMinMaxDataset;
+	lastValueStr.reserve(_lastValues.size());
+	lastUnitStr.reserve(_lastValues.size());
 	// Delete min/max values:
 	_minmaxData.clear();
 	// Setup new min/max values and output data:
-	for (size_t k=0; k<_lastValues.size(); k++)
+	for (const MBSWvalue_dt& lastValue : _lastValues)
 	{
+		MinMaxMBSWvalue_dt newMinMaxDataset;
 		// Set min/max values to current value:
-		newMinMaxDataset.minRawValue = _lastValues.at(k).rawValue;
-		newMinMaxDataset.maxRawValue = _lastValues.at(k).rawValue;
-		newMinMaxDataset.minScaledValueStr = _lastValues.at(k).scaledStr;
-		newMinMaxDataset.maxScaledValueStr = _lastValues.at(k).scaledStr;
+		newMinMaxDataset.minRawValue = lastValue.rawValue;
+		newMinMaxDataset.maxRawValue = lastValue.rawValue;
+		newMinMaxDataset.minScaledValueStr = lastValue.scaledStr;
+		newMinMaxDataset.maxScaledValueStr = lastValue.scaledStr;
 		_minmaxData.push_back(newMinMaxDataset);
 		// Get min/max value string and unit for output:
-		if (_lastValues.at(k).scaledStr.isEmpty())
-			lastValueStr.append( QString::number(_lastValues.at(k).rawValue) );
-		else
-			lastValueStr.append( _lastValues.at(k).scaledStr );
-		lastUnitStr.append( _lastValues.at(k).unitStr );
+		lastValueStr.push_back( !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue));
+		lastUnitStr.push_back( lastValue.unitStr );
 	}
 	// Display last values as current/min/max values:
 	_valuesTableView->updateMBSWvalues(lastValueStr, lastValueStr, lastValueStr, lastUnitStr);
@@ -904,30 +888,23 @@ void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 {
 	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
 		return;
-	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
-	if (selectedMBSWIndexes.size() < 1)
-		mbswdelete_pushButton->setEnabled(false);
-	else
-		mbswdelete_pushButton->setEnabled(true);
+	mbswdelete_pushButton->setEnabled( _valuesTableView->getSelectedTableWidgetRows().size() > 0 );
 }
 
 
 void CUcontent_MBsSWs::switchTimeMode()
 {
-	QString timeValStr = DefaultTimeValStr;
 	_timemode = !_timemode;
 	updateRefreshTimeTitle();
-	if (_timemode)
+	QString timeValStr {DefaultTimeValStr};
+	if (_lastrefreshduration_ms > 0)
 	{
-		if (_lastrefreshduration_ms > 0)
+		if (_timemode)
 		{
 			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
 			timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 		}
-	}
-	else
-	{
-		if (_lastrefreshduration_ms > 0)
+		else
 		{
 			double sec = static_cast<double>(_lastrefreshduration_ms) / 1000;
 			timeValStr = QString::number(sec, 'f', 3) + " s";
