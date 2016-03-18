@@ -669,12 +669,14 @@ void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 	QString timeValStr;
 	// Output refresh duration:
 	const double secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
-	if (!_timemode)
+	switch(_timemode) {
+	case TimeMode::refreshDuration:
 		timeValStr = QString::number(secs_ilen, 'f', 3) + " s";
-	else
-	{
+		break;
+	case TimeMode::dataRate:
 		double datarate = _MBSWmetaList.size() / secs_ilen;
 		timeValStr = QString::number(datarate, 'f', 1) + " B/s";
+		break;
 	}
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
 }
@@ -682,7 +684,7 @@ void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 
 void CUcontent_MBsSWs::updateRefreshTimeTitle()
 {
-	_MBSWrefreshTimeTitle_label->setText(tr(_timemode ? "Block transfer rate:" : "Refresh duration:"));
+	_MBSWrefreshTimeTitle_label->setText(tr(_timemode == TimeMode::refreshDuration ? "Refresh duration:" : "Block transfer rate:"));
 }
 
 
@@ -894,23 +896,29 @@ void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 
 void CUcontent_MBsSWs::switchTimeMode()
 {
-	_timemode = !_timemode;
-	updateRefreshTimeTitle();
 	QString timeValStr {DefaultTimeValStr};
-	if (_lastrefreshduration_ms > 0)
-	{
-		if (_timemode)
+	TimeMode newtimemode {TimeMode::refreshDuration};
+	switch(_timemode) {
+	case TimeMode::refreshDuration:
+		newtimemode = TimeMode::dataRate;
+		if (_lastrefreshduration_ms > 0)
 		{
 			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
 			timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 		}
-		else
+		break;
+	case TimeMode::dataRate:
+		newtimemode = TimeMode::refreshDuration;
+		if (_lastrefreshduration_ms > 0)
 		{
 			double sec = static_cast<double>(_lastrefreshduration_ms) / 1000;
 			timeValStr = QString::number(sec, 'f', 3) + " s";
 		}
+		break;
 	}
+	_timemode = newtimemode;
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
+	updateRefreshTimeTitle();
 }
 
 

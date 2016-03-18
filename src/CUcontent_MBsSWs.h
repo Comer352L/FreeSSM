@@ -58,10 +58,13 @@ public:
 
 
 
+enum class TimeMode {refreshDuration, dataRate};
+
+
 class MBSWsettings_dt
 {
 public:
-	bool timeMode {false};
+	TimeMode timeMode {TimeMode::refreshDuration};
 	bool minValuesEnabled {true};
 	bool maxValuesEnabled {true};
 };
@@ -93,7 +96,7 @@ private:
 	std::vector<mb_dt> _supportedMBs;
 	std::vector<sw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
-	bool _timemode;
+	TimeMode _timemode;
 	int _lastrefreshduration_ms;
 	std::vector<MBSWvalue_dt> _lastValues;
 	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
