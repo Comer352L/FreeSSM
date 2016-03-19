@@ -22,6 +22,7 @@
 
 
 
+#include <vector>
 #include <algorithm>
 #include <QtGui>
 #include "ui_AddMBsSWsDlg.h"
@@ -34,11 +35,22 @@ class AddMBsSWsDlg : public QDialog, private Ui::AddMBsSWs_Dialog
 	Q_OBJECT
 
 private:
+	enum class Column { type, title, unit };
+
+	struct Item {
+		BlockType blockType;
+		QString title;
+		QString unit;
+	};
+
 	std::vector<MBSWmetadata_dt> *_MBSWmetaList;
 	std::vector<MBSWmetadata_dt> _unselectedMBsSWs_metaList;
+	QIcon iconMB;
+	QIcon iconSW;
 
 	static bool rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B);
 	void setupUiFonts();
+	void setContent(const std::vector<Item>& items);
 
 public:
 	AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,

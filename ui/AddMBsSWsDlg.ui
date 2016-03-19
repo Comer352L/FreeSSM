@@ -1,96 +1,111 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>AddMBsSWs_Dialog</class>
- <widget class="QDialog" name="AddMBsSWs_Dialog" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="AddMBsSWs_Dialog">
+  <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>489</height>
+    <width>600</width>
+    <height>600</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Add Measuring Blocks &amp; Switches</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" >
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="title_label" >
-       <property name="font" >
-        <font>
-         <pointsize>12</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>Title   [Unit]:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QListWidget" name="MBsSWs_listWidget" >
-       <property name="minimumSize" >
-        <size>
-         <width>421</width>
-         <height>276</height>
-        </size>
-       </property>
-       <property name="font" >
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="alternatingRowColors" >
+      <widget class="QTableWidget" name="MBsSWs_tableWidget">
+       <property name="alternatingRowColors">
         <bool>true</bool>
        </property>
-       <property name="selectionMode" >
+       <property name="selectionMode">
         <enum>QAbstractItemView::MultiSelection</enum>
        </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="verticalScrollMode">
+        <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="horizontalScrollMode">
+        <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="rowCount">
+        <number>0</number>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Type:</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Title:</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Unit:</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="gridLayout" >
-       <property name="topMargin" >
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="topMargin">
         <number>0</number>
        </property>
-       <item row="0" column="1" >
-        <widget class="QPushButton" name="add_pushButton" >
-         <property name="minimumSize" >
+       <item row="0" column="1">
+        <widget class="QPushButton" name="add_pushButton">
+         <property name="minimumSize">
           <size>
            <width>122</width>
            <height>32</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
            <width>122</width>
            <height>32</height>
           </size>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>       Add        </string>
          </property>
-         <property name="icon" >
-          <iconset resource="../resources/FreeSSM.qrc" >
+         <property name="icon">
+          <iconset resource="../resources/FreeSSM.qrc">
            <normaloff>:/icons/chrystal/32x32/add.png</normaloff>:/icons/chrystal/32x32/add.png</iconset>
          </property>
-         <property name="iconSize" >
+         <property name="iconSize">
           <size>
            <width>24</width>
            <height>24</height>
@@ -98,28 +113,28 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" >
-        <widget class="QPushButton" name="cancel_pushButton" >
-         <property name="minimumSize" >
+       <item row="0" column="2">
+        <widget class="QPushButton" name="cancel_pushButton">
+         <property name="minimumSize">
           <size>
            <width>122</width>
            <height>32</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
            <width>122</width>
            <height>32</height>
           </size>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>    Cancel       </string>
          </property>
-         <property name="icon" >
-          <iconset resource="../resources/FreeSSM.qrc" >
+         <property name="icon">
+          <iconset resource="../resources/FreeSSM.qrc">
            <normaloff>:/icons/chrystal/32x32/cancel.png</normaloff>:/icons/chrystal/32x32/cancel.png</iconset>
          </property>
-         <property name="iconSize" >
+         <property name="iconSize">
           <size>
            <width>24</width>
            <height>24</height>
@@ -127,12 +142,12 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0" >
-        <spacer name="horizontalSpacer" >
-         <property name="orientation" >
+       <item row="0" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
            <height>20</height>
@@ -140,12 +155,12 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="3" >
-        <spacer name="horizontalSpacer_2" >
-         <property name="orientation" >
+       <item row="0" column="3">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
            <height>20</height>
@@ -160,7 +175,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../resources/FreeSSM.qrc" />
+  <include location="../resources/FreeSSM.qrc"/>
  </resources>
  <connections/>
 </ui>

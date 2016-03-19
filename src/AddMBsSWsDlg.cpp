@@ -35,7 +35,19 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 	// enable maximize and minimize buttons
 	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
 	setWindowFlags( Qt::Window );
-	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) MBs:
+
+	iconMB = QIcon(":/icons/freessm/32x32/MB.png");
+	iconSW = QIcon(":/icons/freessm/32x32/SW.png");
+	auto headerview = MBsSWs_tableWidget->horizontalHeader();
+	headerview->setSectionResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
+	headerview->setSectionResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
+	// Set table row resize behavior:
+	headerview = MBsSWs_tableWidget->verticalHeader();
+	headerview->setResizeMode(QHeaderView::Fixed);
+
+	std::vector<Item> items;
+	// FIND AVAILABLE (UNSELECTED) MBs:
 	tmpMBSWmd.blockType = BlockType::MB;
 	for (size_t k = 0; k < supportedMBs.size(); ++k)
 	{
@@ -51,16 +63,16 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		}
 		if (unselected)
 		{
-			const auto& mb = supportedMBs.at(k);
+			const mb_dt& mb = supportedMBs.at(k);
 			// Output MB:
-			const QString label = !mb.unit.isEmpty() ? mb.title + "   [" + mb.unit + "]" : mb.title;
-			MBsSWs_listWidget->addItem(label);
+			items.push_back(Item { BlockType::MB, mb.title, mb.unit });
+
 			// Put MB to the list of unselected MBs/SWs:
 			tmpMBSWmd.nativeIndex = k;
 			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
 		}
 	}
-	// SAVE AND OUTPUT AVAILABLE (UNSELECTED) SWs:
+	// FIND AVAILABLE (UNSELECTED) SWs:
 	tmpMBSWmd.blockType = BlockType::SW;
 	for (size_t k=0; k < supportedSWs.size(); ++k)
 	{
@@ -77,19 +89,22 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 		if (unselected)
 		{
 			// Output SW:
-			auto& sw = supportedSWs.at(k);
-			MBsSWs_listWidget->addItem(sw.title+"   ["+ sw.unit.replace('\\','/') +"]");
+			sw_dt& sw = supportedSWs.at(k);
+			items.push_back(Item { BlockType::SW, sw.title, sw.unit.replace('\\','/') });
+
 			// Put SW to the list of unselected MBs/SWs:
 			tmpMBSWmd.nativeIndex = k;
 			_unselectedMBsSWs_metaList.push_back( tmpMBSWmd );
 		}
 	}
+
+	setContent(items);
 	// Enable/disable "Add" button:
 	setAddButtonEnableStatus();
 	// CONNECT BUTTONS AND LIST WIDGET WITH SLOTS:
 	connect(add_pushButton, SIGNAL( released() ), this, SLOT( add() ));
 	connect(cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ));
-	connect(MBsSWs_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
+	connect(MBsSWs_tableWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
 }
 
 
@@ -97,14 +112,14 @@ AddMBsSWsDlg::~AddMBsSWsDlg()
 {
 	disconnect(add_pushButton, SIGNAL( released() ), this, SLOT( add() ));
 	disconnect(cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ));
-	disconnect(MBsSWs_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
+	disconnect(MBsSWs_tableWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( setAddButtonEnableStatus() ));
 }
 
 
 void AddMBsSWsDlg::add()
 {
 	disconnect(add_pushButton, SIGNAL( pressed() ), this, SLOT( add() )); // bugfix !
-	QItemSelectionModel *selModel = MBsSWs_listWidget->selectionModel();
+	QItemSelectionModel *selModel = MBsSWs_tableWidget->selectionModel();
 	QModelIndexList MIlist = selModel->selectedRows();
 	std::sort(MIlist.begin(), MIlist.end(), rowIndexLessThan);	// since Qt 4.4.1, we have to sort the QModelIndexes...
 	for (const auto& mi : MIlist)
@@ -119,12 +134,12 @@ void AddMBsSWsDlg::add()
 void AddMBsSWsDlg::cancel()
 {
 	close();
-};
+}
 
 
 void AddMBsSWsDlg::setAddButtonEnableStatus()
 {
-	const QList<QListWidgetItem*> selitemslist = MBsSWs_listWidget->selectedItems();
+	const QList<QTableWidgetItem*> selitemslist = MBsSWs_tableWidget->selectedItems();
 	// NOTE: returns the nr. of selected cells, NOT THE NR. OF ROWS ! Empty cells are not included !
 	add_pushButton->setEnabled(selitemslist.size() > 0);
 }
@@ -145,17 +160,39 @@ void AddMBsSWsDlg::setupUiFonts()
 	font.setFamily(appfont.family());
 	font.setPixelSize(12);	// 9pts
 	this->setFont(font);
-	font = title_label->font();
-	font.setBold(true);
-	font.setPixelSize(13);	// 10pts
-	title_label->setFont(font);
-	font = MBsSWs_listWidget->font();
+	font = MBsSWs_tableWidget->font();
 	font.setPixelSize(12);	// 9pts
-	MBsSWs_listWidget->setFont(font);
+	MBsSWs_tableWidget->setFont(font);
 	font = add_pushButton->font();
 	font.setPixelSize(13);	// 10pts
 	add_pushButton->setFont(font);
 	font = cancel_pushButton->font();
 	font.setPixelSize(13);	// 10pts
 	cancel_pushButton->setFont(font);
+}
+
+
+void AddMBsSWsDlg::setContent(const std::vector<Item>& items)
+{
+	MBsSWs_tableWidget->clearContents();
+	const size_t count = items.size();
+	MBsSWs_tableWidget->setRowCount(count);
+
+	for (size_t row = 0; row < count; ++row)
+	{
+		const Item& item = items.at(row);
+		QTableWidgetItem* tableelement;
+
+		const QIcon& icon = item.blockType == BlockType::MB ? iconMB : iconSW;
+		tableelement = new QTableWidgetItem(icon, nullptr);
+		MBsSWs_tableWidget->setItem(row, static_cast<int>(Column::type), tableelement);
+
+		tableelement = new QTableWidgetItem(item.title);
+		//tableelement->setTextAlignment(alignment);
+		MBsSWs_tableWidget->setItem(row, static_cast<int>(Column::title), tableelement);
+
+		tableelement = new QTableWidgetItem(item.unit);
+		//tableelement->setTextAlignment(alignment);
+		MBsSWs_tableWidget->setItem(row, static_cast<int>(Column::unit), tableelement);
+	}
 }
