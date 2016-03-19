@@ -173,21 +173,15 @@ void CUcontent_MBsSWs_tableView::clearMBSWlistContent()
 void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 {
 	const auto selectedMBSWIndexes = getSelectedTableWidgetRows();
-	if (selectedMBSWIndexes.size() < 1)
+	if (selectedMBSWIndexes.size() > 0)
 	{
-		mbswmovedown_pushButton->setEnabled(false);
-		mbswmoveup_pushButton->setEnabled(false);
+		mbswmoveup_pushButton->setEnabled(selectedMBSWIndexes.front() > 0);
+		mbswmovedown_pushButton->setEnabled(selectedMBSWIndexes.back() < (_nrofMBsSWs - 1));
 	}
 	else
 	{
-		if (selectedMBSWIndexes.at(0) == 0)
-			mbswmoveup_pushButton->setEnabled(false);
-		else
-			mbswmoveup_pushButton->setEnabled(true);
-		if (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1) == (_nrofMBsSWs-1))
-			mbswmovedown_pushButton->setEnabled(false);
-		else
-			mbswmovedown_pushButton->setEnabled(true);
+		mbswmovedown_pushButton->setEnabled(false);
+		mbswmoveup_pushButton->setEnabled(false);
 	}
 }
 
@@ -259,37 +253,27 @@ void CUcontent_MBsSWs_tableView::selectMBSWtableRows(unsigned int start, unsigne
 
 void CUcontent_MBsSWs_tableView::scrollMBSWtable(unsigned int rowindex)
 {
-	QTableWidgetItem *item = new QTableWidgetItem;
-	item = selectedMBsSWs_tableWidget->item(rowindex, 0);
+	const QTableWidgetItem *item = selectedMBsSWs_tableWidget->item(rowindex, static_cast<int>(Column::title));
 	selectedMBsSWs_tableWidget->scrollToItem(item, QAbstractItemView::EnsureVisible);
 }
 
 
 void CUcontent_MBsSWs_tableView::resizeEvent(QResizeEvent *event)
 {
-	int rowheight = 0;
-	int vspace = 0;
-	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (selectedMBsSWs_tableWidget->rowCount() < 1)
 		selectedMBsSWs_tableWidget->setRowCount(1); // Temporary create a row to get the row hight
-	rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
+	const int rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
 	//vspace = selectedMBsSWs_tableWidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
-	vspace = selectedMBsSWs_tableWidget->height() - selectedMBsSWs_tableWidget->horizontalHeader()->viewport()->height() - 4;
+	const int vspace = selectedMBsSWs_tableWidget->height() - selectedMBsSWs_tableWidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
 	_maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (_maxrowsvisible < _nrofMBsSWs)
-		minnrofrows = _nrofMBsSWs;
-	else
-		minnrofrows = _maxrowsvisible;
+	const unsigned int minnrofrows = _maxrowsvisible < _nrofMBsSWs ? _nrofMBsSWs : _maxrowsvisible;
 	selectedMBsSWs_tableWidget->setRowCount(minnrofrows);
 	// Set vertical scroll bar policy:
-	if (minnrofrows > _nrofMBsSWs)
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-	else
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+	selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( minnrofrows > _nrofMBsSWs ? Qt::ScrollBarAlwaysOff : Qt::ScrollBarAsNeeded );
 	// Switch back to "Scroll per item"-mode:
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that  here...
 	// Accept event:
