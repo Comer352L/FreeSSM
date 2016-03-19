@@ -861,25 +861,25 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 
 void CUcontent_MBsSWs::resetMinMaxTableValues()
 {
+	const size_t count = _lastValues.size();
 	QStringList lastValueStr;
-	QStringList lastUnitStr;
-	lastValueStr.reserve(_lastValues.size());
-	lastUnitStr.reserve(_lastValues.size());
-	// Delete min/max values:
-	_minmaxData.clear();
+	libFSSM::fill_n_QStringList(lastValueStr, count);
+	QStringList lastUnitStr(lastValueStr);
 	// Setup new min/max values and output data:
-	for (const MBSWvalue_dt& lastValue : _lastValues)
+	for (size_t k=0; k<count; ++k)
 	{
+		const MBSWvalue_dt& lastValue = _lastValues.at(k);
 		MinMaxMBSWvalue_dt newMinMaxDataset;
 		// Set min/max values to current value:
 		newMinMaxDataset.minRawValue = lastValue.rawValue;
 		newMinMaxDataset.maxRawValue = lastValue.rawValue;
 		newMinMaxDataset.minScaledValueStr = lastValue.scaledStr;
 		newMinMaxDataset.maxScaledValueStr = lastValue.scaledStr;
-		_minmaxData.push_back(newMinMaxDataset);
-		// Get min/max value string and unit for output:
-		lastValueStr.push_back( !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue));
-		lastUnitStr.push_back( lastValue.unitStr );
+		_minmaxData.at(k) = newMinMaxDataset;
+
+		const unsigned int tablePosIndex = _tableRowPosIndexes.at(k);
+		lastValueStr.replace(tablePosIndex, !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue));
+		lastUnitStr.replace(tablePosIndex, lastValue.unitStr);
 	}
 	// Display last values as current/min/max values:
 	_valuesTableView->updateMBSWvalues(lastValueStr, lastValueStr, lastValueStr, lastUnitStr);
