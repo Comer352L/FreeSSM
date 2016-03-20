@@ -81,13 +81,13 @@ CUcontent_MBsSWs_tableView::~CUcontent_MBsSWs_tableView()
 }
 
 
-void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>& types, QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units)
+void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values, const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units)
 {
 	int firstrowvisibleindex = 0;
 	// Delete table content:
 	selectedMBsSWs_tableWidget->clearContents();
 	// Save nr of MBs/Sws:
-	_nrofMBsSWs = std::max({ static_cast<int>(types.size()), titles.size(), values.size(), minValues.size(), maxValues.size(), units.size() });
+	_nrofMBsSWs = std::max({ types.size(), titles.size(), values.size(), minValues.size(), maxValues.size(), units.size() });
 
 	// Set number of rows and vertical scroll bar policy:
 	if (_nrofMBsSWs >= _maxrowsvisible)
@@ -116,7 +116,7 @@ void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>
 	updateMBSWvalues(values, minValues, maxValues, units);
 }
 
-void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column column, Qt::Alignment alignment)
+void CUcontent_MBsSWs_tableView::updateMBColumn(const std::vector<QString>& data, CUcontent_MBsSWs_tableView::Column column, Qt::Alignment alignment)
 {
 	const int col = static_cast<int>(column);
 	const unsigned int rowcount = std::min(static_cast<unsigned int>(data.size()), _nrofMBsSWs);
@@ -132,7 +132,7 @@ void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsS
 	}
 }
 
-void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
+void CUcontent_MBsSWs_tableView::updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList, const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList)
 {
 	updateMBColumn(minValueStrList, Column::min);
 	updateMBColumn(valueStrList, Column::current);
@@ -316,4 +316,3 @@ void CUcontent_MBsSWs_tableView::setupUiFonts()
 	showMin_pushButton->setFont(contentfont);
 	showMax_pushButton->setFont(contentfont);
 }
-

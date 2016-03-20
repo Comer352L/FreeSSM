@@ -195,15 +195,14 @@ void CUcontent_MBsSWs::displayMBsSWs()
 {
 	const auto itemcount = _tableRowPosIndexes.size();
 	std::vector<BlockType> types(itemcount, BlockType::MB);
-	// Prepare string-lists (fill with empty strings up to needed size):
-	QStringList titles;
-	libFSSM::fill_n_QStringList(titles, itemcount);
-	QStringList minvalues(titles);
-	QStringList values(titles);
-	QStringList maxvalues(titles);
-	QStringList units(titles);
+	// Prepare strings, initialize with empty strings up to needed size:
+	std::vector<QString> titles(itemcount);
+	std::vector<QString> minvalues(itemcount);
+	std::vector<QString> values(itemcount);
+	std::vector<QString> maxvalues(itemcount);
+	std::vector<QString> units(itemcount);
 
-	// Fill string-lists for output:
+	// set strings for output:
 	for (size_t k=0; k<_MBSWmetaList.size(); k++)
 	{
 		// Get MB/SW-index:
@@ -213,10 +212,10 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		switch(metadata.blockType)
 		{
 		case BlockType::MB:
-			titles.replace( listPosIndex, _supportedMBs.at(metadata.nativeIndex).title );
+			titles.at(listPosIndex) = _supportedMBs.at(metadata.nativeIndex).title;
 			break;
 		case BlockType::SW:
-			titles.replace( listPosIndex, _supportedSWs.at(metadata.nativeIndex).title );
+			titles.at(listPosIndex) = _supportedSWs.at(metadata.nativeIndex).title;
 			types.at(listPosIndex) = BlockType::SW;
 			break;
 		}
@@ -224,32 +223,24 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		// NOTE: _lastValues can be empty !
 		if (_lastValues.size() > k)
 		{
-			const auto& lastValue = _lastValues.at(k);
-			if (lastValue.scaledStr.isEmpty())
-				values.replace( listPosIndex, QString::number(lastValue.rawValue) );
-			else
-				values.replace( listPosIndex, lastValue.scaledStr );
-			units.replace( listPosIndex, lastValue.unitStr );
+			const MBSWvalue_dt& lastValue = _lastValues.at(k);
+			values.at(listPosIndex) = !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue);
+			units.at(listPosIndex) = lastValue.unitStr;
 		}
 		else
 		{
 			if (metadata.blockType == BlockType::MB)
-				units.replace( listPosIndex, _supportedMBs.at(metadata.nativeIndex).unit );
+				units.at(listPosIndex) = _supportedMBs.at(metadata.nativeIndex).unit;
 		}
 		// Last min/max value strings:
 		// NOTE: _minmaxData can be empty !
 		if (_minmaxData.size() > k)
 		{
-			if (!_minmaxData.at(k).disabled)
+			const MinMaxMBSWvalue_dt& minmaxData = _minmaxData.at(k);
+			if (!minmaxData.disabled)
 			{
-				if (_minmaxData.at(k).minScaledValueStr.isEmpty())
-					minvalues.replace( listPosIndex, QString::number(_minmaxData.at(k).minRawValue) );
-				else
-					minvalues.replace( listPosIndex, _minmaxData.at(k).minScaledValueStr );
-				if (_minmaxData.at(k).maxScaledValueStr.isEmpty())
-					maxvalues.replace( listPosIndex, QString::number(_minmaxData.at(k).maxRawValue) );
-				else
-					maxvalues.replace( listPosIndex, _minmaxData.at(k).maxScaledValueStr );
+				minvalues.at(listPosIndex) = !minmaxData.minScaledValueStr.isEmpty() ? minmaxData.minScaledValueStr : QString::number(minmaxData.minRawValue);
+				maxvalues.at(listPosIndex) = !minmaxData.maxScaledValueStr.isEmpty() ? minmaxData.maxScaledValueStr : QString::number(minmaxData.maxRawValue);
 			}
 		}
 	}
@@ -397,12 +388,12 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 	bool newMin = false;
 	bool newMax = false;
 	// List output
-	// Prepare string-lists for values-table-output (fill with empty strings up to the needed size):
-	QStringList valueStrList;
-	libFSSM::fill_n_QStringList(valueStrList, rawValues.size());
-	QStringList minValueStrList(valueStrList);
-	QStringList maxValueStrList(valueStrList);
-	QStringList unitStrList(valueStrList);
+	// Prepare strings for values-table-output (fill with empty strings up to the needed size):
+	const size_t count = rawValues.size();
+	std::vector<QString> valueStrList(count);
+	std::vector<QString> minValueStrList(count);
+	std::vector<QString> maxValueStrList(count);
+	std::vector<QString> unitStrList(count);
 	// Process raw values
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
@@ -415,7 +406,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		{
 			const mb_dt& mb = _supportedMBs.at(nativeIndex);
 			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
-			unitStrList.replace(tablePosIndex, scalingSuccessful ? mb.unit : "[RAW]");
+			unitStrList.at(tablePosIndex) = scalingSuccessful ? mb.unit : "[RAW]";
 		}
 		else	// it is a SW
 		{
@@ -479,15 +470,15 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			}
 			// Add unit string to the output list:
 			if (!scalingSuccessful/*((rawValues.at(rvIndex)==0) || (rawValues.at(rvIndex) == 1)) && scaledValueStr.isEmpty()*/) // if we have a valid raw value but scaling failed
-				unitStrList.replace(tablePosIndex, "[BIN]"); // display a unit, to signal that the displayed value is unscaled
+				unitStrList.at(tablePosIndex) = "[BIN]"; // display a unit, to signal that the displayed value is unscaled
 			else
-				unitStrList.replace(tablePosIndex, "");
+				unitStrList.at(tablePosIndex) = "";
 		}
 		// Add value string to the output list:
 		if (scalingSuccessful)
-			valueStrList.replace( tablePosIndex, scaledValueStr );
+			valueStrList.at(tablePosIndex) = scaledValueStr;
 		else
-			valueStrList.replace( tablePosIndex, QString::number( rawValues.at(k) ) );
+			valueStrList.at(tablePosIndex) = QString::number(rawValues.at(k));
 		// ******** CHECK FOR NEW MIN/MAX VALUE ********:
 		/* NOTE:
 		 * - MB/SW scaled values can be NUMERIC VALUES or STRINGS or even BOTH MIXED (for different raw values)
@@ -617,22 +608,22 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		if (_minmaxData.at(k).disabled)
 		{
 			// Don not display any min/values, if disabled:
-			minValueStrList.replace( tablePosIndex, "" );
-			maxValueStrList.replace( tablePosIndex, "" );
+			minValueStrList.at(tablePosIndex) = "";
+			maxValueStrList.at(tablePosIndex) = "";
 		}
 		else if (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty()) // if min/max is not disabled an we have unscaled min/max values
 		{
 			/* NOTE: min/max scaled value strings should BOTH be empty in this case
 					 (otherwise min/max would have been disabled before !) */
 			// Display raw min/max values:
-			minValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).minRawValue) );
-			maxValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).maxRawValue) );
+			minValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).minRawValue);
+			maxValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).maxRawValue);
 		}
 		else
 		{
 			// Display scaled min/max values:
-			minValueStrList.replace( tablePosIndex, _minmaxData.at(k).minScaledValueStr );
-			maxValueStrList.replace( tablePosIndex, _minmaxData.at(k).maxScaledValueStr );
+			minValueStrList.at(tablePosIndex) = _minmaxData.at(k).minScaledValueStr;
+			maxValueStrList.at(tablePosIndex) = _minmaxData.at(k).maxScaledValueStr;
 		}
 		// ******** Save current value data ********:
 		if (k >= _lastValues.size())
@@ -862,9 +853,8 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 void CUcontent_MBsSWs::resetMinMaxTableValues()
 {
 	const size_t count = _lastValues.size();
-	QStringList lastValueStr;
-	libFSSM::fill_n_QStringList(lastValueStr, count);
-	QStringList lastUnitStr(lastValueStr);
+	std::vector<QString> lastValueStr(count);
+	std::vector<QString> lastUnitStr(count);
 	// Setup new min/max values and output data:
 	for (size_t k=0; k<count; ++k)
 	{
@@ -878,8 +868,8 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 		_minmaxData.at(k) = newMinMaxDataset;
 
 		const unsigned int tablePosIndex = _tableRowPosIndexes.at(k);
-		lastValueStr.replace(tablePosIndex, !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue));
-		lastUnitStr.replace(tablePosIndex, lastValue.unitStr);
+		lastValueStr.at(tablePosIndex) = !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue);
+		lastUnitStr.at(tablePosIndex) = lastValue.unitStr;
 	}
 	// Display last values as current/min/max values:
 	_valuesTableView->updateMBSWvalues(lastValueStr, lastValueStr, lastValueStr, lastUnitStr);

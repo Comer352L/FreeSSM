@@ -22,7 +22,6 @@
 
 
 #include <QString>
-#include <QStringList>
 #include <string>
 #include <vector>
 #include <cmath>			// round()
@@ -67,16 +66,6 @@ public:
 	 * \return
 	 */
 	static char calcchecksum(const char *message, unsigned int nrofbytes);
-
-	/*!
-	 * \brief Fill list of strings with a constant string.
-	 *
-	 * .size() of the string list will be n. Previous content or size does not matter.
-	 * \param sl String list to modify.
-	 * \param n Number of wanted items.
-	 * \param value String value to set all items to. Default value is empty string.
-	 */
-	static void fill_n_QStringList(QStringList& sl, const unsigned int n, const QString value = QStringLiteral(""));
 
 private:
 	static bool raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue);

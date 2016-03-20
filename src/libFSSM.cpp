@@ -427,12 +427,3 @@ char libFSSM::calcchecksum(const char *message, const unsigned int nrofbytes)
 		cs += message[k];
 	return static_cast<char>(cs);
 }
-
-
-void libFSSM::fill_n_QStringList(QStringList& sl, const unsigned int n, const QString value)
-{
-	sl.clear();
-	sl.reserve(n);
-	for (unsigned int i=0; i<n; ++i)
-		sl.append(value);
-}
