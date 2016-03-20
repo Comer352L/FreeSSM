@@ -35,7 +35,7 @@ private:
 public:
 	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
 	SSMprotocol2_ID();
-	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription);
+	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription);
 
 };
 

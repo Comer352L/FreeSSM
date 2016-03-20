@@ -52,7 +52,7 @@ private:
 	void setupUiFonts();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
-	void updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::AlignmentFlag alignment);
+	void updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment = Qt::AlignCenter);
 
 private slots:
 	void setMoveButtonsEnabledState();

@@ -82,7 +82,7 @@ bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vecto
 		return false;
 	/* NOTE: Problem:
 	 * - we can not rely in buffer flushing because of driver/OS/hardware latencies and bugs
-	 * - control units need some time until they switch from sending data from the previous 
+	 * - control units need some time until they switch from sending data from the previous
 	 *   (read address) request to sending the control unit ID (+data)
 	 */
 	TimeM time_total;
@@ -211,9 +211,7 @@ bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vecto
 		data->assign(_recbuffer.begin(), _recbuffer.begin() + cu_data_len);
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP1communication_procedures::getID(...):   received ID with length " << std::dec << cu_data_len << ": ";
-		for (unsigned char k=0; k< data->size(); k++)
-			std::cout << ' ' << std::hex << std::noshowbase << (static_cast<int>(data->at(k)) & 0xff);
-		std::cout << '\n';
+		std::cout << libFSSM::StrToMultiLineHexstr(*data);
 #endif
 	}
 #ifdef __FSSM_DEBUG__
@@ -263,7 +261,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 			if (_sync && (_recbuffer.size() > 2))
 			{
 				unsigned char olBytes = _recbuffer.size() % 3;
-				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;	
+				unsigned int msgStartIndex = _recbuffer.size() - 3 - olBytes;
 				if ((_recbuffer.at(msgStartIndex) == hb) && (_recbuffer.at(msgStartIndex+1) == lb))
 				{
 					/* NOTE: There could have been an overflow of the drivers receive-buffer.
@@ -297,12 +295,12 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 						_recbuffer.erase(_recbuffer.begin(), _recbuffer.begin()+msgStartIndex+3);
 #ifdef __FSSM_DEBUG__
 						std::cout << "SSMP1communication_procedures::getNextData(...):   received data: "
-						          << std::hex << std::showbase << (static_cast<int>(data->back()) & 0xff) << '\n';
+								  << std::hex << std::showbase << (static_cast<int>(data->back()) & 0xff) << '\n';
 #endif
 						return true;
 					}
 				}
-				else	// may happen, if we got an overflow of the drivers recieve-buffer
+				else	// may happen, if we got an overflow of the drivers receive-buffer
 					_sync = false;
 #ifdef __FSSM_DEBUG__
 				if (!_sync)
@@ -449,13 +447,13 @@ void SSMP1communication_procedures::syncToRecData()
 				 => we can set _sync to true, because when the databyte changes to a value != hb,lb
 				 we will get the wrong address and therefore out of sync again !
 			 */
-			// Special cases that are only relevant during address switching: 
+			// Special cases that are only relevant during address switching:
 			if (_addrswitch_pending && (_lastaddr > -1) && (_currentaddr != _lastaddr))	// max 2 complete old messages
 			{
 				/* NOTE: Terminology:
 						A1		high address byte (old dataset)
 						B1		high address byte (old dataset)
-						D1		databyte (old dataset) => can be different in each message 
+						D1		databyte (old dataset) => can be different in each message
 						A2		high address byte (new dataset)
 						B2		high address byte (new dataset)
 						D2		databyte (new message)

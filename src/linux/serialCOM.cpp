@@ -270,7 +270,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 						}
 					}
 				}
-				else	// If driver settings are not available 
+				else	// If driver settings are not available
 				{
 					settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -694,8 +694,8 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	ECHONL	Echo NL
 	NOFLSH	Disable flushing of input buffers after interrupt or quit characters
 	IEXTEN	Enable extended functions (this flag, as well as ICANON must be enabled for the
-                special characters EOL2, LNEXT, REPRINT, WERASE to be interpreted, and for the IUCLC
-                flag to be effective)
+				special characters EOL2, LNEXT, REPRINT, WERASE to be interpreted, and for the IUCLC
+				flag to be effective)
 	ECHOCTL	Echo control characters as ^char and delete as ~?
 	ECHOPRT	Echo erased character as character erased
 	ECHOKE	BS-SP-BS entire line on line kill
@@ -751,7 +751,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	VT1	Delay 2 seconds after sending VTs
 	FFDLY	Mask for delay time needed after FFs
 	FF0	No delay for FFs
-	FF1	Delay 2 seconds after sending FFs	
+	FF1	Delay 2 seconds after sending FFs
 // CONTROL CHARACTERS AND TIMOUT OPTIONS:		*/
 	// Timeout settings (for input):
 	newtio.c_cc[VMIN] = 0;
@@ -809,7 +809,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		/* NOTE: The following code-block guarantees maximum compatibility:
 		 * In case of non-standard baudrates set with the "BOTHER"-method,
 		 * some serial port drivers might not set the baudrate to the nearest
-		 * supported value IN ANY CASE: 
+		 * supported value IN ANY CASE:
 		 * The ioctl() could fail, if a maximum deviation is exceeded !
 		 * => We try to select the nearest supported baudrate manually in this case
 		 */
@@ -913,7 +913,7 @@ bool serialCOM::OpenPort(std::string portname)
 #ifdef __SERIALCOM_DEBUG__
 			else
 			{
-	  			/* NOTE: some drivers (e.g. for many USB-serial devices) provide the TIOCGSERIAL ioctl, but no TIOCSSERIAL ioctl ! */
+				/* NOTE: some drivers (e.g. for many USB-serial devices) provide the TIOCGSERIAL ioctl, but no TIOCSSERIAL ioctl ! */
 				std::cout << "serialCOM::OpenPort():   ioctl(..., TIOCSSERIAL, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 				std::cout << "serialCOM::OpenPort():   ioctl TIOCSSERIAL seems to be not supported\n";
 			}
@@ -954,7 +954,7 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 			return false;
 			/* NOTE: SetPortSettings not only changes the 4 communication parameters.
-			         It configures additional parameters (like control characters, timeouts, ...) which are 
+					 It configures additional parameters (like control characters, timeouts, ...) which are
 				 are important to ensure proper communication behavior !
 			 */
 		}
@@ -965,7 +965,7 @@ bool serialCOM::OpenPort(std::string portname)
 			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
 #endif
 		/* NOTE: Call SetControlLines AFTER SetPortSettings, because drivers can
-		* change DTS+RTS when new baudrate/databits/parity/stopbits, 
+		* change DTS+RTS when new baudrate/databits/parity/stopbits,
 		* especially at the first time after opening the port !		*/
 		return true;
 	}
@@ -1207,7 +1207,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		return true;
 	}
 	/* NOTE: - we always return the received bytes even if we received less than minbytes (timeout)
-	         - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
+			 - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
 }
 
 
@@ -1251,7 +1251,7 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 	if ((!portisopen) || (duration_ms < 1) || (duration_ms >= 32767))
 		return false;
 	breakset = true;
-	if (duration_ms == 250) 
+	if (duration_ms == 250)
 	{
 		confirmSB = ioctl(fd, TCSBRK, 0);
 #ifdef __SERIALCOM_DEBUG__
@@ -1271,7 +1271,7 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 		if (confirmSB == -1)
 			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRKP, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-		/* NOTE: the Linux TCSBRKP-icotl is defined for compatibility. 
+		/* NOTE: the Linux TCSBRKP-icotl is defined for compatibility.
 			 It works like the TCSBRK-ioctl on other systems and can be used to send breaks of selectable duration.
 			 => on Linux, the argument is interpreted as multiplier of 100ms (other systems behave different !)
 		 */
@@ -1397,63 +1397,63 @@ bool serialCOM::SetControlLines(bool DTR, bool RTS)
 // PRIVATE
 
 struct serialCOM::std_baudrate serialCOM::std_baudrates[] = {  {50, B50}
-                                                             , {75, B75}
-                                                             , {110, B110}
-                                                             , {134.5, B134}
-                                                             , {150, B150}
-                                                             , {200, B200}
-                                                             , {300, B300}
-                                                             , {600, B600}
-                                                             , {1200, B1200}
-                                                             , {1800, B1800}
-                                                             , {2400, B2400}
-                                                             , {4800, B4800}
-                                                             , {9600, B9600}
-                                                             , {19200, B19200}
-                                                             , {38400, B38400}
-                                                             , {57600, B57600}
-                                                             , {115200, B115200}
+															 , {75, B75}
+															 , {110, B110}
+															 , {134.5, B134}
+															 , {150, B150}
+															 , {200, B200}
+															 , {300, B300}
+															 , {600, B600}
+															 , {1200, B1200}
+															 , {1800, B1800}
+															 , {2400, B2400}
+															 , {4800, B4800}
+															 , {9600, B9600}
+															 , {19200, B19200}
+															 , {38400, B38400}
+															 , {57600, B57600}
+															 , {115200, B115200}
 #ifdef B230400
-                                                             , {230400, B230400}
+															 , {230400, B230400}
 #endif
 #ifdef B460800
-                                                             , {460800, B460800}
+															 , {460800, B460800}
 #endif
 #ifdef B500000
-                                                             , {500000, B500000}
+															 , {500000, B500000}
 #endif
 #ifdef B576000
-                                                             , {576000, B576000}
+															 , {576000, B576000}
 #endif
 #ifdef B921600
-                                                             , {921600, B921600}
+															 , {921600, B921600}
 #endif
 #ifdef B1000000
-                                                             , {1000000, B1000000}
+															 , {1000000, B1000000}
 #endif
 #ifdef B1152000
-                                                             , {1152000, B1152000}
+															 , {1152000, B1152000}
 #endif
 #ifdef B1500000
-                                                             , {1500000, B1500000}
+															 , {1500000, B1500000}
 #endif
 #ifdef B2000000
-                                                             , {2000000, B2000000}
+															 , {2000000, B2000000}
 #endif
 #ifdef B2500000
-                                                             , {2500000, B2500000}
+															 , {2500000, B2500000}
 #endif
 #ifdef B3000000
-                                                             , {3000000, B3000000}
+															 , {3000000, B3000000}
 #endif
 #ifdef B3500000
-                                                             , {3500000, B3500000}
+															 , {3500000, B3500000}
 #endif
 #ifdef B4000000
-                                                             , {4000000, B4000000}
+															 , {4000000, B4000000}
 #endif
-                                                            };
-// B0 not used, because of Windows compatibility; B110, B134: divisor not unique 
+															};
+// B0 not used, because of Windows compatibility; B110, B134: divisor not unique
 
 
 bool serialCOM::GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst)
@@ -1476,7 +1476,7 @@ speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 	speed_t nearestBaudrate = 0;
 
 	unsigned int stdbaudelements = (sizeof(std_baudrates)/sizeof(std_baudrate));
-	
+
 	if (selBaudrate <= std_baudrates[0].value)
 	{
 		nearestBaudrate=std_baudrates[0].constant;
@@ -1491,11 +1491,11 @@ speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 		double q1=0;
 		for (unsigned int b=1; b<stdbaudelements; b++)
 		{
-			q2 = std_baudrates[b].value / selBaudrate; 
+			q2 = std_baudrates[b].value / selBaudrate;
 			if (q2 >= 1)
 			{
 				// br[b-1] < baudrate < br[b]:
-				q1 = std_baudrates[b-1].value / selBaudrate; 
+				q1 = std_baudrates[b-1].value / selBaudrate;
 				// compare relative baudrate deviation, select baudrate:
 				if ((q2-1) < (1-q1))
 					nearestBaudrate=std_baudrates[b].constant;

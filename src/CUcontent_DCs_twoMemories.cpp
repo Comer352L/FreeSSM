@@ -44,7 +44,7 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	headerview->setResizeMode(QHeaderView::Fixed);
 	headerview = histOrMemDTCs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
-	/* NOTE: Current method for calculating ther nr. of needed rows 
+	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for DC-tables:
 	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);

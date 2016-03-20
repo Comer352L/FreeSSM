@@ -24,7 +24,7 @@
 #include <QtGui>
 #include "AbstractDiagInterface.h"
 #include "SSMP2communication_core.h"
-
+#include "SSMCUdata.h"
 
 
 #define SSMP2COM_BUFFER_SIZE	256  // buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
@@ -43,16 +43,16 @@ public:
 	void setCUaddress(unsigned int cuaddress);
 	void setRetriesOnError(unsigned char retries);
 
-	bool getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes);
+	bool getCUdata(SSMCUdata& cuData);
 	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
-	bool readMultipleDatabytes(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
-	bool writeDataBlock(unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten=NULL);
-	bool writeDatabyte(unsigned int dataaddr, char databyte, char *databytewritten=NULL);
+	bool readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
+	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten=NULL);
+	bool writeDatabyte(const unsigned int dataaddr, const char databyte, char *databytewritten=NULL);
 
-	bool readDataBlock_permanent(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, int delay=0);
-	bool readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, int delay=0);
-	bool writeDataBlock_permanent(unsigned int dataaddr, char *data, unsigned int datalen, int delay=0);
-	bool writeDatabyte_permanent(unsigned int dataaddr, char databyte, int delay=0);
+	bool readDataBlock_permanent(const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, const int delay=0);
+	bool readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, int delay=0);
+	bool writeDataBlock_permanent(const unsigned int dataaddr, const char *data, const unsigned int datalen, const int delay=0);
+	bool writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay=0);
 
 	comOp_dt getCurrentCommOperation();
 
@@ -78,7 +78,7 @@ private:
 	void run();
 
 signals:
-	void recievedData(std::vector<char> rawdata, int duration_ms);
+	void receivedData(const std::vector<char>& rawdata, int duration_ms);
 
 	void commError();
 

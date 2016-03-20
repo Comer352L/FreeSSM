@@ -98,7 +98,7 @@ bool SSMP1commands::sendReadAddressCmd(SSM1_CUtype_dt cu, unsigned int dataaddr)
 	msg[2] = lowaddrbyte;
 	msg[3] = '\x00';
 	return sendMsg(msg, msglen);
-	/* TODO: add block read support for newer ECUs/TCUs 
+	/* TODO: add block read support for newer ECUs/TCUs
 		 => make nrofbytes a fcn parameter          */
 }
 

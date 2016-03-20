@@ -36,7 +36,7 @@ CUcontent_DCs_stopCodes::CUcontent_DCs_stopCodes(QWidget *parent) : CUcontent_DC
 	// Set table row resize behavior:
 	headerview = currOrTempDTCs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
-	/* NOTE: Current method for calculating ther nr. of needed rows 
+	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for DC-tables:
 	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);

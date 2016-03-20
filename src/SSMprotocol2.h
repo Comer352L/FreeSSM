@@ -23,11 +23,11 @@
 
 
 #include <vector>
-#include <math.h>
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
 #include "SSM2definitionsInterface.h"
+#include "libFSSM.h"
 
 
 
@@ -41,7 +41,7 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(CUtype_dt CU);
 	CUsetupResult_dt setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
-	protocol_dt protocolType() { return SSM2; };
+	protocol_dt protocolType() { return SSM2; }
 	bool hasVINsupport(bool *VINsup);
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);
@@ -51,7 +51,7 @@ public:
 	bool getVIN(QString *VIN);
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();
-	bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList);
+	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
@@ -79,7 +79,7 @@ private:
 	bool validateVIN(char VIN[17]);
 
 private slots:
-	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);
+	void processDCsRawdata(const std::vector<char>& dcrawdata, int duration_ms);
 
 public slots:
 	void resetCUdata();

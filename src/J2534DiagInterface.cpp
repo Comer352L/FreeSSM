@@ -104,7 +104,7 @@ bool J2534DiagInterface::open( std::string name )
 					// Supported protocols
 					std::vector<protocol_type> supportedProtocols;
 					if ((libs.at(k).protocols & PROTOCOL_FLAG_ISO9141) ||
-					    (libs.at(k).protocols & PROTOCOL_FLAG_ISO14230)   )
+						(libs.at(k).protocols & PROTOCOL_FLAG_ISO14230)   )
 						supportedProtocols.push_back(protocol_SSM2_ISO14230);
 					if (libs.at(k).protocols & PROTOCOL_FLAG_ISO15765)
 						supportedProtocols.push_back(protocol_SSM2_ISO15765);
@@ -242,7 +242,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			// P1_MIN (min. ECU inter-byte time)
 			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, always 0ms
 			{
-				CfgItems[0].Parameter = P1_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min/def=0ms, 
+				CfgItems[0].Parameter = P1_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min/def=0ms,
 				CfgItems[0].Value = 0;	// [ms]
 				Input.NumOfParams = 1;
 				Input.ConfigPtr = CfgItems;
@@ -253,7 +253,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #endif
 			}
 			// P1_MAX (max. ECU inter-byte time)
-			CfgItems[0].Parameter = P1_MAX;	// ISO-9141, ISO-14230 (normal timing paramter-set): def/max=20ms, 
+			CfgItems[0].Parameter = P1_MAX;	// ISO-9141, ISO-14230 (normal timing paramter-set): def/max=20ms,
 			if (_j2534->libraryAPIversion() == J2534_API_v0202)
 				CfgItems[0].Value = 5;	// [02.02-API: ms]
 			else
@@ -366,7 +366,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			memset(&MaskMsg, 0, sizeof(MaskMsg));		// .Data=0-array means "do not examine any bits"
 			memset(&PatternMsg, 0, sizeof(PatternMsg));	// .Data must be zero, if no Data bits are examined
 			MaskMsg.DataSize = 1;
-			MaskMsg.ProtocolID = ISO9141;	
+			MaskMsg.ProtocolID = ISO9141;
 			PatternMsg.DataSize = 1;
 			PatternMsg.ProtocolID = ISO9141;
 			if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, PASS_FILTER, &MaskMsg, &PatternMsg, NULL, _FilterID))
@@ -516,7 +516,6 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 		}
 		else
 			return false;
-		buffer->clear();
 		unsigned long rxNumMsgs = 1;
 		unsigned long timeout = 0;	// return immediately
 		// Read all available messages:
@@ -527,10 +526,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "PassThruReadMsgs(): received J2534-message with protocol id 0x" << std::hex << rx_msg.ProtocolID
-				          << ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n";
-				for (unsigned int k=0; k<rx_msg.DataSize; k++)
-					std::cout << " " << std::hex << (unsigned int)(rx_msg.Data[k]);
-				std::cout << std::endl;
+					<< ", rx status 0x" << rx_msg.RxStatus << ", extra data index " << std::dec << rx_msg.ExtraDataIndex << ":\n"
+					<< libFSSM::StrToMultiLineHexstr(rx_msg.Data, rx_msg.DataSize);
 #endif
 				if (rx_msg.RxStatus & TX_MSG_TYPE)
 				{
@@ -578,15 +575,15 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 					else if (rx_msg.ExtraDataIndex < rx_msg.DataSize)
 					{
 						if ((_j2534->libraryAPIversion() == J2534_API_v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
-						    ((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
+							((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
 							std::cout << "WARNING: ExtraDataIndex is not smaller than expected !\n";
 						/* NOTE:
-						 * - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM 
+						 * - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
 						 * - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
 					}
 #endif
-					for (unsigned int k=0; k<rx_msg.DataSize; k++)
-						buffer->push_back(rx_msg.Data[k]);
+					buffer->reserve(rx_msg.DataSize);
+					buffer->assign(rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
 				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
@@ -611,19 +608,18 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 		// Setup message:
 		PASSTHRU_MSG tx_msg;
 		memset(&tx_msg, 0, sizeof(tx_msg));
-		if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-		{ 
+		switch(protocolType()) {
+		case AbstractDiagInterface::protocol_SSM2_ISO14230:
 			tx_msg.ProtocolID = ISO9141;
-		}
-		else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
-		{
+			break;
+		case AbstractDiagInterface::protocol_SSM2_ISO15765:
 			tx_msg.ProtocolID = ISO15765;
 			tx_msg.TxFlags = ISO15765_FRAME_PAD;
-		}
-		else
+			break;
+		default:
 			return false;
-		for (unsigned int k=0; k<buffer.size(); k++)
-			tx_msg.Data[k] = buffer[k];
+		}
+		std::copy(buffer.begin(), buffer.end(), tx_msg.Data);
 		tx_msg.DataSize = buffer.size();
 		unsigned long txNumMsgs = 1;
 		unsigned long timeout = 1000;	// wait until message has been transmitted
@@ -695,7 +691,7 @@ void J2534DiagInterface::printErrorDescription(std::string title, long ret)
 	else
 	{
 		std::cout << "unknown error\n";
-	}		
+	}
 }
 #endif
 

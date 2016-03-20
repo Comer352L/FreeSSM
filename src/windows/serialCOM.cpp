@@ -70,13 +70,13 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 					Using NT device names instead ("\\.\COMx")
 				*/
 				hCom_t = CreateFileA(NTdevName,				// device name of the port
-						     GENERIC_READ | GENERIC_WRITE,	// read/write access
-						     0,					// must be opened with exclusive-access
-						     NULL,				// default security attributes
-						     OPEN_EXISTING,			// must use OPEN_EXISTING
-						     0,					// not overlapped I/O
-						     NULL				// must be NULL for comm devices
-						    );
+							 GENERIC_READ | GENERIC_WRITE,	// read/write access
+							 0,					// must be opened with exclusive-access
+							 NULL,				// default security attributes
+							 OPEN_EXISTING,			// must use OPEN_EXISTING
+							 0,					// not overlapped I/O
+							 NULL				// must be NULL for comm devices
+							);
 				if (hCom_t != INVALID_HANDLE_VALUE)
 				{
 #ifndef __SERIALCOM_DEBUG__
@@ -93,8 +93,8 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 					std::cout << "serialCOM::GetAvailablePorts():   registered port " << (char*)Data << " is not available:   error " << GetLastError() << "\n";
 #endif
 			}
-			szValueName = 256;		// because RegEnumValue has changed value 
-			szData = 256;			// because RegEnumValue has changed value 
+			szValueName = 256;		// because RegEnumValue has changed value
+			szData = 256;			// because RegEnumValue has changed value
 			index++;
 		}
 		std::sort(portlist.begin(), portlist.end());	// quicksort from <algorithm>
@@ -300,7 +300,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	// DATABITS SETTINGS:
 	if ((databits >= 5) && (databits <= 8))
 		newdcb.ByteSize = databits;
-	else 
+	else
 	{
 		nsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -456,10 +456,10 @@ bool serialCOM::OpenPort(std::string portname)
 	// SET TIMEOUTS (=> Timeouts disabled; read operation immediatly returns received characters):
 	COMMTIMEOUTS timeouts;
 	timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
-	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
+	timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read
 	timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
 	timeouts.WriteTotalTimeoutConstant = 0;		// Total max. time for write operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
-	timeouts.WriteTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to write 
+	timeouts.WriteTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to write
 	// all values in [ms]; if one of these max. times is exceeded, Read / Write Operation is stoped and nr. of Read/WrittenBytes is given back
 	confirm = SetCommTimeouts(hCom, &timeouts);	// Apply new timeout settings
 	if (!confirm)
@@ -510,7 +510,7 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 		return false;
 		/* NOTE: SetPortSettings not only changes the 4 communication parameters.
-		         It configures additional parameters which are 
+				 It configures additional parameters which are
 			 are important to ensure proper communication behavior !
 		 */
 	}
@@ -595,11 +595,11 @@ bool serialCOM::Write(char *data, unsigned int datalen)
 	}
 	// SEND DATA:
 	confirmWF = WriteFile (hCom,			// Port handle
-			       data,			// Pointer to the data to write 
-			       datalen,			// Number of bytes to write
-			       &BytesWritten,		// Pointer to the number of bytes written
-			       NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
-			      );
+				   data,			// Pointer to the data to write
+				   datalen,			// Number of bytes to write
+				   &BytesWritten,		// Pointer to the number of bytes written
+				   NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
+				  );
 	// RETURN VALUE:
 	if (confirmWF && (BytesWritten == static_cast<DWORD>(datalen)))
 		return true;
@@ -667,13 +667,13 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		}
 		// READ DATA:
 		confirmRF = ReadFile (hCom,		// Port handle
-				      data,		// Pointer to data to read
-				      minbytes,		// Max. number of bytes to read
-				      &nbr,		// Pointer to number of bytes read
-				      NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
-				     );
+					  data,		// Pointer to data to read
+					  minbytes,		// Max. number of bytes to read
+					  &nbr,		// Pointer to number of bytes read
+					  NULL		// Pointer to an OVERLAPPED structure; Must be NULL if not supported
+					 );
 		/* NOTE: - on timeout, ReadFile() succeeds with less bytes than requested (no error)
-		         - ReadFile() always waits the full timeout to get the number of bytes requested	*/
+				 - ReadFile() always waits the full timeout to get the number of bytes requested	*/
 		if (confirmRF)
 		{
 			rb_total += nbr;
@@ -697,7 +697,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		{
 			// Disable timeout for reading (let ReadFile return immediately):
 			timeouts.ReadIntervalTimeout = MAXDWORD;	// Max. time between two arriving characters
-			timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read 
+			timeouts.ReadTotalTimeoutMultiplier = 0;	// Multiplied with nr. of characters to read
 			timeouts.ReadTotalTimeoutConstant = 0;		// Total max. time for read operations = TotalTimeoutMultiplier * nrOfBytes + TimeoutConstant
 			if (!SetCommTimeouts(hCom, &timeouts))
 			{
@@ -710,11 +710,11 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		}
 		// READ REMAINING DATA:
 		confirmRF = ReadFile (hCom,			// Port handle
-				      data + rb_total,		// Pointer to data to read
-				      maxbytes - rb_total,	// Max. number of bytes to read
-				      &nbr,			// Pointer to number of bytes read
-				      NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
-				     );
+					  data + rb_total,		// Pointer to data to read
+					  maxbytes - rb_total,	// Max. number of bytes to read
+					  &nbr,			// Pointer to number of bytes read
+					  NULL			// Pointer to an OVERLAPPED structure; Must be NULL if not supported
+					 );
 		// NOTE: ReadFile() returns success even if less than the number of requested bytes is read
 		if (confirmRF)
 			rb_total += nbr;
@@ -730,7 +730,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 	*nrofbytesread = static_cast<unsigned int>(rb_total);
 	return true;
 	/* NOTE: - we always return the received bytes even if we received less than minbytes (timeout)
-	         - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
+			 - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
 }
 
 

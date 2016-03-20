@@ -29,8 +29,8 @@
 #include <cstring>	// memset(), strcpy(), ...
 extern "C"
 {
-    #include <errno.h>
-    #include <dlfcn.h>
+	#include <errno.h>
+	#include <dlfcn.h>
 }
 #include "J2534misc.h"
 #include "tinyxml/tinyxml.h"

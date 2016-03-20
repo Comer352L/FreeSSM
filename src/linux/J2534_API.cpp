@@ -24,7 +24,7 @@
 J2534_API::J2534_API()
 {
 	_J2534LIB = NULL;
-        _api_version = J2534_API_v0404;
+		_api_version = J2534_API_v0404;
 	_PassThruOpen = NULL;
 	_PassThruClose = NULL;
 	_PassThruConnect_0202 = NULL;

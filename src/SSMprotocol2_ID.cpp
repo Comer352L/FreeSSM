@@ -70,8 +70,10 @@ SSMprotocol2_ID::SSMprotocol2_ID()
 }
 
 
-bool SSMprotocol2_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, char *sysID, QString *sysDescription)
+bool SSMprotocol2_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription)
 {
+	if (sysID.size() != 3)
+		return false;
 	QStringList *sysDefs = NULL;
 	unsigned char k = 0;
 	bool ok = false;

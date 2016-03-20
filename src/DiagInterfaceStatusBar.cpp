@@ -115,13 +115,13 @@ void DiagInterfaceStatusBar::setInterfaceVersion(QString version, QColor textcol
 	// Set text and text color:
 	setTextContentAndColor(_if_version_label, version, textcolor);
 	// Minimum width:
-	if (_if_version_label->fontMetrics().width(version) + indents + indents + add_space_right < 40 - horiz_margins) 
+	if (_if_version_label->fontMetrics().width(version) + indents + indents + add_space_right < 40 - horiz_margins)
 		minwidth = _if_version_label->fontMetrics().width(version) + indents + add_space_right;
 	else
 		minwidth = 40;
 	_if_version_label->setMinimumSize(minwidth, _if_version_label->minimumHeight());
 	// Maximum width:
-	if (_if_version_label->fontMetrics().width(version) + indents + add_space_right > 40 - horiz_margins) 
+	if (_if_version_label->fontMetrics().width(version) + indents + add_space_right > 40 - horiz_margins)
 		maxwidth = _if_version_label->fontMetrics().width(version) + indents + add_space_right;
 	else
 		maxwidth = 40;

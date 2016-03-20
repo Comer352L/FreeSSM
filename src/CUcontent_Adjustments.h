@@ -24,6 +24,7 @@
 
 #include <QWidget>
 #include <vector>
+#include <cmath>		// pow()
 #include "ui_CUcontent_Adjustments.h"
 #include "SSMprotocol.h"
 #include "libFSSM.h"

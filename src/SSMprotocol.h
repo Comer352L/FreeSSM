@@ -29,13 +29,16 @@
 #include <QEventLoop>
 #include <string>
 #include <vector>
-#include <cmath>
 #include <limits.h>
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"
+#include "SSMCUdata.h"
 
 
 #define		MEMORY_ADDRESS_NONE	UINT_MAX
+
+
+enum BlockType { blockType_MB, blockType_SW };
 
 
 class dc_defs_dt
@@ -46,8 +49,8 @@ public:
 	QString code[8];
 	QString title[8];
 };
-  
-  
+
+
 class  mb_dt
 {
 public:
@@ -85,7 +88,7 @@ public:
 class MBSWmetadata_dt
 {
 public:
-	bool blockType;
+	BlockType blockType;
 	unsigned int nativeIndex;
 };
 
@@ -142,8 +145,9 @@ public:
 	state_dt state();
 	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	std::string getSysID();
-	std::string getROMID();
+	bool uses_SSM2defs() const;
+	std::string getSysID() const;
+	std::string getROMID() const;
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	virtual bool hasVINsupport(bool *VINsup);
@@ -166,7 +170,7 @@ public:
 	virtual bool startDCreading(int DCgroups) = 0;
 	bool restartDCreading();
 	virtual bool stopDCreading() = 0;
-	virtual bool startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList) = 0;
+	virtual bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList) = 0;
 	bool restartMBSWreading();
 	virtual bool stopMBSWreading() = 0;
 	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;
@@ -189,8 +193,7 @@ protected:
 	state_dt _state;
 	QString _language;
 	// *** CONTROL UNIT RAW DATA ***:
-	char _SYS_ID[3];
-	char _ROM_ID[5];
+	SSMCUdata _ssmCUdata;
 	QString _sysDescription;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_OBD2;
@@ -219,7 +222,7 @@ protected:
 	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues);
+	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);
 	void setupActuatorTestAddrList();
 	void resetCommonCUdata();
 
@@ -228,7 +231,7 @@ signals:
 	void historicOrMemorizedDTCs(QStringList historicDTCs, QStringList historicDTCsDescriptions);
 	void latestCCCCs(QStringList currentCCCCs, QStringList currentCCCCsDescriptions);
 	void memorizedCCCCs(QStringList historicCCCCs, QStringList historicCCCCsDescriptions);
-	void newMBSWrawValues(std::vector<unsigned int> rawValues, int duration_ms);
+	void newMBSWrawValues(const std::vector<unsigned int>& rawValues, int duration_ms);
 	void startedDCreading();
 	void startedMBSWreading();
 	void startedActuatorTest();
@@ -238,7 +241,7 @@ signals:
 	void commError();
 
 protected slots:
-	void processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms);
+	void processMBSWrawData(const std::vector<char>& MBSWrawdata, int duration_ms);
 	unsigned int processDTCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:

@@ -39,7 +39,7 @@ public:
 	enum condition_dt {equal, smaller, larger, equalOrSmaller, equalOrLarger};
 
 	attributeCondition(std::string name="", std::string val="", condition_dt cond=equal)
-	                                        : name(name), value(val), condition(cond) {};
+		: name(name), value(val), condition(cond) {}
 
 	std::string name;
 	std::string value;
@@ -55,12 +55,12 @@ public:
 	bool selectDefinitionsFile(std::string filename);
 	void getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);
-	bool selectID(char id[3]);
+	bool selectID(const std::vector<char>& id);
 
 	bool systemDescription(std::string *description);
 	bool model(std::string *name);
 	bool year(std::string *yearstr);
-	
+
 	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
@@ -71,7 +71,7 @@ private:
 	std::string _defs_version;
 	std::string _defs_format_version;
 	std::string _lang;
-	char _ID[3];
+	std::vector<char> _ID;
 	bool _id_set;
 	// Shortcuts to important nodes:
 	TiXmlNode *_defs_root_node;

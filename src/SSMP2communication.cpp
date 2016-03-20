@@ -24,18 +24,16 @@
 SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress, unsigned char errRetries) : QThread(), SSMP2communication_core(diagInterface)
 {
 	_cuaddress = cuaddress;
-
-	unsigned int k = 0;
 	_CommOperation = comOp_noCom;
 	_result = false;
 	_abort = false;
 	_errRetries = errRetries;
 	_padaddr = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _dataaddr[k] = 0;
 	_datalen = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _rec_buf[k] = 0;
-	for (k=0; k<SSMP2COM_BUFFER_SIZE; k++) _snd_buf[k] = 0;
 	_delay = 0;
+	std::fill_n(_dataaddr, SSMP2COM_BUFFER_SIZE, 0);
+	std::fill_n(_rec_buf, SSMP2COM_BUFFER_SIZE, 0);
+	std::fill_n(_snd_buf, SSMP2COM_BUFFER_SIZE, 0);
 }
 
 
@@ -62,28 +60,16 @@ void SSMP2communication::setRetriesOnError(unsigned char retries)
 
 
 
-bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, unsigned char *nrofflagbytes)
+bool SSMP2communication::getCUdata(SSMCUdata& cuData)
 {
+	cuData.clear();
 	bool ok = false;
-	unsigned int k = 0;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0)) return false;
 	_CommOperation = comOp_readCUdata;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
-	{
-		// Return System-ID:
-		SYS_ID[0] = _rec_buf[0];
-		SYS_ID[1] = _rec_buf[1];
-		SYS_ID[2] = _rec_buf[2];
-		// Return ROM-ID
-		for (k=0; k<5; k++)
-			ROM_ID[k] = _rec_buf[3+k];
-		// Return flagbytes:
-		for (k=0; k<(_datalen - 8); k++)
-			flagbytes[k] = _rec_buf[8+k];
-		*nrofflagbytes = _datalen - 8;
-	}
+		cuData.from_SSMP2(_rec_buf, _datalen);
 	_CommOperation = comOp_noCom;
 	return ok;
 }
@@ -93,8 +79,7 @@ bool SSMP2communication::getCUdata(char *SYS_ID, char *ROM_ID, char *flagbytes, 
 bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data)
 {
 	bool ok = false;
-	unsigned int k = 0;
-	
+
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
 	{
 		return false;
@@ -118,9 +103,8 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Assign recieved data:
-		for (k=0; k<nrofbytes; k++)
-			data[k] = _rec_buf[k];
+		// Assign received data:
+		std::copy(_rec_buf, _rec_buf + nrofbytes, data);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;
@@ -128,24 +112,22 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 
 
 
-bool SSMP2communication::readMultipleDatabytes(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data)
+bool SSMP2communication::readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data)
 {
 	bool ok = false;
-	unsigned int k = 0;
 	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_readMulti;
 	// Prepare buffers:
 	_padaddr = padaddr;
-	for (k=0; k<datalen; k++) _dataaddr[k] = dataaddr[k];
+	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
 	_datalen = datalen;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Assign recieved data:
-		for (k=0; k<datalen; k++)
-			data[k] = _rec_buf[k];
+		// Assign received data:
+		std::copy(_rec_buf, _rec_buf + datalen, data);
 	}
 	_CommOperation = comOp_noCom;
 	return ok;
@@ -153,11 +135,9 @@ bool SSMP2communication::readMultipleDatabytes(char padaddr, unsigned int dataad
 
 
 
-bool SSMP2communication::writeDataBlock(unsigned int dataaddr, char *data, unsigned int datalen, char *datawritten)
+bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten)
 {
 	bool ok = false;
-	unsigned int k = 0;
-	
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
 	{
 		return false;
@@ -171,30 +151,22 @@ bool SSMP2communication::writeDataBlock(unsigned int dataaddr, char *data, unsig
 	_CommOperation = comOp_writeBlock;
 	// Prepare buffers:
 	_dataaddr[0] = dataaddr;
-	for (k=0; k<datalen; k++) _snd_buf[k] = data[k];
+	std::copy(data, data + datalen, _snd_buf);
 	_datalen = datalen;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Check/assign recieved data:
+		// Check/assign received data:
 		if (datawritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-			for (k=0; k<_datalen; k++)
-			{
-				if (_snd_buf[k] != _rec_buf[k])
-				{
-					ok = false;
-					break;
-				}
-			}
+			ok = libFSSM::data_equal(_rec_buf, data, datalen);
 		}
 		else
 		{
 			// EXTRACT AND RETURN WRITTEN DATA:
-			for (k=0; k<_datalen; k++)
-				datawritten[k] = _rec_buf[k];
+			std::copy(_rec_buf, _rec_buf + _datalen, datawritten);
 		}
 	}
 	_CommOperation = comOp_noCom;
@@ -203,7 +175,7 @@ bool SSMP2communication::writeDataBlock(unsigned int dataaddr, char *data, unsig
 
 
 
-bool SSMP2communication::writeDatabyte(unsigned int dataaddr, char databyte, char *databytewritten)
+bool SSMP2communication::writeDatabyte(const unsigned int dataaddr, const char databyte, char* databytewritten)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
@@ -215,7 +187,7 @@ bool SSMP2communication::writeDatabyte(unsigned int dataaddr, char databyte, cha
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// Check/assign recieved data:
+		// Check/assign received data:
 		if (databytewritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
@@ -263,15 +235,14 @@ bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int data
 
 
 
-bool SSMP2communication::readMultipleDatabytes_permanent(char padaddr, unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, int delay)
+bool SSMP2communication::readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, const int delay)
 {
-	unsigned int k = 0;
 	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_readMulti_p;
 	// Prepare buffers:
 	_padaddr = padaddr;
-	for (k=0; k<datalen; k++) _dataaddr[k] = dataaddr[k];
+	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
 	_datalen = datalen;
 	_delay = delay;
 	// Start permanent reading:
@@ -281,9 +252,8 @@ bool SSMP2communication::readMultipleDatabytes_permanent(char padaddr, unsigned 
 
 
 
-bool SSMP2communication::writeDataBlock_permanent(unsigned int dataaddr, char *data, unsigned int datalen, int delay)
+bool SSMP2communication::writeDataBlock_permanent(const unsigned int dataaddr, const char* data, const unsigned int datalen, const int delay)
 {
-	unsigned int k = 0;
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
 	{
 		return false;
@@ -297,7 +267,7 @@ bool SSMP2communication::writeDataBlock_permanent(unsigned int dataaddr, char *d
 	_CommOperation = comOp_writeBlock_p;
 	// Prepare buffers:
 	_dataaddr[0] = dataaddr;
-	for (k=0; k<datalen; k++) _snd_buf[k] = data[k];
+	std::copy(data, data + datalen, _snd_buf);
 	_datalen = datalen;
 	_delay = delay;
 	// Start permanent writing:
@@ -307,7 +277,7 @@ bool SSMP2communication::writeDataBlock_permanent(unsigned int dataaddr, char *d
 
 
 
-bool SSMP2communication::writeDatabyte_permanent(unsigned int dataaddr, char databyte, int delay)
+bool SSMP2communication::writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay)
 {
 	if ((_CommOperation != comOp_noCom) || (_cuaddress == 0) || isRunning()) return false;
 	_CommOperation = comOp_writeSingle_p;
@@ -376,7 +346,6 @@ void SSMP2communication::run()
 	std::vector<char> rawdata;
 	QTime timer;
 	int duration_ms = 0;
-	unsigned int k = 1;
 	unsigned int rindex = 1;
 	unsigned char nrofReadAddr = 0;
 	char errcount = 0;
@@ -400,8 +369,8 @@ void SSMP2communication::run()
 	cuaddress = _cuaddress;
 	padaddr = _padaddr;
 	datalen = _datalen;
-	for (k=0; k<datalen; k++) dataaddr[k] = _dataaddr[k];
-	for (k=0; k<datalen; k++) snd_buf[k] = _snd_buf[k];
+	std::copy(_dataaddr, _dataaddr + datalen, dataaddr);
+	std::copy(_snd_buf, _snd_buf + datalen, snd_buf);
 	delay = _delay;
 	errmax = _errRetries + 1;
 	_result = false;
@@ -460,8 +429,7 @@ void SSMP2communication::run()
 		switch (operation)
 		{
 			case comOp_readCUdata:// GetECUData(...)
-				op_success = GetCUdata(cuaddress, rec_buf, rec_buf+3, rec_buf+8, &datalen);
-				if (op_success) datalen += 8;
+				op_success = GetCUdata(cuaddress, rec_buf, &datalen);
 				break;
 			case comOp_readBlock:
 			case comOp_readBlock_p:// ReadDataBlock_permanent(...)
@@ -507,7 +475,7 @@ void SSMP2communication::run()
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
-				emit recievedData(rawdata, duration_ms);
+				emit receivedData(rawdata, duration_ms);
 				// Wait for the desired delay time:
 				if (delay > 0) msleep(delay);
 			}
@@ -532,7 +500,7 @@ void SSMP2communication::run()
 	if (!permanent && op_success)
 	{
 		_datalen = datalen;	// only necessary for getCUdata
-		for (k=0; k<datalen; k++) _rec_buf[k] = rec_buf[k];
+		std::copy(rec_buf, rec_buf + datalen, _rec_buf);
 		_result = op_success;
 	}
 	_abort = false;
@@ -560,7 +528,7 @@ TODO:
 */
 
 /*
-NOTE: 
+NOTE:
  - signal commError() is only emmited for permanent communication operations (success of single operation can be checked with the boolean return value)
  - for all write-operations (calls of SSMPcommunication_core-functions), we always read the bytes that were actually written (even if the public SSMPcommunication-functions are called with a NULL-pointer for the written data). Otherwise, a negative result in run() (op_success == false) could also mean that other data have been written...
  */

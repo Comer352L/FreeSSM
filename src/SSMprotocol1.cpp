@@ -41,10 +41,10 @@ void SSMprotocol1::resetCUdata()
 		// Disconnect communication error and data signals:
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-			    this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
-		disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-			    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+				this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+				this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
 		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
 		if (_SSMP1com->stopCommunication() && (_state == state_ActTesting) && _uses_SSM2defs) // TODO: other definition systems
@@ -95,8 +95,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
 	std::string SSM1defsFile;
 	SSM1_CUtype_dt SSM1_CU;
-	char flagbytes[96];
-	unsigned char nrofflagbytes;
 	// Reset:
 	resetCUdata();
 	// Create SSMP1communication-object:
@@ -144,11 +142,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		return result_invalidCUtype;
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	bool ok = _SSMP1com->getCUdata(0, _SYS_ID, flagbytes, &nrofflagbytes);
+	bool ok = _SSMP1com->getCUdata(0, _ssmCUdata);
 	if (!ok && (CU == CUtype_AirCon))
 	{
 		_SSMP1com->selectCU(SSM1_CU_AirCon2);
-		ok = _SSMP1com->getCUdata(0, _SYS_ID, flagbytes, &nrofflagbytes);
+		ok = _SSMP1com->getCUdata(0, _ssmCUdata);
 	}
 	if (!ok)
 	{
@@ -160,7 +158,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	 * Power supply of these old control units is immediately cut when ignition is switched off */
 	_CU = CU;
 	_state = state_normal;
-	_uses_SSM2defs = ((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10');
+	_uses_SSM2defs = uses_SSM2defs();
 	// Connect communication error signals from SSMP1communication:
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
@@ -168,20 +166,20 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	if (_uses_SSM2defs)
 	{
 		// Request flag bytes:
-		if (!_SSMP1com->getCUdata(32, _SYS_ID, flagbytes, &nrofflagbytes))
+		if (!_SSMP1com->getCUdata(32, _ssmCUdata))
 		{
 			resetCUdata();
 			return result_commError;
 		}
 		// Read extended ID (5-byte ROM-ID):
-		if (!readExtendedID(_ROM_ID))
+		if (!readExtendedID(_ssmCUdata.ROM_ID))
 		{
 			resetCUdata();
 			return result_commError;
 		}
 		// Setup definitions interface:
 		SSM2definitionsInterface SSM2defsIface(_language);
-		SSM2defsIface.selectControlUnitID(_CU, _SYS_ID, _ROM_ID, flagbytes, nrofflagbytes);
+		SSM2defsIface.selectControlUnitID(_CU, _ssmCUdata);
 		// Get system description:
 		SSM2defsIface.systemDescription(&_sysDescription);
 		// Get supported features;
@@ -220,7 +218,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 			return result_noOrInvalidDefsFile;
 		}
 		SSM1defsIface.setLanguage(_language.toStdString());
-		if (!SSM1defsIface.selectID(_SYS_ID)) // TODO: Ax 01 xx IDs
+		if (!SSM1defsIface.selectID(_ssmCUdata.SYS_ID)) // TODO: Ax 01 xx IDs
 		{
 			resetCUdata();
 			return result_noDefs;
@@ -298,7 +296,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 			if (_DTCdefs.at(k).byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
 				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
 		}
-	}	
+	}
 	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
 	{
 		for (unsigned int k=0; k<_DTCdefs.size(); k++)
@@ -318,7 +316,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
-		connect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
+		connect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 			this, SLOT( processDTCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
@@ -336,8 +334,8 @@ bool SSMprotocol1::stopDCreading()
 	{
 		if (_SSMP1com->stopCommunication())
 		{
-			disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+			disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+					this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -349,7 +347,7 @@ bool SSMprotocol1::stopDCreading()
 }
 
 
-bool SSMprotocol1::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
+bool SSMprotocol1::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
 {
 	bool started = false;
 	if (_state != state_normal) return false;
@@ -364,8 +362,8 @@ bool SSMprotocol1::startMBSWreading(std::vector<MBSWmetadata_dt> mbswmetaList)
 		// Save MB/SW-selection (necessary for evaluation of raw data):
 		_MBSWmetaList = mbswmetaList;
 		// Connect signals/slots:
-		connect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-			this, SLOT( processMBSWrawData(std::vector<char>, int) ) ); 
+		connect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+			this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Emit signal:
 		emit startedMBSWreading();
 	}
@@ -382,8 +380,8 @@ bool SSMprotocol1::stopMBSWreading()
 	{
 		if (_SSMP1com->stopCommunication())
 		{
-			disconnect( _SSMP1com, SIGNAL( recievedData(std::vector<char>, int) ),
-				    this, SLOT( processMBSWrawData(std::vector<char>, int) ) );
+			disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
+					this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 			_state = state_normal;
 			emit stoppedMBSWreading();
 			return true;
@@ -517,8 +515,8 @@ bool SSMprotocol1::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
-	char databyte = static_cast<char>(pow(2, _actuators.at(actuatorTestIndex).bitadr - 1));
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitadr - 1));
 	// Stop all actuator tests:
 	for (k=0; k<_allActByteAddr.size(); k++)
 	{
@@ -669,7 +667,7 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 	if (!_uses_SSM2defs)	// FIXME: other defintion types
 		return false;
 	if (!_has_MB_engineSpeed) return false;
-	
+
 	if (!_SSMP1com->readAddress(0x0e, &currentdatabyte))
 	{
 		resetCUdata();
@@ -748,17 +746,12 @@ bool SSMprotocol1::waitForIgnitionOff()
 
 // PRIVATE
 
-bool SSMprotocol1::readExtendedID(char ID[5])
+bool SSMprotocol1::readExtendedID(std::vector<char>& ID)
 {
 	std::vector<unsigned int> addresses;
 	for (unsigned int addr=0x01; addr<=0x05; addr++)
 		addresses.push_back(addr);
-	std::vector<char> data;
-	if (!_SSMP1com->readAddresses(addresses, &data))
+	if (!_SSMP1com->readAddresses(addresses, &ID))
 		return false;
-	for (unsigned char i=0; i<5; i++)
-		ID[i] = data.at(i);
 	return true;
 }
-
-

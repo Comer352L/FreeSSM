@@ -55,7 +55,7 @@ SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 }
 
 
-bool SSMP1communication::getCUdata(unsigned char extradatareqlen, char *ID, char *extradata, unsigned char *extradatalen)
+bool SSMP1communication::getCUdata(unsigned char extradatareqlen, SSMCUdata& cuData)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning()) return false;
@@ -65,12 +65,7 @@ bool SSMP1communication::getCUdata(unsigned char extradatareqlen, char *ID, char
 	ok = doSingleCommOperation();
 	if (ok)
 	{
-		// ID:
-		memcpy(ID, &_data.at(0), 3);
-		// Extra data:
-		*extradatalen = _data.size() -3;
-		if (_data.size() > 3)
-			memcpy(extradata, &_data.at(3), _data.size() - 3);
+		cuData.from_SSMP1(&_data.at(0), _data.size());
 	}
 	_CommOperation = comOp_noCom;
 	return ok;
@@ -88,7 +83,7 @@ bool SSMP1communication::readAddress(unsigned int addr, char * databyte)
 }
 
 
-bool SSMP1communication::readAddresses(std::vector<unsigned int> addr, std::vector<char> * data)
+bool SSMP1communication::readAddresses(const std::vector<unsigned int>& addr, std::vector<char> * data)
 {
 	bool ok = false;
 	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0)) return false;
@@ -369,7 +364,7 @@ void SSMP1communication::run()
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
-				emit recievedData(data, duration_ms);
+				emit receivedData(data, duration_ms);
 				// Wait for the desired delay time:
 				if (delay > 0) msleep(delay);
 			}

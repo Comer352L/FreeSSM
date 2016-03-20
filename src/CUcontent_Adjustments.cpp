@@ -213,7 +213,7 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 	// Set table row resize behavior:
 	headerview = adjustments_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
-	/* NOTE: Current method for calculating ther nr. of needed rows 
+	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for adjustments-table:
 	adjustments_tableWidget->viewport()->installEventFilter(this);
@@ -449,7 +449,7 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 		saveButton->setIcon(saveButton_icon);
 		saveButton->setIconSize( QSize(54,22) );
 		connect (saveButton, SIGNAL( released(unsigned int) ), this, SLOT( saveAdjustmentValue(unsigned int) ));
-		adjustments_tableWidget->setCellWidget ( k, 3, saveButton );	
+		adjustments_tableWidget->setCellWidget ( k, 3, saveButton );
 	}
 	// Setup "Reset all"-elements:
 	if (_supportedAdjustments.size() > 0)
@@ -463,7 +463,7 @@ void CUcontent_Adjustments::setupAdjustmentsTable()
 		resetButton->setIcon( resetButton_icon );
 		resetButton->setIconSize( QSize(54, 22) );
 		connect (resetButton, SIGNAL( released() ), this, SLOT( resetAllAdjustmentValues() ));
-		adjustments_tableWidget->setCellWidget ( _supportedAdjustments.size()+1, 3, resetButton );	
+		adjustments_tableWidget->setCellWidget ( _supportedAdjustments.size()+1, 3, resetButton );
 	}
 	// Check for calculation error(s):
 	if (calcerror)

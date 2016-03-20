@@ -224,14 +224,14 @@ FreeSSM::FreeSSM(QApplication *app)
 FreeSSM::~FreeSSM()
 {
 	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
-	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) ); 
-	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) ); 
+	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
+	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
 	disconnect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	disconnect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
-	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) ); 
-	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) ); 
-	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) ); 
-	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) ); 
+	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
+	disconnect( preferences_pushButton, SIGNAL( released() ), this, SLOT( preferences() ) );
+	disconnect( help_pushButton, SIGNAL( released() ), this, SLOT( help() ) );
+	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	delete _dump_action;
 	delete _progtitle_label;
@@ -390,9 +390,9 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 {
 	// Uninstall and delete current translator:
 	if (_translator != NULL)
-	{ 
+	{
 		QApplication::removeTranslator(_translator);
-		delete _translator; 
+		delete _translator;
 		_translator = NULL;
 	}
 	// Save new language settings:
@@ -427,15 +427,14 @@ void FreeSSM::retranslate(QString newlanguage, QTranslator *newtranslator)
 
 void FreeSSM::dumpCUdata()
 {
+	const size_t VINlength = 17;
+
 	QFile dumpfile;
-	char SYS_ID[3] = {0};
-	char ROM_ID[5] = {0};
-	char flagbytes[96] = {0};
-	unsigned char nrofflagbytes = 0;
+	SSMCUdata ssmCUdata;
 	std::string hexstr = "";
-	unsigned char k = 0;
-	unsigned int dataaddr[17] = {0};
-	char data[17] = {0};
+
+	unsigned int dataaddr[VINlength] = {0};
+	char data[VINlength] = {0};
 	int ssm1_cu_index = SSM1_CU_Engine;
 	bool cu_resp = false;
 
@@ -476,13 +475,13 @@ void FreeSSM::dumpCUdata()
 	if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
 	{
 		cu_resp = true;
-		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+		if (!SSMP2com.getCUdata(ssmCUdata))
 		{
 			SSMP2com.setCUaddress(0x01);
-			if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+			if (!SSMP2com.getCUdata(ssmCUdata))
 			{
 				SSMP2com.setCUaddress(0x02);
-				cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+				cu_resp = SSMP2com.getCUdata(ssmCUdata);
 			}
 		}
 	}
@@ -492,33 +491,17 @@ void FreeSSM::dumpCUdata()
 		if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
 		{
 			SSMP2com.setCUaddress(0x7E0);
-			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+			cu_resp = SSMP2com.getCUdata(ssmCUdata);
 		}
 	}
 	if (cu_resp)
 	{
-		// *** Convert and write data to file:
-		// Sys-ID:
-		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
-		hexstr.push_back('\n');
-		dumpfile.write(hexstr.data(), hexstr.length());
-		// ROM-ID:
-		hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
-		hexstr.push_back('\n');
-		dumpfile.write(hexstr.data(), hexstr.length());
-		// Flagbytes:
-		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
-		{
-			hexstr.clear();
-			if (16*k <= nrofflagbytes)
-				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), 16);
-			else
-				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
-			hexstr.push_back('\n');
-			dumpfile.write(hexstr.data(), hexstr.length());
-		}
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.SYS_ID).c_str());
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.ROM_ID).c_str());
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.flagbytes).c_str());
+		dumpfile.write("\n");
 		// VIN:
-		if (flagbytes[36] == (flagbytes[36] | 0x01))
+		if (ssmCUdata.flagbytebit(36, 0))
 		{
 			dataaddr[0] = 0xDA;
 			dataaddr[1] = 0xDB;
@@ -526,18 +509,17 @@ void FreeSSM::dumpCUdata()
 			if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, 3, data))
 			{
 				hexstr = libFSSM::StrToHexstr(data, 3);
-				hexstr.insert(0, "\n");
 				hexstr.push_back('\n');
 				dumpfile.write(hexstr.data(), hexstr.length());
-				dataaddr[0] = (65536 * static_cast<unsigned char>(data[0]))
-						+ (256 * static_cast<unsigned char>(data[1]))
-						+ (static_cast<unsigned char>(data[2]));
-				for (k=1; k<17; k++)
+
+				dataaddr[0] = libFSSM::parseUInt24BigEndian(data);
+				for (unsigned char k=1; k<VINlength; k++)
 					dataaddr[k] = dataaddr[0]+k;
-				if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, 17, data))
+				if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, VINlength, data))
 				{
-					hexstr = libFSSM::StrToHexstr(data, 17);
-					hexstr.push_back('\n');
+					hexstr = libFSSM::StrToMultiLineHexstr(data, VINlength, VINlength);
+					hexstr.append(data, VINlength);
+					hexstr += "\n\n";
 					dumpfile.write(hexstr.data(), hexstr.size());
 				}
 			}
@@ -553,10 +535,10 @@ void FreeSSM::dumpCUdata()
 	{
 		SSMP2com.setCUaddress(0x18);
 		cu_resp = true;
-		if (!SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes))
+		if (!SSMP2com.getCUdata(ssmCUdata))
 		{
 			SSMP2com.setCUaddress(0x01);
-			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+			cu_resp = SSMP2com.getCUdata(ssmCUdata);
 		}
 	}
 	if (!cu_resp)
@@ -566,36 +548,19 @@ void FreeSSM::dumpCUdata()
 		{
 			SSMP2com.setCUaddress(0x7E1);
 			// Read TCU data:
-			cu_resp = SSMP2com.getCUdata(SYS_ID, ROM_ID, flagbytes, &nrofflagbytes);
+			cu_resp = SSMP2com.getCUdata(ssmCUdata);
 		}
 	}
 	if (cu_resp)
 	{
-		// *** Convert and write data to file:
-		// Sys-ID:
-		hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
-		hexstr.insert(0, "\n");
-		hexstr.push_back('\n');
-		dumpfile.write(hexstr.data(), hexstr.length());
-		// ROM-ID:
-		hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
-		hexstr.push_back('\n');
-		dumpfile.write(hexstr.data(), hexstr.length());
-		// Flagbytes:
-		for (k=1; k<=ceil(static_cast<float>(nrofflagbytes)/16); k++)
-		{
-			hexstr.clear();
-			if (16*k <= nrofflagbytes)
-				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), 16);
-			else
-				hexstr = libFSSM::StrToHexstr(flagbytes+((k-1)*16), (nrofflagbytes%16));
-			hexstr.push_back('\n');
-			dumpfile.write(hexstr.data(), hexstr.length());
-		}
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.SYS_ID).c_str());
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.ROM_ID).c_str());
+		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.flagbytes).c_str());
 	}
 	else
 		dumpfile.write("\n---\n", 5);
 	diagInterface->disconnect();
+
 	// ######## SSM1-Control-Units ########
 	// Configure interface:
 	if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
@@ -606,41 +571,32 @@ void FreeSSM::dumpCUdata()
 		// Select CU:
 		SSMP1com.selectCU( SSM1_CUtype_dt(ssm1_cu_index) );
 		// Read CU-ID(s):
-		if (SSMP1com.getCUdata(0, SYS_ID, flagbytes, &nrofflagbytes))
+		if (SSMP1com.getCUdata(0, ssmCUdata))
 		{
+			dumpfile.write("\n");
 			// *** Convert and write data to file:
 			// ID:
-			hexstr = libFSSM::StrToHexstr(SYS_ID, 3);
-			hexstr.insert(0, "\n");
-			hexstr.push_back('\n');
-			dumpfile.write(hexstr.data(), hexstr.length());
+			dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.SYS_ID).c_str());
 
-			if ((SYS_ID[0] & '\xF0') == '\xA0')
+			if ((ssmCUdata.SYS_ID.at(0) & '\xF0') == '\xA0')
 			{
 				// ROM-ID:
-				if (SYS_ID[1] == '\x10')
+				if (ssmCUdata.SYS_ID.at(1) == '\x10')
 				{
 					std::vector<unsigned int> addresses;
 					for (unsigned int addr=0x01; addr<=0x05; addr++)
 						addresses.push_back(addr);
-					std::vector<char> data;
-					if (!SSMP1com.readAddresses(addresses, &data))
+					if (!SSMP1com.readAddresses(addresses, &ssmCUdata.ROM_ID))
 						dumpfile.write("error\n", 4);
 					else
 					{
-						for (unsigned char i=0; i<5; i++)
-							ROM_ID[i] = data.at(i);
-						hexstr = libFSSM::StrToHexstr(ROM_ID, 5);
-						hexstr.push_back('\n');
-						dumpfile.write(hexstr.data(), hexstr.length());
+						dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.ROM_ID).c_str());
 					}
 				}
 				// Flagbytes:
-				if (SSMP1com.getCUdata(32, SYS_ID, flagbytes, &nrofflagbytes))
+				if (SSMP1com.getCUdata(32, ssmCUdata))
 				{
-					hexstr = libFSSM::StrToHexstr(flagbytes, nrofflagbytes);
-					hexstr.push_back('\n');
-					dumpfile.write(hexstr.data(), hexstr.length());
+					dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.flagbytes).c_str());
 				}
 				else
 					dumpfile.write("error\n", 4);

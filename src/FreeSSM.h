@@ -39,6 +39,7 @@
 #include "Preferences.h"
 #include "About.h"
 #include "ui_FreeSSM.h"
+#include "SSMCUdata.h"
 
 
 
@@ -65,7 +66,7 @@ private:
 public:
 	FreeSSM(QApplication *app = 0);
 	~FreeSSM();
- 
+
 private slots:
 	void engine();
 	void transmission();

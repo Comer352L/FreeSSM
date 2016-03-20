@@ -23,9 +23,9 @@
 
 #include <QtGlobal>	/* required for QT_VERSION */
 #if QT_VERSION < 0x050000
-    #include <QtGui>
+	#include <QtGui>
 #else
-    #include <QtWidgets>
+	#include <QtWidgets>
 #endif
 
 
@@ -33,7 +33,7 @@ class FSSM_InitStatusMsgBox : public QProgressDialog
 {
 public:
 	FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText, int minimum, int maximum,
-			      QWidget * parent = 0, Qt::WindowFlags f = 0);
+				  QWidget * parent = 0, Qt::WindowFlags f = 0);
 	~FSSM_InitStatusMsgBox();
 	void show();
 	void hide();

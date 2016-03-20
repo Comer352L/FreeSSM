@@ -24,11 +24,14 @@
 #include <string>
 #include "AbstractDiagInterface.h"
 #ifdef __WIN32__
-    #include "windows\J2534_API.h"
+	#include "windows\J2534_API.h"
 #elif defined __linux__
-    #include "linux/J2534_API.h"
+	#include "linux/J2534_API.h"
 #else
-    #error "Operating system not supported !"
+	#error "Operating system not supported !"
+#endif
+#ifdef __FSSM_DEBUG__
+	#include "libFSSM.h"
 #endif
 
 class J2534DiagInterface : public AbstractDiagInterface
@@ -54,8 +57,8 @@ private:
 	bool _connected;
 	unsigned long _DeviceID;
 	unsigned long _ChannelID;
-        unsigned long _FilterID[10];	// SAE J2534 allows max. 10 filters
-        unsigned char _numFilters;
+	unsigned long _FilterID[10];	// SAE J2534 allows max. 10 filters
+	unsigned char _numFilters;
 
 #ifdef __FSSM_DEBUG__
 	void printErrorDescription(std::string title, long ret);

@@ -51,18 +51,24 @@ SSMprotocol::state_dt SSMprotocol::state()
 }
 
 
-std::string SSMprotocol::getSysID()
+bool SSMprotocol::uses_SSM2defs() const
 {
-	if (_state == state_needSetup) return "";
-	return libFSSM::StrToHexstr(_SYS_ID, 3);
+	return _ssmCUdata.uses_SSM2defs();
 }
 
 
-std::string SSMprotocol::getROMID()
+std::string SSMprotocol::getSysID() const
 {
 	if (_state == state_needSetup) return "";
-	if (((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
-		return libFSSM::StrToHexstr(_ROM_ID, 5);
+	return libFSSM::StrToHexstr(_ssmCUdata.SYS_ID);
+}
+
+
+std::string SSMprotocol::getROMID() const
+{
+	if (_state == state_needSetup) return "";
+	if (uses_SSM2defs())
+		return libFSSM::StrToHexstr(_ssmCUdata.ROM_ID);
 	else
 		return getSysID();
 }
@@ -276,7 +282,7 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 	unsigned int rawDataIndex = 0;
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
-		if (_CU == CUtype_Engine && ((_SYS_ID[0] & '\xF0') == '\xA0') && (_SYS_ID[1] == '\x10'))
+		if (_CU == CUtype_Engine && _ssmCUdata.uses_SSM2defs())
 		{
 			rawDataIndex = 1;
 			if (_has_TestMode)
@@ -322,15 +328,12 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 
 void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
 {
-	unsigned int k = 0;
-	QString ukdctitle;
-
 	DC->clear();
 	DCdescription->clear();
 	if (DCrawdata == 0) return;
 	// Search definitions:
 	dc_defs_dt def;
-	for (k=0; k<DCdefs.size(); k++)
+	for (size_t k=0; k<DCdefs.size(); k++)
 	{
 		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteadr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteadr))
 		{
@@ -341,7 +344,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std
 	// Assign codes and descriptions:
 	for (unsigned char flagbit=0; flagbit<8; flagbit++)
 	{
-		if (DCrawdata & static_cast<char>(pow(2, flagbit)))
+		if (DCrawdata & static_cast<char>(1 << flagbit))
 		{
 			// Check if DC is to be ignored:
 			// NOTE: DCs with existing definition and empty code- and title-fields must be ignored !
@@ -371,7 +374,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 			// CHECK IF ADDRESS IS ALREADY ON THE LIST:
 			for (m=0; m<_selMBsSWsAddr.size(); m++)
 			{
-				if (MBSWmetaList.at(k).blockType == 0)
+				if (MBSWmetaList.at(k).blockType == blockType_MB)
 				{
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
 					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
@@ -398,7 +401,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 		// ADD ADDRESS TO QUERY-LIST IF IT IS NEW:
 		if (newadr)
 		{
-			if (MBSWmetaList.at(k).blockType == 0)
+			if (MBSWmetaList.at(k).blockType == blockType_MB)
 			{
 				// ADD ADDRESS(ES) OF CURRENT MB TO LIST:
 				_selMBsSWsAddr.push_back( _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low );
@@ -414,53 +417,55 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 }
 
 
-void SSMprotocol::processMBSWrawData(std::vector<char> MBSWrawdata, int duration_ms)
+void SSMprotocol::processMBSWrawData(const std::vector<char>& MBSWrawdata, int duration_ms)
 {
-	std::vector<unsigned int> rawValues;
-	QStringList valueStrList;
-	QStringList unitStrList;
-	assignMBSWRawData( MBSWrawdata, &rawValues );
+	std::vector<unsigned int> rawValues = assignMBSWRawData(MBSWrawdata);
 	emit newMBSWrawValues(rawValues, duration_ms);
 }
 
 
-void SSMprotocol::assignMBSWRawData(std::vector<char> rawdata, std::vector<unsigned int> * mbswrawvalues)
+std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>& rawdata)
 {
-	// ***** ASSIGN RAW DATA *****:
-	unsigned int k = 0, m = 0;
-	mbswrawvalues->clear();
-	mbswrawvalues->resize(_MBSWmetaList.size(), 0);
-	for (m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
+	std::vector<unsigned int> mbswrawvalues(_MBSWmetaList.size());
+
+	for (size_t m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
 	{
-		for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
+		const unsigned int address = _selMBsSWsAddr.at(m);
+		const unsigned char rawbyte = static_cast<unsigned char>(rawdata.at(m));
+
+		for (size_t k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 		{
-			if (_MBSWmetaList.at(k).blockType == 0)
+			const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
+			unsigned int& rawvalue = mbswrawvalues.at(k);
+
+			if (metadata.blockType == blockType_MB)
 			{
+				mb_intl_dt& mb = _supportedMBs.at(metadata.nativeIndex);
 				// COMPARE ADDRESSES:
-				if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_low)
+				if (address == mb.addr_low)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH LOW BYTE ADDRESS OF MB
-					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m));
+					rawvalue += rawbyte;
 				}
-				else if (_selMBsSWsAddr.at(m) == _supportedMBs.at( _MBSWmetaList.at(k).nativeIndex ).addr_high)
+				else if (address == mb.addr_high)
 				{
 					// ADDRESS/RAW BYTE CORRESPONDS WITH HIGH BYTE ADDRESS OF MB
-					mbswrawvalues->at(k) += static_cast<unsigned char>(rawdata.at(m)) * 256;
+					rawvalue += rawbyte << 8;
 				}
 			}
 			else
 			{
-				if (_selMBsSWsAddr.at(m) == _supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).byteAddr)
+				sw_intl_dt& sw = _supportedSWs.at(metadata.nativeIndex);
+				if (address == sw.byteAddr)
 				{
 					// ADDRESS/RAW BYTE CORRESPONS WITH BYTE ADDRESS OF SW
-					if ( rawdata.at(m) & static_cast<char>(pow(2, (_supportedSWs.at( _MBSWmetaList.at(k).nativeIndex ).bitAddr -1) ) ) )	// IF ADDRESS BIT IS SET
-						mbswrawvalues->at(k) = 1;
-					else	// IF ADDRESS BIT IS NOT SET
-						mbswrawvalues->at(k) = 0;
+					const unsigned char bitmask = 1 << (sw.bitAddr - 1);
+					rawvalue = (rawbyte & bitmask) ? 1 : 0;
 				}
 			}
 		}
 	}
+	return mbswrawvalues;
 }
 
 
@@ -491,8 +496,7 @@ void SSMprotocol::setupActuatorTestAddrList()
 void SSMprotocol::resetCommonCUdata()
 {
 	// RESET ECU DATA:
-	memset(_SYS_ID, 0, 3);
-	memset(_ROM_ID, 0, 5);
+	_ssmCUdata.clear();
 	// Clear system description:
 	_sysDescription.clear();
 	_has_OBD2 = false;

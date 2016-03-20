@@ -42,7 +42,7 @@
 #define		SSMP1_T_IC_WAIT			40	/* delay between two commands [ms] */
 #define		SSMP1_T_ID_RECSTART_MAX		300	/* max. time [ms] until the beginning of the control unit ID is received */
 #define		SSMP1_T_RW_REC_MAX		1000	/* timeout for reply-message to read-/write-request [ms] */
-#define		SSMP1_T_RECDATA_CHANGE_MAX	150	/* max. time until the recieved data changes after a new request has been sent [ms] */
+#define		SSMP1_T_RECDATA_CHANGE_MAX	150	/* max. time until the received data changes after a new request has been sent [ms] */
 
 
 

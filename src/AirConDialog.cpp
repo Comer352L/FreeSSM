@@ -1,6 +1,6 @@
 /*
  * AirConDialog.cpp - Air Conditioning Control Unit dialog
- * 
+ *
  * Copyright (C) 2012 L1800Turbo, 2008-2012 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify

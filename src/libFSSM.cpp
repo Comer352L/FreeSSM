@@ -71,7 +71,7 @@ bool libFSSM::raw2scaledByDirectAssociation(unsigned int rawValue, QString scale
 bool libFSSM::raw2scaledByCalculation(unsigned int rawValue, QString scaleformula, double *scaledValue)
 {
 	if (scaleformula.size() < 1) return false;
-	*scaledValue = rawValue;
+	double value_in = rawValue;
 	// CHECK IF FORMULA BEGINS WITH A VALID DATA TYPE MODIFIER:
 	if (scaleformula.startsWith("s", Qt::CaseInsensitive))
 	{
@@ -91,12 +91,12 @@ bool libFSSM::raw2scaledByCalculation(unsigned int rawValue, QString scaleformul
 		{
 			return false;
 		}
-		// INTERPRETE AS SIGNED:
-		if (rawValue > pow(2,bitsize-1) - 1)	// if MSB is set
-			*scaledValue = rawValue - pow(2, bitsize); // substract (half of range + 1)
+		// INTERPRET AS SIGNED:
+		if ( rawValue >= static_cast<unsigned int>(1 << (bitsize - 1)) )	// if MSB is set
+			value_in = static_cast<int>(rawValue) - (1 << bitsize); // substract (half of range + 1)
 	}
 	// SCALE:
-	return scale(*scaledValue, scaleformula, false, scaledValue);
+	return scale(value_in, scaleformula, false, scaledValue);
 }
 
 
@@ -179,7 +179,7 @@ bool libFSSM::scaled2rawByCalculation(double scaledValue, QString scaleformula, 
 	{
 		// CONVERT TO UNSIGNED RAW VALUE:
 		if (wval < 0)
-			wval += pow(2, bitsize);
+			wval += 1 << bitsize;
 	}
 	// PROCESS/CONVERT/VALIDATE SCALED VALUE:
 	wval = round(wval);
@@ -228,7 +228,7 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 		}
 		else if (!formula.at(charindex).isDigit())
 		{
- 				if (charindex == formula.size()) return false;
+				if (charindex == formula.size()) return false;
 				if (!( (formula.at(charindex) == '.') && formula.at(charindex-1).isDigit() && formula.at(charindex+1).isDigit() ))
 					return false;
 		}
@@ -304,15 +304,15 @@ bool libFSSM::scale(double value_in, QString formula, bool inverse, double * val
 // hexadecimal digits
 static char hexdigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-static char nibble_hexdigit(unsigned char value)
+static char nibble_hexdigit(const unsigned char value)
 {
 	return hexdigits[value & 0xF];
 }
 
-std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
+std::string libFSSM::StrToHexstr(const char* inputstr, const size_t nrbytes)
 {
 	if (inputstr == NULL)
-		return std::string();
+		return "";
 	const char delimiter = ' ';
 	const size_t strlength = 3 * nrbytes - 1;
 	std::string s(strlength, delimiter);
@@ -329,4 +329,101 @@ std::string libFSSM::StrToHexstr(const char* inputstr, size_t nrbytes)
 std::string libFSSM::StrToHexstr(const std::vector<char>& data)
 {
 	return StrToHexstr(data.data(), data.size());
+}
+
+
+std::string libFSSM::StrToMultiLineHexstr(const char* const data, const size_t nrbytes, const size_t bytesperline, const std::string& lineprefix)
+{
+	if (data == NULL || !bytesperline)
+		return "";
+	// estimate length for performance, not exact, can be slightly larger than necessary
+	const size_t strlength = lineprefix.length() * (1 + (nrbytes / bytesperline)) + 3 * nrbytes;
+
+	std::string s (strlength, '\0');
+	s.clear();
+	for (size_t current_line_bytes, i = 0; (current_line_bytes = std::min(bytesperline, nrbytes - i)) > 0; i += current_line_bytes) {
+		s += lineprefix;
+		s += StrToHexstr(&data[i], current_line_bytes);
+		s += '\n';
+	}
+	return s;
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const std::vector<char>& data, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(data.data(), data.size(), bytesperline, lineprefix);
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const unsigned char* const data, const size_t nrbytes, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data), nrbytes, bytesperline, lineprefix);
+}
+
+std::string libFSSM::StrToMultiLineHexstr(const std::vector<unsigned char>& data, const size_t bytesperline, const std::string& lineprefix)
+{
+	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data.data()), data.size(), bytesperline, lineprefix);
+}
+
+
+void libFSSM::setUInt24BigEndian(char* data, const unsigned int value)
+{
+	data[0] = value >> 16;
+	data[1] = value >> 8;
+	data[2] = value;
+}
+
+
+void libFSSM::push_back_UInt32BigEndian(std::vector<char>& v, const unsigned int value)
+{
+	v.push_back(value >> 24);
+	v.push_back(value >> 16);
+	v.push_back(value >> 8);
+	v.push_back(value);
+}
+
+
+unsigned int libFSSM::parseUInt24BigEndian(const unsigned char* const data)
+{
+	return data[0] << 16 | data[1] << 8 | data[2];
+}
+
+unsigned int libFSSM::parseUInt24BigEndian(const char* const data)
+{
+	return parseUInt24BigEndian(reinterpret_cast<const unsigned char*>(data));
+}
+
+
+unsigned int libFSSM::parseUInt32BigEndian(const unsigned char* const data)
+{
+	// gcc -O2 will translate this to a single BSWAP instruction, supported since Intel 486
+	return data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+}
+
+unsigned int libFSSM::parseUInt32BigEndian(const char* const data)
+{
+	return parseUInt32BigEndian(reinterpret_cast<const unsigned char*>(data));
+}
+
+
+bool libFSSM::data_equal(const char * a, const char* b, const unsigned int len)
+{
+	// memcmp is like strcmp
+	return !memcmp(a, b, len);
+	/* // equivalent to:
+	for (unsigned int k=0; k<len; k++)
+	{
+		if (a[k] != b[k])
+			return false;
+	}
+	return true;
+	*/
+}
+
+
+char libFSSM::calcchecksum(const char *message, const unsigned int nrofbytes)
+{
+	unsigned char cs = 0;
+	for (unsigned int k=0; k<nrofbytes; k++)
+		cs += message[k];
+	return static_cast<char>(cs);
 }
