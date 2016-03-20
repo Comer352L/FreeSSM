@@ -684,7 +684,7 @@ void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 
 void CUcontent_MBsSWs::updateRefreshTimeTitle()
 {
-	_MBSWrefreshTimeTitle_label->setText(tr(_timemode == TimeMode::refreshDuration ? "Refresh duration:" : "Block transfer rate:"));
+	_MBSWrefreshTimeTitle_label->setText(_timemode == TimeMode::refreshDuration ? tr("Refresh duration:") : tr("Block transfer rate:"));
 }
 
 
