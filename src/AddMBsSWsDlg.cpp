@@ -39,9 +39,9 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 	iconMB = QIcon(":/icons/freessm/32x32/MB.png");
 	iconSW = QIcon(":/icons/freessm/32x32/SW.png");
 	auto headerview = MBsSWs_tableWidget->horizontalHeader();
-	headerview->setSectionResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
-	headerview->setSectionResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
-	headerview->setSectionResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
+	headerview->setResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
+	headerview->setResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
+	headerview->setResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
 	// Set table row resize behavior:
 	headerview = MBsSWs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
