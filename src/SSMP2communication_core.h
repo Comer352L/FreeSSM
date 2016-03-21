@@ -22,7 +22,6 @@
 
 
 #include "AbstractDiagInterface.h"
-#include "SSMCUdata.h"
 #include "libFSSM.h"
 #ifdef __WIN32__
 	#include "windows\TimeM.h"
