@@ -144,7 +144,7 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 
 
 
-bool SSMP2communication_core::WriteDatabyte(unsigned int ecuaddr, unsigned int dataaddr, char databyte, char *databytewritten)
+bool SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten)
 {
 	if (dataaddr > 0xffffff) return false;
 	char indata[2] = {0,};
@@ -185,7 +185,7 @@ bool SSMP2communication_core::WriteDatabyte(unsigned int ecuaddr, unsigned int d
 
 
 
-bool SSMP2communication_core::GetCUdata(unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize)
+bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize)
 {
 	*cuDataSize = 0;
 	char reqmsg = 0;
@@ -304,7 +304,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 
 
 
-bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigned int outmsg_len, std::vector<char> *msg_buffer)
+bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer)
 {
 	/* NOTE: SERIAL-PASS-THROUGH-INTERFACES DO NOT RETURN COMPLETE MESSAGES, SO WE HAVE TO READ DATA IN STEPS (FOR A GOOD PERFORMANCE) */
 
@@ -404,7 +404,7 @@ bool SSMP2communication_core::receiveReplyISO14230(unsigned int ecuaddr, unsigne
 }
 
 
-bool SSMP2communication_core::receiveReplyISO15765(unsigned int ecuaddr, std::vector<char> *msg_buffer)
+bool SSMP2communication_core::receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer)
 {
 	msg_buffer->clear();
 	// READ MESSAGE
@@ -423,7 +423,7 @@ bool SSMP2communication_core::receiveReplyISO15765(unsigned int ecuaddr, std::ve
 
 
 
-bool SSMP2communication_core::readFromInterface(unsigned int minbytes, unsigned int timeout, std::vector<char> *buffer)
+bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer)
 {
 	std::vector<char> read_buffer;
 	TimeM time;
