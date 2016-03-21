@@ -161,7 +161,7 @@ bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char*
 		if (datawritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
 			// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-			ok = libFSSM::data_equal(_rec_buf, data, datalen);
+			ok = !memcmp(_rec_buf, data, datalen);
 		}
 		else
 		{

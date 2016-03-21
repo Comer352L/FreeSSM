@@ -309,6 +309,7 @@ static char nibble_hexdigit(const unsigned char value)
 	return hexdigits[value & 0xF];
 }
 
+
 std::string libFSSM::StrToHexstr(const char* inputstr, const size_t nrbytes)
 {
 	if (inputstr == NULL)
@@ -349,15 +350,18 @@ std::string libFSSM::StrToMultiLineHexstr(const char* const data, const size_t n
 	return s;
 }
 
+
 std::string libFSSM::StrToMultiLineHexstr(const std::vector<char>& data, const size_t bytesperline, const std::string& lineprefix)
 {
 	return StrToMultiLineHexstr(data.data(), data.size(), bytesperline, lineprefix);
 }
 
+
 std::string libFSSM::StrToMultiLineHexstr(const unsigned char* const data, const size_t nrbytes, const size_t bytesperline, const std::string& lineprefix)
 {
 	return StrToMultiLineHexstr(reinterpret_cast<const char*>(data), nrbytes, bytesperline, lineprefix);
 }
+
 
 std::string libFSSM::StrToMultiLineHexstr(const std::vector<unsigned char>& data, const size_t bytesperline, const std::string& lineprefix)
 {
@@ -387,6 +391,7 @@ unsigned int libFSSM::parseUInt24BigEndian(const unsigned char* const data)
 	return data[0] << 16 | data[1] << 8 | data[2];
 }
 
+
 unsigned int libFSSM::parseUInt24BigEndian(const char* const data)
 {
 	return parseUInt24BigEndian(reinterpret_cast<const unsigned char*>(data));
@@ -399,24 +404,10 @@ unsigned int libFSSM::parseUInt32BigEndian(const unsigned char* const data)
 	return data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
 }
 
+
 unsigned int libFSSM::parseUInt32BigEndian(const char* const data)
 {
 	return parseUInt32BigEndian(reinterpret_cast<const unsigned char*>(data));
-}
-
-
-bool libFSSM::data_equal(const char * a, const char* b, const unsigned int len)
-{
-	// memcmp is like strcmp
-	return !memcmp(a, b, len);
-	/* // equivalent to:
-	for (unsigned int k=0; k<len; k++)
-	{
-		if (a[k] != b[k])
-			return false;
-	}
-	return true;
-	*/
 }
 
 

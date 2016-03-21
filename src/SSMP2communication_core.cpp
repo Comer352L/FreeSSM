@@ -127,7 +127,7 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 				if (datawritten == NULL)
 				{
 					// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-					return libFSSM::data_equal(data, indata + 1, datalen);
+					return !memcmp(data, indata + 1, datalen);
 				}
 				else
 				{
