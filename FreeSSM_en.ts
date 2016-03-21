@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en">
+<TS version="2.1" language="en">
 <context>
     <name>ABSdialog</name>
     <message>
@@ -169,22 +169,32 @@ Actuator Test couldn&apos;t be started.</translation>
 <context>
     <name>AddMBsSWs_Dialog</name>
     <message>
-        <location filename="ui/AddMBsSWsDlg.ui" line="27"/>
+        <location filename="ui/AddMBsSWsDlg.ui" line="28"/>
         <source>Add Measuring Blocks &amp; Switches</source>
         <translation>Add Measuring Blocks &amp; Switches</translation>
     </message>
     <message>
-        <location filename="ui/AddMBsSWsDlg.ui" line="42"/>
-        <source>Title   [Unit]:</source>
-        <translation>Title   [Unit]:</translation>
+        <location filename="ui/AddMBsSWsDlg.ui" line="67"/>
+        <source>Type:</source>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/AddMBsSWsDlg.ui" line="87"/>
+        <location filename="ui/AddMBsSWsDlg.ui" line="72"/>
+        <source>Title:</source>
+        <translation>Title:</translation>
+    </message>
+    <message>
+        <location filename="ui/AddMBsSWsDlg.ui" line="77"/>
+        <source>Unit:</source>
+        <translation>Unit:</translation>
+    </message>
+    <message>
+        <location filename="ui/AddMBsSWsDlg.ui" line="102"/>
         <source>       Add        </source>
         <translation>       Add        </translation>
     </message>
     <message>
-        <location filename="ui/AddMBsSWsDlg.ui" line="116"/>
+        <location filename="ui/AddMBsSWsDlg.ui" line="131"/>
         <source>    Cancel       </source>
         <translation>    Cancel       </translation>
     </message>
@@ -719,46 +729,44 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="370"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="366"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="347"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="343"/>
         <source> Stop  </source>
         <translation> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="57"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="925"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="687"/>
         <source>Refresh duration:</source>
         <translation>Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="55"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="916"/>
-        <source>Block transfer rate:   </source>
-        <translation>Block transfer rate:   </translation>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="687"/>
+        <source>Block transfer rate:</source>
+        <translation>Block transfer rate:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="947"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
 - No or invalid answer from Control Unit -</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="277"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="273"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="284"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="280"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t start Measuring Blocks Reading.</translation>
     </message>
@@ -766,25 +774,25 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_sysTests</name>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="106"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="103"/>
         <source>Checking test mode connector... Please wait !</source>
         <oldsource>Checking test mode connector... Please wait !   </oldsource>
         <translation>Checking test mode connector... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="121"/>
         <source>Actuator Test</source>
         <translation>Actuator Test</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="121"/>
         <source>Actuator Test couldn&apos;t be started:
 =&gt; Test mode connector is not connected !</source>
         <translation>Actuator Test couldn&apos;t be started:
 =&gt; Test mode connector is not connected !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="124"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="121"/>
         <source>ATTENTION:
 Connect/Disconnect test mode connector
 ONLY WITH IGNITION SWITCHED OFF !</source>
@@ -793,35 +801,40 @@ Connect/Disconnect test mode connector
 ONLY WITH IGNITION SWITCHED OFF !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="151"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="148"/>
         <source>Testing Immobilizer Communication Line... Please wait !</source>
         <oldsource>Testing Immobilizer Communication Line... Please wait !   </oldsource>
         <translation>Testing Immobilizer Communication Line... Please wait !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="182"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="179"/>
         <source>Immobilizer Test</source>
         <translation>Immobilizer Test</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="167"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="220"/>
+        <source>Communication Error:</source>
+        <translation>Communication Error:</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_sysTests.cpp" line="164"/>
         <source>The Immobilizer Communication Line is not shorted.</source>
         <translation>The Immobilizer Communication Line is not shorted.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="173"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="170"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to ground !</source>
         <translation>The Immobilizer Communication Line seems
 to be shorted to ground !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="223"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="220"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_sysTests.cpp" line="179"/>
+        <location filename="src/CUcontent_sysTests.cpp" line="176"/>
         <source>The Immobilizer Communication Line seems
 to be shorted to battery (+) !</source>
         <translation>The Immobilizer Communication Line seems
@@ -1094,19 +1107,19 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="231"/>
+        <location filename="src/ControlUnitDialog.cpp" line="234"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="231"/>
+        <location filename="src/ControlUnitDialog.cpp" line="234"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
 - No or invalid answer from Control Unit -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="248"/>
+        <location filename="src/ControlUnitDialog.cpp" line="251"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation>Stopping Communication... Please wait !</translation>
@@ -1482,7 +1495,7 @@ If you want to contribute to the the project (help adding defintions), feel free
     <name>FreeSSM</name>
     <message>
         <location filename="src/FreeSSM.cpp" line="123"/>
-        <location filename="src/FreeSSM.cpp" line="663"/>
+        <location filename="src/FreeSSM.cpp" line="619"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -1617,32 +1630,37 @@ Maybe the device is already in use by another application...</translation>
 <context>
     <name>MBSWtable_Form</name>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="25"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="26"/>
         <source>Measuring Blocks</source>
         <translation>Measuring Blocks</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="58"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="59"/>
+        <source>Type:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="64"/>
         <source>Title:</source>
         <translation>Title:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="63"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="69"/>
         <source>Min. Value:</source>
         <translation>Min. Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="68"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="74"/>
         <source>Current Value:</source>
         <translation>Current Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="73"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="79"/>
         <source>Max. Value:</source>
         <translation>Max. Value:</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="78"/>
+        <location filename="ui/CUcontent_MBsSWs_tableView.ui" line="84"/>
         <source>Unit:</source>
         <translation>Unit:</translation>
     </message>
@@ -1651,13 +1669,13 @@ Maybe the device is already in use by another application...</translation>
     <name>Preferences</name>
     <message>
         <location filename="src/Preferences.cpp" line="166"/>
-        <location filename="src/Preferences.cpp" line="439"/>
-        <location filename="src/Preferences.cpp" line="477"/>
+        <location filename="src/Preferences.cpp" line="442"/>
+        <location filename="src/Preferences.cpp" line="480"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="213"/>
+        <location filename="src/Preferences.cpp" line="216"/>
         <source>Serial Port:</source>
         <translation>Serial Port:</translation>
     </message>
@@ -1667,12 +1685,12 @@ Maybe the device is already in use by another application...</translation>
         <translation>Interface-Name:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="270"/>
+        <location filename="src/Preferences.cpp" line="273"/>
         <source>The selected interface is not supported !</source>
         <translation>The selected interface is not supported !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="271"/>
+        <location filename="src/Preferences.cpp" line="274"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</source>
@@ -1684,63 +1702,63 @@ The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="284"/>
+        <location filename="src/Preferences.cpp" line="287"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="285"/>
-        <location filename="src/Preferences.cpp" line="400"/>
+        <location filename="src/Preferences.cpp" line="288"/>
+        <location filename="src/Preferences.cpp" line="403"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="305"/>
+        <location filename="src/Preferences.cpp" line="308"/>
         <source>Testing interface... Please wait !     </source>
         <translation>Testing interface... Please wait !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="368"/>
+        <location filename="src/Preferences.cpp" line="371"/>
         <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="370"/>
+        <location filename="src/Preferences.cpp" line="373"/>
         <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
         <translation>The selected interface does not support the SSM1- and SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="374"/>
+        <location filename="src/Preferences.cpp" line="377"/>
         <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
         <translation>Please make sure that the interface is connected properly and ignition is switched ON.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="378"/>
+        <location filename="src/Preferences.cpp" line="381"/>
         <source>WARNING:</source>
         <translation>WARNING:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="382"/>
+        <location filename="src/Preferences.cpp" line="385"/>
         <source>The selected serial port can not be configured for the SSM1-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM1-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="384"/>
+        <location filename="src/Preferences.cpp" line="387"/>
         <source>The selected interface does not support the SSM1-protocol.</source>
         <translation>The selected interface does not support the SSM1-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="389"/>
+        <location filename="src/Preferences.cpp" line="392"/>
         <source>The selected serial port can not be configured for the SSM2-protocol.</source>
         <translation>The selected serial port can not be configured for the SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="391"/>
+        <location filename="src/Preferences.cpp" line="394"/>
         <source>The selected interface does not support the SSM2-protocol.</source>
         <translation>The selected interface does not support the SSM2-protocol.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="399"/>
+        <location filename="src/Preferences.cpp" line="402"/>
         <source>Retry</source>
         <translation>Retry</translation>
     </message>
@@ -1752,43 +1770,43 @@ The interface test for the selected interface is not yet implemented.
 - Language file missing or damaged -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="277"/>
+        <location filename="src/Preferences.cpp" line="280"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Please make sure that the device is not in use by another application.</source>
         <translation>Couldn&apos;t open the diagnostic interface !
 Please make sure that the device is not in use by another application.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="283"/>
-        <location filename="src/Preferences.cpp" line="395"/>
+        <location filename="src/Preferences.cpp" line="286"/>
         <location filename="src/Preferences.cpp" line="398"/>
+        <location filename="src/Preferences.cpp" line="401"/>
         <source>Interface test</source>
         <translation>Interface test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="283"/>
+        <location filename="src/Preferences.cpp" line="286"/>
         <source>Please connect diagnostic interface to the vehicles
 diagnostic connector and switch ignition on.</source>
         <translation>Please connect diagnostic interface to the vehicles
 diagnostic connector and switch ignition on.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="364"/>
+        <location filename="src/Preferences.cpp" line="367"/>
         <source>Interface test failed !</source>
         <translation>Interface test failed !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="362"/>
+        <location filename="src/Preferences.cpp" line="365"/>
         <source>Interface test successful !</source>
         <translation>Interface test successful !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="415"/>
+        <location filename="src/Preferences.cpp" line="418"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation>Couldn&apos;t close the diagnostic interface !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="439"/>
+        <location filename="src/Preferences.cpp" line="442"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -2001,7 +2019,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>About FreeSSM</source>
         <translation>About FreeSSM</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="1147"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
         <translation>A free diagnostic and adjustment tool for SUBARU® vehicles</translation>
@@ -2021,7 +2039,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>Measuring Blocks:</source>
         <translation>Measuring Blocks:</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="154"/>
         <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</source>
         <oldsource>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</oldsource>
@@ -2072,7 +2090,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>&amp;About</source>
         <translation>&amp;About</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="119"/>
         <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
 
@@ -2131,7 +2149,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <source>Program languages:</source>
         <translation>Program languages:</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="640"/>
         <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
         <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
@@ -2142,17 +2160,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
         <translation>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="684"/>
         <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
         <translation>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="728"/>
         <source>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</source>
         <translation>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="ui/About.ui" line="750"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>

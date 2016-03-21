@@ -39,8 +39,7 @@
 class MBSWvalue_dt
 {
 public:
-	MBSWvalue_dt() { rawValue=0; };
-	unsigned int rawValue;
+	unsigned int rawValue {0};
 	QString scaledStr;
 	QString unitStr;
 };
@@ -50,23 +49,24 @@ public:
 class MinMaxMBSWvalue_dt
 {
 public:
-	MinMaxMBSWvalue_dt() { disabled=false; minRawValue=0; minRawValue=0; };
-	bool disabled;
-	double minRawValue;
-	double maxRawValue;
+	bool disabled {false};
+	double minRawValue {0};
+	double maxRawValue {0};
 	QString minScaledValueStr;
 	QString maxScaledValueStr;
 };
 
 
 
+enum class TimeMode {refreshDuration, dataRate};
+
+
 class MBSWsettings_dt
 {
 public:
-	MBSWsettings_dt() { timeMode=0; minValuesEnabled=1; maxValuesEnabled=1; };
-	bool timeMode;
-	bool minValuesEnabled;
-	bool maxValuesEnabled;
+	TimeMode timeMode {TimeMode::refreshDuration};
+	bool minValuesEnabled {true};
+	bool maxValuesEnabled {true};
 };
 
 
@@ -76,16 +76,18 @@ class CUcontent_MBsSWs : public QWidget, private Ui::MBSWcontent_Form
 	Q_OBJECT
 
 public:
-	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = 0);
+	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = nullptr);
 	~CUcontent_MBsSWs();
 	bool setup(SSMprotocol *SSMPdev);
 	bool startMBSWreading();
 	bool stopMBSWreading();
-	bool setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList);
-	void getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
-	void getSettings(MBSWsettings_dt *settings);
+	bool setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
+	std::vector<MBSWmetadata_dt> getMBSWselection() const;
+	MBSWsettings_dt getSettings() const;
 
 private:
+	const static QString DefaultTimeValStr;
+
 	SSMprotocol *_SSMPdev;
 	QLabel *_MBSWrefreshTimeTitle_label;
 	QLabel *_MBSWrefreshTimeValue_label;
@@ -94,16 +96,18 @@ private:
 	std::vector<mb_dt> _supportedMBs;
 	std::vector<sw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
-	bool _timemode;
+	TimeMode _timemode;
 	int _lastrefreshduration_ms;
-	QList<MBSWvalue_dt> _lastValues;
-	QList<MinMaxMBSWvalue_dt> _minmaxData;
-	QList<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	std::vector<MBSWvalue_dt> _lastValues;
+	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
+	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
 
 	void setupTimeModeUiElements();
 	void setupUiFonts();
 	void displayMBsSWs();
+	void updateRefreshTimeTitle();
 	void updateTimeInfo(int refreshduration_ms);
+	void clearRefreshTime();
 	void communicationError(QString addstr);
 	void resizeEvent(QResizeEvent *event);
 

@@ -309,8 +309,8 @@ void TransmissionDialog::saveContentSettings()
 {
 	if (_mode == MBsSWs_mode)
 	{
-		_content_MBsSWs->getMBSWselection(&_lastMBSWmetaList);
-		_content_MBsSWs->getSettings(&_MBSWsettings);
+		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
+		_MBSWsettings = _content_MBsSWs->getSettings();
 	}
 }
 

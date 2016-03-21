@@ -21,6 +21,7 @@
 
 
 
+
 CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin, bool showMax) : QWidget(parent)
 {
 	QHeaderView *headerview;
@@ -35,11 +36,12 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	mbswmovedown_pushButton->setEnabled( false );
 	// Set table column resize behavior:
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
-	headerview->setResizeMode(col_title, QHeaderView::Stretch);
-	headerview->setResizeMode(col_min, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_current, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_max, QHeaderView::ResizeToContents);
-	headerview->setResizeMode(col_unit, QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
+	headerview->setSectionResizeMode(static_cast<int>(Column::min), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::current), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::max), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
 	// Set table row resize behavior:
 	headerview = selectedMBsSWs_tableWidget->verticalHeader();
 	headerview->setResizeMode(QHeaderView::Fixed);
@@ -53,6 +55,8 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	// Make min/max values columns (in)visible:
 	toggleMinColumnVisible(showMin);
 	toggleMaxColumnVisible(showMax);
+	iconMB = QIcon(":/icons/freessm/32x32/MB.png");
+	iconSW = QIcon(":/icons/freessm/32x32/SW.png");
 	// Connect signals and slots:
 	connect( mbswmoveup_pushButton , SIGNAL( released() ), this, SIGNAL( moveUpButton_pressed() ) );
 	connect( mbswmovedown_pushButton , SIGNAL( released() ), this, SIGNAL( moveDownButton_pressed() ) );
@@ -77,13 +81,14 @@ CUcontent_MBsSWs_tableView::~CUcontent_MBsSWs_tableView()
 }
 
 
-void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units)
+void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values, const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units)
 {
 	int firstrowvisibleindex = 0;
 	// Delete table content:
 	selectedMBsSWs_tableWidget->clearContents();
 	// Save nr of MBs/Sws:
-	_nrofMBsSWs = qMax( qMax( qMax( qMax( values.size(), minValues.size() ), maxValues.size() ), titles.size() ), units.size() );
+	_nrofMBsSWs = std::max({ types.size(), titles.size(), values.size(), minValues.size(), maxValues.size(), units.size() });
+
 	// Set number of rows and vertical scroll bar policy:
 	if (_nrofMBsSWs >= _maxrowsvisible)
 	{
@@ -105,13 +110,15 @@ void CUcontent_MBsSWs_tableView::setMBSWlistContent(QStringList titles, QStringL
 		selectedMBsSWs_tableWidget->scrollToTop();
 	}
 	// *** Fill table ***:
-	updateMBColumn(titles, col_title, Qt::AlignLeft | Qt::AlignVCenter);
+	updateTypesColumn(types);
+	updateMBColumn(titles, Column::title, Qt::AlignLeft | Qt::AlignVCenter);
 	// current/min/max values, units:
 	updateMBSWvalues(values, minValues, maxValues, units);
 }
 
-void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment)
+void CUcontent_MBsSWs_tableView::updateMBColumn(const std::vector<QString>& data, CUcontent_MBsSWs_tableView::Column column, Qt::Alignment alignment)
 {
+	const int col = static_cast<int>(column);
 	const unsigned int rowcount = std::min(static_cast<unsigned int>(data.size()), _nrofMBsSWs);
 	for (unsigned int row = 0; row < rowcount; ++row) {
 		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
@@ -125,16 +132,34 @@ void CUcontent_MBsSWs_tableView::updateMBColumn(QStringList data, CUcontent_MBsS
 	}
 }
 
-void CUcontent_MBsSWs_tableView::updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList)
+void CUcontent_MBsSWs_tableView::updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList, const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList)
 {
-	updateMBColumn(minValueStrList, col_min);
-	updateMBColumn(valueStrList, col_current);
-	updateMBColumn(maxValueStrList, col_max);
-	updateMBColumn(unitStrList, col_unit, Qt::AlignLeft | Qt::AlignVCenter);
+	updateMBColumn(minValueStrList, Column::min);
+	updateMBColumn(valueStrList, Column::current);
+	updateMBColumn(maxValueStrList, Column::max);
+	updateMBColumn(unitStrList, Column::unit, Qt::AlignLeft | Qt::AlignVCenter);
 	/* NOTE: The units can change during MB/SW-reading !:
 	 *       If a MB/SW cannot be scaled (e.g. due to unexpected raw values, incomplete/invalid definitions),
 	 *       the raw value is displayed instead and the unit is switched to [RAW] (MBs) or [BIN] (SWs).
 	 */
+}
+
+void CUcontent_MBsSWs_tableView::updateTypesColumn(const std::vector<BlockType>& types)
+{
+	constexpr int col = static_cast<int>(Column::type);
+	const unsigned int rowcount = std::min(static_cast<unsigned int>(types.size()), _nrofMBsSWs);
+
+	for (unsigned int row = 0; row < rowcount; ++row) {
+		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
+		const QIcon& icon = types.at(row) == BlockType::MB ? iconMB : iconSW;
+		if (tableelement) {
+			tableelement->setIcon(icon);
+		} else {
+			tableelement = new QTableWidgetItem(icon, nullptr);
+			//tableelement->setIcon(icon);
+			selectedMBsSWs_tableWidget->setItem(row, col, tableelement);
+		}
+	}
 }
 
 
@@ -147,23 +172,16 @@ void CUcontent_MBsSWs_tableView::clearMBSWlistContent()
 
 void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 {
-	QList<unsigned int> selectedMBSWIndexes;
-	getSelectedTableWidgetRows(&selectedMBSWIndexes);
-	if (selectedMBSWIndexes.size() < 1)
+	const auto selectedMBSWIndexes = getSelectedTableWidgetRows();
+	if (selectedMBSWIndexes.size() > 0)
 	{
-		mbswmovedown_pushButton->setEnabled(false);
-		mbswmoveup_pushButton->setEnabled(false);
+		mbswmoveup_pushButton->setEnabled(selectedMBSWIndexes.front() > 0);
+		mbswmovedown_pushButton->setEnabled(selectedMBSWIndexes.back() < (_nrofMBsSWs - 1));
 	}
 	else
 	{
-		if (selectedMBSWIndexes.at(0) == 0)
-			mbswmoveup_pushButton->setEnabled(false);
-		else
-			mbswmoveup_pushButton->setEnabled(true);
-		if (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1) == (_nrofMBsSWs-1))
-			mbswmovedown_pushButton->setEnabled(false);
-		else
-			mbswmovedown_pushButton->setEnabled(true);
+		mbswmovedown_pushButton->setEnabled(false);
+		mbswmoveup_pushButton->setEnabled(false);
 	}
 }
 
@@ -171,52 +189,50 @@ void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 void CUcontent_MBsSWs_tableView::toggleMinColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(col_min);
+		selectedMBsSWs_tableWidget->showColumn(static_cast<int>(Column::min));
 	else
-		selectedMBsSWs_tableWidget->hideColumn(col_min);
+		selectedMBsSWs_tableWidget->hideColumn(static_cast<int>(Column::min));
 }
 
 
 void CUcontent_MBsSWs_tableView::toggleMaxColumnVisible(bool show)
 {
 	if (show)
-		selectedMBsSWs_tableWidget->showColumn(col_max);
+		selectedMBsSWs_tableWidget->showColumn(static_cast<int>(Column::max));
 	else
-		selectedMBsSWs_tableWidget->hideColumn(col_max);
+		selectedMBsSWs_tableWidget->hideColumn(static_cast<int>(Column::max));
 }
 
 
-bool CUcontent_MBsSWs_tableView::minValuesEnabled()
+bool CUcontent_MBsSWs_tableView::minValuesEnabled() const
 {
 	return showMin_pushButton->isChecked();
 }
 
 
-bool CUcontent_MBsSWs_tableView::maxValuesEnabled()
+bool CUcontent_MBsSWs_tableView::maxValuesEnabled() const
 {
 	return showMax_pushButton->isChecked();
 }
 
 
-void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes)
+std::vector<unsigned int> CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows() const
 {
-	int k=0;
-	int m=0;
-	int rows=0;
 	// GET INDEXES OF SELECTED ROWS:
-	selectedMBSWIndexes->clear();
-	QList<QTableWidgetSelectionRange> selectedRanges;
-	selectedRanges = selectedMBsSWs_tableWidget->selectedRanges();
-	for (k=0; k<selectedRanges.size(); k++)
+	std::vector<unsigned int> selectedMBSWIndexes;
+	const QList<QTableWidgetSelectionRange> ranges = selectedMBsSWs_tableWidget->selectedRanges();
+	for (const auto& range : ranges)
 	{
-		rows = selectedRanges.at(k).bottomRow() - selectedRanges.at(k).topRow() + 1;
-		for (m=0; m<rows; m++)
+		const int rows = range.rowCount();
+		const int topRow = range.topRow();
+		for (int m=0; m<rows; m++)
 		{
-			if (static_cast<unsigned int>(selectedRanges.at(k).topRow() + m) < _nrofMBsSWs)
-				selectedMBSWIndexes->push_back(selectedRanges.at(k).topRow() + m);
+			const unsigned int index = topRow + m;
+			if (index < _nrofMBsSWs)
+				selectedMBSWIndexes.push_back(index);
 		}
 	}
-	qSort(selectedMBSWIndexes->begin(), selectedMBSWIndexes->end());
+	std::sort(selectedMBSWIndexes.begin(), selectedMBSWIndexes.end());
 	/* NOTE: This function must return sorted indexes (from min to max) !
 	   At least for the QAbstractItemView::ContiguousSelction selection mode,
 	   QTableWidget::selectedRanges() seems to return always sorted indexes.
@@ -224,49 +240,40 @@ void CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows(QList<unsigned int> 
 	   the returned indexes, so we can NOT assume that they are and will
 	   ever be sorted in future Qt-versions !
 	 */
+	return selectedMBSWIndexes;
 }
 
 
 void CUcontent_MBsSWs_tableView::selectMBSWtableRows(unsigned int start, unsigned int end)
 {
-	QTableWidgetSelectionRange selrange(start, col_title, end, col_unit);
+	QTableWidgetSelectionRange selrange(start, static_cast<int>(Column::type), end, static_cast<int>(Column::unit));
 	selectedMBsSWs_tableWidget->setRangeSelected(selrange , true);
 }
 
 
 void CUcontent_MBsSWs_tableView::scrollMBSWtable(unsigned int rowindex)
 {
-	QTableWidgetItem *item = new QTableWidgetItem;
-	item = selectedMBsSWs_tableWidget->item(rowindex, 0);
+	const QTableWidgetItem *item = selectedMBsSWs_tableWidget->item(rowindex, static_cast<int>(Column::title));
 	selectedMBsSWs_tableWidget->scrollToItem(item, QAbstractItemView::EnsureVisible);
 }
 
 
 void CUcontent_MBsSWs_tableView::resizeEvent(QResizeEvent *event)
 {
-	int rowheight = 0;
-	int vspace = 0;
-	unsigned int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (selectedMBsSWs_tableWidget->rowCount() < 1)
 		selectedMBsSWs_tableWidget->setRowCount(1); // Temporary create a row to get the row hight
-	rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
+	const int rowheight = selectedMBsSWs_tableWidget->rowHeight(0);
 	//vspace = selectedMBsSWs_tableWidget->viewport()->height(); // NOTE: Sometimes doesn't work as expected ! (Qt-Bug ?)
-	vspace = selectedMBsSWs_tableWidget->height() - selectedMBsSWs_tableWidget->horizontalHeader()->viewport()->height() - 4;
+	const int vspace = selectedMBsSWs_tableWidget->height() - selectedMBsSWs_tableWidget->horizontalHeader()->viewport()->height() - 4;
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
 	_maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (_maxrowsvisible < _nrofMBsSWs)
-		minnrofrows = _nrofMBsSWs;
-	else
-		minnrofrows = _maxrowsvisible;
+	const unsigned int minnrofrows = _maxrowsvisible < _nrofMBsSWs ? _nrofMBsSWs : _maxrowsvisible;
 	selectedMBsSWs_tableWidget->setRowCount(minnrofrows);
 	// Set vertical scroll bar policy:
-	if (minnrofrows > _nrofMBsSWs)
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-	else
-		selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+	selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( minnrofrows > _nrofMBsSWs ? Qt::ScrollBarAlwaysOff : Qt::ScrollBarAsNeeded );
 	// Switch back to "Scroll per item"-mode:
 	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that  here...
 	// Accept event:
@@ -309,4 +316,3 @@ void CUcontent_MBsSWs_tableView::setupUiFonts()
 	showMin_pushButton->setFont(contentfont);
 	showMax_pushButton->setFont(contentfont);
 }
-

@@ -60,7 +60,7 @@ bool J2534DiagInterface::open( std::string name )
 			char ApiVersion[80] = {0,};
 			long ret = 0;
 			// Open interface (only 0404-API):
-			if (_j2534->libraryAPIversion() != J2534_API_v0202)
+			if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
 			{
 				_DeviceID = 0;
 				ret = _j2534->PassThruOpen(NULL, &_DeviceID);
@@ -75,7 +75,7 @@ bool J2534DiagInterface::open( std::string name )
 				}
 			}
 			// Read hardware/software information:
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
 				ret = _j2534->PassThruReadVersion(FirmwareVersion, DllVersion, ApiVersion);
 			else
 				ret = _j2534->PassThruReadVersion(_DeviceID, FirmwareVersion, DllVersion, ApiVersion);
@@ -94,19 +94,19 @@ bool J2534DiagInterface::open( std::string name )
 				printErrorDescription("PassThruReadVersion() failed: ", ret);
 #endif
 			// Get and save library data:
-			std::vector<J2534Library> libs = J2534_API::getAvailableJ2534Libs();
-			for (unsigned int k=0; k<libs.size(); k++)
+			for (const auto& lib : J2534_API::getAvailableJ2534Libs())
 			{
-				if (libs.at(k).path == name)
+				if (lib.path == name)
 				{
 					// Interface name
-					setName(libs.at(k).name);
+					setName(lib.name);
 					// Supported protocols
 					std::vector<protocol_type> supportedProtocols;
-					if ((libs.at(k).protocols & PROTOCOL_FLAG_ISO9141) ||
-						(libs.at(k).protocols & PROTOCOL_FLAG_ISO14230)   )
+					const auto p = lib.protocols;
+					if (bool(p & J2534_protocol_flags::iso9141)
+						|| bool(p & J2534_protocol_flags::iso14230))
 						supportedProtocols.push_back(protocol_SSM2_ISO14230);
-					if (libs.at(k).protocols & PROTOCOL_FLAG_ISO15765)
+					if (bool(p & J2534_protocol_flags::iso15765))
 						supportedProtocols.push_back(protocol_SSM2_ISO15765);
 					setSupportedProtocols(supportedProtocols);
 					break;
@@ -141,7 +141,7 @@ bool J2534DiagInterface::close()
 		if (_connected)
 			disconnect();
 		// Close interface (only 0404-API):
-		if (_j2534->libraryAPIversion() != J2534_API_v0202)
+		if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
 		{
 			ret = _j2534->PassThruClose(_DeviceID);
 			if (STATUS_NOERROR != ret)
@@ -192,7 +192,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			BaudRate = 500000;
 		}
 		// CONNECT CHANNEL:
-		if (_j2534->libraryAPIversion() == J2534_API_v0202)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
 			ret = _j2534->PassThruConnect(ProtocolID, Flags, &_ChannelID);
 		else
 			ret = _j2534->PassThruConnect(_DeviceID, ProtocolID, Flags, BaudRate, &_ChannelID);
@@ -233,14 +233,14 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #ifdef __FSSM_DEBUG__
 			printErrorDescription("PassThruIoctl() for parameter DATARATE failed: ", ret);
 #endif
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
 				goto err_close;
 		}
 		if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
 			/* ----- SET CONFIGURATION (ISO-14230 specific) ----- */
 			// P1_MIN (min. ECU inter-byte time)
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, always 0ms
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
 			{
 				CfgItems[0].Parameter = P1_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min/def=0ms,
 				CfgItems[0].Value = 0;	// [ms]
@@ -254,7 +254,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			}
 			// P1_MAX (max. ECU inter-byte time)
 			CfgItems[0].Parameter = P1_MAX;	// ISO-9141, ISO-14230 (normal timing paramter-set): def/max=20ms,
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
 				CfgItems[0].Value = 5;	// [02.02-API: ms]
 			else
 				CfgItems[0].Value = 10;	// [04.04-API: *0.5ms]
@@ -266,7 +266,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 				printErrorDescription("PassThruIoctl() for P1_MAX: ", ret);
 #endif
 			// P2_MIN (min. ECU response time [ms] to a tester request or between ECU responses)
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, always 0ms
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
 			{
 				CfgItems[0].Parameter = P2_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min=0ms, def=25ms
 				CfgItems[0].Value = 0;	// [ms]
@@ -279,7 +279,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #endif
 			}
 			// P2_MAX (max. ECU response time [ms] to a tester request or between ECU responses)
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, value is ignored (all messages up to P3_min are accepted)
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, value is ignored (all messages up to P3_min are accepted)
 			{
 				CfgItems[0].Parameter = P2_MAX;	// ISO-9141, ISO-14230 (normal timing paramter set): def=50ms, max=inf
 				CfgItems[0].Value = 3000;
@@ -302,7 +302,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 				printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
 #endif
 			// P3_MAX (max. time between end of ECU reponse and next tester request)
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, tester allows sending message at any time after P3_MIN
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, tester allows sending message at any time after P3_MIN
 			{
 				CfgItems[0].Parameter = P3_MAX;     // ISO-9141, ISO-14230: def=5000ms, max=inf
 				CfgItems[0].Value = 0xffff; // [ms] => 65535ms = max. value
@@ -325,7 +325,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 				printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
 #endif
 			// P4_MAX (max. tester inter-byte time)
-			if (_j2534->libraryAPIversion() == J2534_API_v0202)	// 04.04-API: not adjustable, device always uses P4_MIN
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, device always uses P4_MIN
 			{
 				CfgItems[0].Parameter = P4_MAX;	// ISO-9141, ISO-14230: def/max=50ms
 				CfgItems[0].Value = 5;	// [ms]
@@ -338,7 +338,7 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 #endif
 			}
 			// Data bits:
-			if (_j2534->libraryAPIversion() == J2534_API_v0404)
+			if (_j2534->libraryAPIversion() == J2534_API_version::v0404)
 			{
 				CfgItems[0].Parameter = DATA_BITS;
 				CfgItems[0].Value = DATA_BITS_8;	// should be default
@@ -568,13 +568,13 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 				if (rx_msg.DataSize > 0)
 				{
 #ifdef __FSSM_DEBUG__
-					if ((rx_msg.ExtraDataIndex == 0) && (_j2534->libraryAPIversion() == J2534_API_v0404))
+					if ((rx_msg.ExtraDataIndex == 0) && (_j2534->libraryAPIversion() == J2534_API_version::v0404))
 					{
 						std::cout << "WARNING: ExtraDataIndex is 0, which should be the case only for pure status messages !\n";
 					}
 					else if (rx_msg.ExtraDataIndex < rx_msg.DataSize)
 					{
-						if ((_j2534->libraryAPIversion() == J2534_API_v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
+						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
 							((protocolType() == protocol_SSM2_ISO14230) && (rx_msg.ExtraDataIndex < (rx_msg.DataSize - 1))))
 							std::cout << "WARNING: ExtraDataIndex is not smaller than expected !\n";
 						/* NOTE:

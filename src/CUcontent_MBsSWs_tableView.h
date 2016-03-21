@@ -25,6 +25,7 @@
 #include <QtGui>
 #include <QtGlobal>
 #include "ui_CUcontent_MBsSWs_tableView.h"
+#include "SSMprotocol.h"
 
 
 
@@ -35,24 +36,28 @@ class CUcontent_MBsSWs_tableView : public QWidget, private Ui::MBSWtable_Form
 public:
 	CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin=true, bool showMax=true);
 	~CUcontent_MBsSWs_tableView();
-	void setMBSWlistContent(QStringList titles, QStringList values, QStringList minValues, QStringList maxValues, QStringList units);
-	void updateMBSWvalues(QStringList valueStrList, QStringList minValueStrList, QStringList maxValueStrList, QStringList unitStrList);
+	void setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values, const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units);
+	void updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList, const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList);
 	void clearMBSWlistContent();
-	bool minValuesEnabled();
-	bool maxValuesEnabled();
-	void getSelectedTableWidgetRows(QList<unsigned int> *selectedMBSWIndexes);
+	bool minValuesEnabled() const;
+	bool maxValuesEnabled() const;
+	std::vector<unsigned int> getSelectedTableWidgetRows() const;
 	void selectMBSWtableRows(unsigned int start, unsigned int end);
 	void scrollMBSWtable(unsigned int rowindex);
 
 private:
-	enum Column { col_title, col_min, col_current, col_max, col_unit };
+	enum class Column { type, title, min, current, max, unit };
+
+	QIcon iconMB;
+	QIcon iconSW;
 	unsigned int _nrofMBsSWs;
 	unsigned int _maxrowsvisible;
 
 	void setupUiFonts();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
-	void updateMBColumn(QStringList data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment = Qt::AlignCenter);
+	void updateMBColumn(const std::vector<QString>& data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment = Qt::AlignCenter);
+	void updateTypesColumn(const std::vector<BlockType>& types);
 
 private slots:
 	void setMoveButtonsEnabledState();

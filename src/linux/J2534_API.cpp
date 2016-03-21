@@ -24,7 +24,7 @@
 J2534_API::J2534_API()
 {
 	_J2534LIB = NULL;
-		_api_version = J2534_API_v0404;
+		_api_version = J2534_API_version::v0404;
 	_PassThruOpen = NULL;
 	_PassThruClose = NULL;
 	_PassThruConnect_0202 = NULL;
@@ -81,9 +81,9 @@ bool J2534_API::selectLibrary(std::string libPath)
 		}
 		// Check API-version of the library:
 		if (!dlsym( newJ2534LIB, "PassThruOpen" ) || !dlsym( newJ2534LIB, "PassThruClose" ))
-			_api_version = J2534_API_v0202;
+			_api_version = J2534_API_version::v0202;
 		else
-			_api_version = J2534_API_v0404;
+			_api_version = J2534_API_version::v0404;
 		// Close old library:
 		if (_J2534LIB)
 		{
@@ -126,7 +126,7 @@ void J2534_API::assignJ2534fcns()
 {
 	_PassThruOpen = reinterpret_cast< J2534_PassThruOpen >( dlsym( _J2534LIB, "PassThruOpen" ) );
 	_PassThruClose = reinterpret_cast< J2534_PassThruClose >( dlsym( _J2534LIB, "PassThruClose" ) );
-	if (_api_version == J2534_API_v0202)
+	if (_api_version == J2534_API_version::v0202)
 	{
 		_PassThruConnect_0202 = reinterpret_cast< J2534_PassThruConnect_0202 >( dlsym( _J2534LIB, "PassThruConnect" ) );
 		_PassThruReadVersion_0202 = reinterpret_cast< J2534_PassThruReadVersion_0202 >( dlsym( _J2534LIB, "PassThruReadVersion" ) );
@@ -161,7 +161,7 @@ std::vector<J2534Library> J2534_API::getAvailableJ2534Libs()
 	// HACK
 	const std::string libsDefXmlFile = "./definitions/J2534libs.xml";
 
-	std::vector<J2534Library> PTlibraries = parseJ2534LibsXml(libsDefXmlFile);
+	const std::vector<J2534Library> PTlibraries = parseJ2534LibsXml(libsDefXmlFile);
 
 #ifdef __J2534_API_DEBUG__
 	J2534misc::printLibraryInfo(PTlibraries);
@@ -231,9 +231,9 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 				goto error;
 			}
 			lib.api = J2534misc::parseApiVersion(api_str);
-			if (lib.api == J2534_API_UNDEFINED) {
-				std::cout << "J2534LIB: unknown 'api': \"" << api_str << "\", assuming \"" << J2534misc::apiVersionToStr(J2534_API_v0404) << "\"\n";
-				lib.api = J2534_API_v0404;
+			if (lib.api == J2534_API_version::undefined) {
+				std::cout << "J2534LIB: unknown 'api': \"" << api_str << "\", assuming \"" << J2534misc::apiVersionToStr(J2534_API_version::v0404) << "\"\n";
+				lib.api = J2534_API_version::v0404;
 			}
 
 			TiXmlNode* protocolsnode = libnode->FirstChild("PROTOCOLS");
@@ -245,7 +245,7 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 			TiXmlElement* protocolelement = protocolsnode->FirstChildElement("PROTOCOL");
 			while (protocolelement) {
 				std::string protocolstr(protocolelement->GetText());
-				lib.protocols = J2534_protocol_flags(lib.protocols | J2534misc::parseProtocol(protocolstr));
+				lib.protocols = lib.protocols | J2534misc::parseProtocol(protocolstr);
 				protocolelement = protocolelement->NextSiblingElement();
 			}
 

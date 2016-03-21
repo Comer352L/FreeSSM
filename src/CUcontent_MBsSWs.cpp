@@ -21,17 +21,13 @@
 
 
 
+const QString CUcontent_MBsSWs::DefaultTimeValStr {"---"};
+
 CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : QWidget(parent)
 {
 	_SSMPdev = NULL;
-	_supportedMBs.clear();
-	_supportedSWs.clear();
-	_MBSWmetaList.clear();
 	_timemode = settings.timeMode;
 	_lastrefreshduration_ms = 0;
-	_lastValues.clear();
-	_minmaxData.clear();
-	_tableRowPosIndexes.clear();
 
 	// Setup GUI:
 	setupUi(this);
@@ -50,12 +46,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	mbswdelete_pushButton->setEnabled( false );
 	MBSWviews_tabWidget->setTabEnabled(1, false);
 	_valuesTableView->setEnabled(false);
-	// Set content of time refresh-time labels:
-	if (_timemode)
-		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
-	else
-		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	updateRefreshTimeTitle();
+	clearRefreshTime();
 	// Connect signals and slots:
 	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
@@ -115,7 +107,7 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	_minmaxData.clear();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Output titles and units of the selcted MBs/SWs
 	displayMBsSWs();
 	// *** Enable/Disable all GUI-elements:
@@ -139,25 +131,26 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 }
 
 
-bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaList)
+bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
 {
-	unsigned int k = 0;
 	// Check if MBSW-reading (and monitoring !) is in progress:
 	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size())))
 		return false;
 	// Check if the selected MBs/SWs are available:
-	for (k=0; k<MBSWmetaList.size(); k++)
+	for (const MBSWmetadata_dt& metadata : MBSWmetaList)
 	{
-		if (MBSWmetaList.at(k).blockType == blockType_MB)
+		unsigned int count = 0;
+		switch(metadata.blockType)
 		{
-			if (MBSWmetaList.at(k).nativeIndex > (_supportedMBs.size()-1))
-				return false;
+		case BlockType::MB:
+			count = _supportedMBs.size();
+			break;
+		case BlockType::SW:
+			count = _supportedSWs.size();
+			break;
 		}
-		else
-		{
-			if (MBSWmetaList.at(k).nativeIndex > (_supportedSWs.size()-1))
-				return false;
-		}
+		if (metadata.nativeIndex >= count)
+			return false;
 	}
 	// Save MB/SW-list:
 	_MBSWmetaList = MBSWmetaList;
@@ -165,12 +158,13 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 	_lastValues.clear();
 	_minmaxData.clear();
 	// Setup table position indexes:
-	for (k=0; k<MBSWmetaList.size(); k++)
+	for (size_t k=0; k<MBSWmetaList.size(); k++)
 		_tableRowPosIndexes.push_back(k);
+
 	// Update MB/SW table content:
 	displayMBsSWs();
 	// Clear time information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Activate/deactivate buttons:
 	if (_MBSWmetaList.size() > 0)
 	{
@@ -186,79 +180,72 @@ bool CUcontent_MBsSWs::setMBSWselection(std::vector<MBSWmetadata_dt> MBSWmetaLis
 }
 
 
-void CUcontent_MBsSWs::getMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
+std::vector<MBSWmetadata_dt> CUcontent_MBsSWs::getMBSWselection() const
 {
-	unsigned int k = 0;
 	// Return the MBSW-metalist re-ordered according to their positions on the values-table-widget:
-	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(_MBSWmetaList);
-	for (k=0; k<_MBSWmetaList.size(); k++)
+	const size_t count = _MBSWmetaList.size();
+	std::vector<MBSWmetadata_dt> orderedMBSWmetalist(count);
+	for (size_t k=0; k<count; k++)
 		orderedMBSWmetalist.at(_tableRowPosIndexes.at(k)) = _MBSWmetaList.at(k);
-	*MBSWmetaList = orderedMBSWmetalist;
+	return orderedMBSWmetalist;
 }
 
 
 void CUcontent_MBsSWs::displayMBsSWs()
 {
-	QStringList titles;
-	QStringList minvalues;
-	QStringList values;
-	QStringList maxvalues;
-	QStringList units;
-	unsigned int k=0;
-	unsigned int listPosIndex = 0;
-	// Prepare string-lists (fill with empty strings up to needed size):
-	for (int s=0; s<_tableRowPosIndexes.size(); s++)
-	{
-		titles << "";
-		minvalues << "";
-		values << "";
-		maxvalues << "";
-		units << "";
-	}
-	// Fill string-lists for output:
-	for (k=0; k<_MBSWmetaList.size(); k++)
+	const auto itemcount = _tableRowPosIndexes.size();
+	std::vector<BlockType> types(itemcount, BlockType::MB);
+	// Prepare strings, initialize with empty strings up to needed size:
+	std::vector<QString> titles(itemcount);
+	std::vector<QString> minvalues(itemcount);
+	std::vector<QString> values(itemcount);
+	std::vector<QString> maxvalues(itemcount);
+	std::vector<QString> units(itemcount);
+
+	// set strings for output:
+	for (size_t k=0; k<_MBSWmetaList.size(); k++)
 	{
 		// Get MB/SW-index:
-		listPosIndex = _tableRowPosIndexes.at(k);
+		const auto listPosIndex = _tableRowPosIndexes.at(k);
+		const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
 		// Title:
-		if (_MBSWmetaList.at(k).blockType == blockType_MB)
-			titles.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).title );
-		else	// SW
-			titles.replace( listPosIndex, _supportedSWs.at(_MBSWmetaList.at(k).nativeIndex).title );
+		switch(metadata.blockType)
+		{
+		case BlockType::MB:
+			titles.at(listPosIndex) = _supportedMBs.at(metadata.nativeIndex).title;
+			break;
+		case BlockType::SW:
+			titles.at(listPosIndex) = _supportedSWs.at(metadata.nativeIndex).title;
+			types.at(listPosIndex) = BlockType::SW;
+			break;
+		}
 		// Value and unit strings:
 		// NOTE: _lastValues can be empty !
-		if (static_cast<unsigned int>(_lastValues.size()) > k)
+		if (_lastValues.size() > k)
 		{
-			if (_lastValues.at(k).scaledStr.isEmpty())
-				values.replace( listPosIndex, QString::number(_lastValues.at(k).rawValue) );
-			else
-				values.replace( listPosIndex, _lastValues.at(k).scaledStr );
-			units.replace( listPosIndex, _lastValues.at(k).unitStr );
+			const MBSWvalue_dt& lastValue = _lastValues.at(k);
+			values.at(listPosIndex) = !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue);
+			units.at(listPosIndex) = lastValue.unitStr;
 		}
 		else
 		{
-			if (_MBSWmetaList.at(k).blockType == blockType_MB)
-				units.replace( listPosIndex, _supportedMBs.at(_MBSWmetaList.at(k).nativeIndex).unit );
+			if (metadata.blockType == BlockType::MB)
+				units.at(listPosIndex) = _supportedMBs.at(metadata.nativeIndex).unit;
 		}
 		// Last min/max value strings:
 		// NOTE: _minmaxData can be empty !
-		if (static_cast<unsigned int>(_minmaxData.size()) > k)
+		if (_minmaxData.size() > k)
 		{
-			if (!_minmaxData.at(k).disabled)
+			const MinMaxMBSWvalue_dt& minmaxData = _minmaxData.at(k);
+			if (!minmaxData.disabled)
 			{
-				if (_minmaxData.at(k).minScaledValueStr.isEmpty())
-					minvalues.replace( listPosIndex, QString::number(_minmaxData.at(k).minRawValue) );
-				else
-					minvalues.replace( listPosIndex, _minmaxData.at(k).minScaledValueStr );
-				if (_minmaxData.at(k).maxScaledValueStr.isEmpty())
-					maxvalues.replace( listPosIndex, QString::number(_minmaxData.at(k).maxRawValue) );
-				else
-					maxvalues.replace( listPosIndex, _minmaxData.at(k).maxScaledValueStr );
+				minvalues.at(listPosIndex) = !minmaxData.minScaledValueStr.isEmpty() ? minmaxData.minScaledValueStr : QString::number(minmaxData.minRawValue);
+				maxvalues.at(listPosIndex) = !minmaxData.maxScaledValueStr.isEmpty() ? minmaxData.maxScaledValueStr : QString::number(minmaxData.maxRawValue);
 			}
 		}
 	}
 	// Display MBs/SWs
-	_valuesTableView->setMBSWlistContent(titles, values, minvalues, maxvalues, units);
+	_valuesTableView->setMBSWlistContent(types, titles, values, minvalues, maxvalues, units);
 }
 
 
@@ -336,7 +323,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	// Clear values in MB/SW-table:
 	displayMBsSWs();
 	// Clear refresh-time-information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// Connect signals and slots:
 	connect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
 	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
@@ -382,8 +369,6 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 
 void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms)
 {
-	QString defstr;
-	QString rvstr;
 	bool scalingSuccessful = false;
 	QString scaledValueStr;
 	unsigned int k = 0;
@@ -403,19 +388,12 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 	bool newMin = false;
 	bool newMax = false;
 	// List output
-	QStringList minValueStrList;
-	QStringList valueStrList;
-	QStringList maxValueStrList;
-	QStringList unitStrList;
-
-	// Prepare string-lists for values-table-output (fill with empty strings up to the needed size):
-	for (unsigned int s=0; s<rawValues.size(); s++)
-	{
-		minValueStrList << "";
-		valueStrList << "";
-		maxValueStrList << "";
-		unitStrList << "";
-	}
+	// Prepare strings for values-table-output (fill with empty strings up to the needed size):
+	const size_t count = rawValues.size();
+	std::vector<QString> valueStrList(count);
+	std::vector<QString> minValueStrList(count);
+	std::vector<QString> maxValueStrList(count);
+	std::vector<QString> unitStrList(count);
 	// Process raw values
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
@@ -424,11 +402,11 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		const size_t nativeIndex = _MBSWmetaList.at(k).nativeIndex;
 		// ******** SCALE MB/SW ********:
 		// Scale raw values:
-		if (_MBSWmetaList.at(k).blockType == blockType_MB)
+		if (_MBSWmetaList.at(k).blockType == BlockType::MB)
 		{
 			const mb_dt& mb = _supportedMBs.at(nativeIndex);
 			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
-			unitStrList.replace(tablePosIndex, scalingSuccessful ? mb.unit : "[RAW]");
+			unitStrList.at(tablePosIndex) = scalingSuccessful ? mb.unit : "[RAW]";
 		}
 		else	// it is a SW
 		{
@@ -492,15 +470,15 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			}
 			// Add unit string to the output list:
 			if (!scalingSuccessful/*((rawValues.at(rvIndex)==0) || (rawValues.at(rvIndex) == 1)) && scaledValueStr.isEmpty()*/) // if we have a valid raw value but scaling failed
-				unitStrList.replace(tablePosIndex, "[BIN]"); // display a unit, to signal that the displayed value is unscaled
+				unitStrList.at(tablePosIndex) = "[BIN]"; // display a unit, to signal that the displayed value is unscaled
 			else
-				unitStrList.replace(tablePosIndex, "");
+				unitStrList.at(tablePosIndex) = "";
 		}
 		// Add value string to the output list:
 		if (scalingSuccessful)
-			valueStrList.replace( tablePosIndex, scaledValueStr );
+			valueStrList.at(tablePosIndex) = scaledValueStr;
 		else
-			valueStrList.replace( tablePosIndex, QString::number( rawValues.at(k) ) );
+			valueStrList.at(tablePosIndex) = QString::number(rawValues.at(k));
 		// ******** CHECK FOR NEW MIN/MAX VALUE ********:
 		/* NOTE:
 		 * - MB/SW scaled values can be NUMERIC VALUES or STRINGS or even BOTH MIXED (for different raw values)
@@ -512,7 +490,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		// Check if we already have min+max values, try to convert last min/max values and current value to (scaled) numeric values:
 		isLastMinValueNumeric = false;
 		isLastMaxValueNumeric = false;
-		if (k >= static_cast<unsigned int>(_minmaxData.size()))	// if no last min/max values available
+		if (k >= _minmaxData.size())	// if no last min/max values available
 			noLastMinMaxValue = true;
 		else
 		{
@@ -561,7 +539,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 					newMinMaxDataset.minScaledValueStr = "";
 					newMinMaxDataset.maxScaledValueStr = "";
 				}
-				_minmaxData.append( newMinMaxDataset );
+				_minmaxData.push_back(newMinMaxDataset);
 			}
 			else
 			{
@@ -593,7 +571,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 				}
 				/* NOTE: only compare scaled values, if BOTH (min/max and current) are numeric ! */
 				// Compare current value with last min/max values:
-				if ( (_MBSWmetaList.at(k).blockType == blockType_SW) && scalingSuccessful && invSWmeaning)
+				if ( (_MBSWmetaList.at(k).blockType == BlockType::SW) && scalingSuccessful && invSWmeaning)
 				{
 					// Inverse comparison:
 					newMin = (currentMinCompValue > lastMinCompValue);
@@ -630,25 +608,25 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		if (_minmaxData.at(k).disabled)
 		{
 			// Don not display any min/values, if disabled:
-			minValueStrList.replace( tablePosIndex, "" );
-			maxValueStrList.replace( tablePosIndex, "" );
+			minValueStrList.at(tablePosIndex) = "";
+			maxValueStrList.at(tablePosIndex) = "";
 		}
 		else if (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty()) // if min/max is not disabled an we have unscaled min/max values
 		{
 			/* NOTE: min/max scaled value strings should BOTH be empty in this case
 					 (otherwise min/max would have been disabled before !) */
 			// Display raw min/max values:
-			minValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).minRawValue) );
-			maxValueStrList.replace( tablePosIndex, QString::number(_minmaxData.at(k).maxRawValue) );
+			minValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).minRawValue);
+			maxValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).maxRawValue);
 		}
 		else
 		{
 			// Display scaled min/max values:
-			minValueStrList.replace( tablePosIndex, _minmaxData.at(k).minScaledValueStr );
-			maxValueStrList.replace( tablePosIndex, _minmaxData.at(k).maxScaledValueStr );
+			minValueStrList.at(tablePosIndex) = _minmaxData.at(k).minScaledValueStr;
+			maxValueStrList.at(tablePosIndex) = _minmaxData.at(k).maxScaledValueStr;
 		}
 		// ******** Save current value data ********:
-		if (k >= static_cast<unsigned int>(_lastValues.size()))
+		if (k >= _lastValues.size())
 		{
 			MBSWvalue_dt newValueDataset;
 			newValueDataset.rawValue = rawValues.at(k);
@@ -657,7 +635,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			else
 				newValueDataset.scaledStr = "";
 			newValueDataset.unitStr = unitStrList.at(tablePosIndex);
-			_lastValues.append( newValueDataset );
+			_lastValues.push_back(newValueDataset);
 		}
 		else
 		{
@@ -678,21 +656,32 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 
 void CUcontent_MBsSWs::updateTimeInfo(int refreshduration_ms)
 {
-	double secs_ilen = 0;
-	double datarate = 0;
-
 	_lastrefreshduration_ms = refreshduration_ms; // save last refresh duration
-	QString timeValStr = "";
+	QString timeValStr;
 	// Output refresh duration:
-	secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
-	if (_timemode == 0)
+	const double secs_ilen = static_cast<double>(refreshduration_ms) / 1000;
+	switch(_timemode) {
+	case TimeMode::refreshDuration:
 		timeValStr = QString::number(secs_ilen, 'f', 3) + " s";
-	else
-	{
-		datarate = _MBSWmetaList.size() / secs_ilen;
+		break;
+	case TimeMode::dataRate:
+		double datarate = _MBSWmetaList.size() / secs_ilen;
 		timeValStr = QString::number(datarate, 'f', 1) + " B/s";
+		break;
 	}
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
+}
+
+
+void CUcontent_MBsSWs::updateRefreshTimeTitle()
+{
+	_MBSWrefreshTimeTitle_label->setText(_timemode == TimeMode::refreshDuration ? tr("Refresh duration:") : tr("Block transfer rate:"));
+}
+
+
+void CUcontent_MBsSWs::clearRefreshTime()
+{
+	_MBSWrefreshTimeValue_label->setText(DefaultTimeValStr);
 }
 
 
@@ -712,11 +701,11 @@ void CUcontent_MBsSWs::addMBsSWs()
 		_minmaxData.clear();
 		// Add new table-position-indexes:
 		for (k=MBSWmetaList_len_old; k<_MBSWmetaList.size(); k++)
-			_tableRowPosIndexes.append(k);
+			_tableRowPosIndexes.push_back(k);
 		// Update MB/SW table content:
 		displayMBsSWs();
 		// Clear time information:
-		_MBSWrefreshTimeValue_label->setText("---      ");
+		clearRefreshTime();
 		// Select new MBs/SWs:
 		if (MBSWmetaList_len_old > 0)
 		{
@@ -739,12 +728,11 @@ void CUcontent_MBsSWs::addMBsSWs()
 
 void CUcontent_MBsSWs::deleteMBsSWs()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int startindex = 0;
 	unsigned int endindex = 0;
 	unsigned int k = 0;
 	// GET INDEXES OF SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() < 1) return;
 	// CHECK AND CORRECT START AND END INDEXES:
 	startindex = selectedMBSWIndexes.at(0);
@@ -763,9 +751,9 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 			_MBSWmetaList.erase(_MBSWmetaList.begin() + k);
 			// DELETE LAST VALUE, MIN-/MAX-DATA AND PLOT DATA:
 			if (_lastValues.size())
-				_lastValues.removeAt(k);
+				_lastValues.erase(_lastValues.begin() + k);
 			if (_minmaxData.size())
-				_minmaxData.removeAt(k);
+				_minmaxData.erase(_minmaxData.begin() + k);
 			// DELETE TABLE POSITION INDEX:
 			_tableRowPosIndexes.erase(_tableRowPosIndexes.begin() + k);
 		}
@@ -777,7 +765,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	// UPDATE MB/SW TABLE CONTENT:
 	displayMBsSWs();
 	// Clear time information:
-	_MBSWrefreshTimeValue_label->setText("---      ");
+	clearRefreshTime();
 	// ACTIVATE/DEACTIVATE BUTTONS:
 	if (_MBSWmetaList.empty())
 	{
@@ -792,13 +780,11 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 
 void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	int nrofSelRows = 0;
 	unsigned int rowToMoveDownIndex = 0;
 	unsigned int rowToMoveDownTargetIndex = 0;
-	int k = 0;
 	// GET SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	nrofSelRows = selectedMBSWIndexes.size();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((nrofSelRows < 1) || (selectedMBSWIndexes.at(0) < 1) || (1 + selectedMBSWIndexes.at(0) > _MBSWmetaList.size()))
@@ -810,7 +796,7 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;
 	rowToMoveDownTargetIndex = selectedMBSWIndexes.at(nrofSelRows-1);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
-	for (k=0; k<_tableRowPosIndexes.size(); k++)
+	for (size_t k=0; k<_tableRowPosIndexes.size(); k++)
 	{
 		if ((_tableRowPosIndexes.at(k) > rowToMoveDownIndex) && (_tableRowPosIndexes.at(k) <= rowToMoveDownTargetIndex))
 		{
@@ -832,12 +818,10 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 
 void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 {
-	QList<unsigned int> selectedMBSWIndexes;
 	unsigned int rowToMoveUpIndex = 0;
 	unsigned int rowToMoveUpTargetIndex = 0;
-	int k = 0;
 	// GET SELECTED ROWS:
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
+	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible
@@ -846,7 +830,7 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	rowToMoveUpIndex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1;
 	rowToMoveUpTargetIndex = selectedMBSWIndexes.at(0);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
-	for (k=0; k<_tableRowPosIndexes.size(); k++)
+	for (size_t k=0; k<_tableRowPosIndexes.size(); k++)
 	{
 		if ((_tableRowPosIndexes.at(k) >= rowToMoveUpTargetIndex) && (_tableRowPosIndexes.at(k) < rowToMoveUpIndex))
 		{
@@ -868,26 +852,24 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 
 void CUcontent_MBsSWs::resetMinMaxTableValues()
 {
-	QStringList lastValueStr;
-	QStringList lastUnitStr;
-	MinMaxMBSWvalue_dt newMinMaxDataset;
-	// Delete min/max values:
-	_minmaxData.clear();
+	const size_t count = _lastValues.size();
+	std::vector<QString> lastValueStr(count);
+	std::vector<QString> lastUnitStr(count);
 	// Setup new min/max values and output data:
-	for (int k=0; k<_lastValues.size(); k++)
+	for (size_t k=0; k<count; ++k)
 	{
+		const MBSWvalue_dt& lastValue = _lastValues.at(k);
+		MinMaxMBSWvalue_dt newMinMaxDataset;
 		// Set min/max values to current value:
-		newMinMaxDataset.minRawValue = _lastValues.at(k).rawValue;
-		newMinMaxDataset.maxRawValue = _lastValues.at(k).rawValue;
-		newMinMaxDataset.minScaledValueStr = _lastValues.at(k).scaledStr;
-		newMinMaxDataset.maxScaledValueStr = _lastValues.at(k).scaledStr;
-		_minmaxData.append( newMinMaxDataset );
-		// Get min/max value string and unit for output:
-		if (_lastValues.at(k).scaledStr.isEmpty())
-			lastValueStr.append( QString::number(_lastValues.at(k).rawValue) );
-		else
-			lastValueStr.append( _lastValues.at(k).scaledStr );
-		lastUnitStr.append( _lastValues.at(k).unitStr );
+		newMinMaxDataset.minRawValue = lastValue.rawValue;
+		newMinMaxDataset.maxRawValue = lastValue.rawValue;
+		newMinMaxDataset.minScaledValueStr = lastValue.scaledStr;
+		newMinMaxDataset.maxScaledValueStr = lastValue.scaledStr;
+		_minmaxData.at(k) = newMinMaxDataset;
+
+		const unsigned int tablePosIndex = _tableRowPosIndexes.at(k);
+		lastValueStr.at(tablePosIndex) = !lastValue.scaledStr.isEmpty() ? lastValue.scaledStr : QString::number(lastValue.rawValue);
+		lastUnitStr.at(tablePosIndex) = lastValue.unitStr;
 	}
 	// Display last values as current/min/max values:
 	_valuesTableView->updateMBSWvalues(lastValueStr, lastValueStr, lastValueStr, lastUnitStr);
@@ -896,47 +878,47 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 
 void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 {
-	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading) return;
-	QList<unsigned int> selectedMBSWIndexes;
-	_valuesTableView->getSelectedTableWidgetRows(&selectedMBSWIndexes);
-	if (selectedMBSWIndexes.size() < 1)
-		mbswdelete_pushButton->setEnabled(false);
-	else
-		mbswdelete_pushButton->setEnabled(true);
+	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
+		return;
+	mbswdelete_pushButton->setEnabled( _valuesTableView->getSelectedTableWidgetRows().size() > 0 );
 }
 
 
 void CUcontent_MBsSWs::switchTimeMode()
 {
-	QString timeValStr = "---      ";
-	_timemode = !_timemode;
-	if (_timemode)
-	{
-		_MBSWrefreshTimeTitle_label->setText(tr("Block transfer rate:   "));
+	QString timeValStr {DefaultTimeValStr};
+	TimeMode newtimemode {TimeMode::refreshDuration};
+	switch(_timemode) {
+	case TimeMode::refreshDuration:
+		newtimemode = TimeMode::dataRate;
 		if (_lastrefreshduration_ms > 0)
 		{
 			double datarate = static_cast<double>(1000 * _MBSWmetaList.size()) / _lastrefreshduration_ms;
 			timeValStr = QString::number(datarate, 'f', 1) + " B/s";
 		}
-	}
-	else
-	{
-		_MBSWrefreshTimeTitle_label->setText(tr("Refresh duration:"));
+		break;
+	case TimeMode::dataRate:
+		newtimemode = TimeMode::refreshDuration;
 		if (_lastrefreshduration_ms > 0)
 		{
 			double sec = static_cast<double>(_lastrefreshduration_ms) / 1000;
 			timeValStr = QString::number(sec, 'f', 3) + " s";
 		}
+		break;
 	}
+	_timemode = newtimemode;
 	_MBSWrefreshTimeValue_label->setText(timeValStr);
+	updateRefreshTimeTitle();
 }
 
 
-void CUcontent_MBsSWs::getSettings(MBSWsettings_dt *settings)
+MBSWsettings_dt CUcontent_MBsSWs::getSettings() const
 {
-	settings->timeMode = _timemode;
-	settings->minValuesEnabled = _valuesTableView->minValuesEnabled();
-	settings->maxValuesEnabled = _valuesTableView->maxValuesEnabled();
+	MBSWsettings_dt s;
+	s.timeMode = _timemode;
+	s.minValuesEnabled = _valuesTableView->minValuesEnabled();
+	s.maxValuesEnabled = _valuesTableView->maxValuesEnabled();
+	return s;
 }
 
 
@@ -954,11 +936,18 @@ void CUcontent_MBsSWs::communicationError(QString addstr)
 }
 
 
+constexpr int offsetRightTimeTitle = 244;
+constexpr int offsetRightTimeValue = 100;
+constexpr int offsetRightTimeModeButton = 29;
+constexpr int offsetDownTimeLabel = 3;
+constexpr int offsetDownTimeModeButton = 1;
+constexpr int heightLabel = 16;
+
 void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 {
-	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
-	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-29, 1);
+	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
+	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
+	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
 	event->accept();
 }
 
@@ -967,17 +956,18 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 {
 	_MBSWrefreshTimeTitle_label = new QLabel("", this);
 	_MBSWrefreshTimeTitle_label->setFixedWidth(140);
-	_MBSWrefreshTimeTitle_label->setFixedHeight(16);
+	_MBSWrefreshTimeTitle_label->setFixedHeight(heightLabel);
+	_MBSWrefreshTimeTitle_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	_MBSWrefreshTimeValue_label = new QLabel("", this);
-	_MBSWrefreshTimeValue_label->setFixedWidth(55);
-	_MBSWrefreshTimeValue_label->setFixedHeight(16);
+	_MBSWrefreshTimeValue_label->setFixedWidth(70);
+	_MBSWrefreshTimeValue_label->setFixedHeight(heightLabel);
 	_timemode_pushButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/oxygen/16x16/chronometer.png")), "", this);
 	_timemode_pushButton->setFixedWidth(20);
 	_timemode_pushButton->setFixedHeight(20);
 	_timemode_pushButton->setIconSize(QSize(12,12));
-	_MBSWrefreshTimeTitle_label->move(width()-244, 3);
-	_MBSWrefreshTimeValue_label->move(width()-100, 3);
-	_timemode_pushButton->move(width()-29, 1);
+	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
+	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
+	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
 	_MBSWrefreshTimeTitle_label->show();
 	_MBSWrefreshTimeValue_label->show();
 	_timemode_pushButton->show();
@@ -1003,4 +993,3 @@ void CUcontent_MBsSWs::setupUiFonts()
 	// Tab widget:
 	MBSWviews_tabWidget->setFont(contentfont);
 }
-
