@@ -82,6 +82,8 @@ Open a console window and switch to the FreeSSM-directory.
 
 Preparation:
 $ qmake
+or (if you have Qt4 AND Qt5 installed)
+$ qmake-qt4   or   $ qmake-qt5   (depending on your system environment)
 
 Compilation:
 $ make release
