@@ -694,8 +694,8 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	ECHONL	Echo NL
 	NOFLSH	Disable flushing of input buffers after interrupt or quit characters
 	IEXTEN	Enable extended functions (this flag, as well as ICANON must be enabled for the
-				special characters EOL2, LNEXT, REPRINT, WERASE to be interpreted, and for the IUCLC
-				flag to be effective)
+		 special characters EOL2, LNEXT, REPRINT, WERASE to be interpreted, and for the IUCLC
+		 flag to be effective)
 	ECHOCTL	Echo control characters as ^char and delete as ~?
 	ECHOPRT	Echo erased character as character erased
 	ECHOKE	BS-SP-BS entire line on line kill
@@ -954,8 +954,8 @@ bool serialCOM::OpenPort(std::string portname)
 #endif
 			return false;
 			/* NOTE: SetPortSettings not only changes the 4 communication parameters.
-					 It configures additional parameters (like control characters, timeouts, ...) which are
-				 are important to ensure proper communication behavior !
+			         It configures additional parameters (like control characters, timeouts, ...) which are
+			         are important to ensure proper communication behavior !
 			 */
 		}
 		// SET CONTROL LINES (DTR+RTS) TO STANDARD VALUES:
@@ -965,8 +965,8 @@ bool serialCOM::OpenPort(std::string portname)
 			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
 #endif
 		/* NOTE: Call SetControlLines AFTER SetPortSettings, because drivers can
-		* change DTS+RTS when new baudrate/databits/parity/stopbits,
-		* especially at the first time after opening the port !		*/
+		 * change DTS+RTS when new baudrate/databits/parity/stopbits,
+		 * especially at the first time after opening the port !		*/
 		return true;
 	}
 	else
@@ -1207,7 +1207,7 @@ bool serialCOM::Read(unsigned int minbytes, unsigned int maxbytes, unsigned int 
 		return true;
 	}
 	/* NOTE: - we always return the received bytes even if we received less than minbytes (timeout)
-			 - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
+	         - return value indicates error but not a timeout (can be checked by comparing minbytes and nrofbytesread) */
 }
 
 
@@ -1396,63 +1396,64 @@ bool serialCOM::SetControlLines(bool DTR, bool RTS)
 
 // PRIVATE
 
-struct serialCOM::std_baudrate serialCOM::std_baudrates[] = {  {50, B50}
-															 , {75, B75}
-															 , {110, B110}
-															 , {134.5, B134}
-															 , {150, B150}
-															 , {200, B200}
-															 , {300, B300}
-															 , {600, B600}
-															 , {1200, B1200}
-															 , {1800, B1800}
-															 , {2400, B2400}
-															 , {4800, B4800}
-															 , {9600, B9600}
-															 , {19200, B19200}
-															 , {38400, B38400}
-															 , {57600, B57600}
-															 , {115200, B115200}
+struct serialCOM::std_baudrate serialCOM::std_baudrates[] = {
+	{50, B50},
+	{75, B75},
+	{110, B110},
+	{134.5, B134},
+	{150, B150},
+	{200, B200},
+	{300, B300},
+	{600, B600},
+	{1200, B1200},
+	{1800, B1800},
+	{2400, B2400},
+	{4800, B4800},
+	{9600, B9600},
+	{19200, B19200},
+	{38400, B38400},
+	{57600, B57600},
+	{115200, B115200},
 #ifdef B230400
-															 , {230400, B230400}
+	{230400, B230400},
 #endif
 #ifdef B460800
-															 , {460800, B460800}
+	{460800, B460800},
 #endif
 #ifdef B500000
-															 , {500000, B500000}
+	{500000, B500000},
 #endif
 #ifdef B576000
-															 , {576000, B576000}
+	{576000, B576000},
 #endif
 #ifdef B921600
-															 , {921600, B921600}
+	{921600, B921600},
 #endif
 #ifdef B1000000
-															 , {1000000, B1000000}
+	{1000000, B1000000},
 #endif
 #ifdef B1152000
-															 , {1152000, B1152000}
+	{1152000, B1152000},
 #endif
 #ifdef B1500000
-															 , {1500000, B1500000}
+	{1500000, B1500000},
 #endif
 #ifdef B2000000
-															 , {2000000, B2000000}
+	{2000000, B2000000},
 #endif
 #ifdef B2500000
-															 , {2500000, B2500000}
+	{2500000, B2500000},
 #endif
 #ifdef B3000000
-															 , {3000000, B3000000}
+	{3000000, B3000000},
 #endif
 #ifdef B3500000
-															 , {3500000, B3500000}
+	{3500000, B3500000},
 #endif
 #ifdef B4000000
-															 , {4000000, B4000000}
+	{4000000, B4000000},
 #endif
-															};
+};
 // B0 not used, because of Windows compatibility; B110, B134: divisor not unique
 
 

@@ -463,7 +463,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 				 * => handling this theoretical case would be too complicated...
 				 *    => display the raw value (although it is definitely wrong)
 				 *       => in combination with the display unit [BIN], the user should notice
-								 *          that something is going wrong...
+				 *          that something is going wrong...
 				 */
 				scalingSuccessful = false;
 				scaledValueStr = "";
@@ -507,17 +507,17 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		if (!noLastMinMaxValue && !_minmaxData.at(k).disabled)
 		{
 			if ( (!scalingSuccessful && (!_minmaxData.at(k).minScaledValueStr.isEmpty() || !_minmaxData.at(k).maxScaledValueStr.isEmpty())) ||
-				 (scalingSuccessful && (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty())) )
+			     (scalingSuccessful && (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty())) )
 			{
 				_minmaxData[k].disabled = true;
 				_minmaxData[k].minScaledValueStr = "";	// important !
 				_minmaxData[k].maxScaledValueStr = "";	// important !
 				/* NOTE:
-				* - do not generally disable min/max values, if scaling failed. Pure raw value MBs/SWs
-				*   (without any scaling information) should be allowed
-				* - maybe we can improve the min/max determination for MBs/SWs which are partially unscalable
-				*   (does it make sense to switch betweend scaled and unscaled min/max values ???)
-				*/
+				 * - do not generally disable min/max values, if scaling failed. Pure raw value MBs/SWs
+				 *   (without any scaling information) should be allowed
+				 * - maybe we can improve the min/max determination for MBs/SWs which are partially unscalable
+				 *   (does it make sense to switch betweend scaled and unscaled min/max values ???)
+				 */
 			}
 		}
 		// Update/get new min/max values:
@@ -614,7 +614,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		else if (_minmaxData.at(k).minScaledValueStr.isEmpty() || _minmaxData.at(k).maxScaledValueStr.isEmpty()) // if min/max is not disabled an we have unscaled min/max values
 		{
 			/* NOTE: min/max scaled value strings should BOTH be empty in this case
-					 (otherwise min/max would have been disabled before !) */
+			         (otherwise min/max would have been disabled before !) */
 			// Display raw min/max values:
 			minValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).minRawValue);
 			maxValueStrList.at(tablePosIndex) = QString::number(_minmaxData.at(k).maxRawValue);

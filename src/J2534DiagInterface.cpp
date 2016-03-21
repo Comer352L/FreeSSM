@@ -103,8 +103,8 @@ bool J2534DiagInterface::open( std::string name )
 					// Supported protocols
 					std::vector<protocol_type> supportedProtocols;
 					const auto p = lib.protocols;
-					if (bool(p & J2534_protocol_flags::iso9141)
-						|| bool(p & J2534_protocol_flags::iso14230))
+					if (bool(p & J2534_protocol_flags::iso9141) ||
+					    bool(p & J2534_protocol_flags::iso14230))
 						supportedProtocols.push_back(protocol_SSM2_ISO14230);
 					if (bool(p & J2534_protocol_flags::iso15765))
 						supportedProtocols.push_back(protocol_SSM2_ISO15765);

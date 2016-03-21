@@ -27,9 +27,9 @@
 
 /* Supported locales (languages) */
 static const QVector<QLocale> __supportedLocales = QVector<QLocale>()
-												   << QLocale::English
-												   << QLocale::German;
-												   /* ===> ADD NEW LOCALES HERE <=== */
+	<< QLocale::English
+	<< QLocale::German;
+	/* ===> ADD NEW LOCALES HERE <=== */
 
 /* Make language names translatable */
 #if 0

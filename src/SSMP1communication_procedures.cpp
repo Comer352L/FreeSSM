@@ -295,7 +295,7 @@ bool SSMP1communication_procedures::getNextData(std::vector<char> * data, unsign
 						_recbuffer.erase(_recbuffer.begin(), _recbuffer.begin()+msgStartIndex+3);
 #ifdef __FSSM_DEBUG__
 						std::cout << "SSMP1communication_procedures::getNextData(...):   received data: "
-								  << std::hex << std::showbase << (static_cast<int>(data->back()) & 0xff) << '\n';
+						          << std::hex << std::showbase << (static_cast<int>(data->back()) & 0xff) << '\n';
 #endif
 						return true;
 					}

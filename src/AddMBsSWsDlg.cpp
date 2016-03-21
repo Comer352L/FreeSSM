@@ -22,7 +22,7 @@
 
 
 AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,
-						   std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
+                           std::vector<MBSWmetadata_dt> *MBSWmetaList) : QDialog(parent)
 {
 	bool unselected = false;
 	MBSWmetadata_dt tmpMBSWmd;

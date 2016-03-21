@@ -54,7 +54,7 @@ private:
 
 public:
 	AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std::vector<sw_dt> supportedSWs,
-			 std::vector<MBSWmetadata_dt> *MBSWmetaList);
+	             std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	~AddMBsSWsDlg();
 
 private slots:

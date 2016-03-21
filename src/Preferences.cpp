@@ -56,7 +56,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	_lastlangindex = __supportedLocales.indexOf( QLocale(_language_current) );
 	language_comboBox->setCurrentIndex(_lastlangindex);
 	/* NOTE: no need to implement fallback, selected language is always valid (has been checked/corrected at program start)
-			 Apart from that, language switching wouldn't work at this point   */
+	         Apart from that, language switching wouldn't work at this point   */
 	// GUI-STYLES:
 	_style_old = QApplication::style()->objectName();
 	QStringList supStyles = QStyleFactory::keys();
