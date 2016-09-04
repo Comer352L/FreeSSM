@@ -1,7 +1,7 @@
 /*
  * CUcontent_sysTests.cpp - Widget for System Test Procedures
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 {
 	bool ok = false;
 	bool AT_sup = false;
-	bool immo_sup = false;
+	bool immotest_sup = false;
 
 	_SSMPdev = SSMPdev;
 	_actuatorTestTitles.clear();
@@ -66,9 +66,9 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	if (ok && AT_sup)
 		ok = _SSMPdev->getSupportedActuatorTests(&_actuatorTestTitles);
 	if (ok)
-		ok = _SSMPdev->hasImmobilizer(&immo_sup);
+		ok = _SSMPdev->hasImmobilizerTest(&immotest_sup);
 	AT_sup = AT_sup && ok;
-	immo_sup = immo_sup && ok;
+	immotest_sup = immotest_sup && ok;
 	// Display actuator test list content:
 	if (AT_sup)
 	{
@@ -85,8 +85,8 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	actuatorTest_arrow_label->setEnabled( AT_sup );
 	startActuatorTest_pushButton->setEnabled( AT_sup );
 	actuatorTestInfo_label->setEnabled( AT_sup );
-	testImmoLine_pushButton->setEnabled(immo_sup);
-	testImmoLineTitel_label->setEnabled(immo_sup);
+	testImmoLine_pushButton->setEnabled(immotest_sup);
+	testImmoLineTitel_label->setEnabled(immotest_sup);
 	// Return result:
 	return ok;
 }

@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,6 +106,14 @@ bool SSMprotocol::hasImmobilizer(bool *ImmoSup)
 {
 	if (_state == state_needSetup) return false;
 	*ImmoSup = _has_Immo;
+	return true;
+}
+
+
+bool SSMprotocol::hasImmobilizerTest(bool *ImmoTestSup)
+{
+	if (_state == state_needSetup) return false;
+	*ImmoTestSup = _has_ImmoTest;
 	return true;
 }
 
@@ -493,6 +501,7 @@ void SSMprotocol::resetCommonCUdata()
 	_sysDescription.clear();
 	_has_OBD2 = false;
 	_has_Immo = false;
+	_has_ImmoTest = false;
 	_has_TestMode = false;
 	_has_ActTest = false;
 	_has_MB_engineSpeed = false;

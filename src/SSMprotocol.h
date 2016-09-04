@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,6 +152,7 @@ public:
 	bool hasOBD2system(bool *OBD2);
 	virtual bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);
+	bool hasImmobilizerTest(bool *ImmoTestSup);
 	virtual bool hasIntegratedCC(bool *CCsup);
 	virtual bool hasClearMemory(bool *CMsup) = 0;
 	virtual bool hasClearMemory2(bool *CM2sup);
@@ -198,6 +199,7 @@ protected:
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_OBD2;
 	bool _has_Immo;
+	bool _has_ImmoTest;
 	bool _has_TestMode;
 	bool _has_ActTest;
 	bool _has_MB_engineSpeed;

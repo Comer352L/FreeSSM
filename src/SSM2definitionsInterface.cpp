@@ -1,7 +1,7 @@
 /*
  * SSM2definitionsInterface.cpp - Interface to the SSM2-definitions
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -528,6 +528,18 @@ bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
 	*ImmoSup = _CU == SSMprotocol::CUtype_Engine
+		&& _ssmCUdata.flagbytebit(28, 4);
+	return true;
+}
+
+
+bool SSM2definitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
+{
+	if (!_id_set)
+		return false;
+	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
+		return false;
+	*ImmoTestSup = _CU == SSMprotocol::CUtype_Engine
 		&& _ssmCUdata.flagbytebit(11, 5)
 		&& _ssmCUdata.flagbytebit(28, 4);
 	return true;

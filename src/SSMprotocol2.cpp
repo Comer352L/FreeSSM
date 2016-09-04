@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -180,6 +180,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	SSM2defsIface->systemDescription(&_sysDescription);
 	SSM2defsIface->hasOBD2system(&_has_OBD2);
 	SSM2defsIface->hasImmobilizer(&_has_Immo);
+	SSM2defsIface->hasImmobilizerTest(&_has_ImmoTest);
 	SSM2defsIface->hasTestMode(&_has_TestMode);
 	SSM2defsIface->hasActuatorTests(&_has_ActTest);
 	SSM2defsIface->hasClearMemory(&_has_CM);
@@ -672,7 +673,7 @@ bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 	if (_state != state_normal) return false;
-	if (!_has_Immo) return false;
+	if (!_has_ImmoTest) return false;
 	char checkvalue = 0;
 	unsigned int readcheckadr = 0x8B;
 	// Write test-pattern:

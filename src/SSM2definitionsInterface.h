@@ -1,7 +1,7 @@
 /*
  * SSM2definitionsInterface.h - Interface to the SSM2-definitions
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ public:
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
 	bool hasImmobilizer(bool *ImmoSup);
+	bool hasImmobilizerTest(bool *ImmoTestSup);
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
