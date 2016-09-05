@@ -516,7 +516,7 @@ bool SSM2definitionsInterface::hasVINsupport(bool *VINsup)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
-	*VINsup = _CU == SSMprotocol::CUtype_Engine && _ssmCUdata.flagbytebit(36, 0);
+	*VINsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(36, 0);
 	return true;
 }
 
@@ -535,13 +535,11 @@ bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
 
 bool SSM2definitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
 {
-	if (!_id_set)
+	bool ImmoSup = false;
+	bool TMsup = false;
+	if (!hasImmobilizer(&ImmoSup) || !hasTestMode(&TMsup))
 		return false;
-	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
-		return false;
-	*ImmoTestSup = _CU == SSMprotocol::CUtype_Engine
-		&& _ssmCUdata.flagbytebit(11, 5)
-		&& _ssmCUdata.flagbytebit(28, 4);
+	*ImmoTestSup = TMsup && ImmoSup;
 	return true;
 }
 
@@ -552,7 +550,7 @@ bool SSM2definitionsInterface::hasIntegratedCC(bool *CCsup)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
-	*CCsup = _CU == SSMprotocol::CUtype_Engine && _ssmCUdata.flagbytebit(39, 0);
+	*CCsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(39, 0);
 	return true;
 }
 
@@ -574,7 +572,7 @@ bool SSM2definitionsInterface::hasClearMemory2(bool *CM2sup)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
-	*CM2sup = _CU == SSMprotocol::CUtype_Transmission && _ssmCUdata.flagbytebit(39, 1);
+	*CM2sup = (_CU == SSMprotocol::CUtype_Transmission) && _ssmCUdata.flagbytebit(39, 1);
 	return true;
 }
 
@@ -585,7 +583,7 @@ bool SSM2definitionsInterface::hasTestMode(bool *TMsup)
 		return false;
 	if ((_CU != SSMprotocol::CUtype_Engine) && (_CU != SSMprotocol::CUtype_Transmission))
 		return false;
-	*TMsup = _CU == SSMprotocol::CUtype_Engine && _ssmCUdata.flagbytebit(11, 5);
+	*TMsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(11, 5);
 	return true;
 }
 
@@ -593,12 +591,13 @@ bool SSM2definitionsInterface::hasTestMode(bool *TMsup)
 bool SSM2definitionsInterface::hasActuatorTests(bool *ATsup)
 {
 	bool TMsup = false;
-	if (!hasTestMode(&TMsup))	// includes check of _status
+	bool EngSpeedMBsup = false;
+	if (!hasTestMode(&TMsup) || !hasMBengineSpeed(&EngSpeedMBsup))
 		return false;
-	*ATsup = _CU == SSMprotocol::CUtype_Engine
-		&& TMsup
-		&& _ssmCUdata.flagbytebit(28, 6)
-		&& _ssmCUdata.flagbytebit(0, 0);
+	*ATsup = (_CU == SSMprotocol::CUtype_Engine)
+		  && TMsup
+		  && EngSpeedMBsup
+		  && _ssmCUdata.flagbytebit(28, 6);
 	return true;
 }
 
