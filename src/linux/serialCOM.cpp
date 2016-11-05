@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2013 Comer352L
+ * Copyright (C) 2008-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,8 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 			fp = readdir (dp);	// get next file in directory
 			if (fp != NULL)
 			{
-				if ((!strncmp(fp->d_name,"ttyS",4)) || (!strncmp(fp->d_name,"ttyUSB",6)) || (!strncmp(fp->d_name,"ttyACM",6))) // if filename starts with "ttyS" or "ttyUSB" or "ttyACM"
+				if ((!strncmp(fp->d_name,"ttyS",4)) || (!strncmp(fp->d_name,"ttyUSB",6))	// if filename starts with "ttyS" or "ttyUSB" (USB-Serial-Adapter)...
+				    || (!strncmp(fp->d_name,"ttyACM",6))  || (!strncmp(fp->d_name,"rfcomm",6))) // ... or "ttyACM" (USB-Modem) or "rfcomm" (Bluetooth-Serial-Adapter)
 				{
 					// CONSTRUCT FULL FILENAME:
 					strcpy(ffn, "/dev/");		// (replaces old string)
@@ -79,7 +80,7 @@ std::vector<std::string> serialCOM::GetAvailablePorts()
 	else
 		std::cout << "serialCOM::GetAvailablePorts():   opendir(''/dev'') failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-	// SEARCH FOR USB-SERIAL-CONVERTERS:
+	// ALSO SEARCH FOR USB-SERIAL-CONVERTERS IN /dev/usb:
 	dp = opendir ("/dev/usb");
 	if (dp != NULL)
 	{
