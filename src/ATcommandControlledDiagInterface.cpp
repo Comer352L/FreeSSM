@@ -1,7 +1,7 @@
 /*
  * ATcommandControlledDiagInterface.cpp - AT-command controlled diagnostic interface
  *
- * Copyright (C) 2012 Comer352L
+ * Copyright (C) 2012-2016 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1022,10 +1022,10 @@ bool ATcommandControlledDiagInterface::configureDevice()
 #endif
 	}
 	// Increase baud rate if interface supports custom baud rates
-	if ((_baudrate = 38400) && ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329)))
+	if ((_baudrate < CUSTOM_BAUDRATE) && ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329)))
 	{
-			if (changeInterfaceBaudRate(CUSTOM_BAUDRATE))
-				_custom_baudrate = true;
+		if (changeInterfaceBaudRate(CUSTOM_BAUDRATE))
+			_custom_baudrate = true;
 	}
 #ifdef __FSSM_DEBUG__
 	std::cout << "ATcommandControlledDiagInterface::configureDevice():   completed.\n";
