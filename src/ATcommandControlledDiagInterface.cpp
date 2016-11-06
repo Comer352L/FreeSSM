@@ -1527,8 +1527,8 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		_mutex.unlock();
 		return false;
 	}
-	// Wait for confirmation from interface
-	readlen = _try_echo_detection*( (cmd.size()-1) + (1+_linefeed_enabled) ) + 2 + (1+_linefeed_enabled);	// minimum nr. of characters to read
+	// Wait for confirmation from interface ("OK")
+	readlen = _try_echo_detection*( (cmd.size()-1) + (1+_linefeed_enabled) ) + 2 + (1+_linefeed_enabled);
 	if (!_port->Read(readlen, readlen, 250, &buf))	// NOTE: some bad clones reply after ~200ms
 	{
 #ifdef __FSSM_DEBUG__
@@ -1578,7 +1578,8 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		goto err;
 	}
 	// Wait until interface sends ID-string:
-	if (!_port->Read(idstr.size() + 1 + _linefeed_enabled, 255, 150+30, &buf))	// NOTE: first character should be received after 150ms
+	readlen = idstr.size() + 1 + _linefeed_enabled;
+	if (!_port->Read(readlen, readlen, BRC_HS_TIMEOUT+30, &buf))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: failed to read from serial port !\n";
@@ -1586,7 +1587,7 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		ttreset = BRC_HS_TIMEOUT;
 		goto err_reset_port;
 	}
-	if (buf.size() != idstr.size() + 1 + _linefeed_enabled)
+	if (buf.size() != readlen)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: timeout while reading from serial port !\n";
