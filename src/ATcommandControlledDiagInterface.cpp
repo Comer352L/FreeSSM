@@ -262,7 +262,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 				reply = writeRead("ATCEA");	//  ELM327: since v1.4
 #ifdef __FSSM_DEBUG__
 				if (reply != "OK")
-					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable extended CAN adressing !\n";
+					std::cout << "ATcommandControlledDiagInterface::connect():   warning: failed to disable extended CAN addressing !\n";
 #endif
 			}
 			// Configure Rx/Tx addresses
@@ -1619,7 +1619,7 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		goto err_reset_port;
 	}
 	reply.assign(buf.begin(), buf.end());
-	// Reset receive buffers and return to normal meassage reading mode
+	// Reset receive buffers and return to normal message reading mode
 	_port->ClearReceiveBuffer();
 	_RxQueue.clear();
 	_flush_local_Rx_buffer = true;	// let read-thread flush local buffers before next read
