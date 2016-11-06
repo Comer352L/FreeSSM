@@ -1539,57 +1539,33 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 	}
 	if (buf.size() != readlen)
 	{
+		if (buf.size() && (buf.at(0) == '?')) // NOTE: the ELM327 before v1.2 does not support this command / custom baud rates
+		{
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: the interface did not confirm the baud rate change (timeout) !\n";
+			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   interface does not support custom baud rates (command ATBRD not supported).\n";
 #endif
-		ttreset = 2*BRC_HS_TIMEOUT;
+		}
+		else
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: the interface did not confirm the baud rate change (timeout) !\n";
+#endif
+			ttreset = 2*BRC_HS_TIMEOUT;
+		}
 		goto err;
 	}
-	// Eliminate "ready" character (remaining from reply)
-	if (buf.at(0) == '>')
-		reply.assign(buf.begin()+1, buf.end());
-	else
-		reply.assign(buf.begin(), buf.end());
+	reply.assign(buf.begin(), buf.end());
 	// Eliminate echo
 	if (_try_echo_detection)
 		reply.erase(reply.begin(), reply.begin() + (cmd.size()-1) + (1+_linefeed_enabled));
 	// Check reply
-	if (reply.at(0) == '?')  // NOTE: the ELM327 before v1.2 does not support this command / custom baud rates
+	if (reply.find("OK") != 0)
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   interface does not support custom baud rates (command ATBRD not supported).\n";
+		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: the interface did not confirm the baud rate change request (invalid reply) !\n";
 #endif
+		ttreset = 2*BRC_HS_TIMEOUT;
 		goto err;
-	}
-	else if (reply.find("OK") != 0)
-	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: the interface did not confirm the baud rate change request !\n";
-#endif
-		ttreset = 2*BRC_HS_TIMEOUT; // to be sure
-		goto err;
-	}
-	else // "OK", everything is fine
-	{
-		readlen = (2 + 1 + _linefeed_enabled) - reply.size(); // calculate remaining characters, before the ID-string is expected
-		// NOTE: datasheet says that the interface sends a single CR, but it also sends a LF if linefeed is enabled
-		// Read rest of the message:
-		if (!_port->Read(readlen, readlen, 10, &buf))
-		{
-#ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: failed to read from serial port !\n";
-#endif
-			ttreset = BRC_HS_TIMEOUT;
-			goto err_reset_port;
-		}
-		else if (buf.size() != readlen)
-		{
-#ifdef __FSSM_DEBUG__
-			std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: timeout while reading from serial port !\n";
-#endif
-			ttreset = BRC_HS_TIMEOUT;
-			goto err_reset_port;
-		}
 	}
 	// Switch port baud rate
 	act_br = 4000000.0 / divisor;
@@ -1610,7 +1586,7 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		ttreset = BRC_HS_TIMEOUT;
 		goto err_reset_port;
 	}
-	else if (buf.size() != idstr.size() + 1 + _linefeed_enabled)
+	if (buf.size() != idstr.size() + 1 + _linefeed_enabled)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: timeout while reading from serial port !\n";
