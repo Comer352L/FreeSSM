@@ -1528,7 +1528,7 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 		return false;
 	}
 	// Wait for confirmation from interface
-	readlen = 1 + _try_echo_detection*( (cmd.size()-1) + (1+_linefeed_enabled) ) + 2;	// minimum nr. of characters to read
+	readlen = _try_echo_detection*( (cmd.size()-1) + (1+_linefeed_enabled) ) + 2 + (1+_linefeed_enabled);	// minimum nr. of characters to read
 	if (!_port->Read(readlen, readlen, BRC_HS_TIMEOUT, &buf))
 	{
 #ifdef __FSSM_DEBUG__
