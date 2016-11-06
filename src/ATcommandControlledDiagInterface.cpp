@@ -1529,7 +1529,7 @@ bool ATcommandControlledDiagInterface::changeInterfaceBaudRate(unsigned int baud
 	}
 	// Wait for confirmation from interface
 	readlen = _try_echo_detection*( (cmd.size()-1) + (1+_linefeed_enabled) ) + 2 + (1+_linefeed_enabled);	// minimum nr. of characters to read
-	if (!_port->Read(readlen, readlen, BRC_HS_TIMEOUT, &buf))
+	if (!_port->Read(readlen, readlen, 250, &buf))	// NOTE: some bad clones reply after ~200ms
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "ATcommandControlledDiagInterface::changeInterfaceBaudRate():   error: failed to read from serial port !\n";
