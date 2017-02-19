@@ -826,7 +826,13 @@ void CUcontent_MBsSWs::saveMBsSWs()
 #ifdef __FSSM_DEBUG__
 	cout << "CUcontent_MBsSWs::saveMBsSWs(): saving MBs/SWs for re-use\n";
 #endif
+	// We take the ROM_ID to avoid loading MBs/SWs on a different engine/ROM that does not support the same MBs/SWs
+	string ROM_ID = "";
+	// Query ROM-ID:
+	ROM_ID = _SSMPdev->getROMID();
 
+	// Ignore any paths, try and write file to current working directory
+	// Also, we write data in binary format, so non-human readable
 	ofstream file ("MBsSWs.list", ios::out|ios::binary);
 
 	if (file.is_open())
@@ -834,9 +840,14 @@ void CUcontent_MBsSWs::saveMBsSWs()
 #ifdef __FSSM_DEBUG__
 	        cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
 #endif
+		// Save ROM_ID
+		file.write((char*)(&ROM_ID), sizeof(ROM_ID));
+
+		// Save number of selected MBsSWs
 		unsigned int k = _MBSWmetaList.size();
 		file.write((char*)(&k), sizeof(k));
 
+		// Save individual MBsSWs
 		for (unsigned int i=0; i < k ; i++)
 		{
 			file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
@@ -851,34 +862,6 @@ void CUcontent_MBsSWs::saveMBsSWs()
 		return;
 	}
 
-	/*
-        QFile MBsSWsfile;
-	// Set filename
-	QString filename(QDir::currentPath() + "/MBsSWs.list");
-	MBsSWsfile.setFileName(filename);
-	if (!MBsSWsfile.open(QIODevice::WriteOnly)) // | QIODevice::Text))
-	{
-	        // Output an error and return
-		std::cout << "CUcontent_MBsSWs::saveMBsSWs(): error: could not open file " << qPrintable(filename) << " for writing MBs/SWs!\n";
-		return;
-	}
-	// Write binary and do not care too much for readability -- for now
-	//    Nicer alternative: - output engine data
-	//                       - output list of supported MBsSWs
-	//                       - indicate which of these are selected
-	//    In other words: output a more or less complete state that can be edited by the user with a text editor...
-	QDataStream out_MBsSWsfile(&MBsSWsfile);
-	out_MBsSWsfile << (quint8)(_MBSWmetaList.size()) ;
-
-	for (unsigned int i=0; i < _MBSWmetaList.size() ; i++)
-	{
-	        out_MBsSWsfile << _MBSWmetaList.at(i).blockType << _MBSWmetaList.at(i).nativeIndex;
-	}
-
-	// Close file and return
-	MBsSWsfile.close();
-	*/
-
 	return;
 }
 
@@ -890,31 +873,55 @@ void CUcontent_MBsSWs::loadMBsSWs()
 #ifdef __FSSM_DEBUG__
 	cout << "CUcontent_MBsSWs::loadMBsSWs(): attempting to read previously saved MBs/SWs\n";
 #endif
+	// To compare current and saved ROM_IDs...
+	string ROM_ID = "";
+	string savedROM_ID = "";
+	// Query ROM-ID:
+	ROM_ID = _SSMPdev->getROMID();
 
+	// Temporary to keep MBsSWs read from file
 	MBSWmetadata_dt tmpMBSWmd;
 	unsigned int k = 0;
-	// Set filename (I use the Qt stuff here to get paths more easily)
-	//QString filename(QDir::currentPath() + "/MBsSWs.list");
 
+	// Ignore any paths, try and read file from current working directory
 	ifstream file ("MBsSWs.list", ios::in|ios::binary);
 	if (file.is_open())
 	{
-		file.read((char*)(&k), sizeof(k));
+		// Read saved ROM_ID
+		file.read((char*)(&savedROM_ID), sizeof(savedROM_ID));
+
+		// Check that the ROM_IDs match
+		if (ROM_ID.compare(savedROM_ID) == 0)
+		{
+			// Get number of MBsSWs
+			file.read((char*)(&k), sizeof(k));
 #ifdef __FSSM_DEBUG__
-		cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
+			cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
 #endif
 
-		for (unsigned int i=0; i < k ; i++)
-		{
-			file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
-			file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
-			_MBSWmetaList.push_back( tmpMBSWmd );
+			// Read saved MBsSWs one by one
+			for (unsigned int i=0; i < k ; i++)
+			{
+				file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
+				file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
+				// Clear list first
+				_MBSWmetaList.clear();
+				// Then add saved values
+				_MBSWmetaList.push_back( tmpMBSWmd );
+			}
+			file.close();
 		}
-		file.close();
+		// The ROM_IDs do not match, so ignore any file input (but don't forget to close the file...)
+		else
+		{
+#ifdef __FSSM_DEBUG__
+			cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
+#endif
+			file.close();
+		}
 	}
 	else 
 	{
-		//cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << qPrintable(filename) << " for reading MBs/SWs!\n";
 		cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << "MBsSWs.list" << " for reading MBs/SWs!\n";
 		return;
 	}
