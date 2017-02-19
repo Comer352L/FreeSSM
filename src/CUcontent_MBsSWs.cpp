@@ -42,21 +42,40 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	_MBSWrefreshTimeValue_label->setEnabled( false );
 	_timemode_pushButton->setEnabled( false );
 	startstopmbreading_pushButton->setEnabled( false );
+	mbswsave_pushButton->setEnabled( false );
+	mbswload_pushButton->setEnabled( false );
 	mbswadd_pushButton->setEnabled( false );
 	mbswdelete_pushButton->setEnabled( false );
 	MBSWviews_tabWidget->setTabEnabled(1, false);
 	_valuesTableView->setEnabled(false);
 	updateRefreshTimeTitle();
 	clearRefreshTime();
+
+	// Create action for saving/opening MBSWmetaList to/from file:
+	_save_MBSWmetaList = new QAction(this);
+	_save_MBSWmetaList->setShortcut( QKeySequence("Ctrl+s") );
+	this->addAction(_save_MBSWmetaList);
+	_open_MBSWmetaList = new QAction(this);
+	_open_MBSWmetaList->setShortcut( QKeySequence("Ctrl+o") );
+	this->addAction(_open_MBSWmetaList);
+	_read_MBSWmetaList = new QAction(this);
+	_read_MBSWmetaList->setShortcut( QKeySequence("Ctrl+r") );
+	this->addAction(_read_MBSWmetaList);
+
 	// Connect signals and slots:
 	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
 	connect( mbswdelete_pushButton , SIGNAL( released() ), this, SLOT( deleteMBsSWs() ) );
+	connect( mbswsave_pushButton , SIGNAL( released() ), this, SLOT( saveMBsSWs() ) );
+	connect( mbswload_pushButton , SIGNAL( released() ), this, SLOT( loadMBsSWs() ) );
 	connect( _valuesTableView , SIGNAL( moveUpButton_pressed() ), this, SLOT( moveUpMBsSWsOnTheTable() ) );
 	connect( _valuesTableView , SIGNAL( moveDownButton_pressed() ), this, SLOT( moveDownMBsSWsOnTheTable() ) );
 	connect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMaxTableValues() ) );
 	connect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
+	connect( _save_MBSWmetaList, SIGNAL(triggered()), this, SLOT(saveMBsSWs()) );
+	connect( _open_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
+	connect( _read_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
 
@@ -82,6 +101,14 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	delete _MBSWrefreshTimeValue_label;
 	delete _timemode_pushButton;
 	delete _valuesTableView;
+	disconnect( mbswsave_pushButton , SIGNAL( released() ), this, SLOT( saveMBsSWs() ) );
+	disconnect( mbswload_pushButton , SIGNAL( released() ), this, SLOT( loadMBsSWs() ) );
+	disconnect( _save_MBSWmetaList, SIGNAL(triggered()), this, SLOT(saveMBsSWs()) );
+	disconnect( _open_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
+	disconnect( _read_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
+	delete _save_MBSWmetaList;
+	delete _open_MBSWmetaList;
+	delete _read_MBSWmetaList;
 }
 
 
@@ -126,6 +153,13 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	setDeleteButtonEnabledState();
 	// Disable "Start"-button:
 	startstopmbreading_pushButton->setEnabled(false);
+	// Disable "Save"-button, if no supported MBs/SWs are selected:
+	if (_MBSWmetaList.size() > 0)
+	   mbswsave_pushButton->setEnabled(true);
+	else
+	   mbswsave_pushButton->setEnabled(false);
+	// Enable "Load"-button
+	mbswload_pushButton->setEnabled(true);
 	// Return result:
 	return ok;
 }
@@ -170,6 +204,7 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
+		mbswsave_pushButton->setEnabled(true);
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	else
@@ -330,6 +365,8 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	// Disable add/delete buttons:
 	mbswdelete_pushButton->setEnabled(false);
 	mbswadd_pushButton->setEnabled(false);
+	// Disable load state button
+	mbswload_pushButton->setEnabled(false);
 	// Set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Stop  "));
 	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_stop.png"));
@@ -363,6 +400,8 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	setDeleteButtonEnabledState();
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
+	// Enable load state button
+	mbswload_pushButton->setEnabled(true);
 	return true;
 }
 
@@ -711,6 +750,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		{
 			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
 			mbswdelete_pushButton->setEnabled(true);
+			mbswsave_pushButton->setEnabled(true);
 		}
 		// Scroll to end of the table:
 		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
@@ -719,6 +759,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 	if (_MBSWmetaList.size() > 0)
 	{
 		startstopmbreading_pushButton->setEnabled(true);
+		mbswsave_pushButton->setEnabled(true);
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
@@ -771,10 +812,145 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	{
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
+		mbswsave_pushButton->setEnabled(false);
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
+}
+
+
+void CUcontent_MBsSWs::saveMBsSWs()
+{
+	using namespace std;
+#ifdef __FSSM_DEBUG__
+	cout << "CUcontent_MBsSWs::saveMBsSWs(): saving MBs/SWs for re-use\n";
+#endif
+
+	ofstream file ("MBsSWs.list", ios::out|ios::binary);
+
+	if (file.is_open())
+	{
+#ifdef __FSSM_DEBUG__
+	        cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
+#endif
+		unsigned int k = _MBSWmetaList.size();
+		file.write((char*)(&k), sizeof(k));
+
+		for (unsigned int i=0; i < k ; i++)
+		{
+			file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
+			file.write((char*)(&_MBSWmetaList.at(i).nativeIndex), sizeof(_MBSWmetaList.at(i).nativeIndex));
+		}
+
+		file.close();
+	}
+	else 
+	{
+		cout << "CUcontent_MBsSWs::saveMBsSWs(): error: could not open file " << "MBsSWs.list" << " for writing MBs/SWs!\n";
+		return;
+	}
+
+	/*
+        QFile MBsSWsfile;
+	// Set filename
+	QString filename(QDir::currentPath() + "/MBsSWs.list");
+	MBsSWsfile.setFileName(filename);
+	if (!MBsSWsfile.open(QIODevice::WriteOnly)) // | QIODevice::Text))
+	{
+	        // Output an error and return
+		std::cout << "CUcontent_MBsSWs::saveMBsSWs(): error: could not open file " << qPrintable(filename) << " for writing MBs/SWs!\n";
+		return;
+	}
+	// Write binary and do not care too much for readability -- for now
+	//    Nicer alternative: - output engine data
+	//                       - output list of supported MBsSWs
+	//                       - indicate which of these are selected
+	//    In other words: output a more or less complete state that can be edited by the user with a text editor...
+	QDataStream out_MBsSWsfile(&MBsSWsfile);
+	out_MBsSWsfile << (quint8)(_MBSWmetaList.size()) ;
+
+	for (unsigned int i=0; i < _MBSWmetaList.size() ; i++)
+	{
+	        out_MBsSWsfile << _MBSWmetaList.at(i).blockType << _MBSWmetaList.at(i).nativeIndex;
+	}
+
+	// Close file and return
+	MBsSWsfile.close();
+	*/
+
+	return;
+}
+
+
+void CUcontent_MBsSWs::loadMBsSWs()
+{
+	using namespace std;
+	unsigned int MBSWmetaList_len_old = _MBSWmetaList.size();
+#ifdef __FSSM_DEBUG__
+	cout << "CUcontent_MBsSWs::loadMBsSWs(): attempting to read previously saved MBs/SWs\n";
+#endif
+
+	MBSWmetadata_dt tmpMBSWmd;
+	unsigned int k = 0;
+	// Set filename (I use the Qt stuff here to get paths more easily)
+	//QString filename(QDir::currentPath() + "/MBsSWs.list");
+
+	ifstream file ("MBsSWs.list", ios::in|ios::binary);
+	if (file.is_open())
+	{
+		file.read((char*)(&k), sizeof(k));
+#ifdef __FSSM_DEBUG__
+		cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
+#endif
+
+		for (unsigned int i=0; i < k ; i++)
+		{
+			file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
+			file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
+			_MBSWmetaList.push_back( tmpMBSWmd );
+		}
+		file.close();
+	}
+	else 
+	{
+		//cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << qPrintable(filename) << " for reading MBs/SWs!\n";
+		cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << "MBsSWs.list" << " for reading MBs/SWs!\n";
+		return;
+	}
+
+	// Update table:
+	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
+	{
+		// Clear current values:
+		_lastValues.clear();
+		_minmaxData.clear();
+		// Add new table-position-indexes:
+		for (k=MBSWmetaList_len_old; k<_MBSWmetaList.size(); k++)
+			_tableRowPosIndexes.push_back(k);
+		// Update MB/SW table content:
+		displayMBsSWs();
+		// Clear time information:
+		clearRefreshTime();
+		// Select new MBs/SWs:
+		if (MBSWmetaList_len_old > 0)
+		{
+			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
+			mbswdelete_pushButton->setEnabled(true);
+			mbswsave_pushButton->setEnabled(true);
+		}
+		// Scroll to end of the table:
+		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
+	}
+	// Activate/deactivate buttons:
+	if (_MBSWmetaList.size() > 0)
+	{
+		startstopmbreading_pushButton->setEnabled(true);
+		mbswsave_pushButton->setEnabled(true);
+		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+	}
+	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
+		mbswadd_pushButton->setEnabled(false);	// activate add button
 }
 
 
@@ -986,6 +1162,8 @@ void CUcontent_MBsSWs::setupUiFonts()
 	startstopmbreading_pushButton->setFont(contentfont);
 	mbswadd_pushButton->setFont(contentfont);
 	mbswdelete_pushButton->setFont(contentfont);
+	mbswsave_pushButton->setFont(contentfont);
+	mbswload_pushButton->setFont(contentfont);
 	_timemode_pushButton->setFont(contentfont);
 	// Refresh interval labels:
 	_MBSWrefreshTimeTitle_label->setFont(contentfont);

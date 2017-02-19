@@ -141,6 +141,64 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="mbswload_pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
+         <normaloff>:/icons/chrystal/32x32/load.png</normaloff>:/icons/chrystal/32x32/load.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="mbswsave_pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>34</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/FreeSSM.qrc">
+         <normaloff>:/icons/chrystal/32x32/save.png</normaloff>:/icons/chrystal/32x32/save.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
