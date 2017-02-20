@@ -860,7 +860,17 @@ void CUcontent_MBsSWs::saveMBsSWs()
 	}
 	else 
 	{
+#ifdef __FSSM_DEBUG__
 		cout << "CUcontent_MBsSWs::saveMBsSWs(): error: could not open file " << "MBsSWs.list" << " for writing MBs/SWs!\n";
+#endif
+		QMessageBox msg( QMessageBox::Warning, tr("Save Error"), tr("Error storing MBs/SWs:\nCould not open file for writing MBs/SWs."), QMessageBox::Ok, this);
+		QFont msgfont = msg.font();
+		msgfont.setPixelSize(12);
+		msg.setFont( msgfont );
+		msg.show();
+		msg.exec();
+		msg.close();
+
 		return;
 	}
 
@@ -926,11 +936,30 @@ void CUcontent_MBsSWs::loadMBsSWs()
 			cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
 #endif
 			file.close();
+			QMessageBox msg( QMessageBox::Warning, tr("Load Error"), tr("Error reading back MBs/SWs:\nSaved ROM Id does not match current ROM Id."), QMessageBox::Ok, this);
+			QFont msgfont = msg.font();
+			msgfont.setPixelSize(12);
+			msg.setFont( msgfont );
+			msg.show();
+			msg.exec();
+			msg.close();
+
+			return;
 		}
 	}
 	else 
 	{
+#ifdef __FSSM_DEBUG__
 		cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << "MBsSWs.list" << " for reading MBs/SWs!\n";
+#endif
+		QMessageBox msg( QMessageBox::Warning, tr("Load Error"), tr("Error reading back MBs/SWs:\nCould not open file for reading MBs/SWs."), QMessageBox::Ok, this);
+		QFont msgfont = msg.font();
+		msgfont.setPixelSize(12);
+		msg.setFont( msgfont );
+		msg.show();
+		msg.exec();
+		msg.close();
+
 		return;
 	}
 
