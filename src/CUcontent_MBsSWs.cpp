@@ -841,7 +841,9 @@ void CUcontent_MBsSWs::saveMBsSWs()
 	        cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
 #endif
 		// Save ROM_ID
-		file.write((char*)(&ROM_ID), sizeof(ROM_ID));
+		size_t size_of_ROMstring = ROM_ID.size();
+		file.write((char*)(&size_of_ROMstring), sizeof(size_t));
+		file.write((char*)(ROM_ID.data()), ROM_ID.size());
 
 		// Save number of selected MBsSWs
 		unsigned int k = _MBSWmetaList.size();
@@ -888,10 +890,15 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	if (file.is_open())
 	{
 		// Read saved ROM_ID
-		file.read((char*)(&savedROM_ID), sizeof(savedROM_ID));
+		size_t size_of_ROMstring;
+		file.read((char*)(&size_of_ROMstring), sizeof(size_t));
+		char *tmp_savedROM_ID = new char[size_of_ROMstring];
+		file.read((char*)(tmp_savedROM_ID), size_of_ROMstring);
+		savedROM_ID = string(tmp_savedROM_ID, size_of_ROMstring);
+		delete[] tmp_savedROM_ID;
 
 		// Check that the ROM_IDs match
-		if (ROM_ID.compare(savedROM_ID) == 0)
+		if (ROM_ID == savedROM_ID)
 		{
 			// Get number of MBsSWs
 			file.read((char*)(&k), sizeof(k));
@@ -899,13 +906,13 @@ void CUcontent_MBsSWs::loadMBsSWs()
 			cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
 #endif
 
+			// Clear list first
+			_MBSWmetaList.clear();
 			// Read saved MBsSWs one by one
 			for (unsigned int i=0; i < k ; i++)
 			{
 				file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
 				file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
-				// Clear list first
-				_MBSWmetaList.clear();
 				// Then add saved values
 				_MBSWmetaList.push_back( tmpMBSWmd );
 			}
@@ -916,6 +923,7 @@ void CUcontent_MBsSWs::loadMBsSWs()
 		{
 #ifdef __FSSM_DEBUG__
 			cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
+			cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
 #endif
 			file.close();
 		}
