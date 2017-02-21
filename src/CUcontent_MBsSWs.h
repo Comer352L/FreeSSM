@@ -117,6 +117,7 @@ private:
 	void clearRefreshTime();
 	void communicationError(QString addstr);
 	void resizeEvent(QResizeEvent *event);
+	void warningMsg(QString title, QString message);
 
 private slots:
 	void startstopMBsSWsButtonPressed();

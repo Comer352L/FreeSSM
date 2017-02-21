@@ -835,44 +835,32 @@ void CUcontent_MBsSWs::saveMBsSWs()
 	// Also, we write data in binary format, so non-human readable
 	ofstream file ("MBsSWs.list", ios::out|ios::binary);
 
-	if (file.is_open())
+	if (!file.is_open())
 	{
-#ifdef __FSSM_DEBUG__
-	        cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
-#endif
-		// Save ROM_ID
-		size_t size_of_ROMstring = ROM_ID.size();
-		file.write((char*)(&size_of_ROMstring), sizeof(size_t));
-		file.write((char*)(ROM_ID.data()), ROM_ID.size());
-
-		// Save number of selected MBsSWs
-		unsigned int k = _MBSWmetaList.size();
-		file.write((char*)(&k), sizeof(k));
-
-		// Save individual MBsSWs
-		for (unsigned int i=0; i < k ; i++)
-		{
-			file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
-			file.write((char*)(&_MBSWmetaList.at(i).nativeIndex), sizeof(_MBSWmetaList.at(i).nativeIndex));
-		}
-
-		file.close();
-	}
-	else 
-	{
-#ifdef __FSSM_DEBUG__
-		cout << "CUcontent_MBsSWs::saveMBsSWs(): error: could not open file " << "MBsSWs.list" << " for writing MBs/SWs!\n";
-#endif
-		QMessageBox msg( QMessageBox::Warning, tr("Save Error"), tr("Error storing MBs/SWs:\nCould not open file for writing MBs/SWs."), QMessageBox::Ok, this);
-		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12);
-		msg.setFont( msgfont );
-		msg.show();
-		msg.exec();
-		msg.close();
-
+		warningMsg(tr("Save Error"), tr("Error storing MBs/SWs:\nCould not open file for writing MBs/SWs."));
 		return;
 	}
+
+#ifdef __FSSM_DEBUG__
+	cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
+#endif
+	// Save ROM_ID
+	size_t size_of_ROMstring = ROM_ID.size();
+	file.write((char*)(&size_of_ROMstring), sizeof(size_t));
+	file.write((char*)(ROM_ID.data()), ROM_ID.size());
+
+	// Save number of selected MBsSWs
+	unsigned int k = _MBSWmetaList.size();
+	file.write((char*)(&k), sizeof(k));
+
+	// Save individual MBsSWs
+	for (unsigned int i=0; i < k ; i++)
+	{
+		file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
+		file.write((char*)(&_MBSWmetaList.at(i).nativeIndex), sizeof(_MBSWmetaList.at(i).nativeIndex));
+	}
+
+	file.close();
 
 	return;
 }
@@ -897,71 +885,51 @@ void CUcontent_MBsSWs::loadMBsSWs()
 
 	// Ignore any paths, try and read file from current working directory
 	ifstream file ("MBsSWs.list", ios::in|ios::binary);
-	if (file.is_open())
+	if (!file.is_open())
 	{
-		// Read saved ROM_ID
-		size_t size_of_ROMstring;
-		file.read((char*)(&size_of_ROMstring), sizeof(size_t));
-		char *tmp_savedROM_ID = new char[size_of_ROMstring];
-		file.read((char*)(tmp_savedROM_ID), size_of_ROMstring);
-		savedROM_ID = string(tmp_savedROM_ID, size_of_ROMstring);
-		delete[] tmp_savedROM_ID;
-
-		// Check that the ROM_IDs match
-		if (ROM_ID == savedROM_ID)
-		{
-			// Get number of MBsSWs
-			file.read((char*)(&k), sizeof(k));
-#ifdef __FSSM_DEBUG__
-			cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
-#endif
-
-			// Clear list first
-			_MBSWmetaList.clear();
-			// Read saved MBsSWs one by one
-			for (unsigned int i=0; i < k ; i++)
-			{
-				file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
-				file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
-				// Then add saved values
-				_MBSWmetaList.push_back( tmpMBSWmd );
-			}
-			file.close();
-		}
-		// The ROM_IDs do not match, so ignore any file input (but don't forget to close the file...)
-		else
-		{
-#ifdef __FSSM_DEBUG__
-			cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
-			cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
-#endif
-			file.close();
-			QMessageBox msg( QMessageBox::Warning, tr("Load Error"), tr("Error reading back MBs/SWs:\nSaved ROM Id does not match current ROM Id."), QMessageBox::Ok, this);
-			QFont msgfont = msg.font();
-			msgfont.setPixelSize(12);
-			msg.setFont( msgfont );
-			msg.show();
-			msg.exec();
-			msg.close();
-
-			return;
-		}
+		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nCould not open file for reading MBs/SWs."));
+		return;
 	}
-	else 
+
+	// Read saved ROM_ID
+	size_t size_of_ROMstring;
+	file.read((char*)(&size_of_ROMstring), sizeof(size_t));
+	char *tmp_savedROM_ID = new char[size_of_ROMstring];
+	file.read((char*)(tmp_savedROM_ID), size_of_ROMstring);
+	savedROM_ID = string(tmp_savedROM_ID, size_of_ROMstring);
+	delete[] tmp_savedROM_ID;
+
+	// Check that the ROM_IDs match
+	if (ROM_ID != savedROM_ID)
 	{
+		// The ROM_IDs do not match, so ignore any file input (but don't forget to close the file...)
 #ifdef __FSSM_DEBUG__
-		cout << "CUcontent_MBsSWs::loadMBsSWs(): error: could not open file " << "MBsSWs.list" << " for reading MBs/SWs!\n";
+		cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
+		cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
 #endif
-		QMessageBox msg( QMessageBox::Warning, tr("Load Error"), tr("Error reading back MBs/SWs:\nCould not open file for reading MBs/SWs."), QMessageBox::Ok, this);
-		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12);
-		msg.setFont( msgfont );
-		msg.show();
-		msg.exec();
-		msg.close();
+		file.close();
+		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nSaved ROM Id does not match current ROM Id."));
 
 		return;
 	}
+
+	// Get number of MBsSWs
+	file.read((char*)(&k), sizeof(k));
+#ifdef __FSSM_DEBUG__
+	cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
+#endif
+
+	// Clear list first
+	_MBSWmetaList.clear();
+	// Read saved MBsSWs one by one
+	for (unsigned int i=0; i < k ; i++)
+	{
+		file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
+		file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
+		// Then add saved values
+		_MBSWmetaList.push_back( tmpMBSWmd );
+	}
+	file.close();
 
 	// Update table:
 	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
@@ -986,6 +954,7 @@ void CUcontent_MBsSWs::loadMBsSWs()
 		// Scroll to end of the table:
 		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
 	}
+
 	// Activate/deactivate buttons:
 	if (_MBSWmetaList.size() > 0)
 	{
@@ -1214,4 +1183,16 @@ void CUcontent_MBsSWs::setupUiFonts()
 	_MBSWrefreshTimeValue_label->setFont(contentfont);
 	// Tab widget:
 	MBSWviews_tabWidget->setFont(contentfont);
+}
+
+
+void CUcontent_MBsSWs::warningMsg(QString title, QString message)
+{
+	QMessageBox msg( QMessageBox::Warning, title, message, QMessageBox::Ok, this);
+	QFont msgfont = msg.font();
+	msgfont.setPixelSize(12);
+	msg.setFont( msgfont );
+	msg.show();
+	msg.exec();
+	msg.close();
 }
