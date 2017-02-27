@@ -176,6 +176,7 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 	_lastValues.clear();
 	_minmaxData.clear();
 	// Setup table position indexes:
+	_tableRowPosIndexes.clear();
 	for (size_t k=0; k<MBSWmetaList.size(); k++)
 		_tableRowPosIndexes.push_back(k);
 
