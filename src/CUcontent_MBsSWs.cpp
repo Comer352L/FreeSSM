@@ -863,8 +863,13 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	unsigned int k = 0;
 
 	// Select file to load
+	QString default_filename = QCoreApplication::applicationDirPath();
+	QDir dir(QCoreApplication::applicationDirPath());
+	QStringList fileNames = dir.entryList(QStringList("*.list"), QDir::Files | QDir::Readable, QDir::Time);
+	if (fileNames.size())
+		default_filename += QDir::separator() + fileNames.at(0);
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Load MB/SW List"),
-							QCoreApplication::applicationDirPath(),
+							default_filename,
 							tr("FreeSSM MB/SW list files") + " (*.list)(*.list)");
 	if (!fileName.size())
 		return;
