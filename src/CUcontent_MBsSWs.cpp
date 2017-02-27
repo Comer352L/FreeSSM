@@ -734,6 +734,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		{
 			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
 			mbswdelete_pushButton->setEnabled(true);
+			mbswsave_pushButton->setEnabled(true);
 		}
 		// Scroll to end of the table:
 		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
@@ -852,7 +853,6 @@ void CUcontent_MBsSWs::saveMBsSWs()
 void CUcontent_MBsSWs::loadMBsSWs()
 {
 	using namespace std;
-	unsigned int MBSWmetaList_len_old = _MBSWmetaList.size();
 #ifdef __FSSM_DEBUG__
 	cout << "CUcontent_MBsSWs::loadMBsSWs(): attempting to read previously saved MBs/SWs\n";
 #endif
@@ -863,6 +863,7 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	ROM_ID = _SSMPdev->getROMID();
 
 	// Temporary to keep MBsSWs read from file
+	std::vector<MBSWmetadata_dt> MBSWmetaList;
 	MBSWmetadata_dt tmpMBSWmd;
 	unsigned int k = 0;
 
@@ -902,51 +903,18 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
 #endif
 
-	// Clear list first
-	_MBSWmetaList.clear();
 	// Read saved MBsSWs one by one
 	for (unsigned int i=0; i < k ; i++)
 	{
 		file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
 		file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
-		// Then add saved values
-		_MBSWmetaList.push_back( tmpMBSWmd );
+		// Append loaded values to the new list:
+		MBSWmetaList.push_back( tmpMBSWmd );
 	}
 	file.close();
 
 	// Update table:
-	if (_MBSWmetaList.size() != MBSWmetaList_len_old)
-	{
-		// Clear current values:
-		_lastValues.clear();
-		_minmaxData.clear();
-		// Add new table-position-indexes:
-		for (k=MBSWmetaList_len_old; k<_MBSWmetaList.size(); k++)
-			_tableRowPosIndexes.push_back(k);
-		// Update MB/SW table content:
-		displayMBsSWs();
-		// Clear time information:
-		clearRefreshTime();
-		// Select new MBs/SWs:
-		if (MBSWmetaList_len_old > 0)
-		{
-			_valuesTableView->selectMBSWtableRows(MBSWmetaList_len_old, _MBSWmetaList.size()-1);
-			mbswdelete_pushButton->setEnabled(true);
-			mbswsave_pushButton->setEnabled(true);
-		}
-		// Scroll to end of the table:
-		_valuesTableView->scrollMBSWtable(_MBSWmetaList.size()-1);
-	}
-
-	// Activate/deactivate buttons:
-	if (_MBSWmetaList.size() > 0)
-	{
-		startstopmbreading_pushButton->setEnabled(true);
-		mbswsave_pushButton->setEnabled(true);
-		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
-	}
-	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
-		mbswadd_pushButton->setEnabled(false);	// activate add button
+	setMBSWselection(MBSWmetaList);
 }
 
 
