@@ -814,9 +814,15 @@ void CUcontent_MBsSWs::saveMBsSWs()
 	// We take the ROM-ID to avoid loading MBs/SWs on a different control unit / ROM that does not support the same MBs/SWs
 	string ROM_ID = _SSMPdev->getROMID();
 
-	// Ignore any paths, try and write file to current working directory
-	// Also, we write data in binary format, so non-human readable
-	ofstream file ("MBsSWs.list", ios::out|ios::binary);
+	// Select file for saving
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Save MB/SW List"),
+							QCoreApplication::applicationDirPath(),
+							tr("FreeSSM MB/SW list files") + " (*.list)(*.list)");
+	if (!fileName.size())
+		return;
+	// Open file
+	// NOTE: we write data in binary format, so non-human readable
+	ofstream file (fileName.toLocal8Bit(), ios::out | ios::binary);
 	if (!file.is_open())
 	{
 		warningMsg(tr("Save Error"), tr("Error storing MBs/SWs:\nCould not open file for writing MBs/SWs."));
@@ -856,8 +862,14 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	MBSWmetadata_dt tmpMBSWmd;
 	unsigned int k = 0;
 
-	// Ignore any paths, try and read file from current working directory
-	ifstream file ("MBsSWs.list", ios::in|ios::binary);
+	// Select file to load
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Load MB/SW List"),
+							QCoreApplication::applicationDirPath(),
+							tr("FreeSSM MB/SW list files") + " (*.list)(*.list)");
+	if (!fileName.size())
+		return;
+	// Open file
+	ifstream file (fileName.toLocal8Bit(), ios::in | ios::binary);
 	if (!file.is_open())
 	{
 		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nCould not open file for reading MBs/SWs."));
