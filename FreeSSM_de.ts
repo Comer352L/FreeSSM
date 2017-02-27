@@ -766,42 +766,38 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="840"/>
-	<source>Error storing MBs/SWs:
+        <source>Error storing MBs/SWs:
 Could not open file for writing MBs/SWs.</source>
-	<translation>Fehler beim Speichern der MB/SW:
+        <translation>Fehler beim Speichern der MB/SW:
 Datei kann nicht zum Schreiben geoeffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="891"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="890"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="911"/>
         <source>Load Error</source>
         <translation>Fehler beim Laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="891"/>
-	<source>Error reading back MBs/SWs:
+        <location filename="src/CUcontent_MBsSWs.cpp" line="890"/>
+        <source>Error reading back MBs/SWs:
+Could not open file for reading MBs/SWs.</source>
+        <translation>Fehler beim Lesen der MB/SW:
+Datei konnte nicht geöffnet werden.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="911"/>
+        <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
-	<translation>Fehler beim Lesen der MB/SW:
+        <translation>Fehler beim Lesen der MB/SW:
 ROM Id in der Datei stimmt nicht mit aktueller ROM Id ueberein.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
-        <source>Load Error</source>
-        <translation>Fehler beim Laden</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
-	<source>Error reading back MBs/SWs:
-Saved ROM Id does not match current ROM Id.</source>
-	<translation>Fehler beim Lesen der MB/SW:
-Datei kann nicht zum Lesen geoeffnet werden.</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1118"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1117"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1118"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1117"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
@@ -1654,7 +1650,7 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
         <translation>Plots</translation>
     </message>
     <message>
-        <location filename="ui/CUcontent_MBsSWs.ui" line="171"/>
+        <location filename="ui/CUcontent_MBsSWs.ui" line="229"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
