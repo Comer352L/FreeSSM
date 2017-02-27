@@ -63,6 +63,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 	// Add some shortcuts:
+	mbswadd_pushButton->setShortcut( QKeySequence("Ctrl++") );
+	mbswdelete_pushButton->setShortcut( QKeySequence("Ctrl+-") );
 	mbswsave_pushButton->setShortcut( QKeySequence("Ctrl+s") );
 	mbswload_pushButton->setShortcut( QKeySequence("Ctrl+l") );
 }
