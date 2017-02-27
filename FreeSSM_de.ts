@@ -730,74 +730,90 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="299"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="284"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Das Lesen der Messwertblöcke konnte nicht beendet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="306"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="291"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Das Lesen der Messwertblöcke konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="371"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="356"/>
         <source> Stop  </source>
         <translation> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="394"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="379"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="717"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
         <source>Refresh duration:</source>
         <translation>Aktualisierungsdauer:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="717"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
         <source>Block transfer rate:</source>
         <translation>Block-Transferrate:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="840"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="818"/>
+        <source>Save MB/SW List</source>
+        <translation>Messwertblockliste speichern</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="820"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="868"/>
+        <source>FreeSSM MB/SW list files</source>
+        <translation>FreeSSM MB/SW-Listen-Dateien</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
         <source>Save Error</source>
         <translation>Fehler beim Speichern</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="840"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
         <source>Error storing MBs/SWs:
 Could not open file for writing MBs/SWs.</source>
         <translation>Fehler beim Speichern der MB/SW:
 Datei kann nicht zum Schreiben geoeffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="890"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="911"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="866"/>
+        <source>Load MB/SW List</source>
+        <translation>Messwertblockliste laden</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
         <source>Load Error</source>
         <translation>Fehler beim Laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="890"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
         <source>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</source>
         <translation>Fehler beim Lesen der MB/SW:
 Datei konnte nicht geöffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="911"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
         <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
         <translation>Fehler beim Lesen der MB/SW:
 ROM Id in der Datei stimmt nicht mit aktueller ROM Id ueberein.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1117"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1117"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
