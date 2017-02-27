@@ -35,6 +35,10 @@
 #include "SSMprotocol.h"
 #include "libFSSM.h"
 
+// To get stdout for my errors
+#include <iostream>
+// To do binary file operations storing the current setup
+#include <fstream>
 
 class MBSWvalue_dt
 {
@@ -101,6 +105,9 @@ private:
 	std::vector<MBSWvalue_dt> _lastValues;
 	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
 	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	QAction *_save_MBSWmetaList;
+	QAction *_open_MBSWmetaList;
+	QAction *_read_MBSWmetaList;
 
 	void setupTimeModeUiElements();
 	void setupUiFonts();
@@ -110,6 +117,7 @@ private:
 	void clearRefreshTime();
 	void communicationError(QString addstr);
 	void resizeEvent(QResizeEvent *event);
+	void warningMsg(QString title, QString message);
 
 private slots:
 	void startstopMBsSWsButtonPressed();
@@ -118,6 +126,8 @@ private slots:
 	void processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
+	void saveMBsSWs();
+	void loadMBsSWs();
 	void moveUpMBsSWsOnTheTable();
 	void moveDownMBsSWsOnTheTable();
 	void resetMinMaxTableValues();

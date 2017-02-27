@@ -729,46 +729,82 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="366"/>
-        <source> Start  </source>
-        <translation> Start  </translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="343"/>
-        <source> Stop  </source>
-        <translation> Stop  </translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="687"/>
-        <source>Refresh duration:</source>
-        <translation>Refresh duration:</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="687"/>
-        <source>Block transfer rate:</source>
-        <translation>Block transfer rate:</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
-        <source>Communication Error</source>
-        <translation>Communication Error</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
-        <source>Communication Error:
-- No or invalid answer from Control Unit -</source>
-        <translation>Communication Error:
-- No or invalid answer from Control Unit -</translation>
-    </message>
-    <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="273"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="299"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="280"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="306"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t start Measuring Blocks Reading.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="371"/>
+        <source> Stop  </source>
+        <translation> Stop  </translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="394"/>
+        <source> Start  </source>
+        <translation> Start  </translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="717"/>
+        <source>Refresh duration:</source>
+        <translation>Refresh duration:</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="717"/>
+        <source>Block transfer rate:</source>
+        <translation>Block transfer rate:</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="840"/>
+        <source>Save Error</source>
+	<translation>Save Error</translation>>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="840"/>
+	<source>Error storing MBs/SWs:
+Could not open file for writing MBs/SWs.</source>>
+	<translation>Error storing MBs/SWs:
+Could not open file for writing MBs/SWs.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="891"/>
+        <source>Load Error</source>
+        <translation>Load Error</translation>>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="891"/>
+	<source>Error reading back MBs/SWs:
+Saved ROM Id does not match current ROM Id.</source>
+	<translation>Error reading back MBs/SWs:
+Saved ROM Id does not match current ROM Id.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
+        <source>Load Error</source>
+        <translation>Load Error</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="912"/>
+	<source>Error reading back MBs/SWs:
+Saved ROM Id does not match current ROM Id.</source>
+	<translation>Error reading back MBs/SWs:
+Saved ROM Id does not match current ROM Id.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1118"/>
+        <source>Communication Error</source>
+        <translation>Communication Error</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1118"/>
+        <source>Communication Error:
+- No or invalid answer from Control Unit -</source>
+        <translation>Communication Error:
+- No or invalid answer from Control Unit -</translation>
     </message>
 </context>
 <context>
