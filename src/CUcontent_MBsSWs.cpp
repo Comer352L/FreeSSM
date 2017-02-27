@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.cpp - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2017 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,18 +50,6 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	_valuesTableView->setEnabled(false);
 	updateRefreshTimeTitle();
 	clearRefreshTime();
-
-	// Create action for saving/opening MBSWmetaList to/from file:
-	_save_MBSWmetaList = new QAction(this);
-	_save_MBSWmetaList->setShortcut( QKeySequence("Ctrl+s") );
-	this->addAction(_save_MBSWmetaList);
-	_open_MBSWmetaList = new QAction(this);
-	_open_MBSWmetaList->setShortcut( QKeySequence("Ctrl+o") );
-	this->addAction(_open_MBSWmetaList);
-	_read_MBSWmetaList = new QAction(this);
-	_read_MBSWmetaList->setShortcut( QKeySequence("Ctrl+r") );
-	this->addAction(_read_MBSWmetaList);
-
 	// Connect signals and slots:
 	connect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	connect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
@@ -73,10 +61,10 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	connect( _valuesTableView , SIGNAL( resetMinMaxButton_pressed() ), this, SLOT( resetMinMaxTableValues() ) );
 	connect( _valuesTableView , SIGNAL( itemSelectionChanged() ), this, SLOT( setDeleteButtonEnabledState() ) );
 	connect( _timemode_pushButton , SIGNAL( released() ), this, SLOT( switchTimeMode() ) );
-	connect( _save_MBSWmetaList, SIGNAL(triggered()), this, SLOT(saveMBsSWs()) );
-	connect( _open_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
-	connect( _read_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
+	// Add some shortcuts:
+	mbswsave_pushButton->setShortcut( QKeySequence("Ctrl+s") );
+	mbswload_pushButton->setShortcut( QKeySequence("Ctrl+l") );
 }
 
 
@@ -103,12 +91,6 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	delete _valuesTableView;
 	disconnect( mbswsave_pushButton , SIGNAL( released() ), this, SLOT( saveMBsSWs() ) );
 	disconnect( mbswload_pushButton , SIGNAL( released() ), this, SLOT( loadMBsSWs() ) );
-	disconnect( _save_MBSWmetaList, SIGNAL(triggered()), this, SLOT(saveMBsSWs()) );
-	disconnect( _open_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
-	disconnect( _read_MBSWmetaList, SIGNAL(triggered()), this, SLOT(loadMBsSWs()) );
-	delete _save_MBSWmetaList;
-	delete _open_MBSWmetaList;
-	delete _read_MBSWmetaList;
 }
 
 

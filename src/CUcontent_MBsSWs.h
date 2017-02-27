@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.h - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2014 Comer352L
+ * Copyright (C) 2008-2017 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -105,9 +105,6 @@ private:
 	std::vector<MBSWvalue_dt> _lastValues;
 	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
 	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
-	QAction *_save_MBSWmetaList;
-	QAction *_open_MBSWmetaList;
-	QAction *_read_MBSWmetaList;
 
 	void setupTimeModeUiElements();
 	void setupUiFonts();
