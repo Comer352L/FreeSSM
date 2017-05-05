@@ -33,11 +33,13 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	// enable maximize and minimize buttons
 	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
 	setWindowFlags( Qt::Window );
-	// Move window to desired coordinates:
-	move( 30, 30 );
 	// Set window and dialog titles:
 	setWindowTitle("FreeSSM " + QApplication::applicationVersion() + " - " + title);
 	title_label->setText(title);
+
+#ifndef SMALL_RESOLUTION
+	// Move window to desired coordinates:
+	move( 30, 30 );
 	// Apply quirk for GTK+-Layout:
 	if (QApplication::style()->objectName().toLower() == "gtk+")
 	{
@@ -59,6 +61,10 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_ifstatusbar->setInterfaceVersion( QString::fromStdString( diagInterface->version() ), Qt::blue );
 	_ifstatusbar->setProtocolName("---");
 	_ifstatusbar->setBaudRate("---");
+#else
+	showFullScreen();
+#endif
+
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }
@@ -71,7 +77,9 @@ ControlUnitDialog::~ControlUnitDialog()
 		delete _infoWidget;
 	if (_contentWidget)
 		delete _contentWidget;
+#ifndef SMALL_RESOLUTION
 	delete _ifstatusbar;
+#endif
 	if (_SSMPdev)
 	{
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
@@ -116,8 +124,14 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 {
 	QPushButton *button = new QPushButton(selection_groupBox);
 	selButtons_verticalLayout->insertWidget(_selButtons.size(), button);
+
+#ifndef SMALL_RESOLUTION
 	button->setFixedWidth(160);
 	button->setFixedHeight(35);
+#else
+	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+#endif
+
 	button->setCheckable(checkable);
 	button->setAutoExclusive(checkable);
 	// Icon:
@@ -200,6 +214,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 			}
 		}
 	}
+#ifndef SMALL_RESOLUTION
 	// Update diagnostic interface status bar:
 	if (_SSMPdev != NULL)
 	{
@@ -222,6 +237,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 		}
 		_ifstatusbar->setBaudRate(bstr, Qt::darkGreen);
 	}
+#endif
 	return result;
 }
 
