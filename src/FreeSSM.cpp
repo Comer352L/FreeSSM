@@ -33,6 +33,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	// SETUP GUI:
 	setupUi(this);
 	setWindowFlags( windowFlags() & ~Qt::WindowMaximizeButtonHint );	// only necessary for MS Windows
+#ifndef SMALL_RESOLUTION
 	// LOAD BACKGROUND PICTURE:
 	background_label->setPixmap(appsPath + "/background.png");
 	// SHOW PROGRAM TITEL + VERSION:
@@ -49,6 +50,9 @@ FreeSSM::FreeSSM(QApplication *app)
 	int x = (desktop.width() - size().width()) / 2;
 	int y = (desktop.height() - size().height()) / 2 - 50;
 	this->move ( x, y );
+#else
+	showFullScreen();
+#endif
 	// LOAD PREFERENCES FROM FILE:
 	QString savedinterfacefilename = "";
 	QString savedlanguage = "";
@@ -233,7 +237,9 @@ FreeSSM::~FreeSSM()
 	disconnect( about_pushButton, SIGNAL( released() ), this, SLOT( about() ) );
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	delete _dump_action;
+#ifndef SMALL_RESOLUTION
 	delete _progtitle_label;
+#endif
 	if (_translator != NULL)
 	{
 		QApplication::removeTranslator(_translator);
