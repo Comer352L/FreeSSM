@@ -111,14 +111,15 @@ SOURCES += src/main.cpp \
            src/tinyxml/tinyxmlparser.cpp
 
 SMALL_RESOLUTION {
-FORMS += ui/small/FreeSSM.ui
+FORMS += ui/small/FreeSSM.ui \
+         ui/small/ControlUnitDialog.ui
 } else {
-FORMS += ui/FreeSSM.ui
+FORMS += ui/FreeSSM.ui \
+         ui/ControlUnitDialog.ui
 }
 
 FORMS +=   ui/Preferences.ui \
            ui/About.ui \
-           ui/ControlUnitDialog.ui \
            ui/CUinfo_Engine.ui \
            ui/CUinfo_Transmission.ui \
            ui/CUinfo_simple.ui \
@@ -130,7 +131,7 @@ FORMS +=   ui/Preferences.ui \
            ui/CUcontent_Adjustments.ui \
            ui/CUcontent_sysTests.ui \
            ui/AddMBsSWsDlg.ui \
-           ui/ActuatorTestDlg.ui \
+           ui/ActuatorTestDlg.ui
 
 RESOURCES += resources/FreeSSM.qrc
 
