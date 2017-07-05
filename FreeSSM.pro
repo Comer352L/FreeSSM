@@ -117,7 +117,10 @@ FORMS += ui/small/FreeSSM.ui \
          ui/small/CUcontent_DCs_engine.ui \
          ui/small/CUcontent_MBsSWs.ui \
          ui/small/CUcontent_MBsSWs_tableView.ui \
-         ui/small/AddMBsSWsDlg.ui
+         ui/small/AddMBsSWsDlg.ui \
+         ui/small/CUinfo_Engine.ui \
+         ui/small/CUinfo_Transmission.ui \
+         ui/small/CUinfo_simple.ui
 } else {
 FORMS += ui/FreeSSM.ui \
          ui/ControlUnitDialog.ui \ 
@@ -125,13 +128,13 @@ FORMS += ui/FreeSSM.ui \
          ui/CUcontent_DCs_engine.ui \ 
          ui/CUcontent_MBsSWs.ui \
          ui/CUcontent_MBsSWs_tableView.ui \
-         ui/AddMBsSWsDlg.ui
+         ui/AddMBsSWsDlg.ui \
+         ui/CUinfo_Engine.ui \
+         ui/CUinfo_Transmission.ui \
+         ui/CUinfo_simple.ui
 }
 
 FORMS +=   ui/About.ui \
-           ui/CUinfo_Engine.ui \
-           ui/CUinfo_Transmission.ui \
-           ui/CUinfo_simple.ui \
            ui/CUcontent_DCs_twoMemories.ui \
            ui/CUcontent_DCs_stopCodes.ui \
            ui/CUcontent_Adjustments.ui \
