@@ -111,7 +111,7 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "11;4;2;00005C;;AT Turbine Speed 1;rpm;*32;0"
 	<< "11;5;2;00005B;;Voltage Center Differential Switch;V;/51;2"
 	<< "11;6;2;00005A;;ATF Temperature 2;°C;-50;0"
-	<< "11;7;2;000059;;Load & Reverse Brake (L&R B) Duty;%;/2;1"
+	<< "11;7;2;000059;;Low & Reverse Brake (L&R B) Duty;%;/2;1"
 	<< "11;8;2;000058;;High Clutch Duty;%;/2;1"
 	<< "31;5;1;0000FB;;Throttle Motor Voltage;V;*2/25;1"
 	<< "31;6;1;0000FA;;Throttle Motor Duty;%;-128/128*100;0"
