@@ -326,7 +326,7 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 }
 
 
-void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
+void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteaddr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
 {
 	DC->clear();
 	DCdescription->clear();
@@ -335,7 +335,7 @@ void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std
 	dc_defs_dt def;
 	for (size_t k=0; k<DCdefs.size(); k++)
 	{
-		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteadr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteadr))
+		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteaddr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteaddr))
 		{
 			def = DCdefs.at(k);
 			break;
@@ -362,12 +362,12 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 {
 	// ***** SETUP (BYTE-) ADDRESS LIST FOR QUERYS *****
 	unsigned int k = 0, m = 0;
-	bool newadr = true;
+	bool newaddr = true;
 	_selMBsSWsAddr.clear();
 	if (MBSWmetaList.size() == 0) return false;
 	for (k=0; k<MBSWmetaList.size(); k++)
 	{
-		newadr = true;
+		newaddr = true;
 		// CHECK IF ADDRESS IS ALREADY ON THE QUERY-LIST:
 		if (_selMBsSWsAddr.size())
 		{
@@ -381,7 +381,7 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 					// COMPARE ADDRESS:
 					if (_selMBsSWsAddr.at(m) == _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addr_low)
 					{
-						newadr = false;
+						newaddr = false;
 						break;
 					}
 				}
@@ -392,14 +392,14 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 					// COMPARE ADDRESS:
 					if (_selMBsSWsAddr.at(m) == _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr)
 					{
-						newadr = false;
+						newaddr = false;
 						break;
 					}
 				}
 			}
 		}
 		// ADD ADDRESS TO QUERY-LIST IF IT IS NEW:
-		if (newadr)
+		if (newaddr)
 		{
 			if (MBSWmetaList.at(k).blockType == BlockType::MB)
 			{
@@ -478,7 +478,7 @@ void SSMprotocol::setupActuatorTestAddrList()
 		// Check if byte address is already on the list:
 		for (unsigned int m=0; m<_allActByteAddr.size(); m++)
 		{
-			if (_allActByteAddr.at(m) == _actuators.at(n).byteadr)
+			if (_allActByteAddr.at(m) == _actuators.at(n).byteAddr)
 			{
 				aol = true;
 				break;
@@ -486,7 +486,7 @@ void SSMprotocol::setupActuatorTestAddrList()
 		}
 		// Put address on addresses list (if not duplicate):
 		if (!aol)
-			_allActByteAddr.push_back( _actuators.at(n).byteadr );
+			_allActByteAddr.push_back( _actuators.at(n).byteAddr );
 		else
 			aol = false;
 	}

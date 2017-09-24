@@ -50,9 +50,9 @@ void SSMprotocol2::resetCUdata()
 		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
 		if (_SSMP2com->stopCommunication() && (_state == state_ActTesting))
 		{
-			unsigned int dataadr = 0x61;
+			unsigned int dataaddr = 0x61;
 			char currentdatabyte = '\x0';
-			if (_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+			if (_SSMP2com->readMultipleDatabytes(0x0, &dataaddr, 1, &currentdatabyte))
 			{
 				// Check if test mode is active:
 				if (currentdatabyte & 0x20)
@@ -553,8 +553,8 @@ bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
-	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitadr - 1));
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteAddr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitAddr - 1));
 	// Stop all actuator tests:
 	for (size_t k=0; k<_allActByteAddr.size(); k++)
 	{
@@ -675,12 +675,12 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 	if (_state != state_normal) return false;
 	if (!_has_ImmoTest) return false;
 	char checkvalue = 0;
-	unsigned int readcheckadr = 0x8B;
+	unsigned int readcheckaddr = 0x8B;
 	// Write test-pattern:
 	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
 	{
 		// Read result:
-		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckadr, 1, &checkvalue))
+		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckaddr, 1, &checkvalue))
 		{
 			/* NOTE: the actually written data is NOT 0xAA ! */
 			if (checkvalue == '\x01')
@@ -706,11 +706,11 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 
 bool SSMprotocol2::isEngineRunning(bool *isrunning)
 {
-	unsigned int dataadr = 0x0e;
+	unsigned int dataaddr = 0x0e;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
 	if (!_has_MB_engineSpeed) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataaddr, 1, &currentdatabyte))
 	{
 		resetCUdata();
 		return false;
@@ -725,11 +725,11 @@ bool SSMprotocol2::isEngineRunning(bool *isrunning)
 
 bool SSMprotocol2::isInTestMode(bool *testmode)
 {
-	unsigned int dataadr = 0x61;
+	unsigned int dataaddr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
 	if (!_has_TestMode) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataadr, 1, &currentdatabyte))
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataaddr, 1, &currentdatabyte))
 	{
 		resetCUdata();
 		return false;

@@ -118,8 +118,8 @@ class actuator_dt
 {
 public:
 	QString title;
-	unsigned int byteadr;
-	unsigned char bitadr;
+	unsigned int byteAddr;
+	unsigned char bitAddr;
 };
 
 
@@ -221,7 +221,7 @@ protected:
 	std::vector<unsigned int> _selMBsSWsAddr;
 	unsigned char _selectedActuatorTestIndex;
 
-	void evaluateDCdataByte(unsigned int DCbyteadr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
+	void evaluateDCdataByte(unsigned int DCbyteaddr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
 				QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);

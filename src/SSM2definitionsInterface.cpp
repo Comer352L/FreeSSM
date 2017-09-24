@@ -447,7 +447,7 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 	unsigned int tmpflagbyte = 0;
 	unsigned int tmpflagbit = 0;
 	actuator_dt tmpactuator;
-	unsigned char tmpbitadr = 0;
+	unsigned char tmpbitaddr = 0;
 	bool ok = false;
 	int k = 0;
 	QStringList actuatorsrawdata;
@@ -483,16 +483,16 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 			continue;
 		if (!_ssmCUdata.flagbytebit(tmpflagbyte-1, tmpflagbit-1))
 			continue;
-		tmpactuator.byteadr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
-		if (!ok || (tmpactuator.byteadr == 0))
+		tmpactuator.byteAddr = actuatorsrawdata.at(k).section(';', 2, 2).toUInt(&ok, 16);
+		if (!ok || (tmpactuator.byteAddr == 0))
 			continue;
-		tmpbitadr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt();
-		if ((tmpbitadr < 1) || (tmpbitadr > 8))
+		tmpbitaddr = actuatorsrawdata.at(k).section(';', 3, 3).toUInt();
+		if ((tmpbitaddr < 1) || (tmpbitaddr > 8))
 			continue;
 		tmpactuator.title = actuatorsrawdata.at(k).section(';', 4, 4);
 		if (!tmpactuator.title.length())
 			continue;
-		tmpactuator.bitadr = tmpbitadr;
+		tmpactuator.bitAddr = tmpbitaddr;
 		actuators->push_back( tmpactuator );
 	}
 	return true;

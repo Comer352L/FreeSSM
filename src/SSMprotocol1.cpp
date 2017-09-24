@@ -515,8 +515,8 @@ bool SSMprotocol1::startActuatorTest(unsigned char actuatorTestIndex)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
-	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteadr;
-	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitadr - 1));
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteAddr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitAddr - 1));
 	// Stop all actuator tests:
 	for (k=0; k<_allActByteAddr.size(); k++)
 	{
@@ -628,12 +628,12 @@ bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 		return false;
 	if (!_has_Immo) return false;
 	char checkvalue = 0;
-	unsigned int readcheckadr = 0x8B;
+	unsigned int readcheckaddr = 0x8B;
 	// Write test-pattern:
 	if (_SSMP1com->writeAddress(0xE0, '\xAA', &checkvalue))
 	{
 		// Read result:
-		if (_SSMP1com->readAddress(readcheckadr, &checkvalue))
+		if (_SSMP1com->readAddress(readcheckaddr, &checkvalue))
 		{
 			/* NOTE: the actually written data is NOT 0xAA ! */
 			if (checkvalue == '\x01')
@@ -684,13 +684,13 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 
 bool SSMprotocol1::isInTestMode(bool *testmode)
 {
-	unsigned int dataadr = 0x61;
+	unsigned int dataaddr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
 	if (_uses_SSM2defs)	// FIXME: other defintion types
 		return false;
 	if (!_has_TestMode) return false;
-	if (!_SSMP1com->readAddress(dataadr, &currentdatabyte))
+	if (!_SSMP1com->readAddress(dataaddr, &currentdatabyte))
 	{
 		resetCUdata();
 		return false;
