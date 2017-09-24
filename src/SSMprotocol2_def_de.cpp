@@ -111,7 +111,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "11;4;2;00005C;;Automatikgetriebe Turbinendrehzahl 1;U/Min;*32;0"
 	<< "11;5;2;00005B;;Spannung Zentraldifferential-Schalter;V;/51;2"
 	<< "11;6;2;00005A;;ATF-Temperatur 2;°C;-50;0"
-	<< "11;7;2;000059;;Bremse für Lastbereich und Rückwärtsgang (L&R B) Zyklus;%;/2;1"
+	<< "11;7;2;000059;;Bremse für Nieddrig- und Rückwärtsgang (L&R B) Zyklus;%;/2;1"
 	<< "11;8;2;000058;;Schnellgang-Kupplung Arbeitszyklus;%;/2;1"
 	<< "31;5;1;0000FB;;Drosselklappenmotor Spannung;V;*2/25;1"
 	<< "31;6;1;0000FA;;Drosselklappenmotor Arbeitszyklus;%;-128/128*100;0"
