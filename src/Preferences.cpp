@@ -80,13 +80,13 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	else if (_newinterfacetype == AbstractDiagInterface::interface_ATcommandControlled) // AT-comand controlled (e.g. ELM, AGV, Diamex)
 	{
 		interfaceType_comboBox->setCurrentIndex(2);
-		selectInterfaceType(2); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
+		selectInterfaceType(2);
 		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
 	}
 	else	// Serial Pass-Through
 	{
 		interfaceType_comboBox->setCurrentIndex(0);
-		selectInterfaceType(0); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
+		selectInterfaceType(0);
 		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
 	}
 	if (if_name_index >= 0)
