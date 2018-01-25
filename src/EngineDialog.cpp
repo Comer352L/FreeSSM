@@ -137,7 +137,7 @@ void EngineDialog::setup()
 				// Query test mode connector status:
 				if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
 					goto commError;
-				if (testmode)	// wenn ECU im Testmodus
+				if (testmode)
 				{
 					// Check that engine is not running:
 					if (!_SSMPdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
