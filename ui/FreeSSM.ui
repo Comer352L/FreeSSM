@@ -92,11 +92,6 @@
        <height>40</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>        &amp;Engine         </string>
      </property>
@@ -120,11 +115,6 @@
        <height>40</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>   &amp;Transmission  </string>
      </property>
@@ -147,11 +137,6 @@
        <width>172</width>
        <height>40</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>      ABS/VDC       </string>
@@ -179,11 +164,6 @@
        <height>40</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>  Cruise Control </string>
      </property>
@@ -206,11 +186,6 @@
        <width>172</width>
        <height>40</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>Air Conditioning</string>
@@ -255,11 +230,6 @@
        <height>40</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>         &amp;Help             </string>
      </property>
@@ -283,11 +253,6 @@
        <height>40</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>         &amp;About           </string>
      </property>
@@ -310,11 +275,6 @@
        <width>172</width>
        <height>40</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>    &amp;Preferences    </string>
