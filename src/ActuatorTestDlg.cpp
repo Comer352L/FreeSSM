@@ -1,7 +1,7 @@
 /*
  * ActuatorTestDlg.cpp - Actuator Test Dialog
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 
 	_SSMPdev = SSMPdev;
 	setupUi(this);
-	setupUiFonts();
 	exit_pushButton->setEnabled(false);
 	this->show();
 	actuator_label->setText(actuatorTitle);
@@ -45,7 +44,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 				engineoffmsg.addButton(tr("Continue"), QMessageBox::AcceptRole);
 				engineoffmsg.addButton(tr("Cancel"), QMessageBox::RejectRole);
 				msgfont = engineoffmsg.font();
-				msgfont.setPixelSize(12); // 9pts
+				msgfont.setPointSize(9);
 				engineoffmsg.setFont( msgfont );
 				engineoffmsg.show();
 				dlgchoice = engineoffmsg.exec();
@@ -67,7 +66,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 			errmsg.addButton(tr("Retry"), QMessageBox::AcceptRole);
 			errmsg.addButton(tr("Exit Control Unit"), QMessageBox::RejectRole);
 			msgfont = errmsg.font();
-			msgfont.setPixelSize(12); // 9pts
+			msgfont.setPointSize(9);
 			errmsg.setFont( msgfont );
 			errmsg.show();
 			dlgchoice = errmsg.exec();
@@ -88,7 +87,7 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 		// Show error message
 		QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\nActuator Test couldn't be started."), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
+		msgfont.setPointSize(9);
 		msg.setFont( msgfont );
 		msg.show();
 		msg.exec();
@@ -113,40 +112,4 @@ void ActuatorTestDlg::closeEvent(QCloseEvent *event)
 	event->accept();
 }
 
-
-
-void ActuatorTestDlg::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_ActuatorTestDlg.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = title_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(21);	// 16pts
-	title_label->setFont(font);
-	font = actuatortitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	actuatortitle_label->setFont(font);
-	font = actuator_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	actuator_label->setFont(font);
-	font = statustitle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	statustitle_label->setFont(font);
-	font = status_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	status_label->setFont(font);
-	font = exit_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	exit_pushButton->setFont(font);
-}
 
