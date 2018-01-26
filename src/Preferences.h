@@ -61,7 +61,6 @@ private:
 	QStringList _J2534libraryPaths;
 
 	void displayErrorMsg(QString errormsg);
-	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);
 
 public:
