@@ -1,7 +1,7 @@
 /*
  * CruiseControlDialog.cpp - Cruise Control Unit dialog
  *
- * Copyright (C) 2012 L1800Turbo, 2008-2012 Comer352L
+ * Copyright (C) 2012 L1800Turbo, 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ void CruiseControlDialog::setup()
 	button->setText(tr("Continue"));
 	msgbox->addButton(QMessageBox::Cancel);
 	QFont msgfont = msgbox->font();
-	msgfont.setPixelSize(12);	// 9pts
+	msgfont.setPointSize(9);
 	msgbox->setFont( msgfont );
 	msgbox->show();
 	int ret = msgbox->exec();
@@ -143,7 +143,7 @@ void CruiseControlDialog::setup()
 			}
 			QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
 			QFont msgfont = msg.font();
-			msgfont.setPixelSize(12);	// 9pts
+			msgfont.setPointSize(9);
 			msg.setFont( msgfont );
 			msg.show();
 			msg.exec();
