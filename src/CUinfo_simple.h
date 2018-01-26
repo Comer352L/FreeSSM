@@ -1,7 +1,7 @@
 /*
  * CUinfo_simple.h - Basic widget for displaying Control Unit information
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,6 @@ public:
 	void setSystemTypeText(QString Type);
 	void setRomIDText(QString RomID);
 	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
-
-private:
-	void setupUiFonts();
 
 };
 
