@@ -98,6 +98,11 @@
     <number>0</number>
    </property>
    <widget class="QWidget" name="about_tab">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <attribute name="title">
      <string>&amp;About</string>
     </attribute>
@@ -109,11 +114,6 @@
        <width>485</width>
        <height>344</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
@@ -133,6 +133,11 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     </widget>
    </widget>
    <widget class="QWidget" name="features_tab">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <attribute name="title">
      <string>&amp;Features</string>
     </attribute>
@@ -144,11 +149,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>295</width>
        <height>34</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</string>
@@ -171,7 +171,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -190,11 +189,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>Engine, Transmission</string>
      </property>
@@ -207,11 +201,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>201</width>
        <height>18</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>(Non-OBD / OBD2 / CC)</string>
@@ -226,11 +215,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string/>
      </property>
@@ -243,11 +227,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>45</width>
        <height>18</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string/>
@@ -262,11 +241,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>(Actuators / Others) (Engine only)</string>
      </property>
@@ -279,11 +253,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>241</width>
        <height>18</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string>(Engine / Transmission)</string>
@@ -300,7 +269,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -321,7 +289,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -340,11 +307,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string/>
      </property>
@@ -360,7 +322,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -381,7 +342,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -400,11 +360,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>(Data / Switches)</string>
      </property>
@@ -417,11 +372,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>54</width>
        <height>18</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="text">
       <string/>
@@ -438,7 +388,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -459,6 +408,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
+       <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -478,7 +428,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -497,11 +446,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string/>
      </property>
@@ -517,7 +461,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
@@ -536,17 +479,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>18</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="text">
       <string>Linux/X11, Windows</string>
      </property>
     </widget>
    </widget>
    <widget class="QWidget" name="credits_tab">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <attribute name="title">
      <string>&amp;Credits</string>
     </attribute>
@@ -561,7 +504,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -587,7 +529,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -1089,12 +1030,22 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>31</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Read the full license document</string>
      </property>
     </widget>
    </widget>
    <widget class="QWidget" name="changelog_tab">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <attribute name="title">
      <string>Change&amp;log</string>
     </attribute>
@@ -1106,11 +1057,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>500</width>
        <height>345</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
      </property>
      <property name="lineWrapColumnOrWidth">
       <number>0</number>
