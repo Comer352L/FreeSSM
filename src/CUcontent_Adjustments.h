@@ -1,7 +1,7 @@
 /*
  * CUcontent_Adjustments.h - Widget for Control Unit Adjustments
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,7 +102,6 @@ private:
 	std::vector<bool> _newValueSelWidgetType;
 	unsigned int _maxrowsvisible;
 
-	void setupUiFonts();
 	void setupAdjustmentsTable();
 	void displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit);
 	void setupNewValueSelWidgetTypes();
