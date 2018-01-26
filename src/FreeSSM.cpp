@@ -1,7 +1,7 @@
 /*
  * FreeSSM.cpp - Program main window
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,12 +33,11 @@ FreeSSM::FreeSSM(QApplication *app)
 	// SETUP GUI:
 	setupUi(this);
 	setWindowFlags( windowFlags() & ~Qt::WindowMaximizeButtonHint );	// only necessary for MS Windows
-	setupUiFonts();
 	// LOAD BACKGROUND PICTURE:
 	background_label->setPixmap(appsPath + "/background.png");
 	// SHOW PROGRAM TITEL + VERSION:
 	QFont titlefont = this->font();
-	titlefont.setPixelSize(27); // 20pts
+	titlefont.setPointSize(20);
 	titlefont.setBold(true);
 	_progtitle_label = new QLabel(this);
 	_progtitle_label->setGeometry(20, 17, 315, 34);
@@ -122,7 +121,7 @@ FreeSSM::FreeSSM(QApplication *app)
 		// Display error message about missing language file:
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
+		msgfont.setPointSize(9);
 		msg.setFont( msgfont );
 		msg.show();
 		msg.exec();
@@ -618,7 +617,7 @@ void FreeSSM::displayErrorMsg(QString errmsg)
 {
 	QMessageBox msg( QMessageBox::Critical, tr("Error"), errmsg, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
@@ -653,49 +652,4 @@ void FreeSSM::closeEvent(QCloseEvent *event)
 	else
 		event->ignore();
 }
-
-
-void FreeSSM::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_FreeSSM.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = controlunits_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	controlunits_groupBox->setFont(font);
-	font = engine_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	engine_pushButton->setFont(font);
-	font = transmission_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	transmission_pushButton->setFont(font);
-	font = program_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	program_groupBox->setFont(font);
-	font = help_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	help_pushButton->setFont(font);
-	font = about_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	about_pushButton->setFont(font);
-	font = preferences_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	preferences_pushButton->setFont(font);
-	font = exit_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(16);	// 12pts
-	exit_pushButton->setFont(font);
-}
-
 
