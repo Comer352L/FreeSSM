@@ -1,7 +1,7 @@
 /*
  * CUcontent_Adjustments.cpp - Widget for Control Unit Adjustments
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -200,7 +200,6 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 	_newValueSelWidgetType.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Set column widths:
 	adjustments_tableWidget->setColumnWidth (1, 88);
 	adjustments_tableWidget->setColumnWidth (2, 106);
@@ -588,7 +587,7 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	confirmmsg.addButton(tr("OK"), QMessageBox::AcceptRole);
 	confirmmsg.addButton(tr("Cancel"), QMessageBox::RejectRole);
 	QFont confirmmsgfont = confirmmsg.font();
-	confirmmsgfont.setPixelSize(12); // 9pts
+	confirmmsgfont.setPointSize(9);
 	confirmmsg.setFont( confirmmsgfont );
 	confirmmsg.show();
 	uc = confirmmsg.exec();
@@ -693,24 +692,10 @@ void CUcontent_Adjustments::errorMsg(QString title, QString errstr)
 {
 	QMessageBox msg( QMessageBox::Critical, title, errstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
 	msg.close();
 }
-
-
-void CUcontent_Adjustments::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_Adjustments.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12);// 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	adjustments_tableWidget->setFont(contentfont);
-	nonPermanentInfo_label->setFont(contentfont);
-}
-
 
