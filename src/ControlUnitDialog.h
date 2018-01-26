@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.h - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2010 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,6 @@ private:
 	DiagInterfaceStatusBar *_ifstatusbar;
 	QList<QPushButton*> _selButtons;
 
-	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);
 
 protected slots:
