@@ -1,10 +1,11 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>actuatortest_Dialog</class>
- <widget class="QDialog" name="actuatortest_Dialog" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="actuatortest_Dialog">
+  <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -12,28 +13,29 @@
     <height>142</height>
    </rect>
   </property>
-  <property name="minimumSize" >
+  <property name="minimumSize">
    <size>
     <width>397</width>
     <height>142</height>
    </size>
   </property>
-  <property name="maximumSize" >
+  <property name="maximumSize">
    <size>
     <width>397</width>
     <height>142</height>
    </size>
   </property>
-  <property name="font" >
+  <property name="font">
    <font>
     <family>Liberation Sans</family>
+    <pointsize>10</pointsize>
    </font>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Actuator Test</string>
   </property>
-  <widget class="QLabel" name="actuatortitle_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="actuatortitle_label">
+   <property name="geometry">
     <rect>
      <x>20</x>
      <y>49</y>
@@ -41,19 +43,18 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
-     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Actuator:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="statustitle_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="statustitle_label">
+   <property name="geometry">
     <rect>
      <x>20</x>
      <y>79</y>
@@ -61,19 +62,18 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
-     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Status:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="actuator_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="actuator_label">
+   <property name="geometry">
     <rect>
      <x>90</x>
      <y>49</y>
@@ -81,17 +81,12 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font" >
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text" >
+   <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="status_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="status_label">
+   <property name="geometry">
     <rect>
      <x>90</x>
      <y>79</y>
@@ -99,17 +94,12 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font" >
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text" >
+   <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="exit_pushButton" >
-   <property name="geometry" >
+  <widget class="QPushButton" name="exit_pushButton">
+   <property name="geometry">
     <rect>
      <x>149</x>
      <y>106</y>
@@ -117,17 +107,12 @@
      <height>26</height>
     </rect>
    </property>
-   <property name="font" >
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text" >
+   <property name="text">
     <string>Exit</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_label" >
-   <property name="geometry" >
+  <widget class="QLabel" name="title_label">
+   <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
@@ -135,12 +120,12 @@
      <height>26</height>
     </rect>
    </property>
-   <property name="font" >
+   <property name="font">
     <font>
      <pointsize>16</pointsize>
     </font>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Actuator Test:</string>
    </property>
   </widget>
