@@ -1,7 +1,7 @@
 /*
  * AddMBsSWsDlg.h - Dialog for selecting/adding measuring blocks and switches
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,6 @@ private:
 	QIcon iconSW;
 
 	static bool rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B);
-	void setupUiFonts();
 	void setContent(const std::vector<Item>& items);
 
 public:

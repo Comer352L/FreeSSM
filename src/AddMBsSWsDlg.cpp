@@ -1,7 +1,7 @@
 /*
  * AddMBsSWsDlg.cpp - Dialog for selecting/adding measuring blocks and switches
  *
- * Copyright (C) 2008-2009 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 	_unselectedMBsSWs_metaList.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// enable maximize and minimize buttons
 	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
 	setWindowFlags( Qt::Window );
@@ -148,27 +147,6 @@ void AddMBsSWsDlg::setAddButtonEnableStatus()
 bool AddMBsSWsDlg::rowIndexLessThan(const QModelIndex mi_A, const QModelIndex mi_B)
 {
 	return mi_A.row() < mi_B.row();
-}
-
-
-void AddMBsSWsDlg::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_AddMBsSWsDlg.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = MBsSWs_tableWidget->font();
-	font.setPixelSize(12);	// 9pts
-	MBsSWs_tableWidget->setFont(font);
-	font = add_pushButton->font();
-	font.setPixelSize(13);	// 10pts
-	add_pushButton->setFont(font);
-	font = cancel_pushButton->font();
-	font.setPixelSize(13);	// 10pts
-	cancel_pushButton->setFont(font);
 }
 
 
