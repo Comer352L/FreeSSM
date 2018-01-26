@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.cpp - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_contentWidget = NULL;
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// enable maximize and minimize buttons
 	//   GNOME 3 at least: this also enables fast window management e.g. "View split on left" (Super-Left), "... right" (Super-Right)
 	setWindowFlags( Qt::Window );
@@ -128,7 +127,7 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 	QFont font = button->font();
 	font.setFamily(QApplication::font().family());
 	font.setBold(false);
-	font.setPixelSize(13);	// 10pts
+	font.setPointSize(10);
 	button->setFont(font);
 	// Text: prepend/append spaces to achieve proper icon positions:
 	QFontMetrics fm(font);
@@ -233,7 +232,7 @@ void ControlUnitDialog::communicationError(QString addstr)
 	if (addstr.size() > 0) addstr.prepend('\n');
 	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from Control Unit -") + addstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12);	// 9pts
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
@@ -256,37 +255,5 @@ void ControlUnitDialog::closeEvent(QCloseEvent *event)
 		waitmsgbox.close();
 	}
 	event->accept();
-}
-
-
-void ControlUnitDialog::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_ControlUnit.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = title_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(29);	// 22pts
-	title_label->setFont(font);
-	font = information_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	information_groupBox->setFont(font);
-	font = selection_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	selection_groupBox->setFont(font);
-	font = exit_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(13);	// 10pts
-	exit_pushButton->setFont(font);
-	font = content_groupBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(15);	// 11-12pts
-	content_groupBox->setFont(font);
 }
 
