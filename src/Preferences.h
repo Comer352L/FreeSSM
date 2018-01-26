@@ -1,7 +1,7 @@
 /*
  * Preferences.h - Adjustment of program settings
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,6 @@ private:
 	QStringList _J2534libraryPaths;
 
 	void displayErrorMsg(QString errormsg);
-	void setupUiFonts();
 	void closeEvent(QCloseEvent *event);
 
 public:

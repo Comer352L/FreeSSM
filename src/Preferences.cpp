@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2014 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	_confirmed = false;
 	// SET UP GUI:
 	setupUi(this);
-	setupUiFonts();
 	// PLACE WINDOW:
 	// get coordinates of FreeSSM_MainWindow
 	QRect FreeSSM_MW_geometry;
@@ -165,7 +164,7 @@ void Preferences::switchLanguage(int langindex)
 		language_comboBox->setCurrentIndex(_lastlangindex);
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Error:\n- Language file missing or damaged -"), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
+		msgfont.setPointSize(9);
 		msg.setFont( msgfont );
 		msg.show();
 		msg.exec();
@@ -287,7 +286,7 @@ void Preferences::interfacetest()
 	msgbox->addButton(tr("Start"), QMessageBox::AcceptRole);
 	msgbox->addButton(tr("Cancel"), QMessageBox::RejectRole);
 	msgboxfont = msgbox->font();
-	msgboxfont.setPixelSize(12); // 9pts
+	msgboxfont.setPointSize(9);
 	msgbox->setFont( msgboxfont );
 	msgbox->show();
 	choice = msgbox->exec();
@@ -403,7 +402,7 @@ void Preferences::interfacetest()
 				msgbox->addButton(tr("Cancel"), QMessageBox::RejectRole);
 			}
 			msgboxfont = msgbox->font();
-			msgboxfont.setPixelSize(12); // 9pts
+			msgboxfont.setPointSize(9);
 			msgbox->setFont( msgboxfont );
 			msgbox->show();
 			choice = msgbox->exec();
@@ -441,7 +440,7 @@ void Preferences::ok()
 	{
 		QMessageBox msg( QMessageBox::Warning, tr("Error"), tr("Couldn't save preferences to file !\nTo prevent this failure in the future, ensure write access\nto your home directory and file ''FreeSSM.prefs''."), QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
-		msgfont.setPixelSize(12); // 9pts
+		msgfont.setPointSize(9);
 		msg.setFont( msgfont );
 		msg.show();
 		msg.exec();
@@ -479,71 +478,11 @@ void Preferences::displayErrorMsg(QString errormsg)
 	QFont msgboxfont;
 	msgbox = new QMessageBox( QMessageBox::Critical, tr("Error"), errormsg, QMessageBox::Ok, this);
 	msgboxfont = msgbox->font();
-	msgboxfont.setPixelSize(12); // 9pts
+	msgboxfont.setPointSize(9);
 	msgbox->setFont( msgboxfont );
 	msgbox->show();
 	msgbox->exec();
 	msgbox->close();
 	delete msgbox;
-}
-
-
-void Preferences::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_Preferences.h (made with QDesigner)
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = title_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(29);	// 22pts
-	title_label->setFont(font);
-	font = ok_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	ok_pushButton->setFont(font);
-	font = cancel_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	cancel_pushButton->setFont(font);
-	font = testinterface_pushButton->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	testinterface_pushButton->setFont(font);
-	font = language_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	language_label->setFont(font);
-	font = guistyle_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	guistyle_label->setFont(font);
-	font = interfaceType_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	interfaceType_label->setFont(font);
-	font = interfaceName_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	interfaceName_label->setFont(font);
-	font = language_comboBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	language_comboBox->setFont(font);
-	font = guistyle_comboBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	guistyle_comboBox->setFont(font);
-	font = interfaceType_comboBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	interfaceType_comboBox->setFont(font);
-	font = interfaceName_comboBox->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	interfaceName_comboBox->setFont(font);
 }
 
