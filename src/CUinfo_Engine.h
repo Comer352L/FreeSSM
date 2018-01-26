@@ -1,7 +1,7 @@
 /*
  * CUinfo_Engine.h - Widget for displaying Engine Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@ public:
 	void setOBD2Supported(bool sup);
 	void setIntegratedCCSupported(bool sup);
 	void setImmobilizerSupported(bool sup);
-
-private:
-	void setupUiFonts();
 
 };
 
