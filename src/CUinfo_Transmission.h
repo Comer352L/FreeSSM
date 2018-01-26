@@ -1,7 +1,7 @@
 /*
  * CUinfo_Transmission.h - Widget for displaying Transmission Control Unit information
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,9 +37,6 @@ public:
 	void setRomIDText(QString RomID);
 	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
 	void setOBD2Supported(bool sup);
-
-private:
-	void setupUiFonts();
 
 };
 
