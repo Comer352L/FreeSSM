@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_twoMemories.cpp - Widget for Diagnostic Codes Reading with two memories
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	_histOrMemDTCdescriptions.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Set column widths:
 	QHeaderView *headerview;
 	currOrTempDTCs_tableWidget->setColumnWidth (0, 70);
@@ -268,28 +267,4 @@ bool CUcontent_DCs_twoMemories::eventFilter(QObject *obj, QEvent *event)
 	// Pass the event on to the parent class
 	return QWidget::eventFilter(obj, event);
 }
-
-
-void CUcontent_DCs_twoMemories::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_transmission.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12); // 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Table titles:
-	QFont tabletitlefont = contentfont;
-	tabletitlefont.setUnderline(true);
-	currOrTempDTCsTitle_label->setFont(tabletitlefont);
-	histOrMemDTCsTitle_label->setFont(tabletitlefont);
-	// Tables:
-	currOrTempDTCs_tableWidget->setFont(contentfont);
-	histOrMemDTCs_tableWidget->setFont(contentfont);
-	// Info about DC-Clearing:
-	DCclearingInfo_label->setFont(contentfont);
-	// Print-button:
-	printDClist_pushButton->setFont(contentfont);
-}
-
 
