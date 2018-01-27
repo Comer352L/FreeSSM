@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.h - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2017 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,7 +107,6 @@ private:
 	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
 
 	void setupTimeModeUiElements();
-	void setupUiFonts();
 	void displayMBsSWs();
 	void updateRefreshTimeTitle();
 	void updateTimeInfo(int refreshduration_ms);
