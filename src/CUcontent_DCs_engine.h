@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_engine.h - Widget for ECU Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,6 @@ private:
 	QStringList _memorizedCCCCs;
 	QStringList _memorizedCCCCdescriptions;
 
-	void setupUiFonts();
 	void connectGUIelements();
 	void disconnectGUIelements();
 	void setNrOfRowsOfAllTableWidgets();
