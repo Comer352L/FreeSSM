@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_abstract.cpp - Abstract widget for Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,7 +189,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	QPixmap printicon(QString::fromUtf8(":/icons/chrystal/32x32/fileprint"));
 	printmbox.setIconPixmap(printicon);
 	QFont printmboxfont = printmbox.font();
-	printmboxfont.setPixelSize(13);	// 10pts
+	printmboxfont.setPointSize(10);	// 10pts
 	printmboxfont.setBold(true);
 	printmbox.setFont( printmboxfont );
 	printmbox.show();
@@ -440,7 +440,7 @@ void CUcontent_DCs_abstract::communicationError(QString errstr)
 {
 	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:") + ('\n') + errstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
+	msgfont.setPointSize(9); // 9pts
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
