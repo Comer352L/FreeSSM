@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_engine.cpp - Widget for ECU Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ CUcontent_DCs_engine::CUcontent_DCs_engine(QWidget *parent) : CUcontent_DCs_abst
 	_memorizedCCCCdescriptions.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Set column widths:
 	QHeaderView *headerview;
 	currOrTempDTCs_tableWidget->setColumnWidth (0, 70);
@@ -483,40 +482,4 @@ void CUcontent_DCs_engine::show()
 	 * Alternative solution: call show() already in the constructor
 	 */
 }
-
-
-void CUcontent_DCs_engine::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_engine.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12);// 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Tab-Widget:
-	QFont tabwidgetfont = DCgroups_tabWidget->font();
-	tabwidgetfont.setPixelSize(13);
-	tabwidgetfont.setBold(true);
-	DCgroups_tabWidget->setFont(tabwidgetfont);
-	// Tabs:
-	engineDTCs_tab->setFont(contentfont);
-	CCCCs_tab->setFont(contentfont);
-	// Table titles:
-	QFont tabletitlefont = contentfont;
-	tabletitlefont.setUnderline(true);
-	currOrTempDTCsTitle_label->setFont(tabletitlefont);
-	histOrMemDTCsTitle_label->setFont(tabletitlefont);
-	latestCCCCsTitle_label->setFont(tabletitlefont);
-	memorizedCCCCsTitle_label->setFont(tabletitlefont);
-	// Tables:
-	currOrTempDTCs_tableWidget->setFont(contentfont);
-	histOrMemDTCs_tableWidget->setFont(contentfont);
-	latestCCCCs_tableWidget->setFont(contentfont);
-	memorizedCCCCs_tableWidget->setFont(contentfont);
-	// Info about DC-Clearing:
-	DCclearingInfo_label->setFont(contentfont);
-	// Print-button:
-	printDClist_pushButton->setFont(contentfont);
-}
-
 
