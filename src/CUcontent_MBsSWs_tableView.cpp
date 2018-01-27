@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs_tableView.cpp - Widget for displaying MB/SW values in a table
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Disable all GUI-elements:
 	mbswmoveup_pushButton->setEnabled( false );
 	mbswmovedown_pushButton->setEnabled( false );
@@ -298,21 +297,3 @@ bool CUcontent_MBsSWs_tableView::eventFilter(QObject *obj, QEvent *event)
 	return QWidget::eventFilter(obj, event);
 }
 
-
-void CUcontent_MBsSWs_tableView::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUcontent_MBsSWs_tableView.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12);// 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Table:
-	selectedMBsSWs_tableWidget->setFont(contentfont);
-	// Buttons:
-	mbswmoveup_pushButton->setFont(contentfont);
-	mbswmovedown_pushButton->setFont(contentfont);
-	resetMinMax_pushButton->setFont(contentfont);
-	showMin_pushButton->setFont(contentfont);
-	showMax_pushButton->setFont(contentfont);
-}
