@@ -32,7 +32,6 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	// Setup GUI:
 	setupUi(this);
 	setupTimeModeUiElements();
-	setupUiFonts();
 	_valuesTableView = new CUcontent_MBsSWs_tableView(MBSWviews_tabWidget->widget(0), settings.minValuesEnabled, settings.maxValuesEnabled);
 	valuesTableView_gridLayout->addWidget(_valuesTableView);
 	//_curvesTableView = new ...
@@ -1039,7 +1038,7 @@ void CUcontent_MBsSWs::communicationError(QString addstr)
 	if (addstr.size() > 0) addstr.prepend('\n');
 	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:\n- No or invalid answer from Control Unit -") + addstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
@@ -1083,34 +1082,11 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 }
 
 
-void CUcontent_MBsSWs::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUcontent_MBsSWs.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12);// 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Buttons:
-	startstopmbreading_pushButton->setFont(contentfont);
-	mbswadd_pushButton->setFont(contentfont);
-	mbswdelete_pushButton->setFont(contentfont);
-	mbswsave_pushButton->setFont(contentfont);
-	mbswload_pushButton->setFont(contentfont);
-	_timemode_pushButton->setFont(contentfont);
-	// Refresh interval labels:
-	_MBSWrefreshTimeTitle_label->setFont(contentfont);
-	_MBSWrefreshTimeValue_label->setFont(contentfont);
-	// Tab widget:
-	MBSWviews_tabWidget->setFont(contentfont);
-}
-
-
 void CUcontent_MBsSWs::warningMsg(QString title, QString message)
 {
 	QMessageBox msg( QMessageBox::Warning, title, message, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12);
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
