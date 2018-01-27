@@ -1,7 +1,7 @@
 /*
  * FSSMdialogs.cpp - Dialogs and Messagboxes for FreeSSM
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-20018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 	setAutoReset( false );
 	setModal( true );
 	QFont newfont = font();
-	newfont.setPixelSize(13); // 10pts
+	newfont.setPointSize(10);
 	newfont.setBold( true );
 	setFont( newfont );
 }
@@ -89,7 +89,7 @@ FSSM_WaitMsgBox::FSSM_WaitMsgBox(QWidget *parent, const QString text, const QStr
 	setStandardButtons( QMessageBox::NoButton );
 	// Set font
 	QFont newfont = font();
-	newfont.setPixelSize(13); // 10pts
+	newfont.setPointSize(10);
 	newfont.setBold( true );
 	setFont( newfont );
 	// Set icon:
