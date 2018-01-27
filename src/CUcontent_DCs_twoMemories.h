@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_twoMemories.h - Widget for Diagnostic Codes Reading with two memories
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ private:
 	QStringList _histOrMemDTCs;
 	QStringList _histOrMemDTCdescriptions;
 
-	void setupUiFonts();
 	void connectGUIelements();
 	void disconnectGUIelements();
 	void resizeEvent(QResizeEvent *event);
