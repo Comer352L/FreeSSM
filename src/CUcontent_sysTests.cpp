@@ -1,7 +1,7 @@
 /*
  * CUcontent_sysTests.cpp - Widget for System Test Procedures
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ CUcontent_sysTests::CUcontent_sysTests(QWidget *parent) : QWidget(parent)
 	_actuatorTestTitles.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Disable GUI-elements:
 	actuatorlistTitle_label->setEnabled(false);
 	actuators_listWidget->setEnabled(false);
@@ -120,7 +119,7 @@ void CUcontent_sysTests::startActuatorTest()
 			// Error message: not in test mode
 			QMessageBox infomsgbox( QMessageBox::Critical, tr("Actuator Test"), tr("Actuator Test couldn't be started:\n=> Test mode connector is not connected !") + "\n\n" + tr("ATTENTION:\nConnect/Disconnect test mode connector\nONLY WITH IGNITION SWITCHED OFF !"), QMessageBox::Ok, this);
 			mbfont = infomsgbox.font();
-			mbfont.setPixelSize(12); // 9pts
+			mbfont.setPointSize(9);
 			infomsgbox.setFont( mbfont );
 			infomsgbox.show();
 			infomsgbox.exec();
@@ -178,7 +177,7 @@ void CUcontent_sysTests::testImmobilizerLine()
 		}
 		QMessageBox resultmsgbox( msgboxicon, tr("Immobilizer Test"), resultInfo, QMessageBox::Ok, this);
 		msgfont = resultmsgbox.font();
-		msgfont.setPixelSize(12); // 9pts
+		msgfont.setPointSize(9);
 		resultmsgbox.setFont( msgfont );
 		resultmsgbox.show();
 		resultmsgbox.exec();
@@ -189,37 +188,12 @@ void CUcontent_sysTests::testImmobilizerLine()
 }
 
 
-void CUcontent_sysTests::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS MADE WITH QDESIGNER
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12); // 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Titles:
-	QFont titlefont = contentfont;
-	titlefont.setUnderline(true);
-	actuatorlistTitle_label->setFont(titlefont);
-	testImmoLineTitel_label->setFont(titlefont);
-	// Actuator Test elements:
-	actuators_listWidget->setFont(contentfont);
-	actuatorTestInfo_label->setFont(contentfont);
-	QFont arrowfont = contentfont;
-	arrowfont.setPointSize(18);
-	actuatorTest_arrow_label->setFont(arrowfont);
-	// Buttons:
-	startActuatorTest_pushButton->setFont(contentfont);
-	testImmoLine_pushButton->setFont(contentfont);
-}
-
-
 void CUcontent_sysTests::communicationError(QString adstr)
 {
 	if (adstr.size() > 0) adstr.prepend('\n');
 	QMessageBox msg( QMessageBox::Critical, tr("Communication Error"), tr("Communication Error:") + adstr, QMessageBox::Ok, this);
 	QFont msgfont = msg.font();
-	msgfont.setPixelSize(12); // 9pts
+	msgfont.setPointSize(9);
 	msg.setFont( msgfont );
 	msg.show();
 	msg.exec();
