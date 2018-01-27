@@ -1,7 +1,7 @@
 /*
  * ClearMemoryDlg.cpp - Provides dialogs and runs the Clear Memory procedure(s)
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -201,7 +201,7 @@ bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
 	ccmmsg.addButton(tr("OK"), QMessageBox::AcceptRole);
 	ccmmsg.addButton(tr("Cancel"), QMessageBox::RejectRole);
 	QFont ccmmsgfont = ccmmsg.font();
-	ccmmsgfont.setPixelSize(12);	// 9pts
+	ccmmsgfont.setPointSize(9);
 	ccmmsg.setFont( ccmmsgfont );
 	ccmmsg.show();
 	// Wait for user choice:
@@ -226,7 +226,7 @@ bool ClearMemoryDlg::confirmAdjustmentValuesRestoration()
 	ccmmsg.addButton(tr("Restore"), QMessageBox::AcceptRole);
 	ccmmsg.addButton(tr("Keep default values"), QMessageBox::RejectRole);
 	QFont ccmmsgfont = ccmmsg.font();
-	ccmmsgfont.setPixelSize(12);	// 9pts
+	ccmmsgfont.setPointSize(9);
 	ccmmsg.setFont( ccmmsgfont );
 	ccmmsg.show();
 	// Wait for user choice:
@@ -265,7 +265,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 		{
 			QMessageBox msg( QMessageBox::Critical, tr("Error"), tr("Adjustment Value restoration failed:\nThe Control Unit didn't accept some of the values !") + "\n\n" + tr("Please check current values !"), QMessageBox::Ok, _parent);
 			QFont msgfont = msg.font();
-			msgfont.setPixelSize(12); // 9pts
+			msgfont.setPointSize(9);
 			msg.setFont( msgfont );
 			msg.show();
 			msg.exec();
@@ -293,7 +293,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu,
 	ignonmsgbox.addButton(tr("Continue"), QMessageBox::AcceptRole);
 	ignonmsgbox.addButton(tr(" Leave Control Unit "), QMessageBox::RejectRole);
 	QFont ignonmsgfont = ignonmsgbox.font();
-	ignonmsgfont.setPixelSize(12);	// 9pts
+	ignonmsgfont.setPointSize(9);
 	ignonmsgbox.setFont( ignonmsgfont );
 	// Wait-messagebox:
 	FSSM_WaitMsgBox waitmsgbox(_parent, tr("Reconnecting... Please wait !"));
