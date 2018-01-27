@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs_tableView.h - Widget for displaying MB/SW values in a table
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,6 @@ private:
 	unsigned int _nrofMBsSWs;
 	unsigned int _maxrowsvisible;
 
-	void setupUiFonts();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void updateMBColumn(const std::vector<QString>& data, CUcontent_MBsSWs_tableView::Column col, Qt::Alignment alignment = Qt::AlignCenter);
