@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_stopCodes.cpp - Widget for Diagnostic Codes Reading with Stop Codes
  *
- * Copyright (C) 2012 L1800Turbo, 2008-2012 Comer352L
+ * Copyright (C) 2012 L1800Turbo, 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ CUcontent_DCs_stopCodes::CUcontent_DCs_stopCodes(QWidget *parent) : CUcontent_DC
 	_currOrTempDTCdescriptions.clear();
 	// Setup GUI:
 	setupUi(this);
-	setupUiFonts();
 	// Set column widths:
 	QHeaderView *headerview;
 	currOrTempDTCs_tableWidget->setColumnWidth (0, 70);
@@ -190,25 +189,4 @@ bool CUcontent_DCs_stopCodes::eventFilter(QObject *obj, QEvent *event)
 	// Pass the event on to the parent class
 	return QWidget::eventFilter(obj, event);
 }
-
-
-void CUcontent_DCs_stopCodes::setupUiFonts()
-{
-	// SET FONT FAMILY AND FONT SIZE
-	// OVERWRITES SETTINGS OF ui_CUcontent_DCs_transmission.h (made with QDesigner)
-	QFont contentfont = QApplication::font();
-	contentfont.setPixelSize(12); // 9pts
-	contentfont.setBold(false);
-	this->setFont(contentfont);
-	// Table titles:
-	QFont tabletitlefont = contentfont;
-	tabletitlefont.setUnderline(true);
-	currOrTempDTCsTitle_label->setFont(tabletitlefont);
-	// Tables:
-	currOrTempDTCs_tableWidget->setFont(contentfont);
-
-	// Print-button:
-	printDClist_pushButton->setFont(contentfont);
-}
-
 
