@@ -19,6 +19,7 @@
   <property name="font">
    <font>
     <family>Liberation Sans</family>
+    <pointsize>9</pointsize>
    </font>
   </property>
   <property name="windowTitle">
