@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>515</width>
     <height>400</height>
    </rect>
   </property>
@@ -36,10 +36,20 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="engineDTCs_tab">
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <attribute name="title">
        <string>Engine</string>
       </attribute>
@@ -156,6 +166,11 @@
       </layout>
      </widget>
      <widget class="QWidget" name="CCCCs_tab">
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <attribute name="title">
        <string>Cruise Control</string>
       </attribute>
@@ -286,6 +301,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>=&gt; Call ''Clear Memory'' from the ''Selection'' menu to erease all DTCs.</string>
        </property>
@@ -304,6 +324,11 @@
          <width>90</width>
          <height>34</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>    Print    </string>
