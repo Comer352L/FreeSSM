@@ -1,7 +1,7 @@
 /*
  * CUcontent_sysTests.h - Widget for System Test Procedures
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ private:
 	SSMprotocol *_SSMPdev;
 	QStringList _actuatorTestTitles;
 
-	void setupUiFonts();
 	void communicationError(QString adstr = "");
 
 public:
