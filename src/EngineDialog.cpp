@@ -1,7 +1,7 @@
 /*
  * Engine.cpp - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ void EngineDialog::setup()
 			}
 			QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
 			QFont msgfont = msg.font();
-			msgfont.setPixelSize(12);	// 9pts
+			msgfont.setPointSize(9);
 			msg.setFont( msgfont );
 			msg.show();
 			msg.exec();
