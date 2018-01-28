@@ -1,7 +1,7 @@
 /*
  * DiagInterfaceStatusBar.h - Status bar widget for the diagnostic interface
  *
- * Copyright (C) 2012-2014 Comer352L
+ * Copyright (C) 2012-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ private:
 	QLabel *_baudrate_title_label;
 	QLabel *_baudrate_label;
 
-	void setupUiFonts();
 	void setTextContentAndColor(QLabel *label, QString text, QColor textcolor);
 };
 

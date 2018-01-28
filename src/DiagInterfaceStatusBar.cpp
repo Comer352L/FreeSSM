@@ -1,7 +1,7 @@
 /*
  * DiagInterfaceStatusBar.cpp - Status bar widget for the diagnostic interface
  *
- * Copyright (C) 2012 Comer352L
+ * Copyright (C) 2012-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,33 @@
 #include "DiagInterfaceStatusBar.h"
 
 
-
+#include <iostream>
 DiagInterfaceStatusBar::DiagInterfaceStatusBar(QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags)
 {
+	QFont labelfont = this->font();
+	labelfont.setPointSize(9);
 	// Layout:
 	_hboxlayout = new QHBoxLayout(this);
 	_hboxlayout->setContentsMargins(0, 0, 0, 0);
 	setLayout(_hboxlayout);
 	// Interface name:
 	_if_name_title_label = new QLabel(this);
+	_if_name_title_label->setFont(labelfont);
 	_if_name_title_label->setText("Interface:");
 	_hboxlayout->addWidget(_if_name_title_label);
 	_if_name_label = new QLabel(this);
+	_if_name_label->setFont(labelfont);
 	_if_name_label->setFrameShape(QFrame::Panel);
 	_if_name_label->setFrameShadow(QFrame::Sunken);
 	_if_name_label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	_hboxlayout->addWidget(_if_name_label);
 	// Interface version
 	_if_version_title_label = new QLabel(this);
+	_if_version_title_label->setFont(labelfont);
 	_if_version_title_label->setText("Version:");
 	_hboxlayout->addWidget(_if_version_title_label);
 	_if_version_label = new QLabel(this);
+	_if_version_label->setFont(labelfont);
 	_if_version_label->setFrameShape(QFrame::Panel);
 	_if_version_label->setFrameShadow(QFrame::Sunken);
 	_if_version_label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
@@ -49,9 +55,11 @@ DiagInterfaceStatusBar::DiagInterfaceStatusBar(QWidget *parent, Qt::WindowFlags 
 	_hboxlayout->addStretch();
 	// Protocol
 	_protocol_name_title_label = new QLabel(this);
+	_protocol_name_title_label->setFont(labelfont);
 	_protocol_name_title_label->setText("Protocol:");
 	_hboxlayout->addWidget(_protocol_name_title_label);
 	_protocol_name_label = new QLabel(this);
+	_protocol_name_label->setFont(labelfont);
 	_protocol_name_label->setFrameShape(QFrame::Panel);
 	_protocol_name_label->setFrameShadow(QFrame::Sunken);
 	_protocol_name_label->setFixedWidth(125);
@@ -59,16 +67,16 @@ DiagInterfaceStatusBar::DiagInterfaceStatusBar(QWidget *parent, Qt::WindowFlags 
 	_hboxlayout->addWidget(_protocol_name_label);
 	// Baud rate
 	_baudrate_title_label = new QLabel(this);
+	_baudrate_title_label->setFont(labelfont);
 	_baudrate_title_label->setText("Baud rate:");
 	_hboxlayout->addWidget(_baudrate_title_label);
 	_baudrate_label = new QLabel(this);
+	_baudrate_label->setFont(labelfont);
 	_baudrate_label->setFrameShape(QFrame::Panel);
 	_baudrate_label->setFrameShadow(QFrame::Sunken);
 	_baudrate_label->setFixedWidth(75);
 	_baudrate_label->setAlignment(Qt::AlignHCenter);
 	_hboxlayout->addWidget(_baudrate_label);
-	// Setup fonts
-	setupUiFonts();
 }
 
 DiagInterfaceStatusBar::~DiagInterfaceStatusBar()
@@ -147,26 +155,5 @@ void DiagInterfaceStatusBar::setTextContentAndColor(QLabel *label, QString text,
 	label->setPalette(palette);
 	// Set Text
 	label->setText(text);
-}
-
-void DiagInterfaceStatusBar::setupUiFonts()
-{
-	// Overwrite default font settings
-	QFont appfont = QApplication::font();
-	QFont font = this->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	this->setFont(font);
-	font = _if_name_title_label->font();
-	font.setFamily(appfont.family());
-	font.setPixelSize(12);	// 9pts
-	_if_name_title_label->setFont(font);
-	_if_version_title_label->setFont(font);
-	_protocol_name_title_label->setFont(font);
-	_baudrate_title_label->setFont(font);
-	_if_name_label->setFont(font);
-	_if_version_label->setFont(font);
-	_protocol_name_label->setFont(font);
-	_baudrate_label->setFont(font);
 }
 
