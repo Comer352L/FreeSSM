@@ -19,6 +19,8 @@
   <property name="font">
    <font>
     <family>Liberation Sans</family>
+    <weight>50</weight>
+    <bold>false</bold>
    </font>
   </property>
   <property name="windowTitle">
