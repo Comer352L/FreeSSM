@@ -38,8 +38,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -115,12 +113,6 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Data:</string>
    </property>
@@ -136,8 +128,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -215,8 +205,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -292,12 +280,6 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Switches:</string>
    </property>
@@ -313,8 +295,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -368,12 +348,6 @@
      </disabled>
     </palette>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string/>
    </property>
@@ -386,12 +360,6 @@
      <width>141</width>
      <height>16</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
    </property>
    <property name="text">
     <string/>
@@ -443,12 +411,6 @@
      </disabled>
     </palette>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string/>
    </property>
@@ -464,8 +426,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -519,12 +479,6 @@
      </disabled>
     </palette>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string/>
    </property>
@@ -540,8 +494,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
@@ -595,12 +547,6 @@
      </disabled>
     </palette>
    </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string/>
    </property>
@@ -619,8 +565,6 @@
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
      <underline>true</underline>
     </font>
    </property>
