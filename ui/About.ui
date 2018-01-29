@@ -83,9 +83,6 @@
    <property name="font">
     <font>
      <pointsize>12</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-     <kerning>true</kerning>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -409,8 +406,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>12</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -502,12 +497,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
      <property name="text">
       <string notr="true">Written by &lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352L&lt;/a&gt; (Copyright © 2008-2014)</string>
      </property>
@@ -526,12 +515,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>330</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
      </property>
      <property name="text">
       <string notr="true">&lt;a href=&quot;https://github.com/Comer352L/FreeSSM&quot;&gt;https://github.com/Comer352L/FreeSSM&lt;/a&gt;</string>
@@ -552,12 +535,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
      <property name="text">
       <string>Project homepage:</string>
      </property>
@@ -570,12 +547,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>500</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
      </property>
      <property name="text">
       <string>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</string>
@@ -593,12 +564,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
      <property name="text">
       <string>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</string>
      </property>
@@ -614,12 +579,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>500</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
      </property>
      <property name="text">
       <string>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</string>
@@ -637,12 +596,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>20</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
      <property name="text">
       <string>Contributors:</string>
      </property>
@@ -659,12 +612,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <height>80</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
      <property name="text">
       <string>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</string>
      </property>
@@ -680,12 +627,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <width>500</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
      </property>
      <property name="text">
       <string>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</string>
@@ -711,8 +652,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -737,8 +676,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -787,8 +724,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -813,8 +748,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -839,8 +772,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -862,8 +793,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -891,8 +820,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -920,8 +847,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -949,8 +874,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -975,8 +898,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -1004,8 +925,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -1085,8 +1004,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
    <property name="font">
     <font>
      <pointsize>12</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
     </font>
    </property>
    <property name="text">
