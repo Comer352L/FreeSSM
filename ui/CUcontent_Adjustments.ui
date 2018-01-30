@@ -24,6 +24,7 @@
   </property>
   <property name="font">
    <font>
+    <family>Liberation Sans</family>
     <pointsize>9</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -58,7 +59,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Liberation Sans</family>
        <underline>true</underline>
       </font>
      </property>
