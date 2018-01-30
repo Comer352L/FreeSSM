@@ -37,11 +37,6 @@
        <height>123</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>Liberation Sans</family>
-      </font>
-     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>

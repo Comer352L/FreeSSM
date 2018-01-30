@@ -13,6 +13,11 @@
     <height>414</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Liberation Sans</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Control Unit</string>
   </property>
