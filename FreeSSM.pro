@@ -76,7 +76,7 @@ RESOURCES += resources/FreeSSM.qrc
 TRANSLATIONS = FreeSSM_en.ts \
                FreeSSM_de.ts
 
-translation.commands = lrelease FreeSSM.pro & qmake
+translation.commands = lrelease FreeSSM.pro & $$QMAKE_QMAKE     # qmake needs to be called again, otherwise *.qm file will not be installed
 QMAKE_EXTRA_TARGETS += translation
 
 # Add pre-processor-define if we compile as debug:
