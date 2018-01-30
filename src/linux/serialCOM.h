@@ -35,6 +35,7 @@ extern "C"
     #include <sys/ioctl.h>	// ioctl => for access to serial port driver
     #include <linux/serial.h>	// serial port driver
     #include <limits.h>
+    #include <unistd.h>		// usleep(), isatty(), close()
     #ifdef __SERIALCOM_DEBUG__
         #include <errno.h>
     #endif
