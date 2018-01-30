@@ -1,7 +1,7 @@
 /*
  * main.cpp - Main file of the FreeSSM software
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,27 +50,19 @@ int main(int argc, char *argv[])
 	// Get installed (system) fonts:
 	QFontDatabase fdb;
 	QStringList fontfamilies = fdb.families ( QFontDatabase::Any );
-	// Select font:
-	QFont appfont = app.font();
-	if (fontfamilies.contains("Arial"))
-		appfont.setFamily("Arial");
-	else if (fontfamilies.contains("Albany AMT"))
-		appfont.setFamily("Albany AMT");
-	else
+	// Check if font "Liberation Sans" is installed:
+	if (!fontfamilies.contains("Liberation Sans"))
 	{
-		// Check if font "Liberation Sans" is installed:
-		if (!fontfamilies.contains("Liberation Sans"))
-		{
-			// Load font "Liberation Sans" (no installation !)
-			QString AppsPath( QCoreApplication::applicationDirPath() );
-			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Regular.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Bold.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Italic.ttf");
-			QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-BoldItalic.ttf");
-		}
-		appfont.setFamily("Liberation Sans");
+		// Load font "Liberation Sans" (no installation !)
+		QString AppsPath( QCoreApplication::applicationDirPath() );
+		QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Regular.ttf");
+		QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Bold.ttf");
+		QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-Italic.ttf");
+		QFontDatabase::addApplicationFont (AppsPath + "/LiberationSans-BoldItalic.ttf");
 	}
-	// Use selected font:
+	// Select and use font:
+	QFont appfont = app.font();
+	appfont.setFamily("Liberation Sans");
 	app.setFont( appfont );
 	// Open main window:
 	FreeSSM *freessm_mainwindow = new FreeSSM(&app);
