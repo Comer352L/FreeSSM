@@ -687,7 +687,7 @@ bool SSMprotocol1::isInTestMode(bool *testmode)
 	unsigned int dataaddr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
-	if (_uses_SSM2defs)	// FIXME: other defintion types
+	if (!_uses_SSM2defs)	// FIXME: other defintion types
 		return false;
 	if (!_has_TestMode) return false;
 	if (!_SSMP1com->readAddress(dataaddr, &currentdatabyte))
