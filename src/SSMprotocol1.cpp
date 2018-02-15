@@ -213,16 +213,10 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		// Setup definitions interface:
 		SSM1definitionsInterface SSM1defsIface;
 		if (!SSM1defsIface.selectDefinitionsFile(SSM1defsFile))
-		{
-			resetCUdata();
 			return result_noOrInvalidDefsFile;
-		}
 		SSM1defsIface.setLanguage(_language.toStdString());
 		if (!SSM1defsIface.selectID(_ssmCUdata.SYS_ID)) // TODO: Ax 01 xx IDs
-		{
-			resetCUdata();
 			return result_noDefs;
-		}
 		// Get system description:
 		std::string sysdescription;
 		SSM1defsIface.systemDescription(&sysdescription);
