@@ -67,7 +67,7 @@ std::string SSMprotocol::getSysID() const
 std::string SSMprotocol::getROMID() const
 {
 	if (_state == state_needSetup) return "";
-	if (uses_SSM2defs())
+	if (_ssmCUdata.uses_Flagbytes())
 		return libFSSM::StrToHexstr(_ssmCUdata.ROM_ID);
 	else
 		return getSysID();

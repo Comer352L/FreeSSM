@@ -1,7 +1,7 @@
 /*
  * SSMCUdata.h - Class to manage SYS_ID, ROM_ID and flagbytes
  *
- * Copyright (C) 2016 MartinX
+ * Copyright (C) 2016 MartinX, 2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ public:
 	 */
 	bool flagbytebit(std::size_t byteindex, unsigned char bitnr) const;
 
+	bool uses_Flagbytes() const;
 	bool uses_SSM2defs() const;
 
 	// C++11: std::array<T, count> var;

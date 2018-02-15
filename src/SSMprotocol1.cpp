@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.cpp - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -163,7 +163,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Load control unit definitions */
-	if (_uses_SSM2defs)
+	if (_ssmCUdata.uses_Flagbytes())
 	{
 		// Request flag bytes:
 		if (!_SSMP1com->getCUdata(32, _ssmCUdata))
@@ -177,6 +177,9 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 			resetCUdata();
 			return result_commError;
 		}
+		// Check if we have definitions for this control unit:
+		if (!_uses_SSM2defs)
+			return result_noDefs;
 		// Setup definitions interface:
 		SSM2definitionsInterface SSM2defsIface(_language);
 		SSM2defsIface.selectControlUnitID(_CU, _ssmCUdata);
