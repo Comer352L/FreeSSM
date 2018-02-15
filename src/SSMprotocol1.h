@@ -63,7 +63,6 @@ public:
 
 private:
 	SSMP1communication *_SSMP1com;
-	bool _uses_SSM2defs;
 	unsigned int _CMaddr;
 	char _CMvalue;
 

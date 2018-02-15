@@ -145,7 +145,6 @@ public:
 	state_dt state();
 	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
 	virtual protocol_dt protocolType() = 0;
-	bool uses_SSM2defs() const;
 	std::string getSysID() const;
 	std::string getROMID() const;
 	bool getSystemDescription(QString *sysdescription);

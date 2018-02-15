@@ -51,12 +51,6 @@ SSMprotocol::state_dt SSMprotocol::state()
 }
 
 
-bool SSMprotocol::uses_SSM2defs() const
-{
-	return _ssmCUdata.uses_SSM2defs();
-}
-
-
 std::string SSMprotocol::getSysID() const
 {
 	if (_state == state_needSetup) return "";
