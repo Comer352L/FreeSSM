@@ -801,7 +801,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>Truetype font &quot;Liberation Sans&quot;: </string>
+      <string>Truetype font &quot;Liberation Sans&quot;:</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de">
+<TS version="2.0" language="de">
 <context>
     <name>ABSdialog</name>
     <message>
@@ -766,7 +766,7 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="820"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="868"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="873"/>
         <source>FreeSSM MB/SW list files</source>
         <translation>FreeSSM MB/SW-Listen-Dateien</translation>
     </message>
@@ -783,37 +783,37 @@ Could not open file for writing MBs/SWs.</source>
 Datei kann nicht zum Schreiben geoeffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="866"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Load MB/SW List</source>
         <translation>Messwertblockliste laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
         <source>Load Error</source>
         <translation>Fehler beim Laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
         <source>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</source>
         <translation>Fehler beim Lesen der MB/SW:
 Datei konnte nicht geöffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
         <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
         <translation>Fehler beim Lesen der MB/SW:
 ROM Id in der Datei stimmt nicht mit aktueller ROM Id ueberein.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
@@ -1478,8 +1478,8 @@ FreeSSM can communiate with the control unit, but it doesn&apos;t have the neces
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
-FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
-Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht untertsützte Steuergeräte hinzuzufügen, kontaktieren Sie bitte die Autoren.</translation>
+FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu können.
+Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht unterstützte Steuergeräte hinzuzufügen, kontaktieren Sie bitte die Autoren.</translation>
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="194"/>
@@ -2237,7 +2237,8 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
     </message>
     <message>
         <location filename="ui/About.ui" line="804"/>
-        <source>Truetype font &quot;Liberation Sans&quot;: </source>
+        <source>Truetype font &quot;Liberation Sans&quot;:</source>
+        <oldsource>Truetype font &quot;Liberation Sans&quot;: </oldsource>
         <translation>Truetype-Schrift &quot;Liberation Sans&quot;:</translation>
     </message>
     <message>

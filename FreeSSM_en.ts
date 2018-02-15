@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en">
+<TS version="2.0" language="en">
 <context>
     <name>ABSdialog</name>
     <message>
@@ -765,7 +765,7 @@ The Control Unit didn&apos;t accept the new value !</translation>
     </message>
     <message>
         <location filename="src/CUcontent_MBsSWs.cpp" line="820"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="868"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="873"/>
         <source>FreeSSM MB/SW list files</source>
         <translation>FreeSSM MB/SW list files</translation>
     </message>
@@ -782,37 +782,37 @@ Could not open file for writing MBs/SWs.</source>
 Could not open file for writing MBs/SWs.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="866"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Load MB/SW List</source>
         <translation>Load MB/SW List</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
         <source>Load Error</source>
         <translation>Load Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="875"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
         <source>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</source>
         <translation>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="894"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
         <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
         <translation>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1063"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
@@ -2067,7 +2067,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>About FreeSSM</source>
         <translation>About FreeSSM</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="1147"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
         <translation>A free diagnostic and adjustment tool for SUBARU® vehicles</translation>
@@ -2087,7 +2087,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>Measuring Blocks:</source>
         <translation>Measuring Blocks:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="154"/>
         <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</source>
         <oldsource>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</oldsource>
@@ -2138,7 +2138,7 @@ If you want to contribute to the the project (help adding defintions), feel free
         <source>&amp;About</source>
         <translation>&amp;About</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="119"/>
         <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
 
@@ -2197,7 +2197,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <source>Program languages:</source>
         <translation>Program languages:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="640"/>
         <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
         <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
@@ -2208,17 +2208,17 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
         <translation>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="684"/>
         <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
         <translation>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="728"/>
         <source>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</source>
         <translation>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="750"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
@@ -2236,7 +2236,8 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     </message>
     <message>
         <location filename="ui/About.ui" line="804"/>
-        <source>Truetype font &quot;Liberation Sans&quot;: </source>
+        <source>Truetype font &quot;Liberation Sans&quot;:</source>
+        <oldsource>Truetype font &quot;Liberation Sans&quot;: </oldsource>
         <translation>Truetype font &quot;Liberation Sans&quot;:</translation>
     </message>
     <message>
