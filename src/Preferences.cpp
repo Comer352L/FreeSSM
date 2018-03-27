@@ -197,7 +197,7 @@ void Preferences::selectInterfaceType(int index)
 	{
 		_newinterfacetype = AbstractDiagInterface::interface_J2534;
 		interfaceName_label->setText(tr("Interface-Name:"));
-		for (const auto& lib : J2534_API::getAvailableJ2534Libs())
+		for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
 		{
 			QFile file(QString::fromStdString(lib.path));
 			if (file.exists())

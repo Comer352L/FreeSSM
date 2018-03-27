@@ -213,7 +213,7 @@ std::vector<MBSWmetadata_dt> CUcontent_MBsSWs::getMBSWselection() const
 
 void CUcontent_MBsSWs::displayMBsSWs()
 {
-	const auto itemcount = _tableRowPosIndexes.size();
+	const size_t itemcount = _tableRowPosIndexes.size();
 	std::vector<BlockType> types(itemcount, BlockType::MB);
 	// Prepare strings, initialize with empty strings up to needed size:
 	std::vector<QString> titles(itemcount);
@@ -226,7 +226,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 	for (size_t k=0; k<_MBSWmetaList.size(); k++)
 	{
 		// Get MB/SW-index:
-		const auto listPosIndex = _tableRowPosIndexes.at(k);
+		const unsigned int listPosIndex = _tableRowPosIndexes.at(k);
 		const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
 		// Title:
 		switch(metadata.blockType)
@@ -758,7 +758,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 	unsigned int endindex = 0;
 	unsigned int k = 0;
 	// GET INDEXES OF SELECTED ROWS:
-	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
+	const std::vector<unsigned int> selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() < 1) return;
 	// CHECK AND CORRECT START AND END INDEXES:
 	startindex = selectedMBSWIndexes.at(0);
@@ -924,7 +924,7 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	unsigned int rowToMoveDownIndex = 0;
 	unsigned int rowToMoveDownTargetIndex = 0;
 	// GET SELECTED ROWS:
-	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
+	const std::vector<unsigned int> selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	nrofSelRows = selectedMBSWIndexes.size();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((nrofSelRows < 1) || (selectedMBSWIndexes.at(0) < 1) || (1 + selectedMBSWIndexes.at(0) > _MBSWmetaList.size()))
@@ -961,7 +961,7 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	unsigned int rowToMoveUpIndex = 0;
 	unsigned int rowToMoveUpTargetIndex = 0;
 	// GET SELECTED ROWS:
-	const auto selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
+	const std::vector<unsigned int> selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
 		return;	// Cancle if moving is not possible

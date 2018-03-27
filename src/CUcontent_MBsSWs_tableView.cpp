@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs_tableView.cpp - Widget for displaying MB/SW values in a table
  *
- * Copyright (C) 2009 Comer352l
+ * Copyright (C) 2009 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -172,7 +172,7 @@ void CUcontent_MBsSWs_tableView::clearMBSWlistContent()
 
 void CUcontent_MBsSWs_tableView::setMoveButtonsEnabledState()
 {
-	const auto selectedMBSWIndexes = getSelectedTableWidgetRows();
+	const std::vector<unsigned int> selectedMBSWIndexes = getSelectedTableWidgetRows();
 	if (selectedMBSWIndexes.size() > 0)
 	{
 		mbswmoveup_pushButton->setEnabled(selectedMBSWIndexes.front() > 0);
@@ -221,7 +221,7 @@ std::vector<unsigned int> CUcontent_MBsSWs_tableView::getSelectedTableWidgetRows
 	// GET INDEXES OF SELECTED ROWS:
 	std::vector<unsigned int> selectedMBSWIndexes;
 	const QList<QTableWidgetSelectionRange> ranges = selectedMBsSWs_tableWidget->selectedRanges();
-	for (const auto& range : ranges)
+	for (const QTableWidgetSelectionRange& range : ranges)
 	{
 		const int rows = range.rowCount();
 		const int topRow = range.topRow();

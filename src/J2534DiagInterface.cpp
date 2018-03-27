@@ -94,7 +94,7 @@ bool J2534DiagInterface::open( std::string name )
 				printErrorDescription("PassThruReadVersion() failed: ", ret);
 #endif
 			// Get and save library data:
-			for (const auto& lib : J2534_API::getAvailableJ2534Libs())
+			for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
 			{
 				if (lib.path == name)
 				{
@@ -102,7 +102,7 @@ bool J2534DiagInterface::open( std::string name )
 					setName(lib.name);
 					// Supported protocols
 					std::vector<protocol_type> supportedProtocols;
-					const auto p = lib.protocols;
+					const J2534_protocol_flags p = lib.protocols;
 					if (bool(p & J2534_protocol_flags::iso9141) ||
 					    bool(p & J2534_protocol_flags::iso14230))
 						supportedProtocols.push_back(protocol_SSM2_ISO14230);

@@ -1,7 +1,7 @@
 /*
  * AddMBsSWsDlg.cpp - Dialog for selecting/adding measuring blocks and switches
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2009 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ AddMBsSWsDlg::AddMBsSWsDlg(QWidget *parent, std::vector<mb_dt> supportedMBs, std
 
 	iconMB = QIcon(":/icons/freessm/32x32/MB.png");
 	iconSW = QIcon(":/icons/freessm/32x32/SW.png");
-	auto headerview = MBsSWs_tableWidget->horizontalHeader();
+	QHeaderView* headerview = MBsSWs_tableWidget->horizontalHeader();
 	headerview->setResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
 	headerview->setResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
 	headerview->setResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
@@ -122,7 +122,7 @@ void AddMBsSWsDlg::add()
 	QItemSelectionModel *selModel = MBsSWs_tableWidget->selectionModel();
 	QModelIndexList MIlist = selModel->selectedRows();
 	std::sort(MIlist.begin(), MIlist.end(), rowIndexLessThan);	// since Qt 4.4.1, we have to sort the QModelIndexes...
-	for (const auto& mi : MIlist)
+	for (const QModelIndex& mi : MIlist)
 	{
 		int index = mi.row();
 		_MBSWmetaList->push_back( _unselectedMBsSWs_metaList.at(index) );

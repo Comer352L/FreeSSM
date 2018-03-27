@@ -1,7 +1,7 @@
 /*
  * J2534misc.cpp -  J2534-related miscellaneous functionality
  *
- * Copyright (C) 2009-2016 Comer352l, 2016 MartinX
+ * Copyright (C) 2009-2016 Comer352L, 2016 MartinX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ const std::map<std::string, J2534_protocol_flags> J2534misc::protocolsMap {
 J2534_protocol_flags J2534misc::parseProtocol(const std::string& s)
 {
 	const std::string key = toupper(s);
-	const auto it = protocolsMap.find(key);
+	const std::map<std::string, J2534_protocol_flags>::const_iterator it = protocolsMap.find(key);
 	return (it != protocolsMap.end()) ? it->second : J2534_protocol_flags(0);
 }
 
@@ -69,7 +69,7 @@ std::string J2534misc::apiVersionToStr(const J2534_API_version api)
 std::vector<std::string> J2534misc::protocolsToStrings(const J2534_protocol_flags pflags)
 {
 	std::vector<std::string> vs;
-	for (const auto& pair : protocolsMap) {
+	for (const std::pair<std::string, J2534_protocol_flags>& pair : protocolsMap) {
 		if (bool(pflags & pair.second))
 			vs.push_back(pair.first);
 	}
@@ -78,20 +78,20 @@ std::vector<std::string> J2534misc::protocolsToStrings(const J2534_protocol_flag
 
 void J2534misc::printLibraryInfo(const std::vector<J2534Library>& PTlibraries)
 {
-	const auto libcount = PTlibraries.size();
+	const size_t libcount = PTlibraries.size();
 	if (libcount)
 		std::cout << "Found " << libcount << " registered J2534-libraries:\n";
 	else
 		std::cout << "No J2534-libraries found.\n";
 
-	for (const auto& lib : PTlibraries)
+	for (const J2534Library& lib : PTlibraries)
 	{
 		std::cout << "\n  Name:        " << lib.name;
 		std::cout << "\n  Path:        " << lib.path;
 		std::cout << "\n  API-version: " << apiVersionToStr(lib.api);
 		std::cout << "\n  Protocols:   ";
 
-		const auto protocolStrings = protocolsToStrings(lib.protocols);
+		const std::vector<std::string> protocolStrings = protocolsToStrings(lib.protocols);
 		for(size_t i = 0; i < protocolStrings.size(); ++i) {
 			if (i)
 				std::cout << " ";
