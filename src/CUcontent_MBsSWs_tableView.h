@@ -46,7 +46,7 @@ public:
 	void scrollMBSWtable(unsigned int rowindex);
 
 private:
-	enum class Column { type, title, min, current, max, unit };
+	enum Column { type, title, min, current, max, unit };
 
 	QIcon iconMB;
 	QIcon iconSW;

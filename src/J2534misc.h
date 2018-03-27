@@ -50,12 +50,12 @@ enum class J2534_protocol_flags
 	sci_b_trans  = 0x200,
 };
 
-constexpr J2534_protocol_flags operator&(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
+inline J2534_protocol_flags operator&(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
 {
 	return J2534_protocol_flags(static_cast<unsigned int>(f1) & static_cast<unsigned int>(f2));
 }
 
-constexpr J2534_protocol_flags operator|(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
+inline J2534_protocol_flags operator|(const J2534_protocol_flags f1, const J2534_protocol_flags f2)
 {
 	return J2534_protocol_flags(static_cast<unsigned int>(f1) | static_cast<unsigned int>(f2));
 }

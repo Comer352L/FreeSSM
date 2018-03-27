@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.cpp - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2017 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1076,18 +1076,17 @@ void CUcontent_MBsSWs::communicationError(QString addstr)
 }
 
 
-constexpr int offsetRightTimeTitle = 244;
-constexpr int offsetRightTimeValue = 100;
-constexpr int offsetRightTimeModeButton = 29;
-constexpr int offsetDownTimeLabel = 3;
-constexpr int offsetDownTimeModeButton = 1;
-constexpr int heightLabel = 16;
+void CUcontent_MBsSWs::moveRefreshTimeUiElements()
+{
+	_MBSWrefreshTimeTitle_label->move(width() - 244, 3);
+	_MBSWrefreshTimeValue_label->move(width() - 100, 3);
+	_timemode_pushButton->move(width() - 29, 1);
+}
+
 
 void CUcontent_MBsSWs::resizeEvent(QResizeEvent *event)
 {
-	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
-	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
-	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
+	moveRefreshTimeUiElements();
 	event->accept();
 }
 
@@ -1096,18 +1095,16 @@ void CUcontent_MBsSWs::setupTimeModeUiElements()
 {
 	_MBSWrefreshTimeTitle_label = new QLabel("", this);
 	_MBSWrefreshTimeTitle_label->setFixedWidth(140);
-	_MBSWrefreshTimeTitle_label->setFixedHeight(heightLabel);
+	_MBSWrefreshTimeTitle_label->setFixedHeight(16);
 	_MBSWrefreshTimeTitle_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	_MBSWrefreshTimeValue_label = new QLabel("", this);
 	_MBSWrefreshTimeValue_label->setFixedWidth(70);
-	_MBSWrefreshTimeValue_label->setFixedHeight(heightLabel);
+	_MBSWrefreshTimeValue_label->setFixedHeight(16);
 	_timemode_pushButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/oxygen/16x16/chronometer.png")), "", this);
 	_timemode_pushButton->setFixedWidth(20);
 	_timemode_pushButton->setFixedHeight(20);
 	_timemode_pushButton->setIconSize(QSize(12,12));
-	_MBSWrefreshTimeTitle_label->move(width() - offsetRightTimeTitle, offsetDownTimeLabel);
-	_MBSWrefreshTimeValue_label->move(width() - offsetRightTimeValue, offsetDownTimeLabel);
-	_timemode_pushButton->move(width() - offsetRightTimeModeButton, offsetDownTimeModeButton);
+	moveRefreshTimeUiElements();
 	_MBSWrefreshTimeTitle_label->show();
 	_MBSWrefreshTimeValue_label->show();
 	_timemode_pushButton->show();

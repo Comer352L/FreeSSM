@@ -113,6 +113,7 @@ private:
 	void updateTimeInfo(int refreshduration_ms);
 	void clearRefreshTime();
 	void communicationError(QString addstr);
+	void moveRefreshTimeUiElements();
 	void resizeEvent(QResizeEvent *event);
 	void warningMsg(QString title, QString message);
 
