@@ -591,9 +591,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 			return true;
 #ifdef __FSSM_DEBUG__
 		else
-		{
 			printErrorDescription("PassThruReadMsgs() failed: ", ret);
-		}
 #endif
 	}
 	return false;

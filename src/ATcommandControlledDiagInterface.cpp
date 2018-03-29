@@ -681,17 +681,13 @@ void ATcommandControlledDiagInterface::run()
 				}
 #ifdef __FSSM_DEBUG__
 				else
-				{
 					std::cout << "\nATcommandControlledDiagInterface::run():   error: serialCOM::Read() failed.\n";
-				}
 #endif
 			}
 		}
 #ifdef __FSSM_DEBUG__
 		else
-		{
 			std::cout << "\nATcommandControlledDiagInterface::run():   error: serialCOM::GetNrOfBytesAvailable() failed.\n";
-		}
 #endif
 		exit = _exit;
 		_mutex.unlock();

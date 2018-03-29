@@ -253,9 +253,8 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 			libnode = libnode->NextSibling();
 		}	// while (libnode)
 	}
-	else {
+	else
 		std::cout << "J2534 library definitions XML file not found: \"" << libsDefXmlFile << "\"\n";
-	}
 
 error:
 	return PTlibraries;

@@ -122,9 +122,10 @@ void CUcontent_MBsSWs_tableView::updateMBColumn(const std::vector<QString>& data
 	const unsigned int rowcount = std::min(static_cast<unsigned int>(data.size()), _nrofMBsSWs);
 	for (unsigned int row = 0; row < rowcount; ++row) {
 		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, col);
-		if (tableelement) {
+		if (tableelement)
 			tableelement->setText(data.at(row));
-		} else {
+		else
+		{
 			tableelement = new QTableWidgetItem(data.at(row));
 			tableelement->setTextAlignment(alignment);
 			selectedMBsSWs_tableWidget->setItem(row, col, tableelement);
@@ -151,9 +152,10 @@ void CUcontent_MBsSWs_tableView::updateTypesColumn(const std::vector<BlockType>&
 	for (unsigned int row = 0; row < rowcount; ++row) {
 		QTableWidgetItem* tableelement = selectedMBsSWs_tableWidget->item(row, Column::type);
 		const QIcon& icon = types.at(row) == BlockType::MB ? iconMB : iconSW;
-		if (tableelement) {
+		if (tableelement)
 			tableelement->setIcon(icon);
-		} else {
+		else
+		{
 			tableelement = new QTableWidgetItem(icon, nullptr);
 			//tableelement->setIcon(icon);
 			selectedMBsSWs_tableWidget->setItem(row, Column::type, tableelement);
