@@ -61,18 +61,20 @@ and other Unix systems, too, but there is currently no offical support.
 
 3. REQUIREMENTS:
    1.) FreeSSM source code (https://github.com/Comer352L/FreeSSM)
-   2.) Qt framework >= 4.4.0 (qt-project.org)
-       - Qt 4.8.5 (the latest and last release of the Qt4 framework) is recommended
-       - Qt 5 support is still experimental
-       - for Windows, the MinGW-version is required (not the VS version)
-   3.) MinGW (only for MS Windows; usually shipped with Qt; see www.MinGW.org)
-       PLEASE NOTE:
-         The Qt 4.8.5 installer currently available at qt-project.org does not
-         include MinGW anymore.
-         Qt 4.8.x requires MinGW with g++ 4.4, which is unfortunately no longer
-         available at MinGW.org but can be downloaded from:
-            https://piece-of-c.googlecode.com/files/MinGW-gcc440_1.zip
-         Newer MinGW versions will not work with the binary release of Qt 4.8.x
+   2.) Qt framework (www.qt.io/download)
+        Linux:   Qt4 (>= 4.4.0) or Qt5
+                 Packages are usually available in the distribution repositories.
+                 Development packages are needed.
+        Windows: Qt5 (using MinGW, not MS Visual Studio)
+                 Qt4 is not available for download anymore and the used MinGW
+                 version is too old.
+   3.) MinGW (only for MS Windows)
+       MinGW is usually shipped with Qt and just needs to be selected during
+       the installation process.
+       However, in the past the installation process changed very often.
+       There were times when it had to be downloaded and installed manually.
+       Check mingw.org and sourceforge.net/projects/mingw in case you are forced
+       to install it manually.
 
 --------------------------------------------------------------------------------
 
