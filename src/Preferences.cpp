@@ -199,8 +199,8 @@ void Preferences::selectInterfaceType(int index)
 		interfaceName_label->setText(tr("Interface-Name:"));
 		for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
 		{
-			QFile file(QString::fromStdString(lib.path));
-			if (file.exists())
+			QFileInfo fileinfo(QString::fromStdString(lib.path));
+			if (fileinfo.isFile())
 			{
 				deviceNames.push_back(QString::fromStdString(lib.name));
 				_J2534libraryPaths.push_back(QString::fromStdString(lib.path));
