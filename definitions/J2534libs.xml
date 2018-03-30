@@ -3,21 +3,55 @@
 	J2534libs.xml - Define J2534-libraries for Linux
 
 	(c) 2016 MartinX
+	(c) 2018 Comer352L
 
 -->
 <J2534LIBS>
-<!--
-	<J2534LIB name="libj2534.so" api="02.02" path="./libj2534_v0202.so" >
+	<!--
+	<J2534LIB name="..." api="..." path="...">
+	   => defines a J2534 library for a diagnostic interface:
+		name:	name of the interface; e.g. "MegaTester 3000"
+		api:	J2534 API version; either "02.02" or "04.04"
+		path:	path and name of the J2534 library; e.g. "/usr/lib/libj2534.so"
+
 		<PROTOCOLS>
-			<PROTOCOL>ISO9141</PROTOCOL>
+		   => defines the protocols supported by the library/interface, using one
+		      PROTOCOL element for each supported protocol:
+
+			<PROTOCOL>...</PROTOCOL>
+			   => define a protocol supported by the library/interface
+			      possible values are:
+					ISO9141
+					ISO14230
+					ISO15765
+					J1850VPW
+					J1850PWM
+					CAN
+					SCI_A_ENGINE
+					SCI_A_TRANS
+					SCI_B_ENGINE
+					SCI_B_TRANS
+			      but only the first 3 are relevant for Subaru
+			<PROTOCOL>...</PROTOCOL>
+			...
 		</PROTOCOLS>
 	</J2534LIB>
--->
-	<J2534LIB name="libj2534.so" api="04.04" path="./libj2534.so" >
+	-->
+
+
+	<J2534LIB name="Unknown J2534 interface" api="04.04" path="./libj2534.so" >
 		<PROTOCOLS>
 			<PROTOCOL>ISO15765</PROTOCOL>
 			<PROTOCOL>ISO14230</PROTOCOL>
 			<PROTOCOL>ISO9141</PROTOCOL>
 		</PROTOCOLS>
 	</J2534LIB>
+<!--
+	<J2534LIB name="Another J2534 interface" api="02.02" path="/usr/local/lib/j2534lib.so" >
+		<PROTOCOLS>
+			<PROTOCOL>ISO9141</PROTOCOL>
+			<PROTOCOL>ISO14230</PROTOCOL>
+		</PROTOCOLS>
+	</J2534LIB>
+-->
 </J2534LIBS>
