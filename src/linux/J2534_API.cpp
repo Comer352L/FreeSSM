@@ -188,7 +188,14 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 		TiXmlNode* libnode = rootnode->FirstChild("J2534LIB");
 
 		while (libnode) {
-			TiXmlAttribute* attrib = libnode->ToElement()->FirstAttribute();
+			TiXmlElement* elem = libnode->ToElement();
+			if (!elem)	// e.g. if node is a comment
+			{
+				libnode = libnode->NextSibling();
+				continue;
+			}
+
+			TiXmlAttribute* attrib = elem->FirstAttribute();
 
 			J2534Library lib;
 			std::string api_str;
