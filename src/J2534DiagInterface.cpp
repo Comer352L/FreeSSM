@@ -1,7 +1,7 @@
 /*
  * J2534DiagInterface.cpp - J2534-pass-through diagnostic interface
  *
- * Copyright (C) 2010-2012 Comer352L
+ * Copyright (C) 2010-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -671,12 +671,15 @@ bool J2534DiagInterface::clearReceiveBuffer()
 void J2534DiagInterface::printErrorDescription(std::string title, long ret)
 {
 	char ErrorDescription[80] = {0,};
+	std::cout << title;
 	if (ret > 0)
 	{
-		if (STATUS_NOERROR == _j2534->PassThruGetLastError(ErrorDescription))
-			std::cout << title << ErrorDescription << '\n';
+		long ptgeterr_ret = _j2534->PassThruGetLastError(ErrorDescription);
+		if (STATUS_NOERROR == ptgeterr_ret)
+			std::cout << ErrorDescription << '\n';
 		else
-			std::cout << "unknown error (PassThruGetLastError() failed !)\n";
+			std::cout << "unknown error: " << ret << " (PassThruGetLastError() failed: " << ptgeterr_ret << ")\n";
+			/* NOTE: this is actually a bug in the J2534 library ! */
 	}
 	else if (ret == J2534API_ERROR_FCN_NOT_SUPPORTED)
 	{
@@ -686,7 +689,7 @@ void J2534DiagInterface::printErrorDescription(std::string title, long ret)
 	{
 		std::cout << "invalid library selected\n";
 	}
-	else
+	else	// BUG !
 	{
 		std::cout << "unknown error\n";
 	}
