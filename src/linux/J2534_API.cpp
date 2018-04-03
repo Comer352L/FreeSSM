@@ -380,11 +380,11 @@ long J2534_API::PassThruStopPeriodicMsg(unsigned long ChannelID, unsigned long M
 }
 
 
-long J2534_API::PassThruIoctl(unsigned long HandleID, unsigned long IoctlID, void *pInput, void *pOutput)
+long J2534_API::PassThruIoctl(unsigned long ChannelID, unsigned long IoctlID, void *pInput, void *pOutput)
 {
 	if (!_J2534LIB) return J2534API_ERROR_INVALID_LIBRARY;
 	if (!_PassThruIoctl) return J2534API_ERROR_FCN_NOT_SUPPORTED;
-	return _PassThruIoctl(HandleID, IoctlID, pInput, pOutput);
+	return _PassThruIoctl(ChannelID, IoctlID, pInput, pOutput);
 }
 
 

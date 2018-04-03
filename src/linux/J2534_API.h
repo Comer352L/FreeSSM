@@ -61,7 +61,7 @@ public:
 	long PassThruWriteMsgs(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pNumMsgs, unsigned long Timeout);
 	long PassThruStartPeriodicMsg(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pMsgID, unsigned long TimeInterval);
 	long PassThruStopPeriodicMsg(unsigned long ChannelID, unsigned long MsgID);
-	long PassThruIoctl(unsigned long HandleID, unsigned long IoctlID, void *pInput, void *pOutput);
+	long PassThruIoctl(unsigned long ChannelID, unsigned long IoctlID, void *pInput, void *pOutput);
 	long PassThruSetProgrammingVoltage(unsigned long PinNumber, unsigned long Voltage);								// 0202-API
 	long PassThruSetProgrammingVoltage(unsigned long DeviceID, unsigned long PinNumber, unsigned long Voltage);					// 0404-API
 
