@@ -1,7 +1,7 @@
 /*
  * SerialPassThroughDiagInterface.h - Serial port pass-through diagnostic interface
  *
- * Copyright (C) 2010 Comer352l
+ * Copyright (C) 2010-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 
 #include <string>
+#include <vector>
 #include "AbstractDiagInterface.h"
 #ifdef __WIN32__
 	#include "windows\serialCOM.h"
@@ -34,6 +35,9 @@
 	#define waitms(x) usleep(1000*x)
 #else
 	#error "Operating system not supported !"
+#endif
+#ifdef __FSSM_DEBUG__
+	#include <iostream>
 #endif
 
 
