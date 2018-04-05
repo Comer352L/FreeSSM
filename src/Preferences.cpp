@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2014 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	connect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	connect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	connect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
-	connect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
+	connect( cancel_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
 
@@ -128,7 +128,7 @@ Preferences::~Preferences()
 	disconnect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	disconnect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	disconnect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
-	disconnect( cancel_pushButton, SIGNAL( released() ), this, SLOT( cancel() ) );
+	disconnect( cancel_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }
 
 
@@ -447,14 +447,7 @@ void Preferences::ok()
 		msg.exec();
 		msg.close();
 	}
-	_confirmed = true;	// IMPORTANT: prevents undo of all chnges in destructor
-	close();		// close window (delete is called automaticly)
-}
-
-
-void Preferences::cancel()
-{
-	_confirmed = false;	// IMPORTANT: cause destructor to undo all changes
+	_confirmed = true;	// IMPORTANT: prevents undo of all changes in close event handler
 	close();		// close window (delete is called automaticly)
 }
 
