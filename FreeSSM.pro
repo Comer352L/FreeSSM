@@ -113,18 +113,19 @@ SOURCES += src/main.cpp \
 SMALL_RESOLUTION {
 FORMS += ui/small/FreeSSM.ui \
          ui/small/ControlUnitDialog.ui \ 
-         ui/small/Preferences.ui
+         ui/small/Preferences.ui \ 
+         ui/small/CUcontent_DCs_engine.ui
 } else {
 FORMS += ui/FreeSSM.ui \
          ui/ControlUnitDialog.ui \ 
-         ui/Preferences.ui
+         ui/Preferences.ui \
+         ui/CUcontent_DCs_engine.ui
 }
 
 FORMS +=   ui/About.ui \
            ui/CUinfo_Engine.ui \
            ui/CUinfo_Transmission.ui \
            ui/CUinfo_simple.ui \
-           ui/CUcontent_DCs_engine.ui \
            ui/CUcontent_DCs_twoMemories.ui \
            ui/CUcontent_DCs_stopCodes.ui \
            ui/CUcontent_MBsSWs.ui \
