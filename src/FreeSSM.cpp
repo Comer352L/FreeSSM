@@ -330,7 +330,6 @@ void FreeSSM::preferences()
 {
 	if (_dumping) return;
 	Preferences *preferencesdlg = new Preferences(this, &_iface_type, &_iface_filename, _language);
-	preferencesdlg->show();
 	connect(preferencesdlg, SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
 	preferencesdlg->exec();
