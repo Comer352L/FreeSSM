@@ -120,7 +120,9 @@ FORMS += ui/small/FreeSSM.ui \
          ui/small/AddMBsSWsDlg.ui \
          ui/small/CUinfo_Engine.ui \
          ui/small/CUinfo_Transmission.ui \
-         ui/small/CUinfo_simple.ui
+         ui/small/CUinfo_simple.ui \ 
+         ui/small/CUcontent_Adjustments.ui \ 
+
 } else {
 FORMS += ui/FreeSSM.ui \
          ui/ControlUnitDialog.ui \ 
@@ -131,15 +133,16 @@ FORMS += ui/FreeSSM.ui \
          ui/AddMBsSWsDlg.ui \
          ui/CUinfo_Engine.ui \
          ui/CUinfo_Transmission.ui \
-         ui/CUinfo_simple.ui
+         ui/CUinfo_simple.ui \ 
+         ui/CUcontent_Adjustments.ui \ 
 }
 
 FORMS +=   ui/About.ui \
+           ui/ActuatorTestDlg.ui \
            ui/CUcontent_DCs_twoMemories.ui \
            ui/CUcontent_DCs_stopCodes.ui \
-           ui/CUcontent_Adjustments.ui \
            ui/CUcontent_sysTests.ui \
-           ui/ActuatorTestDlg.ui
+
 
 RESOURCES += resources/FreeSSM.qrc
 
