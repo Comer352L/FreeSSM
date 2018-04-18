@@ -122,6 +122,8 @@ FORMS += ui/small/FreeSSM.ui \
          ui/small/CUinfo_Transmission.ui \
          ui/small/CUinfo_simple.ui \ 
          ui/small/CUcontent_Adjustments.ui \ 
+         ui/small/CUcontent_DCs_twoMemories.ui \
+         ui/small/CUcontent_DCs_stopCodes.ui \
 
 } else {
 FORMS += ui/FreeSSM.ui \
@@ -135,12 +137,12 @@ FORMS += ui/FreeSSM.ui \
          ui/CUinfo_Transmission.ui \
          ui/CUinfo_simple.ui \ 
          ui/CUcontent_Adjustments.ui \ 
+         ui/CUcontent_DCs_twoMemories.ui \
+         ui/CUcontent_DCs_stopCodes.ui \
 }
 
 FORMS +=   ui/About.ui \
            ui/ActuatorTestDlg.ui \
-           ui/CUcontent_DCs_twoMemories.ui \
-           ui/CUcontent_DCs_stopCodes.ui \
            ui/CUcontent_sysTests.ui \
 
 

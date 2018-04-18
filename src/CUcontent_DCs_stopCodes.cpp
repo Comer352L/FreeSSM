@@ -45,14 +45,18 @@ CUcontent_DCs_stopCodes::CUcontent_DCs_stopCodes(QWidget *parent) : CUcontent_DC
 	// Disable tables and their titles:
 	currOrTempDTCsTitle_label->setEnabled( false );
 	currOrTempDTCs_tableWidget->setEnabled( false );
+#ifndef SMALL_RESOLUTION
 	// Disable "print"-button:
 	printDClist_pushButton->setDisabled(true);
+#endif
 }
 
 
 CUcontent_DCs_stopCodes::~CUcontent_DCs_stopCodes()
 {
+#ifndef SMALL_RESOLUTION
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+#endif
 	disconnectGUIelements();
 }
 
@@ -88,9 +92,11 @@ bool CUcontent_DCs_stopCodes::setup(SSMprotocol *SSMPdev)
 		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(""));
 	currOrTempDTCsTitle_label->setEnabled(currOrTempDTCs_sup);
 	currOrTempDTCs_tableWidget->setEnabled(currOrTempDTCs_sup);
+#ifndef SMALL_RESOLUTION
 	// Deactivate and disconnect "Print"-button:
 	printDClist_pushButton->setEnabled(false);
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+#endif
 	// Connect start-slot:
 	if (_SSMPdev)
 	{
@@ -113,10 +119,12 @@ void CUcontent_DCs_stopCodes::connectGUIelements()
 		updateCurrentOrTemporaryDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( currentOrTemporaryDTCs(QStringList, QStringList, bool, bool) ), this, SLOT( updateCurrentOrTemporaryDTCsContent(QStringList, QStringList) ));
 	}
+#ifndef SMALL_RESOLUTION
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
 	connect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
+#endif
 }
 
 
@@ -141,14 +149,17 @@ void CUcontent_DCs_stopCodes::updateCurrentOrTemporaryDTCsContent(QStringList cu
 			currOrTempDTCdescriptions << tr("----- No valid Stop Codes -----");
 		}
 		setDCtableContent(currOrTempDTCs_tableWidget, currOrTempDTCs, currOrTempDTCdescriptions);
+#ifndef SMALL_RESOLUTION
 		// Activate "Print" button:
 		printDClist_pushButton->setEnabled(true);
+#endif
 	}
 }
 
 
 void CUcontent_DCs_stopCodes::createDCprintTables(QTextCursor cursor)
 {
+#ifndef SMALL_RESOLUTION
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	// Current/Temporary DTCs:
@@ -162,6 +173,10 @@ void CUcontent_DCs_stopCodes::createDCprintTables(QTextCursor cursor)
 		// Insert table with current/temporary DTCs into text document:
 		insertDCprintTable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
+#else
+	//Just surpress the unused parameter warning, because we are not having printing for small resolution
+	(void)cursor;
+#endif
 }
 
 
