@@ -50,6 +50,7 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	histOrMemDTCs_tableWidget->viewport()->installEventFilter(this);
 	// *** Set initial content ***:
 	// Set provisional titles:
+#ifndef SMALL_RESOLUTION
 	currOrTempDTCsTitle_label->setText( tr("Temporary Diagnostic Trouble Code(s):") );
 	histOrMemDTCsTitle_label->setText( tr("Memorized Diagnostic Trouble Code(s):") );
 	// Disable tables and their titles:
@@ -59,12 +60,15 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	histOrMemDTCs_tableWidget->setEnabled( false );
 	// Disable "print"-button:
 	printDClist_pushButton->setDisabled(true);
+#endif
 }
 
 
 CUcontent_DCs_twoMemories::~CUcontent_DCs_twoMemories()
 {
+#ifndef SMALL_RESOLUTION
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+#endif
 	disconnectGUIelements();
 }
 
@@ -95,6 +99,7 @@ bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 		currOrTempDTCs_sup = ((_supportedDCgroups & SSMprotocol::currentDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::temporaryDTCs_DCgroup));
 		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
 	}
+#ifndef SMALL_RESOLUTION
 	// Set titles of the DTC-tables
 	if ( obd2DTCformat )
 		title = tr("Temporary Diagnostic Trouble Code(s):");
@@ -106,22 +111,32 @@ bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");
 	histOrMemDTCsTitle_label->setText( title );
+#else
+	//Just surpress the unused parameter warning, because we are not having printing for small resolution
+	(void)obd2DTCformat;
+#endif
 	// DC-tables and titles:
 	if (ok && !currOrTempDTCs_sup)
 		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
 		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(""));
+#ifndef SMALL_RESOLUTION
 	currOrTempDTCsTitle_label->setEnabled(currOrTempDTCs_sup);
+#endif
 	currOrTempDTCs_tableWidget->setEnabled(currOrTempDTCs_sup);
 	if (ok && !histOrMemDTCs_sup)
 		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
 		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(""));
+#ifndef SMALL_RESOLUTION
 	histOrMemDTCsTitle_label->setEnabled(histOrMemDTCs_sup);
+#endif
 	histOrMemDTCs_tableWidget->setEnabled(histOrMemDTCs_sup);
+#ifndef SMALL_RESOLUTION
 	// Deactivate and disconnect "Print"-button:
 	printDClist_pushButton->setEnabled(false);
 	disconnect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+#endif
 	// Connect start-slot:
 	if (_SSMPdev)
 	{
@@ -149,9 +164,11 @@ void CUcontent_DCs_twoMemories::connectGUIelements()
 		updateHistoricOrMemorizedDTCsContent(QStringList(""), QStringList(tr("----- Reading data... Please wait ! -----")));
 		connect(_SSMPdev, SIGNAL( historicOrMemorizedDTCs(QStringList, QStringList) ), this, SLOT( updateHistoricOrMemorizedDTCsContent(QStringList, QStringList) ));
 	}
+#ifndef SMALL_RESOLUTION
 	// Connect and disable print-button temporary (until all memories have been read once):
 	printDClist_pushButton->setDisabled(true);
 	connect(printDClist_pushButton, SIGNAL( released() ), this, SLOT( printDCprotocol() ));
+#endif
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
 
@@ -178,8 +195,11 @@ void CUcontent_DCs_twoMemories::updateCurrentOrTemporaryDTCsContent(QStringList 
 			currOrTempDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		setDCtableContent(currOrTempDTCs_tableWidget, currOrTempDTCs, currOrTempDTCdescriptions);
+#ifndef SMALL_RESOLUTION
 		// Activate "Print" button:
 		printDClist_pushButton->setEnabled(true);
+#endif
+
 	}
 }
 
@@ -198,14 +218,17 @@ void CUcontent_DCs_twoMemories::updateHistoricOrMemorizedDTCsContent(QStringList
 			histOrMemDTCdescriptions << tr("----- No Trouble Codes -----");
 		}
 		setDCtableContent(histOrMemDTCs_tableWidget, histOrMemDTCs, histOrMemDTCdescriptions);
+#ifndef SMALL_RESOLUTION
 		// Activate "Print" button:
 		printDClist_pushButton->setEnabled(true);
+#endif
 	}
 }
 
 
 void CUcontent_DCs_twoMemories::createDCprintTables(QTextCursor cursor)
 {
+#ifndef SMALL_RESOLUTION
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	QStringList histOrMemDTCcodes = _histOrMemDTCs;
@@ -232,6 +255,10 @@ void CUcontent_DCs_twoMemories::createDCprintTables(QTextCursor cursor)
 		// Insert table with historic/memorized DTCs into text document:
 		insertDCprintTable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
+#else
+        //Just surpress the unused parameter warning, because we are not having printing for small resolution
+	(void)cursor;
+#endif
 }
 
 
@@ -267,4 +294,3 @@ bool CUcontent_DCs_twoMemories::eventFilter(QObject *obj, QEvent *event)
 	// Pass the event on to the parent class
 	return QWidget::eventFilter(obj, event);
 }
-
