@@ -124,6 +124,7 @@ FORMS += ui/small/FreeSSM.ui \
          ui/small/CUcontent_Adjustments.ui \ 
          ui/small/CUcontent_DCs_twoMemories.ui \
          ui/small/CUcontent_DCs_stopCodes.ui \
+         ui/small/CUcontent_sysTests.ui \
 
 } else {
 FORMS += ui/FreeSSM.ui \
@@ -139,11 +140,11 @@ FORMS += ui/FreeSSM.ui \
          ui/CUcontent_Adjustments.ui \ 
          ui/CUcontent_DCs_twoMemories.ui \
          ui/CUcontent_DCs_stopCodes.ui \
+         ui/CUcontent_sysTests.ui \
 }
 
 FORMS +=   ui/About.ui \
            ui/ActuatorTestDlg.ui \
-           ui/CUcontent_sysTests.ui \
 
 
 RESOURCES += resources/FreeSSM.qrc
