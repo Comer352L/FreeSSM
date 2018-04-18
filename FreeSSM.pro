@@ -112,14 +112,15 @@ SOURCES += src/main.cpp \
 
 SMALL_RESOLUTION {
 FORMS += ui/small/FreeSSM.ui \
-         ui/small/ControlUnitDialog.ui
+         ui/small/ControlUnitDialog.ui \ 
+         ui/small/Preferences.ui
 } else {
 FORMS += ui/FreeSSM.ui \
-         ui/ControlUnitDialog.ui
+         ui/ControlUnitDialog.ui \ 
+         ui/Preferences.ui
 }
 
-FORMS +=   ui/Preferences.ui \
-           ui/About.ui \
+FORMS +=   ui/About.ui \
            ui/CUinfo_Engine.ui \
            ui/CUinfo_Transmission.ui \
            ui/CUinfo_simple.ui \
