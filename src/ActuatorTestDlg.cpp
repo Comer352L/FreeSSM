@@ -30,7 +30,14 @@ ActuatorTestDlg::ActuatorTestDlg(QWidget *parent, SSMprotocol *SSMPdev, QString 
 	_SSMPdev = SSMPdev;
 	setupUi(this);
 	exit_pushButton->setEnabled(false);
+#ifndef SMALL_RESOLUTION
 	this->show();
+#else
+	// https://bugreports.qt.io/browse/QTBUG-16034
+	// Workaround for window not showing always fullscreen
+	setWindowFlags( Qt::Window );
+	this->showFullScreen();
+#endif
 	actuator_label->setText(actuatorTitle);
 	status_label->setText(tr("Checking engine status..."));
 	// CHECK IF ENGINE IS RUNNING:
@@ -111,5 +118,3 @@ void ActuatorTestDlg::closeEvent(QCloseEvent *event)
 	_SSMPdev->stopActuatorTesting();
 	event->accept();
 }
-
-
