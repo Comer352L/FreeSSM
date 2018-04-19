@@ -1,6 +1,10 @@
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 CONFIG += debug_and_release	# warning: specifying EITHER release OR debug breaks the dll installation target on Windows !
+
+#Uncomment this line if you want the project to be build for small resolution by default
+#CONFIG+=small-resolution
+
 TEMPLATE = app
 TARGET = FreeSSM
 DESTDIR = ./
@@ -110,7 +114,10 @@ SOURCES += src/main.cpp \
            src/tinyxml/tinyxmlerror.cpp \
            src/tinyxml/tinyxmlparser.cpp
 
-SMALL_RESOLUTION {
+small-resolution {
+
+DEFINES += SMALL_RESOLUTION
+
 FORMS += ui/small/FreeSSM.ui \
          ui/small/ControlUnitDialog.ui \ 
          ui/small/CUcontent_DCs_engine.ui \

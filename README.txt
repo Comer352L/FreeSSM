@@ -85,6 +85,10 @@ $ qmake
 or (if you have Qt4 AND Qt5 installed)
 $ qmake-qt4   or   $ qmake-qt5   (depending on your system environment)
 
+If you want to compile for small display resolution use
+$ qmake "CONFIG+=small-resolution"
+or just uncomment the '#CONFIG+=small-resolution' line from the FreeSSM.pro file, if you want to build for small resolution by default
+
 Compilation:
 $ make release
 or
