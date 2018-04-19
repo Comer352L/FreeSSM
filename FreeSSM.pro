@@ -126,6 +126,7 @@ FORMS += ui/small/FreeSSM.ui \
          ui/small/CUinfo_simple.ui \ 
          ui/small/Preferences.ui \ 
          ui/small/About.ui \
+         ui/small/ActuatorTestDlg.ui \
 
 } else {
 FORMS += ui/FreeSSM.ui \
@@ -143,9 +144,8 @@ FORMS += ui/FreeSSM.ui \
          ui/CUinfo_simple.ui \ 
          ui/Preferences.ui \
          ui/About.ui \
+         ui/ActuatorTestDlg.ui \
 }
-
-FORMS += ui/ActuatorTestDlg.ui \
 
 RESOURCES += resources/FreeSSM.qrc
 
