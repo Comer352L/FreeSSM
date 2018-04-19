@@ -113,39 +113,39 @@ SOURCES += src/main.cpp \
 SMALL_RESOLUTION {
 FORMS += ui/small/FreeSSM.ui \
          ui/small/ControlUnitDialog.ui \ 
-         ui/small/Preferences.ui \ 
          ui/small/CUcontent_DCs_engine.ui \
+         ui/small/CUcontent_DCs_twoMemories.ui \
+         ui/small/CUcontent_DCs_stopCodes.ui \
          ui/small/CUcontent_MBsSWs.ui \
          ui/small/CUcontent_MBsSWs_tableView.ui \
+         ui/small/CUcontent_Adjustments.ui \ 
+         ui/small/CUcontent_sysTests.ui \
          ui/small/AddMBsSWsDlg.ui \
          ui/small/CUinfo_Engine.ui \
          ui/small/CUinfo_Transmission.ui \
          ui/small/CUinfo_simple.ui \ 
-         ui/small/CUcontent_Adjustments.ui \ 
-         ui/small/CUcontent_DCs_twoMemories.ui \
-         ui/small/CUcontent_DCs_stopCodes.ui \
-         ui/small/CUcontent_sysTests.ui \
+         ui/small/Preferences.ui \ 
+         ui/small/About.ui \
 
 } else {
 FORMS += ui/FreeSSM.ui \
          ui/ControlUnitDialog.ui \ 
-         ui/Preferences.ui \
-         ui/CUcontent_DCs_engine.ui \ 
+         ui/CUcontent_DCs_engine.ui \
+         ui/CUcontent_DCs_twoMemories.ui \
+         ui/CUcontent_DCs_stopCodes.ui \ 
          ui/CUcontent_MBsSWs.ui \
          ui/CUcontent_MBsSWs_tableView.ui \
+         ui/CUcontent_Adjustments.ui \
+         ui/CUcontent_sysTests.ui \
          ui/AddMBsSWsDlg.ui \
          ui/CUinfo_Engine.ui \
          ui/CUinfo_Transmission.ui \
          ui/CUinfo_simple.ui \ 
-         ui/CUcontent_Adjustments.ui \ 
-         ui/CUcontent_DCs_twoMemories.ui \
-         ui/CUcontent_DCs_stopCodes.ui \
-         ui/CUcontent_sysTests.ui \
+         ui/Preferences.ui \
+         ui/About.ui \
 }
 
-FORMS +=   ui/About.ui \
-           ui/ActuatorTestDlg.ui \
-
+FORMS += ui/ActuatorTestDlg.ui \
 
 RESOURCES += resources/FreeSSM.qrc
 
