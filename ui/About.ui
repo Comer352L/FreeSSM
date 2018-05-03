@@ -613,7 +613,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </rect>
      </property>
      <property name="text">
-      <string>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</string>
+      <string>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br&gt;Nikolay Marinov (small screen resolution)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
