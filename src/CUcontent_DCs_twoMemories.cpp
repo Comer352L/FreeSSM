@@ -49,15 +49,25 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	currOrTempDTCs_tableWidget->viewport()->installEventFilter(this);
 	histOrMemDTCs_tableWidget->viewport()->installEventFilter(this);
 	// *** Set initial content ***:
-	// Set provisional titles:
 #ifndef SMALL_RESOLUTION
+	// Set provisional titles:
 	currOrTempDTCsTitle_label->setText( tr("Temporary Diagnostic Trouble Code(s):") );
 	histOrMemDTCsTitle_label->setText( tr("Memorized Diagnostic Trouble Code(s):") );
-	// Disable tables and their titles:
+	// Disable tables titles:
 	currOrTempDTCsTitle_label->setEnabled( false );
-	currOrTempDTCs_tableWidget->setEnabled( false );
 	histOrMemDTCsTitle_label->setEnabled( false );
+#else
+	// Set provisional titles:
+	DTCtables_tabWidget->setTabText(0, tr("Temporary"));
+	DTCtables_tabWidget->setTabText(1, tr("Memorized"));
+	// Disable table tabs:
+	DTCtables_tabWidget->setTabEnabled(0, false);
+	DTCtables_tabWidget->setTabEnabled(1, false);
+#endif
+	// Disable the DTC tables:
+	currOrTempDTCs_tableWidget->setEnabled( false );
 	histOrMemDTCs_tableWidget->setEnabled( false );
+#ifndef SMALL_RESOLUTION
 	// Disable "print"-button:
 	printDClist_pushButton->setDisabled(true);
 #endif
@@ -100,7 +110,7 @@ bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 		histOrMemDTCs_sup = ((_supportedDCgroups & SSMprotocol::historicDTCs_DCgroup) || (_supportedDCgroups & SSMprotocol::memorizedDTCs_DCgroup));
 	}
 #ifndef SMALL_RESOLUTION
-	// Set titles of the DTC-tables
+	// DTC-table titles:
 	if ( obd2DTCformat )
 		title = tr("Temporary Diagnostic Trouble Code(s):");
 	else
@@ -111,26 +121,33 @@ bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 	else
 		title = tr("Historic Diagnostic Trouble Code(s):");
 	histOrMemDTCsTitle_label->setText( title );
+	currOrTempDTCsTitle_label->setEnabled(currOrTempDTCs_sup);
+	histOrMemDTCsTitle_label->setEnabled(histOrMemDTCs_sup);
 #else
-	//Just surpress the unused parameter warning, because we are not having printing for small resolution
-	(void)obd2DTCformat;
+	// DTC-table-tab titles:
+	if ( obd2DTCformat )
+		title = tr("Temporary");
+	else
+		title = tr("Current");
+	DTCtables_tabWidget->setTabText(0, title);
+	if ( obd2DTCformat )
+		title = tr("Memorized");
+	else
+		title = tr("Historic");
+	DTCtables_tabWidget->setTabText(1, title);
+	DTCtables_tabWidget->setTabEnabled(0, currOrTempDTCs_sup);
+	DTCtables_tabWidget->setTabEnabled(1, histOrMemDTCs_sup);
 #endif
-	// DC-tables and titles:
+	// DTC-tables:
 	if (ok && !currOrTempDTCs_sup)
 		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
 		setDCtableContent(currOrTempDTCs_tableWidget, QStringList(""), QStringList(""));
-#ifndef SMALL_RESOLUTION
-	currOrTempDTCsTitle_label->setEnabled(currOrTempDTCs_sup);
-#endif
 	currOrTempDTCs_tableWidget->setEnabled(currOrTempDTCs_sup);
 	if (ok && !histOrMemDTCs_sup)
 		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(tr("----- Not supported by ECU -----")));
 	else
 		setDCtableContent(histOrMemDTCs_tableWidget, QStringList(""), QStringList(""));
-#ifndef SMALL_RESOLUTION
-	histOrMemDTCsTitle_label->setEnabled(histOrMemDTCs_sup);
-#endif
 	histOrMemDTCs_tableWidget->setEnabled(histOrMemDTCs_sup);
 #ifndef SMALL_RESOLUTION
 	// Deactivate and disconnect "Print"-button:
