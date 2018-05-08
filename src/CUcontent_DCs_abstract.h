@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_abstract.h - Abstract widget for Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2014 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,14 +50,18 @@ protected:
 	virtual void disconnectGUIelements() = 0;
 	void setDCtableContent(QTableWidget *tableWidget, QStringList DCs, QStringList DCdescriptions);
 	void setNrOfTableRows(QTableWidget *tablewidget, unsigned int nrofUsedRows);
+#ifndef SMALL_RESOLUTION
 	virtual void createDCprintTables(QTextCursor cursor) = 0;
 	void insertDCprintTable(QTextCursor cursor, QString title, QStringList codes, QStringList descriptions);
+#endif
 	void communicationError(QString errstr);
 
 protected slots:
 	void callStart();
 	void callStop();
+#ifndef SMALL_RESOLUTION
 	void printDCprotocol();
+#endif
 
 signals:
 	void error();

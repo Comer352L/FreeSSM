@@ -243,9 +243,9 @@ void CUcontent_DCs_twoMemories::updateHistoricOrMemorizedDTCsContent(QStringList
 }
 
 
+#ifndef SMALL_RESOLUTION
 void CUcontent_DCs_twoMemories::createDCprintTables(QTextCursor cursor)
 {
-#ifndef SMALL_RESOLUTION
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	QStringList histOrMemDTCcodes = _histOrMemDTCs;
@@ -272,11 +272,8 @@ void CUcontent_DCs_twoMemories::createDCprintTables(QTextCursor cursor)
 		// Insert table with historic/memorized DTCs into text document:
 		insertDCprintTable(cursor, histOrMemDTCsTitle_label->text(), histOrMemDTCcodes, histOrMemDTCdescriptions);
 	}
-#else
-        //Just surpress the unused parameter warning, because we are not having printing for small resolution
-	(void)cursor;
-#endif
 }
+#endif
 
 
 void CUcontent_DCs_twoMemories::resizeEvent(QResizeEvent *event)

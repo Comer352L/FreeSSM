@@ -397,6 +397,7 @@ void CUcontent_DCs_engine::setNrOfRowsOfAllTableWidgets()
 }
 
 
+#ifndef SMALL_RESOLUTION
 void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 {
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
@@ -452,6 +453,7 @@ void CUcontent_DCs_engine::createDCprintTables(QTextCursor cursor)
 		insertDCprintTable(cursor, memorizedCCCCsTitle_label->text(), memorizedCCCCcodes, memorizedCCCCdescriptions);
 	}
 }
+#endif
 
 
 void CUcontent_DCs_engine::resizeEvent(QResizeEvent *event)

@@ -164,6 +164,7 @@ void CUcontent_DCs_abstract::setNrOfTableRows(QTableWidget *tablewidget, unsigne
 }
 
 
+#ifndef SMALL_RESOLUTION
 void CUcontent_DCs_abstract::printDCprotocol()
 {
 	QString datetime;
@@ -390,8 +391,10 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	// Delete status message:
 	printmbox.close();
 }
+#endif	// !SMALL_RESOLUTION
 
 
+#ifndef SMALL_RESOLUTION
 void CUcontent_DCs_abstract::insertDCprintTable(QTextCursor cursor, QString title, QStringList codes, QStringList descriptions)
 {
 	QTextTableFormat tableFormat;
@@ -434,6 +437,7 @@ void CUcontent_DCs_abstract::insertDCprintTable(QTextCursor cursor, QString titl
 		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 	}
 }
+#endif
 
 
 void CUcontent_DCs_abstract::communicationError(QString errstr)

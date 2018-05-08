@@ -157,9 +157,9 @@ void CUcontent_DCs_stopCodes::updateCurrentOrTemporaryDTCsContent(QStringList cu
 }
 
 
+#ifndef SMALL_RESOLUTION
 void CUcontent_DCs_stopCodes::createDCprintTables(QTextCursor cursor)
 {
-#ifndef SMALL_RESOLUTION
 	QStringList currOrTempDTCcodes = _currOrTempDTCs;
 	QStringList currOrTempDTCdescriptions = _currOrTempDTCdescriptions;
 	// Current/Temporary DTCs:
@@ -173,11 +173,8 @@ void CUcontent_DCs_stopCodes::createDCprintTables(QTextCursor cursor)
 		// Insert table with current/temporary DTCs into text document:
 		insertDCprintTable(cursor, currOrTempDTCsTitle_label->text(), currOrTempDTCcodes, currOrTempDTCdescriptions);
 	}
-#else
-	//Just surpress the unused parameter warning, because we are not having printing for small resolution
-	(void)cursor;
-#endif
 }
+#endif
 
 
 void CUcontent_DCs_stopCodes::resizeEvent(QResizeEvent *event)

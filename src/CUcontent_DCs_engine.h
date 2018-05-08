@@ -57,7 +57,9 @@ private:
 	void setTitleOfFirstDTCtable(bool obd2, bool testMode);
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
+#ifndef SMALL_RESOLUTION
 	void createDCprintTables(QTextCursor cursor);
+#endif
 
 private slots:
 	void updateCurrentOrTemporaryDTCsContent(QStringList currOrTempDTCs, QStringList currOrTempDTCdescriptions, bool testMode, bool DCheckActive);
