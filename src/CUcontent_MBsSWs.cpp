@@ -686,6 +686,11 @@ void CUcontent_MBsSWs::addMBsSWs()
 	unsigned int k = 0;
 	// Open selection dialog:
 	AddMBsSWsDlg *dlg = new AddMBsSWsDlg(this, _supportedMBs, _supportedSWs, &_MBSWmetaList);
+#ifdef SMALL_RESOLUTION
+	dlg->showFullScreen();
+#else
+	dlg->show();
+#endif
 	dlg->exec();
 	delete dlg;
 	// Update table:

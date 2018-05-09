@@ -36,7 +36,6 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	// Set window and dialog titles:
 	setWindowTitle("FreeSSM " + QApplication::applicationVersion() + " - " + title);
 	title_label->setText(title);
-
 #ifndef SMALL_RESOLUTION
 	// Move window to desired coordinates:
 	move( 30, 30 );
@@ -61,10 +60,7 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_ifstatusbar->setInterfaceVersion( QString::fromStdString( diagInterface->version() ), Qt::blue );
 	_ifstatusbar->setProtocolName("---");
 	_ifstatusbar->setBaudRate("---");
-#else
-	showFullScreen();
 #endif
-
 	// Connect signals and slots:
 	connect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 }

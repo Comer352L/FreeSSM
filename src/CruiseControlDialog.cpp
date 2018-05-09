@@ -42,7 +42,11 @@ CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, Q
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
 	// Make GUI visible
+#ifdef SMALL_RESOLUTION
+	this->showFullScreen();
+#else
 	this->show();
+#endif
 	// Connect to Control Unit, get data and setup GUI:
 	setup();
 }

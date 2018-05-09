@@ -30,7 +30,6 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	// https://bugreports.qt.io/browse/QTBUG-16034
 	// Workaround for window not showing always fullscreen
 	setWindowFlags( Qt::Window );
-	this->showFullScreen();
 #endif
 	// Display title/program version:
 	progversion_label->setText(progversion_label->text() + " " + QApplication::applicationVersion());

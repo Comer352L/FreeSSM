@@ -66,7 +66,11 @@ int main(int argc, char *argv[])
 	app.setFont( appfont );
 	// Open main window:
 	FreeSSM *freessm_mainwindow = new FreeSSM(&app);
+#ifdef SMALL_RESOLUTION
+	freessm_mainwindow->showFullScreen();
+#else
 	freessm_mainwindow->show();
+#endif
 	// Wait until main window is closed:
 	int ret = app.exec();
 	delete freessm_mainwindow;

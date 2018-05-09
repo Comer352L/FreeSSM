@@ -50,8 +50,6 @@ FreeSSM::FreeSSM(QApplication *app)
 	int x = (desktop.width() - size().width()) / 2;
 	int y = (desktop.height() - size().height()) / 2 - 50;
 	this->move ( x, y );
-#else
-	showFullScreen();
 #endif
 	// LOAD PREFERENCES FROM FILE:
 	QString savedinterfacefilename = "";
@@ -332,6 +330,11 @@ void FreeSSM::preferences()
 	Preferences *preferencesdlg = new Preferences(this, &_iface_type, &_iface_filename, _language);
 	connect(preferencesdlg, SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
+#ifdef SMALL_RESOLUTION
+	preferencesdlg->showFullScreen();
+#else
+	preferencesdlg->show();
+#endif
 	preferencesdlg->exec();
 	delete preferencesdlg;
 }
@@ -348,7 +351,11 @@ void FreeSSM::help()
 void FreeSSM::about()
 {
 	About *aboutdlg = new About(this, _language);
+#ifdef SMALL_RESOLUTION
+	aboutdlg->showFullScreen();
+#else
 	aboutdlg->show();
+#endif
 	aboutdlg->exec();
 	delete aboutdlg;
 }
