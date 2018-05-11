@@ -353,6 +353,9 @@
  <tabstops>
   <tabstop>engine_pushButton</tabstop>
   <tabstop>transmission_pushButton</tabstop>
+  <tabstop>absvdc_pushButton</tabstop>
+  <tabstop>cruisecontrol_pushButton</tabstop>
+  <tabstop>aircon_pushButton</tabstop>
   <tabstop>preferences_pushButton</tabstop>
   <tabstop>help_pushButton</tabstop>
   <tabstop>about_pushButton</tabstop>
