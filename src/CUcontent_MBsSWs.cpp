@@ -179,7 +179,6 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 	_tableRowPosIndexes.clear();
 	for (size_t k=0; k<MBSWmetaList.size(); k++)
 		_tableRowPosIndexes.push_back(k);
-
 	// Update MB/SW table content:
 	displayMBsSWs();
 	// Clear time information:
@@ -193,7 +192,12 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
 	}
 	else
+	{
+		startstopmbreading_pushButton->setEnabled(false);
+		mbswdelete_pushButton->setEnabled(false);
+		mbswsave_pushButton->setEnabled(false);
 		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
 	return true;
