@@ -47,7 +47,7 @@
        </sizepolicy>
       </property>
       <attribute name="title">
-       <string>Current</string>
+       <string>Current/Temporary DTCs</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
@@ -95,7 +95,7 @@
        </sizepolicy>
       </property>
       <attribute name="title">
-       <string>Historic</string>
+       <string>Historic/Memorized DTCs</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">

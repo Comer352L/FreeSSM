@@ -58,8 +58,8 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	histOrMemDTCsTitle_label->setEnabled( false );
 #else
 	// Set provisional titles:
-	DTCtables_tabWidget->setTabText(0, tr("Temporary"));
-	DTCtables_tabWidget->setTabText(1, tr("Memorized"));
+	DTCtables_tabWidget->setTabText(0, tr("Temporary DTCs"));
+	DTCtables_tabWidget->setTabText(1, tr("Memorized DTCs"));
 	// Disable table tabs:
 	DTCtables_tabWidget->setTabEnabled(0, false);
 	DTCtables_tabWidget->setTabEnabled(1, false);
@@ -126,14 +126,14 @@ bool CUcontent_DCs_twoMemories::setup(SSMprotocol *SSMPdev)
 #else
 	// DTC-table-tab titles:
 	if ( obd2DTCformat )
-		title = tr("Temporary");
+		title = tr("Temporary DTCs");
 	else
-		title = tr("Current");
+		title = tr("Current DTCs");
 	DTCtables_tabWidget->setTabText(0, title);
 	if ( obd2DTCformat )
-		title = tr("Memorized");
+		title = tr("Memorized DTCs");
 	else
-		title = tr("Historic");
+		title = tr("Historic DTCs");
 	DTCtables_tabWidget->setTabText(1, title);
 	DTCtables_tabWidget->setTabEnabled(0, currOrTempDTCs_sup);
 	DTCtables_tabWidget->setTabEnabled(1, histOrMemDTCs_sup);
