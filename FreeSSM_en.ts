@@ -729,90 +729,90 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="284"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="344"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="291"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="331"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t start Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="356"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="325"/>
         <source> Stop  </source>
         <translation> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="379"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="351"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="674"/>
         <source>Refresh duration:</source>
         <translation>Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="674"/>
         <source>Block transfer rate:</source>
         <translation>Block transfer rate:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="818"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="790"/>
         <source>Save MB/SW List</source>
         <translation>Save MB/SW List</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="820"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="873"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="792"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="845"/>
         <source>FreeSSM MB/SW list files</source>
         <translation>FreeSSM MB/SW list files</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="800"/>
         <source>Save Error</source>
         <translation>Save Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="800"/>
         <source>Error storing MBs/SWs:
 Could not open file for writing MBs/SWs.</source>
         <translation>Error storing MBs/SWs:
 Could not open file for writing MBs/SWs.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="843"/>
         <source>Load MB/SW List</source>
         <translation>Load MB/SW List</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="852"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Load Error</source>
         <translation>Load Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="852"/>
         <source>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</source>
         <translation>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
         <translation>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1040"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1040"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
@@ -1600,18 +1600,21 @@ Maybe the device is already in use by another application...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="157"/>
-        <source>      ABS/VDC       </source>
-        <translation>      ABS/VDC       </translation>
+        <source>      A&amp;BS/VDC       </source>
+        <oldsource>      ABS/VDC       </oldsource>
+        <translation>      A&amp;BS/VDC       </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="188"/>
-        <source>  Cruise Control </source>
-        <translation>  Cruise Control </translation>
+        <source>  &amp;Cruise Control </source>
+        <oldsource>  Cruise Control </oldsource>
+        <translation>  &amp;Cruise Control </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="216"/>
-        <source>Air Conditioning</source>
-        <translation>Air Conditioning</translation>
+        <source>A&amp;ir Conditioning</source>
+        <oldsource>Air Conditioning</oldsource>
+        <translation>A&amp;ir Conditioning</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="247"/>
@@ -1718,7 +1721,7 @@ Maybe the device is already in use by another application...</translation>
     <message>
         <location filename="src/Preferences.cpp" line="166"/>
         <location filename="src/Preferences.cpp" line="442"/>
-        <location filename="src/Preferences.cpp" line="480"/>
+        <location filename="src/Preferences.cpp" line="473"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>

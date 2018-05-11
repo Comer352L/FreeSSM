@@ -730,90 +730,90 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="284"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="344"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Das Lesen der Messwertblöcke konnte nicht beendet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="291"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="331"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Das Lesen der Messwertblöcke konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="356"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="325"/>
         <source> Stop  </source>
         <translation> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="379"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="351"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="674"/>
         <source>Refresh duration:</source>
         <translation>Aktualisierungsdauer:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="702"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="674"/>
         <source>Block transfer rate:</source>
         <translation>Block-Transferrate:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="818"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="790"/>
         <source>Save MB/SW List</source>
         <translation>Messwertblockliste speichern</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="820"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="873"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="792"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="845"/>
         <source>FreeSSM MB/SW list files</source>
         <translation>FreeSSM MB/SW-Listen-Dateien</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="800"/>
         <source>Save Error</source>
         <translation>Fehler beim Speichern</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="828"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="800"/>
         <source>Error storing MBs/SWs:
 Could not open file for writing MBs/SWs.</source>
         <translation>Fehler beim Speichern der MB/SW:
 Datei kann nicht zum Schreiben geoeffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="843"/>
         <source>Load MB/SW List</source>
         <translation>Messwertblockliste laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="852"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Load Error</source>
         <translation>Fehler beim Laden</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="880"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="852"/>
         <source>Error reading back MBs/SWs:
 Could not open file for reading MBs/SWs.</source>
         <translation>Fehler beim Lesen der MB/SW:
 Datei konnte nicht geöffnet werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="899"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="871"/>
         <source>Error reading back MBs/SWs:
 Saved ROM Id does not match current ROM Id.</source>
         <translation>Fehler beim Lesen der MB/SW:
 ROM Id in der Datei stimmt nicht mit aktueller ROM Id ueberein.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1040"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1068"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1040"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
@@ -1601,18 +1601,21 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="157"/>
-        <source>      ABS/VDC       </source>
-        <translation>      ABS/VDC       </translation>
+        <source>      A&amp;BS/VDC       </source>
+        <oldsource>      ABS/VDC       </oldsource>
+        <translation>      &amp;ABS/VDC       </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="188"/>
-        <source>  Cruise Control </source>
-        <translation>Geschw.-Regel. </translation>
+        <source>  &amp;Cruise Control </source>
+        <oldsource>  Cruise Control </oldsource>
+        <translation>Geschw.-&amp;Regel. </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="216"/>
-        <source>Air Conditioning</source>
-        <translation>   Klimaanlage     </translation>
+        <source>A&amp;ir Conditioning</source>
+        <oldsource>Air Conditioning</oldsource>
+        <translation>   &amp;Klimaanlage     </translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="247"/>
@@ -1719,7 +1722,7 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
     <message>
         <location filename="src/Preferences.cpp" line="166"/>
         <location filename="src/Preferences.cpp" line="442"/>
-        <location filename="src/Preferences.cpp" line="480"/>
+        <location filename="src/Preferences.cpp" line="473"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -2068,7 +2071,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <source>About FreeSSM</source>
         <translation>Informationen über FreeSSM</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="1147"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
         <translation>Ein freies Diagnose- und Adaptions-Tool für SUBARU®-Fahrzeuge</translation>
@@ -2088,7 +2091,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="154"/>
         <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</source>
         <oldsource>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®</oldsource>
@@ -2139,7 +2142,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <source>&amp;About</source>
         <translation>&amp;Über</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="119"/>
         <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
 
@@ -2198,7 +2201,7 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <source>Program languages:</source>
         <translation>Programmsprachen:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="640"/>
         <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
         <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
@@ -2209,17 +2212,17 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
         <translation>Viele Icons stammen aus den &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; und &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; Icon-Sammlungen.</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="684"/>
         <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
         <translation>Truetype-Schrift &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="728"/>
         <source>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)</source>
         <translation>L1800Turbo (SSM1 ECU Definitionen, Tests)&lt;br&gt;MartinX (SSM2 Definitionen, Bugfix)&lt;br&gt;Antoine Giniès (Hintergrundbild, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU Untersuchungen, Tests)</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="750"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>

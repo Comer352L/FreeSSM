@@ -154,7 +154,7 @@
       </font>
      </property>
      <property name="text">
-      <string>      ABS/VDC       </string>
+      <string>      A&amp;BS/VDC       </string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -185,7 +185,7 @@
       </font>
      </property>
      <property name="text">
-      <string>  Cruise Control </string>
+      <string>  &amp;Cruise Control </string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -213,7 +213,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Air Conditioning</string>
+      <string>A&amp;ir Conditioning</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
