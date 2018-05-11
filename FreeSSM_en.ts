@@ -1713,13 +1713,9 @@ Maybe the device is already in use by another application...</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="191"/>
+        <location filename="ui/small/FreeSSM.ui" line="215"/>
         <source>A&amp;ir Conditioning</source>
         <translation>A&amp;ir Conditioning</translation>
-    </message>
-    <message>
-        <location filename="ui/small/FreeSSM.ui" line="224"/>
-        <source>Air Conditioning</source>
-        <translation>Air Conditioning</translation>
     </message>
     <message>
         <location filename="ui/FreeSSM.ui" line="222"/>
@@ -1747,42 +1743,42 @@ Maybe the device is already in use by another application...</translation>
         <translation>Control Units:</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="89"/>
+        <location filename="ui/small/FreeSSM.ui" line="80"/>
         <source>&amp;Engine</source>
         <translation>&amp;Engine</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="122"/>
+        <location filename="ui/small/FreeSSM.ui" line="113"/>
         <source>&amp;Transmission</source>
         <translation>&amp;Transmission</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="155"/>
-        <source>ABS/VDC</source>
-        <translation>ABS/VDC</translation>
+        <location filename="ui/small/FreeSSM.ui" line="146"/>
+        <source>A&amp;BS/VDC</source>
+        <translation>A&amp;BS/VDC</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="191"/>
-        <source>Cruise Control</source>
-        <translation>Cruise Control</translation>
+        <location filename="ui/small/FreeSSM.ui" line="182"/>
+        <source>&amp;Cruise Control</source>
+        <translation>&amp;Cruise Control</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="260"/>
+        <location filename="ui/small/FreeSSM.ui" line="251"/>
         <source>&amp;Preferences</source>
         <translation>&amp;Preferences</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="293"/>
+        <location filename="ui/small/FreeSSM.ui" line="284"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="326"/>
+        <location filename="ui/small/FreeSSM.ui" line="317"/>
         <source>&amp;About</source>
         <translation>&amp;About</translation>
     </message>
     <message>
-        <location filename="ui/small/FreeSSM.ui" line="365"/>
+        <location filename="ui/small/FreeSSM.ui" line="356"/>
         <source>E&amp;xit</source>
         <translation>E&amp;xit</translation>
     </message>

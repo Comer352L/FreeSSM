@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>477</width>
-    <height>140</height>
+    <width>486</width>
+    <height>170</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,16 +44,7 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <property name="leftMargin">
-     <number>6</number>
-    </property>
-    <property name="topMargin">
-     <number>6</number>
-    </property>
-    <property name="rightMargin">
-     <number>6</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>6</number>
     </property>
     <item row="0" column="0">
@@ -152,7 +143,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>ABS/VDC</string>
+         <string>A&amp;BS/VDC</string>
         </property>
         <property name="icon">
          <iconset resource="../../resources/FreeSSM.qrc">
@@ -188,7 +179,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Cruise Control</string>
+         <string>&amp;Cruise Control</string>
         </property>
         <property name="icon">
          <iconset resource="../../resources/FreeSSM.qrc">
@@ -221,7 +212,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Air Conditioning</string>
+         <string>A&amp;ir Conditioning</string>
         </property>
         <property name="icon">
          <iconset resource="../../resources/FreeSSM.qrc">
