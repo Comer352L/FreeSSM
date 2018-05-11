@@ -119,7 +119,7 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
 	clearRefreshTime();
-	// Output titles and units of the selcted MBs/SWs
+	// Output titles and units of the selected MBs/SWs
 	displayMBsSWs();
 	// *** Enable/Disable all GUI-elements:
 	// Labels + tables:
@@ -951,7 +951,7 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	displayMBsSWs();
 	// RESELECT MOVED ROWS:
 	_valuesTableView->selectMBSWtableRows(rowToMoveDownIndex, rowToMoveDownTargetIndex-1);
-	// SCROLL TO POSTION OF FIRST SELCTED ROW:
+	// SCROLL TO POSTION OF FIRST SELECTED ROW:
 	_valuesTableView->scrollMBSWtable(rowToMoveDownIndex);
 }
 
@@ -985,7 +985,7 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	displayMBsSWs();
 	// RESELECT MOVED ROWS:
 	_valuesTableView->selectMBSWtableRows(rowToMoveUpTargetIndex+1, rowToMoveUpIndex);
-	// SCROLL TO POSTION OF LAST SELCTED ROW:
+	// SCROLL TO POSITION OF LAST SELECTED ROW:
 	_valuesTableView->scrollMBSWtable(rowToMoveUpIndex);
 }
 
