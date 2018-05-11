@@ -282,14 +282,14 @@ void CUcontent_MBsSWs::startstopMBsSWsButtonPressed()
 void CUcontent_MBsSWs::callStart()
 {
 	if (!startMBSWreading())
-		communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
+		communicationError(tr("=> Couldn't start Measuring Blocks Reading."));
 }
 
 
 void CUcontent_MBsSWs::callStop()
 {
 	if (!stopMBSWreading())
-		communicationError(tr("=> Couldn't start Measuring Blocks Reading."));
+		communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
 }
 
 
