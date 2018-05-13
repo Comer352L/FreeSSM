@@ -36,8 +36,10 @@ class CUcontent_MBsSWs_tableView : public QWidget, private Ui::MBSWtable_Form
 public:
 	CUcontent_MBsSWs_tableView(QWidget *parent, bool showMin=true, bool showMax=true);
 	~CUcontent_MBsSWs_tableView();
-	void setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values, const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units);
-	void updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList, const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList);
+	void setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values,
+				const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units);
+	void updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList,
+			      const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList  );
 	void clearMBSWlistContent();
 	bool minValuesEnabled() const;
 	bool maxValuesEnabled() const;

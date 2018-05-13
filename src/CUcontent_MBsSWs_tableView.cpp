@@ -81,7 +81,12 @@ CUcontent_MBsSWs_tableView::~CUcontent_MBsSWs_tableView()
 }
 
 
-void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>& types, const std::vector<QString>& titles, const std::vector<QString>& values, const std::vector<QString>& minValues, const std::vector<QString>& maxValues, const std::vector<QString>& units)
+void CUcontent_MBsSWs_tableView::setMBSWlistContent(const std::vector<BlockType>& types,
+						    const std::vector<QString>& titles,
+						    const std::vector<QString>& values,
+						    const std::vector<QString>& minValues,
+						    const std::vector<QString>& maxValues,
+						    const std::vector<QString>& units      )
 {
 	int firstrowvisibleindex = 0;
 	// Delete table content:
@@ -133,7 +138,10 @@ void CUcontent_MBsSWs_tableView::updateMBColumn(const std::vector<QString>& data
 	}
 }
 
-void CUcontent_MBsSWs_tableView::updateMBSWvalues(const std::vector<QString>& valueStrList, const std::vector<QString>& minValueStrList, const std::vector<QString>& maxValueStrList, const std::vector<QString>& unitStrList)
+void CUcontent_MBsSWs_tableView::updateMBSWvalues(const std::vector<QString>& valueStrList,
+						  const std::vector<QString>& minValueStrList,
+						  const std::vector<QString>& maxValueStrList,
+						  const std::vector<QString>& unitStrList     )
 {
 	updateMBColumn(minValueStrList, Column::min);
 	updateMBColumn(valueStrList, Column::current);
@@ -276,7 +284,7 @@ void CUcontent_MBsSWs_tableView::resizeEvent(QResizeEvent *event)
 	// Set vertical scroll bar policy:
 	selectedMBsSWs_tableWidget->setVerticalScrollBarPolicy( minnrofrows > _nrofMBsSWs ? Qt::ScrollBarAlwaysOff : Qt::ScrollBarAsNeeded );
 	// Switch back to "Scroll per item"-mode:
-	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that  here...
+	selectedMBsSWs_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that here...
 	// Accept event:
 	event->accept();
 }
