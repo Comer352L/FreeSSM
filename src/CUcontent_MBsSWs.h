@@ -83,8 +83,6 @@ public:
 	CUcontent_MBsSWs(MBSWsettings_dt options = MBSWsettings_dt(), QWidget *parent = nullptr);
 	~CUcontent_MBsSWs();
 	bool setup(SSMprotocol *SSMPdev);
-	bool startMBSWreading();
-	bool stopMBSWreading();
 	bool setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
 	std::vector<MBSWmetadata_dt> getMBSWselection() const;
 	MBSWsettings_dt getSettings() const;
@@ -119,8 +117,8 @@ private:
 
 private slots:
 	void startstopMBsSWsButtonPressed();
-	void callStart();
-	void callStop();
+	bool startMBSWreading();
+	bool stopMBSWreading();
 	void processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();

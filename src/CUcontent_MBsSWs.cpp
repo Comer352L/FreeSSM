@@ -76,8 +76,8 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	{
 		_SSMPdev->stopMBSWreading();
 		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
-		disconnect( _SSMPdev , SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
+		disconnect( _SSMPdev , SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 	}
 	disconnect( startstopmbreading_pushButton , SIGNAL( released() ), this, SLOT( startstopMBsSWsButtonPressed() ) );
 	disconnect( mbswadd_pushButton , SIGNAL( released() ), this, SLOT( addMBsSWs() ) );
@@ -186,14 +186,14 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
 		mbswsave_pushButton->setEnabled(true);
-		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	else
 	{
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
 		mbswsave_pushButton->setEnabled(false);
-		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
@@ -273,23 +273,9 @@ void CUcontent_MBsSWs::displayMBsSWs()
 void CUcontent_MBsSWs::startstopMBsSWsButtonPressed()
 {
 	if (!_SSMPdev || (_SSMPdev->state() == SSMprotocol::state_MBSWreading))
-		callStop();
+		stopMBSWreading();
 	else
-		callStart();
-}
-
-
-void CUcontent_MBsSWs::callStart()
-{
-	if (!startMBSWreading())
-		communicationError(tr("=> Couldn't start Measuring Blocks Reading."));
-}
-
-
-void CUcontent_MBsSWs::callStop()
-{
-	if (!stopMBSWreading())
-		communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
+		startMBSWreading();
 }
 
 
@@ -297,18 +283,18 @@ bool CUcontent_MBsSWs::startMBSWreading()
 {
 	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
-	if (!_SSMPdev) return false;
+	if (!_SSMPdev) goto err;
 	// Check premises:
 	state = _SSMPdev->state();
 	if (state == SSMprotocol::state_normal)
 	{
-		if (_MBSWmetaList.empty()) return false;
-		disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+		if (_MBSWmetaList.empty()) goto err;
+		disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 		// Start MB/SW-reading:
 		if (!_SSMPdev->startMBSWreading(_MBSWmetaList))
 		{
-			connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
-			return false;
+			connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+			goto err;
 		}
 	}
 	else if (state == SSMprotocol::state_MBSWreading)
@@ -316,10 +302,10 @@ bool CUcontent_MBsSWs::startMBSWreading()
 		// NOTE: this means we are informed that someone else has called _SSMPdev->startMBSWreading()
 		// Update the MB/SW selection:
 		if (!_SSMPdev->getLastMBSWselection(&_MBSWmetaList))
-			return false;
+			goto err;
 	}
 	else
-		return false;
+		goto err;
 	// Reset old data:
 	_lastValues.clear();
 	_minmaxData.clear();
@@ -329,7 +315,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	clearRefreshTime();
 	// Connect signals and slots:
 	connect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) );
+	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
 	// Disable add/delete buttons:
 	mbswdelete_pushButton->setEnabled(false);
 	mbswadd_pushButton->setEnabled(false);
@@ -337,11 +323,13 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	mbswload_pushButton->setEnabled(false);
 	// Set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Stop  "));
-	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_stop.png"));
-	QSize startstopmbreadingiconsize(24,24);
-	startstopmbreading_pushButton->setIcon(startstopmbreadingicon);
-	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
+	startstopmbreading_pushButton->setIcon( QIcon(QString::fromUtf8(":/icons/chrystal/32x32/player_stop.png")) );
+	startstopmbreading_pushButton->setIconSize( QSize(24,24) );
 	return true;
+
+err:
+	communicationError(tr("=> Couldn't start Measuring Blocks Reading."));
+	return false;
 }
 
 
@@ -349,14 +337,15 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 {
 	if (_SSMPdev)
 	{
-		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
 		if (!_SSMPdev->stopMBSWreading())
 		{
-			connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( callStop() ) ); // must be disconnected before stopMBSWreading is called
+			connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
+			communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
 			return false;
 		}
 		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-		connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ) );
+		connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 	}
 	// Set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Start  "));
@@ -728,7 +717,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswsave_pushButton->setEnabled(true);
-		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
@@ -781,7 +770,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
 		mbswsave_pushButton->setEnabled(false);
-		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( callStart() ));
+		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
