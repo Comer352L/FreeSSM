@@ -314,15 +314,9 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	else if (state == SSMprotocol::state_MBSWreading)
 	{
 		// NOTE: this means we are informed that someone else has called _SSMPdev->startMBSWreading()
-		// Verify that the MB/SW selection is still the same:
-		if (!_SSMPdev->getLastMBSWselection(&usedMBSWmetaList))
+		// Update the MB/SW selection:
+		if (!_SSMPdev->getLastMBSWselection(&_MBSWmetaList))
 			return false;
-		if (_MBSWmetaList != usedMBSWmetaList)
-		{
-			// Stop MBSW-reading:
-			stopMBSWreading();
-			return false;
-		}
 	}
 	else
 		return false;
