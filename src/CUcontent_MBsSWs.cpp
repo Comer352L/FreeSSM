@@ -297,8 +297,6 @@ bool CUcontent_MBsSWs::startMBSWreading()
 {
 	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
-	unsigned int k = 0;
-	bool consistent = true;
 	if (!_SSMPdev) return false;
 	// Check premises:
 	state = _SSMPdev->state();
@@ -315,21 +313,11 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	}
 	else if (state == SSMprotocol::state_MBSWreading)
 	{
-		// Verify consistency:
+		// NOTE: this means we are informed that someone else has called _SSMPdev->startMBSWreading()
+		// Verify that the MB/SW selection is still the same:
 		if (!_SSMPdev->getLastMBSWselection(&usedMBSWmetaList))
 			return false;
-		if (_MBSWmetaList.size() == usedMBSWmetaList.size())
-		{
-			for (k=0; k<_MBSWmetaList.size(); k++)
-			{
-				if ((_MBSWmetaList.at(k).blockType != usedMBSWmetaList.at(k).blockType) || (_MBSWmetaList.at(k).nativeIndex != usedMBSWmetaList.at(k).nativeIndex))
-				{
-					consistent = false;
-					break;
-				}
-			}
-		}
-		if (!consistent)	// inconsistency detected !
+		if (_MBSWmetaList != usedMBSWmetaList)
 		{
 			// Stop MBSW-reading:
 			stopMBSWreading();

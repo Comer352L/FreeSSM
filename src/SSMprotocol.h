@@ -90,6 +90,11 @@ class MBSWmetadata_dt
 public:
 	BlockType blockType;
 	unsigned int nativeIndex;
+
+	bool operator == (const MBSWmetadata_dt &a) const
+	{
+		return ( (a.blockType==blockType) && (a.nativeIndex==nativeIndex) );
+	}
 };
 
 
