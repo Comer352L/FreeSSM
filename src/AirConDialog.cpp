@@ -87,86 +87,83 @@ void AirConDialog::setup()
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
 	SSMprotocol::CUsetupResult_dt init_result = probeProtocol(SSMprotocol::CUtype_AirCon);
-	if ((init_result == SSMprotocol::result_success) || (init_result == SSMprotocol::result_noOrInvalidDefsFile) || (init_result == SSMprotocol::result_noDefs))
-	{
-		// Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Processing Control Unit data... Please wait !"));
-		initstatusmsgbox.setValue(40);
-		// Query ROM-ID:
-		ROM_ID = _SSMPdev->getROMID();
-		if (!ROM_ID.length())
-			goto commError;
-		// Query system description:
-		if (!_SSMPdev->getSystemDescription(&sysdescription))
-		{
-			std::string SYS_ID = _SSMPdev->getSysID();
-			if (!SYS_ID.length())
-				goto commError;
-			sysdescription = tr("unknown");
-			if (SYS_ID != ROM_ID)
-				sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
-		}
-		// Output system description:
-		_infoWidget->setSystemTypeText(sysdescription);
-		// Output ROM-ID:
-		_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
-		if (init_result == SSMprotocol::result_success)
-		{
-			// Number of supported MBs / SWs:
-			if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
-				goto commError;
-			_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
-			// "Clear Memory"-support:
-			if (!_SSMPdev->hasClearMemory(&supported))
-				goto commError;
-			_clearMemory_pushButton->setEnabled(supported);
-			// Start Diagnostic Codes reading:
-			if (!_content_DCs->setup(_SSMPdev))
-				goto commError;
-			if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
-				goto commError;
-			if (supDCgroups != SSMprotocol::noDCs_DCgroup)
-			{
-				if (!_content_DCs->startDCreading())
-					goto commError;
-			}
-			connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-			// Update and close status info:
-			initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
-			initstatusmsgbox.setValue(100);
-			QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
-			initstatusmsgbox.exec();
-			initstatusmsgbox.close();
-		}
-		else
-		{
-			// "Clear Memory"-support:
-			_clearMemory_pushButton->setEnabled(false);
-			// Close progress dialog:
-			initstatusmsgbox.close();
-			// Show error message:
-			QString errtext;
-			if (init_result == SSMprotocol::result_noOrInvalidDefsFile)
-			{
-				errtext = tr("Error:\nNo valid definitions file found.\nPlease make sure that FreeSSM is installed properly.");
-			}
-			else if (init_result == SSMprotocol::result_noDefs)
-			{
-				errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\nFreeSSM can communiate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\nIf you want to contribute to the the project (help adding defintions), feel free to contact the authors.");
-			}
-			QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
-			QFont msgfont = msg.font();
-			msgfont.setPointSize(9);
-			msg.setFont( msgfont );
-			msg.show();
-			msg.exec();
-			msg.close();
-			// Exit CU dialog:
-			close();
-		}
-	}
-	else // All other errors
+	if ((init_result != SSMprotocol::result_success) && (init_result != SSMprotocol::result_noOrInvalidDefsFile) && (init_result != SSMprotocol::result_noDefs))
 		goto commError;
+	// Update status info message box:
+	initstatusmsgbox.setLabelText(tr("Processing Control Unit data... Please wait !"));
+	initstatusmsgbox.setValue(40);
+	// Query ROM-ID:
+	ROM_ID = _SSMPdev->getROMID();
+	if (!ROM_ID.length())
+		goto commError;
+	// Query system description:
+	if (!_SSMPdev->getSystemDescription(&sysdescription))
+	{
+		std::string SYS_ID = _SSMPdev->getSysID();
+		if (!SYS_ID.length())
+			goto commError;
+		sysdescription = tr("unknown");
+		if (SYS_ID != ROM_ID)
+			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
+	}
+	// Output system description:
+	_infoWidget->setSystemTypeText(sysdescription);
+	// Output ROM-ID:
+	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
+	if (init_result == SSMprotocol::result_success)
+	{
+		// Number of supported MBs / SWs:
+		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+			goto commError;
+		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+		// "Clear Memory"-support:
+		if (!_SSMPdev->hasClearMemory(&supported))
+			goto commError;
+		_clearMemory_pushButton->setEnabled(supported);
+		// Start Diagnostic Codes reading:
+		if (!_content_DCs->setup(_SSMPdev))
+			goto commError;
+		if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
+			goto commError;
+		if (supDCgroups != SSMprotocol::noDCs_DCgroup)
+		{
+			if (!_content_DCs->startDCreading())
+				goto commError;
+		}
+		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+		// Update and close status info:
+		initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
+		initstatusmsgbox.setValue(100);
+		QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
+		initstatusmsgbox.exec();
+		initstatusmsgbox.close();
+	}
+	else
+	{
+		// "Clear Memory"-support:
+		_clearMemory_pushButton->setEnabled(false);
+		// Close progress dialog:
+		initstatusmsgbox.close();
+		// Show error message:
+		QString errtext;
+		if (init_result == SSMprotocol::result_noOrInvalidDefsFile)
+		{
+			errtext = tr("Error:\nNo valid definitions file found.\nPlease make sure that FreeSSM is installed properly.");
+		}
+		else if (init_result == SSMprotocol::result_noDefs)
+		{
+			errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\nFreeSSM can communiate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\nIf you want to contribute to the the project (help adding defintions), feel free to contact the authors.");
+		}
+		QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
+		QFont msgfont = msg.font();
+		msgfont.setPointSize(9);
+		msg.setFont( msgfont );
+		msg.show();
+		msg.exec();
+		msg.close();
+		// Exit CU dialog:
+		close();
+	}
 	return;
 
 commError:
