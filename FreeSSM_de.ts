@@ -25,7 +25,7 @@
     </message>
     <message>
         <location filename="src/ABSdialog.cpp" line="49"/>
-        <location filename="src/ABSdialog.cpp" line="179"/>
+        <location filename="src/ABSdialog.cpp" line="176"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
@@ -67,8 +67,12 @@ Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
         <location filename="src/ABSdialog.cpp" line="144"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <oldsource>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</oldsource>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
 FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
@@ -80,17 +84,17 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/ABSdialog.cpp" line="173"/>
+        <location filename="src/ABSdialog.cpp" line="170"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ABSdialog.cpp" line="207"/>
+        <location filename="src/ABSdialog.cpp" line="204"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ABSdialog.cpp" line="213"/>
+        <location filename="src/ABSdialog.cpp" line="210"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
@@ -276,7 +280,7 @@ Stellglied-Test konnte nicht gestartet werden.</translation>
     </message>
     <message>
         <location filename="src/AirConDialog.cpp" line="44"/>
-        <location filename="src/AirConDialog.cpp" line="190"/>
+        <location filename="src/AirConDialog.cpp" line="187"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
@@ -333,8 +337,12 @@ Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
         <location filename="src/AirConDialog.cpp" line="155"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <oldsource>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</oldsource>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
 FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
@@ -346,17 +354,17 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="184"/>
+        <location filename="src/AirConDialog.cpp" line="181"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="218"/>
+        <location filename="src/AirConDialog.cpp" line="215"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/AirConDialog.cpp" line="224"/>
+        <location filename="src/AirConDialog.cpp" line="221"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
@@ -1302,7 +1310,7 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
     </message>
     <message>
         <location filename="src/CruiseControlDialog.cpp" line="42"/>
-        <location filename="src/CruiseControlDialog.cpp" line="181"/>
+        <location filename="src/CruiseControlDialog.cpp" line="178"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
@@ -1359,8 +1367,12 @@ Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
         <location filename="src/CruiseControlDialog.cpp" line="146"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <oldsource>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</oldsource>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
 FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
@@ -1372,17 +1384,17 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="175"/>
+        <location filename="src/CruiseControlDialog.cpp" line="172"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="209"/>
+        <location filename="src/CruiseControlDialog.cpp" line="206"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/CruiseControlDialog.cpp" line="215"/>
+        <location filename="src/CruiseControlDialog.cpp" line="212"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
@@ -1511,7 +1523,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
     </message>
     <message>
         <location filename="src/EngineDialog.cpp" line="48"/>
-        <location filename="src/EngineDialog.cpp" line="231"/>
+        <location filename="src/EngineDialog.cpp" line="228"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
@@ -1575,8 +1587,12 @@ Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
         <location filename="src/EngineDialog.cpp" line="196"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <oldsource>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</oldsource>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
 FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu können.
@@ -1588,46 +1604,46 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="225"/>
+        <location filename="src/EngineDialog.cpp" line="222"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="259"/>
+        <location filename="src/EngineDialog.cpp" line="256"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="265"/>
+        <location filename="src/EngineDialog.cpp" line="262"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="288"/>
+        <location filename="src/EngineDialog.cpp" line="285"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation>Wechsele zu Einstellungen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="294"/>
+        <location filename="src/EngineDialog.cpp" line="291"/>
         <source>Adjustments:</source>
         <translation>Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="314"/>
+        <location filename="src/EngineDialog.cpp" line="311"/>
         <source>Switching to System Tests... Please wait !</source>
         <oldsource>Switching to System Tests... Please wait !   </oldsource>
         <translation>Wechsele zu System-Funktionstests... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="320"/>
+        <location filename="src/EngineDialog.cpp" line="317"/>
         <source>System Operation Tests:</source>
         <translation>System-Funktionstests:</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="351"/>
+        <location filename="src/EngineDialog.cpp" line="348"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation>Einstellungen werden gelesen... Bitte warten !</translation>
@@ -2132,7 +2148,7 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message>
         <location filename="src/TransmissionDialog.cpp" line="49"/>
-        <location filename="src/TransmissionDialog.cpp" line="189"/>
+        <location filename="src/TransmissionDialog.cpp" line="186"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
@@ -2181,8 +2197,12 @@ Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
         <location filename="src/TransmissionDialog.cpp" line="154"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
-FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
 If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</source>
+        <oldsource>Error:
+This control unit is not yet supported by FreeSSM.
+FreeSSM can communiate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
+If you want to contribute to the the project (help adding defintions), feel free to contact the authors.</oldsource>
         <translation>Fehler:
 Dieses Steuergerät wird von FreeSSM noch nicht unterstützt.
 FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwendigen Daten, um die Diagnosefunktionen nutzen zu könnnen.
@@ -2194,35 +2214,35 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="183"/>
+        <location filename="src/TransmissionDialog.cpp" line="180"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <oldsource>Switching to Diagnostic Codes... Please wait !   </oldsource>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="217"/>
+        <location filename="src/TransmissionDialog.cpp" line="214"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <oldsource>Switching to Measuring Blocks... Please wait !   </oldsource>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="223"/>
+        <location filename="src/TransmissionDialog.cpp" line="220"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="246"/>
+        <location filename="src/TransmissionDialog.cpp" line="243"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <oldsource>Switching to Adjustment Values... Please wait !   </oldsource>
         <translation>Wechsele zu Einstellungen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="252"/>
+        <location filename="src/TransmissionDialog.cpp" line="249"/>
         <source>Adjustments:</source>
         <translation>Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="294"/>
+        <location filename="src/TransmissionDialog.cpp" line="291"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <oldsource>Reading Adjustment Values... Please wait !   </oldsource>
         <translation>Einstellungen werden gelesen... Bitte warten !</translation>

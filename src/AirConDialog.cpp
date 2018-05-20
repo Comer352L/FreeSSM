@@ -152,7 +152,7 @@ void AirConDialog::setup()
 		}
 		else if (init_result == SSMprotocol::result_noDefs)
 		{
-			errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\nFreeSSM can communiate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\nIf you want to contribute to the the project (help adding defintions), feel free to contact the authors.");
+			errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\nFreeSSM can communicate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\nIf you want to contribute to the the project (help adding defintions), feel free to contact the authors.");
 		}
 		QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
 		QFont msgfont = msg.font();
