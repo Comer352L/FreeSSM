@@ -65,6 +65,9 @@ bool ABSdialog::setup()
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
+
+	if (_setup_done)
+		return true;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ABS/VDC Control Unit... Please wait !"), 0, 0, 100, this);
@@ -155,6 +158,7 @@ bool ABSdialog::setup()
 		close();
 		return false;
 	}
+	_setup_done = true;
 	return true;
 
 commError:

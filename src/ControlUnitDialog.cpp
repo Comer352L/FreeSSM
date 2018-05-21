@@ -28,6 +28,7 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
+	_setup_done = false;
 	// Setup GUI:
 	setupUi(this);
 	// enable maximize and minimize buttons

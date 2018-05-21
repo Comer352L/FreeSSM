@@ -41,6 +41,7 @@ public:
 
 protected:
 	SSMprotocol *_SSMPdev;
+	bool _setup_done;
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);

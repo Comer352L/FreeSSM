@@ -59,6 +59,9 @@ bool CruiseControlDialog::setup()
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
 	int ret;
+
+	if (_setup_done)
+		return true;
 	// ***** Connect to Control Unit *****:
 	// Inform user that system needs to be switched on manually:
 	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Cruise Control system on."), 0, this);
@@ -158,6 +161,7 @@ bool CruiseControlDialog::setup()
 		close();
 		return false;
 	}
+	_setup_done = true;
 	return true;
 
 commError:
