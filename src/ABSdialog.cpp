@@ -59,7 +59,7 @@ ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : C
 }
 
 
-void ABSdialog::setup()
+bool ABSdialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -153,12 +153,14 @@ void ABSdialog::setup()
 		msg.close();
 		// Exit CU dialog:
 		close();
+		return false;
 	}
-	return;
+	return true;
 
 commError:
 	initstatusmsgbox.close();
 	communicationError();
+	return false;
 }
 
 

@@ -58,7 +58,7 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 }
 
 
-void EngineDialog::setup()
+bool EngineDialog::setup()
 {
 	QString sysdescription = "";
 	std::string SYS_ID = "";
@@ -205,12 +205,14 @@ void EngineDialog::setup()
 		msg.close();
 		// Exit CU dialog:
 		close();
+		return false;
 	}
-	return;
+	return true;
 
 commError:
 	initstatusmsgbox.close();
 	communicationError();
+	return false;
 }
 
 

@@ -59,7 +59,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 }
 
 
-void TransmissionDialog::setup()
+bool TransmissionDialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -163,12 +163,14 @@ void TransmissionDialog::setup()
 		msg.close();
 		// Exit CU dialog:
 		close();
+		return false;
 	}
-	return;
+	return true;
 
 commError:
 	initstatusmsgbox.close();
 	communicationError();
+	return false;
 }
 
 

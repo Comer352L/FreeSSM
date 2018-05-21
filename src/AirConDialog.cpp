@@ -54,7 +54,7 @@ AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString languag
 }
 
 
-void AirConDialog::setup()
+bool AirConDialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -76,7 +76,7 @@ void AirConDialog::setup()
 	if (ret != QMessageBox::Ok)
 	{
 		close();
-		return;
+		return false;
 	}
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Air Conditioning Control Unit... Please wait !"), 0, 0, 100, this);
@@ -165,12 +165,14 @@ void AirConDialog::setup()
 		msg.close();
 		// Exit CU dialog:
 		close();
+		return false;
 	}
-	return;
+	return true;
 
 commError:
 	initstatusmsgbox.close();
 	communicationError();
+	return false;
 }
 
 

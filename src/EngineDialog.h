@@ -65,7 +65,7 @@ private:
 	// Current content/mode:
 	mode_dt _mode;
 
-	void setup();
+	bool setup();
 	void saveContentSettings();
 
 private slots:

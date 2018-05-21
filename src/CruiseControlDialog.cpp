@@ -52,7 +52,7 @@ CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, Q
 }
 
 
-void CruiseControlDialog::setup()
+bool CruiseControlDialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -74,7 +74,7 @@ void CruiseControlDialog::setup()
 	if (ret != QMessageBox::Ok)
 	{
 		close();
-		return;
+		return false;
 	}
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Cruise Control Unit... Please wait !"), 0, 0, 100, this);
@@ -156,12 +156,14 @@ void CruiseControlDialog::setup()
 		msg.close();
 		// Exit CU dialog:
 		close();
+		return false;
 	}
-	return;
+	return true;
 
 commError:
 	initstatusmsgbox.close();
 	communicationError();
+	return false;
 }
 
 
