@@ -63,11 +63,8 @@ void TransmissionDialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
+	std::string SYS_ID = "";
 	std::string ROM_ID = "";
-	bool supported = false;
-	std::vector<mb_dt> supportedMBs;
-	std::vector<sw_dt> supportedSWs;
-	int supDCgroups = 0;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
@@ -88,7 +85,7 @@ void TransmissionDialog::setup()
 	// Query system description:
 	if (!_SSMPdev->getSystemDescription(&sysdescription))
 	{
-		std::string SYS_ID = _SSMPdev->getSysID();
+		SYS_ID = _SSMPdev->getSysID();
 		if (!SYS_ID.length())
 			goto commError;
 		sysdescription = tr("unknown");
@@ -101,6 +98,10 @@ void TransmissionDialog::setup()
 	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 	if (init_result == SSMprotocol::result_success)
 	{
+		bool supported = false;
+		std::vector<mb_dt> supportedMBs;
+		std::vector<sw_dt> supportedSWs;
+		int supDCgroups = 0;
 		// Number of supported MBs / SWs:
 		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
