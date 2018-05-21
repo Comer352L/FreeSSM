@@ -121,8 +121,8 @@ private slots:
 	void processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
-	void saveMBsSWs();
-	void loadMBsSWs();
+	bool saveMBsSWs(QString filename = "");
+	bool loadMBsSWs(QString filename = "");
 	void moveUpMBsSWsOnTheTable();
 	void moveDownMBsSWsOnTheTable();
 	void resetMinMaxTableValues();

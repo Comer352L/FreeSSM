@@ -781,31 +781,33 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 }
 
 
-void CUcontent_MBsSWs::saveMBsSWs()
+bool CUcontent_MBsSWs::saveMBsSWs(QString filename)
 {
-	using namespace std;
 #ifdef __FSSM_DEBUG__
-	cout << "CUcontent_MBsSWs::saveMBsSWs(): saving MBs/SWs for re-use\n";
+	std::cout << "CUcontent_MBsSWs::saveMBsSWs(): saving MBs/SWs for re-use\n";
 #endif
 	// We take the ROM-ID to avoid loading MBs/SWs on a different control unit / ROM that does not support the same MBs/SWs
-	string ROM_ID = _SSMPdev->getROMID();
+	std::string ROM_ID = _SSMPdev->getROMID();
 
-	// Select file for saving
-	QString fileName = QFileDialog::getSaveFileName(this, tr("Save MB/SW List"),
+	if (!filename.size())
+	{
+		// Select file for saving
+		filename = QFileDialog::getSaveFileName(this, tr("Save MB/SW List"),
 							QCoreApplication::applicationDirPath(),
 							tr("FreeSSM MB/SW list files") + " (*.list)(*.list)");
-	if (!fileName.size())
-		return;
+		if (!filename.size())
+			return false;
+	}
 	// Open file
 	// NOTE: we write data in binary format, so non-human readable
-	ofstream file (fileName.toLocal8Bit(), ios::out | ios::binary);
+	std::ofstream file (filename.toLocal8Bit(), std::ios::out | std::ios::binary);
 	if (!file.is_open())
 	{
 		warningMsg(tr("Save Error"), tr("Error storing MBs/SWs:\nCould not open file for writing MBs/SWs."));
-		return;
+		return false;
 	}
 #ifdef __FSSM_DEBUG__
-	cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
+	std::cout << "CUcontent_MBsSWs::saveMBsSWs(): saving " << _MBSWmetaList.size() << " MBs/SWs\n";
 #endif
 	// Save ROM-ID length
 	size_t size_of_ROMstring = ROM_ID.size();
@@ -821,65 +823,69 @@ void CUcontent_MBsSWs::saveMBsSWs()
 		file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
 		file.write((char*)(&_MBSWmetaList.at(i).nativeIndex), sizeof(_MBSWmetaList.at(i).nativeIndex));
 	}
-
+	// Close the file
 	file.close();
+
+	return true;
 }
 
 
-void CUcontent_MBsSWs::loadMBsSWs()
+bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 {
-	using namespace std;
 #ifdef __FSSM_DEBUG__
-	cout << "CUcontent_MBsSWs::loadMBsSWs(): attempting to read previously saved MBs/SWs\n";
+	std::cout << "CUcontent_MBsSWs::loadMBsSWs(): attempting to read previously saved MBs/SWs\n";
 #endif
-	string ROM_ID = _SSMPdev->getROMID();
-	string savedROM_ID = "";
+	std::string ROM_ID = _SSMPdev->getROMID();
+	std::string savedROM_ID = "";
 	std::vector<MBSWmetadata_dt> MBSWmetaList;
 	MBSWmetadata_dt tmpMBSWmd;
 	unsigned int k = 0;
 
-	// Select file to load
-	QString default_filename = QCoreApplication::applicationDirPath();
-	QDir dir(QCoreApplication::applicationDirPath());
-	QStringList fileNames = dir.entryList(QStringList("*.list"), QDir::Files | QDir::Readable, QDir::Time);
-	if (fileNames.size())
-		default_filename += QDir::separator() + fileNames.at(0);
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Load MB/SW List"),
+	if (!filename.size())
+	{
+		// Select file to load
+		QString default_filename = QCoreApplication::applicationDirPath();
+		QDir dir(QCoreApplication::applicationDirPath());
+		QStringList filenames = dir.entryList(QStringList("*.list"), QDir::Files | QDir::Readable, QDir::Time);
+		if (filenames.size())
+			default_filename += QDir::separator() + filenames.at(0);
+		filename = QFileDialog::getOpenFileName(this, tr("Load MB/SW List"),
 							default_filename,
 							tr("FreeSSM MB/SW list files") + " (*.list)(*.list)");
-	if (!fileName.size())
-		return;
+		if (!filename.size())
+			return false;
+	}
 	// Open file
-	ifstream file (fileName.toLocal8Bit(), ios::in | ios::binary);
+	std::ifstream file (filename.toLocal8Bit(), std::ios::in | std::ios::binary);
 	if (!file.is_open())
 	{
 		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nCould not open file for reading MBs/SWs."));
-		return;
+		return false;
 	}
 	// Read saved ROM-ID
 	size_t size_of_ROMstring;
 	file.read((char*)(&size_of_ROMstring), sizeof(size_t));
 	char *tmp_savedROM_ID = new char[size_of_ROMstring];
 	file.read((char*)(tmp_savedROM_ID), size_of_ROMstring);
-	savedROM_ID = string(tmp_savedROM_ID, size_of_ROMstring);
+	savedROM_ID = std::string(tmp_savedROM_ID, size_of_ROMstring);
 	delete[] tmp_savedROM_ID;
 	// Check that the ROM-IDs match
 	if (ROM_ID != savedROM_ID)
 	{
 		// The ROM-IDs do not match, so ignore any file input (but don't forget to close the file...)
 #ifdef __FSSM_DEBUG__
-		cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
-		cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
+		std::cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
+		std::cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
 #endif
 		file.close();
 		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nSaved ROM Id does not match current ROM Id."));
 
-		return;
+		return false;
 	}
 	// Read number of MBs/SWs
 	file.read((char*)(&k), sizeof(k));
 #ifdef __FSSM_DEBUG__
-	cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
+	std::cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor\n";
 #endif
 	// Read saved MBs/SWs one by one
 	for (unsigned int i=0; i<k; i++)
@@ -891,6 +897,8 @@ void CUcontent_MBsSWs::loadMBsSWs()
 	file.close();
 	// Update table
 	setMBSWselection(MBSWmetaList);
+
+	return true;
 }
 
 
