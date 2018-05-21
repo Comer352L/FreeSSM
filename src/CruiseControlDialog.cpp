@@ -56,10 +56,9 @@ void CruiseControlDialog::setup()
 {
 	// *** Local variables:
 	QString sysdescription = "";
+	std::string SYS_ID = "";
 	std::string ROM_ID = "";
-	std::vector<mb_dt> supportedMBs;
-	std::vector<sw_dt> supportedSWs;
-	int supDCgroups = 0;
+	int ret;
 	// ***** Connect to Control Unit *****:
 	// Inform user that system needs to be switched on manually:
 	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Cruise Control system on."), 0, this);
@@ -70,7 +69,7 @@ void CruiseControlDialog::setup()
 	msgfont.setPointSize(9);
 	msgbox->setFont( msgfont );
 	msgbox->show();
-	int ret = msgbox->exec();
+	ret = msgbox->exec();
 	delete msgbox;
 	if (ret != QMessageBox::Ok)
 	{
@@ -96,7 +95,7 @@ void CruiseControlDialog::setup()
 	// Query system description:
 	if (!_SSMPdev->getSystemDescription(&sysdescription))
 	{
-		std::string SYS_ID = _SSMPdev->getSysID();
+		SYS_ID = _SSMPdev->getSysID();
 		if (!SYS_ID.length())
 			goto commError;
 		sysdescription = tr("unknown");
@@ -109,6 +108,9 @@ void CruiseControlDialog::setup()
 	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 	if (init_result == SSMprotocol::result_success)
 	{
+		std::vector<mb_dt> supportedMBs;
+		std::vector<sw_dt> supportedSWs;
+		int supDCgroups = 0;
 		// Number of supported MBs / SWs:
 		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
