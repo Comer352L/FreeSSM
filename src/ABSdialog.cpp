@@ -244,7 +244,7 @@ void ABSdialog::clearMemory()
 	}
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
-		close(); // exit engine control unit dialog
+		close(); // exit control unit dialog
 	}
 }
 

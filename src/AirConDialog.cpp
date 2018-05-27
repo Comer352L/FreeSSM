@@ -240,7 +240,24 @@ void AirConDialog::switchToMBsSWsMode()
 
 void AirConDialog::clearMemory()
 {
-	runClearMemory(SSMprotocol::CMlevel_1);
+	ClearMemoryDlg::CMresult_dt result;
+	// Create "Clear Memory"-dialog:
+	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
+	// Temporary disconnect from "communication error"-signal:
+	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	// Run "Clear Memory"-procedure:
+	result = cmdlg.run();
+	// Reconnect to "communication error"-signal:
+	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	// Check result:
+	if (result == ClearMemoryDlg::CMresult_communicationError)
+	{
+		communicationError();
+	}
+	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
+	{
+		close(); // exit control unit dialog
+	}
 }
 
 
@@ -274,29 +291,6 @@ bool AirConDialog::startMBsSWsMode()
 	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
 	_mode = MBsSWs_mode;
 	return true;
-}
-
-
-void AirConDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
-{
-	ClearMemoryDlg::CMresult_dt result;
-	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, level);
-	// Temporary disconnect from "communication error"-signal:
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Run "Clear Memory"-procedure:
-	result = cmdlg.run();
-	// Reconnect to "communication error"-signal:
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Check result:
-	if (result == ClearMemoryDlg::CMresult_communicationError)
-	{
-		communicationError();
-	}
-	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
-	{
-		close(); // exit engine control unit dialog
-	}
 }
 
 

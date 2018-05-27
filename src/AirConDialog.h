@@ -66,7 +66,6 @@ private:
 	bool setup(enum mode_dt mode = DCs_mode);
 	bool startDCsMode();
 	bool startMBsSWsMode();
-	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void saveContentSettings();
 
 private slots:
