@@ -42,6 +42,7 @@ public:
 protected:
 	SSMprotocol *_SSMPdev;
 	bool _setup_done;
+	QList<QPushButton*> _selButtons;
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
@@ -55,7 +56,6 @@ private:
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
 	DiagInterfaceStatusBar *_ifstatusbar;
-	QList<QPushButton*> _selButtons;
 
 	void closeEvent(QCloseEvent *event);
 
