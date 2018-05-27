@@ -42,14 +42,6 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	// Make GUI visible
-#ifdef SMALL_RESOLUTION
-	this->showFullScreen();
-#else
-	this->show();
-#endif
-	// Connect to Control Unit, get data and setup GUI:
-	setup(DCs_mode);
 }
 
 

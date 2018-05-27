@@ -278,7 +278,12 @@ void FreeSSM::transmission()
 	if (diagInterface)
 	{
 		TransmissionDialog *transmissiondialog = new TransmissionDialog(diagInterface, _language);
-		if (!transmissiondialog->isHidden())
+#ifdef SMALL_RESOLUTION
+		transmissiondialog->showFullScreen();
+#else
+		transmissiondialog->show();
+#endif
+		if (transmissiondialog->setup())
 			transmissiondialog->exec();
 		delete transmissiondialog;
 		delete diagInterface;
