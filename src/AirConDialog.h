@@ -1,7 +1,7 @@
 /*
  * AirConDialog.h - Air Conditioning Control Unit dialog
  *
- * Copyright (C) 2012 L1800Turbo, 2008-2012 Comer352L
+ * Copyright (C) 2012 L1800Turbo, 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,11 +46,11 @@ class AirConDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
+	enum mode_dt {DCs_mode, MBsSWs_mode};
+
 	AirConDialog(AbstractDiagInterface *diagInterface, QString language);
 
 private:
-	enum mode_dt {DCs_mode=1, MBsSWs_mode=2};
-
 	// Content backup parameters:
 	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
 	MBSWsettings_dt _MBSWsettings;
@@ -63,13 +63,15 @@ private:
 	// Current content/mode:
 	mode_dt _mode;
 
-	bool setup();
+	bool setup(enum mode_dt mode = DCs_mode);
+	bool startDCsMode();
+	bool startMBsSWsMode();
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void saveContentSettings();
 
 private slots:
-	void DTCs();
-	void measuringblocks();
+	void switchToDCsMode();
+	void switchToMBsSWsMode();
 	void clearMemory();
 
 };
