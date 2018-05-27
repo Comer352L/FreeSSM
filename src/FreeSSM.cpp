@@ -297,7 +297,12 @@ void FreeSSM::abs()
 	if (diagInterface)
 	{
 		ABSdialog *absdialog = new ABSdialog(diagInterface, _language);
-		if (!absdialog->isHidden())
+#ifdef SMALL_RESOLUTION
+		absdialog->showFullScreen();
+#else
+		absdialog->show();
+#endif
+		if (absdialog->setup())
 			absdialog->exec();
 		delete absdialog;
 		delete diagInterface;
