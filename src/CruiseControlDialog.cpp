@@ -128,6 +128,10 @@ bool CruiseControlDialog::setup(enum mode_dt mode)
 		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
 		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+		// Enable mode buttons:
+		// NOTE: unconditionally, contents are deactivated if unsupported
+		_selButtons.at(0)->setEnabled(true);
+		_selButtons.at(1)->setEnabled(true);
 		// Start selected mode:
 		bool ok = false;
 		if (mode == DCs_mode)

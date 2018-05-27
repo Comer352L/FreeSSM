@@ -121,16 +121,15 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 {
 	QPushButton *button = new QPushButton(selection_groupBox);
 	selButtons_verticalLayout->insertWidget(_selButtons.size(), button);
-
 #ifndef SMALL_RESOLUTION
 	button->setFixedWidth(160);
 	button->setFixedHeight(35);
 #else
 	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 #endif
-
 	button->setCheckable(checkable);
 	button->setAutoExclusive(checkable);
+	button->setDisabled(true);
 	// Icon:
 	button->setIconSize(QSize(22, 22));
 	button->setIcon(icon);

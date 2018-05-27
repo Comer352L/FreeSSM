@@ -138,6 +138,11 @@ bool TransmissionDialog::setup(enum mode_dt mode)
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
 		_clearMemory2_pushButton->setEnabled(supported);
+		// Enable mode buttons:
+		// NOTE: unconditionally, contents are deactivated if unsupported
+		_selButtons.at(0)->setEnabled(true);
+		_selButtons.at(1)->setEnabled(true);
+		_selButtons.at(2)->setEnabled(true);
 		// Start selected mode:
 		bool ok = false;
 		if (mode == DCs_mode)
@@ -164,10 +169,6 @@ bool TransmissionDialog::setup(enum mode_dt mode)
 	}
 	else
 	{
-		// "Clear Memory"-support:
-		_clearMemory_pushButton->setEnabled(false);
-		// "Clear Memory 2"-support:
-		_clearMemory2_pushButton->setEnabled(false);
 		// Close progress dialog:
 		initstatusmsgbox.close();
 		// Show error message:
