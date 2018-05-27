@@ -316,7 +316,12 @@ void FreeSSM::cruisecontrol()
 	if (diagInterface)
 	{
 		CruiseControlDialog *cruisecontroldialog = new CruiseControlDialog(diagInterface, _language);
-		if (!cruisecontroldialog->isHidden())
+#ifdef SMALL_RESOLUTION
+		cruisecontroldialog->showFullScreen();
+#else
+		cruisecontroldialog->show();
+#endif
+		if (cruisecontroldialog->setup())
 			cruisecontroldialog->exec();
 		delete cruisecontroldialog;
 		delete diagInterface;

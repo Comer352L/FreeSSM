@@ -35,14 +35,6 @@ CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, Q
 	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	// Make GUI visible
-#ifdef SMALL_RESOLUTION
-	this->showFullScreen();
-#else
-	this->show();
-#endif
-	// Connect to Control Unit, get data and setup GUI:
-	setup(DCs_mode);
 }
 
 
