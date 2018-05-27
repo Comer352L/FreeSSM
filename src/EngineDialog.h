@@ -50,6 +50,7 @@ public:
 	enum mode_dt {DCs_mode, MBsSWs_mode, Adjustments_mode, SysTests_mode};
 
 	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
+	bool setup(enum mode_dt mode = DCs_mode);
 
 private:
 	// Content backup parameters:
@@ -66,7 +67,6 @@ private:
 	// Current content/mode:
 	mode_dt _mode;
 
-	bool setup(enum mode_dt mode = DCs_mode);
 	bool startDCsMode();
 	bool startMBsSWsMode();
 	bool startAdjustmentsMode();

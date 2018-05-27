@@ -258,7 +258,12 @@ void FreeSSM::engine()
 	if (diagInterface)
 	{
 		EngineDialog *enginedialog = new EngineDialog(diagInterface, _language);
-		if (!enginedialog->isHidden())
+#ifdef SMALL_RESOLUTION
+		enginedialog->showFullScreen();
+#else
+		enginedialog->show();
+#endif
+		if (enginedialog->setup())
 			enginedialog->exec();
 		delete enginedialog;
 		delete diagInterface;
