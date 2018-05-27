@@ -26,28 +26,22 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	_content_DCs = NULL;
 	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
-	_mode = DCs_mode;	// we start in Diagnostic Codes mode
 	// Show information-widget:
 	_infoWidget = new CUinfo_Transmission();
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
 	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
-	pushButton->setChecked(true);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( DTCs() ) );
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
 	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( measuringblocks() ) );
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
 	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( adjustments() ) );
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
 	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 	_clearMemory2_pushButton = addFunction(tr("Clear Memory 2"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
 	connect( _clearMemory2_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
-	// Load/Show Diagnostic Code content:
-	_content_DCs = new CUcontent_DCs_twoMemories();
-	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
-	_content_DCs->show();
 	// Make GUI visible
 #ifdef SMALL_RESOLUTION
 	this->showFullScreen();
@@ -55,11 +49,11 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	this->show();
 #endif
 	// Connect to Control Unit, get data and setup GUI:
-	setup();
+	setup(DCs_mode);
 }
 
 
-bool TransmissionDialog::setup()
+bool TransmissionDialog::setup(enum mode_dt mode)
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -68,6 +62,30 @@ bool TransmissionDialog::setup()
 
 	if (_setup_done)
 		return true;
+	// ***** Create, setup and insert the content-widget *****:
+	if (mode == DCs_mode)
+	{
+		_selButtons.at(0)->setChecked(true);
+		_content_DCs = new CUcontent_DCs_twoMemories();
+		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
+		_content_DCs->show();
+	}
+	else if (mode == MBsSWs_mode)
+	{
+		_selButtons.at(1)->setChecked(true);
+		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
+		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
+		_content_MBsSWs->show();
+	}
+	else if (mode == Adjustments_mode)
+	{
+		_selButtons.at(2)->setChecked(true);
+		_content_Adjustments = new CUcontent_Adjustments();
+		setContentWidget(tr("Adjustments:"), _content_Adjustments);
+		_content_Adjustments->show();
+	}
+	else
+		return false;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
@@ -104,7 +122,6 @@ bool TransmissionDialog::setup()
 		bool supported = false;
 		std::vector<mb_dt> supportedMBs;
 		std::vector<sw_dt> supportedSWs;
-		int supDCgroups = 0;
 		// Number of supported MBs / SWs:
 		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
 			goto commError;
@@ -121,17 +138,23 @@ bool TransmissionDialog::setup()
 		if (!_SSMPdev->hasClearMemory2(&supported))
 			goto commError;
 		_clearMemory2_pushButton->setEnabled(supported);
-		// Start Diagnostic Codes reading:
-		if (!_content_DCs->setup(_SSMPdev))
-			goto commError;
-		if (!_SSMPdev->getSupportedDCgroups(&supDCgroups))
-			goto commError;
-		if (supDCgroups != SSMprotocol::noDCs_DCgroup)
+		// Start selected mode:
+		bool ok = false;
+		if (mode == DCs_mode)
 		{
-			if (!_content_DCs->startDCreading())
-				goto commError;
+			ok = startDCsMode();
 		}
-		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+		else if (mode == MBsSWs_mode)
+		{
+			ok = startMBsSWsMode();
+		}
+		else if (mode == Adjustments_mode)
+		{
+			ok = startAdjustmentsMode();
+		}
+		// else: BUG
+		if (!ok)
+			goto commError;
 		// Update and close status info:
 		initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
 		initstatusmsgbox.setValue(100);
@@ -178,10 +201,9 @@ commError:
 }
 
 
-void TransmissionDialog::DTCs()
+void TransmissionDialog::switchToDCsMode()
 {
 	bool ok = false;
-	int DCgroups = 0;
 	if (_mode == DCs_mode) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
@@ -192,19 +214,8 @@ void TransmissionDialog::DTCs()
 	_content_DCs = new CUcontent_DCs_twoMemories();
 	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 	_content_DCs->show();
-	ok = _content_DCs->setup(_SSMPdev);
-	// Start DC-reading:
-	if (ok)
-	{
-		ok = _SSMPdev->getSupportedDCgroups(&DCgroups);
-		if (ok && DCgroups != SSMprotocol::noDCs_DCgroup)
-			ok = _content_DCs->startDCreading();
-	}
-	// Get notification, if internal error occures:
-	if (ok)
-		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	// Save new mode:
-	_mode = DCs_mode;
+	// Start DCs mode:
+	ok = startDCsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -213,7 +224,7 @@ void TransmissionDialog::DTCs()
 }
 
 
-void TransmissionDialog::measuringblocks()
+void TransmissionDialog::switchToMBsSWsMode()
 {
 	bool ok = false;
 	if (_mode == MBsSWs_mode) return;
@@ -226,14 +237,8 @@ void TransmissionDialog::measuringblocks()
 	_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
 	setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 	_content_MBsSWs->show();
-	ok = _content_MBsSWs->setup(_SSMPdev);
-	if (ok)
-		ok = _content_MBsSWs->setMBSWselection(_lastMBSWmetaList);
-	// Get notification, if internal error occures:
-	if (ok)
-		connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	// Save new mode:
-	_mode = MBsSWs_mode;
+	// Start MB/SW mode:
+	ok = startMBsSWsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -242,10 +247,10 @@ void TransmissionDialog::measuringblocks()
 }
 
 
-void TransmissionDialog::adjustments()
+void TransmissionDialog::switchToAdjustmentsMode()
 {
 	bool ok = false;
-	if (_mode == Adaptions_mode) return;
+	if (_mode == Adjustments_mode) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
@@ -255,11 +260,8 @@ void TransmissionDialog::adjustments()
 	_content_Adjustments = new CUcontent_Adjustments();
 	setContentWidget(tr("Adjustments:"), _content_Adjustments);
 	_content_Adjustments->show();
-	ok = _content_Adjustments->setup(_SSMPdev);
-	if (ok)
-		connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-	// Save new mode:
-	_mode = Adaptions_mode;
+	// Start Adjustments mode:
+	ok = startAdjustmentsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
@@ -280,6 +282,51 @@ void TransmissionDialog::clearMemory2()
 }
 
 
+bool TransmissionDialog::startDCsMode()
+{
+	int DCgroups = 0;
+	if (_content_DCs == NULL)
+		return false;
+	if (!_content_DCs->setup(_SSMPdev))
+		return false;
+	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
+		return false;
+	if (DCgroups == SSMprotocol::noDCs_DCgroup)
+		return false;
+	if (!_content_DCs->startDCreading())
+		return false;
+	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+	_mode = DCs_mode;
+	return true;
+}
+
+
+bool TransmissionDialog::startMBsSWsMode()
+{
+	if (_content_MBsSWs == NULL)
+		return false;
+	if (!_content_MBsSWs->setup(_SSMPdev))
+		return false;
+	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
+		return false;
+	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+	_mode = MBsSWs_mode;
+	return true;
+}
+
+
+bool TransmissionDialog::startAdjustmentsMode()
+{
+	if (_content_Adjustments == NULL)
+		return false;
+	if (!_content_Adjustments->setup(_SSMPdev))
+		return false;
+	connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
+	_mode = Adjustments_mode;
+	return true;
+}
+
+
 void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 {
 	bool ok = false;
@@ -293,7 +340,7 @@ void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 	// Reconnect to "communication error"-signal:
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
-	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adaptions_mode))
+	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adjustments_mode))
 	{
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
 		waitmsgbox.show();
