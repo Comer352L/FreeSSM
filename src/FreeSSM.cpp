@@ -325,7 +325,12 @@ void FreeSSM::aircon()
 	if (diagInterface)
 	{
 		AirConDialog *aircondialog = new AirConDialog(diagInterface, _language);
-		if (!aircondialog->isHidden())
+#ifdef SMALL_RESOLUTION
+		aircondialog->showFullScreen();
+#else
+		aircondialog->show();
+#endif
+		if (aircondialog->setup())
 			aircondialog->exec();
 		delete aircondialog;
 		delete diagInterface;
