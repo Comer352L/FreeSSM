@@ -36,13 +36,18 @@ class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 	Q_OBJECT
 
 public:
+	enum class ContentSelection {DCsMode, MBsSWsMode, AdjustmentsMode, SysTestsMode};
+
 	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language);
 	~ControlUnitDialog();
 
 protected:
+	enum class Mode {None, DCs, MBsSWs, Adjustments, SysTests};
+
 	SSMprotocol *_SSMPdev;
 	bool _setup_done;
 	QList<QPushButton*> _selButtons;
+	Mode _mode;
 
 	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);

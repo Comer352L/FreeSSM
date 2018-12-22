@@ -46,10 +46,8 @@ class AirConDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	enum mode_dt {DCs_mode, MBsSWs_mode};
-
 	AirConDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(enum mode_dt mode = DCs_mode);
+	bool setup(ContentSelection csel = ContentSelection::DCsMode);
 
 private:
 	// Content backup parameters:
@@ -61,8 +59,6 @@ private:
 	CUinfo_simple *_infoWidget;
 	CUcontent_DCs_twoMemories *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
-	// Current content/mode:
-	mode_dt _mode;
 
 	bool startDCsMode();
 	bool startMBsSWsMode();

@@ -45,7 +45,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 }
 
 
-bool TransmissionDialog::setup(enum mode_dt mode)
+bool TransmissionDialog::setup(ContentSelection csel)
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -55,21 +55,21 @@ bool TransmissionDialog::setup(enum mode_dt mode)
 	if (_setup_done)
 		return true;
 	// ***** Create, setup and insert the content-widget *****:
-	if (mode == DCs_mode)
+	if (csel == ContentSelection::DCsMode)
 	{
 		_selButtons.at(0)->setChecked(true);
 		_content_DCs = new CUcontent_DCs_twoMemories();
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
-	else if (mode == MBsSWs_mode)
+	else if (csel == ContentSelection::MBsSWsMode)
 	{
 		_selButtons.at(1)->setChecked(true);
 		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
 		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 		_content_MBsSWs->show();
 	}
-	else if (mode == Adjustments_mode)
+	else if (csel == ContentSelection::AdjustmentsMode)
 	{
 		_selButtons.at(2)->setChecked(true);
 		_content_Adjustments = new CUcontent_Adjustments();
@@ -137,15 +137,15 @@ bool TransmissionDialog::setup(enum mode_dt mode)
 		_selButtons.at(2)->setEnabled(true);
 		// Start selected mode:
 		bool ok = false;
-		if (mode == DCs_mode)
+		if (csel == ContentSelection::DCsMode)
 		{
 			ok = startDCsMode();
 		}
-		else if (mode == MBsSWs_mode)
+		else if (csel == ContentSelection::MBsSWsMode)
 		{
 			ok = startMBsSWsMode();
 		}
-		else if (mode == Adjustments_mode)
+		else if (csel == ContentSelection::AdjustmentsMode)
 		{
 			ok = startAdjustmentsMode();
 		}
@@ -197,7 +197,7 @@ commError:
 void TransmissionDialog::switchToDCsMode()
 {
 	bool ok = false;
-	if (_mode == DCs_mode) return;
+	if (_mode == Mode::DCs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
@@ -220,7 +220,7 @@ void TransmissionDialog::switchToDCsMode()
 void TransmissionDialog::switchToMBsSWsMode()
 {
 	bool ok = false;
-	if (_mode == MBsSWs_mode) return;
+	if (_mode == Mode::MBsSWs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
@@ -243,7 +243,7 @@ void TransmissionDialog::switchToMBsSWsMode()
 void TransmissionDialog::switchToAdjustmentsMode()
 {
 	bool ok = false;
-	if (_mode == Adjustments_mode) return;
+	if (_mode == Mode::Adjustments) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
@@ -289,7 +289,7 @@ bool TransmissionDialog::startDCsMode()
 	if (!_content_DCs->startDCreading())
 		return false;
 	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = DCs_mode;
+	_mode = Mode::DCs;
 	return true;
 }
 
@@ -303,7 +303,7 @@ bool TransmissionDialog::startMBsSWsMode()
 	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
 		return false;
 	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = MBsSWs_mode;
+	_mode = Mode::MBsSWs;
 	return true;
 }
 
@@ -315,7 +315,7 @@ bool TransmissionDialog::startAdjustmentsMode()
 	if (!_content_Adjustments->setup(_SSMPdev))
 		return false;
 	connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-	_mode = Adjustments_mode;
+	_mode = Mode::Adjustments;
 	return true;
 }
 
@@ -333,7 +333,7 @@ void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 	// Reconnect to "communication error"-signal:
 	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
 	// Check result:
-	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Adjustments_mode))
+	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Mode::Adjustments))
 	{
 		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
 		waitmsgbox.show();
@@ -355,7 +355,7 @@ void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 
 void TransmissionDialog::saveContentSettings()
 {
-	if (_mode == MBsSWs_mode)
+	if (_mode == Mode::MBsSWs)
 	{
 		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
 		_MBSWsettings = _content_MBsSWs->getSettings();

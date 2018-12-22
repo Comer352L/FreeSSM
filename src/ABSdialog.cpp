@@ -45,7 +45,7 @@ ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : C
 }
 
 
-bool ABSdialog::setup(enum mode_dt mode)
+bool ABSdialog::setup(ContentSelection csel)
 {
 	// *** Local variables:
 	QString sysdescription = "";
@@ -55,14 +55,14 @@ bool ABSdialog::setup(enum mode_dt mode)
 	if (_setup_done)
 		return true;
 	// ***** Create, setup and insert the content-widget *****:
-	if (mode == DCs_mode)
+	if (csel == ContentSelection::DCsMode)
 	{
 		_selButtons.at(0)->setChecked(true);
 		_content_DCs = new CUcontent_DCs_twoMemories();
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
-	else if (mode == MBsSWs_mode)
+	else if (csel == ContentSelection::MBsSWsMode)
 	{
 		_selButtons.at(1)->setChecked(true);
 		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
@@ -121,11 +121,11 @@ bool ABSdialog::setup(enum mode_dt mode)
 		_selButtons.at(1)->setEnabled(true);
 		// Start selected mode:
 		bool ok = false;
-		if (mode == DCs_mode)
+		if (csel == ContentSelection::DCsMode)
 		{
 			ok = startDCsMode();
 		}
-		else if (mode == MBsSWs_mode)
+		else if (csel == ContentSelection::MBsSWsMode)
 		{
 			ok = startMBsSWsMode();
 		}
@@ -177,7 +177,7 @@ commError:
 void ABSdialog::switchToDCsMode()
 {
 	bool ok = false;
-	if (_mode == DCs_mode) return;
+	if (_mode == Mode::DCs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
@@ -200,7 +200,7 @@ void ABSdialog::switchToDCsMode()
 void ABSdialog::switchToMBsSWsMode()
 {
 	bool ok = false;
-	if (_mode == MBsSWs_mode) return;
+	if (_mode == Mode::MBsSWs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
@@ -257,7 +257,7 @@ bool ABSdialog::startDCsMode()
 	if (!_content_DCs->startDCreading())
 		return false;
 	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = DCs_mode;
+	_mode = Mode::DCs;
 	return true;
 }
 
@@ -271,14 +271,14 @@ bool ABSdialog::startMBsSWsMode()
 	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
 		return false;
 	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = MBsSWs_mode;
+	_mode = Mode::MBsSWs;
 	return true;
 }
 
 
 void ABSdialog::saveContentSettings()
 {
-	if (_mode == MBsSWs_mode)
+	if (_mode == Mode::MBsSWs)
 	{
 		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
 		_MBSWsettings = _content_MBsSWs->getSettings();

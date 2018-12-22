@@ -46,10 +46,8 @@ class TransmissionDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	enum mode_dt {DCs_mode, MBsSWs_mode, Adjustments_mode};
-
 	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(enum mode_dt mode = DCs_mode);
+	bool setup(ContentSelection csel = ContentSelection::DCsMode);
 
 private:
 	// Content backup parameters:
@@ -63,8 +61,6 @@ private:
 	CUcontent_DCs_twoMemories *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
-	// Current content/mode:
-	mode_dt _mode;
 
 	bool startDCsMode();
 	bool startMBsSWsMode();
