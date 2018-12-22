@@ -83,10 +83,13 @@ ControlUnitDialog::~ControlUnitDialog()
 		disconnect( _SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ) );
 		delete _SSMPdev;
 	}
-	for (int k=0; k<_selButtons.size(); k++)
+	// Delete selection buttons:
+	QList<QPushButton*> buttons = _contentSelectionButtons.values();
+	_contentSelectionButtons.clear();
+	for (int k=0; k<buttons.size(); k++)
 	{
-		_selButtons.at(k)->disconnect();
-		delete _selButtons.at(k);
+		buttons.at(k)->disconnect();
+		delete buttons.at(k);
 	}
 }
 
@@ -118,10 +121,52 @@ QWidget * ControlUnitDialog::contentWidget()
 }
 
 
-QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool checkable)
+QPushButton * ControlUnitDialog::addContent(ContentSelection csel)
 {
+	QString title;
+	QIcon icon;
+	bool checkable;
+	if (csel == ContentSelection::DCsMode)
+	{
+		title = tr("&Diagnostic Codes");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::MBsSWsMode)
+	{
+		title = tr("&Measuring Blocks");
+		icon = QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::AdjustmentsMode)
+	{
+		title = tr("&Adjustments");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::SysTestsMode)
+	{
+		title = tr("System &Tests");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::ClearMemoryFcn)
+	{
+		title = tr("Clear Memory");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
+		checkable = false;
+	}
+	else if (csel == ContentSelection::ClearMemory2Fcn)
+	{
+		title = tr("Clear Memory 2");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
+		checkable = false;
+	}
+	else // BUG
+		return NULL;
+	// Create button:
 	QPushButton *button = new QPushButton(selection_groupBox);
-	selButtons_verticalLayout->insertWidget(_selButtons.size(), button);
+	selButtons_verticalLayout->insertWidget(_contentSelectionButtons.size(), button);
 #ifndef SMALL_RESOLUTION
 	button->setFixedWidth(160);
 	button->setFixedHeight(35);
@@ -155,8 +200,22 @@ QPushButton * ControlUnitDialog::addFunction(QString title, QIcon icon, bool che
 	button->setText(title);
 	// Save, show and return button:
 	button->show();
-	_selButtons.push_back(button);
+	_contentSelectionButtons.insert(csel, button);
 	return button;
+}
+
+
+void ControlUnitDialog::setContentSelectionButtonEnabled(ContentSelection csel, bool enabled)
+{
+	if (_contentSelectionButtons.contains(csel))
+		_contentSelectionButtons.value(csel)->setEnabled(enabled);
+}
+
+
+void ControlUnitDialog::setContentSelectionButtonChecked(ContentSelection csel, bool checked)
+{
+	if (_contentSelectionButtons.contains(csel))
+		_contentSelectionButtons.value(csel)->setChecked(checked);
 }
 
 

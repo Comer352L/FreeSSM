@@ -32,16 +32,16 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	QPushButton *pushButton = addContent(ContentSelection::DCsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
-	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	pushButton = addContent(ContentSelection::MBsSWsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
-	pushButton = addFunction(tr("&Adjustments"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png")), true);
+	pushButton = addContent(ContentSelection::AdjustmentsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
-	pushButton = addFunction(tr("System &Tests"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png")), true);
+	pushButton = addContent(ContentSelection::SysTestsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToSystemOperationTestsMode() ) );
-	_clearMemory_pushButton = addFunction(tr("Clear Memory"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png")), false);
-	connect( _clearMemory_pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	pushButton = addContent(ContentSelection::ClearMemoryFcn);
+	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
 }
 
 
@@ -56,28 +56,28 @@ bool EngineDialog::setup(ContentSelection csel)
 	// ***** Create, setup and insert the content-widget *****:
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 	{
-		_selButtons.at(0)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::DCsMode, true);
 		_content_DCs = new CUcontent_DCs_engine();
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
 	else if (csel == ContentSelection::MBsSWsMode)
 	{
-		_selButtons.at(1)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::MBsSWsMode, true);
 		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
 		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 		_content_MBsSWs->show();
 	}
 	else if (csel == ContentSelection::AdjustmentsMode)
 	{
-		_selButtons.at(2)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::AdjustmentsMode, true);
 		_content_Adjustments = new CUcontent_Adjustments();
 		setContentWidget(tr("Adjustments:"), _content_Adjustments);
 		_content_Adjustments->show();
 	}
 	else if (csel == ContentSelection::SysTestsMode)
 	{
-		_selButtons.at(3)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::SysTestsMode, true);
 		_content_SysTests = new CUcontent_sysTests();
 		setContentWidget(tr("System Operation Tests:"), _content_SysTests);
 		_content_SysTests->show();
@@ -181,13 +181,13 @@ bool EngineDialog::setup(ContentSelection csel)
 		// "Clear Memory"-support:
 		if (!_SSMPdev->hasClearMemory(&supported))
 			goto commError;
-		_clearMemory_pushButton->setEnabled(supported);
+		setContentSelectionButtonEnabled(ContentSelection::ClearMemoryFcn, supported);
 		// Enable mode buttons:
 		// NOTE: unconditionally, contents are deactivated if unsupported
-		_selButtons.at(0)->setEnabled(true);
-		_selButtons.at(1)->setEnabled(true);
-		_selButtons.at(2)->setEnabled(true);
-		_selButtons.at(3)->setEnabled(true);
+		setContentSelectionButtonEnabled(ContentSelection::DCsMode, true);
+		setContentSelectionButtonEnabled(ContentSelection::MBsSWsMode, true);
+		setContentSelectionButtonEnabled(ContentSelection::AdjustmentsMode, true);
+		setContentSelectionButtonEnabled(ContentSelection::SysTestsMode, true);
 		// Start selected mode:
 		bool ok = false;
 		if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))

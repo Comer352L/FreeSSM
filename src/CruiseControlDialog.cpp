@@ -30,9 +30,9 @@ CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, Q
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	QPushButton *pushButton = addFunction(tr("&Diagnostic Codes"), QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png")), true);
+	QPushButton *pushButton = addContent(ContentSelection::DCsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
-	pushButton = addFunction(tr("&Measuring Blocks"), QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png")), true);
+	pushButton = addContent(ContentSelection::MBsSWsMode);
 	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
 	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
 }
@@ -51,14 +51,14 @@ bool CruiseControlDialog::setup(ContentSelection csel)
 	// ***** Create, setup and insert the content-widget *****:
 	if (csel == ContentSelection::DCsMode)
 	{
-		_selButtons.at(0)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::DCsMode, true);
 		_content_DCs = new CUcontent_DCs_stopCodes();
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
 	else if (csel == ContentSelection::MBsSWsMode)
 	{
-		_selButtons.at(1)->setChecked(true);
+		setContentSelectionButtonChecked(ContentSelection::MBsSWsMode, true);
 		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
 		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 		_content_MBsSWs->show();
@@ -122,8 +122,8 @@ bool CruiseControlDialog::setup(ContentSelection csel)
 		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 		// Enable mode buttons:
 		// NOTE: unconditionally, contents are deactivated if unsupported
-		_selButtons.at(0)->setEnabled(true);
-		_selButtons.at(1)->setEnabled(true);
+		setContentSelectionButtonEnabled(ContentSelection::DCsMode, true);
+		setContentSelectionButtonEnabled(ContentSelection::MBsSWsMode, true);
 		// Start selected mode:
 		bool ok = false;
 		if (csel == ContentSelection::DCsMode)

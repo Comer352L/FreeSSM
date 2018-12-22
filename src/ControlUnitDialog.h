@@ -46,14 +46,15 @@ protected:
 
 	SSMprotocol *_SSMPdev;
 	bool _setup_done;
-	QList<QPushButton*> _selButtons;
 	Mode _mode;
 
-	QPushButton * addFunction(QString title, QIcon icon, bool checkable);
+	QPushButton * addContent(ContentSelection csel);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
 	void setContentWidget(QString title, QWidget *contentwidget);
 	QWidget * contentWidget();
+	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
+	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
 
 private:
 	QString _language;
@@ -61,6 +62,7 @@ private:
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
 	DiagInterfaceStatusBar *_ifstatusbar;
+	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
 
 	void closeEvent(QCloseEvent *event);
 
