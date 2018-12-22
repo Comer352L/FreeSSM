@@ -54,7 +54,7 @@ bool EngineDialog::setup(ContentSelection csel)
 	if (_setup_done)
 		return true;
 	// ***** Create, setup and insert the content-widget *****:
-	if (csel == ContentSelection::DCsMode)
+	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 	{
 		_selButtons.at(0)->setChecked(true);
 		_content_DCs = new CUcontent_DCs_engine();
@@ -190,7 +190,7 @@ bool EngineDialog::setup(ContentSelection csel)
 		_selButtons.at(3)->setEnabled(true);
 		// Start selected mode:
 		bool ok = false;
-		if (csel == ContentSelection::DCsMode)
+		if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 		{
 			ok = startDCsMode();
 		}
@@ -215,6 +215,9 @@ bool EngineDialog::setup(ContentSelection csel)
 		QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 		initstatusmsgbox.exec();
 		initstatusmsgbox.close();
+		// Run Clear Memory procedure if requested:
+		if (csel == ContentSelection::ClearMemoryFcn)
+			clearMemory();
 	}
 	else
 	{
