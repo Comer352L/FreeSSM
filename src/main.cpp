@@ -94,7 +94,10 @@ int main(int argc, char *argv[])
 		 * survive on UNIX-systems if the attached process is killed (or crashed) !    */
 		fssm_lock.detach();	// trick: this also detaches all dead processes (why ?!) !
 		if ( fssm_lock.attach() ) // another instance of FreeSSM is still running
+		{
+			CmdLine::printError("an instance of FreeSSM is already running");
 			return ERROR_APPRUNNING;
+		}
 	}
 	fssm_lock.create(1, QSharedMemory::ReadOnly);
 	// Set application version:
