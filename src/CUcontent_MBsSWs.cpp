@@ -881,7 +881,7 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 		// The ROM-IDs do not match, so ignore any file input (but don't forget to close the file...)
 #ifdef __FSSM_DEBUG__
 		std::cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM ID from file does not match engine ROM ID, ignoring MBs/SWs!\n";
-		std::cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << endl;
+		std::cout << "ROM ID in file " << savedROM_ID << ", engine ROM ID " << ROM_ID << std::endl;
 #endif
 		file.close();
 		warningMsg(tr("Load Error"), tr("Error reading back MBs/SWs:\nSaved ROM Id does not match current ROM Id."));
