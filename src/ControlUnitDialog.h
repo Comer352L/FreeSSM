@@ -55,6 +55,7 @@ protected:
 	QWidget * contentWidget();
 	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
 	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
+	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
 
 private:
 	QString _language;

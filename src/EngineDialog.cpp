@@ -18,6 +18,7 @@
  */
 
 #include "EngineDialog.h"
+#include "CmdLine.h"
 
 
 EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), diagInterface, language)
@@ -45,14 +46,19 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 }
 
 
-bool EngineDialog::setup(ContentSelection csel)
+bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
+	QString mbssws_selfile = "";
+	bool autostart = false;
 
 	if (_setup_done)
-		return true;
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
 	// ***** Create, setup and insert the content-widget *****:
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 	{
@@ -82,8 +88,11 @@ bool EngineDialog::setup(ContentSelection csel)
 		setContentWidget(tr("System Operation Tests:"), _content_SysTests);
 		_content_SysTests->show();
 	}
-	else
-		return false;
+	else	// NOTE: currently only possible due to wrong command line parameters
+	{
+		CmdLine::printError("the specified function is not supported by the Engine Control Unit.");
+		exit(ERROR_BADCMDLINEARGS);
+	}
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Engine Control Unit... Please wait !"), 0, 0, 100, this);
@@ -218,6 +227,17 @@ bool EngineDialog::setup(ContentSelection csel)
 		// Run Clear Memory procedure if requested:
 		if (csel == ContentSelection::ClearMemoryFcn)
 			clearMemory();
+		// Apply command line startup parameters for MB/SW mode:
+		else if (csel == ContentSelection::MBsSWsMode)
+		{
+			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
+			{
+				if (mbssws_selfile.size())
+					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+					_content_MBsSWs->startMBSWreading();
+			}
+		}
 	}
 	else
 	{

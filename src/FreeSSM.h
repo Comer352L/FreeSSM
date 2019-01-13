@@ -58,6 +58,7 @@ private:
 	bool _dumping;
 
 	AbstractDiagInterface * initInterface();
+	bool getContentSelectionFromCmdLine(QStringList *cmdline_args, ControlUnitDialog::ContentSelection *csel);
 	void displayErrorMsg(QString errmsg);
 	void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
@@ -66,12 +67,14 @@ public:
 	FreeSSM(QApplication *app = 0);
 	~FreeSSM();
 
+public slots:
+	void engine(QStringList cmdline_args = QStringList());
+	void transmission(QStringList cmdline_args = QStringList());
+	void abs(QStringList cmdline_args = QStringList());
+	void cruisecontrol(QStringList cmdline_args = QStringList());
+	void aircon(QStringList cmdline_args = QStringList());
+
 private slots:
-	void engine();
-	void transmission();
-	void abs();
-	void cruisecontrol();
-	void aircon();
 	void preferences();
 	void help();
 	void about();

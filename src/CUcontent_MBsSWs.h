@@ -85,6 +85,7 @@ public:
 	bool setup(SSMprotocol *SSMPdev);
 	bool setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
 	std::vector<MBSWmetadata_dt> getMBSWselection() const;
+	size_t numMBsSWsSelected();
 	MBSWsettings_dt getSettings() const;
 
 private:
@@ -114,15 +115,17 @@ private:
 	void resizeEvent(QResizeEvent *event);
 	void warningMsg(QString title, QString message);
 
+public slots:
+	bool startMBSWreading();
+	bool loadMBsSWs(QString filename = "");
+
 private slots:
 	void startstopMBsSWsButtonPressed();
-	bool startMBSWreading();
 	bool stopMBSWreading();
 	void processMBSWRawValues(const std::vector<unsigned int>& rawValues, int refreshduration_ms);
 	void addMBsSWs();
 	void deleteMBsSWs();
 	bool saveMBsSWs(QString filename = "");
-	bool loadMBsSWs(QString filename = "");
 	void moveUpMBsSWsOnTheTable();
 	void moveDownMBsSWsOnTheTable();
 	void resetMinMaxTableValues();

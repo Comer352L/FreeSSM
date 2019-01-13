@@ -18,6 +18,7 @@
  */
 
 #include "CruiseControlDialog.h"
+#include "CmdLine.h"
 
 
 CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Cruise Control Unit"), diagInterface, language)
@@ -38,16 +39,21 @@ CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, Q
 }
 
 
-bool CruiseControlDialog::setup(ContentSelection csel)
+bool CruiseControlDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	// *** Local variables:
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
+	QString mbssws_selfile = "";
+	bool autostart = false;
 	int ret;
 
 	if (_setup_done)
-		return true;
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
 	// ***** Create, setup and insert the content-widget *****:
 	if (csel == ContentSelection::DCsMode)
 	{
@@ -63,8 +69,11 @@ bool CruiseControlDialog::setup(ContentSelection csel)
 		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 		_content_MBsSWs->show();
 	}
-	else
-		return false;
+	else	// NOTE: currently only possible due to wrong command line parameters
+	{
+		CmdLine::printError("the specified function is not supported by the Cruise Control Control Unit.");
+		exit(ERROR_BADCMDLINEARGS);
+	}
 	// ***** Connect to Control Unit *****:
 	// Inform user that system needs to be switched on manually:
 	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Cruise Control system on."), 0, this);
@@ -143,6 +152,17 @@ bool CruiseControlDialog::setup(ContentSelection csel)
 		QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
 		initstatusmsgbox.exec();
 		initstatusmsgbox.close();
+		// Apply command line startup parameters for MB/SW mode:
+		if (csel == ContentSelection::MBsSWsMode)
+		{
+			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
+			{
+				if (mbssws_selfile.size())
+					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+					_content_MBsSWs->startMBSWreading();
+			}
+		}
 	}
 	else
 	{

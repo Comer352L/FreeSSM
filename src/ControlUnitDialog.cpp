@@ -18,6 +18,7 @@
  */
 
 #include "ControlUnitDialog.h"
+#include "CmdLine.h"
 
 
 ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language)
@@ -295,6 +296,70 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 	}
 #endif
 	return result;
+}
+
+
+bool ControlUnitDialog::getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart)
+{
+	QStringList cargs;
+	QStringList parameters;
+	QString selfile = "";
+	bool astart = false;
+
+	if (cmdline_args == NULL)
+		return false;
+	cargs = *cmdline_args;
+	// Check if command line option -p/--parameters is specified and extract corresponding value(s):
+	if (!CmdLine::parseForOption(&cargs, "-p", "--parameters", &parameters))
+		return true; // no error, option unused
+	// Validate number of specified parameters:
+	if (parameters.size() < 1)
+	{
+		CmdLine::printError("no parameter(s) specified with option -p/--parameters");
+		return false;
+	}
+	// Validate parameter strings:
+	for (int p=0; p<parameters.size(); p++)
+	{
+		if (parameters.at(p).startsWith("selectionfile="))
+		{
+			if (selfile.size())
+			{
+				CmdLine::printError("parameter \"selectionfile=<FILE>\" specified multiple times with different values");
+				// NOTE: values must be different, because otherwise the whole parameter would have been eliminated as duplicate
+				return false;
+			}
+			selfile = parameters.at(p);
+			selfile.remove(0, selfile.indexOf('=') + 1);
+			if ((selfile.size()) && !QFile::exists(selfile))
+			{
+				CmdLine::printError("specified MBs/SWs selection file does not exist");
+				return false;
+			}
+		}
+		else if (parameters.at(p) == "autostart")
+		{
+			astart = true;
+		}
+		else
+		{
+			CmdLine::printError("unknown parameter specified with option -p/--parameters: " + parameters.at(p));
+			return false;
+		}
+	}
+	// Check if a selection file has been specified if autostart is specified:
+	if (astart && !selfile.size())
+	{
+		CmdLine::printError("option -p/--parameters: parameter \"autostart\" specified without parameter \"selectionfile=<FILE>\"");
+		return false;
+	}
+	// Assign return values:
+	*cmdline_args = cargs;
+	if (selfile.size() && (selection_file != NULL))
+		*selection_file = selfile;
+	if (astart && (autostart != NULL))
+		*autostart = true;
+	return true;
 }
 
 

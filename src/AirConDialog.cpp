@@ -18,6 +18,7 @@
  */
 
 #include "AirConDialog.h"
+#include "CmdLine.h"
 
 
 AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Air Conditioning Control Unit"), diagInterface, language)
@@ -40,16 +41,21 @@ AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString languag
 }
 
 
-bool AirConDialog::setup(ContentSelection csel)
+bool AirConDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	// *** Local variables:
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
+	QString mbssws_selfile = "";
+	bool autostart = false;
 	int ret;
 
 	if (_setup_done)
-		return true;
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
 	// ***** Create, setup and insert the content-widget *****:
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 	{
@@ -65,8 +71,11 @@ bool AirConDialog::setup(ContentSelection csel)
 		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
 		_content_MBsSWs->show();
 	}
-	else
-		return false;
+	else	// NOTE: currently only possible due to wrong command line parameters
+	{
+		CmdLine::printError("the specified function is not supported by the Air Conditioning Control Unit.");
+		exit(ERROR_BADCMDLINEARGS);
+	}
 	// ***** Connect to Control Unit *****:
 	// Inform user that system needs to be switched on manually:
 	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Air Conditioning system on."), 0, this);
@@ -153,6 +162,17 @@ bool AirConDialog::setup(ContentSelection csel)
 		// Run Clear Memory procedure if requested:
 		if (csel == ContentSelection::ClearMemoryFcn)
 			clearMemory();
+		// Apply command line startup parameters for MB/SW mode:
+		else if (csel == ContentSelection::MBsSWsMode)
+		{
+			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
+			{
+				if (mbssws_selfile.size())
+					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+					_content_MBsSWs->startMBSWreading();
+			}
+		}
 	}
 	else
 	{

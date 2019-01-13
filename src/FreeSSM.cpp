@@ -18,6 +18,7 @@
  */
 
 #include "FreeSSM.h"
+#include "CmdLine.h"
 
 
 
@@ -251,9 +252,12 @@ FreeSSM::~FreeSSM()
 }
 
 
-void FreeSSM::engine()
+void FreeSSM::engine(QStringList cmdline_args)
 {
 	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if(!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
@@ -263,7 +267,7 @@ void FreeSSM::engine()
 #else
 		enginedialog->show();
 #endif
-		if (enginedialog->setup())
+		if (enginedialog->setup( csel, cmdline_args ))
 			enginedialog->exec();
 		delete enginedialog;
 		delete diagInterface;
@@ -271,9 +275,12 @@ void FreeSSM::engine()
 }
 
 
-void FreeSSM::transmission()
+void FreeSSM::transmission(QStringList cmdline_args)
 {
 	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if(!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
@@ -283,16 +290,20 @@ void FreeSSM::transmission()
 #else
 		transmissiondialog->show();
 #endif
-		if (transmissiondialog->setup())
+		if (transmissiondialog->setup( csel, cmdline_args ))
 			transmissiondialog->exec();
 		delete transmissiondialog;
 		delete diagInterface;
 	}
 }
 
-void FreeSSM::abs()
+
+void FreeSSM::abs(QStringList cmdline_args)
 {
 	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if(!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
@@ -302,16 +313,20 @@ void FreeSSM::abs()
 #else
 		absdialog->show();
 #endif
-		if (absdialog->setup())
+		if (absdialog->setup( csel, cmdline_args ))
 			absdialog->exec();
 		delete absdialog;
 		delete diagInterface;
 	}
 }
 
-void FreeSSM::cruisecontrol()
+
+void FreeSSM::cruisecontrol(QStringList cmdline_args)
 {
 	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if(!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
@@ -321,16 +336,20 @@ void FreeSSM::cruisecontrol()
 #else
 		cruisecontroldialog->show();
 #endif
-		if (cruisecontroldialog->setup())
+		if (cruisecontroldialog->setup( csel, cmdline_args ))
 			cruisecontroldialog->exec();
 		delete cruisecontroldialog;
 		delete diagInterface;
 	}
 }
 
-void FreeSSM::aircon()
+
+void FreeSSM::aircon(QStringList cmdline_args)
 {
 	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if(!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
@@ -340,13 +359,12 @@ void FreeSSM::aircon()
 #else
 		aircondialog->show();
 #endif
-		if (aircondialog->setup())
+		if (aircondialog->setup( csel, cmdline_args ))
 			aircondialog->exec();
 		delete aircondialog;
 		delete diagInterface;
 	}
 }
-
 
 
 void FreeSSM::preferences()
@@ -647,6 +665,66 @@ end:
 	dumpfile.close();
 	delete diagInterface;	// will be closed in destructor
 	_dumping = false;
+}
+
+
+bool FreeSSM::getContentSelectionFromCmdLine(QStringList *cmdline_args, ControlUnitDialog::ContentSelection *csel)
+{
+	QStringList cargs;
+	QStringList values;
+	QString selstr;
+
+	if (cmdline_args == NULL)
+		return false;
+	cargs = *cmdline_args;
+	// Check if command line option -f/--function is specified and extract corresponding value(s):
+	if (!CmdLine::parseForOption(&cargs, "-f", "--function", &values))
+		return true; // no error, option unused
+	// Validate number of specified values:
+	if (values.size() < 1)
+	{
+		CmdLine::printError("no function specified with option -f/--function");
+		return false;
+	}
+	if (values.size() > 1)
+	{
+		CmdLine::printError("multiple functions specified with option -f/--function");
+		return false;
+	}
+	// Validate content selection string and return corresponding value:
+	selstr = values.at(0);
+	if (selstr == "dcs")
+	{
+		*csel = ControlUnitDialog::ContentSelection::DCsMode;
+	}
+	else if (selstr == "mbssws")
+	{
+		*csel = ControlUnitDialog::ContentSelection::MBsSWsMode;
+	}
+	else if (selstr == "adjustments")
+	{
+		*csel = ControlUnitDialog::ContentSelection::AdjustmentsMode;
+	}
+	else if (selstr == "systests")
+	{
+		*csel = ControlUnitDialog::ContentSelection::SysTestsMode;
+	}
+	else if (selstr == "clearmemory")
+	{
+		*csel = ControlUnitDialog::ContentSelection::ClearMemoryFcn;
+	}
+	else if (selstr == "clearmemory2")
+	{
+		*csel = ControlUnitDialog::ContentSelection::ClearMemory2Fcn;
+	}
+	else
+	{
+		CmdLine::printError("invalid function specified with option -f/--function");
+		return false;
+	}
+	// Assign return value:
+	*cmdline_args = cargs;
+	return true;
 }
 
 

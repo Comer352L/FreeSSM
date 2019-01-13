@@ -18,6 +18,7 @@
  */
 
 #include "TransmissionDialog.h"
+#include "CmdLine.h"
 
 
 TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), diagInterface, language)
@@ -45,15 +46,20 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 }
 
 
-bool TransmissionDialog::setup(ContentSelection csel)
+bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	// *** Local variables:
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
+	QString mbssws_selfile = "";
+	bool autostart = false;
 
 	if (_setup_done)
-		return true;
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
 	// ***** Create, setup and insert the content-widget *****:
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn) || (csel == ContentSelection::ClearMemory2Fcn))
 	{
@@ -76,8 +82,11 @@ bool TransmissionDialog::setup(ContentSelection csel)
 		setContentWidget(tr("Adjustments:"), _content_Adjustments);
 		_content_Adjustments->show();
 	}
-	else
-		return false;
+	else	// NOTE: currently only possible due to wrong command line parameters
+	{
+		CmdLine::printError("the specified function is not supported by the Transmission Control Unit.");
+		exit(ERROR_BADCMDLINEARGS);
+	}
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
@@ -166,6 +175,17 @@ bool TransmissionDialog::setup(ContentSelection csel)
 		else if (csel == ContentSelection::ClearMemory2Fcn)
 		{
 			clearMemory2();
+		}
+		// Apply command line startup parameters for MB/SW mode:
+		else if (csel == ContentSelection::MBsSWsMode)
+		{
+			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
+			{
+				if (mbssws_selfile.size())
+					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+					_content_MBsSWs->startMBSWreading();
+			}
 		}
 	}
 	else

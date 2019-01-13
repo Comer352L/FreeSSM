@@ -211,6 +211,12 @@ std::vector<MBSWmetadata_dt> CUcontent_MBsSWs::getMBSWselection() const
 }
 
 
+size_t CUcontent_MBsSWs::numMBsSWsSelected()
+{
+	return _MBSWmetaList.size();
+}
+
+
 void CUcontent_MBsSWs::displayMBsSWs()
 {
 	const size_t itemcount = _tableRowPosIndexes.size();

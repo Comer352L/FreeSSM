@@ -47,7 +47,7 @@ class TransmissionDialog : public ControlUnitDialog
 
 public:
 	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode);
+	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	// Content backup parameters:

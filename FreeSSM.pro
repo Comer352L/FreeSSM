@@ -13,6 +13,7 @@ INCLUDEPATH += . src src/tinyxml
 # Input
 HEADERS += src/FreeSSM.h \
            src/Languages.h \
+           src/CmdLine.h \
            src/EngineDialog.h \
            src/TransmissionDialog.h \
            src/ABSdialog.h \
@@ -63,6 +64,7 @@ HEADERS += src/FreeSSM.h \
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
+           src/CmdLine.cpp \
            src/EngineDialog.cpp \
            src/TransmissionDialog.cpp \
            src/ABSdialog.cpp \

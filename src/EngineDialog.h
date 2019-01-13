@@ -48,7 +48,7 @@ class EngineDialog : public ControlUnitDialog
 
 public:
 	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode);
+	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	// Content backup parameters:

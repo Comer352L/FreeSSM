@@ -122,7 +122,7 @@ $ make debug-uninstall
 
 --------------------------------------------------------------------------------
 
-6. STARTING FreeSSM:
+6. STARTING FreeSSM from command line:
 
 First, switch to the installation folder (see 5.).
 
@@ -132,3 +132,15 @@ $ ./FreeSSM
 Windows:
 $ freessm
 
+You can append additional command line options if useful.
+To get a full list of supported options and corresponding descriptions, start
+FreeSSM with option "-h" (or "--help").
+
+Examples:
+$ ./FreeSSM -h
+=> prints help text (list of supported command line options)
+
+$ ./FreeSSM -c transmission -f mbssws -p selectionfile="/home/users/myMBSWselection_4.list" autostart
+=> starts directly into the transmission control unit dialog, selects reading of
+   measuring blocks and switches, loads the MB/SW selection file
+   "/home/users/myMBSWselection_4.list" and starts reading immediately
