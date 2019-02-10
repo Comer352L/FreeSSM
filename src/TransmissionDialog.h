@@ -31,7 +31,6 @@
 #include <QtGui>
 #include "ControlUnitDialog.h"
 #include "CUinfo_Transmission.h"
-#include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
@@ -49,14 +48,10 @@ public:
 private:
 	CUinfo_Transmission *_infoWidget;
 
-	void runClearMemory(SSMprotocol::CMlevel_dt level);
-
 private slots:
 	void switchToDCsMode();
 	void switchToMBsSWsMode();
 	void switchToAdjustmentsMode();
-	void clearMemory();
-	void clearMemory2();
 
 };
 

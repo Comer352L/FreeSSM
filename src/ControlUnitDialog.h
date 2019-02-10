@@ -82,9 +82,12 @@ private:
 	DiagInterfaceStatusBar *_ifstatusbar;
 	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
 
+	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void closeEvent(QCloseEvent *event);
 
 protected slots:
+	void clearMemory();
+	void clearMemory2();
 	void communicationError(QString addstr = "");
 
 };

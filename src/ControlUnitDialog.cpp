@@ -19,6 +19,7 @@
 
 #include "ControlUnitDialog.h"
 #include "CmdLine.h"
+#include "ClearMemoryDlg.h"
 
 
 ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language)
@@ -421,6 +422,51 @@ bool ControlUnitDialog::startSystemOperationTestsMode()
 	connect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
 	_mode = Mode::SysTests;
 	return true;
+}
+
+
+void ControlUnitDialog::clearMemory()
+{
+	runClearMemory(SSMprotocol::CMlevel_1);
+}
+
+
+void ControlUnitDialog::clearMemory2()
+{
+	runClearMemory(SSMprotocol::CMlevel_2);
+}
+
+
+void ControlUnitDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
+{
+	bool ok = false;
+	ClearMemoryDlg::CMresult_dt result;
+	// Create "Clear Memory"-dialog:
+	ClearMemoryDlg cmdlg(this, _SSMPdev, level);
+	// Temporary disconnect from "communication error"-signal:
+	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	// Run "Clear Memory"-procedure:
+	result = cmdlg.run();
+	// Reconnect to "communication error"-signal:
+	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
+	// Check result:
+	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Mode::Adjustments))
+	{
+		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
+		waitmsgbox.show();
+		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
+		waitmsgbox.close();
+		if (!ok)
+			communicationError();
+	}
+	else if (result == ClearMemoryDlg::CMresult_communicationError)
+	{
+		communicationError();
+	}
+	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
+	{
+		close(); // exit control unit dialog
+	}
 }
 
 

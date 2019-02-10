@@ -240,26 +240,3 @@ void ABSdialog::switchToMBsSWsMode()
 		communicationError();
 }
 
-
-void ABSdialog::clearMemory()
-{
-	ClearMemoryDlg::CMresult_dt result;
-	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
-	// Temporary disconnect from "communication error"-signal:
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Run "Clear Memory"-procedure:
-	result = cmdlg.run();
-	// Reconnect to "communication error"-signal:
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Check result:
-	if (result == ClearMemoryDlg::CMresult_communicationError)
-	{
-		communicationError();
-	}
-	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
-	{
-		close(); // exit control unit dialog
-	}
-}
-

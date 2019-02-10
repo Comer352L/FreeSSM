@@ -361,36 +361,3 @@ void EngineDialog::switchToSystemOperationTestsMode()
 		communicationError();
 }
 
-
-void EngineDialog::clearMemory()
-{
-	bool ok = false;
-	ClearMemoryDlg::CMresult_dt result;
-	// Create "Clear Memory"-dialog:
-	ClearMemoryDlg cmdlg(this, _SSMPdev, SSMprotocol::CMlevel_1);
-	// Temporary disconnect from "communication error"-signal:
-	disconnect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Run "Clear Memory"-procedure:
-	result = cmdlg.run();
-	// Reconnect to "communication error"-signal:
-	connect(_SSMPdev, SIGNAL( commError() ), this, SLOT( communicationError() ));
-	// Check result:
-	if ((result == ClearMemoryDlg::CMresult_success) && (_mode == Mode::Adjustments))
-	{
-		FSSM_WaitMsgBox waitmsgbox(this, tr("Reading Adjustment Values... Please wait !"));
-		waitmsgbox.show();
-		ok = _content_Adjustments->setup(_SSMPdev); // refresh adjustment values
-		waitmsgbox.close();
-		if (!ok)
-			communicationError();
-	}
-	else if (result == ClearMemoryDlg::CMresult_communicationError)
-	{
-		communicationError();
-	}
-	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
-	{
-		close(); // exit engine control unit dialog
-	}
-}
-

@@ -31,7 +31,6 @@
 #include <QtGui>
 #include "ControlUnitDialog.h"
 #include "CUinfo_Engine.h"
-#include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
@@ -54,7 +53,6 @@ private slots:
 	void switchToMBsSWsMode();
 	void switchToAdjustmentsMode();
 	void switchToSystemOperationTestsMode();
-	void clearMemory();
 
 };
 
