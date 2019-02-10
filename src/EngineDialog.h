@@ -48,11 +48,7 @@ public:
 private:
 	CUinfo_Engine *_infoWidget;
 
-private slots:
-	void switchToDCsMode();
-	void switchToMBsSWsMode();
-	void switchToAdjustmentsMode();
-	void switchToSystemOperationTestsMode();
+	CUcontent_DCs_abstract * allocate_DCsContentWidget();
 
 };
 

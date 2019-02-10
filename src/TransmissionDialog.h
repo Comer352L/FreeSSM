@@ -48,10 +48,7 @@ public:
 private:
 	CUinfo_Transmission *_infoWidget;
 
-private slots:
-	void switchToDCsMode();
-	void switchToMBsSWsMode();
-	void switchToAdjustmentsMode();
+	CUcontent_DCs_abstract * allocate_DCsContentWidget();
 
 };
 

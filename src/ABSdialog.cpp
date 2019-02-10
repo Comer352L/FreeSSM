@@ -62,7 +62,7 @@ bool ABSdialog::setup(ContentSelection csel, QStringList cmdline_args)
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn))
 	{
 		setContentSelectionButtonChecked(ContentSelection::DCsMode, true);
-		_content_DCs = new CUcontent_DCs_twoMemories();
+		_content_DCs = allocate_DCsContentWidget();
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
@@ -195,48 +195,8 @@ commError:
 }
 
 
-void ABSdialog::switchToDCsMode()
+CUcontent_DCs_abstract * ABSdialog::allocate_DCsContentWidget()
 {
-	bool ok = false;
-	if (_mode == Mode::DCs) return;
-	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
-	waitmsgbox.show();
-	// Save content settings:
-	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_DCs = new CUcontent_DCs_twoMemories();
-	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
-	_content_DCs->show();
-	// Start DCs mode:
-	ok = startDCsMode();
-	// Close wait-message:
-	waitmsgbox.close();
-	// Check for communication error:
-	if (!ok)
-		communicationError();
-}
-
-
-void ABSdialog::switchToMBsSWsMode()
-{
-	bool ok = false;
-	if (_mode == Mode::MBsSWs) return;
-	// Show wait-message:
-	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
-	waitmsgbox.show();
-	// Save content settings:
-	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
-	setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
-	_content_MBsSWs->show();
-	// Start MB/SW mode:
-	ok = startMBsSWsMode();
-	// Close wait-message:
-	waitmsgbox.close();
-	// Check for communication error:
-	if (!ok)
-		communicationError();
+	return new CUcontent_DCs_twoMemories();
 }
 

@@ -72,7 +72,6 @@ protected:
 	bool startMBsSWsMode();
 	bool startAdjustmentsMode();
 	bool startSystemOperationTestsMode();
-	void saveContentSettings();
 
 private:
 	QString _language;
@@ -82,10 +81,16 @@ private:
 	DiagInterfaceStatusBar *_ifstatusbar;
 	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
 
+	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
+	void saveContentSettings();
 	void closeEvent(QCloseEvent *event);
 
 protected slots:
+	void switchToDCsMode();
+	void switchToMBsSWsMode();
+	void switchToAdjustmentsMode();
+	void switchToSystemOperationTestsMode();
 	void clearMemory();
 	void clearMemory2();
 	void communicationError(QString addstr = "");
