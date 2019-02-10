@@ -29,16 +29,11 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	QPushButton *pushButton = addContent(ContentSelection::DCsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
-	pushButton = addContent(ContentSelection::MBsSWsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
-	pushButton = addContent(ContentSelection::AdjustmentsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
-	pushButton = addContent(ContentSelection::SysTestsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToSystemOperationTestsMode() ) );
-	pushButton = addContent(ContentSelection::ClearMemoryFcn);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	addContent(ContentSelection::DCsMode);
+	addContent(ContentSelection::MBsSWsMode);
+	addContent(ContentSelection::AdjustmentsMode);
+	addContent(ContentSelection::SysTestsMode);
+	addContent(ContentSelection::ClearMemoryFcn);
 }
 
 

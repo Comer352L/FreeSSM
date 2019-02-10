@@ -29,17 +29,11 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	setInfoWidget(_infoWidget);
 	_infoWidget->show();
 	// Setup functions:
-	QPushButton *pushButton = addContent(ContentSelection::DCsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
-	pushButton = addContent(ContentSelection::MBsSWsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
-	pushButton = addContent(ContentSelection::AdjustmentsMode);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
-	pushButton = addContent(ContentSelection::ClearMemoryFcn);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
-	pushButton = addContent(ContentSelection::ClearMemory2Fcn);
-	connect( pushButton, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
-	// NOTE: using released() instead of pressed() as workaround for a Qt-Bug occuring under MS Windows
+	addContent(ContentSelection::DCsMode);
+	addContent(ContentSelection::MBsSWsMode);
+	addContent(ContentSelection::AdjustmentsMode);
+	addContent(ContentSelection::ClearMemoryFcn);
+	addContent(ContentSelection::ClearMemory2Fcn);
 }
 
 

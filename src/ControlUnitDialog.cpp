@@ -127,7 +127,7 @@ QWidget * ControlUnitDialog::contentWidget()
 }
 
 
-QPushButton * ControlUnitDialog::addContent(ContentSelection csel)
+void ControlUnitDialog::addContent(ContentSelection csel)
 {
 	QString title;
 	QIcon icon;
@@ -169,7 +169,7 @@ QPushButton * ControlUnitDialog::addContent(ContentSelection csel)
 		checkable = false;
 	}
 	else // BUG
-		return NULL;
+		return;
 	// Create button:
 	QPushButton *button = new QPushButton(selection_groupBox);
 	selButtons_verticalLayout->insertWidget(_contentSelectionButtons.size(), button);
@@ -204,10 +204,23 @@ QPushButton * ControlUnitDialog::addContent(ContentSelection csel)
 		title.append( QString( nspaces - nspaces/2, ' ' ) );
 	}
 	button->setText(title);
+	// Connect buttons with slots:
+	if (csel == ContentSelection::DCsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
+	else if (csel == ContentSelection::MBsSWsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
+	else if (csel == ContentSelection::AdjustmentsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
+	else if (csel == ContentSelection::SysTestsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToSystemOperationTestsMode() ) );
+	else if (csel == ContentSelection::ClearMemoryFcn)
+		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	else if (csel == ContentSelection::ClearMemory2Fcn)
+		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
+	//else: BUG
 	// Save, show and return button:
 	button->show();
 	_contentSelectionButtons.insert(csel, button);
-	return button;
 }
 
 

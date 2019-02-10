@@ -60,7 +60,7 @@ protected:
 	CUcontent_Adjustments *_content_Adjustments;
 	CUcontent_sysTests *_content_SysTests;
 
-	QPushButton * addContent(ContentSelection csel);
+	void addContent(ContentSelection csel);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
 	void setContentWidget(QString title, QWidget *contentwidget);
@@ -87,13 +87,15 @@ private:
 	void closeEvent(QCloseEvent *event);
 
 protected slots:
+	void clearMemory();
+	void clearMemory2();
+	void communicationError(QString addstr = "");
+
+private slots:
 	void switchToDCsMode();
 	void switchToMBsSWsMode();
 	void switchToAdjustmentsMode();
 	void switchToSystemOperationTestsMode();
-	void clearMemory();
-	void clearMemory2();
-	void communicationError(QString addstr = "");
 
 };
 
