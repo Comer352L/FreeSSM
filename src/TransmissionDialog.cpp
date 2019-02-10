@@ -1,7 +1,7 @@
 /*
  * Transmission.cpp - Transmission Control Unit dialog
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,11 @@
 
 #include "TransmissionDialog.h"
 #include "CmdLine.h"
+#include "CUcontent_DCs_twoMemories.h"
 
 
 TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), diagInterface, language)
 {
-	// *** Initialize global variables:
-	_content_DCs = NULL;
-	_content_MBsSWs = NULL;
-	_content_Adjustments = NULL;
 	// Show information-widget:
 	_infoWidget = new CUinfo_Transmission();
 	setInfoWidget(_infoWidget);
@@ -304,51 +301,6 @@ void TransmissionDialog::clearMemory2()
 }
 
 
-bool TransmissionDialog::startDCsMode()
-{
-	int DCgroups = 0;
-	if (_content_DCs == NULL)
-		return false;
-	if (!_content_DCs->setup(_SSMPdev))
-		return false;
-	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
-		return false;
-	if (DCgroups == SSMprotocol::noDCs_DCgroup)
-		return false;
-	if (!_content_DCs->startDCreading())
-		return false;
-	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::DCs;
-	return true;
-}
-
-
-bool TransmissionDialog::startMBsSWsMode()
-{
-	if (_content_MBsSWs == NULL)
-		return false;
-	if (!_content_MBsSWs->setup(_SSMPdev))
-		return false;
-	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
-		return false;
-	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::MBsSWs;
-	return true;
-}
-
-
-bool TransmissionDialog::startAdjustmentsMode()
-{
-	if (_content_Adjustments == NULL)
-		return false;
-	if (!_content_Adjustments->setup(_SSMPdev))
-		return false;
-	connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-	_mode = Mode::Adjustments;
-	return true;
-}
-
-
 void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 {
 	bool ok = false;
@@ -378,16 +330,6 @@ void TransmissionDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit control unit dialog
-	}
-}
-
-
-void TransmissionDialog::saveContentSettings()
-{
-	if (_mode == Mode::MBsSWs)
-	{
-		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
-		_MBSWsettings = _content_MBsSWs->getSettings();
 	}
 }
 

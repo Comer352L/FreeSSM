@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.cpp - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,10 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_contentWidget = NULL;
 	_setup_done = false;
 	_mode = Mode::None;
+	_content_DCs = NULL;
+	_content_MBsSWs = NULL;
+	_content_Adjustments = NULL;
+	_content_SysTests = NULL;
 	// Setup GUI:
 	setupUi(this);
 	// enable maximize and minimize buttons
@@ -360,6 +364,73 @@ bool ControlUnitDialog::getParametersFromCmdLine(QStringList *cmdline_args, QStr
 	if (astart && (autostart != NULL))
 		*autostart = true;
 	return true;
+}
+
+
+bool ControlUnitDialog::startDCsMode()
+{
+	int DCgroups = 0;
+	if (_content_DCs == NULL)
+		return false;
+	if (!_content_DCs->setup(_SSMPdev))
+		return false;
+	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
+		return false;
+	if (DCgroups == SSMprotocol::noDCs_DCgroup)
+		return false;
+	if (!_content_DCs->startDCreading())
+		return false;
+	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+	_mode = Mode::DCs;
+	return true;
+}
+
+
+bool ControlUnitDialog::startMBsSWsMode()
+{
+	if (_content_MBsSWs == NULL)
+		return false;
+	if (!_content_MBsSWs->setup(_SSMPdev))
+		return false;
+	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
+		return false;
+	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
+	_mode = Mode::MBsSWs;
+	return true;
+}
+
+
+bool ControlUnitDialog::startAdjustmentsMode()
+{
+	if (_content_Adjustments == NULL)
+		return false;
+	if (!_content_Adjustments->setup(_SSMPdev))
+		return false;
+	connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
+	_mode = Mode::Adjustments;
+	return true;
+}
+
+
+bool ControlUnitDialog::startSystemOperationTestsMode()
+{
+	if (_content_SysTests == NULL)
+		return false;
+	if (!_content_SysTests->setup(_SSMPdev))
+		return false;
+	connect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
+	_mode = Mode::SysTests;
+	return true;
+}
+
+
+void ControlUnitDialog::saveContentSettings()
+{
+	if (_mode == Mode::MBsSWs)
+	{
+		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
+		_MBSWsettings = _content_MBsSWs->getSettings();
+	}
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * Engine.cpp - Engine Control Unit dialog
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,11 @@
 
 #include "EngineDialog.h"
 #include "CmdLine.h"
+#include "CUcontent_DCs_engine.h"
 
 
 EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), diagInterface, language)
 {
-	// *** Initialize global variables:
-	_content_DCs = NULL;
-	_content_MBsSWs = NULL;
-	_content_Adjustments = NULL;
-	_content_SysTests = NULL;
 	// Show information-widget:
 	_infoWidget = new CUinfo_Engine();
 	setInfoWidget(_infoWidget);
@@ -395,73 +391,6 @@ void EngineDialog::clearMemory()
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit engine control unit dialog
-	}
-}
-
-
-bool EngineDialog::startDCsMode()
-{
-	int DCgroups = 0;
-	if (_content_DCs == NULL)
-		return false;
-	if (!_content_DCs->setup(_SSMPdev))
-		return false;
-	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
-		return false;
-	if (DCgroups == SSMprotocol::noDCs_DCgroup)
-		return false;
-	if (!_content_DCs->startDCreading())
-		return false;
-	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::DCs;
-	return true;
-}
-
-
-bool EngineDialog::startMBsSWsMode()
-{
-	if (_content_MBsSWs == NULL)
-		return false;
-	if (!_content_MBsSWs->setup(_SSMPdev))
-		return false;
-	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
-		return false;
-	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::MBsSWs;
-	return true;
-}
-
-
-bool EngineDialog::startAdjustmentsMode()
-{
-	if (_content_Adjustments == NULL)
-		return false;
-	if (!_content_Adjustments->setup(_SSMPdev))
-		return false;
-	connect(_content_Adjustments, SIGNAL( communicationError() ), this, SLOT( close() ) );
-	_mode = Mode::Adjustments;
-	return true;
-}
-
-
-bool EngineDialog::startSystemOperationTestsMode()
-{
-	if (_content_SysTests == NULL)
-		return false;
-	if (!_content_SysTests->setup(_SSMPdev))
-		return false;
-	connect(_content_SysTests, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::SysTests;
-	return true;
-}
-
-
-void EngineDialog::saveContentSettings()
-{
-	if (_mode == Mode::MBsSWs)
-	{
-		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
-		_MBSWsettings = _content_MBsSWs->getSettings();
 	}
 }
 

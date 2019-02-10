@@ -1,7 +1,7 @@
 /*
  * Transmission.h - Transmission Control Unit dialog
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,6 @@
 #include <QtGui>
 #include "ControlUnitDialog.h"
 #include "CUinfo_Transmission.h"
-#include "CUcontent_DCs_twoMemories.h"
-#include "CUcontent_MBsSWs.h"
-#include "CUcontent_Adjustments.h"
 #include "ClearMemoryDlg.h"
 #include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
@@ -50,20 +47,9 @@ public:
 	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
-	// Content backup parameters:
-	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
-	MBSWsettings_dt _MBSWsettings;
-	// Info- and content-widgets:
 	CUinfo_Transmission *_infoWidget;
-	CUcontent_DCs_twoMemories *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
-	CUcontent_Adjustments *_content_Adjustments;
 
-	bool startDCsMode();
-	bool startMBsSWsMode();
-	bool startAdjustmentsMode();
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
-	void saveContentSettings();
 
 private slots:
 	void switchToDCsMode();

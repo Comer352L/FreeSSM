@@ -1,7 +1,7 @@
 /*
  * ABSdialog.cpp - ABS/VDC Control Unit dialog
  *
- * Copyright (C) 2012 L1800Turbo, 2008-2018 Comer352L
+ * Copyright (C) 2012 L1800Turbo, 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,11 @@
 
 #include "ABSdialog.h"
 #include "CmdLine.h"
+#include "CUcontent_DCs_twoMemories.h"
 
 
 ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("ABS/VDC Control Unit"), diagInterface, language)
 {
-	// *** Initialize global variables:
-	_content_DCs = NULL;
-	_content_MBsSWs = NULL;
 	// Show information-widget:
 	_infoWidget = new CUinfo_simple();
 	setInfoWidget(_infoWidget);
@@ -262,49 +260,6 @@ void ABSdialog::clearMemory()
 	else if ((result == ClearMemoryDlg::CMresult_reconnectAborted) || (result == ClearMemoryDlg::CMresult_reconnectFailed))
 	{
 		close(); // exit control unit dialog
-	}
-}
-
-
-bool ABSdialog::startDCsMode()
-{
-	int DCgroups = 0;
-	if (_content_DCs == NULL)
-		return false;
-	if (!_content_DCs->setup(_SSMPdev))
-		return false;
-	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
-		return false;
-	if (DCgroups == SSMprotocol::noDCs_DCgroup)
-		return false;
-	if (!_content_DCs->startDCreading())
-		return false;
-	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::DCs;
-	return true;
-}
-
-
-bool ABSdialog::startMBsSWsMode()
-{
-	if (_content_MBsSWs == NULL)
-		return false;
-	if (!_content_MBsSWs->setup(_SSMPdev))
-		return false;
-	if (!_content_MBsSWs->setMBSWselection(_lastMBSWmetaList))
-		return false;
-	connect(_content_MBsSWs, SIGNAL( error() ), this, SLOT( close() ) );
-	_mode = Mode::MBsSWs;
-	return true;
-}
-
-
-void ABSdialog::saveContentSettings()
-{
-	if (_mode == Mode::MBsSWs)
-	{
-		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
-		_MBSWsettings = _content_MBsSWs->getSettings();
 	}
 }
 

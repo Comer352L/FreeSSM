@@ -1,7 +1,7 @@
 /*
  * CUcontent_DCs_abstract.h - Abstract widget for Diagnostic Codes Reading
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ class CUcontent_DCs_abstract : public QWidget
 public:
 	CUcontent_DCs_abstract(QWidget *parent);
 	virtual ~CUcontent_DCs_abstract();
+	virtual bool setup(SSMprotocol *SSMPdev) = 0;
 	bool startDCreading();
 	bool stopDCreading();
 

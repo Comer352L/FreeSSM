@@ -1,7 +1,7 @@
 /*
  * ControlUnitDialog.h - Template for Control Unit dialogs
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
 
 #include <QtGui>
 #include "ui_ControlUnitDialog.h"
+#include "CUcontent_DCs_abstract.h"
+#include "CUcontent_MBsSWs.h"
+#include "CUcontent_Adjustments.h"
+#include "CUcontent_sysTests.h"
 #include "DiagInterfaceStatusBar.h"
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol1.h"
@@ -47,6 +51,14 @@ protected:
 	SSMprotocol *_SSMPdev;
 	bool _setup_done;
 	Mode _mode;
+	// Content backup parameters:
+	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
+	MBSWsettings_dt _MBSWsettings;
+	// Content widgets:
+	CUcontent_DCs_abstract *_content_DCs;
+	CUcontent_MBsSWs *_content_MBsSWs;
+	CUcontent_Adjustments *_content_Adjustments;
+	CUcontent_sysTests *_content_SysTests;
 
 	QPushButton * addContent(ContentSelection csel);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
@@ -56,6 +68,11 @@ protected:
 	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
 	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
 	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
+	bool startDCsMode();
+	bool startMBsSWsMode();
+	bool startAdjustmentsMode();
+	bool startSystemOperationTestsMode();
+	void saveContentSettings();
 
 private:
 	QString _language;
