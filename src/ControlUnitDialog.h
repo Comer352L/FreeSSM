@@ -61,13 +61,17 @@ protected:
 	CUcontent_sysTests *_content_SysTests;
 
 	void addContent(ContentSelection csel);
+	bool contentSupported(ContentSelection csel);
+	bool getModeForContentSelection(ContentSelection csel, Mode *mode);
 	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
+	bool prepareContentWidget(Mode mode);
 	void setContentWidget(QString title, QWidget *contentwidget);
 	QWidget * contentWidget();
 	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
 	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
 	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
+	bool startMode(Mode mode);
 	bool startDCsMode();
 	bool startMBsSWsMode();
 	bool startAdjustmentsMode();

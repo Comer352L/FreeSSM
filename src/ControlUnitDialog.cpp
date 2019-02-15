@@ -110,6 +110,43 @@ void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
 }
 
 
+bool ControlUnitDialog::prepareContentWidget(Mode mode)
+{
+	// ***** Create, setup and insert the content widget *****:
+	if (mode == Mode::DCs)
+	{
+		setContentSelectionButtonChecked(ContentSelection::DCsMode, true);
+		_content_DCs = allocate_DCsContentWidget();
+		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
+		_content_DCs->show();
+	}
+	else if (mode == Mode::MBsSWs)
+	{
+		setContentSelectionButtonChecked(ContentSelection::MBsSWsMode, true);
+		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
+		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
+		_content_MBsSWs->show();
+	}
+	else if (mode == Mode::Adjustments)
+	{
+		setContentSelectionButtonChecked(ContentSelection::AdjustmentsMode, true);
+		_content_Adjustments = new CUcontent_Adjustments();
+		setContentWidget(tr("Adjustments:"), _content_Adjustments);
+		_content_Adjustments->show();
+	}
+	else if (mode == Mode::SysTests)
+	{
+		setContentSelectionButtonChecked(ContentSelection::SysTestsMode, true);
+		_content_SysTests = new CUcontent_sysTests();
+		setContentWidget(tr("System Operation Tests:"), _content_SysTests);
+		_content_SysTests->show();
+	}
+	else // BUG
+		return false;
+	return true;
+}
+
+
 void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 {
 	if (_contentWidget)
@@ -221,6 +258,28 @@ void ControlUnitDialog::addContent(ContentSelection csel)
 	// Save, show and return button:
 	button->show();
 	_contentSelectionButtons.insert(csel, button);
+}
+
+
+bool ControlUnitDialog::contentSupported(ContentSelection csel)
+{
+	return _contentSelectionButtons.contains(csel);
+}
+
+
+bool ControlUnitDialog::getModeForContentSelection(ContentSelection csel, Mode *mode)
+{
+	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn) || (csel == ContentSelection::ClearMemory2Fcn))
+		*mode = Mode::DCs;
+	else if (csel == ContentSelection::MBsSWsMode)
+		*mode = Mode::MBsSWs;
+	else if (csel == ContentSelection::AdjustmentsMode)
+		*mode = Mode::Adjustments;
+	else if (csel == ContentSelection::SysTestsMode)
+		*mode = Mode::SysTests;
+	else // BUG
+		return false;
+	return true;
 }
 
 
@@ -383,93 +442,102 @@ bool ControlUnitDialog::getParametersFromCmdLine(QStringList *cmdline_args, QStr
 
 void ControlUnitDialog::switchToDCsMode()
 {
-	bool ok = false;
+	bool com_err = false;
 	if (_mode == Mode::DCs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Diagnostic Codes... Please wait !"));
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_DCs = allocate_DCsContentWidget();
-	setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
-	_content_DCs->show();
-	// Start DCs mode:
-	ok = startDCsMode();
+	// Create and insert new content widget:
+	if (prepareContentWidget(Mode::DCs))
+		// Start DCs mode:
+		com_err = !startDCsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
-	if (!ok)
+	if (com_err)
 		communicationError();
 }
 
 
 void ControlUnitDialog::switchToMBsSWsMode()
 {
-	bool ok = false;
+	bool com_err = false;
 	if (_mode == Mode::MBsSWs) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Measuring Blocks... Please wait !"));
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
-	setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
-	_content_MBsSWs->show();
-	// Start MB/SW mode:
-	ok = startMBsSWsMode();
+	// Create and insert new content widget:
+	if (prepareContentWidget(Mode::MBsSWs))
+		// Start MB/SW mode:
+		com_err = !startMBsSWsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
-	if (!ok)
+	if (com_err)
 		communicationError();
 }
 
 
 void ControlUnitDialog::switchToAdjustmentsMode()
 {
-	bool ok = false;
+	bool com_err = false;
 	if (_mode == Mode::Adjustments) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Adjustment Values... Please wait !"));
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_Adjustments = new CUcontent_Adjustments();
-	setContentWidget(tr("Adjustments:"), _content_Adjustments);
-	_content_Adjustments->show();
-	// Start Adjustments mode:
-	ok = startAdjustmentsMode();
+	// Create and insert new content widget:
+	if (prepareContentWidget(Mode::Adjustments))
+		// Start Adjustments mode:
+		com_err = !startAdjustmentsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
-	if (!ok)
+	if (com_err)
 		communicationError();
 }
 
 
 void ControlUnitDialog::switchToSystemOperationTestsMode()
 {
-	bool ok = false;
+	bool com_err = false;
 	if (_mode == Mode::SysTests) return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to System Tests... Please wait !"));
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
-	// Create, setup and insert new content-widget:
-	_content_SysTests = new CUcontent_sysTests();
-	setContentWidget(tr("System Operation Tests:"), _content_SysTests);
-	_content_SysTests->show();
-	// Start System Operation Tests mode:
-	ok = startSystemOperationTestsMode();
+	// Create and insert new content widget:
+	if (prepareContentWidget(Mode::SysTests))
+		// Start System Operation Tests mode:
+		com_err = !startSystemOperationTestsMode();
 	// Close wait-message:
 	waitmsgbox.close();
 	// Check for communication error:
-	if (!ok)
+	if (com_err)
 		communicationError();
+}
+
+
+bool ControlUnitDialog::startMode(Mode mode)
+{
+	bool ok = true;
+	if (mode == Mode::DCs)
+		ok = startDCsMode();
+	else if (mode == Mode::MBsSWs)
+		ok = startMBsSWsMode();
+	else if (mode == Mode::Adjustments)
+		ok = startAdjustmentsMode();
+	else if (mode == Mode::SysTests)
+		ok = startSystemOperationTestsMode();
+	else // BUG
+		ok = false;
+	return ok;
 }
 
 

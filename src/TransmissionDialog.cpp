@@ -39,7 +39,7 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 
 bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
-	// *** Local variables:
+	Mode mode;
 	QString sysdescription = "";
 	std::string SYS_ID = "";
 	std::string ROM_ID = "";
@@ -48,36 +48,19 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 
 	if (_setup_done)
 		return false;
-	// Get command line startup parameters (if available):
-	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
-		exit(ERROR_BADCMDLINEARGS);
-	// ***** Create, setup and insert the content-widget *****:
-	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn) || (csel == ContentSelection::ClearMemory2Fcn))
-	{
-		setContentSelectionButtonChecked(ContentSelection::DCsMode, true);
-		_content_DCs = allocate_DCsContentWidget();
-		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
-		_content_DCs->show();
-	}
-	else if (csel == ContentSelection::MBsSWsMode)
-	{
-		setContentSelectionButtonChecked(ContentSelection::MBsSWsMode, true);
-		_content_MBsSWs = new CUcontent_MBsSWs(_MBSWsettings);
-		setContentWidget(tr("Measuring Blocks:"), _content_MBsSWs);
-		_content_MBsSWs->show();
-	}
-	else if (csel == ContentSelection::AdjustmentsMode)
-	{
-		setContentSelectionButtonChecked(ContentSelection::AdjustmentsMode, true);
-		_content_Adjustments = new CUcontent_Adjustments();
-		setContentWidget(tr("Adjustments:"), _content_Adjustments);
-		_content_Adjustments->show();
-	}
-	else	// NOTE: currently only possible due to wrong command line parameters
+	if (!contentSupported(csel))
 	{
 		CmdLine::printError("the specified function is not supported by the Transmission Control Unit.");
 		exit(ERROR_BADCMDLINEARGS);
 	}
+	if (!getModeForContentSelection(csel, &mode))
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
+	// ***** Create and insert the content widget *****:
+	if (!prepareContentWidget(mode))
+		return false;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
 	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
@@ -136,21 +119,7 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		setContentSelectionButtonEnabled(ContentSelection::MBsSWsMode, true);
 		setContentSelectionButtonEnabled(ContentSelection::AdjustmentsMode, true);
 		// Start selected mode:
-		bool ok = false;
-		if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn) || (csel == ContentSelection::ClearMemory2Fcn))
-		{
-			ok = startDCsMode();
-		}
-		else if (csel == ContentSelection::MBsSWsMode)
-		{
-			ok = startMBsSWsMode();
-		}
-		else if (csel == ContentSelection::AdjustmentsMode)
-		{
-			ok = startAdjustmentsMode();
-		}
-		// else: BUG
-		if (!ok)
+		if (!startMode(mode))
 			goto commError;
 		// Update and close status info:
 		initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
