@@ -1,7 +1,7 @@
 /*
  * CUcontent_MBsSWs.h - Widget for Reading of Measuring Blocks and Switches
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ private:
 	void communicationError(QString addstr);
 	void moveRefreshTimeUiElements();
 	void resizeEvent(QResizeEvent *event);
-	void warningMsg(QString title, QString message);
+	void errorMsg(QString title, QString message);
 
 public slots:
 	bool startMBSWreading();
