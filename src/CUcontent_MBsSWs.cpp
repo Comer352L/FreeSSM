@@ -358,8 +358,10 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	QSize startstopmbreadingiconsize(24,24);
 	startstopmbreading_pushButton->setIcon(startstopmbreadingicon);
 	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
-	// Enable add/delete button (depending on list content and selection):
-	setDeleteButtonEnabledState();
+	// Enable delete button if MBs/SWs are selected on the table:
+	if (_valuesTableView->getSelectedTableWidgetRows().size() > 0)
+		mbswdelete_pushButton->setEnabled(true);
+	// Enable add button (if there is something left to add):
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
 	// Enable load state button
