@@ -132,8 +132,8 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 		mbswadd_pushButton->setEnabled(true);
 	else
 		mbswadd_pushButton->setEnabled(false);
-	// Enable/disable "Delete"-button:
-	setDeleteButtonEnabledState();
+	// Disable "Delete"-button:
+	mbswdelete_pushButton->setEnabled(false);
 	// Disable "Start"-button:
 	startstopmbreading_pushButton->setEnabled(false);
 	// Disable "Save"-button:
