@@ -97,14 +97,12 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 
 bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 {
-	bool ok;
-	_SSMPdev = SSMPdev;
+	bool ok = (SSMPdev != NULL);
 	// Get supported MBs/SWs:
-	ok = (_SSMPdev != NULL);
 	if (ok)
-		ok = _SSMPdev->getSupportedMBs(&_supportedMBs);
+		ok = SSMPdev->getSupportedMBs(&_supportedMBs);
 	if (ok)
-		ok = _SSMPdev->getSupportedSWs(&_supportedSWs);
+		ok = SSMPdev->getSupportedSWs(&_supportedSWs);
 	if (!ok)
 	{
 		// Reset CU-data:
@@ -140,6 +138,12 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	mbswsave_pushButton->setEnabled(false);
 	// Enable "Load"-button
 	mbswload_pushButton->setEnabled(true);
+	// Save SSMpdev:
+	if (ok)
+		_SSMPdev = SSMPdev;
+	else
+		_SSMPdev = NULL;
+	// NOTE: _SSMPdev != NULL means setup() has been done
 	// Return result:
 	return ok;
 }
@@ -834,11 +838,13 @@ bool CUcontent_MBsSWs::saveMBsSWs(QString filename)
 
 bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 {
-	std::string ROM_ID = _SSMPdev->getROMID();
 	std::string savedROM_ID = "";
 	std::vector<MBSWmetadata_dt> MBSWmetaList;
 	MBSWmetadata_dt tmpMBSWmd;
 	unsigned int k = 0;
+	// Check if setup() has already been called:
+	if (_SSMPdev == NULL)
+		return false;
 	// Get file name:
 	if (!filename.size())
 	{
@@ -869,7 +875,8 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	savedROM_ID = std::string(tmp_savedROM_ID, size_of_ROMstring);
 	delete[] tmp_savedROM_ID;
 	// Check that the ROM-IDs match:
-	if (ROM_ID != savedROM_ID)
+	std::string ROM_ID = _SSMPdev->getROMID();
+	if (savedROM_ID != ROM_ID)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM-ID from file does not match Control Unit ROM-ID, ignoring MBs/SWs!" << std::endl;
