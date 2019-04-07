@@ -856,6 +856,12 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 		errorMsg(tr("Load Error"), tr("Error: can't load a new MB/SW list:\nMB/SW-monitoring is in progress"));
 		return false;
 	}
+	// Check if Control Unit provides at least one MB/SW:
+	if (_supportedMBs.size() + _supportedSWs.size() < 1)
+	{
+		errorMsg(tr("Load Error"), tr("Error: can't load a MB/SW list:\nControl Unit provides no MBs/SWs"));
+		return false;
+	}
 	// Get file name:
 	if (!filename.size())
 	{
