@@ -104,6 +104,7 @@ private:
 	std::vector<MBSWvalue_dt> _lastValues;
 	std::vector<MinMaxMBSWvalue_dt> _minmaxData;
 	std::vector<unsigned int> _tableRowPosIndexes; /* index of the row at which the MB/SW is displayed in the values-table-widget */
+	bool _MBSWreading;
 
 	void setupTimeModeUiElements();
 	void displayMBsSWs();

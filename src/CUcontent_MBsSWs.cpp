@@ -28,6 +28,7 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	_SSMPdev = NULL;
 	_timemode = settings.timeMode;
 	_lastrefreshduration_ms = 0;
+	_MBSWreading = false;
 
 	// Setup GUI:
 	setupUi(this);
@@ -151,8 +152,8 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 
 bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
 {
-	// Check if MBSW-reading (and monitoring !) is in progress:
-	if ((mbswadd_pushButton->isEnabled() == false) && (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size())))
+	// Check if MB/SW monitoring is in progress:
+	if (_MBSWreading)
 		return false;
 	// Check if the selected MBs/SWs are available:
 	for (const MBSWmetadata_dt& metadata : MBSWmetaList)
@@ -281,7 +282,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 
 void CUcontent_MBsSWs::startstopMBsSWsButtonPressed()
 {
-	if (!_SSMPdev || (_SSMPdev->state() == SSMprotocol::state_MBSWreading))
+	if (!_SSMPdev || _MBSWreading)
 		stopMBSWreading();
 	else
 		startMBSWreading();
@@ -294,7 +295,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
 	if (!_SSMPdev) goto err;
 	// Check premises:
-	state = _SSMPdev->state();
+	state = _SSMPdev->state(); // NOTE: we are interested in the "real" state here, not _MBSWreading
 	if (state == SSMprotocol::state_normal)
 	{
 		if (_MBSWmetaList.empty()) goto err;
@@ -334,6 +335,8 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	startstopmbreading_pushButton->setText(tr(" Stop  "));
 	startstopmbreading_pushButton->setIcon( QIcon(QString::fromUtf8(":/icons/chrystal/32x32/player_stop.png")) );
 	startstopmbreading_pushButton->setIconSize( QSize(24,24) );
+	// Update state:
+	_MBSWreading = true;
 	return true;
 
 err:
@@ -370,6 +373,8 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 		mbswadd_pushButton->setEnabled(true);
 	// Enable load state button
 	mbswload_pushButton->setEnabled(true);
+	// Update state:
+	_MBSWreading = false;
 	return true;
 }
 
@@ -1006,9 +1011,8 @@ void CUcontent_MBsSWs::resetMinMaxTableValues()
 
 void CUcontent_MBsSWs::setDeleteButtonEnabledState()
 {
-	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
-		return;
-	mbswdelete_pushButton->setEnabled( _valuesTableView->getSelectedTableWidgetRows().size() > 0 );
+	bool enable = (!_MBSWreading) && (_valuesTableView->getSelectedTableWidgetRows().size() > 0);
+	mbswdelete_pushButton->setEnabled(enable);
 }
 
 
