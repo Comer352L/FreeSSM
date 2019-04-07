@@ -152,6 +152,9 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 
 bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
 {
+	// Check if setup() has already been called:
+	if (_SSMPdev == NULL)
+		return false;
 	// Check if MB/SW monitoring is in progress:
 	if (_MBSWreading)
 		return false;
