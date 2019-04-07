@@ -850,6 +850,12 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	// Check if setup() has already been called:
 	if (_SSMPdev == NULL)
 		return false;
+	// Check if MB/SW monitoring is in progress:
+	if (_MBSWreading)
+	{
+		errorMsg(tr("Load Error"), tr("Error: can't load a new MB/SW list:\nMB/SW-monitoring is in progress"));
+		return false;
+	}
 	// Get file name:
 	if (!filename.size())
 	{
