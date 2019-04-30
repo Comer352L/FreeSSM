@@ -107,6 +107,8 @@ private:
 	bool _MBSWreading;
 
 	void setupTimeModeUiElements();
+	bool validateMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
+	void setMBSWselectionUnvalidated(const std::vector<MBSWmetadata_dt>& MBSWmetaList);
 	void displayMBsSWs();
 	void updateRefreshTimeTitle();
 	void updateTimeInfo(int refreshduration_ms);

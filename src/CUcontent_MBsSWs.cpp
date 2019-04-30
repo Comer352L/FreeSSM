@@ -150,14 +150,8 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 }
 
 
-bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
+bool CUcontent_MBsSWs::validateMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
 {
-	// Check if setup() has already been called:
-	if (_SSMPdev == NULL)
-		return false;
-	// Check if MB/SW monitoring is in progress:
-	if (_MBSWreading)
-		return false;
 	// Check if the selected MBs/SWs are available:
 	for (const MBSWmetadata_dt& metadata : MBSWmetaList)
 	{
@@ -174,6 +168,31 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 		if (metadata.nativeIndex >= count)
 			return false;
 	}
+
+	return true;
+}
+
+
+bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
+{
+	// Check if setup() has already been called:
+	if (_SSMPdev == NULL)
+		return false;
+	// Check if MB/SW monitoring is in progress:
+	if (_MBSWreading)
+		return false;
+	// Check if the selected MBs/SWs are available:
+	if (!validateMBSWselection(MBSWmetaList))
+		return false;
+	// Save+display the new MB/SW selection:
+	setMBSWselectionUnvalidated(MBSWmetaList);
+
+	return true;
+}
+
+
+void CUcontent_MBsSWs::setMBSWselectionUnvalidated(const std::vector<MBSWmetadata_dt>& MBSWmetaList)
+{
 	// Save MB/SW-list:
 	_MBSWmetaList = MBSWmetaList;
 	// Clear last values:
@@ -204,7 +223,6 @@ bool CUcontent_MBsSWs::setMBSWselection(const std::vector<MBSWmetadata_dt>& MBSW
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
-	return true;
 }
 
 
@@ -919,8 +937,14 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 		MBSWmetaList.push_back( tmpMBSWmd );
 	}
 	file.close();
-	// Update table:
-	setMBSWselection(MBSWmetaList);
+	// Validate loaded MBs/SWs and update table:
+	if (!validateMBSWselection(MBSWmetaList))
+	{
+		errorMsg(tr("Load Error"), tr("Error: failed to load MB/SW list:\nThe loaded MB/SW list is invalid"));
+		return false;
+	}
+	// Save and display the new MB/SW selection:
+	setMBSWselectionUnvalidated(MBSWmetaList);
 
 	return true;
 }
