@@ -22,7 +22,7 @@
 #include "CUcontent_DCs_engine.h"
 
 
-EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Engine Control Unit"), diagInterface, language)
+EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
 	// Show information-widget:
 	_infoWidget = new CUinfo_Engine();
@@ -34,6 +34,18 @@ EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString languag
 	addContent(ContentSelection::AdjustmentsMode);
 	addContent(ContentSelection::SysTestsMode);
 	addContent(ContentSelection::ClearMemoryFcn);
+}
+
+
+QString EngineDialog::systemName()
+{
+	return tr("Engine");
+}
+
+
+QString EngineDialog::controlUnitName()
+{
+	return tr("Engine Control Unit");
 }
 
 
@@ -63,7 +75,7 @@ bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		return false;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Engine Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to %1... Please wait !").arg(controlUnitName()), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();

@@ -22,7 +22,7 @@
 #include "CUcontent_DCs_twoMemories.h"
 
 
-TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Transmission Control Unit"), diagInterface, language)
+TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
 	// Show information-widget:
 	_infoWidget = new CUinfo_Transmission();
@@ -34,6 +34,18 @@ TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QSt
 	addContent(ContentSelection::AdjustmentsMode);
 	addContent(ContentSelection::ClearMemoryFcn);
 	addContent(ContentSelection::ClearMemory2Fcn);
+}
+
+
+QString TransmissionDialog::systemName()
+{
+	return tr("Transmission");
+}
+
+
+QString TransmissionDialog::controlUnitName()
+{
+	return tr("Transmission Control Unit");
 }
 
 
@@ -63,7 +75,7 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		return false;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Transmission Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to %1... Please wait !").arg(controlUnitName()), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();

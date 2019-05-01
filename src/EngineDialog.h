@@ -48,6 +48,8 @@ public:
 private:
 	CUinfo_Engine *_infoWidget;
 
+	QString systemName();
+	QString controlUnitName();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
 	bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox);
 

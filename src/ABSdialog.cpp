@@ -27,7 +27,7 @@
 #include "CUcontent_DCs_twoMemories.h"
 
 
-ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("ABS/VDC Control Unit"), diagInterface, language)
+ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
 	// Show information-widget:
 	_infoWidget = new CUinfo_simple();
@@ -37,6 +37,18 @@ ABSdialog::ABSdialog(AbstractDiagInterface *diagInterface, QString language) : C
 	addContent(ContentSelection::DCsMode);
 	addContent(ContentSelection::MBsSWsMode);
 	addContent(ContentSelection::ClearMemoryFcn);
+}
+
+
+QString ABSdialog::systemName()
+{
+	return tr("ABS/VDC");
+}
+
+
+QString ABSdialog::controlUnitName()
+{
+	return tr("ABS/VDC Control Unit");
 }
 
 
@@ -66,7 +78,7 @@ bool ABSdialog::setup(ContentSelection csel, QStringList cmdline_args)
 		return false;
 	// ***** Connect to Control Unit *****:
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to ABS/VDC Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to %1... Please wait !").arg(controlUnitName()), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();

@@ -22,7 +22,7 @@
 #include "CUcontent_DCs_twoMemories.h"
 
 
-AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Air Conditioning Control Unit"), diagInterface, language)
+AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
 	// Show information-widget:
 	_infoWidget = new CUinfo_simple();
@@ -32,6 +32,18 @@ AirConDialog::AirConDialog(AbstractDiagInterface *diagInterface, QString languag
 	addContent(ContentSelection::DCsMode);
 	addContent(ContentSelection::MBsSWsMode);
 	addContent(ContentSelection::ClearMemoryFcn);
+}
+
+
+QString AirConDialog::systemName()
+{
+	return tr("Air Conditioning");
+}
+
+
+QString AirConDialog::controlUnitName()
+{
+	return tr("Air Conditioning Control Unit");
 }
 
 
@@ -62,7 +74,7 @@ bool AirConDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		return false;
 	// ***** Connect to Control Unit *****:
 	// Inform user that system needs to be switched on manually:
-	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), tr("Please switch the Air Conditioning system on."), 0, this);
+	QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), QString(tr("Please switch the %1 system on.").arg(systemName())), 0, this);
 	QPushButton *button = msgbox->addButton(QMessageBox::Ok);
 	button->setText(tr("Continue"));
 	msgbox->addButton(QMessageBox::Cancel);
@@ -78,7 +90,7 @@ bool AirConDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		return false;
 	}
 	// Create Status information message box for CU initialisation/setup:
-	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to Air Conditioning Control Unit... Please wait !"), 0, 0, 100, this);
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to %1... Please wait !").arg(controlUnitName()), 0, 0, 100, this);
 	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();

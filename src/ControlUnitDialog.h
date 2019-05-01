@@ -85,6 +85,8 @@ private:
 	DiagInterfaceStatusBar *_ifstatusbar;
 	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
 
+	virtual QString systemName() = 0;
+	virtual QString controlUnitName() = 0;
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	virtual bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
