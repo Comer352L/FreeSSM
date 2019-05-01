@@ -108,12 +108,9 @@ bool CruiseControlDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
 	if (init_result == SSMprotocol::result_success)
 	{
-		std::vector<mb_dt> supportedMBs;
-		std::vector<sw_dt> supportedSWs;
-		// Number of supported MBs / SWs:
-		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		// Fill info widget with information about the Control Unit:
+		if (!fillInfoWidget(&initstatusmsgbox))
 			goto commError;
-		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 		// Enable mode buttons:
 		// NOTE: unconditionally, contents are deactivated if unsupported
 		setContentSelectionButtonEnabled(ContentSelection::DCsMode, true);
@@ -128,15 +125,12 @@ bool CruiseControlDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		initstatusmsgbox.exec();
 		initstatusmsgbox.close();
 		// Apply command line startup parameters for MB/SW mode:
-		if (csel == ContentSelection::MBsSWsMode)
+		if ((csel == ContentSelection::MBsSWsMode) && (_content_MBsSWs != NULL))
 		{
-			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
-			{
-				if (mbssws_selfile.size())
-					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
-				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
-					_content_MBsSWs->startMBSWreading();
-			}
+			if (mbssws_selfile.size())
+				_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+			if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+				_content_MBsSWs->startMBSWreading();
 		}
 	}
 	else
@@ -177,5 +171,17 @@ commError:
 CUcontent_DCs_abstract * CruiseControlDialog::allocate_DCsContentWidget()
 {
 	return new CUcontent_DCs_stopCodes();
+}
+
+
+bool CruiseControlDialog::fillInfoWidget(FSSM_InitStatusMsgBox*)
+{
+	std::vector<mb_dt> supportedMBs;
+	std::vector<sw_dt> supportedSWs;
+	// Number of supported MBs / SWs:
+	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		return false;	// commError
+	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	return true;
 }
 

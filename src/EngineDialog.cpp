@@ -98,36 +98,9 @@ bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		bool supported = false;
 		bool testmode = false;
 		bool enginerunning = false;
-		std::vector<mb_dt> supportedMBs;
-		std::vector<sw_dt> supportedSWs;
-		// Number of supported MBs / SWs:
-		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		// Fill info widget with information about the Control Unit:
+		if (!fillInfoWidget(&initstatusmsgbox))
 			goto commError;
-		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
-		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2system(&supported))
-			goto commError;
-		_infoWidget->setOBD2Supported(supported);
-		// Integrated Cruise Control:
-		if (!_SSMPdev->hasIntegratedCC(&supported))
-			goto commError;
-		_infoWidget->setIntegratedCCSupported(supported);
-		// Immobilizer:
-		if (!_SSMPdev->hasImmobilizer(&supported))
-			goto commError;
-		_infoWidget->setImmobilizerSupported(supported);
-		// Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
-		initstatusmsgbox.setValue(55);
-		// Query and output VIN, if supported:
-		if (!_SSMPdev->hasVINsupport(&supported))
-			goto commError;
-		if (supported)
-		{
-			if (!_SSMPdev->getVIN(&VIN))
-				goto commError;
-		}
-		_infoWidget->setVINinfo(supported, VIN);
 		// Check if we need to stop the automatic actuator test:
 		if (!_SSMPdev->hasActuatorTests(&supported))
 			goto commError;
@@ -178,15 +151,12 @@ bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		if (csel == ContentSelection::ClearMemoryFcn)
 			clearMemory();
 		// Apply command line startup parameters for MB/SW mode:
-		else if (csel == ContentSelection::MBsSWsMode)
+		else if ((csel == ContentSelection::MBsSWsMode) && (_content_MBsSWs != NULL))
 		{
-			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
-			{
-				if (mbssws_selfile.size())
-					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
-				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
-					_content_MBsSWs->startMBSWreading();
-			}
+			if (mbssws_selfile.size())
+				_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+			if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+				_content_MBsSWs->startMBSWreading();
 		}
 	}
 	else
@@ -227,5 +197,46 @@ commError:
 CUcontent_DCs_abstract * EngineDialog::allocate_DCsContentWidget()
 {
 	return new CUcontent_DCs_engine();
+}
+
+
+bool EngineDialog::fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox)
+{
+	QString VIN = "";
+	bool supported = false;
+	std::vector<mb_dt> supportedMBs;
+	std::vector<sw_dt> supportedSWs;
+	// Number of supported MBs / SWs:
+	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		return false;	// commError
+	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	// OBD2-Support:
+	if (!_SSMPdev->hasOBD2system(&supported))
+		return false;	// commError
+	_infoWidget->setOBD2Supported(supported);
+	// Integrated Cruise Control:
+	if (!_SSMPdev->hasIntegratedCC(&supported))
+		return false;	// commError
+	_infoWidget->setIntegratedCCSupported(supported);
+	// Immobilizer:
+	if (!_SSMPdev->hasImmobilizer(&supported))
+		return false;	// commError
+	_infoWidget->setImmobilizerSupported(supported);
+	// Update status info message box:
+	if (initstatusmsgbox != NULL)
+	{
+		initstatusmsgbox->setLabelText(tr("Reading Vehicle Ident. Number... Please wait !"));
+		initstatusmsgbox->setValue(55);
+	}
+	// Query and output VIN, if supported:
+	if (!_SSMPdev->hasVINsupport(&supported))
+		return false;	// commError
+	if (supported)
+	{
+		if (!_SSMPdev->getVIN(&VIN))
+			return false;	// commError
+	}
+	_infoWidget->setVINinfo(supported, VIN);
+	return true;
 }
 

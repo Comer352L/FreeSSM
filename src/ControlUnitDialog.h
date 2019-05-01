@@ -86,6 +86,7 @@ private:
 	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
 
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
+	virtual bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void saveContentSettings();
 	void closeEvent(QCloseEvent *event);

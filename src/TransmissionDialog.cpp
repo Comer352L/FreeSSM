@@ -95,16 +95,9 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	if (init_result == SSMprotocol::result_success)
 	{
 		bool supported = false;
-		std::vector<mb_dt> supportedMBs;
-		std::vector<sw_dt> supportedSWs;
-		// Number of supported MBs / SWs:
-		if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		// Fill info widget with information about the Control Unit:
+		if (!fillInfoWidget(&initstatusmsgbox))
 			goto commError;
-		_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
-		// OBD2-Support:
-		if (!_SSMPdev->hasOBD2system(&supported))
-			goto commError;
-		_infoWidget->setOBD2Supported(supported);
 		// "Clear Memory"-support:
 		if (!_SSMPdev->hasClearMemory(&supported))
 			goto commError;
@@ -137,15 +130,12 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 			clearMemory2();
 		}
 		// Apply command line startup parameters for MB/SW mode:
-		else if (csel == ContentSelection::MBsSWsMode)
+		else if ((csel == ContentSelection::MBsSWsMode) && (_content_MBsSWs != NULL))
 		{
-			if (((supportedMBs.size() + supportedSWs.size()) > 0) && (_content_MBsSWs != NULL))
-			{
-				if (mbssws_selfile.size())
-					_content_MBsSWs->loadMBsSWs(mbssws_selfile);
-				if (_content_MBsSWs->numMBsSWsSelected() && autostart)
-					_content_MBsSWs->startMBSWreading();
-			}
+			if (mbssws_selfile.size())
+				_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+			if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+				_content_MBsSWs->startMBSWreading();
 		}
 	}
 	else
@@ -186,5 +176,22 @@ commError:
 CUcontent_DCs_abstract * TransmissionDialog::allocate_DCsContentWidget()
 {
 	return new CUcontent_DCs_twoMemories();
+}
+
+
+bool TransmissionDialog::fillInfoWidget(FSSM_InitStatusMsgBox*)
+{
+	bool supported = false;
+	std::vector<mb_dt> supportedMBs;
+	std::vector<sw_dt> supportedSWs;
+	// Number of supported MBs / SWs:
+	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+		return false;	// commError
+	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	// OBD2-Support:
+	if (!_SSMPdev->hasOBD2system(&supported))
+		return false;	// commError
+	_infoWidget->setOBD2Supported(supported);
+	return true;
 }
 

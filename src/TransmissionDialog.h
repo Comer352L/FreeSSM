@@ -49,6 +49,7 @@ private:
 	CUinfo_Transmission *_infoWidget;
 
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
+	bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox);
 
 };
 
