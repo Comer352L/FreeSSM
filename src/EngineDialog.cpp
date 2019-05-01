@@ -112,10 +112,8 @@ bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		if (SYS_ID != ROM_ID)
 			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 	}
-	// Output system description:
-	_infoWidget->setEngineTypeText(sysdescription);
-	// Output ROM-ID:
-	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
+	// Display system description and ID:
+	displaySystemDescriptionAndID(sysdescription, QString::fromStdString(ROM_ID));
 	if (init_result == SSMprotocol::result_success)
 	{
 		QString VIN = "";
@@ -221,6 +219,13 @@ commError:
 CUcontent_DCs_abstract * EngineDialog::allocate_DCsContentWidget()
 {
 	return new CUcontent_DCs_engine();
+}
+
+
+void EngineDialog::displaySystemDescriptionAndID(QString description, QString ID)
+{
+	_infoWidget->setEngineTypeText(description);
+	_infoWidget->setRomIDText(ID);
 }
 
 

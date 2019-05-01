@@ -53,6 +53,7 @@ private:
 	SSMprotocol::CUtype_dt controlUnitType();
 	bool systemRequiresManualON();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
+	void displaySystemDescriptionAndID(QString description, QString ID);
 	bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox);
 
 };

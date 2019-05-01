@@ -115,10 +115,8 @@ bool ABSdialog::setup(ContentSelection csel, QStringList cmdline_args)
 		if (SYS_ID != ROM_ID)
 			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
 	}
-	// Output system description:
-	_infoWidget->setSystemTypeText(sysdescription);
-	// Output ROM-ID:
-	_infoWidget->setRomIDText( QString::fromStdString(ROM_ID) );
+	// Display system description and ID:
+	displaySystemDescriptionAndID(sysdescription, QString::fromStdString(ROM_ID));
 	if (init_result == SSMprotocol::result_success)
 	{
 		bool supported = false;
@@ -192,6 +190,13 @@ commError:
 CUcontent_DCs_abstract * ABSdialog::allocate_DCsContentWidget()
 {
 	return new CUcontent_DCs_twoMemories();
+}
+
+
+void ABSdialog::displaySystemDescriptionAndID(QString description, QString ID)
+{
+	_infoWidget->setSystemTypeText(description);
+	_infoWidget->setRomIDText(ID);
 }
 
 
