@@ -55,6 +55,12 @@ SSMprotocol::CUtype_dt TransmissionDialog::controlUnitType()
 }
 
 
+bool TransmissionDialog::systemRequiresManualON()
+{
+	return false;
+}
+
+
 bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;

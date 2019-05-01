@@ -58,6 +58,12 @@ SSMprotocol::CUtype_dt ABSdialog::controlUnitType()
 }
 
 
+bool ABSdialog::systemRequiresManualON()
+{
+	return false;
+}
+
+
 bool ABSdialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;

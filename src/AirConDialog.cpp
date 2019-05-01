@@ -53,6 +53,12 @@ SSMprotocol::CUtype_dt AirConDialog::controlUnitType()
 }
 
 
+bool AirConDialog::systemRequiresManualON()
+{
+	return true;
+}
+
+
 bool AirConDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;

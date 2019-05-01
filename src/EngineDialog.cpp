@@ -55,6 +55,12 @@ SSMprotocol::CUtype_dt EngineDialog::controlUnitType()
 }
 
 
+bool EngineDialog::systemRequiresManualON()
+{
+	return false;
+}
+
+
 bool EngineDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;

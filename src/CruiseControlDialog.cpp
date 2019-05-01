@@ -52,6 +52,12 @@ SSMprotocol::CUtype_dt CruiseControlDialog::controlUnitType()
 }
 
 
+bool CruiseControlDialog::systemRequiresManualON()
+{
+	return true;
+}
+
+
 bool CruiseControlDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;
