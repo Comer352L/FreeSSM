@@ -50,6 +50,7 @@ private:
 
 	QString systemName();
 	QString controlUnitName();
+	SSMprotocol::CUtype_dt controlUnitType();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
 	bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox);
 

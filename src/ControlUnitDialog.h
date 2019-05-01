@@ -29,6 +29,7 @@
 #include "CUcontent_sysTests.h"
 #include "DiagInterfaceStatusBar.h"
 #include "AbstractDiagInterface.h"
+#include "SSMprotocol.h"
 #include "SSMprotocol1.h"
 #include "SSMprotocol2.h"
 #include "FSSMdialogs.h"
@@ -87,6 +88,7 @@ private:
 
 	virtual QString systemName() = 0;
 	virtual QString controlUnitName() = 0;
+	virtual SSMprotocol::CUtype_dt controlUnitType() = 0;
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	virtual bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
 	void runClearMemory(SSMprotocol::CMlevel_dt level);

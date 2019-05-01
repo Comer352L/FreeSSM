@@ -22,7 +22,7 @@
 #include "CUcontent_DCs_stopCodes.h"
 
 
-CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(tr("Cruise Control Unit"), diagInterface, language)
+CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
 	// Show information-widget:
 	_infoWidget = new CUinfo_simple();
@@ -43,6 +43,12 @@ QString CruiseControlDialog::systemName()
 QString CruiseControlDialog::controlUnitName()
 {
 	return tr("Cruise Control Control Unit");
+}
+
+
+SSMprotocol::CUtype_dt CruiseControlDialog::controlUnitType()
+{
+	return SSMprotocol::CUtype_CruiseControl;
 }
 
 
@@ -94,7 +100,7 @@ bool CruiseControlDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	SSMprotocol::CUsetupResult_dt init_result = probeProtocol(SSMprotocol::CUtype_CruiseControl);
+	SSMprotocol::CUsetupResult_dt init_result = probeProtocol( controlUnitType() );
 	if ((init_result != SSMprotocol::result_success) && (init_result != SSMprotocol::result_noOrInvalidDefsFile) && (init_result != SSMprotocol::result_noDefs))
 		goto commError;
 	// Update status info message box:

@@ -49,6 +49,12 @@ QString TransmissionDialog::controlUnitName()
 }
 
 
+SSMprotocol::CUtype_dt TransmissionDialog::controlUnitType()
+{
+	return SSMprotocol::CUtype_Transmission;
+}
+
+
 bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;
@@ -80,7 +86,7 @@ bool TransmissionDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	initstatusmsgbox.setValue(5);
 	initstatusmsgbox.show();
 	// Try to establish CU connection:
-	SSMprotocol::CUsetupResult_dt init_result = probeProtocol(SSMprotocol::CUtype_Transmission);
+	SSMprotocol::CUsetupResult_dt init_result = probeProtocol( controlUnitType() );
 	if ((init_result != SSMprotocol::result_success) && (init_result != SSMprotocol::result_noOrInvalidDefsFile) && (init_result != SSMprotocol::result_noDefs))
 		goto commError;
 	// Update status info message box:
