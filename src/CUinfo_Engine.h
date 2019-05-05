@@ -1,7 +1,7 @@
 /*
  * CUinfo_Engine.h - Widget for displaying Engine Control Unit information
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,19 +21,19 @@
 #define CUINFO_ENGINE_H
 
 
-#include <QtGui>
+#include <QWidget>
+#include <QString>
 #include "ui_CUinfo_Engine.h"
+#include "CUinfo_abstract.h"
 
 
-
-class CUinfo_Engine : public QWidget, private Ui::CUinfo_Engine_Form
+class CUinfo_Engine : public CUinfo_abstract, private Ui::CUinfo_Engine_Form
 {
-	Q_OBJECT
 
 public:
 	CUinfo_Engine(QWidget * parent = 0);
 	~CUinfo_Engine();
-	void setEngineTypeText(QString Type);
+	void setSystemTypeText(QString Type);
 	void setRomIDText(QString RomID);
 	void setVINinfo(bool VINsupported, QString VIN);
 	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);

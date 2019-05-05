@@ -44,15 +44,12 @@ public:
 	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
 
 private:
-	CUinfo_Engine *_infoWidget;
-
 	QString systemName();
 	QString controlUnitName();
 	SSMprotocol::CUtype_dt controlUnitType();
 	bool systemRequiresManualON();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
-	void displaySystemDescriptionAndID(QString description, QString ID);
-	bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox);
+	bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox);
 
 };
 

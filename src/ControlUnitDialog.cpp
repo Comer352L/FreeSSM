@@ -208,9 +208,6 @@ bool ControlUnitDialog::contentSupported(ContentSelection csel)
 bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;
-	QString sysdescription = "";
-	std::string SYS_ID = "";
-	std::string ROM_ID = "";
 	bool supported = false;
 	QString mbssws_selfile = "";
 	bool autostart = false;
@@ -262,22 +259,9 @@ bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	// Update status info message box:
 	initstatusmsgbox.setLabelText(tr("Processing Control Unit data... Please wait !"));
 	initstatusmsgbox.setValue(40);
-	// Query ROM-ID:
-	ROM_ID = _SSMPdev->getROMID();
-	if (!ROM_ID.length())
-		goto commError;
-	// Query system description:
-	if (!_SSMPdev->getSystemDescription(&sysdescription))
-	{
-		SYS_ID = _SSMPdev->getSysID();
-		if (!SYS_ID.length())
-			goto commError;
-		sysdescription = tr("unknown");
-		if (SYS_ID != ROM_ID)
-			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
-	}
 	// Display system description and ID:
-	displaySystemDescriptionAndID(sysdescription, QString::fromStdString(ROM_ID));
+	if (!displaySystemDescriptionAndID(_SSMPdev, _infoWidget))
+		goto commError;
 	// Check if we have valid definitions for this Control Unit:
 	if (init_result != SSMprotocol::result_success)
 	{
@@ -306,8 +290,8 @@ bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		close();
 		return false;
 	}
-	// Fill info widget with further Control Unit specific information:
-	if (!fillInfoWidget(&initstatusmsgbox))
+	// Display extended Control Unit information:
+	if (!displayExtendedCUinfo(_SSMPdev, _infoWidget, &initstatusmsgbox))
 		goto commError;
 	// ***** Prepare the Control Unit *****:
 	// Check if we need to stop the automatic actuator test:
@@ -396,13 +380,45 @@ commError:
 }
 
 
-void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
+void ControlUnitDialog::setInfoWidget(CUinfo_abstract *infowidget)
 {
 	if (_infoWidget)
 		delete _infoWidget;
 	infowidget->setParent(information_groupBox);
 	information_groupBox->setMinimumHeight(infowidget->minimumHeight());
+	infowidget->show();
 	_infoWidget = infowidget;
+}
+
+
+bool ControlUnitDialog::displaySystemDescriptionAndID(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget)
+{
+	QString sysdescription = "";
+	std::string SYS_ID = "";
+	std::string ROM_ID = "";
+	if (SSMPdev == NULL)
+		return false;
+	if (abstractInfoWidget == NULL)
+		return true; // NOTE: no communication error
+	// Query ROM-ID:
+	ROM_ID = SSMPdev->getROMID();
+	if (!ROM_ID.length())
+		return false;
+	// Query system description:
+	if (!SSMPdev->getSystemDescription(&sysdescription))
+	{
+		SYS_ID = SSMPdev->getSysID();
+		if (!SYS_ID.length())
+			return false;
+		sysdescription = tr("unknown");
+		if (SYS_ID != ROM_ID)
+			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
+	}
+	// Display system description and ID:
+	abstractInfoWidget->setSystemTypeText(sysdescription);
+	abstractInfoWidget->setRomIDText(QString::fromStdString(ROM_ID));
+
+	return true;
 }
 
 

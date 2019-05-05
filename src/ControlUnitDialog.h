@@ -23,6 +23,7 @@
 
 #include <QtGui>
 #include "ui_ControlUnitDialog.h"
+#include "CUinfo_abstract.h"
 #include "CUcontent_DCs_abstract.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
@@ -48,16 +49,15 @@ public:
 protected:
 	enum class Mode {None, DCs, MBsSWs, Adjustments, SysTests};
 
-	SSMprotocol *_SSMPdev;
-
 	void addContent(ContentSelection csel);
 	bool contentSupported(ContentSelection csel);
-	void setInfoWidget(QWidget *infowidget);
+	void setInfoWidget(CUinfo_abstract *infowidget);
 
 private:
 	QString _language;
 	AbstractDiagInterface *_diagInterface;
-	QWidget *_infoWidget;
+	SSMprotocol *_SSMPdev;
+	CUinfo_abstract *_infoWidget;
 	QWidget *_contentWidget;
 	CUcontent_DCs_abstract *_content_DCs;
 	CUcontent_MBsSWs *_content_MBsSWs;
@@ -76,8 +76,8 @@ private:
 	virtual SSMprotocol::CUtype_dt controlUnitType() = 0;
 	virtual bool systemRequiresManualON() = 0;
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
-	virtual void displaySystemDescriptionAndID(QString description, QString ID) = 0;
-	virtual bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
+	bool displaySystemDescriptionAndID(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget);
+	virtual bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
 	bool prepareContentWidget(Mode mode);
 	void setContentWidget(QString title, QWidget *contentwidget);
 	QWidget * contentWidget();

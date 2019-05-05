@@ -23,11 +23,9 @@
 
 CruiseControlDialog::CruiseControlDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
-	// Show information-widget:
-	_infoWidget = new CUinfo_simple();
-	setInfoWidget(_infoWidget);
-	_infoWidget->show();
-	// Setup functions:
+	// Add information widget:
+	setInfoWidget( new CUinfo_simple() );
+	// Add content:
 	addContent(ContentSelection::DCsMode);
 	addContent(ContentSelection::MBsSWsMode);
 }
@@ -63,21 +61,18 @@ CUcontent_DCs_abstract * CruiseControlDialog::allocate_DCsContentWidget()
 }
 
 
-void CruiseControlDialog::displaySystemDescriptionAndID(QString description, QString ID)
-{
-	_infoWidget->setSystemTypeText(description);
-	_infoWidget->setRomIDText(ID);
-}
-
-
-bool CruiseControlDialog::fillInfoWidget(FSSM_InitStatusMsgBox*)
+bool CruiseControlDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox*)
 {
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
+	if (SSMPdev == NULL)
+		return false;
+	CUinfo_simple *infoWidget = dynamic_cast<CUinfo_simple*>(abstractInfoWidget);
+	if (infoWidget == NULL)
+		return true; // NOTE: no communication error
 	// Number of supported MBs / SWs:
-	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+	if ((!SSMPdev->getSupportedMBs(&supportedMBs)) || (!SSMPdev->getSupportedSWs(&supportedSWs)))
 		return false;	// commError
-	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 	return true;
 }
-

@@ -23,11 +23,9 @@
 
 TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
-	// Show information-widget:
-	_infoWidget = new CUinfo_Transmission();
-	setInfoWidget(_infoWidget);
-	_infoWidget->show();
-	// Setup functions:
+	// Add information widget:
+	setInfoWidget( new CUinfo_Transmission() );
+	// Add content:
 	addContent(ContentSelection::DCsMode);
 	addContent(ContentSelection::MBsSWsMode);
 	addContent(ContentSelection::AdjustmentsMode);
@@ -66,26 +64,24 @@ CUcontent_DCs_abstract * TransmissionDialog::allocate_DCsContentWidget()
 }
 
 
-void TransmissionDialog::displaySystemDescriptionAndID(QString description, QString ID)
-{
-	_infoWidget->setTransmissionTypeText(description);
-	_infoWidget->setRomIDText(ID);
-}
-
-
-bool TransmissionDialog::fillInfoWidget(FSSM_InitStatusMsgBox*)
+bool TransmissionDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox*)
 {
 	bool supported = false;
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
+	if (SSMPdev == NULL)
+		return false;
+	CUinfo_Transmission *infoWidget = dynamic_cast<CUinfo_Transmission*>(abstractInfoWidget);
+	if (infoWidget == NULL)
+		return true; // NOTE: no communication error
 	// Number of supported MBs / SWs:
-	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+	if ((!SSMPdev->getSupportedMBs(&supportedMBs)) || (!SSMPdev->getSupportedSWs(&supportedSWs)))
 		return false;	// commError
-	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 	// OBD2-Support:
-	if (!_SSMPdev->hasOBD2system(&supported))
+	if (!SSMPdev->hasOBD2system(&supported))
 		return false;	// commError
-	_infoWidget->setOBD2Supported(supported);
+	infoWidget->setOBD2Supported(supported);
 	return true;
 }
 

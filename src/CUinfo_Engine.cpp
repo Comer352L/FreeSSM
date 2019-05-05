@@ -1,7 +1,7 @@
 /*
  * CUinfo_Engine.cpp - Widget for displaying Engine Control Unit information
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,12 @@
  */
 
 #include "CUinfo_Engine.h"
+#include <QColor>
+#include <QPalette>
+#include <QPixmap>
 
 
-CUinfo_Engine::CUinfo_Engine(QWidget * parent) : QWidget(parent)
+CUinfo_Engine::CUinfo_Engine(QWidget * parent) : CUinfo_abstract(parent)
 {
 	setupUi(this);
 }
@@ -31,7 +34,7 @@ CUinfo_Engine::~CUinfo_Engine()
 }
 
 
-void CUinfo_Engine::setEngineTypeText(QString Type)
+void CUinfo_Engine::setSystemTypeText(QString Type)
 {
 	systemType_label->setText(Type);
 }

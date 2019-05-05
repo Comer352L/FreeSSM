@@ -1,7 +1,7 @@
 /*
  * CUinfo_Transmission.h - Widget for displaying Transmission Control Unit information
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,19 +21,19 @@
 #define CUINFO_TRANSMISSION_H
 
 
-#include <QtGui>
+#include <QWidget>
+#include <QString>
 #include "ui_CUinfo_Transmission.h"
+#include "CUinfo_abstract.h"
 
 
-
-class CUinfo_Transmission : public QWidget, private Ui::CUinfo_Transmission_Form
+class CUinfo_Transmission : public CUinfo_abstract, private Ui::CUinfo_Transmission_Form
 {
-	Q_OBJECT
 
 public:
 	CUinfo_Transmission(QWidget * parent = 0);
 	~CUinfo_Transmission();
-	void setTransmissionTypeText(QString Type);
+	void setSystemTypeText(QString Type);
 	void setRomIDText(QString RomID);
 	void setNrOfSupportedMBsSWs(unsigned int MBs, unsigned int SWs);
 	void setOBD2Supported(bool sup);

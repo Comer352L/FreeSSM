@@ -23,11 +23,9 @@
 
 EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
 {
-	// Show information-widget:
-	_infoWidget = new CUinfo_Engine();
-	setInfoWidget(_infoWidget);
-	_infoWidget->show();
-	// Setup functions:
+	// Add information widget:
+	setInfoWidget( new CUinfo_Engine() );
+	// Add content:
 	addContent(ContentSelection::DCsMode);
 	addContent(ContentSelection::MBsSWsMode);
 	addContent(ContentSelection::AdjustmentsMode);
@@ -66,35 +64,33 @@ CUcontent_DCs_abstract * EngineDialog::allocate_DCsContentWidget()
 }
 
 
-void EngineDialog::displaySystemDescriptionAndID(QString description, QString ID)
-{
-	_infoWidget->setEngineTypeText(description);
-	_infoWidget->setRomIDText(ID);
-}
-
-
-bool EngineDialog::fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox)
+bool EngineDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox)
 {
 	QString VIN = "";
 	bool supported = false;
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
+	if (SSMPdev == NULL)
+		return false;
+	CUinfo_Engine *infoWidget = dynamic_cast<CUinfo_Engine*>(abstractInfoWidget);
+	if (infoWidget == NULL)
+		return true; // NOTE: no communication error
 	// Number of supported MBs / SWs:
-	if ((!_SSMPdev->getSupportedMBs(&supportedMBs)) || (!_SSMPdev->getSupportedSWs(&supportedSWs)))
+	if ((!SSMPdev->getSupportedMBs(&supportedMBs)) || (!SSMPdev->getSupportedSWs(&supportedSWs)))
 		return false;	// commError
-	_infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
+	infoWidget->setNrOfSupportedMBsSWs(supportedMBs.size(), supportedSWs.size());
 	// OBD2-Support:
-	if (!_SSMPdev->hasOBD2system(&supported))
+	if (!SSMPdev->hasOBD2system(&supported))
 		return false;	// commError
-	_infoWidget->setOBD2Supported(supported);
+	infoWidget->setOBD2Supported(supported);
 	// Integrated Cruise Control:
-	if (!_SSMPdev->hasIntegratedCC(&supported))
+	if (!SSMPdev->hasIntegratedCC(&supported))
 		return false;	// commError
-	_infoWidget->setIntegratedCCSupported(supported);
+	infoWidget->setIntegratedCCSupported(supported);
 	// Immobilizer:
-	if (!_SSMPdev->hasImmobilizer(&supported))
+	if (!SSMPdev->hasImmobilizer(&supported))
 		return false;	// commError
-	_infoWidget->setImmobilizerSupported(supported);
+	infoWidget->setImmobilizerSupported(supported);
 	// Update status info message box:
 	if (initstatusmsgbox != NULL)
 	{
@@ -102,14 +98,13 @@ bool EngineDialog::fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox)
 		initstatusmsgbox->setValue(55);
 	}
 	// Query and output VIN, if supported:
-	if (!_SSMPdev->hasVINsupport(&supported))
+	if (!SSMPdev->hasVINsupport(&supported))
 		return false;	// commError
 	if (supported)
 	{
-		if (!_SSMPdev->getVIN(&VIN))
+		if (!SSMPdev->getVIN(&VIN))
 			return false;	// commError
 	}
-	_infoWidget->setVINinfo(supported, VIN);
+	infoWidget->setVINinfo(supported, VIN);
 	return true;
 }
-

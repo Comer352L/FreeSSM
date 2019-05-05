@@ -1,7 +1,7 @@
 /*
  * CUinfo_Transmission.cpp - Widget for displaying Transmission Control Unit information
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
  */
 
 #include "CUinfo_Transmission.h"
+#include <QPixmap>
 
 
-CUinfo_Transmission::CUinfo_Transmission(QWidget * parent) : QWidget(parent)
+CUinfo_Transmission::CUinfo_Transmission(QWidget * parent) : CUinfo_abstract(parent)
 {
 	setupUi(this);
 }
@@ -31,7 +32,7 @@ CUinfo_Transmission::~CUinfo_Transmission()
 }
 
 
-void CUinfo_Transmission::setTransmissionTypeText(QString Type)
+void CUinfo_Transmission::setSystemTypeText(QString Type)
 {
 	systemType_label->setText(Type);
 }

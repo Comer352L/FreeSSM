@@ -39,6 +39,7 @@ HEADERS += src/FreeSSM.h \
            src/SSMprotocol2.h \
            src/AddMBsSWsDlg.h \
            src/ControlUnitDialog.h \
+           src/CUinfo_abstract.h \
            src/CUinfo_Engine.h \
            src/CUinfo_Transmission.h \
            src/CUinfo_simple.h \
