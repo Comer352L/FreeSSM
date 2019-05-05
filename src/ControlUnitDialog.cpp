@@ -102,6 +102,109 @@ ControlUnitDialog::~ControlUnitDialog()
 }
 
 
+void ControlUnitDialog::addContent(ContentSelection csel)
+{
+	QString title;
+	QIcon icon;
+	bool checkable;
+	if (csel == ContentSelection::DCsMode)
+	{
+		title = tr("&Diagnostic Codes");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::MBsSWsMode)
+	{
+		title = tr("&Measuring Blocks");
+		icon = QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::AdjustmentsMode)
+	{
+		title = tr("&Adjustments");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::SysTestsMode)
+	{
+		title = tr("System &Tests");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png"));
+		checkable = true;
+	}
+	else if (csel == ContentSelection::ClearMemoryFcn)
+	{
+		title = tr("Clear Memory");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
+		checkable = false;
+	}
+	else if (csel == ContentSelection::ClearMemory2Fcn)
+	{
+		title = tr("Clear Memory 2");
+		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
+		checkable = false;
+	}
+	else // BUG
+		return;
+	// Create button:
+	QPushButton *button = new QPushButton(selection_groupBox);
+	selButtons_verticalLayout->insertWidget(_contentSelectionButtons.size(), button);
+#ifndef SMALL_RESOLUTION
+	button->setFixedWidth(160);
+	button->setFixedHeight(35);
+#else
+	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+#endif
+	button->setCheckable(checkable);
+	button->setAutoExclusive(checkable);
+	button->setDisabled(true);
+	// Icon:
+	button->setIconSize(QSize(22, 22));
+	button->setIcon(icon);
+	// Font:
+	QFont font = button->font();
+	font.setFamily(QApplication::font().family());
+	font.setBold(false);
+	font.setPointSize(10);
+	button->setFont(font);
+	// Text: prepend/append spaces to achieve proper icon positions:
+	QFontMetrics fm(font);
+	title = title.trimmed();
+	int targetstrsize = button->size().width() - button->iconSize().width() - 18;
+	int barestrsize = fm.size(Qt::TextShowMnemonic, title).width();
+	if (barestrsize < targetstrsize)
+	{
+		double spacesize = fm.size(Qt::TextShowMnemonic, " ").width();
+		int nspaces = static_cast<int>((targetstrsize - barestrsize) / spacesize + 0.5);
+		title.prepend( QString( nspaces/2, ' ' ) );
+		title.append( QString( nspaces - nspaces/2, ' ' ) );
+	}
+	button->setText(title);
+	// Connect buttons with slots:
+	if (csel == ContentSelection::DCsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
+	else if (csel == ContentSelection::MBsSWsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
+	else if (csel == ContentSelection::AdjustmentsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
+	else if (csel == ContentSelection::SysTestsMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToSystemOperationTestsMode() ) );
+	else if (csel == ContentSelection::ClearMemoryFcn)
+		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
+	else if (csel == ContentSelection::ClearMemory2Fcn)
+		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
+	//else: BUG
+	// Save, show and return button:
+	button->show();
+	_contentSelectionButtons.insert(csel, button);
+}
+
+
+bool ControlUnitDialog::contentSupported(ContentSelection csel)
+{
+	return _contentSelectionButtons.contains(csel);
+}
+
+
 bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 {
 	Mode mode;
@@ -357,106 +460,67 @@ QWidget * ControlUnitDialog::contentWidget()
 }
 
 
-void ControlUnitDialog::addContent(ContentSelection csel)
+bool ControlUnitDialog::getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart)
 {
-	QString title;
-	QIcon icon;
-	bool checkable;
-	if (csel == ContentSelection::DCsMode)
-	{
-		title = tr("&Diagnostic Codes");
-		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png"));
-		checkable = true;
-	}
-	else if (csel == ContentSelection::MBsSWsMode)
-	{
-		title = tr("&Measuring Blocks");
-		icon = QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png"));
-		checkable = true;
-	}
-	else if (csel == ContentSelection::AdjustmentsMode)
-	{
-		title = tr("&Adjustments");
-		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/configure.png"));
-		checkable = true;
-	}
-	else if (csel == ContentSelection::SysTestsMode)
-	{
-		title = tr("System &Tests");
-		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/klaptop.png"));
-		checkable = true;
-	}
-	else if (csel == ContentSelection::ClearMemoryFcn)
-	{
-		title = tr("Clear Memory");
-		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
-		checkable = false;
-	}
-	else if (csel == ContentSelection::ClearMemory2Fcn)
-	{
-		title = tr("Clear Memory 2");
-		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/eraser.png"));
-		checkable = false;
-	}
-	else // BUG
-		return;
-	// Create button:
-	QPushButton *button = new QPushButton(selection_groupBox);
-	selButtons_verticalLayout->insertWidget(_contentSelectionButtons.size(), button);
-#ifndef SMALL_RESOLUTION
-	button->setFixedWidth(160);
-	button->setFixedHeight(35);
-#else
-	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-#endif
-	button->setCheckable(checkable);
-	button->setAutoExclusive(checkable);
-	button->setDisabled(true);
-	// Icon:
-	button->setIconSize(QSize(22, 22));
-	button->setIcon(icon);
-	// Font:
-	QFont font = button->font();
-	font.setFamily(QApplication::font().family());
-	font.setBold(false);
-	font.setPointSize(10);
-	button->setFont(font);
-	// Text: prepend/append spaces to achieve proper icon positions:
-	QFontMetrics fm(font);
-	title = title.trimmed();
-	int targetstrsize = button->size().width() - button->iconSize().width() - 18;
-	int barestrsize = fm.size(Qt::TextShowMnemonic, title).width();
-	if (barestrsize < targetstrsize)
-	{
-		double spacesize = fm.size(Qt::TextShowMnemonic, " ").width();
-		int nspaces = static_cast<int>((targetstrsize - barestrsize) / spacesize + 0.5);
-		title.prepend( QString( nspaces/2, ' ' ) );
-		title.append( QString( nspaces - nspaces/2, ' ' ) );
-	}
-	button->setText(title);
-	// Connect buttons with slots:
-	if (csel == ContentSelection::DCsMode)
-		connect( button, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
-	else if (csel == ContentSelection::MBsSWsMode)
-		connect( button, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
-	else if (csel == ContentSelection::AdjustmentsMode)
-		connect( button, SIGNAL( clicked() ), this, SLOT( switchToAdjustmentsMode() ) );
-	else if (csel == ContentSelection::SysTestsMode)
-		connect( button, SIGNAL( clicked() ), this, SLOT( switchToSystemOperationTestsMode() ) );
-	else if (csel == ContentSelection::ClearMemoryFcn)
-		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory() ) );
-	else if (csel == ContentSelection::ClearMemory2Fcn)
-		connect( button, SIGNAL( clicked() ), this, SLOT( clearMemory2() ) );
-	//else: BUG
-	// Save, show and return button:
-	button->show();
-	_contentSelectionButtons.insert(csel, button);
-}
+	QStringList cargs;
+	QStringList parameters;
+	QString selfile = "";
+	bool astart = false;
 
-
-bool ControlUnitDialog::contentSupported(ContentSelection csel)
-{
-	return _contentSelectionButtons.contains(csel);
+	if (cmdline_args == NULL)
+		return false;
+	cargs = *cmdline_args;
+	// Check if command line option -p/--parameters is specified and extract corresponding value(s):
+	if (!CmdLine::parseForOption(&cargs, "-p", "--parameters", &parameters))
+		return true; // no error, option unused
+	// Validate number of specified parameters:
+	if (parameters.size() < 1)
+	{
+		CmdLine::printError("no parameter(s) specified with option -p/--parameters");
+		return false;
+	}
+	// Validate parameter strings:
+	for (int p=0; p<parameters.size(); p++)
+	{
+		if (parameters.at(p).startsWith("selectionfile="))
+		{
+			if (selfile.size())
+			{
+				CmdLine::printError("parameter \"selectionfile=<FILE>\" specified multiple times with different values");
+				// NOTE: values must be different, because otherwise the whole parameter would have been eliminated as duplicate
+				return false;
+			}
+			selfile = parameters.at(p);
+			selfile.remove(0, selfile.indexOf('=') + 1);
+			if ((selfile.size()) && !QFile::exists(selfile))
+			{
+				CmdLine::printError("specified MBs/SWs selection file does not exist");
+				return false;
+			}
+		}
+		else if (parameters.at(p) == "autostart")
+		{
+			astart = true;
+		}
+		else
+		{
+			CmdLine::printError("unknown parameter specified with option -p/--parameters: " + parameters.at(p));
+			return false;
+		}
+	}
+	// Check if a selection file has been specified if autostart is specified:
+	if (astart && !selfile.size())
+	{
+		CmdLine::printError("option -p/--parameters: parameter \"autostart\" specified without parameter \"selectionfile=<FILE>\"");
+		return false;
+	}
+	// Assign return values:
+	*cmdline_args = cargs;
+	if (selfile.size() && (selection_file != NULL))
+		*selection_file = selfile;
+	if (astart && (autostart != NULL))
+		*autostart = true;
+	return true;
 }
 
 
@@ -566,70 +630,6 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUty
 	}
 #endif
 	return result;
-}
-
-
-bool ControlUnitDialog::getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart)
-{
-	QStringList cargs;
-	QStringList parameters;
-	QString selfile = "";
-	bool astart = false;
-
-	if (cmdline_args == NULL)
-		return false;
-	cargs = *cmdline_args;
-	// Check if command line option -p/--parameters is specified and extract corresponding value(s):
-	if (!CmdLine::parseForOption(&cargs, "-p", "--parameters", &parameters))
-		return true; // no error, option unused
-	// Validate number of specified parameters:
-	if (parameters.size() < 1)
-	{
-		CmdLine::printError("no parameter(s) specified with option -p/--parameters");
-		return false;
-	}
-	// Validate parameter strings:
-	for (int p=0; p<parameters.size(); p++)
-	{
-		if (parameters.at(p).startsWith("selectionfile="))
-		{
-			if (selfile.size())
-			{
-				CmdLine::printError("parameter \"selectionfile=<FILE>\" specified multiple times with different values");
-				// NOTE: values must be different, because otherwise the whole parameter would have been eliminated as duplicate
-				return false;
-			}
-			selfile = parameters.at(p);
-			selfile.remove(0, selfile.indexOf('=') + 1);
-			if ((selfile.size()) && !QFile::exists(selfile))
-			{
-				CmdLine::printError("specified MBs/SWs selection file does not exist");
-				return false;
-			}
-		}
-		else if (parameters.at(p) == "autostart")
-		{
-			astart = true;
-		}
-		else
-		{
-			CmdLine::printError("unknown parameter specified with option -p/--parameters: " + parameters.at(p));
-			return false;
-		}
-	}
-	// Check if a selection file has been specified if autostart is specified:
-	if (astart && !selfile.size())
-	{
-		CmdLine::printError("option -p/--parameters: parameter \"autostart\" specified without parameter \"selectionfile=<FILE>\"");
-		return false;
-	}
-	// Assign return values:
-	*cmdline_args = cargs;
-	if (selfile.size() && (selection_file != NULL))
-		*selection_file = selfile;
-	if (astart && (autostart != NULL))
-		*autostart = true;
-	return true;
 }
 
 

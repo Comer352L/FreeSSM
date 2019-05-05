@@ -49,41 +49,27 @@ protected:
 	enum class Mode {None, DCs, MBsSWs, Adjustments, SysTests};
 
 	SSMprotocol *_SSMPdev;
-	bool _setup_done;
-	Mode _mode;
-	// Content backup parameters:
-	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
-	MBSWsettings_dt _MBSWsettings;
-	// Content widgets:
-	CUcontent_DCs_abstract *_content_DCs;
-	CUcontent_MBsSWs *_content_MBsSWs;
-	CUcontent_Adjustments *_content_Adjustments;
-	CUcontent_sysTests *_content_SysTests;
 
 	void addContent(ContentSelection csel);
 	bool contentSupported(ContentSelection csel);
-	bool getModeForContentSelection(ContentSelection csel, Mode *mode);
-	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
 	void setInfoWidget(QWidget *infowidget);
-	bool prepareContentWidget(Mode mode);
-	void setContentWidget(QString title, QWidget *contentwidget);
-	QWidget * contentWidget();
-	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
-	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
-	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
-	bool startMode(Mode mode);
-	bool startDCsMode();
-	bool startMBsSWsMode();
-	bool startAdjustmentsMode();
-	bool startSystemOperationTestsMode();
 
 private:
 	QString _language;
 	AbstractDiagInterface *_diagInterface;
 	QWidget *_infoWidget;
 	QWidget *_contentWidget;
+	CUcontent_DCs_abstract *_content_DCs;
+	CUcontent_MBsSWs *_content_MBsSWs;
+	CUcontent_Adjustments *_content_Adjustments;
+	CUcontent_sysTests *_content_SysTests;
 	DiagInterfaceStatusBar *_ifstatusbar;
 	QMap<ContentSelection, QPushButton*> _contentSelectionButtons;
+	bool _setup_done;
+	Mode _mode;
+	// Content backup parameters:
+	std::vector<MBSWmetadata_dt> _lastMBSWmetaList;
+	MBSWsettings_dt _MBSWsettings;
 
 	virtual QString systemName() = 0;
 	virtual QString controlUnitName() = 0;
@@ -92,20 +78,31 @@ private:
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	virtual void displaySystemDescriptionAndID(QString description, QString ID) = 0;
 	virtual bool fillInfoWidget(FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
+	bool prepareContentWidget(Mode mode);
+	void setContentWidget(QString title, QWidget *contentwidget);
+	QWidget * contentWidget();
+	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
+	bool getModeForContentSelection(ContentSelection csel, Mode *mode);
+	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
+	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
+	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
+	bool startMode(Mode mode);
+	bool startDCsMode();
+	bool startMBsSWsMode();
+	bool startAdjustmentsMode();
+	bool startSystemOperationTestsMode();
 	void runClearMemory(SSMprotocol::CMlevel_dt level);
 	void saveContentSettings();
 	void closeEvent(QCloseEvent *event);
-
-protected slots:
-	void clearMemory();
-	void clearMemory2();
-	void communicationError(QString addstr = "");
 
 private slots:
 	void switchToDCsMode();
 	void switchToMBsSWsMode();
 	void switchToAdjustmentsMode();
 	void switchToSystemOperationTestsMode();
+	void clearMemory();
+	void clearMemory2();
+	void communicationError(QString addstr = "");
 
 };
 
