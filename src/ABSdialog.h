@@ -43,7 +43,6 @@ class ABSdialog : public ControlUnitDialog
 
 public:
 	ABSdialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	CUinfo_simple *_infoWidget;

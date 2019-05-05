@@ -43,7 +43,6 @@ class EngineDialog : public ControlUnitDialog
 
 public:
 	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	CUinfo_Engine *_infoWidget;

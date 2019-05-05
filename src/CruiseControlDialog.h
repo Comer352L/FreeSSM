@@ -43,7 +43,6 @@ class CruiseControlDialog : public ControlUnitDialog
 
 public:
 	CruiseControlDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	CUinfo_simple *_infoWidget;

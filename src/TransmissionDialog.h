@@ -43,7 +43,6 @@ class TransmissionDialog : public ControlUnitDialog
 
 public:
 	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
-	bool setup(ContentSelection csel = ContentSelection::DCsMode, QStringList cmdline_args = QStringList());
 
 private:
 	CUinfo_Transmission *_infoWidget;

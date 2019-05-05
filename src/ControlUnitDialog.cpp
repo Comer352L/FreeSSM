@@ -100,6 +100,197 @@ ControlUnitDialog::~ControlUnitDialog()
 }
 
 
+bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
+{
+	Mode mode;
+	QString sysdescription = "";
+	std::string SYS_ID = "";
+	std::string ROM_ID = "";
+	bool supported = false;
+	QString mbssws_selfile = "";
+	bool autostart = false;
+
+	if (_setup_done)
+		return false;
+	if (!contentSupported(csel))
+	{
+		CmdLine::printError("function not supported by the selected Control Unit.");
+		exit(ERROR_BADCMDLINEARGS);
+	}
+	if (!getModeForContentSelection(csel, &mode))
+		return false;
+	// Get command line startup parameters (if available):
+	if (!getParametersFromCmdLine(&cmdline_args, &mbssws_selfile, &autostart))
+		exit(ERROR_BADCMDLINEARGS);
+	// ***** Create and insert the content widget *****:
+	if (!prepareContentWidget(mode))
+		return false;
+	// ***** Connect to Control Unit *****:
+	if (systemRequiresManualON())
+	{
+		// Inform user that system needs to be switched on manually:
+		QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), QString(tr("Please switch the %1 system on.").arg(systemName())), 0, this);
+		QPushButton *button = msgbox->addButton(QMessageBox::Ok);
+		button->setText(tr("Continue"));
+		msgbox->addButton(QMessageBox::Cancel);
+		QFont msgfont = msgbox->font();
+		msgfont.setPointSize(9);
+		msgbox->setFont( msgfont );
+		msgbox->show();
+		int ret = msgbox->exec();
+		delete msgbox;
+		if (ret != QMessageBox::Ok)
+		{
+			close();
+			return false;
+		}
+	}
+	// Create Status information message box for CU initialisation/setup:
+	FSSM_InitStatusMsgBox initstatusmsgbox(tr("Connecting to %1... Please wait !").arg(controlUnitName()), 0, 0, 100, this);
+	initstatusmsgbox.setWindowTitle(tr("Connecting..."));
+	initstatusmsgbox.setValue(5);
+	initstatusmsgbox.show();
+	// Try to establish CU connection:
+	SSMprotocol::CUsetupResult_dt init_result = probeProtocol( controlUnitType() );
+	if ((init_result != SSMprotocol::result_success) && (init_result != SSMprotocol::result_noOrInvalidDefsFile) && (init_result != SSMprotocol::result_noDefs))
+		goto commError;
+	// Update status info message box:
+	initstatusmsgbox.setLabelText(tr("Processing Control Unit data... Please wait !"));
+	initstatusmsgbox.setValue(40);
+	// Query ROM-ID:
+	ROM_ID = _SSMPdev->getROMID();
+	if (!ROM_ID.length())
+		goto commError;
+	// Query system description:
+	if (!_SSMPdev->getSystemDescription(&sysdescription))
+	{
+		SYS_ID = _SSMPdev->getSysID();
+		if (!SYS_ID.length())
+			goto commError;
+		sysdescription = tr("unknown");
+		if (SYS_ID != ROM_ID)
+			sysdescription += " (" + QString::fromStdString(SYS_ID) + ")";
+	}
+	// Display system description and ID:
+	displaySystemDescriptionAndID(sysdescription, QString::fromStdString(ROM_ID));
+	// Check if we have valid definitions for this Control Unit:
+	if (init_result != SSMprotocol::result_success)
+	{
+		// Close progress dialog:
+		initstatusmsgbox.close();
+		// Show error message:
+		QString errtext;
+		if (init_result == SSMprotocol::result_noOrInvalidDefsFile)
+		{
+			errtext = tr("Error:\nNo valid definitions file found.\nPlease make sure that FreeSSM is installed properly.");
+		}
+		else if (init_result == SSMprotocol::result_noDefs)
+		{
+			errtext = tr("Error:\nThis control unit is not yet supported by FreeSSM.\n"\
+			             "FreeSSM can communicate with the control unit, but it doesn't have the necessary data to provide diagnostic operations.\n"\
+			             "If you want to contribute to the project (help adding defintions), feel free to contact the authors.");
+		}
+		QMessageBox msg( QMessageBox::Critical, tr("Error"), errtext, QMessageBox::Ok, this);
+		QFont msgfont = msg.font();
+		msgfont.setPointSize(9);
+		msg.setFont( msgfont );
+		msg.show();
+		msg.exec();
+		msg.close();
+		// Exit CU dialog:
+		close();
+		return false;
+	}
+	// Fill info widget with further Control Unit specific information:
+	if (!fillInfoWidget(&initstatusmsgbox))
+		goto commError;
+	// ***** Prepare the Control Unit *****:
+	// Check if we need to stop the automatic actuator test:
+	if (!_SSMPdev->hasActuatorTests(&supported))
+		goto commError;
+	if (supported)
+	{
+		// Update status info message box:
+		initstatusmsgbox.setLabelText(tr("Checking system status... Please wait !"));
+		initstatusmsgbox.setValue(70);
+		// Query test mode connector status:
+		bool testmode = false;
+		if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
+			goto commError;
+		if (testmode)
+		{
+			bool enginerunning = false;
+			// Check that engine is not running:
+			if (!_SSMPdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
+				goto commError;
+			if (!enginerunning)
+			{
+				// Update status info message box:
+				initstatusmsgbox.setLabelText(tr("Stopping actuators... Please wait !"));
+				initstatusmsgbox.setValue(85);
+				// Stop all actuator tests:
+				if (!_SSMPdev->stopAllActuators())
+					goto commError;
+			}
+		}
+	}
+	// ***** Enable content selection buttons *****:
+	if (contentSupported(ContentSelection::ClearMemoryFcn))
+	{
+		// "Clear Memory"-support:
+		if (!_SSMPdev->hasClearMemory(&supported))
+			goto commError;
+		setContentSelectionButtonEnabled(ContentSelection::ClearMemoryFcn, supported);
+	}
+	if (contentSupported(ContentSelection::ClearMemory2Fcn))
+	{
+		// "Clear Memory 2"-support:
+		if (!_SSMPdev->hasClearMemory2(&supported))
+			goto commError;
+		setContentSelectionButtonEnabled(ContentSelection::ClearMemory2Fcn, supported);
+	}
+	// NOTE: enable modes unconditionally, UI contents are deactivated if unsupported by the CU
+	setContentSelectionButtonEnabled(ContentSelection::DCsMode, true);
+	setContentSelectionButtonEnabled(ContentSelection::MBsSWsMode, true);
+	setContentSelectionButtonEnabled(ContentSelection::AdjustmentsMode, true);
+	setContentSelectionButtonEnabled(ContentSelection::SysTestsMode, true);
+	// ***** Start selected Control Unit content/functionality *****:
+	if (!startMode(mode))
+		goto commError;
+	// Update and close status info:
+	initstatusmsgbox.setLabelText(tr("Control Unit initialisation successful !"));
+	initstatusmsgbox.setValue(100);
+	QTimer::singleShot(800, &initstatusmsgbox, SLOT(accept()));
+	initstatusmsgbox.exec();
+	initstatusmsgbox.close();
+	// Run Clear Memory procedure if requested:
+	if (csel == ContentSelection::ClearMemoryFcn)
+	{
+		clearMemory();
+	}
+	else if (csel == ContentSelection::ClearMemory2Fcn)
+	{
+		clearMemory2();
+	}
+	// Apply command line startup parameters for MB/SW mode:
+	else if ((csel == ContentSelection::MBsSWsMode) && (_content_MBsSWs != NULL))
+	{
+		if (mbssws_selfile.size())
+			_content_MBsSWs->loadMBsSWs(mbssws_selfile);
+		if (_content_MBsSWs->numMBsSWsSelected() && autostart)
+			_content_MBsSWs->startMBSWreading();
+	}
+
+	_setup_done = true;
+	return true;
+
+commError:
+	initstatusmsgbox.close();
+	communicationError();
+	return false;
+}
+
+
 void ControlUnitDialog::setInfoWidget(QWidget *infowidget)
 {
 	if (_infoWidget)

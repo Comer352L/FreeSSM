@@ -45,6 +45,7 @@ public:
 
 	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language);
 	~ControlUnitDialog();
+	bool setup(ContentSelection csel, QStringList cmdline_args = QStringList());
 
 protected:
 	enum class Mode {None, DCs, MBsSWs, Adjustments, SysTests};
