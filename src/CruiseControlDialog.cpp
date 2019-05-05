@@ -18,7 +18,6 @@
  */
 
 #include "CruiseControlDialog.h"
-#include "CmdLine.h"
 #include "CUcontent_DCs_stopCodes.h"
 
 

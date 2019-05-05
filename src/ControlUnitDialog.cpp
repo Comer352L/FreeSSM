@@ -19,6 +19,8 @@
 
 #include "ControlUnitDialog.h"
 #include "CmdLine.h"
+#include "SSMprotocol1.h"
+#include "SSMprotocol2.h"
 #include "ClearMemoryDlg.h"
 
 

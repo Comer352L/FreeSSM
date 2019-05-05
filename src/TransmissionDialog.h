@@ -31,7 +31,6 @@
 #include <QtGui>
 #include "ControlUnitDialog.h"
 #include "CUinfo_Transmission.h"
-#include "FSSMdialogs.h"
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 
