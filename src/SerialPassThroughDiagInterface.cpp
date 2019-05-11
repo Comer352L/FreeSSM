@@ -63,10 +63,10 @@ bool SerialPassThroughDiagInterface::open( std::string name )
 	_port = new serialCOM;
 	if (_port->OpenPort( name ))
 	{
-		if (_port->SetControlLines(true, false))
-			// FIXME: examine interface to find out which protocol it supports (e.g. test for echo). See comment in constructor.
-			// NOTE: we can not assume that the interface is powered (ignition switched on) !
-			return true;
+		_port->SetControlLines(true, false);
+		// FIXME: examine interface to find out which protocol it supports (e.g. test for echo). See comment in constructor.
+		// NOTE: we can not assume that the interface is powered (ignition switched on) !
+		return true;
 	}
 	delete _port;
 	_port = NULL;
