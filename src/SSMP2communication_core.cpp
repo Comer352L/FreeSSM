@@ -250,13 +250,22 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 	// Checksum (SSM2 over ISO-14230 only):
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		msg_buffer.push_back( libFSSM::calcchecksum(msg_buffer.data(), msg_buffer.size()) );
-
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:\n";
 	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
-
+	// CLEAR INTERFACE BUFFERS:
+	// NOTE: buffers can contain incomplete messages e.g. due to temporary "ignition off"
+#ifdef __FSSM_DEBUG__
+	if (!_diagInterface->clearSendBuffer())
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Tx buffer !\n";
+	if (!_diagInterface->clearReceiveBuffer())
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Rx buffer !\n";
+#else
+	_diagInterface->clearSendBuffer();
+	_diagInterface->clearReceiveBuffer();
+#endif
 	// SEND MESSAGE:
 	if (!_diagInterface->write(msg_buffer))
 	{
@@ -277,7 +286,6 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 		if (!receiveReplyISO15765(ecuaddr, &msg_buffer))
 			return false;
 	}
-
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
 	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:\n";
