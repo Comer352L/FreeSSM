@@ -64,6 +64,8 @@ bool SerialPassThroughDiagInterface::open( std::string name )
 	if (_port->OpenPort( name ))
 	{
 		_port->SetControlLines(true, false);
+		_port->ClearSendBuffer();
+		_port->ClearReceiveBuffer();
 		// FIXME: examine interface to find out which protocol it supports (e.g. test for echo). See comment in constructor.
 		// NOTE: we can not assume that the interface is powered (ignition switched on) !
 		return true;
