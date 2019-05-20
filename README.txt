@@ -52,7 +52,7 @@ www.sourceforge.net/projects/tinyxml for further informations.
 2. SUPPORTED PLATFORMS:
 
    - Linux/X11
-   - Windows
+   - Windows (XP and older are untested/unmaintained !)
 
 With minor modifications, it should be possible to build FreeSSM on MacOS X
 and other Unix systems, too, but there is currently no offical support.
@@ -68,6 +68,8 @@ and other Unix systems, too, but there is currently no offical support.
         Windows: Qt5 (using MinGW, not MS Visual Studio)
                  Qt4 is not available for download anymore and the used MinGW
                  version is too old.
+       The sources of Qt are not required.
+       There is also no need to install tools such as Qt Creator etc.
    3.) MinGW (only for MS Windows)
        MinGW is usually shipped with Qt and just needs to be selected during
        the installation process.
@@ -80,7 +82,18 @@ and other Unix systems, too, but there is currently no offical support.
 
 4. COMPILATION:
 
+4.1 PRELIMINARY NOTE:
+
+Only compilation from command line is maintained/tested (but compilation with
+Qt Creator etc. might work as well).
+
+4.2 COMPILATION STEPS (COMMAND LINE):
+
 Open a console window and switch to the FreeSSM-directory.
+NOTE (Windows only):
+If MinGW is installed properly, there's a start menu entry which opens a command
+line window and sets up the environment for compilation:
+e.g. "Start" > Qt 5.12.3 > 5.12.3 > MinGW 7.3.0 (64bit) > Qt 5.12.3 (MinGW 7.3.0 64bit)
 
 Preparation:
 $ qmake
@@ -119,6 +132,13 @@ Uninstallation:
 $ make release-uninstall
 or
 $ make debug-uninstall
+
+NOTE (Windows only):
+
+Older Qt5 versions (< 5.7 ?) are known to fail copying libstdc++-6.dll during
+the installation process (likely due to a bug in qmake).
+If you get this error, you will have to copy the file manually or use a more
+recent version of Qt5 instead.
 
 --------------------------------------------------------------------------------
 
