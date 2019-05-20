@@ -195,9 +195,11 @@ win32 {
                                                         $$[QT_INSTALL_BINS]/QtGuid4.dll
   } else {
     # Qt5
-    dllstarget.files =                                  $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \
-                                                        $$[QT_INSTALL_BINS]/libwinpthread-1.dll \
+    dllstarget.files =                                  $$[QT_INSTALL_BINS]/libwinpthread-1.dll \
                                                         $$[QT_INSTALL_BINS]/libstdc++-6.dll \
+                                                        $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \	# only MinGW32 32bit
+                                                        $$[QT_INSTALL_BINS]/libgcc_s_seh-1.dll \	# only MinGW32 64bit
+                                                        # Old Qt5 versions only (at least up to v5.2.1):
                                                         $$[QT_INSTALL_BINS]/icuin51.dll \
                                                         $$[QT_INSTALL_BINS]/icuuc51.dll \
                                                         $$[QT_INSTALL_BINS]/icudt51.dll
