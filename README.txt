@@ -61,22 +61,31 @@ and other Unix systems, too, but there is currently no offical support.
 
 3. REQUIREMENTS:
    1.) FreeSSM source code (https://github.com/Comer352L/FreeSSM)
-   2.) Qt framework (www.qt.io/download)
-        Linux:   Qt4 (>= 4.4.0) or Qt5
-                 Packages are usually available in the distribution repositories.
-                 Development packages are needed.
-        Windows: Qt5 (using MinGW, not MS Visual Studio)
-                 Qt4 is not available for download anymore and the used MinGW
-                 version is too old.
-       The sources of Qt are not required.
-       There is also no need to install tools such as Qt Creator etc.
+   2.) Qt framework: Qt4 or Qt5
+        Development of Qt4 has been discontinued, the last release is v4.8.7.
+        Releases older than 4.8.7 are no longer tested !
+        There is no functional difference between Qt4 and Qt5 with regards to FreeSSM.
+        2.1.) Download sources:
+               Qt4: download.qt.io/archive/qt/4.8/4.8.7/
+               Qt5: www.qt.io/download.
+               Linux distributions usually provide ready packages in their
+               repositories, which should be preferred. Development packages are
+               needed, too.
+        2.2.) OS specifics:
+               Windows: The MinGW version of Qt is needed.
+                        All other versions (e.g. for MS Visual Studio) are not
+                        supported.
+        2.3.) General notes:
+               The sources of Qt are not required.
+               There is also no need to install tools such as Qt Creator etc.
    3.) MinGW (only for MS Windows)
        MinGW is usually shipped with Qt and just needs to be selected during
        the installation process.
        However, in the past the installation process changed very often.
        There were times when it had to be downloaded and installed manually.
-       Check mingw.org and sourceforge.net/projects/mingw in case you are forced
-       to install it manually.
+       If the Qt-installer is not shipping MinGW, it usually provides at least a
+       direct link for downloading it. If that's not the case, check
+       mingw.org and sourceforge.net/projects/mingw.
 
 --------------------------------------------------------------------------------
 
