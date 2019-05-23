@@ -187,8 +187,13 @@ win32 {
   dllstarget.path = $$INSTALLDIR
   lessThan(QT_MAJOR_VERSION, 5) {
     # Qt4
-    dllstarget.files =                                  $$[QT_INSTALL_BINS]/mingwm10.dll \
-                                                        $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
+    dllstarget.files =                                  $$[QT_INSTALL_BINS]/libwinpthread-1.dll \    # only newer versions of Qt/MinGW
+                                                        $$[QT_INSTALL_BINS]/libstd~1.dll \	# NOTE: actually libstdc++-6.dll
+                                                         # NOTE: Due to Qt-Bug 74388 copying fails on older Qt/MinGW versions if the filename contains a '+'.
+                                                         #       Using the 8.3 filename is the only known workaround, wildcards and quotes don't work !
+                                                         #       The range of broken versions is unknown. Qt 4.8.7 (last release) / MinGW 4.8.2 is affected.
+                                                        $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \
+                                                        $$[QT_INSTALL_BINS]/mingwm10.dll             # only old versions of Qt/MinGW (e.g. Qt 4.8.5 / MinGW 3.81)
     CONFIG(release, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/QtCore4.dll \
                                                         $$[QT_INSTALL_BINS]/QtGui4.dll
     CONFIG(debug, debug|release): dllstarget.files   += $$[QT_INSTALL_BINS]/QtCored4.dll \
@@ -202,7 +207,7 @@ win32 {
                                                          #       The range of broken versions is unknown. Fixed in Qt 5.12.3 / MinGW 7.3.0 or earlier.
                                                         $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \	# only MinGW32 32bit
                                                         $$[QT_INSTALL_BINS]/libgcc_s_seh-1.dll \	# only MinGW32 64bit
-                                                        # Old Qt5 versions only (at least up to v5.2.1):
+                                                        # Old Qt5/MinGW versions only (at least up to Qt 5.2.1 / MinGW 4.8):
                                                         $$[QT_INSTALL_BINS]/icuin51.dll \
                                                         $$[QT_INSTALL_BINS]/icuuc51.dll \
                                                         $$[QT_INSTALL_BINS]/icudt51.dll
