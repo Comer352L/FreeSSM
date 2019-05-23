@@ -133,13 +133,6 @@ $ make release-uninstall
 or
 $ make debug-uninstall
 
-NOTE (Windows only):
-
-Older Qt5 versions (< 5.7 ?) are known to fail copying libstdc++-6.dll during
-the installation process (likely due to a bug in qmake).
-If you get this error, you will have to copy the file manually or use a more
-recent version of Qt5 instead.
-
 --------------------------------------------------------------------------------
 
 6. STARTING FreeSSM from command line:
