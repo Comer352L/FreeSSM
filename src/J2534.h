@@ -1,7 +1,7 @@
 /*
  * J2534.h - SAE-J2534 definitions
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -226,25 +226,31 @@ typedef struct {
 
 
 
-
 // Function prototypes:
-typedef long (*J2534_PassThruOpen)(void* pName, unsigned long *pDeviceID);	// 0404-API only
-typedef long (*J2534_PassThruClose)(unsigned long DeviceID);			// 0404-API only
-typedef long (*J2534_PassThruConnect_0202)(unsigned long ProtocolID, unsigned long Flags, unsigned long *pChannelID);							// 0202-API
-typedef long (*J2534_PassThruConnect_0404)(unsigned long DeviceID, unsigned long ProtocolID, unsigned long Flags, unsigned long BaudRate, unsigned long *pChannelID);	// 0404-API
-typedef long (*J2534_PassThruDisconnect)(unsigned long ChannelID);
-typedef long (*J2534_PassThruReadVersion_0202)(char *pFirmwareVersion, char *pDllVersion, char *pApiVersion);								// 0202-API
-typedef long (*J2534_PassThruReadVersion_0404)(unsigned long DeviceID, char *pFirmwareVersion, char *pDllVersion, char *pApiVersion);					// 0404-API
-typedef long (*J2534_PassThruGetLastError)(char *pErrorDescription);
-typedef long (*J2534_PassThruReadMsgs)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pNumMsgs, unsigned long Timeout);
-typedef long (*J2534_PassThruStartMsgFilter)(unsigned long ChannelID, unsigned long FilterType, PASSTHRU_MSG *pMaskMsg, PASSTHRU_MSG *pPatternMsg, PASSTHRU_MSG *pFlowControlMsg, unsigned long *pMsgID);
-typedef long (*J2534_PassThruStopMsgFilter)(unsigned long ChannelID, unsigned long MsgID);
-typedef long (*J2534_PassThruWriteMsgs)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pNumMsgs, unsigned long Timeout);
-typedef long (*J2534_PassThruStartPeriodicMsg)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pMsgID, unsigned long TimeInterval);
-typedef long (*J2534_PassThruStopPeriodicMsg)(unsigned long ChannelID, unsigned long MsgID);
-typedef long (*J2534_PassThruIoctl)(unsigned long HandleID, unsigned long IoctlID, void *pInput, void *pOutput);
-typedef long (*J2534_PassThruSetProgrammingVoltage_0202)(unsigned long PinNumber, unsigned long Voltage);								// 0202-API
-typedef long (*J2534_PassThruSetProgrammingVoltage_0404)(unsigned long DeviceID, unsigned long PinNumber, unsigned long Voltage);					// 0404-API
+
+#if defined __WIN32__
+	#define APICALL __stdcall
+#else
+	#define APICALL
+#endif
+
+typedef long APICALL (*J2534_PassThruOpen)(void* pName, unsigned long *pDeviceID);	// 0404-API only
+typedef long APICALL (*J2534_PassThruClose)(unsigned long DeviceID);			// 0404-API only
+typedef long APICALL (*J2534_PassThruConnect_0202)(unsigned long ProtocolID, unsigned long Flags, unsigned long *pChannelID);							// 0202-API
+typedef long APICALL (*J2534_PassThruConnect_0404)(unsigned long DeviceID, unsigned long ProtocolID, unsigned long Flags, unsigned long BaudRate, unsigned long *pChannelID);	// 0404-API
+typedef long APICALL (*J2534_PassThruDisconnect)(unsigned long ChannelID);
+typedef long APICALL (*J2534_PassThruReadVersion_0202)(char *pFirmwareVersion, char *pDllVersion, char *pApiVersion);								// 0202-API
+typedef long APICALL (*J2534_PassThruReadVersion_0404)(unsigned long DeviceID, char *pFirmwareVersion, char *pDllVersion, char *pApiVersion);					// 0404-API
+typedef long APICALL (*J2534_PassThruGetLastError)(char *pErrorDescription);
+typedef long APICALL (*J2534_PassThruReadMsgs)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pNumMsgs, unsigned long Timeout);
+typedef long APICALL (*J2534_PassThruStartMsgFilter)(unsigned long ChannelID, unsigned long FilterType, PASSTHRU_MSG *pMaskMsg, PASSTHRU_MSG *pPatternMsg, PASSTHRU_MSG *pFlowControlMsg, unsigned long *pMsgID);
+typedef long APICALL (*J2534_PassThruStopMsgFilter)(unsigned long ChannelID, unsigned long MsgID);
+typedef long APICALL (*J2534_PassThruWriteMsgs)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pNumMsgs, unsigned long Timeout);
+typedef long APICALL (*J2534_PassThruStartPeriodicMsg)(unsigned long ChannelID, PASSTHRU_MSG *pMsg, unsigned long *pMsgID, unsigned long TimeInterval);
+typedef long APICALL (*J2534_PassThruStopPeriodicMsg)(unsigned long ChannelID, unsigned long MsgID);
+typedef long APICALL (*J2534_PassThruIoctl)(unsigned long HandleID, unsigned long IoctlID, void *pInput, void *pOutput);
+typedef long APICALL (*J2534_PassThruSetProgrammingVoltage_0202)(unsigned long PinNumber, unsigned long Voltage);								// 0202-API
+typedef long APICALL (*J2534_PassThruSetProgrammingVoltage_0404)(unsigned long DeviceID, unsigned long PinNumber, unsigned long Voltage);					// 0404-API
 
 
 
