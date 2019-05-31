@@ -314,7 +314,9 @@ bool CUcontent_MBsSWs::startMBSWreading()
 {
 	SSMprotocol::state_dt state = SSMprotocol::state_needSetup;
 	std::vector<MBSWmetadata_dt> usedMBSWmetaList;
-	if (!_SSMPdev) goto err;
+	// Check if setup() has already been called:
+	if (!_SSMPdev)
+		return false;
 	// Check premises:
 	state = _SSMPdev->state(); // NOTE: we are interested in the "real" state here, not _MBSWreading
 	if (state == SSMprotocol::state_normal)
@@ -368,18 +370,18 @@ err:
 
 bool CUcontent_MBsSWs::stopMBSWreading()
 {
-	if (_SSMPdev)
+	// Check if setup() has already been called:
+	if (!_SSMPdev)
+		return false;
+	disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
+	if (!_SSMPdev->stopMBSWreading())
 	{
-		disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
-		if (!_SSMPdev->stopMBSWreading())
-		{
-			connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
-			communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
-			return false;
-		}
-		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-		connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+		connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
+		communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
+		return false;
 	}
+	disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
+	connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 	// Set text+icon of start/stop-button:
 	startstopmbreading_pushButton->setText(tr(" Start  "));
 	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
