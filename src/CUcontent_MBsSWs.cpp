@@ -860,7 +860,7 @@ bool CUcontent_MBsSWs::saveMBsSWs(QString filename)
 	}
 	// Open file:
 	// NOTE: we write data in binary format, so non-human readable
-	std::ofstream file (filename.toLocal8Bit(), std::ios::out | std::ios::binary);
+	std::ofstream file (filename.toLocal8Bit(), std::ios::out | std::ios::binary | std::ios::trunc); // NOTE: out seems to imply trunc (but in+out does not)
 	if (!file.is_open())
 	{
 		errorMsg(tr("Save Error"), tr("Error: failed to save the MB/SW list:\nCouldn't open the selected file"));
@@ -879,6 +879,14 @@ bool CUcontent_MBsSWs::saveMBsSWs(QString filename)
 	{
 		file.write((char*)(&_MBSWmetaList.at(i).blockType), sizeof(_MBSWmetaList.at(i).blockType));
 		file.write((char*)(&_MBSWmetaList.at(i).nativeIndex), sizeof(_MBSWmetaList.at(i).nativeIndex));
+	}
+	// Check for write errors:
+	if (!file.good())
+	{
+		file.close();
+		remove(filename.toLocal8Bit());
+		errorMsg(tr("Save Error"), tr("Error: failed to save MB/SW list:\nA write error occured"));
+		return false;
 	}
 	// Close the file:
 	file.close();
