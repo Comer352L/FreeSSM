@@ -958,13 +958,12 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	delete[] tmp_savedROM_ID;
 	if (!file.good())
 		goto err_invalid;
+#ifdef __FSSM_DEBUG__
+	std::cout << "CUcontent_MBsSWs::loadMBsSWs(): current ROM-ID: " << ROM_ID << "ROM-ID of the MB/SW list file: " << savedROM_ID << std::endl;
+#endif
 	// Check that the ROM-IDs match:
 	if (savedROM_ID != ROM_ID)
 	{
-#ifdef __FSSM_DEBUG__
-		std::cout << "CUcontent_MBsSWs::loadMBsSWs(): ROM-ID from file does not match Control Unit ROM-ID, ignoring MBs/SWs!" << std::endl;
-		std::cout << "ROM-ID in file " << savedROM_ID << ", engine ROM-ID " << ROM_ID << std::endl;
-#endif
 		file.close();
 		errorMsg(tr("Load Error"), tr("Error: failed to load MB/SW list:\nThe saved ROM-ID does not match the Control Units ROM-ID"));
 		return false;
@@ -972,7 +971,7 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	// Read number of saved MBs/SWs:
 	file.read((char*)(&k), sizeof(k));
 #ifdef __FSSM_DEBUG__
-	std::cout << "CUcontent_MBsSWs::loadMBsSWs(): found " << k << " MBs/SWs to monitor" << std::endl;
+	std::cout << "CUcontent_MBsSWs::loadMBsSWs(): saved MB/SW list size is " << k << std::endl;
 #endif
 	// Read saved MBs/SWs one by one:
 	for (unsigned int i=0; i<k; i++)
@@ -982,12 +981,22 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 		if (file.good())
 			MBSWmetaList.push_back( tmpMBSWmd );
 		else
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "CUcontent_MBsSWs::loadMBsSWs(): error: only " << i << " of " << k << " MBs/SWs could be loaded" << std::endl;
+#endif
 			goto err_invalid;
+		}
 	}
 	// Try to read 1 byte beyond the expected list end / file size:
 	file.read((char*)(&tmpMBSWmd.blockType), 1);
 	if (file.good())
+	{
+#ifdef __FSSM_DEBUG__
+		std::cout << "CUcontent_MBsSWs::loadMBsSWs(): error: file is larger than expected" << std::endl;
+#endif
 		goto err_invalid;
+	}
 	// Validate loaded MBs/SWs and update table:
 	if (!validateMBSWselection(MBSWmetaList))
 		goto err_invalid;
