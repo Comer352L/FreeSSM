@@ -959,19 +959,29 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	{
 		file.read((char*)(&tmpMBSWmd.blockType), sizeof(tmpMBSWmd.blockType));
 		file.read((char*)(&tmpMBSWmd.nativeIndex), sizeof(tmpMBSWmd.nativeIndex));
-		MBSWmetaList.push_back( tmpMBSWmd );
+		if (file.good())
+			MBSWmetaList.push_back( tmpMBSWmd );
+		else
+			goto err_invalid;
 	}
-	file.close();
+	// Try to read 1 byte beyond the expected list end / file size:
+	file.read((char*)(&tmpMBSWmd.blockType), 1);
+	if (file.good())
+		goto err_invalid;
 	// Validate loaded MBs/SWs and update table:
 	if (!validateMBSWselection(MBSWmetaList))
-	{
-		errorMsg(tr("Load Error"), tr("Error: failed to load MB/SW list:\nThe loaded MB/SW list is invalid"));
-		return false;
-	}
+		goto err_invalid;
+	// Close the file
+	file.close();
 	// Save and display the new MB/SW selection:
 	setMBSWselectionUnvalidated(MBSWmetaList);
 
 	return true;
+
+err_invalid:
+	file.close();
+	errorMsg(tr("Load Error"), tr("Error: failed to load MB/SW list:\nThe loaded MB/SW list is invalid"));
+	return false;
 }
 
 
