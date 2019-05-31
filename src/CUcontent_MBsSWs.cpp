@@ -137,9 +137,9 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	startstopmbreading_pushButton->setEnabled(false);
 	// Disable "Save"-button:
 	mbswsave_pushButton->setEnabled(false);
-	// Enable "Load"-button
-	mbswload_pushButton->setEnabled(true);
-	// Save SSMpdev:
+	// Enable "Load"-button if at least MB/SW is provided by the control unit:
+	mbswload_pushButton->setEnabled( (_supportedMBs.size() + _supportedSWs.size() > 0) );
+	// Save SSMPdev:
 	if (ok)
 		_SSMPdev = SSMPdev;
 	else
@@ -392,8 +392,9 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	// Enable add button (if there is something left to add):
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(true);
-	// Enable load state button
-	mbswload_pushButton->setEnabled(true);
+	// Enable load button (if at least MB/SW is provided by the control unit):
+	if (_supportedMBs.size() + _supportedSWs.size() > 0)
+		mbswload_pushButton->setEnabled(true);
 	// Update state:
 	_MBSWreading = false;
 	return true;
