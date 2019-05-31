@@ -321,7 +321,8 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	state = _SSMPdev->state(); // NOTE: we are interested in the "real" state here, not _MBSWreading
 	if (state == SSMprotocol::state_normal)
 	{
-		if (_MBSWmetaList.empty()) goto err;
+		if (_MBSWmetaList.empty())
+			errorMsg(tr("Error"), tr("Error: failed to start MB/SW-reading:\nThe MB/SW list is empty"));
 		disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 		// Start MB/SW-reading:
 		if (!_SSMPdev->startMBSWreading(_MBSWmetaList))
@@ -336,6 +337,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 		// Update the MB/SW selection:
 		if (!_SSMPdev->getLastMBSWselection(&_MBSWmetaList))
 			goto err;
+		// NOTE: MB/SW list can't be empty
 	}
 	else
 		goto err;
