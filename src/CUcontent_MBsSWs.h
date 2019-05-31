@@ -113,6 +113,7 @@ private:
 	void updateRefreshTimeTitle();
 	void updateTimeInfo(int refreshduration_ms);
 	void clearRefreshTime();
+	void labelStartStopButtonReadyForStart();
 	void communicationError(QString addstr);
 	void moveRefreshTimeUiElements();
 	void resizeEvent(QResizeEvent *event);

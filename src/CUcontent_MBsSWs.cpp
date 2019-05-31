@@ -41,6 +41,7 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	_MBSWrefreshTimeTitle_label->setEnabled( false );
 	_MBSWrefreshTimeValue_label->setEnabled( false );
 	_timemode_pushButton->setEnabled( false );
+	labelStartStopButtonReadyForStart();
 	startstopmbreading_pushButton->setEnabled( false );
 	mbswsave_pushButton->setEnabled( false );
 	mbswload_pushButton->setEnabled( false );
@@ -98,8 +99,31 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 
 bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 {
-	bool ok = (SSMPdev != NULL);
+	bool ok = false;
+
+	// Clean up old SSMPdev (if needed):
+	if ((_SSMPdev != NULL) && (_SSMPdev != SSMPdev))
+	{
+		disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
+		disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+		disconnect( _SSMPdev, SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
+		if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
+			_SSMPdev->stopMBSWreading();
+	}
+	// Reset reading state:
+	_MBSWreading = false;
+	// Reset MB/SW list:
+	_MBSWmetaList.clear();
+	_tableRowPosIndexes.clear();
+	_lastValues.clear();
+	_minmaxData.clear();
+	// Reset refresh time:
+	_lastrefreshduration_ms = 0;
+	clearRefreshTime();
+	// Display MB/SW list (make empty):
+	displayMBsSWs();
 	// Get supported MBs/SWs:
+	ok = (SSMPdev != NULL);
 	if (ok)
 		ok = SSMPdev->getSupportedMBs(&_supportedMBs);
 	if (ok)
@@ -110,15 +134,6 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 		_supportedMBs.clear();
 		_supportedSWs.clear();
 	}
-	_MBSWmetaList.clear();
-	_tableRowPosIndexes.clear();
-	_lastValues.clear();
-	_minmaxData.clear();
-	// Reset refresh time:
-	_lastrefreshduration_ms = 0;
-	clearRefreshTime();
-	// Output titles and units of the selected MBs/SWs
-	displayMBsSWs();
 	// *** Enable/Disable all GUI-elements:
 	// Labels + tables:
 	_MBSWrefreshTimeTitle_label->setEnabled( ok );
@@ -133,7 +148,8 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 		mbswadd_pushButton->setEnabled(false);
 	// Disable "Delete"-button:
 	mbswdelete_pushButton->setEnabled(false);
-	// Disable "Start"-button:
+	// Reset "Start"-button:
+	labelStartStopButtonReadyForStart();
 	startstopmbreading_pushButton->setEnabled(false);
 	// Disable "Save"-button:
 	mbswsave_pushButton->setEnabled(false);
@@ -145,6 +161,14 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	else
 		_SSMPdev = NULL;
 	// NOTE: _SSMPdev != NULL means setup() has been done
+	// Sync reading state:
+	if (_SSMPdev)
+	{
+		if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
+			startMBSWreading();	// NOTE: synchronizes MB/SW list etc.
+		connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+		connect( _SSMPdev, SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
+	}
 	// Return result:
 	return ok;
 }
@@ -212,14 +236,12 @@ void CUcontent_MBsSWs::setMBSWselectionUnvalidated(const std::vector<MBSWmetadat
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswdelete_pushButton->setEnabled(true);
 		mbswsave_pushButton->setEnabled(true);
-		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	else
 	{
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
 		mbswsave_pushButton->setEnabled(false);
-		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
@@ -323,13 +345,13 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	{
 		if (_MBSWmetaList.empty())
 			errorMsg(tr("Error"), tr("Error: failed to start MB/SW-reading:\nThe MB/SW list is empty"));
-		disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+		bool sig_disc = disconnect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 		// Start MB/SW-reading:
-		if (!_SSMPdev->startMBSWreading(_MBSWmetaList))
-		{
+		bool ok = _SSMPdev->startMBSWreading(_MBSWmetaList);
+		if (sig_disc)
 			connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
+		if (!ok)
 			goto err;
-		}
 	}
 	else if (state == SSMprotocol::state_MBSWreading)
 	{
@@ -350,7 +372,6 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	clearRefreshTime();
 	// Connect signals and slots:
 	connect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-	connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
 	// Disable add/delete buttons:
 	mbswdelete_pushButton->setEnabled(false);
 	mbswadd_pushButton->setEnabled(false);
@@ -375,21 +396,22 @@ bool CUcontent_MBsSWs::stopMBSWreading()
 	// Check if setup() has already been called:
 	if (!_SSMPdev)
 		return false;
-	disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
-	if (!_SSMPdev->stopMBSWreading())
+	// Stop reading (if in progress):
+	if (_SSMPdev->state() == SSMprotocol::state_MBSWreading)
 	{
-		connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) ); // must be disconnected before stopMBSWreading is called
-		communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
-		return false;
+		bool sig_disc = disconnect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
+		bool ok = _SSMPdev->stopMBSWreading();
+		if (sig_disc)
+			connect( _SSMPdev , SIGNAL( stoppedMBSWreading() ), this, SLOT( stopMBSWreading() ) );
+		if (!ok)
+		{
+			communicationError(tr("=> Couldn't stop Measuring Blocks Reading."));
+			return false;
+		}
 	}
 	disconnect( _SSMPdev, SIGNAL( newMBSWrawValues(const std::vector<unsigned int>&, int) ), this, SLOT( processMBSWRawValues(const std::vector<unsigned int>&, int) ) );
-	connect( _SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ) );
 	// Set text+icon of start/stop-button:
-	startstopmbreading_pushButton->setText(tr(" Start  "));
-	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
-	QSize startstopmbreadingiconsize(24,24);
-	startstopmbreading_pushButton->setIcon(startstopmbreadingicon);
-	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
+	labelStartStopButtonReadyForStart();
 	// Enable delete button if MBs/SWs are selected on the table:
 	if (_valuesTableView->getSelectedTableWidgetRows().size() > 0)
 		mbswdelete_pushButton->setEnabled(true);
@@ -764,7 +786,6 @@ void CUcontent_MBsSWs::addMBsSWs()
 	{
 		startstopmbreading_pushButton->setEnabled(true);
 		mbswsave_pushButton->setEnabled(true);
-		connect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() >= (_supportedMBs.size() + _supportedSWs.size()))
 		mbswadd_pushButton->setEnabled(false);	// "Add"-button aktivieren
@@ -817,7 +838,6 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 		startstopmbreading_pushButton->setEnabled(false);
 		mbswdelete_pushButton->setEnabled(false);
 		mbswsave_pushButton->setEnabled(false);
-		disconnect(_SSMPdev, SIGNAL( startedMBSWreading() ), this, SLOT( startMBSWreading() ));
 	}
 	if (_MBSWmetaList.size() < (_supportedMBs.size() + _supportedSWs.size()))	// if not all MBs/SWs are selected
 		mbswadd_pushButton->setEnabled(true);
@@ -952,6 +972,17 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 	setMBSWselectionUnvalidated(MBSWmetaList);
 
 	return true;
+}
+
+
+void CUcontent_MBsSWs::labelStartStopButtonReadyForStart()
+{
+	// Set text+icon of start/stop-button:
+	startstopmbreading_pushButton->setText(tr(" Start  "));
+	QIcon startstopmbreadingicon(QString::fromUtf8(":/icons/chrystal/32x32/player_play.png"));
+	QSize startstopmbreadingiconsize(24,24);
+	startstopmbreading_pushButton->setIcon(startstopmbreadingicon);
+	startstopmbreading_pushButton->setIconSize(startstopmbreadingiconsize);
 }
 
 
