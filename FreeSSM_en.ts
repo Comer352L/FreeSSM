@@ -591,126 +591,139 @@ The Control Unit didn&apos;t accept the new value !</translation>
 <context>
     <name>CUcontent_MBsSWs</name>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="382"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="408"/>
         <source>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t stop Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="368"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="389"/>
         <source>=&gt; Couldn&apos;t start Measuring Blocks Reading.</source>
         <translation>=&gt; Couldn&apos;t start Measuring Blocks Reading.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="325"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="347"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="325"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="347"/>
         <source>Error: failed to start MB/SW-reading:
 The MB/SW list is empty</source>
         <translation>Error: failed to start MB/SW-reading:
 The MB/SW list is empty</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="360"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="381"/>
         <source> Stop  </source>
         <translation> Stop  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="388"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1020"/>
         <source> Start  </source>
         <translation> Start  </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="716"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="738"/>
         <source>Refresh duration:</source>
         <translation>Refresh duration:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="716"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="738"/>
         <source>Block transfer rate:</source>
         <translation>Block transfer rate:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="835"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="855"/>
         <source>Save MB/SW List</source>
         <translation>Save MB/SW List</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="837"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="902"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="857"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="930"/>
         <source>FreeSSM MB/SW list files</source>
         <translation>FreeSSM MB/SW list files</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="846"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="866"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="888"/>
         <source>Save Error</source>
         <translation>Save Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="846"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="866"/>
         <source>Error: failed to save the MB/SW list:
 Couldn&apos;t open the selected file</source>
         <translation>Error: failed to save the MB/SW list:
 Couldn&apos;t open the selected file</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="882"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="888"/>
+        <source>Error: failed to save MB/SW list:
+A write error occured</source>
+        <translation>Error: failed to save MB/SW list:
+A write error occured</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="910"/>
         <source>Error: can&apos;t load a new MB/SW list:
 MB/SW-monitoring is in progress</source>
         <translation>Error: can&apos;t load a new MB/SW list:
 MB/SW-monitoring is in progress</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="888"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="916"/>
         <source>Error: can&apos;t load a MB/SW list:
 Control Unit provides no MBs/SWs</source>
         <translation>Error: can&apos;t load a MB/SW list:
 Control Unit provides no MBs/SWs</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="910"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
         <source>Error: failed to load MB/SW list:
 Couldn&apos;t open the selected file</source>
         <translation>Error: failed to load MB/SW list:
 Couldn&apos;t open the selected file</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="929"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="946"/>
+        <source>=&gt; Couldn&apos;t read the ROM-ID for validating the saved MB/SW list.</source>
+        <translation>=&gt; Couldn&apos;t read the ROM-ID for validating the saved MB/SW list.</translation>
+    </message>
+    <message>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="968"/>
         <source>Error: failed to load MB/SW list:
 The saved ROM-ID does not match the Control Units ROM-ID</source>
         <translation>Error: failed to load MB/SW list:
 The saved ROM-ID does not match the Control Units ROM-ID</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="948"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1012"/>
         <source>Error: failed to load MB/SW list:
 The loaded MB/SW list is invalid</source>
         <translation>Error: failed to load MB/SW list:
 The loaded MB/SW list is invalid</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="900"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="928"/>
         <source>Load MB/SW List</source>
         <translation>Load MB/SW List</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="882"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="888"/>
         <location filename="src/CUcontent_MBsSWs.cpp" line="910"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="929"/>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="948"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="916"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="938"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="968"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1012"/>
         <source>Load Error</source>
         <translation>Load Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1104"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1174"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_MBsSWs.cpp" line="1104"/>
+        <location filename="src/CUcontent_MBsSWs.cpp" line="1174"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Communication Error:
