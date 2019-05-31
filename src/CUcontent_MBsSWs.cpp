@@ -930,15 +930,27 @@ bool CUcontent_MBsSWs::loadMBsSWs(QString filename)
 		errorMsg(tr("Load Error"), tr("Error: failed to load MB/SW list:\nCouldn't open the selected file"));
 		return false;
 	}
+	// Get the ROM-ID of the current Control Unit:
+	std::string ROM_ID = _SSMPdev->getROMID();
+	if (ROM_ID.empty())
+	{
+		file.close();
+		communicationError(tr("=> Couldn't read the ROM-ID for validating the saved MB/SW list."));
+		return false;
+	}
 	// Read saved ROM-ID::
 	size_t size_of_ROMstring;
+	char *tmp_savedROM_ID = NULL;
 	file.read((char*)(&size_of_ROMstring), sizeof(size_t));
-	char *tmp_savedROM_ID = new char[size_of_ROMstring];
+	if (!file.good() || (size_of_ROMstring != ROM_ID.size()))
+		goto err_invalid;
+	tmp_savedROM_ID = new char[size_of_ROMstring];
 	file.read((char*)(tmp_savedROM_ID), size_of_ROMstring);
 	savedROM_ID = std::string(tmp_savedROM_ID, size_of_ROMstring);
 	delete[] tmp_savedROM_ID;
+	if (!file.good())
+		goto err_invalid;
 	// Check that the ROM-IDs match:
-	std::string ROM_ID = _SSMPdev->getROMID();
 	if (savedROM_ID != ROM_ID)
 	{
 #ifdef __FSSM_DEBUG__
