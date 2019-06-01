@@ -18,6 +18,7 @@
  */
 
 #include "J2534DiagInterface.h"
+#include <cstring>	// strlen()
 
 
 J2534DiagInterface::J2534DiagInterface()
@@ -671,15 +672,24 @@ bool J2534DiagInterface::clearReceiveBuffer()
 void J2534DiagInterface::printErrorDescription(std::string title, long ret)
 {
 	char ErrorDescription[80] = {0,};
-	std::cout << title;
+	std::cout << title << "error " << ret << ": ";
 	if (ret > 0)
 	{
 		long ptgeterr_ret = _j2534->PassThruGetLastError(ErrorDescription);
-		if (STATUS_NOERROR == ptgeterr_ret)
-			std::cout << ErrorDescription << '\n';
+		/* NOTE: some interface libraries do not follow the spec and return incorrect status codes
+		         (not STATUS_NOERROR), so always print the returned description				*/
+		if (strlen(ErrorDescription) > 0)
+			std::cout << ErrorDescription;
 		else
-			std::cout << "unknown error: " << ret << " (PassThruGetLastError() failed: " << ptgeterr_ret << ")\n";
-			/* NOTE: this is actually a bug in the J2534 library ! */
+			std::cout << "";
+		std::cout << std::endl;
+		if (ptgeterr_ret != STATUS_NOERROR)
+		{
+			 // NOTE: ERR_NULL_PARAMETER isn't possible
+			std::cout << "Warning: PassThruGetLastError() failed with error " << ptgeterr_ret << ", which is a bug in the J2534-library !" << std::endl;
+		}
+		else if (!strlen(ErrorDescription)))
+			std::cout << "Warning: PassThruGetLastError() succeeded but returned an empty description string !" << std::endl;
 	}
 	else if (ret == J2534API_ERROR_FCN_NOT_SUPPORTED)
 	{
