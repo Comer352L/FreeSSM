@@ -1666,8 +1666,8 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
     <name>Preferences</name>
     <message>
         <location filename="src/Preferences.cpp" line="171"/>
-        <location filename="src/Preferences.cpp" line="447"/>
-        <location filename="src/Preferences.cpp" line="478"/>
+        <location filename="src/Preferences.cpp" line="455"/>
+        <location filename="src/Preferences.cpp" line="486"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -1705,57 +1705,47 @@ Der Interface-Test für das gewählte Inteface wurde noch nicht implementiert.
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="293"/>
-        <location filename="src/Preferences.cpp" line="408"/>
+        <location filename="src/Preferences.cpp" line="416"/>
         <source>Cancel</source>
         <translation>Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="313"/>
+        <location filename="src/Preferences.cpp" line="314"/>
         <source>Testing interface... Please wait !     </source>
         <translation>Teste Interface... Bitte warten !     </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="376"/>
+        <location filename="src/Preferences.cpp" line="377"/>
         <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
         <translation>Der gewählte serielle Port kann weder für das SSM1- noch das SSM2-Protokoll konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="378"/>
+        <location filename="src/Preferences.cpp" line="379"/>
         <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
         <translation>Das gewählte Interface unterstützt weder das SSM1- noch das SSM2-Protokoll.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="382"/>
+        <location filename="src/Preferences.cpp" line="383"/>
         <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
         <translation>Bitte stellen sie sicher, dass das Interface korrekt angeschlossen ist und die Zündung eigeschaltet ist.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="386"/>
+        <location filename="src/Preferences.cpp" line="387"/>
         <source>WARNING:</source>
         <translation>WARNUNG:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="390"/>
+        <location filename="src/Preferences.cpp" line="391"/>
         <source>The selected serial port can not be configured for the SSM1-protocol.</source>
         <translation>Der gewählte serielle Port kann nicht für das SSM1-Protokoll konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="392"/>
+        <location filename="src/Preferences.cpp" line="393"/>
         <source>The selected interface does not support the SSM1-protocol.</source>
         <translation>Das gewählte Interface bietet keine Unterstützung für das SSM1-Protokoll.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="397"/>
-        <source>The selected serial port can not be configured for the SSM2-protocol.</source>
-        <translation>Der gewählte serielle Port kann nicht für das SSM2-Protokoll konfiguriert werden.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="399"/>
-        <source>The selected interface does not support the SSM2-protocol.</source>
-        <translation>Das gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll.</translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="407"/>
+        <location filename="src/Preferences.cpp" line="415"/>
         <source>Retry</source>
         <translation>Wiederholen</translation>
     </message>
@@ -1775,8 +1765,8 @@ Bitte stellen sie sicher, dass das Gerät von keiner anderen Anwendung verwendet
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="291"/>
-        <location filename="src/Preferences.cpp" line="403"/>
-        <location filename="src/Preferences.cpp" line="406"/>
+        <location filename="src/Preferences.cpp" line="411"/>
+        <location filename="src/Preferences.cpp" line="414"/>
         <source>Interface test</source>
         <translation>Interface-Test</translation>
     </message>
@@ -1788,22 +1778,42 @@ diagnostic connector and switch ignition on.</source>
 verbinden und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="372"/>
+        <location filename="src/Preferences.cpp" line="373"/>
         <source>Interface test failed !</source>
         <translation>Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="370"/>
+        <location filename="src/Preferences.cpp" line="371"/>
         <source>Interface test successful !</source>
         <translation>Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="423"/>
+        <location filename="src/Preferences.cpp" line="398"/>
+        <source>The selected serial port can not be configured for the SSM2-protocol via ISO-14230.</source>
+        <translation>Der gewählte serielle Port kann nicht für das SSM2-Protokoll via ISO-14230 konfiguriert werden.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="400"/>
+        <source>The selected interface does not support the SSM2-protocol via ISO-14230.</source>
+        <translation>Das gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll via ISO-14230.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="405"/>
+        <source>Serial Pass-Through interfaces do not support the SSM2-protocol via ISO-15765.</source>
+        <translation>Serielle Pass-Through-Interfaces unterstützen nicht das SSM2-Protokoll via ISO-15765. </translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="407"/>
+        <source>The selected interface does not support the SSM2-protocol via ISO-15765.</source>
+        <translation>Das gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll via ISO-15765.</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="431"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation>Das Diagnose-Interface konnte nicht geschlossen werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="447"/>
+        <location filename="src/Preferences.cpp" line="455"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
