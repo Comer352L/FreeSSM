@@ -688,7 +688,7 @@ void J2534DiagInterface::printErrorDescription(std::string title, long ret)
 			 // NOTE: ERR_NULL_PARAMETER isn't possible
 			std::cout << "Warning: PassThruGetLastError() failed with error " << ptgeterr_ret << ", which is a bug in the J2534-library !" << std::endl;
 		}
-		else if (!strlen(ErrorDescription)))
+		else if (!strlen(ErrorDescription))
 			std::cout << "Warning: PassThruGetLastError() succeeded but returned an empty description string !" << std::endl;
 	}
 	else if (ret == J2534API_ERROR_FCN_NOT_SUPPORTED)
