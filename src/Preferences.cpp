@@ -305,7 +305,8 @@ void Preferences::interfacetest()
 		bool retry = true;
 		choice = 0;
 		bool SSM1configOK = false;
-		bool SSM2configOK = false;
+		bool SSM2viaISO14230configOK = false;
+		bool SSM2viaISO15765configOK = false;
 		while (retry && !icresult)
 		{
 			char data = 0;
@@ -314,8 +315,8 @@ void Preferences::interfacetest()
 			waitmsgbox->show();
 			// SSM2:
 			SSMP2communication *SSMP2com = new SSMP2communication(diagInterface);
-			SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
-			if (SSM2configOK)
+			SSM2viaISO14230configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
+			if (SSM2viaISO14230configOK)
 			{
 				SSMP2com->setCUaddress(0x10);
 				unsigned int addr = 0x61;
@@ -334,8 +335,8 @@ void Preferences::interfacetest()
 			}
 			if (!icresult)
 			{
-				SSM2configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
-				if (SSM2configOK)
+				SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
+				if (SSM2viaISO15765configOK)
 				{
 					SSMP2com->setCUaddress(0x7E0);
 					unsigned int addr = 0x61;
@@ -370,7 +371,7 @@ void Preferences::interfacetest()
 				resultText = tr("Interface test successful !");
 			else
 				resultText = tr("Interface test failed !");
-			if (!SSM1configOK && !SSM2configOK)	// => test must have failed
+			if (!SSM1configOK && !SSM2viaISO14230configOK && !SSM2viaISO15765configOK)	// => test must have failed
 			{
 				if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
 					resultText += "\n\n" + tr("The selected serial port can not be configured for the SSM1- and SSM2-protocol.");
@@ -381,7 +382,7 @@ void Preferences::interfacetest()
 			{
 				resultText += "\n\n" + tr("Please make sure that the interface is connected properly and ignition is switched ON.");
 			}
-			if (!SSM1configOK || !SSM2configOK)
+			if (!SSM1configOK || !SSM2viaISO14230configOK || !SSM2viaISO15765configOK)
 			{
 				resultText += "\n\n" + tr("WARNING:");
 				if (!SSM1configOK)
@@ -391,12 +392,19 @@ void Preferences::interfacetest()
 					else
 						resultText += '\n' + tr("The selected interface does not support the SSM1-protocol.");
 				}
-				else if (!SSM2configOK)
+				if (!SSM2viaISO14230configOK)
 				{
 					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
-						resultText += '\n' + tr("The selected serial port can not be configured for the SSM2-protocol.");
+						resultText += '\n' + tr("The selected serial port can not be configured for the SSM2-protocol via ISO-14230.");
 					else
-						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol.");
+						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol via ISO-14230.");
+				}
+				if (!SSM2viaISO15765configOK)
+				{
+					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+						resultText += '\n' + tr("Serial Pass-Through interfaces do not support the SSM2-protocol via ISO-15765.");
+					else
+						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol via ISO-15765.");
 				}
 			}
 			if (icresult)
