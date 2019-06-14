@@ -440,6 +440,7 @@ bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, con
 	do
 	{
 		waitms(10);
+		read_buffer.clear();
 		if (!_diagInterface->read(&read_buffer))
 		{
 #ifdef __FSSM_DEBUG__
