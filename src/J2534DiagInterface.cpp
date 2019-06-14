@@ -467,7 +467,7 @@ bool J2534DiagInterface::isConnected()
 
 bool J2534DiagInterface::disconnect()
 {
-	if (_j2534)
+	if (_j2534 &&_connected)
 	{
 		long ret = 0;
 		// Remove filters:
