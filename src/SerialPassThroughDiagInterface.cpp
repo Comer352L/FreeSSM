@@ -162,13 +162,16 @@ bool SerialPassThroughDiagInterface::read(std::vector<char> *buffer)
 	if (_port && _connected)
 	{
 		unsigned int nbytes = 0;
-		buffer->clear();
 		if (_port->GetNrOfBytesAvailable(&nbytes))
 		{
+			std::vector<char> readbuffer;
 			if (nbytes)
-				return _port->Read( 0, nbytes, 0, buffer );
-			else
-				return true;
+			{
+				if (!_port->Read( 0, nbytes, 0, &readbuffer ))
+					return false;
+			}
+			buffer->assign(readbuffer.begin(), readbuffer.end());
+			return true;
 		}
 	}
 	return false;

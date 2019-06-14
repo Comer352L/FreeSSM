@@ -503,6 +503,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 {
 	if (_j2534 && _connected)
 	{
+		std::vector<char> readbuffer;
 		long ret = 0;
 		// Setup message-container:
 		PASSTHRU_MSG rx_msg;
@@ -583,13 +584,16 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 						 * - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
 					}
 #endif
-					buffer->reserve(rx_msg.DataSize);
-					buffer->assign(rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
+					readbuffer.reserve(rx_msg.DataSize);
+					readbuffer.assign(rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
 				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
 		if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret))
+		{
+			buffer->assign(readbuffer.begin(), readbuffer.end());
 			return true;
+		}
 #ifdef __FSSM_DEBUG__
 		else
 			printErrorDescription("PassThruReadMsgs() failed: ", ret);

@@ -458,6 +458,7 @@ bool ATcommandControlledDiagInterface::read(std::vector<char> *buffer)
 		if (!_RxQueue.size())
 		{
 			_mutex.unlock();
+			buffer->clear();
 			return true;	// no data available
 		}
 		msg = _RxQueue.at(0);
@@ -465,10 +466,9 @@ bool ATcommandControlledDiagInterface::read(std::vector<char> *buffer)
 		_mutex.unlock();
 		// Process received data
 		*buffer = processRecData(msg);
-		if (msg.size() && !buffer->size())
-			return true;	// no data available
 #ifdef __FSSM_DEBUG__
-		std::cout << "ATcommandControlledDiagInterface::read():" << libFSSM::StrToHexstr(*buffer) << "\n";
+		if (buffer->size())
+			std::cout << "ATcommandControlledDiagInterface::read():" << libFSSM::StrToHexstr(*buffer) << "\n";
 #endif
 		return true;
 	}
