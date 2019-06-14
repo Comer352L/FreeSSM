@@ -1,7 +1,7 @@
 /*
  * ATcommandControlledDiagInterface.cpp - AT-command controlled diagnostic interface
  *
- * Copyright (C) 2012-2016 Comer352L
+ * Copyright (C) 2012-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -533,6 +533,8 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 
 bool ATcommandControlledDiagInterface::clearSendBuffer()
 {
+	if (_port == NULL)
+		return false;
 	_mutex.lock();
 	_port->ClearSendBuffer();
 	_mutex.unlock();
@@ -542,6 +544,8 @@ bool ATcommandControlledDiagInterface::clearSendBuffer()
 
 bool ATcommandControlledDiagInterface::clearReceiveBuffer()
 {
+	if (_port == NULL)
+		return false;
 	_mutex.lock();
 	_port->ClearReceiveBuffer();
 	_RxQueue.clear();

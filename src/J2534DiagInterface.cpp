@@ -1,7 +1,7 @@
 /*
  * J2534DiagInterface.cpp - J2534-pass-through diagnostic interface
  *
- * Copyright (C) 2010-2018 Comer352L
+ * Copyright (C) 2010-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -645,6 +645,8 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 
 bool J2534DiagInterface::clearSendBuffer()
 {
+	if (!_connected)
+		return false;
 	long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_TX_BUFFER, (void *)NULL, (void *)NULL);
 	if (STATUS_NOERROR != ret)
 	{
@@ -659,6 +661,8 @@ bool J2534DiagInterface::clearSendBuffer()
 
 bool J2534DiagInterface::clearReceiveBuffer()
 {
+	if (!_connected)
+		return false;
 	long ret = _j2534->PassThruIoctl(_ChannelID, CLEAR_RX_BUFFER, (void *)NULL, (void *)NULL);
 	if (STATUS_NOERROR != ret)
 	{

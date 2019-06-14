@@ -1,7 +1,7 @@
 /*
  * SerialPassThroughDiagInterface.cpp - Serial port pass-through diagnostic interface
  *
- * Copyright (C) 2010-2012 Comer352L
+ * Copyright (C) 2010-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -210,12 +210,16 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 
 bool SerialPassThroughDiagInterface::clearSendBuffer()
 {
+	if (_port == NULL)
+		return false;
 	return _port->ClearSendBuffer();
 }
 
 
 bool SerialPassThroughDiagInterface::clearReceiveBuffer()
 {
+	if (_port == NULL)
+		return false;
 	return _port->ClearReceiveBuffer();
 }
 
