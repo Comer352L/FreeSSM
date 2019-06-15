@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.cpp - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 {
 	_diagInterface = diagInterface;
 }
-
 
 
 bool SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, char *data)
@@ -71,7 +70,6 @@ bool SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const ch
 }
 
 
-
 bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr[], const unsigned int datalen, char* data)
 {
 	if (datalen == 0)
@@ -100,7 +98,6 @@ bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, 
 	}
 	return false;
 }
-
 
 
 bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const char *data, const unsigned int datalen, char* datawritten)
@@ -143,7 +140,6 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 }
 
 
-
 bool SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten)
 {
 	if (dataaddr > 0xffffff) return false;
@@ -184,7 +180,6 @@ bool SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const un
 }
 
 
-
 bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize)
 {
 	*cuDataSize = 0;
@@ -218,7 +213,6 @@ bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, char *cuData
 	}
 	return false;
 }
-
 
 
 bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const char *outdata, const unsigned char outdatalen, char *indata, unsigned char *indatalen)
@@ -311,33 +305,32 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 }
 
 
-
 bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer)
 {
-	/* NOTE: SERIAL-PASS-THROUGH-INTERFACES DO NOT RETURN COMPLETE MESSAGES, SO WE HAVE TO READ DATA IN STEPS (FOR A GOOD PERFORMANCE) */
-
 	std::vector<char> read_buffer;
-	int min_bytes_to_read = 0; // NOTE: must be signed !
+	int min_bytes_to_read = 0; // NOTE: must be signed
 	unsigned short int msglen = 0;
 	bool echo = false;
 	TimeM timer;
+	unsigned long int time_elapsed = 0;
+	unsigned int time_remaining = SSM2_READ_TIMEOUT;
 
-	msg_buffer->clear();
+	if ((ecuaddr > 0xff) || (outmsg_len > 260))  // BUG !
+		return false;
 	timer.start();
 	// WAIT FOR HEADER OF ANSWER OR ECHO:
-	if (!readFromInterface(4, SSM2_READ_TIMEOUT, msg_buffer))
+	if (!readFromInterface(4, time_remaining, &read_buffer, false))
 		return false;
 	// CHECK HEADER OF THE MESSAGE AND DETECT ECHO
-	if ((msg_buffer->at(0) == '\x80') && (static_cast<unsigned char>(msg_buffer->at(1)) == ecuaddr) && (msg_buffer->at(2) == '\xF0') && (static_cast<unsigned char>(msg_buffer->at(3)) == (outmsg_len - 4 - 1)))
-	{
-		// ECHO HEADER RECEIVED
+	if ((read_buffer.at(0) == '\x80') &&
+	    (read_buffer.at(1) == static_cast<char>(ecuaddr)) &&
+	    (read_buffer.at(2) == '\xF0') &&
+	    (read_buffer.at(3) == static_cast<char>(outmsg_len - 4 - 1)))
 		echo = true;
-	}
-	else if ((msg_buffer->at(0) == '\x80') && (msg_buffer->at(1) == '\xF0') && (static_cast<unsigned char>(msg_buffer->at(2)) == ecuaddr))
-	{
-		// HEADER OF INCOMING MESSAGE RECEIVED
+	else if ((read_buffer.at(0) == '\x80') &&
+		 (read_buffer.at(1) == '\xF0') &&
+		 (read_buffer.at(2) == static_cast<char>(ecuaddr)))
 		echo = false;
-	}
 	else
 	{
 #ifdef __FSSM_DEBUG__
@@ -345,16 +338,21 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #endif
 		return false;
 	}
-	// READ MINIMUM REMAINING BYTES
-	msglen = (4 + static_cast<unsigned char>(msg_buffer->at(3)) + 1);
-	min_bytes_to_read = msglen - msg_buffer->size() + echo*4; // NOTE: can be < 0 !
+	// READ MINIMUM REMAINING BYTES:
+	msglen = 4 + static_cast<unsigned char>(read_buffer.at(3)) + 1;
+	min_bytes_to_read = msglen - read_buffer.size() + echo*(4 + 1 + 1);
 	if (min_bytes_to_read > 0)
 	{
-		if (!readFromInterface(min_bytes_to_read, SSM2_READ_TIMEOUT - timer.elapsed(), &read_buffer))
+		time_elapsed = timer.elapsed();
+		if (time_elapsed < SSM2_READ_TIMEOUT)
+			time_remaining = SSM2_READ_TIMEOUT - time_elapsed;
+		else
+			time_remaining = 0;
+		if (!readFromInterface(min_bytes_to_read, time_remaining, &read_buffer, true))
 			return false;
-		msg_buffer->insert(msg_buffer->end(), read_buffer.begin(), read_buffer.end());
 	}
-	else if (!echo && (static_cast<int>(msg_buffer->size()) != msglen))	// CHECK IF REPLY IS TOO LONG
+	// CHECK IF REPLY MESSAGE IS TOO LONG:
+	if (!echo && (static_cast<int>(read_buffer.size()) != msglen))	// NOTE: if echo, read_buffer.size() = msglen + 4 + (1 + X) + 1
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#1) !\n";
@@ -362,7 +360,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 		return false;
 	}
 	// CHECK MESSAGE CHECKSUM:
-	if (msg_buffer->at(msglen-1) != libFSSM::calcchecksum(&msg_buffer->at(0), msglen - 1))
+	if (read_buffer.at(msglen-1) != libFSSM::calcchecksum(&read_buffer.at(0), msglen - 1))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#1) !\n";
@@ -373,27 +371,30 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 	if (!echo)
 		return true;
 	// ELIMINATE ECHO:
-	msg_buffer->erase(msg_buffer->begin(), msg_buffer->begin() + outmsg_len);
+	read_buffer.erase(read_buffer.begin(), read_buffer.begin() + outmsg_len);
 	// CHECK IF PROTOCOL HEADER OF REPLY IS CORRECT:
-	if ((msg_buffer->at(0) != '\x80') || (msg_buffer->at(1) != '\xF0') || (static_cast<unsigned char>(msg_buffer->at(2)) != ecuaddr))
+	if ((read_buffer.at(0) != '\x80') || (read_buffer.at(1) != '\xF0') || (read_buffer.at(2) != static_cast<char>(ecuaddr)))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: invalid protocol header (#2)\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: reply message has invalid protocol header !\n";
 #endif
 		return false;
 	}
-	// CALCULATE LENGTH OF COMPLETE ANSWER MESSAGE (using length byte of header):
-	msglen = 4 + static_cast<unsigned char>(msg_buffer->at(3)) + 1;
 	// READ REST OF THE MESSAGE:
-	if (msg_buffer->size() < msglen)	// IF ANSWER IS INCOMPLETE
+	msglen = 4 + static_cast<unsigned char>(read_buffer.at(3)) + 1;
+	min_bytes_to_read = msglen - read_buffer.size();
+	if (min_bytes_to_read > 0)
 	{
-		// WAIT FOR REST OF THE INCOMING MESSAGE:
-		min_bytes_to_read = msglen - msg_buffer->size();
-		if (!readFromInterface(min_bytes_to_read, SSM2_READ_TIMEOUT - timer.elapsed(), &read_buffer)) // Timeout: 260-4=256Bytes=533.3ms => 540ms
+		time_elapsed = timer.elapsed();
+		if (time_elapsed < SSM2_READ_TIMEOUT)
+			time_remaining = SSM2_READ_TIMEOUT - time_elapsed;
+		else
+			time_remaining = 0;
+		if (!readFromInterface(min_bytes_to_read, time_remaining, &read_buffer, true))
 			return false;
-		msg_buffer->insert(msg_buffer->end(), read_buffer.begin(), read_buffer.end());
 	}
-	else if (msg_buffer->size() != msglen)	// CHECK IF REPLY IS TOO LONG
+	// CHECK IF REPLY MESSAGE IS TOO LONG
+	if (read_buffer.size() != msglen)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#2) !\n";
@@ -401,13 +402,14 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 		return false;
 	}
 	// CHECK CHECKSUM:
-	if (msg_buffer->back() != libFSSM::calcchecksum(msg_buffer->data(), msg_buffer->size() - 1))
+	if (read_buffer.back() != libFSSM::calcchecksum(read_buffer.data(), read_buffer.size() - 1))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#2) !\n";
 #endif
 		return false;
 	}
+	msg_buffer->assign(read_buffer.begin(), read_buffer.end());
 	return true;
 }
 
@@ -416,7 +418,7 @@ bool SSMP2communication_core::receiveReplyISO15765(const unsigned int ecuaddr, s
 {
 	msg_buffer->clear();
 	// READ MESSAGE
-	if (!readFromInterface(5, SSM2_READ_TIMEOUT, msg_buffer)) // NOTE: we always get complete messages from the interfaces (as long as minbytes is > 0) !
+	if (!readFromInterface(5, SSM2_READ_TIMEOUT, msg_buffer, false)) // NOTE: we always get complete messages from the interfaces (as long as minbytes is > 0) !
 		return false;
 
 	// CHECK CAN-IDENTIFIER (IF POSSIBLE)
@@ -430,35 +432,38 @@ bool SSMP2communication_core::receiveReplyISO15765(const unsigned int ecuaddr, s
 }
 
 
-
-bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer)
+bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer, bool append)
 {
-	std::vector<char> read_buffer;
+	std::vector<char> temp_buffer;
+	std::vector<char> recv_buffer;
 	TimeM time;
 	time.start();
-	buffer->clear();
 	do
 	{
 		waitms(10);
-		read_buffer.clear();
-		if (!_diagInterface->read(&read_buffer))
+		temp_buffer.clear();
+		if (!_diagInterface->read(&temp_buffer))
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "SSMP2communication_core::readFromInterface():   error: failed to read from interface !\n";
 #endif
 			// NOTE: fail silent
 		}
-		else if (read_buffer.size())
+		else if (temp_buffer.size())
 		{
-			buffer->insert(buffer->end(), read_buffer.begin(), read_buffer.end());
+			recv_buffer.insert(recv_buffer.end(), temp_buffer.begin(), temp_buffer.end());
 		}
-	} while ((buffer->size() < minbytes) && (time.elapsed() < timeout));
-	if (buffer->size() < minbytes)
+	} while ((recv_buffer.size() < minbytes) && (time.elapsed() < timeout));
+	if (recv_buffer.size() < minbytes)
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::readFromInterface():   error: timeout while reading from interface !\n";
 #endif
 		return false;
 	}
+	if (append)
+		buffer->insert(buffer->end(), recv_buffer.begin(), recv_buffer.end());
+	else
+		buffer->assign(recv_buffer.begin(), recv_buffer.end());
 	return true;
 }

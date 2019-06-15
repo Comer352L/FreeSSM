@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.h - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ private:
 	bool SndRcvMessage(const unsigned int ecuaddr, const char *outdata, const unsigned char outdatalen, char *indata, unsigned char *indatalen);
 	bool receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer);
 	bool receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer);
-	bool readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer);
+	bool readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer, bool append = false);
 };
 
 
