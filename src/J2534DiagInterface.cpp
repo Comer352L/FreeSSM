@@ -584,8 +584,11 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 						 * - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
 					}
 #endif
-					readbuffer.reserve(rx_msg.DataSize);
-					readbuffer.assign(rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
+					readbuffer.insert(readbuffer.end(), rx_msg.Data, rx_msg.Data + rx_msg.DataSize);
+					/* NOTE: at least for SSM2 we can't assume that a message from the control unit is
+					 * delivered in a single PASSTHRU_MSG. The used timings exceed the limits defined in
+					 * ISO-14230, so interfaces can't always detect message ends/starts via timeouts properly.
+					 */
 				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
