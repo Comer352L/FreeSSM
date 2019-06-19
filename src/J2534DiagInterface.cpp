@@ -534,7 +534,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 		{
 			rxNumMsgs = num_PTMSGS;
 			ret = _j2534->PassThruReadMsgs(_ChannelID, rx_msgs, &rxNumMsgs, timeout);
-			if ((STATUS_NOERROR == ret) && rxNumMsgs)
+			// NOTE: even with timeout=0 ERR_TIMEOUT can be returned (if at least 1 but less messages than requested have been read)
+			if (((STATUS_NOERROR == ret) || (ERR_TIMEOUT == ret)) && rxNumMsgs)
 			{
 #ifdef __FSSM_DEBUG__
 				std::cout << "PassThruReadMsgs(): received " << rxNumMsgs << " J2534-messages:" << std::endl;
@@ -610,7 +611,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 				}
 			}
 		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
-		if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret))
+		if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret) || (ERR_TIMEOUT == ret))
 		{
 			buffer->assign(readbuffer.begin(), readbuffer.end());
 			delete[] rx_msgs;
