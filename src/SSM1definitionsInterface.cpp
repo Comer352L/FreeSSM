@@ -36,7 +36,10 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 SSM1definitionsInterface::~SSM1definitionsInterface()
 {
 	if (_xmldoc != NULL)
+	{
+		_xmldoc->Clear();
 		delete _xmldoc;
+	}
 }
 
 
@@ -107,6 +110,7 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	return !restored;
 
 error:
+	_xmldoc->Clear();
 	delete _xmldoc;
 	_xmldoc = NULL;
 	_defs_version.clear();
