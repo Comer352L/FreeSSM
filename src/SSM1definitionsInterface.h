@@ -55,6 +55,7 @@ class SSM1definitionsInterface
 {
 public:
 	SSM1definitionsInterface(std::string lang = "en");
+	~SSM1definitionsInterface();
 	bool selectDefinitionsFile(std::string filename);
 	void getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);

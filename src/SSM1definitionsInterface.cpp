@@ -33,6 +33,13 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 }
 
 
+SSM1definitionsInterface::~SSM1definitionsInterface()
+{
+	if (_xmldoc != NULL)
+		delete _xmldoc;
+}
+
+
 bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 {
 	std::vector<XMLElement*> elements;
