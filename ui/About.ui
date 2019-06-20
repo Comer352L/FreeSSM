@@ -9,19 +9,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
+    <width>600</width>
     <height>545</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>575</width>
+    <width>600</width>
     <height>545</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>575</width>
+    <width>600</width>
     <height>545</height>
    </size>
   </property>
@@ -56,7 +56,7 @@
   <widget class="QPushButton" name="close_pushButton">
    <property name="geometry">
     <rect>
-     <x>222</x>
+     <x>229</x>
      <y>502</y>
      <width>141</width>
      <height>31</height>
@@ -76,7 +76,7 @@
     <rect>
      <x>30</x>
      <y>80</y>
-     <width>526</width>
+     <width>540</width>
      <height>394</height>
     </rect>
    </property>
@@ -108,7 +108,7 @@
       <rect>
        <x>15</x>
        <y>12</y>
-       <width>485</width>
+       <width>502</width>
        <height>344</height>
       </rect>
      </property>
@@ -141,7 +141,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="models_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>19</y>
        <width>295</width>
        <height>34</height>
@@ -180,7 +180,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="controlunits_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>64</y>
        <width>300</width>
        <height>18</height>
@@ -193,7 +193,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="dtcsinfo_label">
      <property name="geometry">
       <rect>
-       <x>288</x>
+       <x>308</x>
        <y>96</y>
        <width>201</width>
        <height>18</height>
@@ -206,7 +206,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="nrofActuatortests_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>192</y>
        <width>45</width>
        <height>18</height>
@@ -219,7 +219,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="nrofadjustmentvalues_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>160</y>
        <width>45</width>
        <height>18</height>
@@ -232,7 +232,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="systemtestsinfo_label">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>270</x>
        <y>192</y>
        <width>241</width>
        <height>18</height>
@@ -245,7 +245,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="adjustmentsinfo_label">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>270</x>
        <y>160</y>
        <width>241</width>
        <height>18</height>
@@ -298,7 +298,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="nrofsupportedDTCs_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>96</y>
        <width>85</width>
        <height>18</height>
@@ -351,7 +351,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="mbsswsinfo_label">
      <property name="geometry">
       <rect>
-       <x>288</x>
+       <x>308</x>
        <y>128</y>
        <width>201</width>
        <height>18</height>
@@ -364,7 +364,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="nrofsupportedMBsSWs_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>128</y>
        <width>54</width>
        <height>18</height>
@@ -435,7 +435,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="languages_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>224</y>
        <width>291</width>
        <height>18</height>
@@ -468,7 +468,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="supportedOS_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>256</y>
        <width>291</width>
        <height>18</height>
@@ -544,7 +544,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>170</y>
-       <width>500</width>
+       <width>511</width>
        <height>20</height>
       </rect>
      </property>
@@ -560,7 +560,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>230</y>
-       <width>500</width>
+       <width>511</width>
        <height>20</height>
       </rect>
      </property>
@@ -576,7 +576,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>260</y>
-       <width>500</width>
+       <width>511</width>
        <height>20</height>
       </rect>
      </property>
@@ -624,12 +624,12 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>200</y>
-       <width>500</width>
+       <width>511</width>
        <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</string>
+      <string>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -693,7 +693,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>500</width>
+       <width>511</width>
        <height>121</height>
       </rect>
      </property>
@@ -775,7 +775,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>TinyXML:</string>
+      <string>TinyXML2:</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -784,7 +784,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="fontlicensedoc_label">
      <property name="geometry">
       <rect>
-       <x>267</x>
+       <x>280</x>
        <y>325</y>
        <width>241</width>
        <height>20</height>
@@ -811,7 +811,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="oxygeniconslicensedoc_label">
      <property name="geometry">
       <rect>
-       <x>207</x>
+       <x>220</x>
        <y>265</y>
        <width>301</width>
        <height>20</height>
@@ -838,7 +838,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="qt4licensedoc_label">
      <property name="geometry">
       <rect>
-       <x>187</x>
+       <x>200</x>
        <y>205</y>
        <width>321</width>
        <height>20</height>
@@ -865,7 +865,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="tinyxmllicensedoc_label">
      <property name="geometry">
       <rect>
-       <x>187</x>
+       <x>200</x>
        <y>235</y>
        <width>321</width>
        <height>20</height>
@@ -877,7 +877,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       </font>
      </property>
      <property name="text">
-      <string>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</string>
+      <string>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -889,7 +889,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="crystaliconslicensedoc_label">
      <property name="geometry">
       <rect>
-       <x>257</x>
+       <x>270</x>
        <y>295</y>
        <width>251</width>
        <height>20</height>
@@ -973,7 +973,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>500</width>
+       <width>512</width>
        <height>345</height>
       </rect>
      </property>
@@ -1021,7 +1021,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <rect>
      <x>30</x>
      <y>480</y>
-     <width>526</width>
+     <width>540</width>
      <height>16</height>
     </rect>
    </property>

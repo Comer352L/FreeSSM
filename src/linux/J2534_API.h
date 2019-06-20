@@ -1,7 +1,7 @@
 /*
  * J2534_API.h - API for accessing SAE-J2534 compliant interfaces
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2010 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,13 @@
 #include <vector>
 #include "../J2534.h"
 #include <cstring>	// memset(), strcpy(), ...
+#include <iostream>
 extern "C"
 {
 	#include <errno.h>
 	#include <dlfcn.h>
 }
 #include "J2534misc.h"
-#include "tinyxml/tinyxml.h"
 
 
 class J2534_API

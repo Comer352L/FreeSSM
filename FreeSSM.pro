@@ -60,8 +60,7 @@ HEADERS += src/FreeSSM.h \
            src/SSMprotocol2_def_de.h \
            src/ClearMemoryDlg.h \
            src/libFSSM.h \
-           src/tinyxml/tinyxml.h \
-           src/tinyxml/tinystr.h
+           src/tinyxml2/tinyxml2.h \
 
 SOURCES += src/main.cpp \
            src/FreeSSM.cpp \
@@ -110,10 +109,7 @@ SOURCES += src/main.cpp \
            src/SSMprotocol2_def_de.cpp \
            src/ClearMemoryDlg.cpp \
            src/libFSSM.cpp \
-           src/tinyxml/tinyxml.cpp \
-           src/tinyxml/tinystr.cpp \
-           src/tinyxml/tinyxmlerror.cpp \
-           src/tinyxml/tinyxmlparser.cpp
+           src/tinyxml2/tinyxml2.cpp \
 
 small-resolution {
   DEFINES += SMALL_RESOLUTION
@@ -160,7 +156,6 @@ TRANSLATIONS = FreeSSM_en.ts \
 translation.commands = lrelease FreeSSM.pro & $$QMAKE_QMAKE     # qmake needs to be called again, otherwise *.qm file will not be installed
 QMAKE_EXTRA_TARGETS += translation
 
-DEFINES += TIXML_USE_STL
 # Add pre-processor-define if we compile as debug:
 CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__ __J2534_API_DEBUG__
 # Enable stuff which is deprectaed since Qt5:

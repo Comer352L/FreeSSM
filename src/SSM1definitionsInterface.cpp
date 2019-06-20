@@ -35,22 +35,22 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 
 bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 {
-	std::string fn_bak;
-	std::vector<TiXmlElement*> elements;
-	TiXmlAttribute* pAttrib = NULL;
-	TiXmlNode *root_node;
+	std::vector<XMLElement*> elements;
+	const XMLAttribute* pAttrib = NULL;
+	XMLNode *root_node;
 	if (!filename.size())
 		goto error;
-	if (!_xmldoc)
-		_xmldoc = new TiXmlDocument();
-	else
-		fn_bak = _xmldoc->ValueStr();
-	if (!_xmldoc->LoadFile(filename)) // always closes the current document automatically !
+	if (_xmldoc == NULL)
+		_xmldoc = new XMLDocument();
+	if (_xmldoc->LoadFile(filename.c_str()) != XML_SUCCESS)
+	// NOTE: resets the current document content, opens the new file, reads the content and closes the file
 	{
 		// Try to reopen last document:
-		if (!fn_bak.size() || !_xmldoc->LoadFile(fn_bak))
+		if (!_filename.size() || (_xmldoc->LoadFile(_filename.c_str()) != XML_SUCCESS))
 			goto error;
 	}
+	else
+		_filename = filename;
 	// Find and save node FSSM_SSM1_DEFINITIONS
 	root_node = _xmldoc->FirstChildElement("FSSM_SSM1_DEFINITIONS");
 	if (!root_node)
@@ -64,14 +64,14 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 		if (std::string(pAttrib->Name()) == "version")
 		{
 			if (_defs_version.empty())
-				_defs_version = pAttrib->ValueStr();
+				_defs_version = pAttrib->Value();
 			else
 				goto error;
 		}
 		else if (std::string(pAttrib->Name()) == "format_version")
 		{
 			if (_defs_format_version.empty())
-				_defs_format_version = pAttrib->ValueStr();
+				_defs_format_version = pAttrib->Value();
 			else
 				goto error;
 		}
@@ -106,6 +106,7 @@ error:
 	_defs_for_id_b1_node = NULL;
 	_defs_for_id_b2_node = NULL;
 	_defs_for_id_b3_node = NULL;
+	_filename.clear();
 	return false;
 }
 
@@ -125,7 +126,7 @@ void SSM1definitionsInterface::setLanguage(std::string lang)
 
 bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 {
-	std::vector<TiXmlElement*> elements;
+	std::vector<XMLElement*> elements;
 	std::vector<attributeCondition> attribConditions;
 	attributeCondition attribCondition;
 
@@ -170,7 +171,7 @@ bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 
 bool SSM1definitionsInterface::systemDescription(std::string *description)
 {
-	std::vector<TiXmlElement*> elements;
+	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_node)
 	{
 		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SYSTEMDESCRIPTION");
@@ -203,7 +204,7 @@ bool SSM1definitionsInterface::systemDescription(std::string *description)
 
 bool SSM1definitionsInterface::model(std::string *name)
 {
-	std::vector<TiXmlElement*> elements;
+	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_node)
 	{
 		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "MODEL");
@@ -236,7 +237,7 @@ bool SSM1definitionsInterface::model(std::string *name)
 
 bool SSM1definitionsInterface::year(std::string *yearstr)
 {
-	std::vector<TiXmlElement*> elements;
+	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_node)
 	{
 		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "YEAR");
@@ -269,9 +270,9 @@ bool SSM1definitionsInterface::year(std::string *yearstr)
 
 bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *value)
 {
-	std::vector<TiXmlElement*> elements;
-	TiXmlElement *CM_element;
-	TiXmlElement *addr_element;
+	std::vector<XMLElement*> elements;
+	XMLElement *CM_element;
+	XMLElement *addr_element;
 	const char *str = NULL;
 	if (_defs_for_id_b3_node)
 	{
@@ -322,8 +323,8 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 
 bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 {
-	std::vector<TiXmlElement*> DTCblock_elements;
-	std::vector<TiXmlElement*> DTCblock_elements2;
+	std::vector<XMLElement*> DTCblock_elements;
+	std::vector<XMLElement*> DTCblock_elements2;
 	const char *str = NULL;
 	dcs->clear();
 	if (_defs_root_node)
@@ -349,7 +350,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 		dc_defs_dt dtcblock;
 		dtcblock.byteAddr_currentOrTempOrLatest = MEMORY_ADDRESS_NONE;
 		dtcblock.byteAddr_historicOrMemorized = MEMORY_ADDRESS_NONE;
-		std::vector<TiXmlElement*> tmp_elements;
+		std::vector<XMLElement*> tmp_elements;
 		bool duplicate = false;
 		// --- Get address(es) ---:
 		/* NOTE: DTCs with the same address must be defined in the same DTCBLOCK */
@@ -423,7 +424,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			dtcblock.title[k] += " Bit " + QString::number(k+1) + ")";
 			/* NOTE: see comments at the end of the function */
 		}
-		std::vector<TiXmlElement*> DTC_elements;
+		std::vector<XMLElement*> DTC_elements;
 		DTC_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "DTC");
 		char assignedBits = 0;
 		for (unsigned int k=0; k<DTC_elements.size(); k++)
@@ -463,7 +464,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			}
 			// --- Get common data ---
 			// Find DTC data:
-			TiXmlElement *DTCdata_element = NULL;
+			XMLElement *DTCdata_element = NULL;
 			attribCond.name = "id";
 			attribCond.value = id;
 			attribCond.condition = attributeCondition::equal;
@@ -513,8 +514,8 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 
 bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
-	std::vector<TiXmlElement*> MB_elements;
-	std::vector<TiXmlElement*> MB_elements2;
+	std::vector<XMLElement*> MB_elements;
+	std::vector<XMLElement*> MB_elements2;
 	const char *str = NULL;
 	mbs->clear();
 	if (_defs_root_node)
@@ -536,7 +537,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 	}
 	for (unsigned int k=0; k<MB_elements.size(); k++)
 	{
-		std::vector<TiXmlElement*> tmp_elements;
+		std::vector<XMLElement*> tmp_elements;
 		mb_intl_dt mb;
 		// Get ID:
 		std::string id;
@@ -570,7 +571,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		mb.addr_high = MEMORY_ADDRESS_NONE;
 		// --- Get common data ---
 		// Find MB data:
-		TiXmlElement *MBdata_element = NULL;
+		XMLElement *MBdata_element = NULL;
 		attributeCondition attribCond;
 		attribCond.name = "id";
 		attribCond.value = id;
@@ -646,8 +647,8 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 
 bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
-	std::vector<TiXmlElement*> SWblock_elements;
-	std::vector<TiXmlElement*> SWblock_elements2;
+	std::vector<XMLElement*> SWblock_elements;
+	std::vector<XMLElement*> SWblock_elements2;
 	const char *str = NULL;
 	sws->clear();
 	if (_defs_root_node)
@@ -670,7 +671,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 	for (unsigned int b=0; b<SWblock_elements.size(); b++)
 	{
 		sw_intl_dt sw;
-		std::vector<TiXmlElement*> tmp_elements;
+		std::vector<XMLElement*> tmp_elements;
 		// Get block address:
 		tmp_elements = getAllMatchingChildElements(SWblock_elements.at(b), "ADDRESS");
 		if (tmp_elements.size() != 1)
@@ -683,7 +684,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			continue;
 		sw.byteAddr = byteaddr;
 		// Get switches:
-		std::vector<TiXmlElement*> SW_elements;
+		std::vector<XMLElement*> SW_elements;
 		SW_elements = getAllMatchingChildElements(SWblock_elements.at(b), "SW");
 		for (unsigned int k=0; k<SW_elements.size(); k++)
 		{
@@ -719,7 +720,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			sw.bitAddr = bitaddr;
 			// --- Get common data ---:
 			// Find SW data:
-			TiXmlElement *SWdata_element = NULL;
+			XMLElement *SWdata_element = NULL;
 			attributeCondition attribCond;
 			attribCond.name = "id";
 			attribCond.value = id;
@@ -774,17 +775,17 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 
 // PRIVATE:
 
-std::vector<TiXmlElement*> SSM1definitionsInterface::getAllMatchingChildElements(TiXmlNode *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
+std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(XMLNode *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
 {
-	std::vector<TiXmlElement*> retElements;
-	TiXmlNode *pChild = NULL;
-	TiXmlElement *pElement = NULL;
-	TiXmlAttribute* pAttrib = NULL;
+	std::vector<XMLElement*> retElements;
+	XMLNode *pChild = NULL;
+	XMLElement *pElement = NULL;
+	const XMLAttribute* pAttrib = NULL;
 	double cond_d_val = 0;
 	double attr_d_val = 0;
 	bool attribOK = false;
 	unsigned int attribsOK = 0;
-	for (pChild = pParent->FirstChildElement(elementName); pChild != 0; pChild = pChild->NextSibling(elementName))
+	for (pChild = pParent->FirstChildElement(elementName.c_str()); pChild != NULL; pChild = pChild->NextSiblingElement(elementName.c_str()))
 	{
 		pElement = pChild->ToElement();
 		if (pElement)

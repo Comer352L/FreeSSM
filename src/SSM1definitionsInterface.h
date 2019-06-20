@@ -25,12 +25,15 @@
 #include <vector>
 #include <sstream>
 #include "SSMprotocol.h"
-#include "tinyxml/tinyxml.h"
 #include "libFSSM.h"
+#include "tinyxml2/tinyxml2.h"
 
 
 #define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.2.0"
 #define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.1.1"
+
+
+using namespace tinyxml2;
 
 
 class attributeCondition
@@ -67,20 +70,21 @@ public:
 	bool clearMemoryData(unsigned int *address, char *value);
 
 private:
-	TiXmlDocument *_xmldoc;
+	XMLDocument *_xmldoc;
+	std::string _filename;
 	std::string _defs_version;
 	std::string _defs_format_version;
 	std::string _lang;
 	std::vector<char> _ID;
 	bool _id_set;
 	// Shortcuts to important nodes:
-	TiXmlNode *_defs_root_node;
-	TiXmlNode *_datacommon_root_node;
-	TiXmlNode *_defs_for_id_b1_node;
-	TiXmlNode *_defs_for_id_b2_node;
-	TiXmlNode *_defs_for_id_b3_node;
+	XMLNode *_defs_root_node;
+	XMLNode *_datacommon_root_node;
+	XMLNode *_defs_for_id_b1_node;
+	XMLNode *_defs_for_id_b2_node;
+	XMLNode *_defs_for_id_b3_node;
 
-	std::vector<TiXmlElement*> getAllMatchingChildElements(TiXmlNode *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
+	std::vector<XMLElement*> getAllMatchingChildElements(XMLNode *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
 	bool StrToDouble(std::string mystring, double *d);
 	bool checkDefsFormatVersion(std::string version_str);
 	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);

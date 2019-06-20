@@ -1,7 +1,7 @@
 /*
  * J2534_API.cpp - API for accessing SAE-J2534 compliant interfaces
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  */
 
 #include "J2534_API.h"
+#include "tinyxml2/tinyxml2.h"
 
 
 
@@ -173,29 +174,29 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 {
 	std::vector<J2534Library> PTlibraries;
 
-	TiXmlDocument xmldoc = TiXmlDocument();
+	tinyxml2::XMLDocument xmldoc;
 #ifdef __J2534_API_DEBUG__
 	std::cout << "Trying to load J2534 library definitions XML file: \"" << libsDefXmlFile << "\"\n";
 #endif
-	if (xmldoc.LoadFile(libsDefXmlFile)) {
+	if (xmldoc.LoadFile(libsDefXmlFile.c_str()) == tinyxml2::XML_SUCCESS) {
 #ifdef __J2534_API_DEBUG__
 		std::cout << "Parsing J2534 library definitions XML data...\n";
 #endif
-		TiXmlNode* rootnode = xmldoc.FirstChildElement("J2534LIBS");
+		tinyxml2::XMLNode* rootnode = xmldoc.FirstChildElement("J2534LIBS");
 		if (!rootnode)
 			goto error;
 
-		TiXmlNode* libnode = rootnode->FirstChild("J2534LIB");
+		tinyxml2::XMLNode* libnode = rootnode->FirstChildElement("J2534LIB");
 
 		while (libnode) {
-			TiXmlElement* elem = libnode->ToElement();
+			tinyxml2::XMLElement* elem = libnode->ToElement();
 			if (!elem)	// e.g. if node is a comment
 			{
 				libnode = libnode->NextSibling();
 				continue;
 			}
 
-			TiXmlAttribute* attrib = elem->FirstAttribute();
+			const tinyxml2::XMLAttribute* attrib = elem->FirstAttribute();
 
 			J2534Library lib;
 			std::string api_str;
@@ -204,21 +205,21 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 				if (std::string(attrib->Name()) == "name")
 				{
 					if (lib.name.empty())
-						lib.name = attrib->ValueStr();
+						lib.name = attrib->Value();
 					else
 						goto error;
 				}
 				else if (std::string(attrib->Name()) == "path")
 				{
 					if (lib.path.empty())
-						lib.path = attrib->ValueStr();
+						lib.path = attrib->Value();
 					else
 						goto error;
 				}
 				else if (std::string(attrib->Name()) == "api")
 				{
 					if (api_str.empty())
-						api_str = attrib->ValueStr();
+						api_str = attrib->Value();
 					else
 						goto error;
 				}
@@ -243,13 +244,13 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 				lib.api = J2534_API_version::v0404;
 			}
 
-			TiXmlNode* protocolsnode = libnode->FirstChild("PROTOCOLS");
+			tinyxml2::XMLNode* protocolsnode = libnode->FirstChildElement("PROTOCOLS");
 			if (!protocolsnode) {
 				std::cout << "J2534LIB: element 'PROTOCOLS' missing!\n";
 				goto error;
 			}
 
-			TiXmlElement* protocolelement = protocolsnode->FirstChildElement("PROTOCOL");
+			tinyxml2::XMLElement* protocolelement = protocolsnode->FirstChildElement("PROTOCOL");
 			while (protocolelement) {
 				std::string protocolstr(protocolelement->GetText());
 				lib.protocols = lib.protocols | J2534misc::parseProtocol(protocolstr);
