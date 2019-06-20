@@ -1,7 +1,7 @@
 /*
  * SSM1definitionsInterface.cpp - Interface to the SSM1-definitions
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -778,88 +778,83 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(XMLNode *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
 {
 	std::vector<XMLElement*> retElements;
-	XMLNode *pChild = NULL;
 	XMLElement *pElement = NULL;
 	const XMLAttribute* pAttrib = NULL;
 	double cond_d_val = 0;
 	double attr_d_val = 0;
 	bool attribOK = false;
 	unsigned int attribsOK = 0;
-	for (pChild = pParent->FirstChildElement(elementName.c_str()); pChild != NULL; pChild = pChild->NextSiblingElement(elementName.c_str()))
+	for (pElement = pParent->FirstChildElement(elementName.c_str()); pElement != NULL; pElement = pElement->NextSiblingElement(elementName.c_str()))
 	{
-		pElement = pChild->ToElement();
-		if (pElement)
+		attribsOK = false;
+		// Check attribute conditions:
+		for (unsigned int c=0; c<attribConditions.size(); c++)
 		{
-			attribsOK = false;
-			// Check attribute conditions:
-			for (unsigned int c=0; c<attribConditions.size(); c++)
+			pAttrib = pElement->FirstAttribute();
+			while (pAttrib)
 			{
-				pAttrib = pElement->FirstAttribute();
-				while (pAttrib)
+				if (pAttrib->Name() == attribConditions.at(c).name)
 				{
-					if (pAttrib->Name() == attribConditions.at(c).name)
+					attribOK = false;
+					if (StrToDouble(attribConditions.at(c).value, &cond_d_val) && StrToDouble(pAttrib->Value(), &attr_d_val))
 					{
-						attribOK = false;
-						if (StrToDouble(attribConditions.at(c).value, &cond_d_val) && StrToDouble(pAttrib->Value(), &attr_d_val))
+						// Compare doubles:
+						if (attribConditions.at(c).condition == attributeCondition::equal)
 						{
-							// Compare doubles:
-							if (attribConditions.at(c).condition == attributeCondition::equal)
-							{
-								attribOK = (attr_d_val == cond_d_val);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::smaller)
-							{
-								attribOK = (attr_d_val < cond_d_val);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::larger)
-							{
-								attribOK = (attr_d_val > cond_d_val);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::equalOrSmaller)
-							{
-								attribOK = (attr_d_val <= cond_d_val);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::equalOrLarger)
-							{
-								attribOK = (attr_d_val >= cond_d_val);
-							}
+							attribOK = (attr_d_val == cond_d_val);
 						}
-						else
+						else if (attribConditions.at(c).condition == attributeCondition::smaller)
 						{
-							// Compare strings:
-							if (attribConditions.at(c).condition == attributeCondition::equal)
-							{
-								attribOK = (pAttrib->Value() == attribConditions.at(c).value);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::smaller)
-							{
-								attribOK = (pAttrib->Value() < attribConditions.at(c).value);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::larger)
-							{
-								attribOK = (pAttrib->Value() > attribConditions.at(c).value);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::equalOrSmaller)
-							{
-								attribOK = (pAttrib->Value() <= attribConditions.at(c).value);
-							}
-							else if (attribConditions.at(c).condition == attributeCondition::equalOrLarger)
-							{
-								attribOK = (pAttrib->Value() >= attribConditions.at(c).value);
-							}
+							attribOK = (attr_d_val < cond_d_val);
 						}
-						if (attribOK)
+						else if (attribConditions.at(c).condition == attributeCondition::larger)
 						{
-							attribsOK++;
-							break;
+							attribOK = (attr_d_val > cond_d_val);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::equalOrSmaller)
+						{
+							attribOK = (attr_d_val <= cond_d_val);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::equalOrLarger)
+						{
+							attribOK = (attr_d_val >= cond_d_val);
 						}
 					}
-					pAttrib=pAttrib->Next();
+					else
+					{
+						// Compare strings:
+						if (attribConditions.at(c).condition == attributeCondition::equal)
+						{
+							attribOK = (pAttrib->Value() == attribConditions.at(c).value);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::smaller)
+						{
+							attribOK = (pAttrib->Value() < attribConditions.at(c).value);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::larger)
+						{
+							attribOK = (pAttrib->Value() > attribConditions.at(c).value);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::equalOrSmaller)
+						{
+							attribOK = (pAttrib->Value() <= attribConditions.at(c).value);
+						}
+						else if (attribConditions.at(c).condition == attributeCondition::equalOrLarger)
+						{
+							attribOK = (pAttrib->Value() >= attribConditions.at(c).value);
+						}
+					}
+					if (attribOK)
+					{
+						attribsOK++;
+						break;
+					}
 				}
+				pAttrib = pAttrib->Next();
 			}
-			if (attribsOK == attribConditions.size())
-				retElements.push_back(pElement);
 		}
+		if (attribsOK == attribConditions.size())
+			retElements.push_back(pElement);
 	}
 	return retElements;
 }
