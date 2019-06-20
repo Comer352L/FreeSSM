@@ -110,8 +110,11 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	return !restored;
 
 error:
-	_xmldoc->Clear();
-	delete _xmldoc;
+	if (_xmldoc != NULL)
+	{
+		_xmldoc->Clear();
+		delete _xmldoc;
+	}
 	_xmldoc = NULL;
 	_defs_version.clear();
 	_defs_format_version.clear();
