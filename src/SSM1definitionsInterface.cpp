@@ -23,11 +23,11 @@
 SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 {
 	_xmldoc = NULL;
-	_defs_root_node = NULL;
-	_datacommon_root_node = NULL;
-	_defs_for_id_b1_node = NULL;
-	_defs_for_id_b2_node = NULL;
-	_defs_for_id_b3_node = NULL;
+	_defs_root_element = NULL;
+	_datacommon_root_element = NULL;
+	_defs_for_id_b1_element = NULL;
+	_defs_for_id_b2_element = NULL;
+	_defs_for_id_b3_element = NULL;
 	_lang = lang;
 	_id_set = false;
 }
@@ -37,7 +37,7 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 {
 	std::vector<XMLElement*> elements;
 	const XMLAttribute* pAttrib = NULL;
-	XMLNode *root_node;
+	XMLElement *root_element;
 	if (!filename.size())
 		goto error;
 	if (_xmldoc == NULL)
@@ -51,28 +51,28 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	}
 	else
 		_filename = filename;
-	// Find and save node FSSM_SSM1_DEFINITIONS
-	root_node = _xmldoc->FirstChildElement("FSSM_SSM1_DEFINITIONS");
-	if (!root_node)
+	// Find root element FSSM_SSM1_DEFINITIONS:
+	root_element = _xmldoc->FirstChildElement("FSSM_SSM1_DEFINITIONS");
+	if (!root_element)
 		goto error;
-	// Get version infos:
+	// Find and save version infos:
 	_defs_version.clear();
 	_defs_format_version.clear();
-	pAttrib = root_node->ToElement()->FirstAttribute();
+	pAttrib = root_element->FirstAttribute();
 	while (pAttrib)
 	{
 		if (std::string(pAttrib->Name()) == "version")
 		{
 			if (_defs_version.empty())
 				_defs_version = pAttrib->Value();
-			else
+			else // attribute specified multiple times
 				goto error;
 		}
 		else if (std::string(pAttrib->Name()) == "format_version")
 		{
 			if (_defs_format_version.empty())
 				_defs_format_version = pAttrib->Value();
-			else
+			else // attribute specified multiple times
 				goto error;
 		}
 		pAttrib=pAttrib->Next();
@@ -81,17 +81,17 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 		goto error;
 	if (!checkDefsFormatVersion(_defs_format_version))
 		goto error;
-	// Find and save node DEFINITIONS
-	elements = getAllMatchingChildElements(root_node, "DEFINITIONS");
+	// Find and save element DEFINITIONS:
+	elements = getAllMatchingChildElements(root_element, "DEFINITIONS");
 	if (elements.size() != 1)
 		goto error;
-	_defs_root_node = elements.at(0);
-	// Find and save node DATA_COMMON
-	elements = getAllMatchingChildElements(root_node, "DATA_COMMON");
+	_defs_root_element = elements.at(0);
+	// Find and save element DATA_COMMON:
+	elements = getAllMatchingChildElements(root_element, "DATA_COMMON");
 	if (elements.size() != 1)
 		goto error;
-	_datacommon_root_node = elements.at(0);
-	// Find and save definition nodes for the current ID:
+	_datacommon_root_element = elements.at(0);
+	// Find and save definition element for the current ID:
 	if (_id_set)
 		selectID(_ID);
 	return true;
@@ -101,11 +101,11 @@ error:
 	_xmldoc = NULL;
 	_defs_version.clear();
 	_defs_format_version.clear();
-	_defs_root_node = NULL;
-	_datacommon_root_node = NULL;
-	_defs_for_id_b1_node = NULL;
-	_defs_for_id_b2_node = NULL;
-	_defs_for_id_b3_node = NULL;
+	_defs_root_element = NULL;
+	_datacommon_root_element = NULL;
+	_defs_for_id_b1_element = NULL;
+	_defs_for_id_b2_element = NULL;
+	_defs_for_id_b3_element = NULL;
 	_filename.clear();
 	return false;
 }
@@ -131,23 +131,23 @@ bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 	attributeCondition attribCondition;
 
 	_id_set = false;
-	_defs_for_id_b1_node = NULL;
-	_defs_for_id_b2_node = NULL;
-	_defs_for_id_b3_node = NULL;
-	if (!_defs_root_node)
+	_defs_for_id_b1_element = NULL;
+	_defs_for_id_b2_element = NULL;
+	_defs_for_id_b3_element = NULL;
+	if (!_defs_root_element)
 		return false;
 	attribCondition.name = "value";
 	attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(0), 1);
 	attribCondition.condition = attributeCondition::equal;
-	elements = getAllMatchingChildElements(_defs_root_node, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
+	elements = getAllMatchingChildElements(_defs_root_element, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
 	if (elements.size() == 1)
 	{
-		_defs_for_id_b1_node = elements.at(0);
+		_defs_for_id_b1_element = elements.at(0);
 		attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(1), 1);
 		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
 		if (elements.size() == 1)
 		{
-			_defs_for_id_b2_node = elements.at(0);
+			_defs_for_id_b2_element = elements.at(0);
 			attribCondition.name = "value_start";
 			attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(2), 1);
 			attribCondition.condition = attributeCondition::equalOrSmaller;
@@ -158,7 +158,7 @@ bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
 			if (elements.size() == 1)
 			{
-				_defs_for_id_b3_node = elements.at(0);
+				_defs_for_id_b3_element = elements.at(0);
 				_ID = id;
 				_id_set = true;
 				return true;
@@ -172,26 +172,26 @@ bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 bool SSM1definitionsInterface::systemDescription(std::string *description)
 {
 	std::vector<XMLElement*> elements;
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SYSTEMDESCRIPTION");
+		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "SYSTEMDESCRIPTION");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b2_node)
+	if (!elements.size() && _defs_for_id_b2_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "SYSTEMDESCRIPTION");
+		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "SYSTEMDESCRIPTION");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b1_node)
+	if (!elements.size() && _defs_for_id_b1_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "SYSTEMDESCRIPTION");
+		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "SYSTEMDESCRIPTION");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_root_node)
-		elements = getAllMatchingChildElements(_defs_root_node, "SYSTEMDESCRIPTION");
+	if (!elements.size() && _defs_root_element)
+		elements = getAllMatchingChildElements(_defs_root_element, "SYSTEMDESCRIPTION");
 	if (elements.size() != 1)
 		return false;
 	const char *str = elements.at(0)->GetText();
@@ -205,26 +205,26 @@ bool SSM1definitionsInterface::systemDescription(std::string *description)
 bool SSM1definitionsInterface::model(std::string *name)
 {
 	std::vector<XMLElement*> elements;
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "MODEL");
+		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "MODEL");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b2_node)
+	if (!elements.size() && _defs_for_id_b2_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "MODEL");
+		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "MODEL");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b1_node)
+	if (!elements.size() && _defs_for_id_b1_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "MODEL");
+		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "MODEL");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_root_node)
-		elements = getAllMatchingChildElements(_defs_root_node, "MODEL");
+	if (!elements.size() && _defs_root_element)
+		elements = getAllMatchingChildElements(_defs_root_element, "MODEL");
 	if (elements.size() != 1)
 		return false;
 	const char *str = elements.at(0)->GetText();
@@ -238,26 +238,26 @@ bool SSM1definitionsInterface::model(std::string *name)
 bool SSM1definitionsInterface::year(std::string *yearstr)
 {
 	std::vector<XMLElement*> elements;
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "YEAR");
+		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "YEAR");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b2_node)
+	if (!elements.size() && _defs_for_id_b2_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "YEAR");
+		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "YEAR");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b1_node)
+	if (!elements.size() && _defs_for_id_b1_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "YEAR");
+		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "YEAR");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_root_node)
-		elements = getAllMatchingChildElements(_defs_root_node, "YEAR");
+	if (!elements.size() && _defs_root_element)
+		elements = getAllMatchingChildElements(_defs_root_element, "YEAR");
 	if (elements.size() != 1)
 		return false;
 	const char *str = elements.at(0)->GetText();
@@ -274,26 +274,26 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 	XMLElement *CM_element;
 	XMLElement *addr_element;
 	const char *str = NULL;
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_node, "CLEARMEMORY");
+		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "CLEARMEMORY");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b2_node)
+	if (!elements.size() && _defs_for_id_b2_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_node, "CLEARMEMORY");
+		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "CLEARMEMORY");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_for_id_b1_node)
+	if (!elements.size() && _defs_for_id_b1_element)
 	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_node, "CLEARMEMORY");
+		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "CLEARMEMORY");
 		if (elements.size() > 1)
 			return false;
 	}
-	if (!elements.size() && _defs_root_node)
-		elements = getAllMatchingChildElements(_defs_root_node, "CLEARMEMORY");
+	if (!elements.size() && _defs_root_element)
+		elements = getAllMatchingChildElements(_defs_root_element, "CLEARMEMORY");
 	if (elements.size() != 1)
 		return false;
 	CM_element = elements.at(0);
@@ -327,21 +327,21 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 	std::vector<XMLElement*> DTCblock_elements2;
 	const char *str = NULL;
 	dcs->clear();
-	if (_defs_root_node)
-		DTCblock_elements = getAllMatchingChildElements(_defs_root_node, "DTCBLOCK");
-	if (_defs_for_id_b1_node)
+	if (_defs_root_element)
+		DTCblock_elements = getAllMatchingChildElements(_defs_root_element, "DTCBLOCK");
+	if (_defs_for_id_b1_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "DTCBLOCK");
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "DTCBLOCK");
 		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
 	}
-	if (_defs_for_id_b2_node)
+	if (_defs_for_id_b2_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "DTCBLOCK");
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "DTCBLOCK");
 		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
 	}
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_node, "DTCBLOCK");
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "DTCBLOCK");
 		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
 	}
 	for (unsigned int b=0; b<DTCblock_elements.size(); b++)
@@ -468,7 +468,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 			attribCond.name = "id";
 			attribCond.value = id;
 			attribCond.condition = attributeCondition::equal;
-			tmp_elements = getAllMatchingChildElements(_datacommon_root_node, "DTC", std::vector<attributeCondition>(1, attribCond));
+			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "DTC", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
 				continue;
 			DTCdata_element = tmp_elements.at(0);
@@ -518,21 +518,21 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 	std::vector<XMLElement*> MB_elements2;
 	const char *str = NULL;
 	mbs->clear();
-	if (_defs_root_node)
-		MB_elements = getAllMatchingChildElements(_defs_root_node, "MB");
-	if (_defs_for_id_b1_node)
+	if (_defs_root_element)
+		MB_elements = getAllMatchingChildElements(_defs_root_element, "MB");
+	if (_defs_for_id_b1_element)
 	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "MB");
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "MB");
 		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
 	}
-	if (_defs_for_id_b2_node)
+	if (_defs_for_id_b2_element)
 	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "MB");
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "MB");
 		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
 	}
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b3_node, "MB");
+		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "MB");
 		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
 	}
 	for (unsigned int k=0; k<MB_elements.size(); k++)
@@ -576,7 +576,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 		attribCond.name = "id";
 		attribCond.value = id;
 		attribCond.condition = attributeCondition::equal;
-		tmp_elements = getAllMatchingChildElements(_datacommon_root_node, "MB", std::vector<attributeCondition>(1, attribCond));
+		tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "MB", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
 			continue;
 		MBdata_element = tmp_elements.at(0);
@@ -651,21 +651,21 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 	std::vector<XMLElement*> SWblock_elements2;
 	const char *str = NULL;
 	sws->clear();
-	if (_defs_root_node)
-		SWblock_elements = getAllMatchingChildElements(_defs_root_node, "SWBLOCK");
-	if (_defs_for_id_b1_node)
+	if (_defs_root_element)
+		SWblock_elements = getAllMatchingChildElements(_defs_root_element, "SWBLOCK");
+	if (_defs_for_id_b1_element)
 	{
-		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_node, "SWBLOCK");
+		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "SWBLOCK");
 		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
 	}
-	if (_defs_for_id_b2_node)
+	if (_defs_for_id_b2_element)
 	{
-		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_node, "SWBLOCK");
+		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "SWBLOCK");
 		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
 	}
-	if (_defs_for_id_b3_node)
+	if (_defs_for_id_b3_element)
 	{
-		SWblock_elements = getAllMatchingChildElements(_defs_for_id_b3_node, "SWBLOCK");
+		SWblock_elements = getAllMatchingChildElements(_defs_for_id_b3_element, "SWBLOCK");
 		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
 	}
 	for (unsigned int b=0; b<SWblock_elements.size(); b++)
@@ -725,7 +725,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			attribCond.name = "id";
 			attribCond.value = id;
 			attribCond.condition = attributeCondition::equal;
-			tmp_elements = getAllMatchingChildElements(_datacommon_root_node, "SW", std::vector<attributeCondition>(1, attribCond));
+			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "SW", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
 				continue;
 			SWdata_element = tmp_elements.at(0);

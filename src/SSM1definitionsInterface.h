@@ -1,7 +1,7 @@
 /*
  * SSM1definitionsInterface.h - Interface to the SSM1-definitions
  *
- * Copyright (C) 2009-2010 Comer352l
+ * Copyright (C) 2009-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,11 +78,11 @@ private:
 	std::vector<char> _ID;
 	bool _id_set;
 	// Shortcuts to important nodes:
-	XMLNode *_defs_root_node;
-	XMLNode *_datacommon_root_node;
-	XMLNode *_defs_for_id_b1_node;
-	XMLNode *_defs_for_id_b2_node;
-	XMLNode *_defs_for_id_b3_node;
+	XMLElement *_defs_root_element;
+	XMLElement *_datacommon_root_element;
+	XMLElement *_defs_for_id_b1_element;
+	XMLElement *_defs_for_id_b2_element;
+	XMLElement *_defs_for_id_b3_element;
 
 	std::vector<XMLElement*> getAllMatchingChildElements(XMLNode *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
 	bool StrToDouble(std::string mystring, double *d);
