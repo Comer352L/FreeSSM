@@ -775,7 +775,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 
 // PRIVATE:
 
-std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(XMLNode *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
+std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
 {
 	std::vector<XMLElement*> retElements;
 	XMLElement *pElement = NULL;
