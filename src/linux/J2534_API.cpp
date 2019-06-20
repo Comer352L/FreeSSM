@@ -170,6 +170,7 @@ std::vector<J2534Library> J2534_API::getAvailableJ2534Libs()
 	return PTlibraries;
 }
 
+
 std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDefXmlFile)
 {
 	std::vector<J2534Library> PTlibraries;
@@ -178,63 +179,60 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 #ifdef __J2534_API_DEBUG__
 	std::cout << "Trying to load J2534 library definitions XML file: \"" << libsDefXmlFile << "\"\n";
 #endif
-	if (xmldoc.LoadFile(libsDefXmlFile.c_str()) == tinyxml2::XML_SUCCESS) {
+	if (xmldoc.LoadFile(libsDefXmlFile.c_str()) == tinyxml2::XML_SUCCESS)
+	{
 #ifdef __J2534_API_DEBUG__
 		std::cout << "Parsing J2534 library definitions XML data...\n";
 #endif
-		tinyxml2::XMLNode* rootnode = xmldoc.FirstChildElement("J2534LIBS");
-		if (!rootnode)
+		tinyxml2::XMLElement* rootelement = xmldoc.FirstChildElement("J2534LIBS");
+		if (!rootelement)
 			goto error;
 
-		tinyxml2::XMLNode* libnode = rootnode->FirstChildElement("J2534LIB");
-
-		while (libnode) {
-			tinyxml2::XMLElement* elem = libnode->ToElement();
-			if (!elem)	// e.g. if node is a comment
-			{
-				libnode = libnode->NextSibling();
-				continue;
-			}
-
-			const tinyxml2::XMLAttribute* attrib = elem->FirstAttribute();
-
+		tinyxml2::XMLElement* libelement = rootelement->FirstChildElement("J2534LIB");
+		while (libelement)
+		{
 			J2534Library lib;
 			std::string api_str;
+
+			const tinyxml2::XMLAttribute* attrib = libelement->FirstAttribute();
 			while (attrib)
 			{
 				if (std::string(attrib->Name()) == "name")
 				{
 					if (lib.name.empty())
 						lib.name = attrib->Value();
-					else
+					else // attribute specified multiple times
 						goto error;
 				}
 				else if (std::string(attrib->Name()) == "path")
 				{
 					if (lib.path.empty())
 						lib.path = attrib->Value();
-					else
+					else // attribute specified multiple times
 						goto error;
 				}
 				else if (std::string(attrib->Name()) == "api")
 				{
 					if (api_str.empty())
 						api_str = attrib->Value();
-					else
+					else // attribute specified multiple times
 						goto error;
 				}
 				attrib=attrib->Next();
-			}	// while (attrib)
+			}
 
-			if (lib.name.empty()) {
+			if (lib.name.empty())
+			{
 				std::cout << "J2534LIB: attribute 'name' missing!\n";
 				goto error;
 			}
-			if (lib.path.empty()) {
+			if (lib.path.empty())
+			{
 				std::cout << "J2534LIB: attribute 'path' missing!\n";
 				goto error;
 			}
-			if (api_str.empty()) {
+			if (api_str.empty())
+			{
 				std::cout << "J2534LIB: attribute 'api' missing!\n";
 				goto error;
 			}
@@ -244,22 +242,24 @@ std::vector<J2534Library> J2534_API::parseJ2534LibsXml(const std::string& libsDe
 				lib.api = J2534_API_version::v0404;
 			}
 
-			tinyxml2::XMLNode* protocolsnode = libnode->FirstChildElement("PROTOCOLS");
-			if (!protocolsnode) {
+			tinyxml2::XMLElement* protocolselement = libelement->FirstChildElement("PROTOCOLS");
+			if (!protocolselement)
+			{
 				std::cout << "J2534LIB: element 'PROTOCOLS' missing!\n";
 				goto error;
 			}
 
-			tinyxml2::XMLElement* protocolelement = protocolsnode->FirstChildElement("PROTOCOL");
-			while (protocolelement) {
+			tinyxml2::XMLElement* protocolelement = protocolselement->FirstChildElement("PROTOCOL");
+			while (protocolelement)
+			{
 				std::string protocolstr(protocolelement->GetText());
 				lib.protocols = lib.protocols | J2534misc::parseProtocol(protocolstr);
 				protocolelement = protocolelement->NextSiblingElement();
 			}
 
 			PTlibraries.push_back(lib);
-			libnode = libnode->NextSibling();
-		}	// while (libnode)
+			libelement = libelement->NextSiblingElement("J2534LIB");
+		}
 	}
 	else
 		std::cout << "J2534 library definitions XML file not found: \"" << libsDefXmlFile << "\"\n";
