@@ -38,6 +38,7 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	std::vector<XMLElement*> elements;
 	const XMLAttribute* pAttrib = NULL;
 	XMLElement *root_element;
+	bool restored = false;
 	if (!filename.size())
 		goto error;
 	if (_xmldoc == NULL)
@@ -48,6 +49,7 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 		// Try to reopen last document:
 		if (!_filename.size() || (_xmldoc->LoadFile(_filename.c_str()) != XML_SUCCESS))
 			goto error;
+		restored = true;
 	}
 	else
 		_filename = filename;
@@ -94,7 +96,8 @@ bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
 	// Find and save definition element for the current ID:
 	if (_id_set)
 		selectID(_ID);
-	return true;
+
+	return !restored;
 
 error:
 	delete _xmldoc;
