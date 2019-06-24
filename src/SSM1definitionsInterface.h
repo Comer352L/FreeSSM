@@ -71,7 +71,7 @@ public:
 	bool clearMemoryData(unsigned int *address, char *value);
 
 private:
-	XMLDocument *_xmldoc;
+	tinyxml2::XMLDocument *_xmldoc; // NOTE: avoid namespace collision with XMLDocument from msxml.h (included by windows.h)
 	std::string _filename;
 	std::string _defs_version;
 	std::string _defs_format_version;
