@@ -603,8 +603,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 						}
 #endif
 						readbuffer.insert(readbuffer.end(), rx_msgs[i].Data, rx_msgs[i].Data + rx_msgs[i].DataSize);
-						/* NOTE: at least for SSM2 we can't assume that a message from the control unit is
-						 * delivered in a single PASSTHRU_MSG. The used timings exceed the limits defined in
+						/* NOTE: at least for SSM2 via ISO-14230 we can't assume that a message from the control unit
+						 * is delivered in a single PASSTHRU_MSG. The used timings exceed the limits defined in
 						 * ISO-14230, so interfaces can't always detect message ends/starts via timeouts properly.
 						 */
 					}
