@@ -27,7 +27,7 @@
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
-#include "SSM1definitionsInterface.h"
+#include "SSMLegacyDefinitionsInterface.h"
 #include "SSMFlagbyteDefinitionsInterface.h"
 
 

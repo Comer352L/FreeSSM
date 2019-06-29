@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.cpp - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009-2018 Comer352L
+ * Copyright (C) 2009-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,53 +92,54 @@ void SSMprotocol1::resetCUdata()
 
 SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 {
-	std::string SSM1defsFile;
+	std::string LegacyDefsFile;
 	SSM1_CUtype_dt SSM1_CU;
 	// Reset:
 	resetCUdata();
-	// Create SSMP1communication-object:
+	// Set control unit type and legacy definitions file:
 	if (CU == CUtype_Engine)
 	{
 		SSM1_CU = SSM1_CU_Engine;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Engine.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Engine.xml";
 	}
 	else if (CU == CUtype_Transmission)
 	{
 		SSM1_CU = SSM1_CU_Transmission;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Transmission.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Transmission.xml";
 	}
 	else if (CU == CUtype_CruiseControl)
 	{
 		SSM1_CU = SSM1_CU_CruiseCtrl;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_CruiseControl.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_CruiseControl.xml";
 	}
 	else if (CU == CUtype_AirCon)
 	{
 		SSM1_CU = SSM1_CU_AirCon;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirConditioning.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirConditioning.xml";
 	}
 	else if (CU == CUtype_FourWheelSteering)
 	{
 		SSM1_CU = SSM1_CU_FourWS;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_FourWheelSteering.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_FourWheelSteering.xml";
 	}
 	else if (CU == CUtype_ABS)
 	{
 		SSM1_CU = SSM1_CU_ABS;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_ABS.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_ABS.xml";
 	}
 	else if (CU == CUtype_AirSuspension)
 	{
 		SSM1_CU = SSM1_CU_AirSusp;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirSuspension.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirSuspension.xml";
 	}
 	else if (CU == CUtype_PowerSteering)
 	{
 		SSM1_CU = SSM1_CU_PwrSteer;
-		SSM1defsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_PowerSteering.xml";
+		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_PowerSteering.xml";
 	}
 	else
 		return result_invalidCUtype;
+	// Create SSMP1communication-object:
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
 	bool ok = _SSMP1com->getCUdata(0, _ssmCUdata);
@@ -208,20 +209,20 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	else
 	{
 		/* Get definitions for this control unit */
-		SSM1definitionsInterface *SSM1defsIface = new SSM1definitionsInterface(_language.toStdString());
-		if (!SSM1defsIface->selectDefinitionsFile(SSM1defsFile))
+		SSMLegacyDefinitionsInterface *LegacyDefsIface = new SSMLegacyDefinitionsInterface(_language.toStdString());
+		if (!LegacyDefsIface->selectDefinitionsFile(LegacyDefsFile))
 			return result_noOrInvalidDefsFile;
-		SSM1defsIface->setLanguage(_language.toStdString());
-		if (!SSM1defsIface->selectID(_ssmCUdata.SYS_ID)) // TODO: Ax 01 xx IDs
+		LegacyDefsIface->setLanguage(_language.toStdString());
+		if (!LegacyDefsIface->selectID(_ssmCUdata.SYS_ID))
 			return result_noDefs;
 		std::string sysdescription;
-		SSM1defsIface->systemDescription(&sysdescription);
+		LegacyDefsIface->systemDescription(&sysdescription);
 		_sysDescription = QString::fromStdString(sysdescription);
-		SSM1defsIface->diagnosticCodes(&_DTCdefs);
-		SSM1defsIface->measuringBlocks(&_supportedMBs);
-		SSM1defsIface->switches(&_supportedSWs);
-		SSM1defsIface->clearMemoryData(&_CMaddr, &_CMvalue);
-		delete SSM1defsIface;
+		LegacyDefsIface->diagnosticCodes(&_DTCdefs);
+		LegacyDefsIface->measuringBlocks(&_supportedMBs);
+		LegacyDefsIface->switches(&_supportedSWs);
+		LegacyDefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
+		delete LegacyDefsIface;
 	}
 	return result_success;
 }

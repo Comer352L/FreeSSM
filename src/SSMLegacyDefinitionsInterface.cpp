@@ -1,5 +1,5 @@
 /*
- * SSM1definitionsInterface.cpp - Interface to the SSM1-definitions
+ * SSMLegacyDefinitionsInterface.cpp - Interface to the SSM legacy definitions
  *
  * Copyright (C) 2009-2019 Comer352L
  *
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <SSM1definitionsInterface.h>
+#include <SSMLegacyDefinitionsInterface.h>
 
 
-SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
+SSMLegacyDefinitionsInterface::SSMLegacyDefinitionsInterface(std::string lang)
 {
 	_xmldoc = NULL;
 	_defs_root_element = NULL;
@@ -33,7 +33,7 @@ SSM1definitionsInterface::SSM1definitionsInterface(std::string lang)
 }
 
 
-SSM1definitionsInterface::~SSM1definitionsInterface()
+SSMLegacyDefinitionsInterface::~SSMLegacyDefinitionsInterface()
 {
 	if (_xmldoc != NULL)
 	{
@@ -43,7 +43,7 @@ SSM1definitionsInterface::~SSM1definitionsInterface()
 }
 
 
-bool SSM1definitionsInterface::selectDefinitionsFile(std::string filename)
+bool SSMLegacyDefinitionsInterface::selectDefinitionsFile(std::string filename)
 {
 	std::vector<XMLElement*> elements;
 	const XMLAttribute* pAttrib = NULL;
@@ -128,20 +128,20 @@ error:
 }
 
 
-void SSM1definitionsInterface::getVersionInfos(std::string *defs_version, std::string *format_version)
+void SSMLegacyDefinitionsInterface::getVersionInfos(std::string *defs_version, std::string *format_version)
 {
 	*defs_version = _defs_version;
 	*format_version = _defs_format_version;
 }
 
 
-void SSM1definitionsInterface::setLanguage(std::string lang)
+void SSMLegacyDefinitionsInterface::setLanguage(std::string lang)
 {
 	_lang = lang;
 }
 
 
-bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
+bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 {
 	std::vector<XMLElement*> elements;
 	std::vector<attributeCondition> attribConditions;
@@ -186,7 +186,7 @@ bool SSM1definitionsInterface::selectID(const std::vector<char>& id)
 }
 
 
-bool SSM1definitionsInterface::systemDescription(std::string *description)
+bool SSMLegacyDefinitionsInterface::systemDescription(std::string *description)
 {
 	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_element)
@@ -219,7 +219,7 @@ bool SSM1definitionsInterface::systemDescription(std::string *description)
 }
 
 
-bool SSM1definitionsInterface::model(std::string *name)
+bool SSMLegacyDefinitionsInterface::model(std::string *name)
 {
 	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_element)
@@ -252,7 +252,7 @@ bool SSM1definitionsInterface::model(std::string *name)
 }
 
 
-bool SSM1definitionsInterface::year(std::string *yearstr)
+bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 {
 	std::vector<XMLElement*> elements;
 	if (_defs_for_id_b3_element)
@@ -285,7 +285,7 @@ bool SSM1definitionsInterface::year(std::string *yearstr)
 }
 
 
-bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *value)
+bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char *value)
 {
 	std::vector<XMLElement*> elements;
 	XMLElement *CM_element;
@@ -338,7 +338,7 @@ bool SSM1definitionsInterface::clearMemoryData(unsigned int *address, char *valu
 }
 
 
-bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
+bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 {
 	std::vector<XMLElement*> DTCblock_elements;
 	std::vector<XMLElement*> DTCblock_elements2;
@@ -529,7 +529,7 @@ bool SSM1definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 }
 
 
-bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
+bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	std::vector<XMLElement*> MB_elements;
 	std::vector<XMLElement*> MB_elements2;
@@ -662,7 +662,7 @@ bool SSM1definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 }
 
 
-bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
+bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
 	std::vector<XMLElement*> SWblock_elements;
 	std::vector<XMLElement*> SWblock_elements2;
@@ -792,7 +792,7 @@ bool SSM1definitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 
 // PRIVATE:
 
-std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
+std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
 {
 	std::vector<XMLElement*> retElements;
 	XMLElement *pElement = NULL;
@@ -877,7 +877,7 @@ std::vector<XMLElement*> SSM1definitionsInterface::getAllMatchingChildElements(X
 }
 
 
-bool SSM1definitionsInterface::StrToDouble(std::string str, double *d)
+bool SSMLegacyDefinitionsInterface::StrToDouble(std::string str, double *d)
 {
 	double dbl = 0;
 	int i = 0;
@@ -903,7 +903,7 @@ bool SSM1definitionsInterface::StrToDouble(std::string str, double *d)
 }
 
 
-bool SSM1definitionsInterface::checkDefsFormatVersion(std::string version_str)
+bool SSMLegacyDefinitionsInterface::checkDefsFormatVersion(std::string version_str)
 {
 	unsigned long int version_major = 0, version_major_min = 0, version_major_current = 0;
 	unsigned long int version_minor = 0, version_minor_min = 0, version_minor_current = 0;
@@ -945,7 +945,7 @@ bool SSM1definitionsInterface::checkDefsFormatVersion(std::string version_str)
 }
 
 
-bool SSM1definitionsInterface::versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix)
+bool SSMLegacyDefinitionsInterface::versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix)
 {
 	size_t dot_pos[2];
 	unsigned char num_dots = 0;

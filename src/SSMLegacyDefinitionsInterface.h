@@ -1,5 +1,5 @@
 /*
- * SSM1definitionsInterface.h - Interface to the SSM1-definitions
+ * SSMLegacyDefinitionsInterface.h - Interface to the SSM legacy definitions
  *
  * Copyright (C) 2009-2019 Comer352L
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSM1DEFINITIONSINTERFACE_H
-#define SSM1DEFINITIONSINTERFACE_H
+#ifndef SSMLEGACYDEFINITIONSINTERFACE_H
+#define SSMLEGACYDEFINITIONSINTERFACE_H
 
 
 #include <string>
@@ -51,11 +51,11 @@ public:
 
 
 
-class SSM1definitionsInterface
+class SSMLegacyDefinitionsInterface
 {
 public:
-	SSM1definitionsInterface(std::string lang = "en");
-	~SSM1definitionsInterface();
+	SSMLegacyDefinitionsInterface(std::string lang = "en");
+	~SSMLegacyDefinitionsInterface();
 	bool selectDefinitionsFile(std::string filename);
 	void getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);
