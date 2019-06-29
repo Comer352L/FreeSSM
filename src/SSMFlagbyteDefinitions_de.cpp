@@ -1,7 +1,7 @@
 /*
- * SSMprotocol2_def_de.cpp - SSM2-protocol-definitions
+ * SSMFlagbyteDefinitions_de.cpp - SSM flagbyte definitions (de)
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSMprotocol2_def_de.h"
+#include "SSMFlagbyteDefinitions_de.h"
 
 
-SSMprotocol2_def_de::SSMprotocol2_def_de()
+SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 {
 
 	// Messwertbloecke:
@@ -1140,43 +1140,43 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 }
 
 
-const QStringList SSMprotocol2_def_de::MBrawDefs()
+const QStringList SSMFlagbyteDefinitions_de::MBrawDefs()
 {
 	return _MB_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::SWrawDefs()
+const QStringList SSMFlagbyteDefinitions_de::SWrawDefs()
 {
 	return _SW_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::SUBDTCrawDefs()
+const QStringList SSMFlagbyteDefinitions_de::SUBDTCrawDefs()
 {
 	return _DTC_SUBARU_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::OBDDTCrawDefs()
+const QStringList SSMFlagbyteDefinitions_de::OBDDTCrawDefs()
 {
 	return _DTC_OBD_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::CCCCrawDefs()
+const QStringList SSMFlagbyteDefinitions_de::CCCCrawDefs()
 {
 	return _CC_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::ActuatorRawDefs()
+const QStringList SSMFlagbyteDefinitions_de::ActuatorRawDefs()
 {
 	return _actuator_defs_de;
 }
 
 
-const QStringList SSMprotocol2_def_de::AdjustmentRawDefs()
+const QStringList SSMFlagbyteDefinitions_de::AdjustmentRawDefs()
 {
 	return _adjustment_defs_de;
 }

@@ -1,7 +1,7 @@
 /*
- * SSM2definitionsInterface.cpp - Interface to the SSM2-definitions
+ * SSMFlagbyteDefinitionsInterface.cpp - Interface to the SSM flagbyte definitions
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSM2definitionsInterface.h"
+#include "SSMFlagbyteDefinitionsInterface.h"
 
 
 
-SSM2definitionsInterface::SSM2definitionsInterface(QString language)
+SSMFlagbyteDefinitionsInterface::SSMFlagbyteDefinitionsInterface(QString language)
 {
 	_language = language;
 	_id_set = false;
@@ -29,18 +29,18 @@ SSM2definitionsInterface::SSM2definitionsInterface(QString language)
 }
 
 
-SSM2definitionsInterface::~SSM2definitionsInterface()
+SSMFlagbyteDefinitionsInterface::~SSMFlagbyteDefinitionsInterface()
 {
 }
 
 
-void SSM2definitionsInterface::setLanguage(QString lang)
+void SSMFlagbyteDefinitionsInterface::setLanguage(QString lang)
 {
 	_language = lang;
 }
 
 
-void SSM2definitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata)
+void SSMFlagbyteDefinitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata)
 {
 	_CU = cu;
 	_ssmCUdata = ssmCUdata;
@@ -48,24 +48,24 @@ void SSM2definitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, co
 }
 
 
-bool SSM2definitionsInterface::systemDescription(QString *description)
+bool SSMFlagbyteDefinitionsInterface::systemDescription(QString *description)
 {
 	if (!_id_set)
 		return false;
 	if (_CU == SSMprotocol::CUtype_Engine)
 	{
-		return getSysDescriptionBySysID( SSMprotocol2_ID::ECU_sysID, _ssmCUdata.SYS_ID, description );
+		return getSysDescriptionBySysID( SSMFlagbyteDefinitions_SysDescriptions::ECU_sysID, _ssmCUdata.SYS_ID, description );
 	}
 	else if (_CU == SSMprotocol::CUtype_Transmission)
 	{
-		return getSysDescriptionBySysID( SSMprotocol2_ID::TCU_sysID, _ssmCUdata.SYS_ID, description );
+		return getSysDescriptionBySysID( SSMFlagbyteDefinitions_SysDescriptions::TCU_sysID, _ssmCUdata.SYS_ID, description );
 	}
 	else
 		return false;
 }
 
 
-bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2)
+bool SSMFlagbyteDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2)
 {
 	unsigned int addr = 0;
 	QStringList rawDefs;
@@ -77,7 +77,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 	*fmt_OBD2 = !_ssmCUdata.flagbytebit(29, 7);
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		if (*fmt_OBD2)
 			rawDefs = rawdefs_de.OBDDTCrawDefs();
 		else
@@ -85,7 +85,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		if (*fmt_OBD2)
 			rawDefs = rawdefs_en.OBDDTCrawDefs();
 		else
@@ -151,7 +151,7 @@ bool SSM2definitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnost
 }
 
 
-bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported)
+bool SSMFlagbyteDefinitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported)
 {
 	unsigned int addr = 0;
 	bool CCsup = false;
@@ -165,12 +165,12 @@ bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> 
 	QStringList CCrawDefs;
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		CCrawDefs = rawdefs_de.CCCCrawDefs();
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		CCrawDefs = rawdefs_en.CCCCrawDefs();
 	}
 	// Setup data of the supported CCCCs:
@@ -181,7 +181,7 @@ bool SSM2definitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> 
 }
 
 
-bool SSM2definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measuringblocks)
+bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measuringblocks)
 {
 	QString mbdefline;
 	QString tmpstr;
@@ -199,12 +199,12 @@ bool SSM2definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measurin
 	QStringList mbrawdata;
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		mbrawdata = rawdefs_de.MBrawDefs();
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		mbrawdata = rawdefs_en.MBrawDefs();
 	}
 	// Assort list of supported MBs:
@@ -271,7 +271,7 @@ bool SSM2definitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *measurin
 }
 
 
-bool SSM2definitionsInterface::switches(std::vector<sw_intl_dt> *switches)
+bool SSMFlagbyteDefinitionsInterface::switches(std::vector<sw_intl_dt> *switches)
 {
 	QString swdefline;
 	QString tmpstr;
@@ -288,12 +288,12 @@ bool SSM2definitionsInterface::switches(std::vector<sw_intl_dt> *switches)
 	QStringList swrawdata;
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		swrawdata = rawdefs_de.SWrawDefs();
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		swrawdata = rawdefs_en.SWrawDefs();
 	}
 	// Assort list of supported switches:
@@ -343,7 +343,7 @@ bool SSM2definitionsInterface::switches(std::vector<sw_intl_dt> *switches)
 }
 
 
-bool SSM2definitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adjustments)
+bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adjustments)
 {
 	QString defline = "";
 	QString tmphelpstr = "";
@@ -362,12 +362,12 @@ bool SSM2definitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adju
 	adjustments->clear();
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		adjustmentsrawdata = rawdefs_de.AdjustmentRawDefs();
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		adjustmentsrawdata = rawdefs_en.AdjustmentRawDefs();
 	}
 	for (k=0; k<adjustmentsrawdata.size(); k++)
@@ -440,7 +440,7 @@ bool SSM2definitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adju
 }
 
 
-bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators)
+bool SSMFlagbyteDefinitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators)
 {
 	bool ATsup = false;
 	QString tmpstr = "";
@@ -459,12 +459,12 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 		return true;
 	if (_language == "de")
 	{
-		SSMprotocol2_def_de rawdefs_de;
+		SSMFlagbyteDefinitions_de rawdefs_de;
 		actuatorsrawdata = rawdefs_de.ActuatorRawDefs();
 	}
 	else
 	{
-		SSMprotocol2_def_en rawdefs_en;
+		SSMFlagbyteDefinitions_en rawdefs_en;
 		actuatorsrawdata = rawdefs_en.ActuatorRawDefs();
 	}
 	for (k=0; k<actuatorsrawdata.size(); k++)
@@ -499,7 +499,7 @@ bool SSM2definitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators
 }
 
 
-bool SSM2definitionsInterface::hasOBD2system(bool *OBD2)
+bool SSMFlagbyteDefinitionsInterface::hasOBD2system(bool *OBD2)
 {
 	if (!_id_set)
 		return false;
@@ -510,7 +510,7 @@ bool SSM2definitionsInterface::hasOBD2system(bool *OBD2)
 }
 
 
-bool SSM2definitionsInterface::hasVINsupport(bool *VINsup)
+bool SSMFlagbyteDefinitionsInterface::hasVINsupport(bool *VINsup)
 {
 	if (!_id_set)
 		return false;
@@ -521,7 +521,7 @@ bool SSM2definitionsInterface::hasVINsupport(bool *VINsup)
 }
 
 
-bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
+bool SSMFlagbyteDefinitionsInterface::hasImmobilizer(bool *ImmoSup)
 {
 	if (!_id_set)
 		return false;
@@ -533,7 +533,7 @@ bool SSM2definitionsInterface::hasImmobilizer(bool *ImmoSup)
 }
 
 
-bool SSM2definitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
+bool SSMFlagbyteDefinitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
 {
 	bool ImmoSup = false;
 	bool TMsup = false;
@@ -544,7 +544,7 @@ bool SSM2definitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
 }
 
 
-bool SSM2definitionsInterface::hasIntegratedCC(bool *CCsup)
+bool SSMFlagbyteDefinitionsInterface::hasIntegratedCC(bool *CCsup)
 {
 	if (!_id_set)
 		return false;
@@ -555,7 +555,7 @@ bool SSM2definitionsInterface::hasIntegratedCC(bool *CCsup)
 }
 
 
-bool SSM2definitionsInterface::hasClearMemory(bool *CMsup)
+bool SSMFlagbyteDefinitionsInterface::hasClearMemory(bool *CMsup)
 {
 	if (!_id_set)
 		return false;
@@ -566,7 +566,7 @@ bool SSM2definitionsInterface::hasClearMemory(bool *CMsup)
 }
 
 
-bool SSM2definitionsInterface::hasClearMemory2(bool *CM2sup)
+bool SSMFlagbyteDefinitionsInterface::hasClearMemory2(bool *CM2sup)
 {
 	if (!_id_set)
 		return false;
@@ -577,7 +577,7 @@ bool SSM2definitionsInterface::hasClearMemory2(bool *CM2sup)
 }
 
 
-bool SSM2definitionsInterface::hasTestMode(bool *TMsup)
+bool SSMFlagbyteDefinitionsInterface::hasTestMode(bool *TMsup)
 {
 	if (!_id_set)
 		return false;
@@ -588,7 +588,7 @@ bool SSM2definitionsInterface::hasTestMode(bool *TMsup)
 }
 
 
-bool SSM2definitionsInterface::hasActuatorTests(bool *ATsup)
+bool SSMFlagbyteDefinitionsInterface::hasActuatorTests(bool *ATsup)
 {
 	bool TMsup = false;
 	bool EngSpeedMBsup = false;
@@ -602,7 +602,7 @@ bool SSM2definitionsInterface::hasActuatorTests(bool *ATsup)
 }
 
 
-bool SSM2definitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
+bool SSMFlagbyteDefinitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
 {
 	if (!_id_set)
 		return false;
@@ -613,7 +613,7 @@ bool SSM2definitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
 }
 
 
-bool SSM2definitionsInterface::hasSWignition(bool *IgnSWsup)
+bool SSMFlagbyteDefinitionsInterface::hasSWignition(bool *IgnSWsup)
 {
 	if (!_id_set)
 		return false;
@@ -626,7 +626,7 @@ bool SSM2definitionsInterface::hasSWignition(bool *IgnSWsup)
 
 // PRIVATE:
 
-void SSM2definitionsInterface::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs)
+void SSMFlagbyteDefinitionsInterface::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs)
 {
 	dc_defs_dt tmpdef;
 	QStringList tmpdefparts;

@@ -1,7 +1,7 @@
 /*
- * SSMprotocol2_def_en.h - SSM2-protocol-definitions
+ * SSMFlagbyteDefinitions_de.h - SSM flagbyte definitions (de)
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +18,27 @@
  */
 
 
-#ifndef SSMPROTOCOL2_DEF_EN_H
-#define SSMPROTOCOL2_DEF_EN_H
+#ifndef SSMFLAGBYTEDEFINITIONS_DE_H
+#define SSMFLAGBYTEDEFINITIONS_DE_H
 
 
 #include <QStringList>
 
 
-class SSMprotocol2_def_en
+class SSMFlagbyteDefinitions_de
 {
 
 private:
-	QStringList _MB_defs_en;
-	QStringList _SW_defs_en;
-	QStringList _DTC_SUBARU_defs_en;
-	QStringList _DTC_OBD_defs_en;
-	QStringList _CC_defs_en;
-	QStringList _actuator_defs_en;
-	QStringList _adjustment_defs_en;
+	QStringList _MB_defs_de;
+	QStringList _SW_defs_de;
+	QStringList _DTC_SUBARU_defs_de;
+	QStringList _DTC_OBD_defs_de;
+	QStringList _CC_defs_de;
+	QStringList _actuator_defs_de;
+	QStringList _adjustment_defs_de;
 
 public:
-	SSMprotocol2_def_en();
+	SSMFlagbyteDefinitions_de();
 	const QStringList MBrawDefs();
 	const QStringList SWrawDefs();
 	const QStringList SUBDTCrawDefs();

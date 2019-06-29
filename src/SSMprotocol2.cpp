@@ -105,7 +105,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
-	SSM2definitionsInterface *SSM2defsIface;
+	SSMFlagbyteDefinitionsInterface *SSM2defsIface;
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
@@ -175,7 +175,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
-	SSM2defsIface = new SSM2definitionsInterface(_language);
+	SSM2defsIface = new SSMFlagbyteDefinitionsInterface(_language);
 	SSM2defsIface->selectControlUnitID(_CU, _ssmCUdata);
 	SSM2defsIface->systemDescription(&_sysDescription);
 	SSM2defsIface->hasOBD2system(&_has_OBD2);

@@ -30,7 +30,7 @@
 #endif
 #include "ui_About.h"
 #include "Languages.h"
-#include "SSMprotocol2_def_en.h"
+#include "SSMFlagbyteDefinitions_en.h"
 
 
 

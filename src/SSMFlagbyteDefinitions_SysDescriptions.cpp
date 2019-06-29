@@ -1,7 +1,7 @@
 /*
- * SSMprotocol2_ID.cpp - Identification of vehicle and control unit details
+ * SSMFlagbyteDefinitions_SysDescriptions.cpp - System descriptions for Control Units using the SSM-protocol with flagbytes
  *
- * Copyright (C) 2008-2009 Comer352l
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SSMprotocol2_ID.h"
+#include "SSMFlagbyteDefinitions_SysDescriptions.h"
 
 
-SSMprotocol2_ID::SSMprotocol2_ID()
+SSMFlagbyteDefinitions_SysDescriptions::SSMFlagbyteDefinitions_SysDescriptions()
 {
 	_engine_sysDefs
 	<< "01;2.5L SOHC"
@@ -70,7 +70,7 @@ SSMprotocol2_ID::SSMprotocol2_ID()
 }
 
 
-bool SSMprotocol2_ID::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription)
+bool SSMFlagbyteDefinitions_SysDescriptions::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription)
 {
 	if (sysID.size() != 3)
 		return false;

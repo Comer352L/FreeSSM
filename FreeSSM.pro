@@ -53,11 +53,11 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_sysTests.h \
            src/DiagInterfaceStatusBar.h \
            src/SSM1definitionsInterface.h \
-           src/SSM2definitionsInterface.h \
+           src/SSMFlagbyteDefinitionsInterface.h \
+           src/SSMFlagbyteDefinitions_SysDescriptions.h \
+           src/SSMFlagbyteDefinitions_en.h \
+           src/SSMFlagbyteDefinitions_de.h \
            src/SSMCUdata.h \
-           src/SSMprotocol2_ID.h \
-           src/SSMprotocol2_def_en.h \
-           src/SSMprotocol2_def_de.h \
            src/ClearMemoryDlg.h \
            src/libFSSM.h \
            src/tinyxml2/tinyxml2.h \
@@ -102,11 +102,11 @@ SOURCES += src/main.cpp \
            src/CUcontent_sysTests.cpp \
            src/DiagInterfaceStatusBar.cpp \
            src/SSM1definitionsInterface.cpp \
-           src/SSM2definitionsInterface.cpp \
+           src/SSMFlagbyteDefinitionsInterface.cpp \
+           src/SSMFlagbyteDefinitions_SysDescriptions.cpp \
+           src/SSMFlagbyteDefinitions_en.cpp \
+           src/SSMFlagbyteDefinitions_de.cpp \
            src/SSMCUdata.cpp \
-           src/SSMprotocol2_ID.cpp \
-           src/SSMprotocol2_def_en.cpp \
-           src/SSMprotocol2_def_de.cpp \
            src/ClearMemoryDlg.cpp \
            src/libFSSM.cpp \
            src/tinyxml2/tinyxml2.cpp \

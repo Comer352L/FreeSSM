@@ -1,7 +1,7 @@
 /*
- * SSM2definitionsInterface.h - Interface to the SSM2-definitions
+ * SSMFlagbyteDefinitionsInterface.h - Interface to the SSM flagbyte definitions
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSM2DEFINITIONSINTERFACE_H
-#define SSM2DEFINITIONSINTERFACE_H
+#ifndef SSMFLAGBYTEDEFINITIONSINTERFACE_H
+#define SSMFLAGBYTEDEFINITIONSINTERFACE_H
 
 
 
 #include <QString>
 #include <QStringList>
 #include "SSMprotocol.h"
-#include "SSMprotocol2_ID.h"
-#include "SSMprotocol2_def_en.h"
-#include "SSMprotocol2_def_de.h"
+#include "SSMFlagbyteDefinitions_SysDescriptions.h"
+#include "SSMFlagbyteDefinitions_en.h"
+#include "SSMFlagbyteDefinitions_de.h"
 
 
 
-class SSM2definitionsInterface: public SSMprotocol2_ID
+class SSMFlagbyteDefinitionsInterface: public SSMFlagbyteDefinitions_SysDescriptions
 {
 
 public:
-	SSM2definitionsInterface(QString language = "en");
-	~SSM2definitionsInterface();
+	SSMFlagbyteDefinitionsInterface(QString language = "en");
+	~SSMFlagbyteDefinitionsInterface();
 
 	void setLanguage(QString lang);
 	void selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata);

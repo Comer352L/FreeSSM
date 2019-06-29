@@ -179,7 +179,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		if (!_ssmCUdata.uses_SSM2defs())
 			return result_noDefs;
 		// Setup definitions interface:
-		SSM2definitionsInterface SSM2defsIface(_language);
+		SSMFlagbyteDefinitionsInterface SSM2defsIface(_language);
 		SSM2defsIface.selectControlUnitID(_CU, _ssmCUdata);
 		// Get system description:
 		SSM2defsIface.systemDescription(&_sysDescription);

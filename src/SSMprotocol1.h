@@ -28,7 +28,7 @@
 #include "SSMprotocol.h"
 #include "SSMP1communication.h"
 #include "SSM1definitionsInterface.h"
-#include "SSM2definitionsInterface.h"
+#include "SSMFlagbyteDefinitionsInterface.h"
 
 
 

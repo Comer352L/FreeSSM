@@ -1,7 +1,7 @@
 /*
- * SSMprotocol2_ID.h - Identification of vehicle and control unit details
+ * SSMFlagbyteDefinitions_en.h - SSM flagbyte definitions (en)
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SSMPROTOCOL2_ID_H
-#define SSMPROTOCOL2_ID_H
+
+#ifndef SSMFLAGBYTEDEFINITIONS_EN_H
+#define SSMFLAGBYTEDEFINITIONS_EN_H
 
 
-#include <QObject>
 #include <QStringList>
-#include <vector>
 
 
-class SSMprotocol2_ID
+class SSMFlagbyteDefinitions_en
 {
 
 private:
-	QStringList _engine_sysDefs;
-	QStringList _transmission_sysDefs;
+	QStringList _MB_defs_en;
+	QStringList _SW_defs_en;
+	QStringList _DTC_SUBARU_defs_en;
+	QStringList _DTC_OBD_defs_en;
+	QStringList _CC_defs_en;
+	QStringList _actuator_defs_en;
+	QStringList _adjustment_defs_en;
 
 public:
-	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
-	SSMprotocol2_ID();
-	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription);
+	SSMFlagbyteDefinitions_en();
+	const QStringList MBrawDefs();
+	const QStringList SWrawDefs();
+	const QStringList SUBDTCrawDefs();
+	const QStringList OBDDTCrawDefs();
+	const QStringList CCCCrawDefs();
+	const QStringList ActuatorRawDefs();
+	const QStringList AdjustmentRawDefs();
 
 };
 

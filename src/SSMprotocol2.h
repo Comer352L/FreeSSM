@@ -26,12 +26,12 @@
 #include "AbstractDiagInterface.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
-#include "SSM2definitionsInterface.h"
+#include "SSMFlagbyteDefinitionsInterface.h"
 #include "libFSSM.h"
 
 
 
-class SSMprotocol2 : public SSMprotocol, private SSMprotocol2_ID
+class SSMprotocol2 : public SSMprotocol
 {
 	Q_OBJECT
 
