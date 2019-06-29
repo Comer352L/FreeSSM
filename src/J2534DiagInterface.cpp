@@ -620,13 +620,17 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 
 bool J2534DiagInterface::write(std::vector<char> buffer)
 {
-	if (_j2534 && _connected)
+	unsigned long txNumMsgs = 1;
+	unsigned long timeout = 1000;	// wait until message has been transmitted
+	long ret = 0;
+
+	if ((_j2534 == NULL) || !_connected)
+		return false;
+	// Setup message:
+	PASSTHRU_MSG tx_msg;
+	memset(&tx_msg, 0, sizeof(tx_msg));
+	switch(protocolType())
 	{
-		long ret = 0;
-		// Setup message:
-		PASSTHRU_MSG tx_msg;
-		memset(&tx_msg, 0, sizeof(tx_msg));
-		switch(protocolType()) {
 		case AbstractDiagInterface::protocol_SSM2_ISO14230:
 			tx_msg.ProtocolID = ISO9141;
 			break;
@@ -636,25 +640,20 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 			break;
 		default:
 			return false;
-		}
-		std::copy(buffer.begin(), buffer.end(), tx_msg.Data);
-		tx_msg.DataSize = buffer.size();
-		unsigned long txNumMsgs = 1;
-		unsigned long timeout = 1000;	// wait until message has been transmitted
-		// Send message:
-		ret = _j2534->PassThruWriteMsgs(_ChannelID, &tx_msg, &txNumMsgs, timeout);
-		if (STATUS_NOERROR == ret)
-			return true;
-		else
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruWriteMsgs() failed: ", ret);
-#endif
-			return false;
-		}
 	}
-	else
+	std::copy(buffer.begin(), buffer.end(), tx_msg.Data);
+	tx_msg.DataSize = buffer.size();
+	// Send message:
+	ret = _j2534->PassThruWriteMsgs(_ChannelID, &tx_msg, &txNumMsgs, timeout);
+	if (ret != STATUS_NOERROR)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruWriteMsgs() failed: ", ret);
+#endif
 		return false;
+	}
+
+	return true;
 }
 
 
