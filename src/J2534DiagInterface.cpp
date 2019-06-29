@@ -492,128 +492,128 @@ bool J2534DiagInterface::disconnect()
 
 bool J2534DiagInterface::read(std::vector<char> *buffer)
 {
-	if (_j2534 && _connected)
+	const unsigned long num_PTMSGS = 8; // Nr. of PASSTHRU_MSGs per PassThruReadMsgs() call
+	std::vector<char> readbuffer;
+	long ret = 0;
+
+	if ((_j2534 == NULL) || !_connected)
+		return false;
+	// Setup message-container:
+	PASSTHRU_MSG *rx_msgs = new(std::nothrow) PASSTHRU_MSG[num_PTMSGS];
+	if (rx_msgs == NULL)
+		return false;
+	memset(rx_msgs, 0, num_PTMSGS * sizeof(PASSTHRU_MSG));
+	for (unsigned long i=0; i<num_PTMSGS; i++)
 	{
-		const unsigned long num_PTMSGS = 8; // Nr. of PASSTHRU_MSGs per PassThruReadMsgs() call
-		std::vector<char> readbuffer;
-		long ret = 0;
-		// Setup message-container:
-		PASSTHRU_MSG *rx_msgs = new(std::nothrow) PASSTHRU_MSG[num_PTMSGS];
-		if (rx_msgs == NULL)
-			return false;
-		memset(rx_msgs, 0, num_PTMSGS * sizeof(PASSTHRU_MSG));
-		for (unsigned long i=0; i<num_PTMSGS; i++)
+		if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
-			if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
-			{
-				rx_msgs[i].ProtocolID = ISO9141;
-			}
-			else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
-			{
-				rx_msgs[i].ProtocolID = ISO15765;
-			}
-			else
-			{
-				delete[] rx_msgs;
-				return false;
-			}
+			rx_msgs[i].ProtocolID = ISO9141;
 		}
-		// Read all available messages:
-		unsigned long rxNumMsgs;
-		const unsigned long timeout = 0;	// return immediately
-		do
+		else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
 		{
-			rxNumMsgs = num_PTMSGS;
-			ret = _j2534->PassThruReadMsgs(_ChannelID, rx_msgs, &rxNumMsgs, timeout);
-			// NOTE: even with timeout=0 ERR_TIMEOUT can be returned (if at least 1 but less messages than requested have been read)
-			if (((STATUS_NOERROR == ret) || (ERR_TIMEOUT == ret)) && rxNumMsgs)
+			rx_msgs[i].ProtocolID = ISO15765;
+		}
+		else
+		{
+			delete[] rx_msgs;
+			return false;
+		}
+	}
+	// Read all available messages:
+	unsigned long rxNumMsgs;
+	const unsigned long timeout = 0;	// return immediately
+	do
+	{
+		rxNumMsgs = num_PTMSGS;
+		ret = _j2534->PassThruReadMsgs(_ChannelID, rx_msgs, &rxNumMsgs, timeout);
+		// NOTE: even with timeout=0 ERR_TIMEOUT can be returned (if at least 1 but less messages than requested have been read)
+		if (((STATUS_NOERROR == ret) || (ERR_TIMEOUT == ret)) && rxNumMsgs)
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "PassThruReadMsgs(): received " << rxNumMsgs << " J2534-messages:" << std::endl;
+#endif
+			// Process recieved messages:
+			for (unsigned long i=0; i<rxNumMsgs; i++)
 			{
 #ifdef __FSSM_DEBUG__
-				std::cout << "PassThruReadMsgs(): received " << rxNumMsgs << " J2534-messages:" << std::endl;
+				std::cout << "  PASSTHRU_MSG #" << i
+						<< ": protocol id 0x" << std::hex << rx_msgs[i].ProtocolID << ", rx status 0x" << rx_msgs[i].RxStatus
+						<< ", extra data index " << std::dec << rx_msgs[i].ExtraDataIndex << ":\n"
+						<< libFSSM::StrToMultiLineHexstr(rx_msgs[i].Data, rx_msgs[i].DataSize, 16, "  ");
 #endif
-				// Process recieved messages:
-				for (unsigned long i=0; i<rxNumMsgs; i++)
+				if (rx_msgs[i].RxStatus & TX_MSG_TYPE)
 				{
 #ifdef __FSSM_DEBUG__
-					std::cout << "  PASSTHRU_MSG #" << i
-						  << ": protocol id 0x" << std::hex << rx_msgs[i].ProtocolID << ", rx status 0x" << rx_msgs[i].RxStatus
-						  << ", extra data index " << std::dec << rx_msgs[i].ExtraDataIndex << ":\n"
-						  << libFSSM::StrToMultiLineHexstr(rx_msgs[i].Data, rx_msgs[i].DataSize, 16, "  ");
-#endif
-					if (rx_msgs[i].RxStatus & TX_MSG_TYPE)
+					if (rx_msgs[i].RxStatus & TX_DONE)	// SAE J2534-1 (dec 2004): ISO-15765 only
 					{
-#ifdef __FSSM_DEBUG__
-						if (rx_msgs[i].RxStatus & TX_DONE)	// SAE J2534-1 (dec 2004): ISO-15765 only
-						{
-							std::cout << "  => message is transmit confirmation message\n";
-							continue;
-						}
-						else
-							std::cout << "  => message is loopback message\n";
-#endif
+						std::cout << "  => message is transmit confirmation message\n";
+						continue;
 					}
 					else
+						std::cout << "  => message is loopback message\n";
+#endif
+				}
+				else
+				{
+					if (rx_msgs[i].RxStatus & START_OF_MESSAGE)
 					{
-						if (rx_msgs[i].RxStatus & START_OF_MESSAGE)
-						{
-							/* NOTE:
-							* - incoming (multi-frame) msg transfer has commenced (ISO-15765) /
-							*   first byte of an incoming message has been received (ISO-9141 / ISO-14230)
-							* - ISO-15765: message contains CAN-ID only                                   */
+						/* NOTE:
+						* - incoming (multi-frame) msg transfer has commenced (ISO-15765) /
+						*   first byte of an incoming message has been received (ISO-9141 / ISO-14230)
+						* - ISO-15765: message contains CAN-ID only                                   */
 #ifdef __FSSM_DEBUG__
-							std::cout << "  => message indicates that an incoming message transfer has commenced.\n";
+						std::cout << "  => message indicates that an incoming message transfer has commenced.\n";
 #endif
-							continue;
-						}
-						if ((protocolType() == protocol_SSM2_ISO15765) && (rx_msgs[i].RxStatus & ISO15765_PADDING_ERROR))
-						{
-							// NOTE: ISO-15765 CAN frame was received with less than 8 data bytes
-#ifdef __FSSM_DEBUG__
-							std::cout << "  => message indicates ISO15765 padding error.\n";
-#endif
-							continue;
-						}
-						// NOTE: all other flags do not affect the transferred data or are not defined for the ISO-protocols
+						continue;
 					}
-					// Extract data:
-					if (rx_msgs[i].DataSize > 0)
+					if ((protocolType() == protocol_SSM2_ISO15765) && (rx_msgs[i].RxStatus & ISO15765_PADDING_ERROR))
 					{
+						// NOTE: ISO-15765 CAN frame was received with less than 8 data bytes
 #ifdef __FSSM_DEBUG__
-						if ((rx_msgs[i].ExtraDataIndex == 0) && (_j2534->libraryAPIversion() == J2534_API_version::v0404))
-						{
-							std::cout << "  WARNING: ExtraDataIndex is 0, which should be the case only for pure status messages !\n";
-						}
-						else if (rx_msgs[i].ExtraDataIndex < rx_msgs[i].DataSize)
-						{
-							if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
-								((protocolType() == protocol_SSM2_ISO14230) && (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
-								std::cout << "  WARNING: ExtraDataIndex is smaller than expected !\n";
-							/* NOTE:
-							* - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
-							* - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
-						}
+						std::cout << "  => message indicates ISO15765 padding error.\n";
 #endif
-						readbuffer.insert(readbuffer.end(), rx_msgs[i].Data, rx_msgs[i].Data + rx_msgs[i].DataSize);
-						/* NOTE: at least for SSM2 via ISO-14230 we can't assume that a message from the control unit
-						 * is delivered in a single PASSTHRU_MSG. The used timings exceed the limits defined in
-						 * ISO-14230, so interfaces can't always detect message ends/starts via timeouts properly.
-						 */
+						continue;
 					}
+					// NOTE: all other flags do not affect the transferred data or are not defined for the ISO-protocols
+				}
+				// Extract data:
+				if (rx_msgs[i].DataSize > 0)
+				{
+#ifdef __FSSM_DEBUG__
+					if ((rx_msgs[i].ExtraDataIndex == 0) && (_j2534->libraryAPIversion() == J2534_API_version::v0404))
+					{
+						std::cout << "  WARNING: ExtraDataIndex is 0, which should be the case only for pure status messages !\n";
+					}
+					else if (rx_msgs[i].ExtraDataIndex < rx_msgs[i].DataSize)
+					{
+						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
+							((protocolType() == protocol_SSM2_ISO14230) && (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
+							std::cout << "  WARNING: ExtraDataIndex is smaller than expected !\n";
+						/* NOTE:
+						* - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
+						* - 02.02-API: (SAE-J2534, feb 2002):   ExtraDataIndex also used with J1850 VPW, ISO-9141, ISO-14230 */
+					}
+#endif
+					readbuffer.insert(readbuffer.end(), rx_msgs[i].Data, rx_msgs[i].Data + rx_msgs[i].DataSize);
+					/* NOTE: at least for SSM2 via ISO-14230 we can't assume that a message from the control unit
+						* is delivered in a single PASSTHRU_MSG. The used timings exceed the limits defined in
+						* ISO-14230, so interfaces can't always detect message ends/starts via timeouts properly.
+						*/
 				}
 			}
-		} while ((STATUS_NOERROR == ret) && rxNumMsgs);
-		if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret) || (ERR_TIMEOUT == ret))
-		{
-			buffer->assign(readbuffer.begin(), readbuffer.end());
-			delete[] rx_msgs;
-			return true;
 		}
-#ifdef __FSSM_DEBUG__
-		else
-			printErrorDescription("PassThruReadMsgs() failed: ", ret);
-#endif
+	} while ((STATUS_NOERROR == ret) && rxNumMsgs);
+	if ((STATUS_NOERROR == ret) || (ERR_BUFFER_EMPTY == ret) || (ERR_TIMEOUT == ret))
+	{
+		buffer->assign(readbuffer.begin(), readbuffer.end());
 		delete[] rx_msgs;
+		return true;
 	}
+#ifdef __FSSM_DEBUG__
+	else
+		printErrorDescription("PassThruReadMsgs() failed: ", ret);
+#endif
+	delete[] rx_msgs;
 	return false;
 }
 
