@@ -276,7 +276,7 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 	unsigned int rawDataIndex = 0;
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
-		if (_CU == CUtype_Engine && _ssmCUdata.uses_SSM2defs())
+		if (_CU == CUtype_Engine && _ssmCUdata.uses_Ax10xx_defs())
 		{
 			rawDataIndex = 1;
 			if (_has_TestMode)

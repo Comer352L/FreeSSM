@@ -77,7 +77,7 @@ public:
 	bool flagbytebit(std::size_t byteindex, unsigned char bitnr) const;
 
 	bool uses_Flagbytes() const;
-	bool uses_SSM2defs() const;
+	bool uses_Ax10xx_defs() const;
 
 	// C++11: std::array<T, count> var;
 	std::vector<char> SYS_ID;

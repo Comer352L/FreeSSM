@@ -92,7 +92,7 @@ bool SSMCUdata::uses_Flagbytes() const
 }
 
 
-bool SSMCUdata::uses_SSM2defs() const
+bool SSMCUdata::uses_Ax10xx_defs() const
 {
 	return (uses_Flagbytes() && (SYS_ID.at(1) == '\x10'));
 }

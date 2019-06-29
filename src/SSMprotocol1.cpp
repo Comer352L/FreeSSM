@@ -47,7 +47,7 @@ void SSMprotocol1::resetCUdata()
 		            this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
 		// NOTE: DO NOT CALL any communicating member functions here because of possible recursions !
-		if (_SSMP1com->stopCommunication() && (_state == state_ActTesting) && _ssmCUdata.uses_SSM2defs()) // TODO: other definition systems
+		if (_SSMP1com->stopCommunication() && (_state == state_ActTesting) && _ssmCUdata.uses_Ax10xx_defs()) // TODO: other definition systems
 		{
 			char currentdatabyte = '\x0';
 			if (_SSMP1com->readAddress(0x61, &currentdatabyte))
@@ -177,7 +177,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 			return result_commError;
 		}
 		// Check if we have definitions for this control unit:
-		if (!_ssmCUdata.uses_SSM2defs())
+		if (!_ssmCUdata.uses_Ax10xx_defs())
 			return result_noDefs;
 		/* Get definitions for this control unit */
 		FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
@@ -276,7 +276,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 	// Setup diagnostic codes addresses list:
 	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
-		if ((_CU == CUtype_Engine) && _ssmCUdata.uses_SSM2defs())
+		if ((_CU == CUtype_Engine) && _ssmCUdata.uses_Ax10xx_defs())
 			DCqueryAddrList.push_back( 0x000061 );
 		// FIXME: test mode and D-Check status addresses for other SSM1 control units
 		for (unsigned int k=0; k<_DTCdefs.size(); k++)
@@ -294,7 +294,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 		}
 	}
 	// Check if min. 1 address to read:
-	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.size() < 2) && _ssmCUdata.uses_SSM2defs() && (DCqueryAddrList.at(0) == 0x000061)))
+	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.size() < 2) && _ssmCUdata.uses_Ax10xx_defs() && (DCqueryAddrList.at(0) == 0x000061)))
 		return false;
 	// Start diagostic code reading:
 	started = _SSMP1com->readAddresses_permanent( DCqueryAddrList );
@@ -612,7 +612,7 @@ bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 	if (_state != state_normal) return false;
-	if (!_ssmCUdata.uses_SSM2defs())
+	if (!_ssmCUdata.uses_Ax10xx_defs())
 		return false;
 	if (!_has_Immo) return false;
 	char checkvalue = 0;
@@ -652,7 +652,7 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 	if (_state != state_normal) return false;
 	if ((_CU != CUtype_Engine) && (_CU != CUtype_Transmission))
 		return false;
-	if (!_ssmCUdata.uses_SSM2defs())	// FIXME: other defintion types
+	if (!_ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
 		return false;
 	if (!_has_MB_engineSpeed) return false;
 
@@ -675,7 +675,7 @@ bool SSMprotocol1::isInTestMode(bool *testmode)
 	unsigned int dataaddr = 0x61;
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
-	if (!_ssmCUdata.uses_SSM2defs())	// FIXME: other defintion types
+	if (!_ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
 		return false;
 	if (!_has_TestMode) return false;
 	if (!_SSMP1com->readAddress(dataaddr, &currentdatabyte))
@@ -698,7 +698,7 @@ bool SSMprotocol1::waitForIgnitionOff()
 	unsigned int dataaddr;
 	_state = state_waitingForIgnOff;
 	_SSMP1com->setRetriesOnError(1);
-	if (_has_SW_ignition && _ssmCUdata.uses_SSM2defs())	// FIXME: other defintion types
+	if (_has_SW_ignition && _ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
 	{
 		bool ignstate = true;
 		char data = 0x00;
