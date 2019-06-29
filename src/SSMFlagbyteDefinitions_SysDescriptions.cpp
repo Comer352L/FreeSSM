@@ -70,7 +70,7 @@ SSMFlagbyteDefinitions_SysDescriptions::SSMFlagbyteDefinitions_SysDescriptions()
 }
 
 
-bool SSMFlagbyteDefinitions_SysDescriptions::getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription)
+bool SSMFlagbyteDefinitions_SysDescriptions::getSysDescriptionBySysID(SystemType sysType, const std::vector<char>& sysID, QString *sysDescription)
 {
 	if (sysID.size() != 3)
 		return false;
@@ -79,11 +79,11 @@ bool SSMFlagbyteDefinitions_SysDescriptions::getSysDescriptionBySysID(sysIDtype_
 	bool ok = false;
 
 	sysDescription->clear();
-	if (sysIDtype == ECU_sysID)
+	if (sysType == SystemType::ECU)
 	{
 		sysDefs = &_engine_sysDefs;
 	}
-	else if (sysIDtype == TCU_sysID)
+	else if (sysType == SystemType::TCU)
 	{
 		sysDefs = &_transmission_sysDefs;
 	}

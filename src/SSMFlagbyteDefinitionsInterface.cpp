@@ -54,11 +54,11 @@ bool SSMFlagbyteDefinitionsInterface::systemDescription(QString *description)
 		return false;
 	if (_CU == SSMprotocol::CUtype_Engine)
 	{
-		return getSysDescriptionBySysID( SSMFlagbyteDefinitions_SysDescriptions::ECU_sysID, _ssmCUdata.SYS_ID, description );
+		return getSysDescriptionBySysID( SystemType::ECU, _ssmCUdata.SYS_ID, description );
 	}
 	else if (_CU == SSMprotocol::CUtype_Transmission)
 	{
-		return getSysDescriptionBySysID( SSMFlagbyteDefinitions_SysDescriptions::TCU_sysID, _ssmCUdata.SYS_ID, description );
+		return getSysDescriptionBySysID( SystemType::TCU, _ssmCUdata.SYS_ID, description );
 	}
 	else
 		return false;

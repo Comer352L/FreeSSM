@@ -34,9 +34,9 @@ private:
 	QStringList _transmission_sysDefs;
 
 public:
-	enum sysIDtype_dt {ECU_sysID=1, TCU_sysID=2};
+	enum class SystemType {ECU = 1, TCU = 2};
 	SSMFlagbyteDefinitions_SysDescriptions();
-	bool getSysDescriptionBySysID(sysIDtype_dt sysIDtype, const std::vector<char>& sysID, QString *sysDescription);
+	bool getSysDescriptionBySysID(SystemType sysType, const std::vector<char>& sysID, QString *sysDescription);
 
 };
 
