@@ -132,32 +132,30 @@ bool J2534DiagInterface::isOpen()
 
 bool J2534DiagInterface::close()
 {
-	if (_j2534)
-	{
-		long ret = 0;
-		if (_connected)
-			disconnect();
-		// Close interface (only 0404-API):
-		if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
-		{
-			ret = _j2534->PassThruClose(_DeviceID);
-			if (STATUS_NOERROR != ret)
-			{
-#ifdef __FSSM_DEBUG__
-				printErrorDescription("PassThruClose() failed: ", ret);
-#endif
-				return false;
-			}
-		}
-		// Clean up:
-		delete _j2534;
-		_j2534 = NULL;
-		setName("J2534 Pass-Through");
-		setVersion("");
-		return true;
-	}
-	else
+	long ret = 0;
+
+	if (_j2534 == NULL)
 		return false;
+	if (_connected)
+		disconnect();
+	// Close interface (only 0404-API):
+	if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
+	{
+		ret = _j2534->PassThruClose(_DeviceID);
+		if (STATUS_NOERROR != ret)
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruClose() failed: ", ret);
+#endif
+			return false;
+		}
+	}
+	// Clean up:
+	delete _j2534;
+	_j2534 = NULL;
+	setName("J2534 Pass-Through");
+	setVersion("");
+	return true;
 }
 
 
