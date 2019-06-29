@@ -163,6 +163,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	/* Load control unit definitions */
 	if (_ssmCUdata.uses_Flagbytes())
 	{
+		SSMFlagbyteDefinitionsInterface *FBdefsIface;
 		// Request flag bytes:
 		if (!_SSMP1com->getCUdata(32, _ssmCUdata))
 		{
@@ -178,57 +179,49 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		// Check if we have definitions for this control unit:
 		if (!_ssmCUdata.uses_SSM2defs())
 			return result_noDefs;
-		// Setup definitions interface:
-		SSMFlagbyteDefinitionsInterface FBdefsIface(_language);
-		FBdefsIface.selectControlUnitID(_CU, _ssmCUdata);
-		// Get system description:
-		FBdefsIface.systemDescription(&_sysDescription);
-		// Get supported features;
-		FBdefsIface.hasOBD2system(&_has_OBD2);
-		FBdefsIface.hasImmobilizer(&_has_Immo);
+		/* Get definitions for this control unit */
+		FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
+		FBdefsIface->selectControlUnitID(_CU, _ssmCUdata);
+		FBdefsIface->systemDescription(&_sysDescription);
+		FBdefsIface->hasOBD2system(&_has_OBD2);
+		FBdefsIface->hasImmobilizer(&_has_Immo);
 		bool CMsup = false;
-		FBdefsIface.hasClearMemory(&CMsup);
+		FBdefsIface->hasClearMemory(&CMsup);
 		if (CMsup)
 		{
 			_CMaddr = 0x60;
 			_CMvalue = 0x40;
 		}
-		FBdefsIface.hasTestMode(&_has_TestMode);
-		FBdefsIface.hasActuatorTests(&_has_ActTest);
-		FBdefsIface.hasMBengineSpeed(&_has_MB_engineSpeed);
-		FBdefsIface.hasSWignition(&_has_SW_ignition);
-		// Get definitions of the supported diagnostic codes:
-		FBdefsIface.diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
-		// Get supported MBs and SWs:
-		FBdefsIface.measuringBlocks(&_supportedMBs);
-		FBdefsIface.switches(&_supportedSWs);
-		// Get supported adjustment values;
-		FBdefsIface.adjustments(&_adjustments);
-		// Get supported actuator tests:
-		FBdefsIface.actuatorTests(&_actuators);
+		FBdefsIface->hasTestMode(&_has_TestMode);
+		FBdefsIface->hasActuatorTests(&_has_ActTest);
+		FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
+		FBdefsIface->hasSWignition(&_has_SW_ignition);
+		FBdefsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
+		FBdefsIface->measuringBlocks(&_supportedMBs);
+		FBdefsIface->switches(&_supportedSWs);
+		FBdefsIface->adjustments(&_adjustments);
+		FBdefsIface->actuatorTests(&_actuators);
+		delete FBdefsIface;
 		setupActuatorTestAddrList();
 		// NOTE: all other SSM2-features (VIN, CC, CM2...) are not be supported by SSM1 Control units
 	}
 	else
 	{
-		// Setup definitions interface:
-		SSM1definitionsInterface SSM1defsIface;
-		if (!SSM1defsIface.selectDefinitionsFile(SSM1defsFile))
+		/* Get definitions for this control unit */
+		SSM1definitionsInterface *SSM1defsIface = new SSM1definitionsInterface(_language.toStdString());
+		if (!SSM1defsIface->selectDefinitionsFile(SSM1defsFile))
 			return result_noOrInvalidDefsFile;
-		SSM1defsIface.setLanguage(_language.toStdString());
-		if (!SSM1defsIface.selectID(_ssmCUdata.SYS_ID)) // TODO: Ax 01 xx IDs
+		SSM1defsIface->setLanguage(_language.toStdString());
+		if (!SSM1defsIface->selectID(_ssmCUdata.SYS_ID)) // TODO: Ax 01 xx IDs
 			return result_noDefs;
-		// Get system description:
 		std::string sysdescription;
-		SSM1defsIface.systemDescription(&sysdescription);
+		SSM1defsIface->systemDescription(&sysdescription);
 		_sysDescription = QString::fromStdString(sysdescription);
-		// Get definitions of the supported diagnostic codes:
-		SSM1defsIface.diagnosticCodes(&_DTCdefs);
-		// Get supported MBs and SWs:
-		SSM1defsIface.measuringBlocks(&_supportedMBs);
-		SSM1defsIface.switches(&_supportedSWs);
-		// Get Clear Memory data:
-		SSM1defsIface.clearMemoryData(&_CMaddr, &_CMvalue);
+		SSM1defsIface->diagnosticCodes(&_DTCdefs);
+		SSM1defsIface->measuringBlocks(&_supportedMBs);
+		SSM1defsIface->switches(&_supportedSWs);
+		SSM1defsIface->clearMemoryData(&_CMaddr, &_CMvalue);
+		delete SSM1defsIface;
 	}
 	return result_success;
 }
