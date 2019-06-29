@@ -126,7 +126,7 @@ bool J2534DiagInterface::open( std::string name )
 
 bool J2534DiagInterface::isOpen()
 {
-	return _j2534;
+	return (_j2534 != NULL);
 }
 
 
@@ -454,7 +454,7 @@ err_close:
 
 bool J2534DiagInterface::isConnected()
 {
-	return (_j2534 && _connected);
+	return _connected;
 }
 
 
@@ -462,7 +462,7 @@ bool J2534DiagInterface::disconnect()
 {
 	long ret = 0;
 
-	if ((_j2534 == NULL) || !_connected)
+	if (!_connected)
 		return false;
 	// Remove filters:
 	for (unsigned char k=0; k<_numFilters; k++)
@@ -496,7 +496,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 	std::vector<char> readbuffer;
 	long ret = 0;
 
-	if ((_j2534 == NULL) || !_connected)
+	if (!_connected)
 		return false;
 	// Setup message-container:
 	PASSTHRU_MSG *rx_msgs = new(std::nothrow) PASSTHRU_MSG[num_PTMSGS];
@@ -624,7 +624,7 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 	unsigned long timeout = 1000;	// wait until message has been transmitted
 	long ret = 0;
 
-	if ((_j2534 == NULL) || !_connected)
+	if (!_connected)
 		return false;
 	// Setup message:
 	PASSTHRU_MSG tx_msg;
