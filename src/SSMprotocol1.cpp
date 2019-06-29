@@ -179,33 +179,33 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		if (!_ssmCUdata.uses_SSM2defs())
 			return result_noDefs;
 		// Setup definitions interface:
-		SSMFlagbyteDefinitionsInterface SSM2defsIface(_language);
-		SSM2defsIface.selectControlUnitID(_CU, _ssmCUdata);
+		SSMFlagbyteDefinitionsInterface FBdefsIface(_language);
+		FBdefsIface.selectControlUnitID(_CU, _ssmCUdata);
 		// Get system description:
-		SSM2defsIface.systemDescription(&_sysDescription);
+		FBdefsIface.systemDescription(&_sysDescription);
 		// Get supported features;
-		SSM2defsIface.hasOBD2system(&_has_OBD2);
-		SSM2defsIface.hasImmobilizer(&_has_Immo);
+		FBdefsIface.hasOBD2system(&_has_OBD2);
+		FBdefsIface.hasImmobilizer(&_has_Immo);
 		bool CMsup = false;
-		SSM2defsIface.hasClearMemory(&CMsup);
+		FBdefsIface.hasClearMemory(&CMsup);
 		if (CMsup)
 		{
 			_CMaddr = 0x60;
 			_CMvalue = 0x40;
 		}
-		SSM2defsIface.hasTestMode(&_has_TestMode);
-		SSM2defsIface.hasActuatorTests(&_has_ActTest);
-		SSM2defsIface.hasMBengineSpeed(&_has_MB_engineSpeed);
-		SSM2defsIface.hasSWignition(&_has_SW_ignition);
+		FBdefsIface.hasTestMode(&_has_TestMode);
+		FBdefsIface.hasActuatorTests(&_has_ActTest);
+		FBdefsIface.hasMBengineSpeed(&_has_MB_engineSpeed);
+		FBdefsIface.hasSWignition(&_has_SW_ignition);
 		// Get definitions of the supported diagnostic codes:
-		SSM2defsIface.diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
+		FBdefsIface.diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
 		// Get supported MBs and SWs:
-		SSM2defsIface.measuringBlocks(&_supportedMBs);
-		SSM2defsIface.switches(&_supportedSWs);
+		FBdefsIface.measuringBlocks(&_supportedMBs);
+		FBdefsIface.switches(&_supportedSWs);
 		// Get supported adjustment values;
-		SSM2defsIface.adjustments(&_adjustments);
+		FBdefsIface.adjustments(&_adjustments);
 		// Get supported actuator tests:
-		SSM2defsIface.actuatorTests(&_actuators);
+		FBdefsIface.actuatorTests(&_actuators);
 		setupActuatorTestAddrList();
 		// NOTE: all other SSM2-features (VIN, CC, CM2...) are not be supported by SSM1 Control units
 	}
