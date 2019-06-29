@@ -460,35 +460,33 @@ bool J2534DiagInterface::isConnected()
 
 bool J2534DiagInterface::disconnect()
 {
-	if (_j2534 &&_connected)
-	{
-		long ret = 0;
-		// Remove filters:
-		for (unsigned char k=0; k<_numFilters; k++)
-		{
-			ret = _j2534->PassThruStopMsgFilter(_ChannelID, _FilterID[k]);
-#ifdef __FSSM_DEBUG__
-			if (STATUS_NOERROR != ret)
-				printErrorDescription("PassThruStopMsgFilter() failed: ", ret);
-#endif
-		}
-		_numFilters = 0;
-		// Disconnect channel:
-		ret = _j2534->PassThruDisconnect(_ChannelID);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruDisconnect() failed: ", ret);
-#endif
-			return false;
-		}
-		_connected = false;
-		setProtocolType( protocol_NONE );
-		setProtocolBaudrate( 0 );
-		return true;
-	}
-	else
+	long ret = 0;
+
+	if ((_j2534 == NULL) || !_connected)
 		return false;
+	// Remove filters:
+	for (unsigned char k=0; k<_numFilters; k++)
+	{
+		ret = _j2534->PassThruStopMsgFilter(_ChannelID, _FilterID[k]);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruStopMsgFilter() failed: ", ret);
+#endif
+	}
+	_numFilters = 0;
+	// Disconnect channel:
+	ret = _j2534->PassThruDisconnect(_ChannelID);
+	if (STATUS_NOERROR != ret)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruDisconnect() failed: ", ret);
+#endif
+		return false;
+	}
+	_connected = false;
+	setProtocolType( protocol_NONE );
+	setProtocolBaudrate( 0 );
+	return true;
 }
 
 
