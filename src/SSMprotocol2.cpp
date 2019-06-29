@@ -105,7 +105,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
 SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
-	SSMFlagbyteDefinitionsInterface *SSM2defsIface;
+	SSMFlagbyteDefinitionsInterface *FBdefsIface;
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
@@ -175,27 +175,27 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
-	SSM2defsIface = new SSMFlagbyteDefinitionsInterface(_language);
-	SSM2defsIface->selectControlUnitID(_CU, _ssmCUdata);
-	SSM2defsIface->systemDescription(&_sysDescription);
-	SSM2defsIface->hasOBD2system(&_has_OBD2);
-	SSM2defsIface->hasImmobilizer(&_has_Immo);
-	SSM2defsIface->hasImmobilizerTest(&_has_ImmoTest);
-	SSM2defsIface->hasTestMode(&_has_TestMode);
-	SSM2defsIface->hasActuatorTests(&_has_ActTest);
-	SSM2defsIface->hasClearMemory(&_has_CM);
-	SSM2defsIface->hasClearMemory2(&_has_CM2);
-	SSM2defsIface->hasVINsupport(&_has_VINsupport);
-	SSM2defsIface->hasIntegratedCC(&_has_integratedCC);
-	SSM2defsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
-	SSM2defsIface->hasSWignition(&_has_SW_ignition);
-	SSM2defsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
-	SSM2defsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
-	SSM2defsIface->measuringBlocks(&_supportedMBs);
-	SSM2defsIface->switches(&_supportedSWs);
-	SSM2defsIface->adjustments(&_adjustments);
-	SSM2defsIface->actuatorTests(&_actuators);
-	delete SSM2defsIface;
+	FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
+	FBdefsIface->selectControlUnitID(_CU, _ssmCUdata);
+	FBdefsIface->systemDescription(&_sysDescription);
+	FBdefsIface->hasOBD2system(&_has_OBD2);
+	FBdefsIface->hasImmobilizer(&_has_Immo);
+	FBdefsIface->hasImmobilizerTest(&_has_ImmoTest);
+	FBdefsIface->hasTestMode(&_has_TestMode);
+	FBdefsIface->hasActuatorTests(&_has_ActTest);
+	FBdefsIface->hasClearMemory(&_has_CM);
+	FBdefsIface->hasClearMemory2(&_has_CM2);
+	FBdefsIface->hasVINsupport(&_has_VINsupport);
+	FBdefsIface->hasIntegratedCC(&_has_integratedCC);
+	FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
+	FBdefsIface->hasSWignition(&_has_SW_ignition);
+	FBdefsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
+	FBdefsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
+	FBdefsIface->measuringBlocks(&_supportedMBs);
+	FBdefsIface->switches(&_supportedSWs);
+	FBdefsIface->adjustments(&_adjustments);
+	FBdefsIface->actuatorTests(&_actuators);
+	delete FBdefsIface;
 	setupActuatorTestAddrList();
 	return result_success;
 
