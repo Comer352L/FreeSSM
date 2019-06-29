@@ -161,134 +161,148 @@ bool J2534DiagInterface::close()
 
 bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 {
-	if ((protocol != AbstractDiagInterface::protocol_SSM2_ISO14230) && (protocol != AbstractDiagInterface::protocol_SSM2_ISO15765))
+	unsigned long ProtocolID = 0;
+	unsigned long Flags = 0;
+	unsigned long BaudRate = 0;
+	long ret = 0;
+
+	if (_j2534 == NULL)
+		return false;
+	// CHECK PROTOCOL AND SET UP PARAMETERS
+	if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
+	{
+		ProtocolID = ISO9141; // also: ISO14230
+		Flags = ISO9141_NO_CHECKSUM;
+		BaudRate = 4800;
+	}
+	else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO15765)
+	{
+		ProtocolID = ISO15765;
+		Flags = 0;
+		BaudRate = 500000;
+	}
+	else
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "Error: selected protocol is not supported\n";
 #endif
 		return false;
 	}
-	if (_j2534)
+	// CONNECT CHANNEL:
+	if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
+		ret = _j2534->PassThruConnect(ProtocolID, Flags, &_ChannelID);
+	else
+		ret = _j2534->PassThruConnect(_DeviceID, ProtocolID, Flags, BaudRate, &_ChannelID);
+	if (STATUS_NOERROR != ret)
 	{
-		unsigned long ProtocolID = 0;
-		unsigned long Flags = 0;
-		unsigned long BaudRate = 0;
-		long ret = 0;
-		if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
-		{
-			ProtocolID = ISO9141; // also: ISO14230
-			Flags = ISO9141_NO_CHECKSUM;
-			BaudRate = 4800;
-		}
-		else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO15765)
-		{
-			ProtocolID = ISO15765;
-			Flags = 0;
-			BaudRate = 500000;
-		}
-		// CONNECT CHANNEL:
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruConnect() failed: ", ret);
+#endif
+		return false;
+	}
+	/* ----- SET CONFIGURATION ----- */
+	SCONFIG_LIST Input;
+	SCONFIG CfgItems[1];
+	// Echo (MANDATORY):
+	CfgItems[0].Parameter = LOOPBACK;   // Echo off/on
+	if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		CfgItems[0].Value = ON;
+	else
+		CfgItems[0].Value = OFF;
+	Input.NumOfParams = 1;
+	Input.ConfigPtr = CfgItems;
+	ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+	if (STATUS_NOERROR != ret)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruIoctl() for parameter LOOPBACK failed: ", ret);
+#endif
+		goto err_close;
+	}
+	// Baudrate (MANDATORY for 02.02-API only):
+	CfgItems[0].Parameter = DATA_RATE;
+	CfgItems[0].Value = BaudRate;
+	Input.NumOfParams = 1;
+	Input.ConfigPtr = CfgItems;
+	ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+	if (STATUS_NOERROR != ret)
+	{
+#ifdef __FSSM_DEBUG__
+		printErrorDescription("PassThruIoctl() for parameter DATARATE failed: ", ret);
+#endif
 		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
-			ret = _j2534->PassThruConnect(ProtocolID, Flags, &_ChannelID);
-		else
-			ret = _j2534->PassThruConnect(_DeviceID, ProtocolID, Flags, BaudRate, &_ChannelID);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruConnect() failed: ", ret);
-#endif
-			return false;
-		}
-		/* ----- SET CONFIGURATION ----- */
-		SCONFIG_LIST Input;
-		SCONFIG CfgItems[1];
-		// Echo (MANDATORY):
-		CfgItems[0].Parameter = LOOPBACK;   // Echo off/on
-		if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
-			CfgItems[0].Value = ON;
-		else
-			CfgItems[0].Value = OFF;
-		Input.NumOfParams = 1;
-		Input.ConfigPtr = CfgItems;
-		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
-		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() for parameter LOOPBACK failed: ", ret);
-#endif
 			goto err_close;
-		}
-		// Baudrate (MANDATORY for 02.02-API only):
-		CfgItems[0].Parameter = DATA_RATE;
-		CfgItems[0].Value = BaudRate;
-		Input.NumOfParams = 1;
-		Input.ConfigPtr = CfgItems;
-		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-		if (STATUS_NOERROR != ret)
+	}
+	if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
+	{
+		/* ----- SET CONFIGURATION (ISO-14230 specific) ----- */
+		// P1_MIN (min. ECU inter-byte time)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
 		{
-#ifdef __FSSM_DEBUG__
-			printErrorDescription("PassThruIoctl() for parameter DATARATE failed: ", ret);
-#endif
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
-				goto err_close;
-		}
-		if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
-		{
-			/* ----- SET CONFIGURATION (ISO-14230 specific) ----- */
-			// P1_MIN (min. ECU inter-byte time)
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
-			{
-				CfgItems[0].Parameter = P1_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min/def=0ms,
-				CfgItems[0].Value = 0;	// [ms]
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-#ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for P1_MIN: ", ret);
-#endif
-			}
-			// P1_MAX (max. ECU inter-byte time)
-			CfgItems[0].Parameter = P1_MAX;	// ISO-9141, ISO-14230 (normal timing paramter-set): def/max=20ms,
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
-				CfgItems[0].Value = 5;	// [02.02-API: ms]
-			else
-				CfgItems[0].Value = 10;	// [04.04-API: *0.5ms]
+			CfgItems[0].Parameter = P1_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min/def=0ms,
+			CfgItems[0].Value = 0;	// [ms]
 			Input.NumOfParams = 1;
 			Input.ConfigPtr = CfgItems;
 			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
 			if (STATUS_NOERROR != ret)
-				printErrorDescription("PassThruIoctl() for P1_MAX: ", ret);
+				printErrorDescription("PassThruIoctl() for P1_MIN: ", ret);
 #endif
-			// P2_MIN (min. ECU response time [ms] to a tester request or between ECU responses)
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
-			{
-				CfgItems[0].Parameter = P2_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min=0ms, def=25ms
-				CfgItems[0].Value = 0;	// [ms]
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		}
+		// P1_MAX (max. ECU inter-byte time)
+		CfgItems[0].Parameter = P1_MAX;	// ISO-9141, ISO-14230 (normal timing paramter-set): def/max=20ms,
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
+			CfgItems[0].Value = 5;	// [02.02-API: ms]
+		else
+			CfgItems[0].Value = 10;	// [04.04-API: *0.5ms]
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for P1_MIN: ", ret);
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for P1_MAX: ", ret);
 #endif
-			}
-			// P2_MAX (max. ECU response time [ms] to a tester request or between ECU responses)
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, value is ignored (all messages up to P3_min are accepted)
-			{
-				CfgItems[0].Parameter = P2_MAX;	// ISO-9141, ISO-14230 (normal timing paramter set): def=50ms, max=inf
-				CfgItems[0].Value = 3000;
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		// P2_MIN (min. ECU response time [ms] to a tester request or between ECU responses)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, always 0ms
+		{
+			CfgItems[0].Parameter = P2_MIN;	// ISO-9141, ISO-14230 (normal timing paramter-set): min=0ms, def=25ms
+			CfgItems[0].Value = 0;	// [ms]
+			Input.NumOfParams = 1;
+			Input.ConfigPtr = CfgItems;
+			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for P2_MAX: ", ret);
+			if (STATUS_NOERROR != ret)
+				printErrorDescription("PassThruIoctl() for P1_MIN: ", ret);
 #endif
-			}
-			// P3_MIN (min. time between end of ECU reponse and next tester request)
-			CfgItems[0].Parameter = P3_MIN;     // ISO-9141, ISO-14230: min=0ms, def=55ms
-			CfgItems[0].Value = 0;	// [02.02-API: ms, 04.04-API: *0.5ms]
+		}
+		// P2_MAX (max. ECU response time [ms] to a tester request or between ECU responses)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, value is ignored (all messages up to P3_min are accepted)
+		{
+			CfgItems[0].Parameter = P2_MAX;	// ISO-9141, ISO-14230 (normal timing paramter set): def=50ms, max=inf
+			CfgItems[0].Value = 3000;
+			Input.NumOfParams = 1;
+			Input.ConfigPtr = CfgItems;
+			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+			if (STATUS_NOERROR != ret)
+				printErrorDescription("PassThruIoctl() for P2_MAX: ", ret);
+#endif
+		}
+		// P3_MIN (min. time between end of ECU reponse and next tester request)
+		CfgItems[0].Parameter = P3_MIN;     // ISO-9141, ISO-14230: min=0ms, def=55ms
+		CfgItems[0].Value = 0;	// [02.02-API: ms, 04.04-API: *0.5ms]
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
+#endif
+		// P3_MAX (max. time between end of ECU reponse and next tester request)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, tester allows sending message at any time after P3_MIN
+		{
+			CfgItems[0].Parameter = P3_MAX;     // ISO-9141, ISO-14230: def=5000ms, max=inf
+			CfgItems[0].Value = 0xffff; // [ms] => 65535ms = max. value
 			Input.NumOfParams = 1;
 			Input.ConfigPtr = CfgItems;
 			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
@@ -296,154 +310,139 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 			if (STATUS_NOERROR != ret)
 				printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
 #endif
-			// P3_MAX (max. time between end of ECU reponse and next tester request)
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, tester allows sending message at any time after P3_MIN
-			{
-				CfgItems[0].Parameter = P3_MAX;     // ISO-9141, ISO-14230: def=5000ms, max=inf
-				CfgItems[0].Value = 0xffff; // [ms] => 65535ms = max. value
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+		}
+		// P4_MIN (min. tester inter-byte time)
+		CfgItems[0].Parameter = P4_MIN;	// ISO-9141, ISO-14230: min=0ms, def=5ms
+		CfgItems[0].Value = 0;	// [02.02-API: ms, 04.04-API: *0.5ms]
+		Input.NumOfParams = 1;
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for P3_MIN: ", ret);
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
 #endif
-			}
-			// P4_MIN (min. tester inter-byte time)
-			CfgItems[0].Parameter = P4_MIN;	// ISO-9141, ISO-14230: min=0ms, def=5ms
-			CfgItems[0].Value = 0;	// [02.02-API: ms, 04.04-API: *0.5ms]
+		// P4_MAX (max. tester inter-byte time)
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, device always uses P4_MIN
+		{
+			CfgItems[0].Parameter = P4_MAX;	// ISO-9141, ISO-14230: def/max=50ms
+			CfgItems[0].Value = 5;	// [ms]
 			Input.NumOfParams = 1;
 			Input.ConfigPtr = CfgItems;
 			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
 			if (STATUS_NOERROR != ret)
-				printErrorDescription("PassThruIoctl() for P4_MIN: ", ret);
+				printErrorDescription("PassThruIoctl() for P4_MAX: ", ret);
 #endif
-			// P4_MAX (max. tester inter-byte time)
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)	// 04.04-API: not adjustable, device always uses P4_MIN
-			{
-				CfgItems[0].Parameter = P4_MAX;	// ISO-9141, ISO-14230: def/max=50ms
-				CfgItems[0].Value = 5;	// [ms]
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-#ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for P4_MAX: ", ret);
-#endif
-			}
-			// Data bits:
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0404)
-			{
-				CfgItems[0].Parameter = DATA_BITS;
-				CfgItems[0].Value = DATA_BITS_8;	// should be default
-				Input.NumOfParams = 1;
-				Input.ConfigPtr = CfgItems;
-				ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
-#ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruIoctl() for parameter DATA_BITS failed: ", ret);
-#endif
-			}
-			// Parity:
-			CfgItems[0].Parameter = PARITY;
-			CfgItems[0].Value = NO_PARITY;
-			Input.NumOfParams = 1;	// should be default
+		}
+		// Data bits:
+		if (_j2534->libraryAPIversion() == J2534_API_version::v0404)
+		{
+			CfgItems[0].Parameter = DATA_BITS;
+			CfgItems[0].Value = DATA_BITS_8;	// should be default
+			Input.NumOfParams = 1;
 			Input.ConfigPtr = CfgItems;
 			ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
 #ifdef __FSSM_DEBUG__
 			if (STATUS_NOERROR != ret)
-				printErrorDescription("PassThruIoctl() for parameter PARITY failed: ", ret);
+				printErrorDescription("PassThruIoctl() for parameter DATA_BITS failed: ", ret);
 #endif
-			/* APPLY MESSAGE FILTER (Receive all messages) */
-			PASSTHRU_MSG MaskMsg;
-			PASSTHRU_MSG PatternMsg;
-			memset(&MaskMsg, 0, sizeof(MaskMsg));		// .Data=0-array means "do not examine any bits"
-			memset(&PatternMsg, 0, sizeof(PatternMsg));	// .Data must be zero, if no Data bits are examined
-			MaskMsg.DataSize = 1;
-			MaskMsg.ProtocolID = ISO9141;
-			PatternMsg.DataSize = 1;
-			PatternMsg.ProtocolID = ISO9141;
-			if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, PASS_FILTER, &MaskMsg, &PatternMsg, NULL, _FilterID))
-			{
-#ifdef __FSSM_DEBUG__
-				printErrorDescription("PassThruStartMsgFilter() for ISO-14230 failed: ", ret);
-#endif
-				goto err_close;
-			}
-			_numFilters = 1;
 		}
-		else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		// Parity:
+		CfgItems[0].Parameter = PARITY;
+		CfgItems[0].Value = NO_PARITY;
+		Input.NumOfParams = 1;	// should be default
+		Input.ConfigPtr = CfgItems;
+		ret = _j2534->PassThruIoctl(_ChannelID, SET_CONFIG, (void *)&Input, (void *)NULL);
+#ifdef __FSSM_DEBUG__
+		if (STATUS_NOERROR != ret)
+			printErrorDescription("PassThruIoctl() for parameter PARITY failed: ", ret);
+#endif
+		/* APPLY MESSAGE FILTER (Receive all messages) */
+		PASSTHRU_MSG MaskMsg;
+		PASSTHRU_MSG PatternMsg;
+		memset(&MaskMsg, 0, sizeof(MaskMsg));		// .Data=0-array means "do not examine any bits"
+		memset(&PatternMsg, 0, sizeof(PatternMsg));	// .Data must be zero, if no Data bits are examined
+		MaskMsg.DataSize = 1;
+		MaskMsg.ProtocolID = ISO9141;
+		PatternMsg.DataSize = 1;
+		PatternMsg.ProtocolID = ISO9141;
+		if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, PASS_FILTER, &MaskMsg, &PatternMsg, NULL, _FilterID))
 		{
-			// NOTE: also tweak values of ISO15765_BS, ISO15765_STMIN ?
-			/* APPLY MESSAGE FILTERS */
-			PASSTHRU_MSG MaskMsg;
-			PASSTHRU_MSG PatternMsg;
-			PASSTHRU_MSG FlowCtrlMsg;
-			memset(&MaskMsg, 0, sizeof(MaskMsg));
-			memset(&PatternMsg, 0, sizeof(PatternMsg));
-			memset(&FlowCtrlMsg, 0, sizeof(FlowCtrlMsg));
-			// ECU:
-			MaskMsg.Data[0] = '\xFF';
-			MaskMsg.Data[1] = '\xFF';
-			MaskMsg.Data[2] = '\xFF';
-			MaskMsg.Data[3] = '\xFF';
-			MaskMsg.DataSize = 4;
-			MaskMsg.ProtocolID = ISO15765;
-			MaskMsg.TxFlags = ISO15765_FRAME_PAD;
-			PatternMsg.Data[0] =  '\x00';
-			PatternMsg.Data[1] =  '\x00';
-			PatternMsg.Data[2] =  '\x07';
-			PatternMsg.Data[3] =  '\xE8';
-			PatternMsg.DataSize = 4;
-			PatternMsg.ProtocolID = ISO15765;
-			PatternMsg.TxFlags = ISO15765_FRAME_PAD;
-			FlowCtrlMsg.Data[0] = '\x00';
-			FlowCtrlMsg.Data[1] = '\x00';
-			FlowCtrlMsg.Data[2] = '\x07';
-			FlowCtrlMsg.Data[3] = '\xE0';
-			FlowCtrlMsg.DataSize = 4;
-			FlowCtrlMsg.ProtocolID = ISO15765;
-			FlowCtrlMsg.TxFlags = ISO15765_FRAME_PAD;
-			if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, FLOW_CONTROL_FILTER, &MaskMsg, &PatternMsg, &FlowCtrlMsg, _FilterID + _numFilters))
-			{
 #ifdef __FSSM_DEBUG__
-				printErrorDescription("PassThruStartMsgFilter() #1 for ISO-15765 failed: ", ret);
+			printErrorDescription("PassThruStartMsgFilter() for ISO-14230 failed: ", ret);
 #endif
-				goto err_close;
-			}
-			_numFilters = 1;
-			// TCU:
-			PatternMsg.Data[3] =  '\xE9';
-			FlowCtrlMsg.Data[3] = '\xE1';
-			if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, FLOW_CONTROL_FILTER, &MaskMsg, &PatternMsg, &FlowCtrlMsg, _FilterID + _numFilters))
-			{
-#ifdef __FSSM_DEBUG__
-				printErrorDescription("PassThruStartMsgFilter() #2 for ISO-15765 failed: ", ret);
-#endif
-				// Clean up configured message filter
-				ret = _j2534->PassThruStopMsgFilter(_ChannelID, _FilterID[0]);
-#ifdef __FSSM_DEBUG__
-				if (STATUS_NOERROR != ret)
-					printErrorDescription("PassThruStopMsgFilter() for ISO-15765 failed: ", ret);
-#endif
-				_numFilters = 0;
-				goto err_close;
-			}
-			_numFilters = 2;
-			// TODO: add support for additional addresses (requires layer/API changes)
+			goto err_close;
 		}
-		_connected = true;
-		setProtocolType( protocol );
-		setProtocolBaudrate( BaudRate );
-		return true;
+		_numFilters = 1;
 	}
-	else
-		return false;
+	else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO15765)
+	{
+		// NOTE: also tweak values of ISO15765_BS, ISO15765_STMIN ?
+		/* APPLY MESSAGE FILTERS */
+		PASSTHRU_MSG MaskMsg;
+		PASSTHRU_MSG PatternMsg;
+		PASSTHRU_MSG FlowCtrlMsg;
+		memset(&MaskMsg, 0, sizeof(MaskMsg));
+		memset(&PatternMsg, 0, sizeof(PatternMsg));
+		memset(&FlowCtrlMsg, 0, sizeof(FlowCtrlMsg));
+		// ECU:
+		MaskMsg.Data[0] = '\xFF';
+		MaskMsg.Data[1] = '\xFF';
+		MaskMsg.Data[2] = '\xFF';
+		MaskMsg.Data[3] = '\xFF';
+		MaskMsg.DataSize = 4;
+		MaskMsg.ProtocolID = ISO15765;
+		MaskMsg.TxFlags = ISO15765_FRAME_PAD;
+		PatternMsg.Data[0] =  '\x00';
+		PatternMsg.Data[1] =  '\x00';
+		PatternMsg.Data[2] =  '\x07';
+		PatternMsg.Data[3] =  '\xE8';
+		PatternMsg.DataSize = 4;
+		PatternMsg.ProtocolID = ISO15765;
+		PatternMsg.TxFlags = ISO15765_FRAME_PAD;
+		FlowCtrlMsg.Data[0] = '\x00';
+		FlowCtrlMsg.Data[1] = '\x00';
+		FlowCtrlMsg.Data[2] = '\x07';
+		FlowCtrlMsg.Data[3] = '\xE0';
+		FlowCtrlMsg.DataSize = 4;
+		FlowCtrlMsg.ProtocolID = ISO15765;
+		FlowCtrlMsg.TxFlags = ISO15765_FRAME_PAD;
+		if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, FLOW_CONTROL_FILTER, &MaskMsg, &PatternMsg, &FlowCtrlMsg, _FilterID + _numFilters))
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruStartMsgFilter() #1 for ISO-15765 failed: ", ret);
+#endif
+			goto err_close;
+		}
+		_numFilters = 1;
+		// TCU:
+		PatternMsg.Data[3] =  '\xE9';
+		FlowCtrlMsg.Data[3] = '\xE1';
+		if (STATUS_NOERROR != _j2534->PassThruStartMsgFilter(_ChannelID, FLOW_CONTROL_FILTER, &MaskMsg, &PatternMsg, &FlowCtrlMsg, _FilterID + _numFilters))
+		{
+#ifdef __FSSM_DEBUG__
+			printErrorDescription("PassThruStartMsgFilter() #2 for ISO-15765 failed: ", ret);
+#endif
+			// Clean up configured message filter
+			ret = _j2534->PassThruStopMsgFilter(_ChannelID, _FilterID[0]);
+#ifdef __FSSM_DEBUG__
+			if (STATUS_NOERROR != ret)
+				printErrorDescription("PassThruStopMsgFilter() for ISO-15765 failed: ", ret);
+#endif
+			_numFilters = 0;
+			goto err_close;
+		}
+		_numFilters = 2;
+		// TODO: add support for additional addresses (requires layer/API changes)
+	}
+	_connected = true;
+	setProtocolType( protocol );
+	setProtocolBaudrate( BaudRate );
+	return true;
 
 err_close:
 #ifdef __FSSM_DEBUG__
-	long ret = _j2534->PassThruDisconnect(_ChannelID);
+	ret = _j2534->PassThruDisconnect(_ChannelID);
 	if (STATUS_NOERROR != ret)
 		printErrorDescription("PassThruDisconnect() failed: ", ret);
 #else
