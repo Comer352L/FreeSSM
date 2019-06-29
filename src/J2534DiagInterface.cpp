@@ -49,82 +49,78 @@ AbstractDiagInterface::interface_type J2534DiagInterface::interfaceType()
 
 bool J2534DiagInterface::open( std::string name )
 {
-	if (_j2534)
+	long ret = 0;
+
+	if (_j2534 != NULL)
 		return false;
-	else
+	// Select J2534-library:
+	_j2534 = new J2534_API;
+	if (!_j2534->selectLibrary(name))
 	{
-		_j2534 = new J2534_API;
-		if (_j2534->selectLibrary(name))
-		{
-			char FirmwareVersion[80] = {0,};
-			char DllVersion[80] = {0,};
-			char ApiVersion[80] = {0,};
-			long ret = 0;
-			// Open interface (only 0404-API):
-			if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
-			{
-				_DeviceID = 0;
-				ret = _j2534->PassThruOpen(NULL, &_DeviceID);
-				if (STATUS_NOERROR != ret)
-				{
 #ifdef __FSSM_DEBUG__
-					printErrorDescription("PassThruOpen() failed: ", ret);
+		std::cout << "Error: invalid library selected\n";
 #endif
-					delete _j2534;
-					_j2534 = NULL;
-					return false;
-				}
-			}
-			// Read hardware/software information:
-			if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
-				ret = _j2534->PassThruReadVersion(FirmwareVersion, DllVersion, ApiVersion);
-			else
-				ret = _j2534->PassThruReadVersion(_DeviceID, FirmwareVersion, DllVersion, ApiVersion);
-			if (STATUS_NOERROR == ret)
-			{
-				setVersion(std::string(FirmwareVersion) + " (DLL: " + std::string(DllVersion) + ", API: " + std::string(ApiVersion) +")");
-#ifdef __FSSM_DEBUG__
-				std::cout << "Interface information:\n";
-				std::cout << "   Firmware version: " << FirmwareVersion << '\n';
-				std::cout << "   DLL version:      " << DllVersion << '\n';
-				std::cout << "   API version:      " << ApiVersion << '\n';
-#endif
-			}
-#ifdef __FSSM_DEBUG__
-			else
-				printErrorDescription("PassThruReadVersion() failed: ", ret);
-#endif
-			// Get and save library data:
-			for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
-			{
-				if (lib.path == name)
-				{
-					// Interface name
-					setName(lib.name);
-					// Supported protocols
-					std::vector<protocol_type> supportedProtocols;
-					const J2534_protocol_flags p = lib.protocols;
-					if (bool(p & J2534_protocol_flags::iso9141) ||
-					    bool(p & J2534_protocol_flags::iso14230))
-						supportedProtocols.push_back(protocol_SSM2_ISO14230);
-					if (bool(p & J2534_protocol_flags::iso15765))
-						supportedProtocols.push_back(protocol_SSM2_ISO15765);
-					setSupportedProtocols(supportedProtocols);
-					break;
-				}
-			}
-			return true;
-		}
-		else
+		delete _j2534;
+		_j2534 = NULL;
+		return false;
+	}
+	// Open interface (only 0404-API):
+	if (_j2534->libraryAPIversion() != J2534_API_version::v0202)
+	{
+		_DeviceID = 0;
+		ret = _j2534->PassThruOpen(NULL, &_DeviceID);
+		if (STATUS_NOERROR != ret)
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "Error: invalid library selected\n";
+			printErrorDescription("PassThruOpen() failed: ", ret);
 #endif
 			delete _j2534;
 			_j2534 = NULL;
 			return false;
 		}
 	}
+	// Read hardware/software information:
+	char FirmwareVersion[80] = {0,};
+	char DllVersion[80] = {0,};
+	char ApiVersion[80] = {0,};
+	if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
+		ret = _j2534->PassThruReadVersion(FirmwareVersion, DllVersion, ApiVersion);
+	else
+		ret = _j2534->PassThruReadVersion(_DeviceID, FirmwareVersion, DllVersion, ApiVersion);
+	if (STATUS_NOERROR == ret)
+	{
+		setVersion(std::string(FirmwareVersion) + " (DLL: " + std::string(DllVersion) + ", API: " + std::string(ApiVersion) +")");
+#ifdef __FSSM_DEBUG__
+		std::cout << "Interface information:\n";
+		std::cout << "   Firmware version: " << FirmwareVersion << '\n';
+		std::cout << "   DLL version:      " << DllVersion << '\n';
+		std::cout << "   API version:      " << ApiVersion << '\n';
+#endif
+	}
+#ifdef __FSSM_DEBUG__
+	else
+		printErrorDescription("PassThruReadVersion() failed: ", ret);
+#endif
+	// Get and save library data:
+	for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
+	{
+		if (lib.path == name)
+		{
+			// Interface name
+			setName(lib.name);
+			// Supported protocols
+			std::vector<protocol_type> supportedProtocols;
+			const J2534_protocol_flags p = lib.protocols;
+			if (bool(p & J2534_protocol_flags::iso9141) ||
+				bool(p & J2534_protocol_flags::iso14230))
+				supportedProtocols.push_back(protocol_SSM2_ISO14230);
+			if (bool(p & J2534_protocol_flags::iso15765))
+				supportedProtocols.push_back(protocol_SSM2_ISO15765);
+			setSupportedProtocols(supportedProtocols);
+			break;
+		}
+	}
+	return true;
 }
 
 
