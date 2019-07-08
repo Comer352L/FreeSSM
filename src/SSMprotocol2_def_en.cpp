@@ -184,7 +184,7 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "53;5;1;0001E5;;Target Intake Manifold Pressure;kPa;*1;0"
 	<< "53;6;1;0001E4;;Number of Times Injected;;*1;0"
 	<< "53;7;1;0001E3;0001E2;Final Injection Amount;mm³;/256;4"
-	<< "53;8;1;0001E1;;Main Injection Period;°KW;/5-15;1"
+	<< "53;8;1;0001E1;;Main Injection Period;°CA;/5-15;1"
 	<< "54;1;1;0001F7;0001F6;Target Fuel Pump Current;mA;*1;0"
 	<< "54;2;1;0001F5;;Electric Power Steering Current;A;*1;0"
 	<< "54;3;1;0001F0;;Boost Pressure Feedback;%;-128;0"
@@ -244,7 +244,7 @@ SSMprotocol2_def_en::SSMprotocol2_def_en()
 	<< "67;6;1;000249;;Micro-Quantity-Injection Final Learning Value 4-1;ms;-128/200;3"
 	<< "67;7;1;000248;;Micro-Quantity-Injection Final Learning Value 3-4;ms;-128/200;3"
 	<< "67;8;1;000247;;Micro-Quantity-Injection Final Learning Value 3-3;ms;-128/200;3"
-	<< "69;5;1;000258;000257;Final Main Injection Period;ms;/1000;0"
+	<< "69;5;1;000258;000257;Final Main Injection Period;ms;/1000;3"
 	<< "69;6;1;000239;000238;Individual Pump Difference Learning Value;mA;-1000;0"
 	<< "69;7;1;000250;;Micro-Quantity-Injection Final Learning Value 5-4;ms;-128/200;3"
 	<< "69;8;1;00024F;;Micro-Quantity-Injection Final Learning Value 5-3;ms;-128/200;3";

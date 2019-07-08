@@ -184,7 +184,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "53;5;1;0001E5;;Ansaugkrümmer-Zieldruck;kPa;*1;0"
 	<< "53;6;1;0001E4;;Anzahl der Einspritzungen;;*1;0"
 	<< "53;7;1;0001E3;0001E2;Endeinspritzmenge;mm³;/256;4"
-	<< "53;8;1;0001E1;;Haupteinspritzungszeitraum;°CA;/5-15;1"
+	<< "53;8;1;0001E1;;Haupteinspritzungszeitraum;°KW;/5-15;1"
 	<< "54;1;1;0001F7;0001F6;Ziel-Kraftstoffpumpenstrom;mA;*1;0"
 	<< "54;2;1;0001F5;;Elektrische Servolenkung Strom;A;*1;0"
 	<< "54;3;1;0001F0;;Ladedruck-Rückkopplung;%;-128;0"
@@ -244,7 +244,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "67;6;1;000249;;Endgültiger Lernwert 4-1 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "67;7;1;000248;;Endgültiger Lernwert 3-4 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "67;8;1;000247;;Endgültiger Lernwert 3-3 für Mikro-Einspritzmenge;ms;-128/200;3"
-	<< "69;5;1;000258;000257;Dauer der finalen Haupteinspritzung;ms;*1;0"
+	<< "69;5;1;000258;000257;Dauer der finalen Haupteinspritzung;ms;*1;3"
 	<< "69;6;1;000239;000238;Lernwert für individuellen Pumpenunterschied;mA;-1000;0"
 	<< "69;7;1;000250;;Endgültiger Lernwert 5-4 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "69;8;1;00024F;;Endgültiger Lernwert 5-3 für Mikro-Einspritzmenge;ms;-128/200;3";
