@@ -244,7 +244,7 @@ SSMprotocol2_def_de::SSMprotocol2_def_de()
 	<< "67;6;1;000249;;Endgültiger Lernwert 4-1 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "67;7;1;000248;;Endgültiger Lernwert 3-4 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "67;8;1;000247;;Endgültiger Lernwert 3-3 für Mikro-Einspritzmenge;ms;-128/200;3"
-	<< "69;5;1;000258;000257;Dauer der finalen Haupteinspritzung;ms;*1;3"
+	<< "69;5;1;000258;000257;Dauer der finalen Haupteinspritzung;ms;/1000;3"
 	<< "69;6;1;000239;000238;Lernwert für individuellen Pumpenunterschied;mA;-1000;0"
 	<< "69;7;1;000250;;Endgültiger Lernwert 5-4 für Mikro-Einspritzmenge;ms;-128/200;3"
 	<< "69;8;1;00024F;;Endgültiger Lernwert 5-3 für Mikro-Einspritzmenge;ms;-128/200;3";
