@@ -151,7 +151,8 @@ small-resolution {
 RESOURCES += resources/FreeSSM.qrc
 
 TRANSLATIONS = FreeSSM_en.ts \
-               FreeSSM_de.ts
+               FreeSSM_de.ts \
+               FreeSSM_tr.ts 
 
 translation.commands = lrelease FreeSSM.pro & $$QMAKE_QMAKE     # qmake needs to be called again, otherwise *.qm file will not be installed
 QMAKE_EXTRA_TARGETS += translation
