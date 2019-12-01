@@ -1446,7 +1446,7 @@ Eğer projeye destek vermek isterseniz (tanımlamaları eklemek), yapımcıya ul
         <source>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</source>
         <translation>Arayüz seçilmedi !
-=&gt; Lütfen ayarlardan bir tanı arayüzü seçin.</translation>
+=&gt; Lütfen ayarlardan bir bağlantı arayüzü seçin.</translation>
     </message>
     <message>
         <location filename="src/FreeSSM.cpp" line="431"/>
@@ -1457,14 +1457,14 @@ The selected interface type cannot be initialized !
 The selected interface type cannnot be initialized !
 =&gt; Please report this as a bug.</oldsource>
         <translation>İç hata:
-Seçilen arayüz tipi başlatılamadı !
+Seçilen bağlantı arayüzü başlatılamadı !
 =&gt; Lütfen bunu hata olarak bildirin.</translation>
     </message>
     <message>
         <location filename="src/FreeSSM.cpp" line="437"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</source>
-        <translation>Seçilen arayüz açılamadı !
+        <translation>Seçilen bağlantı arayüzü açılamadı !
 Başka bir uygulama tarafından kullanılıyor olabilir...</translation>
     </message>
     <message>
@@ -2076,7 +2076,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/About.ui" line="177"/>
         <location filename="ui/small/About.ui" line="196"/>
         <source>Models (since MY1999):</source>
-        <translation>Modeller (MY1999&apos;den beri):</translation>
+        <translation>Modeller (1999+):</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="412"/>
