@@ -89,9 +89,9 @@ Neden motor kontrol ünitesi OBD2'yi destekliyor, ancak şanzıman kontrol ünit
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>7.) <a href="#7">FreeSSM neden bazı Hata Kodları için farklı başlıklar / açıklamalar gösteriyor ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>8.) <a href="#8">Ayarlama Değerler kısmındaki “kalıcı olmayan” ne demektir ?</a></p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>8.) <a href="#8">Ayarlanan Değerler kısmındaki “kalıcı olmayan” ne demektir ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">"Test modu bağlantısı" nedir ve nerede bulunur?</a></p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>9.) <a href="#9">"Test modu bağlantısı" nedir ve nerede bulunur ?</a></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>10.) <a href="#10">Aktüatör testi neden bazı bileşenler için çalışmıyor ?</a></p>
 
@@ -102,7 +102,7 @@ Neden motor kontrol ünitesi OBD2'yi destekliyor, ancak şanzıman kontrol ünit
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>13.) <a href="#13">
 &quot;Hafızayı Sil&quot; neden bazı durumlarda tüm Hata Kodlarını temizlemiyor ?</a></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">FreeSSM CAN-Bus protokolünü kullanıyor mu / destekliyor mu? ?</a></p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>14.) <a href="#14">FreeSSM CAN-Bus protokolünü kullanıyor mu / destekliyor mu ?</a></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>15.) <a href="#15">FreeSSM'nin geliştirilmesi devam edecek mi ?</a></p>
 
@@ -111,197 +111,165 @@ Neden motor kontrol ünitesi OBD2'yi destekliyor, ancak şanzıman kontrol ünit
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=1></a><strong>1.)
 Ne tür bir arayüze ihtiyacım var ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software works with all 
-ISO-9141-2-/ISO-14230-1-compliant (K/L- and KK/L-) interfaces, that serve as 
-simple voltage level converters ("dumb" interface) or have a "pass-through"-mode.<br>
-The interface must be selectable through a serial port, which also includes USB-interfaces 
-whose driver provides a virtual serial port (e.g. interfaces with FTDI-USB-chip).<br>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Yazılım, tüm ISO-9141-2 / ISO-14230-1 uyumlu (K / L- ve KK / L-) basit voltaj seviyesi dönüştürücüler (&quot;basit&quot; arayüz) veya &quot;pass-troug&quot; modu olan arayüzlerle çalışır.<br>
+Arabirim seri bağlantı noktası üzerinden seçilebilir olmalıdır. Arabirim sürücüsü sanal seri bağlantı noktasını desteklemelidir. (örn. FTDI-USB-çipine sahip arabirimler)<br>
 <br>
-This is a (incomplete) list of interfaces that should work with FreeSSM (no guarantee !):<br>
-- all interfaces that work with VW-Tool and VAG-COM up to version 311.3 (409)<br>
-- Tactrix® Openport interface 1.2/1.3 (not 2.0 !)<br>
-- interfaces with AGV2055, AGV3000, AGV3001, AGV3100, AGV4000, AGV4500 chipset that provide
-  a switch to activate the "transit mode" (e.g. OBD-Diag®-interfaces)<br>
-- "Jeff Noxons" interface (-design)<br>
-- "Andy Whitakkers" interface (-design)<br>
+FreeSSM ile çalışması muhtemel arayüzlerin (eksik) bir listesi aşağıdadır(garanti değil!):<br>
+- 311.3 (409) sürümüne kadar VW-Tool ve VAG-COM ile  çalışan tüm arayüzler<br>
+- Tactrix® Openport arayüzü 1.2/1.3 (2.0 değil!)<br>
+- AGV2055, AGV3000, AGV3001, AGV3100, AGV4000, AGV4500 gibi &quot;transit modunu&quot; etkinleştirmek için switch içeren çipi olanlar (e.g. OBD-Diag® arayüzü)<br>
+- &quot;Jeff Noxons&quot; arayüzü (-dizayn)<br>
+- &quot;Andy Whitakkers&quot; arayüzü (-dizayn)<br>
 <br>
-Interfaces with ELM-chip (ELM320, ELM322, ELM323, ELM327) will not work, because they use a
-fixed AT-command-set which is not compatible with the SUBARU®-specific protocol.</p>
+ELM-çipi (ELM320, ELM322, ELM323, ELM327) içerenler çalışmayacaktır, çünkü SUBARU®'ya özel protokol ile uyumlu olmayan sabit bir AT komut seti kullanıyor.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=2></a><strong>2.)
-Which vehicle models are supported ?</strong> </p>
+Hangi modelleri desteklenir ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software supports the 
-models Legacy®/Liberty®/Outback®/Baja®, Impreza® (incl. WRX + STi), Forester®, Exiga® and Tribeca® 
-starting with model year 1999 up to model year 2009.<br>
-Model year 2010 is already supported, too, but some Measuring Blocks may be missing and some 
-Diagnostic Codes may not be displayed as plaintext.<br>
-Vehicles up to model year 1998 as well as the models SVX®, Justy®, Libero® and Vivio® 
-are not supported.<br>
-The model years 1999+2000 must be regarded as transition period. According to present 
-observations (European models), access to the engine control unit of the models
-Legacy®/Liberty®/Outback®/Baja® is already possible since model year 1999, while most
-of the Impreza®-models and a few of the Foresters® are supported from model year 2000 on.<br>
-Transmission control units are not supported before model year 2000, in most cases 
-support starts with model year 2001.<br>
-It is useful to take a look at the diagnostic connector: if pin 7 is available, at 
-least the engine control unit should be available.<br>
-From model year 2001 on, both control units should be supported.
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Yazılım 1999 yılından 2009 yılına kadar Legacy® / Liberty® / Outback® / Baja®, Impreza® (WRX + STi dahil), Forester®, Exiga® ve Tribeca® modellerini destekler..<br>
+Model 2010 yılı da destekleniyor, ancak bazı ölçüm parametreleri eksik olabilir ve bazı hata kodları düz metin olarak gösterilmeyebilir.<br>
+1998 yılına kadar olan araçların ve SVX®, Justy®, Libero® ve Vivio® modelleri desteklenmemektedir.<br>
+1999-2000 yılları geçiş dönemi olarak kabul edilir. 
+Mevcut gözlemlere göre Legacy® / Liberty® / Outback® / Baja® modellerinin (Avrupa modellerinde) motor kontrol ünitesine erişim 1999 yılından bu yana mümkün iken, Impreza® modellerinin çoğu ve Forester ® 2000 yılından itibaren desteklenmektedir.<br>
+Şanzıman kontrol üniteleri 2000 model yılından önce desteklenmemektedir, çoğunda destek 2001 model yılı ile başlar.<br>
+Tanı portuna bir göz atmak faydalıdır: pin 7 mevcutsa en azından motor kontrol ünitesi bağlantısı mümkün olmalıdır.<br>
+2001 model yılından itibaren her iki kontrol ünitesinin de desteklenmesi gerekir.
 </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3></a><strong>3.)
-Which control units are supported ?</strong> </p>
+Hangi kontrol üniteleri desteklenir?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The software currently 
-provides access to the engine and transmission control units.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Yazılım şu anda motor ve şanzıman kontrol ünitelerine erişim sağlıyor.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3a></a><strong>3a.)
-Why can I connect to the engine's control unit but not to the transmission's control unit ?</strong> </p>
+Neden motor kontrol ünitesine bağlanabiliyorum ama şanzıman kontrol ünitesine bağlanamıyorum ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Depending on model and model 
-year, it is possible that the engine controller already uses the new (supported) 
-protocol while the transmission control unit still uses the old (unsupported) 
-protocol.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Model ve model yılına bağlı olarak, şanzıman kontrol ünitesi hala eski (desteklenmeyen) protokolü kullanırken motor kontrol ünitesinin yeni (desteklenen) protokolü kullanması mümkündür.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=3b></a><strong>3b.)
-Why are the other control units not supported ?</strong> </p>
+Diğer kontrol üniteleri neden desteklenmiyor ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Because they use different 
-communication protocols and are also connected through other diagnostic lines 
-with different electric attributes.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Çünkü farklı iletişim protokolleri kullanıyorlar ve ayrıca farklı elektriksel özelliklere sahip diğer tanımlama hatları üzerinden bağlanıyorlar.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=4></a><strong>4.)
-Why does FreeSSM not show the control unit spare part number or information 
-about the software version ?</strong>
+FreeSSM neden kontrol ünitesinin yedek parça numarasını veya yazılım versiyonu hakkındaki 
+bilgileri göstermiyor ?</strong>
 </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The only identification information provided by the 
-SUBARU®-diagnostic-protocol is the ROM-ID, which is displayed by FreeSSM.<br>
-The correlation between the ROM-ID and part numbers or software versions is ambigous. Control units with identical ROM-IDs 
-can have different part numbers and may be equipped with different software versions.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>SUBARU® diagnostik protokolü tarafından sağlanan tek tanımlama bilgisi, FreeSSM tarafından görüntülenen ROM-ID'dir.<br>
+ROM-ID ile parça numaraları veya yazılım versiyonları arasındaki korelasyon belirsizdir. 
+Aynı ROM kimliğine sahip kontrol üniteleri farklı parça numaralarına sahip olabilir ve farklı yazılım sürümleriyle donatılmış olabilir.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=5></a><strong>5.)
-Why does the engine control unit support OBD2, but the transmission control unit doesn't ?</strong> </p>
+Neden motor kontrol ünitesi OBD2'yi destekliyor, ancak şanzıman kontrol ünitesi desteklemiyor ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>OBD2 is a &quot;functional&quot; system 
-that incorporates information and functionalities from different control units.
-The FreeSSM &quot;OBD2-System&quot;-information only states, that the corresponding 
-control unit takes part in this system.
-In older vehicles, only the engine controller is involved in the OBD2-system.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'> OBD2, farklı kontrol birimlerinden gelen bilgi ve işlevleri içeren &quot;işlevsel&quot; bir sistemdir.
+FreeSSM &quot;OBD2-Sistemi&quot; bilgileri sadece ilgili kontrol ünitesinin bu sistemi desteklediğini belirtir.
+ Daha eski araçlarda, OBD2 sistemine sadece motor kontrol ünitesi dahil edilmiştir.
+</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=6></a><strong>6.)
-Why does the engine control unit not detect the Cruise Control although my 
-car is equipped with one ?</strong></p>
+Aracımda olmasına rağmen motor kontrol ünitesi neden Hız Sabitleyiciyi algılamıyor ?</strong></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>In older vehicles (without 
-electronic throttle control), the Cruise Control is a separate system that is 
-controlled by it's own control unit.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>(Elektronik gaz kelebeği kontrolü olmayan) Eski araçlarda Hız Sabitleyici kendi kontrol ünitesi tarafından kontrol edilen ayrı bir sistemdir.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=7></a><strong>7.)
-Why does FreeSSM display different titles/descriptions for some Data Trouble Codes ?</strong> </p>
+FreeSSM neden bazı Hata Kodları için farklı başlıklar / açıklamalar gösteriyor ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Some of the old 
-2-digit-SUBARU®-DTCs (control units without OBD2-support) are used 
-multiple times with different meanings.<br>
-FreeSSM can distinguish them and displays the right title/description.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Eski 2 basamaklı SUBARU® DTC'lerin bazıları
+ (OBD2 desteği olmayan kontrol üniteleri), birçok kez farklı anlamlarda kullanılır.<br>
+FreeSSM onları ayırt edebilir ve doğru başlığı / açıklamayı gösterir.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=8></a><strong>8.)
-What does &quot;non-permanent&quot; mean in reference to the Adjustment Values ?
+ Ayarlanan Değerler kısmındaki &quot;kalıcı olmayan&quot; ne demektir ?
 </strong> </p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'>
-&quot;Non-permanent&quot; means, that all values are reset to default when 
-disconnecting from power supply or clearing the control unit's memory.</p>
+&quot;kalıcı olmayan&quot; akü bağlantısı kesildiğinde veya hafıza silindiğinde varsayılan değerlere
+sıfırlanacak anlamına gelir.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=9></a><strong>9.)
-What is the "test mode connector" and where can it be found ?
+&quot;Test modu bağlantısı&quot; nedir ve nerede bulunur ?
 </strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>The test mode connector is a pair of green 
-2-pin connectors, which are not connected at normal operation. When they are connected, the engine control 
-unit (ECU) goes into a special operating mode (test mode). Several automatic test routines are running 
-and special tests (like the actuator on/off test) can be performed.<br>
-Furthermore, the engine is operated with different parameters and usually parts of the 
-body electric (e.g. central locking) are decommissioned. That's why the test mode connector 
-is also known as "delivery mode connector".<br>
-It is always located in the area of the dashboard and the legroom, the exact position depends on the model.<br>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Test modu bağlantısı, normalde takılı olmayan bir çift 2-pinli yeşil  konektördür. Bağlandıklarında motor kontrol ünitesi (ECU) özel bir çalışma moduna geçer (test modu). Çeşitli otomatik test rutinleri ve (aktüatör kapalı / açık testi gibi) özel testler yapılabilir.<br>
+Ayrıca, motor farklı parametrelerle çalıştırılır ve genellikle elektrik sisteminin bazı 
+ parçaları (örneğin merkezi kilitleme) kullanılmaz. Bu yüzden test modu bağlantısı
+"teslimat modu konektörü" olarak da bilinir.<br>
+Her zaman gösterge paneli ve ayak boşluğu bölgesinde bulunur, tam konum modele bağlıdır.<br>
 <br>
-The following positions apply to left-hand drive models:<br>
+Soldan direksiyonlu modeller için aşağıdaki pozisyonlar geçerlidir:<br>
 <br>
 <table border=0 cellspacing=10>
 <colgroup>
 <col width=30 span=1><col span=1><col width=100 span=1>
-<tr><th></th></th><th>Model (type):</th><th>Model Year:</th><th>Position:</th></tr>
-<tr><td></td><td>Legacy/Liberty/Outback/Baja (BE/BH)</td><td><p align=center style='text-align:center'>1999-2003</p></td></td><td>at the lower portion of instrument panel (driver’s side), at the side of the center console box</td></tr>
-<tr><td></td><td>Legacy/Liberty/Outback (BL/BP)</td><td><p align=center style='text-align:center'>2004-2009</p></td><td>legroom, beneath the glove compartment</td></tr>
-<tr><td></td><td>Impreza (GC/GF)</td><td><p align=center style='text-align:center'>1993-2000</p></td><td>upside behind the dashboard (driver's side)</td></tr>
-<tr><td></td><td>Impreza (GD/GG)</td><td><p align=center style='text-align:center'>2001-2007</p></td><td>upside behind the dashboard (driver's side)</td></tr>
-<tr><td></td><td>Impreza (GH)</td><td><p align=center style='text-align:center'>2008+</p></td><td>legroom, beneath the glove compartment</td></tr>
-<tr><td></td><td>Forester (SF)</td><td><p align=center style='text-align:center'>1998-2002</p></td><td>upside behind the dashboard (driver's side)</td></tr>
-<tr><td></td><td>Forester (SG)</td><td><p align=center style='text-align:center'>2003-2008</p></td><td>upside behind the dashboard (driver's side)</td></tr>
-<tr><td></td><td>Forester (SH)</td><td><p align=center style='text-align:center'>2009+</p></td><td>legroom, beneath the glove compartment</td></tr>
-<tr><td></td><td>Tribeca (WX)</td><td><p align=center style='text-align:center'>2005+</p></td><td>legroom, beneath the glove compartment</td></tr>
+<tr><th></th></th><th>Model (seri):</th><th>Model Yılı:</th><th>Yer:</th></tr>
+<tr><td></td><td>Legacy/Liberty/Outback/Baja (BE/BH)</td><td><p align=center style='text-align:center'>1999-2003</p></td></td><td>Gösterge tablosunun alt kısmında (sürücü tarafı), orta konsol kutusunun yanında</td></tr>
+<tr><td></td><td>Legacy/Liberty/Outback (BL/BP)</td><td><p align=center style='text-align:center'>2004-2009</p></td><td>Bacak hizası, torpido gözünün altında</td></tr>
+<tr><td></td><td>Impreza (GC/GF)</td><td><p align=center style='text-align:center'>1993-2000</p></td><td>Ön sigorta panelinin arkasında (sürücü tarafı)</td></tr>
+<tr><td></td><td>Impreza (GD/GG)</td><td><p align=center style='text-align:center'>2001-2007</p></td><td>Ön sigorta panelinin arkasında (sürücü tarafı)</td></tr>
+<tr><td></td><td>Impreza (GH)</td><td><p align=center style='text-align:center'>2008+</p></td><td>Bacak hizası, torpido gözünün altında</td></tr>
+<tr><td></td><td>Forester (SF)</td><td><p align=center style='text-align:center'>1998-2002</p></td><td>Ön sigorta panelinin arkasında (sürücü tarafı)</td></tr>
+<tr><td></td><td>Forester (SG)</td><td><p align=center style='text-align:center'>2003-2008</p></td><td>Ön sigorta panelinin arkasında (sürücü tarafı)</td></tr>
+<tr><td></td><td>Forester (SH)</td><td><p align=center style='text-align:center'>2009+</p></td><td>Bacak hizası, torpido gözünün altında</td></tr>
+<tr><td></td><td>Tribeca (WX)</td><td><p align=center style='text-align:center'>2005+</p></td><td>Bacak hizası, torpido gözünün altında</td></tr>
 </table>
 <br>
-ATTENTION: connect or disconnect the test mode connector only when ignition is switched off !</p>
+DİKKAT: Test modu bağlantısını sadece kontak kapalıyken birleştirin veya ayırın.!</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=10></a><strong>10.)
-Why does the Actuator Test not work for some components ?</strong> </p>
+Aktüatör testi neden bazı bileşenler için çalışmıyor ?</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Not all of the selectable 
-actuators are available in every vehicle.
-The SUBARU®-diagnostic-protocol only provides the information, if actuator 
-tests are supported or not, but it doesn't provide any information about the 
-available/testable actuators.<br>
-That's why FreeSSM always lists all known actuators.<br>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Seçilebilir aktüatörlerin hepsi her araçta mevcut değildir.<br>
+SUBARU®-diagnostik protokolü yalnızca desteklenen veya desteklenmeyen aktüatör testleri hakkında bilgi sağlar, ancak mevcut / test edilebilir aktüatörler hakkında herhangi bir bilgi sağlamaz.<br>
+Bu yüzden FreeSSM her zaman bilinen tüm aktüatörleri listeler.<br>
 If the selected actuator is not available, simply nothing will happen during the test.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=11></a><strong>11.)
-What happens when clearing the control unit's memory ?</strong>
+Kontrol ünitesinin hafızasını temizlerken ne olur ?</strong>
 </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>All diagnostic codes are cleared 
-(also see <a href="#13">question 13</a> !) and all adaption values are reset to default.<br>
-For newer engine control units with electronic throttle control, the corresponding 
-learning values are reset, too. This can result in unusual engine behavior for the 
-first time after clearing the memory.<br>
-Therefore, it should not be done without a reason.
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Tüm hata kodları temizlenir
+(ayrıca <a href="#13">soru 13</a>'e bakınız !) ve tüm adaptasyon değerleri varsayılana sıfırlanır.<br>
+Elektronik gaz kelebeği kontrolü olan yeni motor kontrol ünitelerinde gaz kelebeği ile ilgili öğrenme değerleri de sıfırlanır.
+Bu da belleği temizledikten sonra beklenmedik motor davranışa neden olabilir.<br>
+Bu nedenle sebepsiz yere yapılmamalıdır.
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=12></a><strong>12.)
-What's the difference between &quot;Clear Memory&quot; and &quot;Clear Memory 2&quot; 
-for the transmission control unit ?</strong></p>
+Şanzıman kontrol ünitesi için &quot;Hafızayı Sil&quot; ve &quot;Hafızayı Sil 2&quot; arasındaki fark nedir ?
+</strong></p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>&quot;Clear Memory 2&quot; 
-includes &quot;Clear Memory&quot; and also clears all learning values of the 
-transmission control.<br>
-This can result in unusual behavior of the transmission for the first time after clearing the memory.<br>
-Therefore, it should only be applied if a reset of the learning values is the goal !</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>&quot;Hafızayı Sil 2&quot; 
+seçeneği &quot;Hafızayı Sil&quot; i de içerir ve ona ek olarak şanzıman kontrolünün tüm öğrenilmiş değerlerini temizler.<br>
+Hafızayı temizledikten sonra şanzımanın alışılmadık davranışlarına neden olabilir.<br>
+Bu nedenle SADECE öğrenme değerlerinin sıfırlanması amaçlanıyorsa uygulanmalıdır.!</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=13></a><strong>13.)
-Why does &quot;Clear Memory&quot; not clear all Diagnostic Codes in some cases ?</strong> </p>
+"Hafızayı Sil" neden bazı durumlarda tüm Hata Kodlarını temizlemiyor ?
+</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>There are two possible reasons:<br>
-a.) the problem/malfunction that caused the diagnostic code to be stored still exists 
-(immediate re-detection)<br>
-b.) on newer vehicles, some (emission related) diagnostic codes can not be cleared at 
-manufacturer level. They have to be cleared in the OBD2-system, for which an additional 
-OBD2-Scantool is needed.<br>
-<strong>PLEASE NOTE: FreeSSM IS NO OBD2-Scantool !</strong></p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Bunun iki olası nedeni var:<br>
+a.) hata kodunun çıkmasına neden olan problem / arıza halen mevcut (Temizlendiği anda tekrar oluşuyor.)<br>
+b.) daha yeni araçlarda, bazı (emisyonla ilgili) hata kodları üretici düzeyinde silinemez.
+OBD2 sisteminde temizlenmeleri gerekir, bunun için ek bir OBD2 tarama cihazı gereklidir.<br>
+<strong>LÜTFEN DİKKAT: FreeSSM, OBD2 tarama cihazı DEĞİLDİR !</strong></p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=14></a><strong>14.)
-Does FreeSSM use/support the CAN-Bus ?</strong> </p>
+FreeSSM CAN-Bus protokolünü kullanıyor mu / destekliyor mu ?
+</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>No, because it's not necessary. 
-Of course, the newer vehicles are working with a CAN-Bus system, but it is not 
-used for diagnostic purposes at manufacturer level or rather the communication 
-between engine/transmission control unit and the diagnostic equipment.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Hayır, çünkü buna gerek yok.
+Tabii ki, yeni araçlar CAN-Bus sistemi ile çalışıyor ancak 
+motor / şanzıman kontrol ünitesi ile tanı cihazı arasındaki 
+üretici düzeyinde teşhis amaçlı iletişimde CAN-Bus protokolü kullanılmıyor.</p>
 
 <p style='margin-bottom:0cm;margin-bottom:.0001pt'><a name=15></a><strong>15.)
-Will development of FreeSSM go on ?</strong> </p>
+FreeSSM'nin geliştirilmesi devam edecek mi ?
+</strong> </p>
 
-<p style='margin-bottom:0cm;margin-bottom:.0001pt'>That's the plan.
-The latest version is always available at <a href="http://github.com/Comer352L/FreeSSM/">
-<span style=" text-decoration: underline; color:#0000ff;">http://github.com/Comer352L/FreeSSM/</span></a>.</p>
+<p style='margin-bottom:0cm;margin-bottom:.0001pt'>Amacımız devam ettirmek.
+Son sürüme her zaman <a href="http://github.com/Comer352L/FreeSSM/">
+<span style=" text-decoration: underline; color:#0000ff;">http://github.com/Comer352L/FreeSSM/</span></a> adresinden ulaşabilirsiniz.</p>
 </p>
 
 <div class=MsoNormal align=center style='text-align:center'>
@@ -551,8 +519,8 @@ style='font-size:18.0pt;font-family:Arial;mso-ansi-language:EN-GB'>C.) Kısaltma
 </table>
 
 <br>
-<p align=center>Copyright (C) 2008-2012 Comer352L<br>OBD-Diag is a trademark of Folker Stange<br>
-All other trademarks are property of Fuji Heavy Industries Ltd. or their respective owners.</p>
+<p align=center>Copyright (C) 2008-2012 Comer352L<br>OBD-Diag Folker Stange'in ticari markasıdır.<br>
+Diğerleri Fuji Heavy Industries Ltd. veya ilgili şirketlerin ticari markalarıdır.</p>
 
 </div>
 
