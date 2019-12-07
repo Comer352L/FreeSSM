@@ -2064,7 +2064,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/About.ui" line="600"/>
         <location filename="ui/small/About.ui" line="649"/>
         <source>Contributors:</source>
-        <translation>Katkıda Bulunanlar:</translation>
+        <translation>Katkı Sağlayan:</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="139"/>
