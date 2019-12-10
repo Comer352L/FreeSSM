@@ -485,7 +485,7 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "000094;0000AA;6;81;Tork Artırma Kontrol Valfi"
 	<< "000094;0000AA;7;68;Turboşarj Basınç Kontrol Çıkışı Sinyali #2"
 	<< "000094;0000AA;8;67;Egzoz Manifoldu Pozitif Basınç Kontrolü Solenoid Valfi"
-	<< "000095;0000AB;1;89;Değişken Valf Zamanlaması (VVT) Sistemleri (sol)""
+	<< "000095;0000AB;1;89;Değişken Valf Zamanlaması (VVT) Sistemleri (sol)"
 	<< "000095;0000AB;3;24;Rölanti Devri Kontrolü (ISC) Valfi Sıkışmış"
 	<< "000095;0000AB;4;24;Rölanti Devri Kontrolü (ISC) Valf Devresi Açık/KısaDevre"
 	<< "000095;0000AB;5;32;Hava/Yakıt Sensörü #2 Sistemi"
