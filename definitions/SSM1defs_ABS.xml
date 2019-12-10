@@ -5,7 +5,8 @@
 	(c) 2012 L1800Turbo
 	
 	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing freeze frame implementation
-
+	
+	madanadam at gmail (Turkish Translation) 2019
 
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
@@ -92,6 +93,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">FR wheel speed</TITLE>
 		<TITLE lang="de">Radgeschwindigkeit VR</TITLE>
+		<TITLE lang="tr">ÖnSağ teker hızı</TITLE>
 	</MB>
 	<MB id="MB_FL">
 		<UNIT lang="all">km/h</UNIT>
@@ -99,6 +101,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">FL wheel speed</TITLE>
 		<TITLE lang="de">Radgeschwindigkeit VL</TITLE>
+		<TITLE lang="tr">ÖnSol teker hızı</TITLE>
 	</MB>
 	<MB id="MB_RR">
 		<UNIT lang="all">km/h</UNIT>
@@ -106,6 +109,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">RR wheel speed</TITLE>
 		<TITLE lang="de">Radgeschwindigkeit HR</TITLE>
+		<TITLE lang="tr">ArkaSağ teker hızı</TITLE>
 	</MB>
 	<MB id="MB_RL">
 		<UNIT lang="all">km/h</UNIT>
@@ -113,6 +117,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">RL wheel speed</TITLE>
 		<TITLE lang="de">Radgeschwindigkeit HL</TITLE>
+		<TITLE lang="tr">ArkaSol teker hızı</TITLE>
 	</MB>
 	<MB id="MB_BLS">
 		<UNIT lang="all">V</UNIT>
@@ -120,6 +125,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">BLS</TITLE>
 		<TITLE lang="de">BLS</TITLE>
+		<TITLE lang="tr">BLS</TITLE>
 	</MB>
 	<MB id="MB_GSENS">
 		<UNIT lang="all"></UNIT>
@@ -127,55 +133,72 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">G-Sensor output voltage</TITLE>
 		<TITLE lang="de">GSENS</TITLE>
+		<TITLE lang="tr">G-Sensörü çıkış voltajı</TITLE>
 	</MB>
 	
 	<SW id="SW_B1">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Stop light switch</TITLE>
 		<TITLE lang="de">Bremslichtschalter</TITLE>
+		<TITLE lang="tr">Stop lambası anahtarı</TITLE>
 	</SW>
 	<SW id="SW_VR">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Valve relay signal</TITLE>
 		<TITLE lang="de">Signal Ventil-Relais</TITLE>
+		<TITLE lang="tr">Valf rölesi sinyali</TITLE>
 	</SW>
 	<SW id="SW_MR">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Motor relay signal</TITLE>
 		<TITLE lang="de">Signal Pumpenmotor-Relais</TITLE>
+		<TITLE lang="tr">Motor rölesi sinyali</TITLE>
 	</SW>
 	<SW id="SW_AT">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">AT ABS signal</TITLE>
 		<TITLE lang="de">AT ABS Signal</TITLE>
+		<TITLE lang="tr">AT ABS sinyali</TITLE>
 	</SW>
 	<SW id="SW_AW">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">ABS warning light</TITLE>
 		<TITLE lang="de">ABS Warnleuchte</TITLE>
+		<TITLE lang="tr">AB uyarı ışığı</TITLE>
 	</SW>
 	<SW id="SW_VM">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Valve relay monitor</TITLE>
 		<TITLE lang="de">Überwachung Ventil-Relais</TITLE>
+		<TITLE lang="tr">Valf rölesi monitörü</TITLE>
 	</SW>
 	<SW id="SW_MM">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Motor relay monitor</TITLE>
 		<TITLE lang="de">Überwachung Pumpenmotor-Relais</TITLE>
+		<TITLE lang="tr">Motor rölesi monitörü</TITLE>
 	</SW>
 	<SW id="SW_CM">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">CCM signal</TITLE>
 		<TITLE lang="de">CCM-Signal</TITLE>
+		<TITLE lang="tr">CCM sinyali</TITLE>
 	</SW>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>

@@ -9,7 +9,7 @@
 		- SVX'92, missing: clean DTCs complete, "IN PROCESS" switch
 	0.1.2  - Additional RomIDs 723420, 7234A0, 733420, 7334A0 Legacy Turbo (incomplete)
 
-
+	madanadam at gmail (Turkish Translation) 2019
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
@@ -2699,6 +2699,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Battery voltage</TITLE>
 		<TITLE lang="de">Batteriespannung</TITLE>
+		<TITLE lang="tr">Akü voltajı</TITLE>
 	</MB>
 	<MB id="MB_VSP">
 		<UNIT lang="all">km/h</UNIT>
@@ -2706,6 +2707,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Vehicle speed</TITLE>
 		<TITLE lang="de">Fahrzeuggeschwindigkeit</TITLE>
+		<TITLE lang="tr">Araç hızı</TITLE>
 	</MB>
 	<MB id="MB_EREV">
 		<UNIT lang="all">rpm</UNIT>
@@ -2713,6 +2715,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Engine speed</TITLE>
 		<TITLE lang="de">Motordrehzahl</TITLE>
+		<TITLE lang="tr">Motor devri</TITLE>
 	</MB>
 	<MB id="MB_TW">
 		<UNIT lang="all">°C</UNIT>
@@ -2720,6 +2723,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Water temperature</TITLE>
 		<TITLE lang="de">Wassertemperatur</TITLE>
+		<TITLE lang="tr">Su sıcaklığı</TITLE>
 	</MB>
 	<MB id="MB_ADVS">
 		<UNIT lang="all">°</UNIT>
@@ -2727,6 +2731,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Ignition advance</TITLE>
 		<TITLE lang="de">Zündverstellung</TITLE>
+		<TITLE lang="tr">Ateşleme avansı</TITLE>
 	</MB>
 	<MB id="MB_ADVS_NONLINEAR">
 		<UNIT lang="all">°</UNIT>
@@ -2734,6 +2739,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Ignition advance</TITLE>
 		<TITLE lang="de">Zündverstellung</TITLE>
+		<TITLE lang="tr">Ateşleme avansı</TITLE>
 	</MB>
 	<MB id="MB_QA">
 		<UNIT lang="all">V</UNIT>
@@ -2741,6 +2747,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Airflow sensor voltage</TITLE>
 		<TITLE lang="de">Luftmassenmesser Spannung</TITLE>
+		<TITLE lang="tr">Hava akımı sensörü voltajı</TITLE>
 	</MB>
 	<MB id="MB_QA_Lseries">
 		<UNIT lang="all">V</UNIT>
@@ -2748,6 +2755,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Airflow sensor voltage</TITLE>
 		<TITLE lang="de">Luftmassenmesser Spannung</TITLE>
+		<TITLE lang="tr">Hava akımı sensörü voltajı</TITLE>
 	</MB>
 	<MB id="MB_QA_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2755,6 +2763,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Airflow sensor voltage</TITLE>
 		<TITLE lang="de">Luftmassenmesser Spannung</TITLE>
+		<TITLE lang="tr">Hava akımı sensörü voltajı</TITLE>
 	</MB>
 	<MB id="MB_LDATA">
 		<UNIT lang="all"></UNIT>
@@ -2762,6 +2771,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Load data</TITLE>
 		<TITLE lang="de">Last-Daten</TITLE>
+		<TITLE lang="tr">Veri yükle</TITLE>
 	</MB>
 	<MB id="MB_THV">
 		<UNIT lang="all">V</UNIT>
@@ -2769,6 +2779,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Throttle sensor</TITLE>
 		<TITLE lang="de">Drosselklappensensor</TITLE>
+		<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
 	</MB>
 	<MB id="MB_THV_Lseries">
 		<UNIT lang="all">V</UNIT>
@@ -2776,6 +2787,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Throttle sensor</TITLE>
 		<TITLE lang="de">Drosselklappensensor</TITLE>
+		<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
 	</MB>
 	<MB id="MB_THV_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2783,6 +2795,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Throttle sensor</TITLE>
 		<TITLE lang="de">Drosselklappensensor</TITLE>
+		<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
 	</MB>
 	<MB id="MB_TIM">
 		<UNIT lang="all">ms</UNIT>
@@ -2790,6 +2803,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Injection pulse width</TITLE>
 		<TITLE lang="de">Einspritzdüsen-Impulslänge</TITLE>
+		<TITLE lang="tr">Enjeksiyon sinyal genişliği</TITLE>
 	</MB>
 	<MB id="MB_ISC">
 		<UNIT lang="all">%</UNIT>
@@ -2797,6 +2811,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">By-pass solenoid (ISC)</TITLE>
 		<TITLE lang="de">Leerlaufregelventil (ISC)</TITLE>
+		<TITLE lang="tr">Baypas solenoidi (ISC)</TITLE>
 	</MB>
 	<MB id="MB_ISC_Lseries">
 		<UNIT lang="all">%</UNIT>
@@ -2804,6 +2819,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">By-pass solenoid (ISC)</TITLE>
 		<TITLE lang="de">Leerlaufregelventil (ISC)</TITLE>
+		<TITLE lang="tr">Baypas solenoidi (ISC)</TITLE>
 	</MB>
 	<MB id="MB_O2_Lseries">
 		<UNIT lang="all">V</UNIT>
@@ -2811,6 +2827,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage</TITLE>
 		<TITLE lang="de">Lambdasondenspannung</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı</TITLE>
 	</MB>
 	<MB id="MB_O2_R">
 		<UNIT lang="all">V</UNIT>
@@ -2818,6 +2835,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı - sağ</TITLE>
 	</MB>
 	<MB id="MB_O2_R_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2825,6 +2843,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı - sağ</TITLE>
 	</MB>
 	<MB id="MB_O2_Rmax">
 		<UNIT lang="all">V</UNIT>
@@ -2832,6 +2851,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right maximum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts Maximum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sağ en fazla</TITLE>
 	</MB>
 	<MB id="MB_O2_Rmax_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2839,6 +2859,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right maximum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts Maximum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sağ en fazla</TITLE>
 	</MB>
 	<MB id="MB_O2_Rmin">
 		<UNIT lang="all">V</UNIT>
@@ -2846,6 +2867,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right minimum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts Minimum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sağ en az</TITLE>
 	</MB>
 	<MB id="MB_O2_Rmin_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2853,6 +2875,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage right minimum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung rechts Minimum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sağ en az</TITLE>
 	</MB>
 	<MB id="MB_O2_L_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2860,6 +2883,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage left</TITLE>
 		<TITLE lang="de">Lambdasondenspannung links</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sol</TITLE>
 	</MB>
 	<MB id="MB_O2_Lmax_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2867,6 +2891,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage left maximum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung links Maximum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sol en fazla</TITLE>
 	</MB>
 	<MB id="MB_O2_Lmin_SVX">
 		<UNIT lang="all">V</UNIT>
@@ -2874,6 +2899,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">O2 sensor voltage left minimum</TITLE>
 		<TITLE lang="de">Lambdasondenspannung links Minimum</TITLE>
+		<TITLE lang="tr">O2 sensörü voltajı sol en az</TITLE>
 	</MB>
 	<MB id="MB_ALPHA_Lseries">
 		<UNIT lang="all">%</UNIT>
@@ -2881,6 +2907,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">ALPHA correction O2 sensor</TITLE>
 		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde</TITLE>
+		<TITLE lang="tr">O2 sensörü ALFA düzeltmesi</TITLE>
 	</MB>
 	<MB id="MB_ALPHA_R">
 		<UNIT lang="all">%</UNIT>
@@ -2888,6 +2915,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">ALPHA correction O2 sensor right</TITLE>
 		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde rechts</TITLE>
+		<TITLE lang="tr">O2 sensörü ALFA düzeltmesi sağ</TITLE>
 	</MB>
 	<MB id="MB_ALPHA_R_SVX">
 		<UNIT lang="all">%</UNIT>
@@ -2895,6 +2923,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">ALPHA correction O2 sensor right</TITLE>
 		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde rechts</TITLE>
+		<TITLE lang="tr">O2 sensörü ALFA düzeltmesi sağ</TITLE>
 	</MB>
 	<MB id="MB_ALPHA_L_SVX">
 		<UNIT lang="all">%</UNIT>
@@ -2902,6 +2931,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">ALPHA correction O2 sensor left</TITLE>
 		<TITLE lang="de">ALPHA Korrektursignal Lambdasonde links</TITLE>
+		<TITLE lang="tr">O2 sensörü ALFA düzeltmesi sol</TITLE>
 	</MB>
 	<MB id="MB_RTRD_Lseries">
 		<UNIT lang="all">°</UNIT>
@@ -2909,6 +2939,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Knock sensor (Turbo only)</TITLE>
 		<TITLE lang="de">Klopfsensor (nur Turbo)</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü (Sadece Turbo)</TITLE>
 	</MB>
 	<MB id="MB_RTRD">
 		<UNIT lang="all">°</UNIT>
@@ -2916,6 +2947,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Knock sensor</TITLE>
 		<TITLE lang="de">Klopfsensor</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü</TITLE>
 	</MB>
 	<MB id="MB_RTRD_SVX">
 		<UNIT lang="all">°</UNIT>
@@ -2923,6 +2955,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Knock sensor</TITLE>
 		<TITLE lang="de">Klopfsensor</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü</TITLE>
 	</MB>
 	<MB id="MB_WGC">
 		<UNIT lang="all">%</UNIT>
@@ -2930,6 +2963,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">wastegate valve</TITLE>
 		<TITLE lang="de">Wastegate-Magnetventil</TITLE>
+		<TITLE lang="tr">Westgate valfi</TITLE>
 	</MB>
 	<MB id="MB_WGC_Lseries">
 		<UNIT lang="all">%</UNIT>
@@ -2937,6 +2971,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">wastegate valve (Turbo only)</TITLE>
 		<TITLE lang="de">Wastegate-Magnetventil (nur Turbo)</TITLE>
+		<TITLE lang="tr">Westgate valfi (Sadece Turbo)</TITLE>
 	</MB>
 	<MB id="MB_FPDY_Lseries">
 		<UNIT lang="all">%</UNIT>
@@ -2944,6 +2979,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">fuel pump ratio</TITLE>
 		<TITLE lang="de">Einschaltverhältnis Kraftstoffpumpe</TITLE>
+		<TITLE lang="tr">Yakıt pompa oranı</TITLE>
 	</MB>
 	<MB id="MB_CPCP">
 		<UNIT lang="all">%</UNIT>
@@ -2951,6 +2987,7 @@
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">Canister purge control</TITLE>
 		<TITLE lang="de">Absaug-Magnetventil</TITLE>
+		<TITLE lang="tr">Kanister tasfiye kontrolü</TITLE>
 	</MB>
 	<MB id="MB_BARO.P">
 		<UNIT lang="all">mmHg</UNIT>
@@ -2958,6 +2995,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Atmospheric pressure</TITLE>
 		<TITLE lang="de">Umgebungsdruck</TITLE>
+		<TITLE lang="tr">Atmosfer basıncı</TITLE>
 	</MB>
 	<MB id="MB_BARO.P_SVX">
 		<UNIT lang="all">mmHg</UNIT>
@@ -2965,6 +3003,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Atmospheric pressure</TITLE>
 		<TITLE lang="de">Umgebungsdruck</TITLE>
+		<TITLE lang="tr">Atmosfer basıncı</TITLE>
 	</MB>
 	<MB id="MB_COADJ">
 		<UNIT lang="all">kg/h</UNIT>
@@ -2972,6 +3011,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">COADJ</TITLE><!-- TODO //-->
 		<TITLE lang="de">COADJ</TITLE><!-- TODO //-->
+		<TITLE lang="tr">COADJ</TITLE>
 	</MB>
 	<MB id="MB_ALT_CUT">
 		<UNIT lang="all">%</UNIT>
@@ -2979,6 +3019,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">ALT_CUT</TITLE><!-- TODO //-->
 		<TITLE lang="de">ALT_CUT</TITLE><!-- TODO //-->
+		<TITLE lang="tr">ALT_CUT</TITLE>
 	</MB>
 	
 	<!-- ###################################          S W I T C H E S          ###################################  //-->
@@ -2986,188 +3027,250 @@
 	<SW id="SW_FP">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Fuel pump control</TITLE>
 		<TITLE lang="de">Kraftstoffpumpensteuerung</TITLE>
+		<TITLE lang="tr">Yakıt pompası kontrolü</TITLE>
 	</SW>
 	<SW id="SW_FP_2">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Fuel pump relais</TITLE>
 		<TITLE lang="de">Kraftstoffpumpenrelais</TITLE>
+		<TITLE lang="tr">Yakıt pompası rölesi</TITLE>
 	</SW>
 	<SW id="SW_AC">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Air conditioning switch</TITLE>
 		<TITLE lang="de">Klimaanlagenschalter</TITLE>
+		<TITLE lang="tr">Klima anahtarı</TITLE>
 	</SW>
 	<SW id="SW_ID">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
+		<TITLE lang="tr">Boşta anahtarı</TITLE>
 	</SW>
 	<SW id="SW_AR">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">air conditioning relay</TITLE>
 		<TITLE lang="de">Klimaanlagenrelais</TITLE>
+		<TITLE lang="tr">Klima rölesi</TITLE>
 	</SW>
 	<SW id="SW_AP">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Air conditioning pressure switch</TITLE>
 		<TITLE lang="de">Dreifachschalter d. Klimaanlage (Druckschalter)</TITLE>
+		<TITLE lang="tr">Klima basınç şalteri</TITLE>
 	</SW>
 	<SW id="SW_IG">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Ignition switch</TITLE>
 		<TITLE lang="de">Zündschalter</TITLE>
+		<TITLE lang="tr">Kontak anahtarı</TITLE>
 	</SW>
 	<SW id="SW_AT">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">AT</TITLE><!-- TODO //-->
 		<TITLE lang="de">AT</TITLE><!-- TODO //-->
+		<TITLE lang="tr">AT</TITLE>
 	</SW>
 	<SW id="SW_NT">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Neutral switch</TITLE>
 		<TITLE lang="de">Neutralschalter</TITLE>
+		<TITLE lang="tr">Nötr (Boşta) anahtarı</TITLE>
 	</SW>
 	<SW id="SW_SS">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Pressure switch power steering</TITLE>
 		<TITLE lang="de">Druckschalter Servolenkung</TITLE>
+		<TITLE lang="tr">Hidrolik direksiyon basınç şalteri</TITLE>
 	</SW>
 	<SW id="SW_PS">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Pressure switch power steering</TITLE>
 		<TITLE lang="de">Druckschalter Servolenkung</TITLE>
+		<TITLE lang="tr">Hidrolik direksiyon basınç şalteri</TITLE>
 	</SW>
 	<SW id="SW_ER">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">EGR valve</TITLE>
 		<TITLE lang="de">AGR-Ventil</TITLE>
+		<TITLE lang="tr">EGR valfi</TITLE>
 	</SW>
 	<SW id="SW_AX">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Auxiliary air valve (no Turbo)</TITLE>
 		<TITLE lang="de">Zusatzluftventil (kein Turbo)</TITLE>
+		<TITLE lang="tr">İkincil hava valfi (Turbo yok)</TITLE>
 	</SW>
 	<SW id="SW_KS">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Knock sensor signal</TITLE>
 		<TITLE lang="de">Klopfsensorsignal</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü sinyali</TITLE>
 	</SW>
 	<SW id="SW_KS_inverted">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
+		<UNIT lang="tr">Kapalı\Açık</UNIT>
 		<TITLE lang="en">Knock sensor signal</TITLE>
 		<TITLE lang="de">Klopfsensorsignal</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü sinyali</TITLE>
 	</SW>
 	<SW id="SW_CN">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">hmm..</TITLE><!-- TODO //-->
 		<TITLE lang="de">Spülluftmagnetventil</TITLE>
+		<TITLE lang="tr">Tahliye havası solenoid valfi</TITLE>
 	</SW>
 	<SW id="SW_UD">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Test mode</TITLE>
 		<TITLE lang="de">Test-Modus</TITLE>
+		<TITLE lang="tr">Test modu</TITLE>
 	</SW>
 	<SW id="SW_RM">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Read DTC mode</TITLE>
 		<TITLE lang="de">Speicher-Lese-Modus</TITLE>
+		<TITLE lang="tr">Hata Kodu okuma modu</TITLE>
 	</SW>
 	<SW id="SW_AS">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">AS</TITLE><!-- TODO //-->
 		<TITLE lang="de">AS</TITLE><!-- TODO //-->
+		<TITLE lang="tr">AS</TITLE>
 	</SW>
 	<SW id="SW_TR">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Torque control</TITLE>
 		<TITLE lang="de">Drehmomentregelung</TITLE>
+		<TITLE lang="tr">Tork kontrolü</TITLE>
 	</SW>
 	<SW id="SW_PK">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Parking position interdrings....</TITLE><!-- TODO //-->
 		<TITLE lang="de">Parkstellung des Sperrschalters</TITLE>
+		<TITLE lang="tr">Park konumu kilit anahtarı</TITLE>
 	</SW>
 	<SW id="SW_FC">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">FC</TITLE><!-- TODO //-->
 		<TITLE lang="de">FC</TITLE><!-- TODO //-->
+		<TITLE lang="tr">FC</TITLE>
 	</SW>
 	<SW id="SW_R2">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Second blower</TITLE>
 		<TITLE lang="de">Nebenlüfter</TITLE>
+		<TITLE lang="tr">İkinci blower</TITLE>
 	</SW>
 	<SW id="SW_R1">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">First blower</TITLE>
 		<TITLE lang="de">Hauptlüfter</TITLE>
+		<TITLE lang="tr">Birinci blower</TITLE>
 	</SW>
 	<SW id="SW_IH">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">IH</TITLE><!-- TODO //-->
 		<TITLE lang="de">Magnetventil für Saugrohr-Umschaltklappe</TITLE>
+		<TITLE lang="tr">Emme manifoldu değişim kapağı solenoid valfi</TITLE>
 	</SW>
 	<SW id="SW_OL">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">O2 monitor left</TITLE>
 		<TITLE lang="de">Lambdasonden-Monitor links</TITLE>
+		<TITLE lang="tr">O2 monitörü sol</TITLE>
 	</SW>
 	<SW id="SW_OR">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">O2 monitor right</TITLE>
 		<TITLE lang="de">Lambdasonden-Monitor rechts</TITLE>
+		<TITLE lang="tr">O2 monitörü sağ</TITLE>
 	</SW>
 	<SW id="SW_MC">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">MC</TITLE><!-- TODO //-->
 		<TITLE lang="de">MC</TITLE><!-- TODO //-->
+		<TITLE lang="tr">MC</TITLE>
 	</SW>
 	<SW id="SW_IC">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">IC</TITLE><!-- TODO //-->
 		<TITLE lang="de">IC</TITLE><!-- TODO //-->
+		<TITLE lang="tr">IC</TITLE>
 	</SW>
 	<SW id="SW_BR">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">BR</TITLE><!-- TODO //-->
 		<TITLE lang="de">BR</TITLE><!-- TODO //-->
+		<TITLE lang="tr">BR</TITLE>
 	</SW>
 	<SW id="SW_RF">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">RF</TITLE><!-- TODO //-->
 		<TITLE lang="de">RF</TITLE><!-- TODO //-->
+		<TITLE lang="tr">RF</TITLE>
 	</SW>
 	
 	
@@ -3179,221 +3282,265 @@
 		<CODE>11</CODE>
 		<TITLE lang="en">Crank angle sensor (No reference pulse)</TITLE>
 		<TITLE lang="de">Kurbelwinkelsensor (kein Referenzimpuls)</TITLE>
+		<TITLE lang="tr">Krank açısı sensörü (Referans sinyali yok)</TITLE>
 	</DTC>
 	<DTC id="DTC_11_SVX">
 		<CODE>11</CODE>
 		<TITLE lang="en">Crank angle sensor 1</TITLE>
 		<TITLE lang="de">Kurbelwinkelsensor 1</TITLE>
+		<TITLE lang="tr">Krank açısı sensörü 1</TITLE>
 	</DTC>
 	<DTC id="DTC_12">
 		<CODE>12</CODE>
 		<TITLE lang="en">Starter switch</TITLE>
 		<TITLE lang="de">Anlasserschalter</TITLE>
+		<TITLE lang="tr">Marş anahtarı</TITLE>
 	</DTC>
 	<DTC id="DTC_13_CRANK">
 		<CODE>13</CODE>
 		<TITLE lang="en">Crank angle sensor (No position pulse)</TITLE>
 		<TITLE lang="de">Kurbelwinkelsensor (kein Positionsimpuls)</TITLE>
+		<TITLE lang="tr">Krank açısı sensörü (Konum sinyali yok)</TITLE>
 	</DTC>
 	<DTC id="DTC_13_CAM">
 		<CODE>13</CODE>
 		<TITLE lang="en">Cam angle sensor</TITLE>
 		<TITLE lang="de">Nockenwellensensor</TITLE>
+		<TITLE lang="tr">KAM açısı sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_14">
 		<CODE>14</CODE>
 		<TITLE lang="en">Fuel injector #1</TITLE>
 		<TITLE lang="de">Einspritzdüse #1</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü # 1</TITLE>
 	</DTC>
 	<DTC id="DTC_14_Lseries">
 		<CODE>14</CODE>
 		<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
 		<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
 	</DTC>
 	<DTC id="DTC_14_XT6">
 		<CODE>14</CODE>
 		<TITLE lang="en">Fuel injector #5 and/or #6</TITLE>
 		<TITLE lang="de">Einspritzdüse #5 und/oder #6</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #5 ve/veya #6</TITLE>
 	</DTC>
 	<DTC id="DTC_15">
 		<CODE>15</CODE>
 		<TITLE lang="en">Fuel injector #2</TITLE>
 		<TITLE lang="de">Einspritzdüse #2</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #2</TITLE>
 	</DTC>
 	<DTC id="DTC_15_Lseries">
 		<CODE>15</CODE>
 		<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
 		<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
 	</DTC>
 	<DTC id="DTC_15_XT6">
 		<CODE>15</CODE>
 		<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
 		<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
 	</DTC>
 	<DTC id="DTC_16">
 		<CODE>16</CODE>
 		<TITLE lang="en">Fuel injector #3</TITLE>
 		<TITLE lang="de">Einspritzdüse #3</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #3</TITLE>
 	</DTC>
 	<DTC id="DTC_17">
 		<CODE>17</CODE>
 		<TITLE lang="en">Fuel injector #4</TITLE>
 		<TITLE lang="de">Einspritzdüse #4</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #4</TITLE>
 	</DTC>
 	<DTC id="DTC_18">
 		<CODE>18</CODE>
 		<TITLE lang="en">Fuel injector #5</TITLE>
 		<TITLE lang="de">Einspritzdüse #5</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #5</TITLE>
 	</DTC>
 	<DTC id="DTC_19">
 		<CODE>19</CODE>
 		<TITLE lang="en">Fuel injector #6</TITLE>
 		<TITLE lang="de">Einspritzdüse #6</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #6</TITLE>
 	</DTC>
 	<DTC id="DTC_21">
 		<CODE>21</CODE>
 		<TITLE lang="en">Water temperature sensor</TITLE>
 		<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
+		<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_22">
 		<CODE>22</CODE>
 		<TITLE lang="en">Knock sensor</TITLE>
 		<TITLE lang="de">Klopfsensor</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_22_SVX">
 		<CODE>22</CODE>
 		<TITLE lang="en">Knock sensor 1</TITLE>
 		<TITLE lang="de">Klopfsensor 1</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü 1</TITLE>
 	</DTC>
 	<DTC id="DTC_23_QA">
 		<CODE>23</CODE>
 		<TITLE lang="en">Air flow meter</TITLE>
 		<TITLE lang="de">Luftmassenmesser</TITLE>
+		<TITLE lang="tr">Hava akışmetre</TITLE>
 	</DTC>
 	<DTC id="DTC_24">
 		<CODE>24</CODE>
 		<TITLE lang="en">By-pass air control valve</TITLE>
 		<TITLE lang="de">Leerlaufregelventil</TITLE>
+		<TITLE lang="tr">Baypas hava kontrol valfi</TITLE>
 	</DTC>
 	<DTC id="DTC_25_XT6">
 		<CODE>25</CODE>
 		<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
 		<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
+		<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
 	</DTC>
 	<DTC id="DTC_26">
 		<CODE>26</CODE>
 		<TITLE lang="en">Auxiliary air valve</TITLE>
 		<TITLE lang="de">Zusatzluftventil</TITLE>
+		<TITLE lang="tr">İkincil hava valfi</TITLE>
 	</DTC>
 	<DTC id="DTC_28_SVX">
 		<CODE>28</CODE>
 		<TITLE lang="en">Knock sensor 2</TITLE>
 		<TITLE lang="de">Klopfsensor 2</TITLE>
+		<TITLE lang="tr">Vuruntu sensörü 2</TITLE>
 	</DTC>
 	<DTC id="DTC_29">
 		<CODE>29</CODE>
 		<TITLE lang="en">Crank angle sensor 2</TITLE>
 		<TITLE lang="de">Kurbelwinkelsensor 2</TITLE>
+		<TITLE lang="tr">Krank açısı sensörü 2</TITLE>
 	</DTC>
 	<DTC id="DTC_31"><!-- THV //-->
 		<CODE>31</CODE>
 		<TITLE lang="en">Throttle sensor</TITLE>
 		<TITLE lang="de">Drosselklappensensor</TITLE>
+		<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_32"><!-- O2 //-->
 		<CODE>32</CODE>
 		<TITLE lang="en">O2 sensor</TITLE>
 		<TITLE lang="de">Lambdasonde</TITLE>
+		<TITLE lang="tr">O2 sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_32_SVX"><!-- O2 R //-->
 		<CODE>32</CODE>
 		<TITLE lang="en">O2 sensor right</TITLE>
 		<TITLE lang="de">Lambdasonde rechts</TITLE>
+		<TITLE lang="tr">O2 sensörü sağ</TITLE>
 	</DTC>
 	<DTC id="DTC_33"><!-- VSP //-->
 		<CODE>33</CODE>
 		<TITLE lang="en">Vehicle speed sensor</TITLE>
 		<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
+		<TITLE lang="tr">Araç hız sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_34">
 		<CODE>34</CODE>
 		<TITLE lang="en">EGR valve</TITLE>
 		<TITLE lang="de">AGR-Magnetventil</TITLE>
+		<TITLE lang="tr">EGR valfi</TITLE>
 	</DTC>
 	<DTC id="DTC_35"><!-- CPC //-->
 		<CODE>35</CODE>
 		<TITLE lang="en">Purge control solenoid valve</TITLE>
 		<TITLE lang="de">Absaug-Magnetventil</TITLE>
+		<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
 	</DTC>
 	<DTC id="DTC_37"><!-- O2 L //-->
 		<CODE>37</CODE>
 		<TITLE lang="en">O2 sensor left</TITLE>
 		<TITLE lang="de">Lambdasonde links</TITLE>
+		<TITLE lang="tr">O2 sensörü sol</TITLE>
 	</DTC>
 	<DTC id="DTC_38">
 		<CODE>38</CODE>
 		<TITLE lang="en">Torque signal</TITLE>
 		<TITLE lang="de">Drehmomentsignal</TITLE>
+		<TITLE lang="tr">Tork sinyali</TITLE>
 	</DTC>
 	<DTC id="DTC_41">
 		<CODE>41</CODE>
 		<TITLE lang="en">Mixture too lean</TITLE>
 		<TITLE lang="de">Kraftstoffgemisch zu mager</TITLE>
+		<TITLE lang="tr">Karışım çok zayıf</TITLE>
 	</DTC>
 	<DTC id="DTC_41_Lseries">
 		<CODE>41</CODE>
 		<TITLE lang="en">Mixture too lean or system error</TITLE>
 		<TITLE lang="de">Gemisch zu mager oder Systemfehler</TITLE>
+		<TITLE lang="tr">Karışım çok zayıf veya sistem hatası</TITLE>
 	</DTC>
 	<DTC id="DTC_42"><!-- ID_SW //-->
 		<CODE>42</CODE>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
+		<TITLE lang="tr">Boşta anahtarı</TITLE>
 	</DTC>
 	<DTC id="DTC_43_ACCSW"><!-- ACCSW //-->
 		<CODE>43</CODE>
 		<TITLE lang="en">ACCSW</TITLE><!-- TODO //-->
 		<TITLE lang="de">ACCSW</TITLE><!-- TODO //-->
+		<TITLE lang="tr">ACCSW</TITLE>
 	</DTC>
 	<DTC id="DTC_44"><!-- WGC //-->
 		<CODE>44</CODE>
 		<TITLE lang="en">By-pass valve (TURBO)</TITLE>
 		<TITLE lang="de">Bypass-Ventil (TURBO)</TITLE>
+		<TITLE lang="tr">Baypas valfi (TURBO)</TITLE>
 	</DTC>
 	<DTC id="DTC_45"><!-- P.S //-->
 		<CODE>45</CODE>
 		<TITLE lang="en">Atmospheric pressure sensor</TITLE>
 		<TITLE lang="de">Umgebungsdruck-Sensor</TITLE>
+		<TITLE lang="tr">Atmosferik basınç sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_49"><!-- SYS.ERR //-->
 		<CODE>49</CODE>
 		<TITLE lang="en">Internal System Error</TITLE>
 		<TITLE lang="de">interner Systemfehler</TITLE>
+		<TITLE lang="tr">İç Sistem Hatası</TITLE>
 	</DTC>
 	<DTC id="DTC_51"><!-- N_SW //-->
 		<CODE>51</CODE>
 		<TITLE lang="en">Neutral switch (MT)</TITLE>
 		<TITLE lang="de">Neutralschalter (MT)</TITLE>
+		<TITLE lang="tr">Nötr anahtarı (MT)</TITLE>
 	</DTC>
 	<DTC id="DTC_52"><!-- P_SW //--><!-- not documented in US XT FSM '88 but possible //-->
 		<CODE>52</CODE>
 		<TITLE lang="en">Parking switch</TITLE>
 		<TITLE lang="de">Parkschalter</TITLE>
+		<TITLE lang="tr">Park anahtarı</TITLE>
 	</DTC>
 	<DTC id="DTC_55">
 		<CODE>55</CODE>
 		<TITLE lang="en">EGR temperature sensor</TITLE>
 		<TITLE lang="de">AGR-Temperatur-Sensor</TITLE>
+		<TITLE lang="tr">EGR sıcaklık sensörü</TITLE>
 	</DTC>
 	<DTC id="DTC_56">
 		<CODE>56</CODE>
 		<TITLE lang="en">EGR_SYS</TITLE><!-- TODO //-->
 		<TITLE lang="de">EGR_SYS</TITLE><!-- TODO //-->
+		<TITLE lang="tr">EGR_SYS</TITLE>
 	</DTC>
 	<DTC id="DTC_57"><!-- ALT.SYS //-->
 		<CODE>57</CODE>
 		<TITLE lang="en">ALT.SYS</TITLE><!-- TODO //-->
 		<TITLE lang="de">ALT.SYS</TITLE><!-- TODO //-->
+		<TITLE lang="tr">ALT.SYS</TITLE>
 	</DTC>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
