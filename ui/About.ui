@@ -609,11 +609,11 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
        <x>140</x>
        <y>50</y>
        <width>370</width>
-       <height>100</height>
+       <height>111</height>
       </rect>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;br/&gt;madanadam (Turkish translation)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
