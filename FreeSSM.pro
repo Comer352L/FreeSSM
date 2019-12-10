@@ -57,6 +57,7 @@ HEADERS += src/FreeSSM.h \
            src/SSMFlagbyteDefinitions_SysDescriptions.h \
            src/SSMFlagbyteDefinitions_en.h \
            src/SSMFlagbyteDefinitions_de.h \
+		   src/SSMFlagbyteDefinitions_tr.h \
            src/SSMCUdata.h \
            src/ClearMemoryDlg.h \
            src/libFSSM.h \
@@ -106,6 +107,7 @@ SOURCES += src/main.cpp \
            src/SSMFlagbyteDefinitions_SysDescriptions.cpp \
            src/SSMFlagbyteDefinitions_en.cpp \
            src/SSMFlagbyteDefinitions_de.cpp \
+		   src/SSMFlagbyteDefinitions_tr.cpp \
            src/SSMCUdata.cpp \
            src/ClearMemoryDlg.cpp \
            src/libFSSM.cpp \
@@ -151,7 +153,8 @@ small-resolution {
 RESOURCES += resources/FreeSSM.qrc
 
 TRANSLATIONS = FreeSSM_en.ts \
-               FreeSSM_de.ts
+               FreeSSM_de.ts \
+               FreeSSM_tr.ts 
 
 translation.commands = lrelease FreeSSM.pro & $$QMAKE_QMAKE     # qmake needs to be called again, otherwise *.qm file will not be installed
 QMAKE_EXTRA_TARGETS += translation
