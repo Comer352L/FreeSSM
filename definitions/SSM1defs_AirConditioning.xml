@@ -3,6 +3,7 @@
 	SSM1defs_AirConditioning.xml - Definitions for Air Conditioning
 	
 	(c) 2012 L1800Turbo
+	(c) 2019 madanadam at gmail (Turkish translation)
 	
 	0.1.1  First example version for testing (Legacy '90/'91) without DTCs because of missing hex value implementation
 
@@ -148,6 +149,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tset</TITLE>
 		<TITLE lang="de">Tset</TITLE>
+		<TITLE lang="tr">Tset</TITLE>
 	</MB>
 	<MB id="MB_To">
 		<UNIT lang="all">°C</UNIT>
@@ -155,6 +157,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">To</TITLE>
 		<TITLE lang="de">To</TITLE>
+		<TITLE lang="tr">To</TITLE>
 	</MB>
 	<MB id="MB_Troom">
 		<UNIT lang="all">°C</UNIT>
@@ -162,6 +165,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Troom</TITLE>
 		<TITLE lang="de">Troom</TITLE>
+		<TITLE lang="tr">Troom</TITLE>
 	</MB>
 	<MB id="MB_Troom_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">°C</UNIT>
@@ -169,6 +173,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Troom</TITLE>
 		<TITLE lang="de">Troom</TITLE>
+		<TITLE lang="tr">Troom</TITLE>
 	</MB>
 	<MB id="MB_Tamb">
 		<UNIT lang="all">°C</UNIT>
@@ -176,6 +181,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tamb</TITLE>
 		<TITLE lang="de">Tamb</TITLE>
+		<TITLE lang="tr">Tamb</TITLE>
 	</MB>
 	<MB id="MB_Tamb_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">°C</UNIT>
@@ -183,6 +189,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tamb</TITLE>
 		<TITLE lang="de">Tamb</TITLE>
+		<TITLE lang="tr">Tamb</TITLE>
 	</MB>
 	<MB id="MB_Tevp">
 		<UNIT lang="all">°C</UNIT>
@@ -190,6 +197,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tevp</TITLE>
 		<TITLE lang="de">Tevp</TITLE>
+		<TITLE lang="tr">Tevp</TITLE>
 	</MB>
 	<MB id="MB_Tevp_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">°C</UNIT>
@@ -197,6 +205,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tevp</TITLE>
 		<TITLE lang="de">Tevp</TITLE>
+		<TITLE lang="tr">Tevp</TITLE>
 	</MB>
 	<MB id="MB_Tw">
 		<UNIT lang="all">°C</UNIT>
@@ -204,6 +213,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tw</TITLE>
 		<TITLE lang="de">Tw</TITLE>
+		<TITLE lang="tr">Tw</TITLE>
 	</MB>
 	<MB id="MB_Tw_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">°C</UNIT>
@@ -211,6 +221,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Tw</TITLE>
 		<TITLE lang="de">Tw</TITLE>
+		<TITLE lang="tr">Tw</TITLE>
 	</MB>
 	<MB id="MB_Qsun">
 		<UNIT lang="all">kCal</UNIT>
@@ -218,6 +229,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">Qsun</TITLE>
 		<TITLE lang="de">Qsun</TITLE>
+		<TITLE lang="tr">Qsun</TITLE>
 	</MB>
 	<MB id="MB_Qsun_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">kCal</UNIT>
@@ -225,6 +237,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Qsun</TITLE>
 		<TITLE lang="de">Qsun</TITLE>
+		<TITLE lang="tr">Qsun</TITLE>
 	</MB>
 	<MB id="MB_Qav_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">kCal</UNIT>
@@ -232,6 +245,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Qav</TITLE>
 		<TITLE lang="de">Qav</TITLE>
+		<TITLE lang="tr">Qav</TITLE>
 	</MB>
 	<MB id="MB_AMRset">
 		<UNIT lang="all">%</UNIT>
@@ -239,6 +253,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">AMRset</TITLE>
 		<TITLE lang="de">AMRset</TITLE>
+		<TITLE lang="tr">AMRset</TITLE>
 	</MB>
 	<MB id="MB_AMRset_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">%</UNIT>
@@ -246,6 +261,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">AMRset</TITLE>
 		<TITLE lang="de">AMRset</TITLE>
+		<TITLE lang="tr">AMRset</TITLE>
 	</MB>
 	<MB id="MB_AMRpt">
 		<UNIT lang="all">%</UNIT>
@@ -253,6 +269,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">AMRpt</TITLE>
 		<TITLE lang="de">AMRpt</TITLE>
+		<TITLE lang="tr">AMRpt</TITLE>
 	</MB>
 	<MB id="MB_AMRpt_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">%</UNIT>
@@ -260,6 +277,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">AMRpt</TITLE>
 		<TITLE lang="de">AMRpt</TITLE>
+		<TITLE lang="tr">AMRpt</TITLE>
 	</MB>
 	<MB id="MB_POSset">
 		<UNIT lang="all">%</UNIT>
@@ -267,6 +285,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">POSset</TITLE>
 		<TITLE lang="de">POSset</TITLE>
+		<TITLE lang="tr">POSset</TITLE>
 	</MB>
 	<MB id="MB_POSset_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all"></UNIT>
@@ -274,6 +293,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">POSset</TITLE>
 		<TITLE lang="de">POSset</TITLE>
+		<TITLE lang="tr">POSset</TITLE>
 	</MB>
 	<MB id="MB_POSpt">
 		<UNIT lang="all">%</UNIT>
@@ -281,6 +301,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">POSpt</TITLE>
 		<TITLE lang="de">POSpt</TITLE>
+		<TITLE lang="tr">POSpt</TITLE>
 	</MB>
 	<MB id="MB_POSpt_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all"></UNIT>
@@ -288,6 +309,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">POSpt</TITLE>
 		<TITLE lang="de">POSpt</TITLE>
+		<TITLE lang="tr">POSpt</TITLE>
 	</MB>
 	<MB id="MB_BLW">
 		<UNIT lang="all"></UNIT>
@@ -295,6 +317,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">BLW</TITLE>
 		<TITLE lang="de">BLW</TITLE>
+		<TITLE lang="tr">BLW</TITLE>
 	</MB>
 	<MB id="MB_BLW_0x89"><!-- for 70 89 00 //-->
 		<UNIT lang="all">V</UNIT>
@@ -302,6 +325,7 @@
 		<PRECISION>1</PRECISION>
 		<TITLE lang="en">BLW</TITLE>
 		<TITLE lang="de">BLW</TITLE>
+		<TITLE lang="tr">BLW</TITLE>
 	</MB>
 	<MB id="MB_Intak">
 		<UNIT lang="all"></UNIT>
@@ -309,6 +333,7 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">Intak</TITLE>
 		<TITLE lang="de">Intak</TITLE>
+		<TITLE lang="tr">Intak</TITLE>
 	</MB>
 	<MB id="MB_VSP">
 		<UNIT lang="all">km/h</UNIT>
@@ -316,57 +341,68 @@
 		<PRECISION>0</PRECISION>
 		<TITLE lang="en">VSP</TITLE>
 		<TITLE lang="de">VSP</TITLE>
+		<TITLE lang="tr">VSP</TITLE>
 	</MB>
 	
 	<DTC id="DTC_1">
 		<CODE>1</CODE>
 		<TITLE lang="en">1</TITLE>
 		<TITLE lang="de">1</TITLE>
+		<TITLE lang="tr">1</TITLE>
 	</DTC>
 	<DTC id="DTC_2">
 		<CODE>2</CODE>
 		<TITLE lang="en">2</TITLE>
 		<TITLE lang="de">2</TITLE>
+		<TITLE lang="tr">2</TITLE>
 	</DTC>
 	<DTC id="DTC_3">
 		<CODE>3</CODE>
 		<TITLE lang="en">3</TITLE>
 		<TITLE lang="de">3</TITLE>
+		<TITLE lang="tr">3</TITLE>
 	</DTC>
 	<DTC id="DTC_4">
 		<CODE>4</CODE>
 		<TITLE lang="en">4</TITLE>
 		<TITLE lang="de">4</TITLE>
+		<TITLE lang="tr">4</TITLE>
 	</DTC>
 	<DTC id="DTC_5">
 		<CODE>5</CODE>
 		<TITLE lang="en">5</TITLE>
 		<TITLE lang="de">5</TITLE>
+		<TITLE lang="tr">5</TITLE>
 	</DTC>
 	<DTC id="DTC_6">
 		<CODE>6</CODE>
 		<TITLE lang="en">6</TITLE>
 		<TITLE lang="de">6</TITLE>
+		<TITLE lang="tr">6</TITLE>
 	</DTC>
 	<DTC id="DTC_7">
 		<CODE>7</CODE>
 		<TITLE lang="en">7</TITLE>
 		<TITLE lang="de">7</TITLE>
+		<TITLE lang="tr">7</TITLE>
 	</DTC>
 	<DTC id="DTC_8">
 		<CODE>8</CODE>
 		<TITLE lang="en">8</TITLE>
 		<TITLE lang="de">8</TITLE>
+		<TITLE lang="tr">8</TITLE>
 	</DTC>
 	<DTC id="DTC_9">
 		<CODE>9</CODE>
 		<TITLE lang="en">9</TITLE>
 		<TITLE lang="de">9</TITLE>
+		<TITLE lang="tr">9</TITLE>
 	</DTC>
 	<DTC id="DTC_10">
 		<CODE>10</CODE>
 		<TITLE lang="en">10</TITLE>
 		<TITLE lang="de">10</TITLE>
+		<TITLE lang="tr">10</TITLE>
 	</DTC>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
