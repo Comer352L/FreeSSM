@@ -6,7 +6,8 @@
 	
 	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing hex value implementation
 
-
+	madanadam at gmail (Turkish Translation) 2019
+	
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
