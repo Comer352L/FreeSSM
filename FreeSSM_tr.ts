@@ -60,7 +60,7 @@
     <message>
         <location filename="src/ActuatorTestDlg.cpp" line="74"/>
         <source>Exit Control Unit</source>
-        <translation>Kontrol Ünitesinden Çık</translation>
+        <translation>Bölümden Çık</translation>
     </message>
     <message>
         <location filename="src/ActuatorTestDlg.cpp" line="91"/>
@@ -986,7 +986,7 @@ Kontrol Ünitesi bazı değerleri kabul etmedi!</translation>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="294"/>
         <source> Leave Control Unit </source>
-        <translation> Kontrol Ünitesinden Ayrıl </translation>
+        <translation> Bölümden Çık </translation>
     </message>
     <message>
         <location filename="src/ClearMemoryDlg.cpp" line="57"/>
@@ -1280,7 +1280,7 @@ Eğer projeye destek vermek isterseniz (tanımlamaları eklemek), yapımcıya ul
         <location filename="ui/ControlUnitDialog.ui" line="218"/>
         <location filename="ui/small/ControlUnitDialog.ui" line="191"/>
         <source>       &amp;Exit Control Unit        </source>
-        <translation>       &amp;Kontrol Ünitesinden Çık        </translation>
+        <translation>&amp;Bölümden Çık</translation>
     </message>
     <message>
         <location filename="ui/ControlUnitDialog.ui" line="256"/>
