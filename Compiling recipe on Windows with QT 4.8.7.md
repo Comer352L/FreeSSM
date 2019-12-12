@@ -13,29 +13,31 @@ Extract source code files to working directory. For example d:\freessm
 
 ## Compiling
 
-Run "Qt 4.8.7 Command Prompt" from "Start Menu" --> "Program Files" --> "Qt 4.8.7 (MinGW 4.8.2 OpenSource)"
+- Run "Qt 4.8.7 Command Prompt" from "Start Menu" --> "Program Files" --> "Qt 4.8.7 (MinGW 4.8.2 OpenSource)"
 
 
-Change Directory to "d:\freessm"
+- Change Directory to "d:\freessm"
 
     d:
     cd \freessm
 
-Prepare source code files : 
+- Prepare source code files : 
 
     qmake
 
-Compile source code:
+- Compile source code:
 
     make release-install
 
-Make and copy translation files to install directory c:\freessm : 
+- Make and copy translation files to install directory c:\freessm : 
 
     make translation
     copy *.qm c:\freessm\
 
-Replace and overwrite libstdc++-6.dll file. Because automatic installed file gives an error:
+- Replace and overwrite libstdc++-6.dll file. Because automatic installed file gives an error:
 
     copy /Y "C:\mingw32\bin\libstdc++-6.dll" c:\FreeSSM
 
-Finished
+- Finished.
+   
+   You can run from c:\freessm\ or copy whole FreeSSM directory to USB or another media.
