@@ -60,7 +60,7 @@
     <message>
         <location filename="src/ActuatorTestDlg.cpp" line="74"/>
         <source>Exit Control Unit</source>
-        <translation>Kontrol Ünitesinden Çık</translation>
+        <translation>Bölümü Kapat</translation>
     </message>
     <message>
         <location filename="src/ActuatorTestDlg.cpp" line="91"/>
