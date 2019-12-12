@@ -19,6 +19,7 @@ Extract source code files to working directory. For example d:\freessm
 - Change Directory to "d:\freessm"
 
     d:
+    
     cd \freessm
 
 - Prepare source code files : 
@@ -32,6 +33,7 @@ Extract source code files to working directory. For example d:\freessm
 - Make and copy translation files to install directory c:\freessm : 
 
     make translation
+    
     copy *.qm c:\freessm\
 
 - Replace and overwrite libstdc++-6.dll file. Because automatic installed file gives an error:
