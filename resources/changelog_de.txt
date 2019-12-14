@@ -7,6 +7,7 @@ nächstes Release (aktuelle Entwicklungsversion):
     (nur SSM1, Definitionen unvollständig)
   - Unterstützung für weitere Motor- und Getriebesteuergeräte hinzugefügt
     (OBD2 SSM1 Steuergeräte und weitere SSM2 Steuergeräteadressen)
+  - Türkische Übersetzung hinzugefügt
   - Zahlreiche interne Änderungen, Code-Überarbeitung, Modularisierung
   - Mehrere kleinere Fehler behoben
 

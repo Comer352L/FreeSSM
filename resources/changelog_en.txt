@@ -7,6 +7,7 @@ next release (current development snapshot):
     (SSM1 only, definitions incomplete)
   - Added support for further engine and transmission control units 
     (OBD2 SSM1 controllers and additional SSM2 control unit addresses)
+  - Added Turkish translation
   - Lots of internal changes, code rework, modularization
   - Fixed some minor bugs
 
