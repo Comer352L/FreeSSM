@@ -2,6 +2,7 @@
  * SSMFlagbyteDefinitionsInterface.h - Interface to the SSM flagbyte definitions
  *
  * Copyright (C) 2008-2019 Comer352L
+ * Copyright (C) 2019 madanadam (Turkish language support)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +29,7 @@
 #include "SSMFlagbyteDefinitions_SysDescriptions.h"
 #include "SSMFlagbyteDefinitions_en.h"
 #include "SSMFlagbyteDefinitions_de.h"
+#include "SSMFlagbyteDefinitions_tr.h"
 
 
 

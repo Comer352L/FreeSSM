@@ -2,6 +2,7 @@
  * SSMFlagbyteDefinitionsInterface.cpp - Interface to the SSM flagbyte definitions
  *
  * Copyright (C) 2008-2019 Comer352L
+ * Copyright (C) 2019 madanadam (Turkish language support)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,6 +83,14 @@ bool SSMFlagbyteDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *d
 			rawDefs = rawdefs_de.OBDDTCrawDefs();
 		else
 			rawDefs = rawdefs_de.SUBDTCrawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		if (*fmt_OBD2)
+			rawDefs = rawdefs_tr.OBDDTCrawDefs();
+		else
+			rawDefs = rawdefs_tr.SUBDTCrawDefs();
 	}
 	else
 	{
@@ -168,6 +177,11 @@ bool SSMFlagbyteDefinitionsInterface::cruiseControlCancelCodes(std::vector<dc_de
 		SSMFlagbyteDefinitions_de rawdefs_de;
 		CCrawDefs = rawdefs_de.CCCCrawDefs();
 	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		CCrawDefs = rawdefs_tr.CCCCrawDefs();
+	}
 	else
 	{
 		SSMFlagbyteDefinitions_en rawdefs_en;
@@ -201,6 +215,11 @@ bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *m
 	{
 		SSMFlagbyteDefinitions_de rawdefs_de;
 		mbrawdata = rawdefs_de.MBrawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		mbrawdata = rawdefs_tr.MBrawDefs();
 	}
 	else
 	{
@@ -291,6 +310,11 @@ bool SSMFlagbyteDefinitionsInterface::switches(std::vector<sw_intl_dt> *switches
 		SSMFlagbyteDefinitions_de rawdefs_de;
 		swrawdata = rawdefs_de.SWrawDefs();
 	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		swrawdata = rawdefs_tr.SWrawDefs();
+	}
 	else
 	{
 		SSMFlagbyteDefinitions_en rawdefs_en;
@@ -364,6 +388,11 @@ bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt
 	{
 		SSMFlagbyteDefinitions_de rawdefs_de;
 		adjustmentsrawdata = rawdefs_de.AdjustmentRawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		adjustmentsrawdata = rawdefs_tr.AdjustmentRawDefs();
 	}
 	else
 	{
@@ -461,6 +490,11 @@ bool SSMFlagbyteDefinitionsInterface::actuatorTests(std::vector<actuator_dt> *ac
 	{
 		SSMFlagbyteDefinitions_de rawdefs_de;
 		actuatorsrawdata = rawdefs_de.ActuatorRawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		actuatorsrawdata = rawdefs_tr.ActuatorRawDefs();
 	}
 	else
 	{
