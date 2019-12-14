@@ -1901,7 +1901,7 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/SSMprotocol2_ID.cpp" line="68"/>
+        <location filename="src/SSMFlagbyteDefinitions_SysDescriptions.cpp" line="68"/>
         <source>Center Differential</source>
         <translation>Zentraldifferential</translation>
     </message>
@@ -1928,7 +1928,6 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
         <translation>Informationen über FreeSSM</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="616"/>
         <location filename="ui/small/About.ui" line="672"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br&gt;Nikolay Marinov (small screen resolution)</oldsource>
@@ -2111,7 +2110,6 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <translation>Truetype-Schrift &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="632"/>
         <location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
@@ -2153,7 +2151,6 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <translation>Oxygen Icon Motiv:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="778"/>
         <location filename="ui/small/About.ui" line="977"/>
         <source>TinyXML:</source>
         <translation>TinyXML:</translation>
@@ -2177,7 +2174,6 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; und (seit Qt 4.5) auch die &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="880"/>
         <location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB-Lizenz&lt;/a&gt;</translation>

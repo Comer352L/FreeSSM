@@ -1588,7 +1588,7 @@ Maybe the device is already in use by another application...</translation>
         <source>German</source>
         <translation>German</translation>
     </message>
-	<message>
+    <message>
         <location filename="src/Languages.h" line="39"/>
         <source>Turkish</source>
         <translation>Turkish</translation>
@@ -1900,7 +1900,7 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/SSMprotocol2_ID.cpp" line="68"/>
+        <location filename="src/SSMFlagbyteDefinitions_SysDescriptions.cpp" line="68"/>
         <source>Center Differential</source>
         <translation>Center Differential</translation>
     </message>
@@ -1927,7 +1927,6 @@ to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</translat
         <translation>About FreeSSM</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="616"/>
         <location filename="ui/small/About.ui" line="672"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br&gt;Nikolay Marinov (small screen resolution)</oldsource>
@@ -2110,7 +2109,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <translation>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
     <message utf8="true">
-        <location filename="ui/About.ui" line="632"/>
         <location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
@@ -2152,7 +2150,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <translation>Oxygen icon theme:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="778"/>
         <location filename="ui/small/About.ui" line="977"/>
         <source>TinyXML:</source>
         <translation>TinyXML:</translation>
@@ -2176,7 +2173,6 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
         <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; and (since Qt 4.5) also the &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="880"/>
         <location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</translation>

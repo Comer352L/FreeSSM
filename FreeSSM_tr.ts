@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="tr">
+<TS version="2.0" language="tr">
 <context>
     <name>ABSdialog</name>
     <message>
@@ -1900,7 +1900,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/SSMprotocol2_ID.cpp" line="68"/>
+        <location filename="src/SSMFlagbyteDefinitions_SysDescriptions.cpp" line="68"/>
         <source>Center Differential</source>
         <translation>Orta Diferansiyal</translation>
     </message>
@@ -1926,8 +1926,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <source>About FreeSSM</source>
         <translation>FreeSSM Hakkında</translation>
     </message>
-    <message>
-        <location filename="ui/About.ui" line="616"/>
+    <message utf8="true">
         <location filename="ui/small/About.ui" line="672"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>L1800Turbo (SSM1 ECU definitions, testing)&lt;br&gt;MartinX (SSM2 definitions, bugfix)&lt;br&gt;Antoine Giniès (background picture, Copyright ©)&lt;br&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br&gt;Nikolay Marinov (small screen resolution)</oldsource>
@@ -1938,7 +1937,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <source>Truetype font &quot;Liberation Sans&quot;:</source>
         <translation>Truetype font &quot;Liberation Sans&quot;:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="1010"/>
         <location filename="ui/small/About.ui" line="86"/>
         <source>A free diagnostic and adjustment tool for SUBARU® vehicles</source>
@@ -1962,7 +1961,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <source>Measuring Blocks:</source>
         <translation>Ölçüm Blokları:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="151"/>
         <location filename="ui/small/About.ui" line="214"/>
         <source>LEGACY® / LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA®, EXIGA®</source>
@@ -2023,7 +2022,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <source>&amp;About</source>
         <translation>&amp;Hakkında</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="116"/>
         <location filename="ui/small/About.ui" line="145"/>
         <source>FreeSSM is a free and easy to use diagnostic and adjustment tool for SUBARU® vehicles. It currently supports the models LEGACY®, LIBERTY®, OUTBACK®, BAJA®, IMPREZA®, FORESTER®, TRIBECA® and EXIGA® starting with model year 1999 and provides access to the engine and transmission control units.
@@ -2090,7 +2089,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <source>Program languages:</source>
         <translation>Program dilleri:</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="552"/>
         <location filename="ui/small/About.ui" line="695"/>
         <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
@@ -2103,14 +2102,13 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
         <translation>Bazı simgeler &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; ve &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; ikon temalarından alınmıştır.</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="ui/About.ui" line="584"/>
         <location filename="ui/small/About.ui" line="764"/>
         <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
         <translation>Truetype fontu &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
-    <message>
-        <location filename="ui/About.ui" line="632"/>
+    <message utf8="true">
         <location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
@@ -2152,7 +2150,6 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <translation>Oxygen ikon teması:</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="778"/>
         <location filename="ui/small/About.ui" line="977"/>
         <source>TinyXML:</source>
         <translation>TinyXML:</translation>
@@ -2176,7 +2173,6 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; ve (since Qt 4.5) ayrıca &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="ui/About.ui" line="880"/>
         <location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB lisansı&lt;/a&gt;</translation>
