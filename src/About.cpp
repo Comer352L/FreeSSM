@@ -1,7 +1,7 @@
 /*
  * About.cpp - Display informations about the FreeSSM software
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2019 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,11 +34,11 @@ About::About(QWidget *parent, QString language) : QDialog(parent)
 	// Display title/program version:
 	progversion_label->setText(progversion_label->text() + " " + QApplication::applicationVersion());
 	// Load licence text and changelog:
+	QString changelog_filename = ":/changelog_" + language + ".txt";
+	if (!QFile::exists(changelog_filename) && (language != "en"))
+		changelog_filename = ":/changelog_en.txt";
 	QFile changelog_file;
-	if (language == "de")
-		changelog_file.setFileName(":/changelog_de.txt");
-	else
-		changelog_file.setFileName(":/changelog_en.txt");
+	changelog_file.setFileName(changelog_filename);
 	changelog_file.open(QIODevice::ReadOnly | QIODevice::Text);
 	QString changelog_content = static_cast<QString>(changelog_file.readAll());
 	changelog_textBrowser->setText(changelog_content);
