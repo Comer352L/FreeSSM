@@ -107,10 +107,10 @@ void About::showLicense()
 	int y = (desktop.height() - license_textBrowser->size().height()) / 2 - 50;
 	license_textBrowser->move ( x, y );
 	// Display license text:
-	if (_language == "de")
-		license_textBrowser->setSource(QUrl("qrc:/license_de.html"));
-	else
-		license_textBrowser->setSource(QUrl("qrc:/license_en.html"));
+	QString license_filename = "license_" + _language + ".html";
+	if (!QFile::exists(":/" + license_filename) && (_language != "en"))
+		license_filename = "license_en.html";
+	license_textBrowser->setSource(QUrl("qrc:/" + license_filename));
 	license_textBrowser->show();
 }
 
