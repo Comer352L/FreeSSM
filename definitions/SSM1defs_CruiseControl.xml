@@ -3,11 +3,11 @@
 	SSM1defs_CruiseControl.xml - Definitions for Cruise Control Unit
 	
 	(c) 2012 L1800Turbo
+	(c) 2019 madanadam at gmail (Turkish translation)
 	
 	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing hex value implementation
 
-	madanadam at gmail (Turkish Translation) 2019
-	
+
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
@@ -78,15 +78,15 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">SET/COAST switch</TITLE>
 		<TITLE lang="de">SET/COAST-Schalter</TITLE>
-		<TITLE lang="tr">SET/COAST anahtarı</TITLE>
-			</SW>
+		<TITLE lang="tr">SET/COAST düğmesi</TITLE>
+	</SW>
 	<SW id="SW_RE">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">RESUME/ACCEL switch</TITLE>
 		<TITLE lang="de">RESUME/ACCEL-Schalter</TITLE>
-		<TITLE lang="tr">RESUME/ACCEL anahtarı</TITLE>
+		<TITLE lang="tr">RESUME/ACCEL düğmesi</TITLE>
 	</SW>
 	<SW id="SW_ST">
 		<UNIT lang="en">Off/On</UNIT>
@@ -94,7 +94,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Stop light switch</TITLE>
 		<TITLE lang="de">Bremslichtschalter</TITLE>
-		<TITLE lang="tr">Stop lambası anahtarı</TITLE>
+		<TITLE lang="tr">Stop lambası düğmesi</TITLE>
 	</SW>
 	<SW id="SW_BR">
 		<UNIT lang="en">Off/On</UNIT>
@@ -102,7 +102,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">brake / clutch switch</TITLE>
 		<TITLE lang="de">Brems- und/oder Kupplungsschalter</TITLE>
-		<TITLE lang="tr">Fren / Debriyaj anahtarı</TITLE>
+		<TITLE lang="tr">Fren / Debriyaj düğmesi</TITLE>
 	</SW>
 	<SW id="SW_N">
 		<UNIT lang="en">Off/On</UNIT>
@@ -110,7 +110,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Inhibitor switch (AT)</TITLE>
 		<TITLE lang="de">Sperrschalter (AT)</TITLE>
-		<TITLE lang="tr">Inhibitör Anahtar (AT)</TITLE>
+		<TITLE lang="tr">Inhibitör düğme (AT)</TITLE>
 	</SW>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>

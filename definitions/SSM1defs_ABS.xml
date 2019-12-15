@@ -3,10 +3,10 @@
 	SSM1defs_ABS.xml - Definitions for Antilock Brake System
 	
 	(c) 2012 L1800Turbo
+	(c) 2019 madanadam at gmail (Turkish translation)
 	
 	0.1.1  First example version for testing (Impreza '96) without DTCs because of missing freeze frame implementation
-	
-	madanadam at gmail (Turkish Translation) 2019
+
 
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
@@ -142,7 +142,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Stop light switch</TITLE>
 		<TITLE lang="de">Bremslichtschalter</TITLE>
-		<TITLE lang="tr">Stop lambası anahtarı</TITLE>
+		<TITLE lang="tr">Stop lambası düğmesi</TITLE>
 	</SW>
 	<SW id="SW_VR">
 		<UNIT lang="en">Off/On</UNIT>
@@ -155,7 +155,7 @@
 	<SW id="SW_MR">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
-		<UNIT lang="tr">Kapalı/Açık</UNIT>
+		<UNIT lang="tr">Kapalı\Açık</UNIT>
 		<TITLE lang="en">Motor relay signal</TITLE>
 		<TITLE lang="de">Signal Pumpenmotor-Relais</TITLE>
 		<TITLE lang="tr">Motor rölesi sinyali</TITLE>
@@ -163,7 +163,7 @@
 	<SW id="SW_AT">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
-		<UNIT lang="tr">Kapalı/Açık</UNIT>
+		<UNIT lang="tr">Kapalı\Açık</UNIT>
 		<TITLE lang="en">AT ABS signal</TITLE>
 		<TITLE lang="de">AT ABS Signal</TITLE>
 		<TITLE lang="tr">AT ABS sinyali</TITLE>
@@ -171,7 +171,7 @@
 	<SW id="SW_AW">
 		<UNIT lang="en">On\Off</UNIT>
 		<UNIT lang="de">Ein\Aus</UNIT>
-		<UNIT lang="tr">Kapalı/Açık</UNIT>
+		<UNIT lang="tr">Kapalı\Açık</UNIT>
 		<TITLE lang="en">ABS warning light</TITLE>
 		<TITLE lang="de">ABS Warnleuchte</TITLE>
 		<TITLE lang="tr">AB uyarı ışığı</TITLE>

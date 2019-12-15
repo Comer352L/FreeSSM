@@ -3,13 +3,14 @@
 	SSM1defs_Engine.xml - Definitions for Engine Control Unit
 	
 	(c) 2012 L1800Turbo
+	(c) 2019 madanadam at gmail (Turkish translation)
 	
 	0.1.1  First example version for testing:
 		- MPI87.5+XT, missing: TIM & O2 as switch, special routines needed
 		- SVX'92, missing: clean DTCs complete, "IN PROCESS" switch
 	0.1.2  - Additional RomIDs 723420, 7234A0, 733420, 7334A0 Legacy Turbo (incomplete)
 
-	madanadam at gmail (Turkish Translation) 2019
+
 //-->
 <FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
 <DEFINITIONS>
@@ -3046,7 +3047,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Air conditioning switch</TITLE>
 		<TITLE lang="de">Klimaanlagenschalter</TITLE>
-		<TITLE lang="tr">Klima anahtarı</TITLE>
+		<TITLE lang="tr">Klima düğmesi</TITLE>
 	</SW>
 	<SW id="SW_ID">
 		<UNIT lang="en">Off/On</UNIT>
@@ -3054,7 +3055,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
-		<TITLE lang="tr">Boşta anahtarı</TITLE>
+		<TITLE lang="tr">Boşta düğmesi</TITLE>
 	</SW>
 	<SW id="SW_AR">
 		<UNIT lang="en">Off/On</UNIT>
@@ -3094,7 +3095,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Neutral switch</TITLE>
 		<TITLE lang="de">Neutralschalter</TITLE>
-		<TITLE lang="tr">Nötr (Boşta) anahtarı</TITLE>
+		<TITLE lang="tr">Nötr (Boşta) düğmesi</TITLE>
 	</SW>
 	<SW id="SW_SS">
 		<UNIT lang="en">Off/On</UNIT>
@@ -3190,7 +3191,7 @@
 		<UNIT lang="tr">Kapalı/Açık</UNIT>
 		<TITLE lang="en">Parking position interdrings....</TITLE><!-- TODO //-->
 		<TITLE lang="de">Parkstellung des Sperrschalters</TITLE>
-		<TITLE lang="tr">Park konumu kilit anahtarı</TITLE>
+		<TITLE lang="tr">Park konumu kilit düğmesi</TITLE>
 	</SW>
 	<SW id="SW_FC">
 		<UNIT lang="en">Off/On</UNIT>
@@ -3294,7 +3295,7 @@
 		<CODE>12</CODE>
 		<TITLE lang="en">Starter switch</TITLE>
 		<TITLE lang="de">Anlasserschalter</TITLE>
-		<TITLE lang="tr">Marş anahtarı</TITLE>
+		<TITLE lang="tr">Marş düğmesi</TITLE>
 	</DTC>
 	<DTC id="DTC_13_CRANK">
 		<CODE>13</CODE>
@@ -3486,7 +3487,7 @@
 		<CODE>42</CODE>
 		<TITLE lang="en">Idle switch</TITLE>
 		<TITLE lang="de">Leerlaufschalter</TITLE>
-		<TITLE lang="tr">Boşta anahtarı</TITLE>
+		<TITLE lang="tr">Boşta düğmesi</TITLE>
 	</DTC>
 	<DTC id="DTC_43_ACCSW"><!-- ACCSW //-->
 		<CODE>43</CODE>
@@ -3516,13 +3517,13 @@
 		<CODE>51</CODE>
 		<TITLE lang="en">Neutral switch (MT)</TITLE>
 		<TITLE lang="de">Neutralschalter (MT)</TITLE>
-		<TITLE lang="tr">Nötr anahtarı (MT)</TITLE>
+		<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
 	</DTC>
 	<DTC id="DTC_52"><!-- P_SW //--><!-- not documented in US XT FSM '88 but possible //-->
 		<CODE>52</CODE>
 		<TITLE lang="en">Parking switch</TITLE>
 		<TITLE lang="de">Parkschalter</TITLE>
-		<TITLE lang="tr">Park anahtarı</TITLE>
+		<TITLE lang="tr">Park düğmesi</TITLE>
 	</DTC>
 	<DTC id="DTC_55">
 		<CODE>55</CODE>
