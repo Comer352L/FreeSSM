@@ -91,7 +91,7 @@ Actuator Test couldn&apos;t be started.</source>
         <location filename="ui/AddMBsSWsDlg.ui" line="28"/>
         <location filename="ui/small/AddMBsSWsDlg.ui" line="28"/>
         <source>Add Measuring Blocks &amp; Switches</source>
-        <translation>Ölçüm Bloğu &amp; Anahtarı Ekle</translation>
+        <translation>Ölçüm Bloğu &amp; Anahtar Ekle</translation>
     </message>
     <message>
         <location filename="ui/AddMBsSWsDlg.ui" line="72"/>
