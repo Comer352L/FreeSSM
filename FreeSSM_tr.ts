@@ -82,7 +82,7 @@
         <source>Communication Error:
 Actuator Test couldn&apos;t be started.</source>
         <translation>İletişim Hatası:
-Çalıştırıcı Testi başlatılamadı.</translation>
+İşletici Testi başlatılamadı.</translation>
     </message>
 </context>
 <context>
@@ -741,13 +741,13 @@ Yüklenen MB/SW listesi geçersiz</translation>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="120"/>
         <source>Actuator Test</source>
-        <translation>Çalıştırıcı Testi</translation>
+        <translation>İşletici Testi</translation>
     </message>
     <message>
         <location filename="src/CUcontent_sysTests.cpp" line="120"/>
         <source>Actuator Test couldn&apos;t be started:
 =&gt; Test mode connector is not connected !</source>
-        <translation>Çalıtırıcı Testi başlatılamadı:
+        <translation>İşletici Testi başlatılamadı:
 =&gt; Test modu bağlantısı bağlı değil !</translation>
     </message>
     <message>
@@ -1178,7 +1178,7 @@ Eğer projeye destek vermek isterseniz (tanımlamaları eklemek), yapımcıya ul
     <message>
         <location filename="src/ControlUnitDialog.cpp" line="318"/>
         <source>Stopping actuators... Please wait !</source>
-        <translation>Başlatıcılar durduruluyor... Lütfen bekleyin !</translation>
+        <translation>İşleticiler durduruluyor... Lütfen bekleyin !</translation>
     </message>
     <message>
         <location filename="src/ControlUnitDialog.cpp" line="350"/>
@@ -1996,7 +1996,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <location filename="ui/About.ui" line="242"/>
         <location filename="ui/small/About.ui" line="487"/>
         <source>(Actuators / Others) (Engine only)</source>
-        <translation>(Başlatıcılar / Diğerleri) (Motor için)</translation>
+        <translation>İşleticiler / Diğerleri) (Motor için)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="348"/>
@@ -2226,13 +2226,13 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/ActuatorTestDlg.ui" line="35"/>
         <location filename="ui/small/ActuatorTestDlg.ui" line="40"/>
         <source>Actuator Test</source>
-        <translation>Çalıştırıcı Testi</translation>
+        <translation>İşletici Testi</translation>
     </message>
     <message>
         <location filename="ui/ActuatorTestDlg.ui" line="53"/>
         <location filename="ui/small/ActuatorTestDlg.ui" line="77"/>
         <source>Actuator:</source>
-        <translation>Çalıştırıcı:</translation>
+        <translation>İşletici:</translation>
     </message>
     <message>
         <location filename="ui/ActuatorTestDlg.ui" line="72"/>
@@ -2250,7 +2250,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/ActuatorTestDlg.ui" line="129"/>
         <location filename="ui/small/ActuatorTestDlg.ui" line="57"/>
         <source>Actuator Test:</source>
-        <translation>Çalıştırıcı Testi:</translation>
+        <translation>İşletici Testi:</translation>
     </message>
 </context>
 <context>
@@ -2348,7 +2348,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/CUcontent_sysTests.ui" line="60"/>
         <location filename="ui/small/CUcontent_sysTests.ui" line="69"/>
         <source>Actuators:</source>
-        <translation>Çalıştırıcılar:</translation>
+        <translation>İşleticiler:</translation>
     </message>
     <message>
         <location filename="ui/CUcontent_sysTests.ui" line="178"/>
@@ -2358,8 +2358,8 @@ Not all actuator tests may be available for this vehicle.
 If the selected actuator is not supported, nothing will happen.
 For corresponding information, please read the manufacturers repair manual.</source>
         <translation>NOT:
-Tüm çalıştırıcı testleri bu araç için geçerli olmayabilir.
-Seçili çalıştırıcı araçta yoksa hareket olmaz.
+Tüm İşletici testleri bu araç için geçerli olmayabilir.
+Seçili işletici araçta yoksa hareket olmaz.
 Daha fazla bilgi için üreticinin tamir kılavuzuna başvurun.</translation>
     </message>
     <message>
