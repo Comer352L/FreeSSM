@@ -156,7 +156,11 @@ TRANSLATIONS = FreeSSM_en.ts \
                FreeSSM_de.ts \
                FreeSSM_tr.ts
 
-translation.commands = lrelease FreeSSM.pro & $$QMAKE_QMAKE     # qmake needs to be called again, otherwise *.qm file will not be installed
+TRANSLATIONS_BIN = FreeSSM_en.qm \
+                   FreeSSM_de.qm \
+                   FreeSSM_tr.qm
+                   # NOTE: we can't use wildcards (see below)
+
 QMAKE_EXTRA_TARGETS += translation
 
 # Add pre-processor-define if we compile as debug:
@@ -174,12 +178,16 @@ unix:INSTALLDIR = $$system(echo ~)/FreeSSM
 win32:INSTALLDIR = $$system(echo %homedrive%)/FreeSSM
 target.path = $$INSTALLDIR
 filestarget.path = $$INSTALLDIR
-filestarget.files = background.png LiberationSans*.ttf *.qm
+filestarget.files = background.png LiberationSans*.ttf
 unix:filestarget.files += resources/icons/freessm/48x48/FreeSSM.png
 doctarget.path = $$INSTALLDIR/doc
 doctarget.files = doc/*
 defstarget.path = $$INSTALLDIR/definitions
 defstarget.files = definitions/SSM1defs_*.xml
+translation.commands = lrelease FreeSSM.pro
+translation.path = $$INSTALLDIR
+translation.files = $$TRANSLATIONS_BIN  #NOTE: wildcards don't work (if the *.qm files don't exist yet when qmake is run, it creates a non-working installation command using the wildcard name as destination name)
+translation.CONFIG += no_check_exist    #NOTE: files do not exist yet when qmake is run
 win32 {
   platformstarget.path = $$INSTALLDIR/platforms
   dllstarget.path = $$INSTALLDIR
@@ -225,7 +233,7 @@ win32 {
 unix {
     defstarget.files += definitions/J2534libs.xml
 }
-INSTALLS += target doctarget defstarget filestarget
+INSTALLS += target doctarget defstarget filestarget translation
 win32:INSTALLS += dllstarget platformstarget
 
 
