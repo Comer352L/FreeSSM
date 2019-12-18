@@ -163,6 +163,8 @@ TRANSLATIONS_BIN = FreeSSM_en.qm \
 
 QMAKE_EXTRA_TARGETS += translation
 
+QMAKE_CLEAN += *.qm
+
 # Add pre-processor-define if we compile as debug:
 CONFIG(debug, debug|release): DEFINES += __FSSM_DEBUG__ __SERIALCOM_DEBUG__ __J2534_API_DEBUG__
 # Enable stuff which is deprectaed since Qt5:
