@@ -1,130 +1,130 @@
 sonraki sürüm (anlık geliştirme görüntüsü):
-	- J2534 arayüzleri için deneysel destek eklendi
-	- AT komut kontrollü arayüzler için deneysel destek eklendi
-	- SSM2 için ISO-15765 (CAN) üzerinden deneysel destek eklendi
-	- Eski SSM1 iletişim protokolü için destek eklendi
-	- Ek kontrol üniteleri için temel destek eklendi: ABS/VDC, CC, klima
+ - J2534 arayüzleri için deneysel destek eklendi
+ - AT komut kontrollü arayüzler için deneysel destek eklendi
+ - SSM2 için ISO-15765 (CAN) üzerinden deneysel destek eklendi
+ - Eski SSM1 iletişim protokolü için destek eklendi
+ - Ek kontrol üniteleri için temel destek eklendi: ABS/VDC, Hız Sabitleyici, Klima
      (Yalnızca SSM1, tanımlamaları eksik)
-	- Daha fazla motor ve şanzıman kontrol ünitesi için destek eklendi
+ - Daha fazla motor ve şanzıman kontrol ünitesi için destek eklendi
      (OBD2 SSM1 kontrolörleri ve SSM2 kontrol ünitesi ek adresleri)
-	- Türkçe çeviri eklendi
-	- Çok fazla iç değişiklik, kod düzenlemesi, modülerleştirme yapıldı
-	- Bazı küçük hatalar düzeltildi
+ - Türkçe çeviri eklendi
+ - Çok fazla iç değişiklik, kod düzenlemesi, modülerleştirme yapıldı
+ - Bazı küçük hatalar düzeltildi
 
 
 v1.2.5 (26.05.2010):
-	- Bazı yeni Outback modellerinde ve Dizel motorlu modellerde VIN 
-	(Şasi) numarasının "henüz kaydedilmemiş" 
-	olarak gösterilme  arızası düzeltildi
-	- Yazı tipi "Liberation Sans" son sürüme güncellendi
-	- Almanca değişim günlüğünün düzeni düzeltildi
+ - Bazı yeni Outback modellerinde ve Dizel motorlu modellerde VIN 
+ (Şasi) numarasının "henüz kaydedilmemiş" 
+ olarak gösterilme  arızası düzeltildi
+ - Yazı tipi "Liberation Sans" son sürüme güncellendi
+ - Almanca değişim günlüğünün düzeni düzeltildi
 
 
 v1.2.4 (15.05.2010):
-	- 2005+ E-4AT aktarım denetleyicilerinin hafızasını temizlerken 
-	oluşabilecek iletişim hatası düzeltildi
-	- Şanzıman kontrolörleri için 3 düğme ünitesinin hatası düzeltildi
+ - 2005+ E-4AT aktarım denetleyicilerinin hafızasını temizlerken 
+ oluşabilecek iletişim hatası düzeltildi
+ - Şanzıman kontrolörleri için 3 düğme ünitesinin hatası düzeltildi
 
 
 v1.2.3 (20.04.2010):
-	- OBD2 olmayan sistemlerde DTC-tablolarının güncellenememesi hatası 
-	düzeltildi
-	- GTK+ stilini kullanırken GUI çerçevesi düzeltildi
-	- Tercihler iletişim kutusunda GTK+ stili seçilmemesi düzeltildi
+ - OBD2 olmayan sistemlerde DTC-tablolarının güncellenememesi hatası 
+ düzeltildi
+ - GTK+ stilini kullanırken GUI çerçevesi düzeltildi
+ - Tercihler iletişim kutusunda GTK+ stili seçilmemesi düzeltildi
 
 
 v1.2.2 (27.03.2010):
-	- Aktüatör testlerini desteklemeyen kontrol üniteleri ile 
-	"Sistem Testleri" moduna geçerken iletişim hatasına neden 
-	olan bir hata düzeltildi
+ - İşletici testlerini desteklemeyen kontrol üniteleri ile 
+ "Sistem Testleri" moduna geçerken iletişim hatasına neden 
+ olan bir hata düzeltildi
 
 
 v1.2.1 (19.03.2010):
-	- Bir çeviri düzeltildi 
-	- COM9'dan daha yüksek portlar için MS Windows'ta seri port 
-	algılaması iyileştirildi
+ - Bir çeviri düzeltildi 
+ - COM9'dan daha yüksek portlar için MS Windows'ta seri port 
+ algılaması iyileştirildi
 
 
 v1.2.0 (23.12.2009):
-	- Blok ve Anahtar ölçme ekranına enaz/ençok işlevselliği eklendi
-	- Okuma işlemi devam ederken, Ölçüm Blokları/Anahtarları artık listede 
-	yukarı/aşağı hareket ettirilebilir
-	- Yeni Lineartronic CVT'nin sistem kimliği eklendi (MY2010)
-	- 44 yeni Ölçüm Bloğu ve Anahtar (MY2009 artık destekleniyor)
-	- 18 yeni Tanı Kodu (MY2009 artık destekleniyor)
-	- Geliştirilmiş seri port donanım/sürücü uyumluluğu
-	- Seri portta DTR+RTS el sıkışma hatlarının ayarlanması düzeltildi
-	- Bazı Windows sistemlerinde görüntülenmeyen arka plan resmi düzeltildi
-	- Bazı küçük tablo satır sorunları düzeltildi (sayı, yükseklik)
-	- Bazı küçük düzen ve çeviri düzeltmeleri
+ - Blok ve Anahtar ölçme ekranına enaz/ençok işlevselliği eklendi
+ - Okuma işlemi devam ederken, Ölçüm Blokları/Anahtarları artık listede 
+ yukarı/aşağı hareket ettirilebilir
+ - Yeni Lineartronic CVT'nin sistem kimliği eklendi (MY2010)
+ - 44 yeni Ölçüm Bloğu ve Anahtar (MY2009 artık destekleniyor)
+ - 18 yeni Tanı Kodu (MY2009 artık destekleniyor)
+ - Geliştirilmiş seri port donanım/sürücü uyumluluğu
+ - Seri portta DTR+RTS el sıkışma hatlarının ayarlanması düzeltildi
+ - Bazı Windows sistemlerinde görüntülenmeyen arka plan resmi düzeltildi
+ - Bazı küçük tablo satır sorunları düzeltildi (sayı, yükseklik)
+ - Bazı küçük düzen ve çeviri düzeltmeleri
 
 
 v1.1.1 (05.05.2009):
-	- Veri okuma başladıktan sonra MB birimlerinin kaybolmasına neden olan 
-	bir hata düzeltildi.
-	- Dokümantasyon düzeltmesi: Openport 2.0 arayüzü FreeSSM ile çalışmıyor
-	- Kod yeniden yapılandırılması/optimizasyonu, Qt4.5'e uyarlama
+ - Veri okuma başladıktan sonra MB birimlerinin kaybolmasına neden olan 
+ bir hata düzeltildi.
+ - Dokümantasyon düzeltmesi: Openport 2.0 arayüzü FreeSSM ile çalışmıyor
+ - Kod yeniden yapılandırılması/optimizasyonu, Qt4.5'e uyarlama
 
 
 v1.1.0 (25.03.2009):
-	- "Belleği Temizle" iletişim kutusundaki bilgiler genişletildi
-	- "Belleği Temizle" den sonra ayarlama değerlerinin otomatik 
-	geri yüklemesi ayarlandı
-	- Bazı klavye kısayollarının tanıtımı
-	- Birkaç küçük GUI ve çeviri düzeltmeleri
+ - "Belleği Temizle" iletişim kutusundaki bilgiler genişletildi
+ - "Belleği Temizle" den sonra ayarlama değerlerinin otomatik 
+ geri yüklemesi ayarlandı
+ - Bazı klavye kısayollarının tanıtımı
+ - Birkaç küçük GUI ve çeviri düzeltmeleri
 
 
 v1.0.0 (15.03.2009):
-	- Güç Aktarma Organları Kontrol Üniteleri (PCM) için destek eklendi
-	- 15 yeni Ölçüm Bloğu eklendi:
+ - Güç Aktarma Organları Kontrol Üniteleri (PCM) için destek eklendi
+ - 15 yeni Ölçüm Bloğu eklendi:
      => 2008 model yılına kadar destekleniyor
-	- 28 yeni Diyagnostik Hata Kodu eklendi:
+ - 28 yeni Diyagnostik Hata Kodu eklendi:
      => 2008 model yılına kadar destekleniyor
-	- Geliştirilmiş/Genişletilmiş Tanı Kodu başlıkları
-	- 2009+ modellerde yeni Tanı Sorun Kodları için tespit desteği eklendi 
-	(Düzmetin yok)
-	- Kontrol Ünitelerine olan bağlantılar artık sadece kontak açık
-	olduğunda yapılabilir
-	- MS Windows sistemlerde yinelenen iletişim açılışlarına neden olabilecek 
-	bir hata düzeltildi
-	- Genişletilmiş hata ayıklama bilgileriyle yeni hata ayıklama modu
-	- Geliştirilmiş program simgesi
-	- Birkaç küçük değişiklik ve optimizasyon
+ - Geliştirilmiş/Genişletilmiş Tanı Kodu başlıkları
+ - 2009+ modellerde yeni Tanı Sorun Kodları için tespit desteği eklendi 
+ (Düzmetin yok)
+ - Kontrol Ünitelerine olan bağlantılar artık sadece kontak açık
+ olduğunda yapılabilir
+ - MS Windows sistemlerde yinelenen iletişim açılışlarına neden olabilecek 
+ bir hata düzeltildi
+ - Genişletilmiş hata ayıklama bilgileriyle yeni hata ayıklama modu
+ - Geliştirilmiş program simgesi
+ - Birkaç küçük değişiklik ve optimizasyon
 
 v0.99.0 (01.02.2009):
-	- 2008+ Dizel ECU'lar tarafından kullanılan yeni DTC-adres bloğu ve 
-	tanımlamaları eklendi
-	- 2008+ Dizel motorlar için yeni Ölçüm Blokları (Veri + Anahtar) eklendi
-	- "Belleği Temizle" işlemi sırasındaki "kontak kapalı" süresi daha uzun 
-	hale getirildi
-	- Özellikler, Bilgi: Desteklenen Diyagnostik Kodların sayısı değiştirildi
-	- DTC tanımlama verileri için hafıza kullanımı optimize edildi
-	- Bazı durumlarda DTC tabloları için yanlış başlıklara neden olabilecek 
-	2 hata düzeltildi.
+ - 2008+ Dizel ECU'lar tarafından kullanılan yeni DTC-adres bloğu ve 
+ tanımlamaları eklendi
+ - 2008+ Dizel motorlar için yeni Ölçüm Blokları (Veri + Anahtar) eklendi
+ - "Belleği Temizle" işlemi sırasındaki "kontak kapalı" süresi daha uzun 
+ hale getirildi
+ - Özellikler, Bilgi: Desteklenen Diyagnostik Kodların sayısı değiştirildi
+ - DTC tanımlama verileri için hafıza kullanımı optimize edildi
+ - Bazı durumlarda DTC tabloları için yanlış başlıklara neden olabilecek 
+ 2 hata düzeltildi.
 
 
 v0.98.0 (04.01.2009):
-	- Genişletilmiş belgeler: test modu konektörü, arabirimlerin listesi, 
-	bazı yazım düzeltmeleri
-	- GUI stilini seçme imkanı eklendi
-	- KDE4-oksijen tarzı için çok sayıda küçük GUI uyarlaması yapıldı
-	- MB/SW eklemek için iletişim kutusu: listenin seçim davranışını değiştirdi
-	- Kod düzeltmeleri, birkaç küçük düzeltmeler ve optimizasyonlar
-	- 4.2< GCC-derleyici sürümlerinde oluşan bir regresyon için geçici çözüm
+ - Genişletilmiş belgeler: test modu konektörü, arabirimlerin listesi, 
+ bazı yazım düzeltmeleri
+ - GUI stilini seçme imkanı eklendi
+ - KDE4-oksijen tarzı için çok sayıda küçük GUI uyarlaması yapıldı
+ - MB/SW eklemek için iletişim kutusu: listenin seçim davranışını değiştirdi
+ - Kod düzeltmeleri, birkaç küçük düzeltmeler ve optimizasyonlar
+ - 4.2< GCC-derleyici sürümlerinde oluşan bir regresyon için geçici çözüm
      (GCSE-optimizasyonunun çok büyük bir ikili dosyaya sebep olması)
-	- Güncellenmiş Telif Hakkı tarihleri
-	- Linux: xUbuntu ve openSUSE 11.1 için paketler mevcut
+ - Güncellenmiş Telif Hakkı tarihleri
+ - Linux: xUbuntu ve openSUSE 11.1 için paketler mevcut
 
 
 v0.97.2 (04.12.2008):
-	- Çoğu kurulum işlemiyle ilgili küçük değişiklikler
+ - Çoğu kurulum işlemiyle ilgili küçük değişiklikler
 
 
 v0.97.1 (01.12.2008):
 İlk sürüm:
-	- Üretim Yılı 1999+ modellerinin ECU'larına ve TCU'larına erişim
-	- Veri Arıza Kodları ve Hız Sabitleme İptali Kodları Okuma
-	- Ölçüm Blokları Okuma
-	- Ayarlama Değerleri
-	- Aktüatör Testleri, İmmobilizer Testi
-	- Hafıza İşlemlerini Temizle
+ - Üretim Yılı 1999+ modellerinin ECU'larına ve TCU'larına erişim
+ - Veri Arıza Kodları ve Hız Sabitleme İptali Kodları Okuma
+ - Ölçüm Blokları Okuma
+ - Ayarlama Değerleri
+ - İşletici Testleri, İmmobilizer Testi
+ - Hafıza İşlemlerini Temizle
