@@ -7,6 +7,9 @@ sonraki sürüm (anlık geliştirme görüntüsü):
      (Yalnızca SSM1, tanımlamaları eksik)
 	- Daha fazla motor ve şanzıman kontrol ünitesi için destek eklendi
      (OBD2 SSM1 kontrolörleri ve SSM2 kontrol ünitesi ek adresleri)
+	- Added support for a program variant with a small user interface, which
+	  better fits to very small screens (e.g. used in car computers etc.)
+	- Added support for automated program startup using command line parameters
 	- Türkçe çeviri eklendi
 	- Çok fazla iç değişiklik, kod düzenlemesi, modülerleştirme yapıldı
 	- Bazı küçük hatalar düzeltildi
