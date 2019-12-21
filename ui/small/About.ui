@@ -620,7 +620,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
           </font>
          </property>
          <property name="text">
-          <string notr="true">Written by &lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352L&lt;/a&gt; (Copyright © 2008-2014)</string>
+          <string>Written by &lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352L&lt;/a&gt; (Copyright © 2008-2014)</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
