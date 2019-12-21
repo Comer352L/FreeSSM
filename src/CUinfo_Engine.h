@@ -29,6 +29,7 @@
 
 class CUinfo_Engine : public CUinfo_abstract, private Ui::CUinfo_Engine_Form
 {
+	Q_OBJECT	// required for translation
 
 public:
 	CUinfo_Engine(QWidget * parent = 0);
