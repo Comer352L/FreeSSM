@@ -209,16 +209,23 @@ win32 {
   } else {
     # Qt5
     dllstarget.files =                                  $$[QT_INSTALL_BINS]/libwinpthread-1.dll \
-                                                        $$[QT_INSTALL_BINS]/libstd~1.dll \	# NOTE: actually libstdc++-6.dll
-                                                         # NOTE: Due to Qt-Bug 74388 copying fails on older Qt/MinGW versions if the filename contains a '+'.
-                                                         #       Using the 8.3 filename is the only known workaround, wildcards and quotes don't work !
-                                                         #       The range of broken versions is unknown. Fixed in Qt 5.12.3 / MinGW 7.3.0 or earlier.
                                                         $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll \	# only MinGW32 32bit
                                                         $$[QT_INSTALL_BINS]/libgcc_s_seh-1.dll \	# only MinGW32 64bit
                                                         # Old Qt5/MinGW versions only (at least up to Qt 5.2.1 / MinGW 4.8):
                                                         $$[QT_INSTALL_BINS]/icuin51.dll \
                                                         $$[QT_INSTALL_BINS]/icuuc51.dll \
                                                         $$[QT_INSTALL_BINS]/icudt51.dll
+        # NOTE: Due to a Qt-bug in older Qt/MinGW versions, copying files fails if the file name contains a '+'.
+        #       According to the changelog of Qt, this should have been fixed with Qt 5.9.0, but e.g. Qt-bug 74388 says 5.11.4 is (still) affected.
+        #       Confirmed to be fixed at least since Qt 5.12.3 / MinGW 7.3.0.
+        greaterThan(QT_MAJOR_VERSION, 5) | greaterThan(QT_MINOR_VERSION, 8) {		# NOTE: & can't be used !
+            dllstarget.files +=                         $$[QT_INSTALL_BINS]/libstdc++-6.dll
+        } else {
+            dllstarget.files +=                         $$[QT_INSTALL_BINS]/libstd~1.dll
+            # NOTE: Using the 8.3 filename can be used as workaround on at least most affected Qt 5 versions.
+            #       Recent Qt versions started using "qmake -install qinstall ..." instead of "copy /y ..." to install files,
+            #       which apparently doesn't expand the destination file name properly if 8.3 file names are used.
+        }
     CONFIG(release, debug|release): dllstarget.files += $$[QT_INSTALL_BINS]/Qt5Core.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5Gui.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5PrintSupport.dll \
@@ -227,7 +234,6 @@ win32 {
                                                         $$[QT_INSTALL_BINS]/Qt5Guid.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5PrintSupportd.dll \
                                                         $$[QT_INSTALL_BINS]/Qt5Widgetsd.dll
-
     CONFIG(release, debug|release): platformstarget.files = $$[QT_INSTALL_PLUGINS]/platforms/qwindows.dll
     CONFIG(debug, debug|release): platformstarget.files   = $$[QT_INSTALL_PLUGINS]/platforms/qwindowsd.dll
   }
