@@ -1931,12 +1931,12 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <location filename="ui/small/About.ui" line="672"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;br/&gt;madanadam (Turkish translation)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU tanımlamaları, deneme)&lt;br/&gt;MartinX (SSM2 tanımlamaları, hata düzeltme)&lt;br/&gt;Antoine Giniès (arkaplan resmi, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU sorgulamaları, deneme)&lt;br/&gt;Nikolay Marinov (ufak ekranlar için kullanıcı arayüzü)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU tanımlamaları, deneme)&lt;br/&gt;MartinX (SSM2 tanımlamaları, hata düzeltme)&lt;br/&gt;Antoine Giniès (arkaplan resmi, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU sorgulamaları, deneme)&lt;br/&gt;Nikolay Marinov (ufak ekranlar için kullanıcı arayüzü)&lt;br/&gt;madanadam (Türkçe çeviri)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="632"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="682"/>
@@ -1946,7 +1946,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
     <message>
         <location filename="ui/About.ui" line="880"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB lisansı&lt;/a&gt;</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="1010"/>
@@ -2007,7 +2007,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <location filename="ui/About.ui" line="242"/>
         <location filename="ui/small/About.ui" line="487"/>
         <source>(Actuators / Others) (Engine only)</source>
-        <translation>İşleticiler / Diğerleri) (Motor için)</translation>
+        <translation>(İşleticiler / Diğerleri) (Motor için)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="348"/>
@@ -2068,7 +2068,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/About.ui" line="501"/>
         <location filename="ui/small/About.ui" line="623"/>
         <source>Written by &lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352L&lt;/a&gt; (Copyright © 2008-2014)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;mailto:comer352l@googlemail.com&quot;&gt;Comer352L&lt;/a&gt; tarafından yazılmıştır. (Copyright © 2008-2014)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="539"/>
@@ -2111,7 +2111,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/small/About.ui" line="695"/>
         <source>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; (Copyright © Digia Plc).</source>
         <oldsource>Based on the &lt;a href=&quot;http://qt-project.org&quot;&gt;Qt4-Framework&lt;/a&gt; (Copyright © Digia Plc).</oldsource>
-        <translation>&lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Framework&lt;/a&gt; tabanlıdır (Copyright © Digia Plc).</translation>
+        <translation>&lt;a href=&quot;http://qt-project.org&quot;&gt;Qt-Çerçevesi&lt;/a&gt; tabanlıdır (Copyright © Digia Plc).</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="568"/>
@@ -2163,19 +2163,19 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/About.ui" line="799"/>
         <location filename="ui/small/About.ui" line="1160"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/liberation-fonts-LICENSE.txt&quot;&gt;SIL Open Font License v1.1&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;./licenses-3rd-party/liberation-fonts-LICENSE.txt&quot;&gt;SIL Open Font License v1.1&lt;/a&gt;</translation>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/liberation-fonts-LICENSE.txt&quot;&gt;SIL Open Font Lisansı v1.1&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="826"/>
         <location filename="ui/small/About.ui" line="1050"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/LGPL-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt; and &lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/CC-BY-SA-3.0-LICENSE.txt&quot;&gt;CC-BY-SA-3.0 license&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/LGPL-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt; and &lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/CC-BY-SA-3.0-LICENSE.txt&quot;&gt;CC-BY-SA-3.0 license&lt;/a&gt;</translation>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/LGPL-LICENSE.txt&quot;&gt;LGPL v3&lt;/a&gt; ve &lt;a href=&quot;./licenses-3rd-party/Oxygen-icons/CC-BY-SA-3.0-LICENSE.txt&quot;&gt;CC-BY-SA-3.0 lisansı&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="853"/>
         <location filename="ui/small/About.ui" line="948"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; and (since Qt 4.5) also the &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; ve (since Qt 4.5) ayrıca &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
+        <translation>&lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.GPL3.txt&quot;&gt;GPL v3&lt;/a&gt; ve (Qt 4.5 itibariyle) ayrıca &lt;a href=&quot;./licenses-3rd-party/Qt4/LICENSE.LGPL.txt&quot;&gt;LGPL v2.1&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="ui/small/About.ui" line="998"/>
@@ -2204,7 +2204,7 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <location filename="ui/About.ui" line="969"/>
         <location filename="ui/small/About.ui" line="1188"/>
         <source>Change&amp;log</source>
-        <translation>Değişik&amp;likler</translation>
+        <translation>&amp;Değişiklikler</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="1034"/>
