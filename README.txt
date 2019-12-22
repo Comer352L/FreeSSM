@@ -128,13 +128,20 @@ NOTE (Windows only): depending on the used Qt-version and system configuration,
 
 5. INSTALLATION:
 
+By default, the the application will be installed to
+	Linux:        the users home-directory (/home/userXYZ/FreeSSM)
+	Windows:      C:\FreeSSM
+If you want to install to a custom directory, call qmake first with
+"INSTALLDIR=CUSTOM_DIR" appended, e.g.:
+$ qmake "INSTALLDIR=D:\somedir\FreeSSM_TEST"
+
+
+Installation:
+
 $ make release-install
 or
 $ make debug-install
 
-=> the application will be installed to 
-	- Linux:	the users home-directory (/home/userXYZ/FreeSSM)
-	- Windows:	C:\FreeSSM (can be moved after installation)
 
 Uninstallation:
 

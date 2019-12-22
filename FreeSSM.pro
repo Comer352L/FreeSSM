@@ -176,8 +176,10 @@ QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions wi
 QMAKE_CXXFLAGS += -std=c++11
 
 # Installation
-unix:INSTALLDIR = $$system(echo ~)/FreeSSM
-win32:INSTALLDIR = $$system(echo %homedrive%)/FreeSSM
+isEmpty(INSTALLDIR) {
+    unix:INSTALLDIR = $$system(echo ~)/FreeSSM
+    win32:INSTALLDIR = $$system(echo %homedrive%)/FreeSSM
+}
 target.path = $$INSTALLDIR
 filestarget.path = $$INSTALLDIR
 filestarget.files = background.png LiberationSans*.ttf
