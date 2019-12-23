@@ -1936,16 +1936,19 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="632"/>
+		<location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="682"/>
+		<location filename="ui/small/About.ui" line="1134"/>
         <source>Truetype font &quot;Liberation Sans&quot;:</source>
         <translation>Truetype font &quot;Liberation Sans&quot;:</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="880"/>
+		<location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB-Lizenz&lt;/a&gt;</translation>
     </message>
@@ -2117,8 +2120,8 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
     <message>
         <location filename="ui/About.ui" line="568"/>
         <location filename="ui/small/About.ui" line="741"/>
-        <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; icon themes.</source>
-        <translation>Viele Icons stammen aus den &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; und &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Chrytstal&lt;/a&gt; Icon-Sammlungen.</translation>
+        <source>Many icons are taken from the &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; and &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Crystal&lt;/a&gt; icon themes.</source>
+        <translation>Viele Icons stammen aus den &lt;a href=&quot;http://web.archive.org/web/20120914230906/http://www.oxygen-icons.org/&quot;&gt;Oxygen&lt;/a&gt; und &lt;a href=&quot;http://web.archive.org/web/20121010063705/http://everaldo.com/crystal/&quot;&gt;Crystal&lt;/a&gt; Icon-Sammlungen.</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="584"/>
@@ -2126,21 +2129,11 @@ Dieses Programm ist KEIN PRODUKT VON FUJI HEAVY INDUSTRIES LTD. ODER IRGENDEINEM
         <source>Truetype font &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</source>
         <translation>Truetype-Schrift &quot;&lt;a href=&quot;https://fedorahosted.org/liberation-fonts/&quot;&gt;Liberation Sans&lt;/a&gt;&quot; Copyright © Red Hat, Inc.</translation>
     </message>
-    <message utf8="true">
-        <location filename="ui/small/About.ui" line="718"/>
-        <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
-        <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
-    </message>
     <message>
         <location filename="ui/About.ui" line="641"/>
         <location filename="ui/small/About.ui" line="832"/>
         <source>&amp;Licenses</source>
         <translation>&amp;Lizenzen</translation>
-    </message>
-    <message>
-        <location filename="ui/small/About.ui" line="1134"/>
-        <source>Truetype font &quot;Liberation Sans&quot;: </source>
-        <translation>Truetype-Schrift &quot;Liberation Sans&quot;:</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="706"/>
