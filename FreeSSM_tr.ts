@@ -1935,7 +1935,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="632"/>
-		<location filename="ui/small/About.ui" line="718"/>
+        <location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
     </message>
@@ -1948,7 +1948,7 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
 
     <message>
         <location filename="ui/About.ui" line="880"/>
-		<location filename="ui/small/About.ui" line="998"/>
+        <location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML2-LICENSE.txt&quot;&gt;ZLIB lisansı&lt;/a&gt;</translation>
     </message>
