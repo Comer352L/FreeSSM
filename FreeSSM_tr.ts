@@ -1935,11 +1935,13 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
     </message>
     <message utf8="true">
         <location filename="ui/About.ui" line="632"/>
+        <location filename="ui/small/About.ui" line="718"/>
         <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
         <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml2/&quot;&gt;TinyXML2&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
     </message>
     <message>
         <location filename="ui/About.ui" line="682"/>
+        <location filename="ui/small/About.ui" line="1134"/>
         <source>Truetype font &quot;Liberation Sans&quot;:</source>
         <translation>Truetype font &quot;Liberation Sans&quot;:</translation>
     </message>
@@ -2209,20 +2211,10 @@ Bu program FUJI HEAVY INDUSTRIES LTD. veya SUBARU® BAĞLANTILI HİÇBİR ŞİRK
         <source>Linux/X11, Windows</source>
         <translation>Linux/X11, Windows</translation>
     </message>
-    <message utf8="true">
-        <location filename="ui/small/About.ui" line="718"/>
-        <source>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</source>
-        <translation>&lt;a href=&quot;http://www.grinninglizard.com/tinyxml/&quot;&gt;TinyXML&lt;/a&gt; (Copyright © Lee Thomason, Yves Berquin, Andrew Ellerton)</translation>
-    </message>
     <message>
         <location filename="ui/small/About.ui" line="998"/>
         <source>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;./licenses-3rd-party/tinyXML-LICENSE.txt&quot;&gt;ZLIB license&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <location filename="ui/small/About.ui" line="1134"/>
-        <source>Truetype font &quot;Liberation Sans&quot;: </source>
-        <translation>Truetype font &quot;Liberation Sans&quot;:</translation>
     </message>
 </context>
 <context>
