@@ -86,6 +86,9 @@ and other Unix systems, too, but there is currently no offical support.
        If the Qt-installer is not shipping MinGW, it usually provides at least a
        direct link for downloading it. If that's not the case, check
        mingw.org and sourceforge.net/projects/mingw.
+       The 32 bit version is required for building a 32 bit application while
+       the 64 bit version is required for building a 64 bit application.
+       Both versions can be installed in parallel.
 
 --------------------------------------------------------------------------------
 
@@ -96,13 +99,25 @@ and other Unix systems, too, but there is currently no offical support.
 Only compilation from command line is maintained/tested (but compilation with
 Qt Creator etc. might work as well).
 
-4.2 COMPILATION STEPS (COMMAND LINE):
+4.2 BUILDING A 32 OR 64 BIT APPLICATION ?
+
+If you are going to use a J2534-interface, you should check if the interface
+library is available as 32 and/or 64 bit version.
+32 bit libraries can only be used by a 32 bit application and 64 bit libraries
+can only be used by a 64 bit application.
+At least on MS Windows, most libraries are still available as 32bit version only.
+So you likely prefer to build a 32 bit application here.
+
+To build a 32 (64) bit application on MS Windows, you have to use
+the 32 (64) bit version of MinGW.
+
+4.3 COMPILATION STEPS (COMMAND LINE):
 
 Open a console window and switch to the FreeSSM-directory.
 NOTE (Windows only):
 If MinGW is installed properly, there's a start menu entry which opens a command
 line window and sets up the environment for compilation:
-e.g. "Start" > Qt 5.12.3 > 5.12.3 > MinGW 7.3.0 (64bit) > Qt 5.12.3 (MinGW 7.3.0 64bit)
+e.g. "Start" > Qt 5.12.3 > 5.12.3 > MinGW 7.3.0 (32bit) > Qt 5.12.3 (MinGW 7.3.0 32bit)
 
 Preparation:
 $ qmake
