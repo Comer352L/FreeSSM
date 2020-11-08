@@ -223,7 +223,7 @@ bool SSMP1communication::doSingleCommOperation()
 
 void SSMP1communication::run()
 {
-	QTime timer;
+	QElapsedTimer timer;
 	int duration_ms = 0;
 	bool permanent = false;
 	bool op_success = false;

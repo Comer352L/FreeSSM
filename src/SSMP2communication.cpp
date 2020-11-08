@@ -344,7 +344,7 @@ bool SSMP2communication::doSingleCommOperation()
 void SSMP2communication::run()
 {
 	std::vector<char> rawdata;
-	QTime timer;
+	QElapsedTimer timer;
 	int duration_ms = 0;
 	unsigned int rindex = 1;
 	unsigned char nrofReadAddr = 0;
