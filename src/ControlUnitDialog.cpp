@@ -231,7 +231,7 @@ bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 	if (systemRequiresManualON())
 	{
 		// Inform user that system needs to be switched on manually:
-		QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), QString(tr("Please switch the %1 system on.").arg(systemName())), 0, this);
+		QMessageBox *msgbox = new QMessageBox(QMessageBox::Information, tr("Prepare system"), QString(tr("Please switch the %1 system on.").arg(systemName())), QMessageBox::NoButton, this);
 		QPushButton *button = msgbox->addButton(QMessageBox::Ok);
 		button->setText(tr("Continue"));
 		msgbox->addButton(QMessageBox::Cancel);
