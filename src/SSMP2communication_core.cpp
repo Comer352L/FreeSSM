@@ -219,8 +219,8 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 {
 	if (_diagInterface == NULL) return false;
 	if (outdatalen < 1) return false;
-	std::vector<char> msg_buffer(outdatalen + 5);
-	msg_buffer.resize(0);
+	std::vector<char> msg_buffer;
+	msg_buffer.reserve(outdatalen + 5);
 	// SETUP COMPLETE MESSAGE:
 	// Protocol-header
 	switch(_diagInterface->protocolType()) {
