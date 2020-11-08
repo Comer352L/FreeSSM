@@ -34,7 +34,7 @@ class DiagInterfaceStatusBar : public QWidget
 	Q_OBJECT
 
 public:
-	DiagInterfaceStatusBar(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	DiagInterfaceStatusBar(QWidget *parent = 0, Qt::WindowFlags flags = Qt::Widget);
 	~DiagInterfaceStatusBar();
 	void setInterfaceName(QString name, QColor textcolor = Qt::black);
 	void setInterfaceVersion(QString version, QColor textcolor = Qt::black);

@@ -32,8 +32,7 @@
 class FSSM_InitStatusMsgBox : public QProgressDialog
 {
 public:
-	FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText, int minimum, int maximum,
-				  QWidget * parent = 0, Qt::WindowFlags f = 0);
+	FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText, int minimum, int maximum, QWidget * parent = 0, Qt::WindowFlags f = Qt::Widget);
 	~FSSM_InitStatusMsgBox();
 	void show();
 	void hide();
