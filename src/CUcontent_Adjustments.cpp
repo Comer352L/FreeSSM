@@ -205,13 +205,24 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 	adjustments_tableWidget->setColumnWidth (2, 106);
 	adjustments_tableWidget->setColumnWidth (3, 70);
 	headerview = adjustments_tableWidget->horizontalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(0,QHeaderView::Stretch);
 	headerview->setResizeMode(1,QHeaderView::Fixed);
 	headerview->setResizeMode(2,QHeaderView::Fixed);
 	headerview->setResizeMode(3,QHeaderView::Fixed);
+#else
+	headerview->setSectionResizeMode(0,QHeaderView::Stretch);
+	headerview->setSectionResizeMode(1,QHeaderView::Fixed);
+	headerview->setSectionResizeMode(2,QHeaderView::Fixed);
+	headerview->setSectionResizeMode(3,QHeaderView::Fixed);
+#endif
 	// Set table row resize behavior:
 	headerview = adjustments_tableWidget->verticalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(QHeaderView::Fixed);
+#else
+	headerview->setSectionResizeMode(QHeaderView::Fixed);
+#endif
 	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for adjustments-table:

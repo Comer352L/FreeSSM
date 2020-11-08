@@ -32,17 +32,35 @@ CUcontent_DCs_twoMemories::CUcontent_DCs_twoMemories(QWidget *parent) : CUconten
 	QHeaderView *headerview;
 	currOrTempDTCs_tableWidget->setColumnWidth (0, 70);
 	headerview = currOrTempDTCs_tableWidget->horizontalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
+#else
+	headerview->setSectionResizeMode(0,QHeaderView::Interactive);
+	headerview->setSectionResizeMode(1,QHeaderView::Stretch);
+#endif
 	histOrMemDTCs_tableWidget->setColumnWidth (0, 70);
 	headerview = histOrMemDTCs_tableWidget->horizontalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(0,QHeaderView::Interactive);
 	headerview->setResizeMode(1,QHeaderView::Stretch);
+#else
+	headerview->setSectionResizeMode(0,QHeaderView::Interactive);
+	headerview->setSectionResizeMode(1,QHeaderView::Stretch);
+#endif
 	// Set table row resize behavior:
 	headerview = currOrTempDTCs_tableWidget->verticalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(QHeaderView::Fixed);
+#else
+	headerview->setSectionResizeMode(QHeaderView::Fixed);
+#endif
 	headerview = histOrMemDTCs_tableWidget->verticalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(QHeaderView::Fixed);
+#else
+	headerview->setSectionResizeMode(QHeaderView::Fixed);
+#endif
 	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constsant height */
 	// Install event-filter for DC-tables:

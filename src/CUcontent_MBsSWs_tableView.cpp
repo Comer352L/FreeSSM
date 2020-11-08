@@ -35,15 +35,28 @@ CUcontent_MBsSWs_tableView::CUcontent_MBsSWs_tableView(QWidget *parent, bool sho
 	mbswmovedown_pushButton->setEnabled( false );
 	// Set table column resize behavior:
 	headerview = selectedMBsSWs_tableWidget->horizontalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
 	headerview->setResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
 	headerview->setResizeMode(static_cast<int>(Column::min), QHeaderView::ResizeToContents);
 	headerview->setResizeMode(static_cast<int>(Column::current), QHeaderView::ResizeToContents);
 	headerview->setResizeMode(static_cast<int>(Column::max), QHeaderView::ResizeToContents);
 	headerview->setResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
+#else
+	headerview->setSectionResizeMode(static_cast<int>(Column::type), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::title), QHeaderView::Stretch);
+	headerview->setSectionResizeMode(static_cast<int>(Column::min), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::current), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::max), QHeaderView::ResizeToContents);
+	headerview->setSectionResizeMode(static_cast<int>(Column::unit), QHeaderView::ResizeToContents);
+#endif
 	// Set table row resize behavior:
 	headerview = selectedMBsSWs_tableWidget->verticalHeader();
+#if QT_VERSION < 0x050000
 	headerview->setResizeMode(QHeaderView::Fixed);
+#else
+	headerview->setSectionResizeMode(QHeaderView::Fixed);
+#endif
 	/* NOTE: Current method for calculating ther nr. of needed rows
 	 * assumes all rows to have the same constant height */
 	// Install event-filter for MB/SW-table:
