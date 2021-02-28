@@ -436,7 +436,7 @@ bool SSMprotocol2::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 	datalen = 1;
 	if (_adjustments.at(index).AddrHigh > 0)
 	{
-		dataaddr[1] = _adjustments.at(index).AddrLow;
+		dataaddr[1] = _adjustments.at(index).AddrHigh;
 		datalen++;
 	}
 	// Read data from control unit:
