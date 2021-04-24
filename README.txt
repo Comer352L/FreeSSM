@@ -75,6 +75,12 @@ and other Unix systems, too, but there is currently no offical support.
                Windows: The MinGW version of Qt is needed.
                         All other versions (e.g. for MS Visual Studio) are not
                         supported.
+               Linux: Distributions split the Qt framework into multiple packages.
+                      Besides the core/main development package, an additional package
+                      is usually required for buidling the translations:
+                      On Debian based distributions, the package for Qt5 is called
+                      "qttools5-dev-tools".
+                      On openSUSE, the package for Qt5 is called "libqt5-linguist".
         2.3.) General notes:
                The sources of Qt are not required.
                There is also no need to install tools such as Qt Creator etc.
