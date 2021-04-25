@@ -1,7 +1,7 @@
 /*
  * FreeSSM.cpp - Program main window
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2021 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,9 +47,15 @@ FreeSSM::FreeSSM(QApplication *app)
 	_progtitle_label->setText("FreeSSM " + QApplication::applicationVersion());
 	this->setWindowTitle("FreeSSM " + QApplication::applicationVersion());
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
+#if QT_VERSION < 0x050000
 	QDesktopWidget desktop;
 	int x = (desktop.width() - size().width()) / 2;
 	int y = (desktop.height() - size().height()) / 2 - 50;
+#else
+	QScreen *screen = this->screen();
+	int x = (screen->geometry().width() - size().width()) / 2;
+	int y = (screen->geometry().height() - size().height()) / 2 - 50;
+#endif
 	this->move ( x, y );
 #endif
 	// LOAD PREFERENCES FROM FILE:

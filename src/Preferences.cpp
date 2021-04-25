@@ -1,7 +1,7 @@
 /*
  * Preferences.cpp - Adjustment of program settings
  *
- * Copyright (C) 2008-2018 Comer352L
+ * Copyright (C) 2008-2021 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,11 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	QStringList supStyles = QStyleFactory::keys();
 	if (supStyles.size())
 	{
+#if QT_VERSION < 0x050000
 		int styleindex = supStyles.indexOf( QRegExp( _style_old, Qt::CaseInsensitive, QRegExp::FixedString ) );
+#else
+		int styleindex = supStyles.indexOf( QRegularExpression( _style_old, QRegularExpression::CaseInsensitiveOption ) );
+#endif
 		// NOTE: default pattern syntax QRegExp::RegExp(2) doesn't work for "gtk+"/"GTK+" !
 		guistyle_comboBox->insertItems(0, supStyles);
 		guistyle_comboBox->setCurrentIndex( styleindex );

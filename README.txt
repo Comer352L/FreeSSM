@@ -61,13 +61,14 @@ and other Unix systems, too, but there is currently no offical support.
 
 3. REQUIREMENTS:
    1.) FreeSSM source code (https://github.com/Comer352L/FreeSSM)
-   2.) Qt framework: Qt4 or Qt5
+   2.) Qt framework: Qt4, Qt5 or Qt6
         Development of Qt4 has been discontinued, the last release is v4.8.7.
         Releases older than 4.8.7 are no longer tested !
-        There is no functional difference between Qt4 and Qt5 with regards to FreeSSM.
+        Support for Qt6 is still experimental.
+        There is no functional difference between the Qt versions with regards to FreeSSM.
         2.1.) Download sources:
                Qt4: download.qt.io/archive/qt/4.8/4.8.7/
-               Qt5: www.qt.io/download.
+               Qt5 and Qt6: www.qt.io/download, https://www.qt.io/download-qt-installer
                Linux distributions usually provide ready packages in their
                repositories, which should be preferred. Development packages are
                needed, too.
@@ -80,7 +81,8 @@ and other Unix systems, too, but there is currently no offical support.
                       is usually required for buidling the translations:
                       On Debian based distributions, the package for Qt5 is called
                       "qttools5-dev-tools".
-                      On openSUSE, the package for Qt5 is called "libqt5-linguist".
+                      On openSUSE, the package for Qt5 is called "libqt5-linguist" while
+                      for Qt6 the package is called "qt6-tools-linguist".
         2.3.) General notes:
                The sources of Qt are not required.
                There is also no need to install tools such as Qt Creator etc.
@@ -127,8 +129,8 @@ e.g. "Start" > Qt 5.12.3 > 5.12.3 > MinGW 7.3.0 (32bit) > Qt 5.12.3 (MinGW 7.3.0
 
 Preparation:
 $ qmake
-or (if you have Qt4 AND Qt5 installed)
-$ qmake-qt4   or   $ qmake-qt5   (depending on your system environment)
+or (if you have multiple versions of Qt installed)
+$ qmake-qt4   or   $ qmake-qt5   or   $ qmake6   (depending on your system environment)
 
 If you want to build the version for small display resolutions, call qmake with
 "CONFIG+=small-resolution" appended or uncomment the corresponding line in the
