@@ -47,7 +47,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	_progtitle_label->setText("FreeSSM " + QApplication::applicationVersion());
 	this->setWindowTitle("FreeSSM " + QApplication::applicationVersion());
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
-#if QT_VERSION < 0x050000
+#if QT_VERSION < 0x051400
 	QDesktopWidget desktop;
 	int x = (desktop.width() - size().width()) / 2;
 	int y = (desktop.height() - size().height()) / 2 - 50;
