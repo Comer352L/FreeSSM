@@ -102,7 +102,7 @@ void About::showLicense()
 	license_textBrowser->setAttribute(Qt::WA_DeleteOnClose, true);
 	// Place window in the center of the screen and resize:
 	license_textBrowser->resize(700, 500);
-#if QT_VERSION < 0x050000
+#if QT_VERSION < 0x051400
 	QDesktopWidget desktop;
 	int x = (desktop.width() - license_textBrowser->size().width()) / 2;
 	int y = (desktop.height() - license_textBrowser->size().height()) / 2 - 50;
