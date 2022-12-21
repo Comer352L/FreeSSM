@@ -570,7 +570,7 @@ void FreeSSM::dumpCUdata()
 			{
 				hexstr = libFSSM::StrToHexstr(data, 3);
 				hexstr.push_back('\n');
-				dumpfile.write(hexstr.data(), hexstr.length());
+				dumpfile.write(hexstr.data());
 
 				dataaddr[0] = libFSSM::parseUInt24BigEndian(data);
 				for (unsigned char k=1; k<VINlength; k++)
@@ -580,13 +580,13 @@ void FreeSSM::dumpCUdata()
 					hexstr = libFSSM::StrToMultiLineHexstr(data, VINlength, VINlength);
 					hexstr.append(data, VINlength);
 					hexstr += "\n\n";
-					dumpfile.write(hexstr.data(), hexstr.size());
+					dumpfile.write(hexstr.data());
 				}
 			}
 		}
 	}
 	else
-		dumpfile.write("\n---\n", 5);
+		dumpfile.write("\n---\n");
 	// **************** TCU ***************
 	// Read TCU data:
 	cu_resp = false;
@@ -618,7 +618,7 @@ void FreeSSM::dumpCUdata()
 		dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.flagbytes).c_str());
 	}
 	else
-		dumpfile.write("\n---\n", 5);
+		dumpfile.write("\n---\n");
 	diagInterface->disconnect();
 
 	// ######## SSM1-Control-Units ########
@@ -646,24 +646,20 @@ void FreeSSM::dumpCUdata()
 					std::vector<unsigned int> addresses;
 					for (unsigned int addr=0x01; addr<=0x05; addr++)
 						addresses.push_back(addr);
-					if (!SSMP1com.readAddresses(addresses, &ssmCUdata.ROM_ID))
-						dumpfile.write("error\n", 4);
-					else
-					{
+					if (SSMP1com.readAddresses(addresses, &ssmCUdata.ROM_ID))
 						dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.ROM_ID).c_str());
-					}
+					else
+						dumpfile.write("error\n");
 				}
 				// Flagbytes:
 				if (SSMP1com.getCUdata(32, ssmCUdata))
-				{
 					dumpfile.write(libFSSM::StrToMultiLineHexstr(ssmCUdata.flagbytes).c_str());
-				}
 				else
-					dumpfile.write("error\n", 4);
+					dumpfile.write("error\n");
 			}
 		}
 		else
-			dumpfile.write("\n-----\n", 7);
+			dumpfile.write("\n-----\n");
 	}
 	diagInterface->disconnect();
 
