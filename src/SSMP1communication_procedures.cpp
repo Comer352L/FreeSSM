@@ -557,7 +557,7 @@ void SSMP1communication_procedures::syncToRecData()
 	{
 		std::cout << "failed:\n";
 		if (!syncerrstr.size())
-			syncerrstr = "Address-header not detetced.";
+			syncerrstr = "Address-header not detected.";
 		std::cout << "    => " << syncerrstr << " Need to wait for further incoming datasets.\n";
 	}
 	else
