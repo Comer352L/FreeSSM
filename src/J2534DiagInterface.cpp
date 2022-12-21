@@ -532,7 +532,7 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 #ifdef __FSSM_DEBUG__
 			std::cout << "PassThruReadMsgs(): received " << rxNumMsgs << " J2534-messages:" << std::endl;
 #endif
-			// Process recieved messages:
+			// Process received messages:
 			for (unsigned long i=0; i<rxNumMsgs; i++)
 			{
 #ifdef __FSSM_DEBUG__
