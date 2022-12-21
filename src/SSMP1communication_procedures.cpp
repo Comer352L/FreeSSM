@@ -52,7 +52,7 @@ bool SSMP1communication_procedures::setAddress(SSM1_CUtype_dt cu, unsigned int a
 }
 
 
-bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vector<char> * data)
+bool SSMP1communication_procedures::getID(unsigned int addr, unsigned char extradatalen, std::vector<char> * data)
 {
 	const unsigned int t_max_total = (SSMP1_T_ID_RECSTART_MAX + 1000*(3+extradatalen)*8/1953) * 2;
 	const unsigned char max_bytes_dropped = 15; // NOTE: depends on last request; min. 12 (seen with Ax10xx TCU) if last CU reply message length is 3 bytes
@@ -63,7 +63,8 @@ bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vecto
 	unsigned int cu_data_len = 0;
 	bool timeout;
 
-	if (!sendQueryIdCmd(0)) return false;
+	if (!sendQueryIdCmd(addr, 0))
+		return false;
 	waitms(SSMP1_T_IC_WAIT);
 	_recbuffer.clear();
 	_currentaddr = -1;
@@ -71,7 +72,7 @@ bool SSMP1communication_procedures::getID(unsigned char extradatalen, std::vecto
 	_addrswitch_pending = false;
 	if (!_diagInterface->clearReceiveBuffer())
 		return false;
-	if (!sendQueryIdCmd(extradatalen))
+	if (!sendQueryIdCmd(addr, extradatalen))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP1communication_procedures::getID(...):   sendQueryIdCmd() failed.\n";

@@ -46,7 +46,7 @@ class SSMP1communication_procedures : private SSMP1commands
 public:
 	SSMP1communication_procedures(AbstractDiagInterface *diagInterface);
 	bool setAddress(SSM1_CUtype_dt cu, unsigned int addr);
-	bool getID(unsigned char extradatalen, std::vector<char> * data);
+	bool getID(unsigned int addr, unsigned char extradatalen, std::vector<char> * data);
 	bool writeDatabyte(char databyte);
 	bool getNextData(std::vector<char> * data, unsigned int timeout = SSMP1_T_RW_REC_MAX);	/* read and process received data */
 	char waitForDataValue(char data, unsigned int timeout = SSMP1_T_RECDATA_CHANGE_MAX);

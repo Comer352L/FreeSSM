@@ -33,9 +33,10 @@ bool SSMP1commands::sendStopTalkingCmd()
 }
 
 
-bool SSMP1commands::sendQueryIdCmd(unsigned char extradatalen)
+bool SSMP1commands::sendQueryIdCmd(unsigned int addr, unsigned char extradatalen)
 {
-	char querymsg[4] = {SSMP1_CMD_GET_ID, '\x80', '\x00', static_cast<char>(extradatalen)};
+	if (addr > 0xffff) return false;
+	char querymsg[4] = {SSMP1_CMD_GET_ID, static_cast<char>((addr >> 8) & 0xFF), static_cast<char>(addr & 0xFF), static_cast<char>(extradatalen)};
 	return sendMsg(querymsg, 4);
 }
 

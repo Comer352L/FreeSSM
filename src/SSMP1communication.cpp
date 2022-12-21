@@ -290,10 +290,12 @@ void SSMP1communication::run()
 		wcdata = data;
 	if (operation == comOp_readRomId)
 	{
+		addresses.clear();
 		if (cu == SSM1_CU_FourWS)
 			addresses.push_back(0xffff);
 		else
 			addresses.push_back(0x8000);
+			// NOTE: for old ECUs 0x0000 has been used, but apparently they accept at least 0x8000, too (address is likely ignored)
 	}
 	// COMMUNICATION:
 	do
@@ -340,7 +342,7 @@ void SSMP1communication::run()
 			else if (operation == comOp_readRomId)
 			{
 				// Get ROM-ID:
-				op_success = getID(reqsize, &data);
+				op_success = getID(addresses.at(0), reqsize, &data);
 			}
 		}
 		// Evaluate result; Prepare for next operation:
