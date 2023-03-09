@@ -1,7 +1,7 @@
 /*
  * serialCOM.cpp - Serial port configuration and communication
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -498,7 +498,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			std::cout << "serialCOM::SetPortSettings:   error: illegal baud rate - baud rate must be > 0\n";
 #endif
 	}
-	else if (ioctl_tiocgserial_supported && (cIOCTL_SD != -1) && (baudrate > new_serdrvinfo.baud_base))
+	else if (ioctl_tiocgserial_supported && (cIOCTL_SD != -1) && (new_serdrvinfo.baud_base > 0) && (baudrate > new_serdrvinfo.baud_base))
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
@@ -510,29 +510,43 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		isStdBaud = GetStdBaudRateDCBConst(baudrate, &newbaudrate);
 		if (!isStdBaud)
 		{
-			/* NOTE: The "old" method for setting non-standrad baud rates is prefered,
+			/* NOTE: The "old" method for setting non-standard baud rates is preferred,
 			 *       because we know the supported baud rates exactly and can select them
 			 *       according to our own startegy (=> min. relative deviation)
 			 */
-			if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported && (cIOCTL_SD != -1))	// if we have read+write access to serial driver
+			bool use_old_baudrate_encoding = ioctl_tiocgserial_supported && ioctl_tiocsserial_supported && (cIOCTL_SD != -1);
+			if (use_old_baudrate_encoding)
 			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::SetPortSettings:   encoding non-standard baud rate with custom divisor (old method)\n";
+#endif
 				int customdivisor = 0;
-				customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / baudrate));
-				if (customdivisor < 1)
-					customdivisor = 1;	// ...to be sure
-				if (customdivisor > 65535)
-					customdivisor = 65535;
-				//double custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
-				// Check if it is a standard baud rate now:
-				if (!GetStdBaudRateDCBConst(baudrate, &newbaudrate))
+				if ((round(new_serdrvinfo.baud_base / baudrate)) > INT_MAX)
+					customdivisor = INT_MAX;
+				else
+					customdivisor = static_cast<int>(round(new_serdrvinfo.baud_base / baudrate));
+				if (customdivisor < 1) // WARNING: e.g. the ch341 driver reports 0 as baud_base, in which case customdivisor is also 0 !
 				{
-					newbaudrate = B38400;
+#ifdef __SERIALCOM_DEBUG__
+					std::cout << "serialCOM::SetPortSettings:   WARNING: driver reports baud_base 0 - switching to new encoding method\n";
+#endif
+					use_old_baudrate_encoding = false;
+				}
+				else
+				{
+					if (customdivisor > INT_MAX)
+						customdivisor = INT_MAX; // NOTE: data type of custom_divisor in struct serial_struct is integer
+						// NOTE: we could switch to the new encoding method, but it will most likely not cause a better result. In fact, the result could be worse.
+					newbaudrate = BOTHER;
 					new_serdrvinfo.flags |= ASYNC_SPD_CUST;
 					new_serdrvinfo.custom_divisor = customdivisor;
 				}
 			}
-			else
+			if (!use_old_baudrate_encoding)
 			{
+#ifdef __SERIALCOM_DEBUG__
+				std::cout << "serialCOM::SetPortSettings:   encoding non-standard baud rate with BOTHER and c_ispeed/c_ospeed (new method)\n";
+#endif
 				newbaudrate = BOTHER;
 				newtio.c_ispeed = round(baudrate);
 				newtio.c_ospeed = round(baudrate);
@@ -546,6 +560,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 				 */
 			}
 		}
+		// else: GetStdBaudRateDCBConst(...) has set newbaudrate to the standard baud rate constant
 	}
 	// DATABITS:
 	switch (databits)
@@ -1272,7 +1287,7 @@ bool serialCOM::SendBreak(unsigned int duration_ms)
 		if (confirmSB == -1)
 			std::cout << "serialCOM::SendBreak(...):   ioctl(..., TCSBRKP, ...) failed with error " << errno << " " << strerror(errno) << "\n";
 #endif
-		/* NOTE: the Linux TCSBRKP-icotl is defined for compatibility.
+		/* NOTE: The Linux TCSBRKP-icotl is defined for compatibility.
 			 It works like the TCSBRK-ioctl on other systems and can be used to send breaks of selectable duration.
 			 => on Linux, the argument is interpreted as multiplier of 100ms (other systems behave different !)
 		 */
@@ -1498,7 +1513,7 @@ speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 			{
 				// br[b-1] < baudrate < br[b]:
 				q1 = std_baudrates[b-1].value / selBaudrate;
-				// compare relative baudrate deviation, select baud rate:
+				// compare relative baud rate deviation, select baud rate:
 				if ((q2-1) < (1-q1))
 					nearestBaudrate=std_baudrates[b].constant;
 				else
