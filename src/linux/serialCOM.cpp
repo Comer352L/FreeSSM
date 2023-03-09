@@ -507,7 +507,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	}
 	else
 	{
-		isStdBaud = GetStdbaudrateDCBConst(baudrate, &newbaudrate);
+		isStdBaud = GetStdBaudRateDCBConst(baudrate, &newbaudrate);
 		if (!isStdBaud)
 		{
 			/* NOTE: The "old" method for setting non-standrad baud rates is prefered,
@@ -524,7 +524,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 					customdivisor = 65535;
 				//double custombaudrate = static_cast<double>(new_serdrvinfo.baud_base / customdivisor);
 				// Check if it is a standard baud rate now:
-				if (!GetStdbaudrateDCBConst(baudrate, &newbaudrate))
+				if (!GetStdBaudRateDCBConst(baudrate, &newbaudrate))
 				{
 					newbaudrate = B38400;
 					new_serdrvinfo.flags |= ASYNC_SPD_CUST;
@@ -1458,7 +1458,7 @@ struct serialCOM::std_baudrate serialCOM::std_baudrates[] = {
 // B0 not used, because of Windows compatibility; B110, B134: divisor not unique
 
 
-bool serialCOM::GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst)
+bool serialCOM::GetStdBaudRateDCBConst(double baudrate, speed_t *DCBbaudconst)
 {
 	for (unsigned int k=0; k<(sizeof(std_baudrates)/sizeof(std_baudrate)); k++)
 	{

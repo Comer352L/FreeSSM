@@ -82,7 +82,7 @@ private:
 		speed_t constant;
 	};
 
-	bool GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst);
+	bool GetStdBaudRateDCBConst(double baudrate, speed_t *DCBbaudconst);
 	speed_t GetNearestStdBaudrate(double selBaudrate);
 
 	int fd;					// file descriptor for the port
