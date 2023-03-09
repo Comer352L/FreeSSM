@@ -144,7 +144,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 #endif
 		return false;
 	}
-	// BAUDRATE:
+	// BAUD RATE:
 	if (baudrate)
 	{
 		baud = currenttio.c_cflag & CBAUD;	// get baud rate
@@ -153,13 +153,13 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 		new termios2 with c_cflag not set to BOTHER (set to another Bxxxxx)
 		- when getting the termios2 struct from the system, the
 		c_ispeed/c_ospeed field SEEM to contain always the
-		baudrate value regardless of the baud settings in c_cflag
+		baud rate value regardless of the baud settings in c_cflag
 		CAN WE BE SURE THAT ALL DRIVERS BEHAVE LIKE THIS ???
 		=> For now, we only trust c_ispeed/c_ospeed if c_cflag
 		contains BOTHER
 		*/
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::GetPortSettings(): baudrates in struct termios2:\n";
+		std::cout << "serialCOM::GetPortSettings(): baud rates in struct termios2:\n";
 		std::cout << "   c_cflag & CBAUD: " << (currenttio.c_cflag & CBAUD) << '\n';
 		std::cout << "   c_ispeed: " << currenttio.c_ispeed << '\n';
 		std::cout << "   c_ospeed: " << currenttio.c_ospeed << '\n';
@@ -170,7 +170,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 			{
 				*baudrate = currenttio.c_ispeed;
 #ifdef __SERIALCOM_DEBUG__
-				std::cout << "serialCOM::GetPortSettings():   WARNING:   baudrate is encoded with the BOTHER-method !\n => The reported baudrate may differ from the ''real'' baudrate depending on the driver !\n";
+				std::cout << "serialCOM::GetPortSettings():   WARNING:   baud rate is encoded with the BOTHER-method !\n => The reported baud rate may differ from the ''real'' baud rate depending on the driver !\n";
 #endif
 			}
 			else
@@ -251,7 +251,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 				cvIOCTL_SD = ioctl(fd, TIOCGSERIAL, &current_serdrvinfo);
 				if (cvIOCTL_SD != -1)
 				{
-					// Check if it is a non-standard baudrate:
+					// Check if it is a non-standard baud rate:
 					if (!(current_serdrvinfo.flags & ASYNC_SPD_CUST))
 						*baudrate = 38400;
 					else
@@ -261,12 +261,12 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 							std::cout << "serialCOM::GetPortSettings():   warning: ioctl TIOCSSERIAL not supported, but ASYNC_SPD_CUST flag set !\n";
 #endif
 						if (current_serdrvinfo.custom_divisor != 0)
-							*baudrate = (static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baudrate
+							*baudrate = (static_cast<double>(current_serdrvinfo.baud_base) / current_serdrvinfo.custom_divisor); // Calculate custom baud rate
 						else
 						{
 							settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-							std::cout << "serialCOM::GetPortSettings():   error: custom baudrate with custom_divisor=0 detected\n";
+							std::cout << "serialCOM::GetPortSettings():   error: custom baud rate with custom_divisor=0 detected\n";
 #endif
 						}
 					}
@@ -372,7 +372,7 @@ bool serialCOM::GetPortSettings(double *baudrate, unsigned short *databits, char
 		{
 			settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-			std::cout << "serialCOM::GetPortSettings():   error: unknown baudrate\n";
+			std::cout << "serialCOM::GetPortSettings():   error: unknown baud rate\n";
 #endif
 		}
 	}
@@ -478,7 +478,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		if (cIOCTL_SD == -1)
 			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TIOCGSERIAL, ...) #1 failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
-		// Deactivate custom baudrate settings:
+		// Deactivate custom baud rate settings:
 		new_serdrvinfo.custom_divisor = 0;
 		new_serdrvinfo.flags &= ~ASYNC_SPD_CUST;
 		if (flag_async_low_latency_supported)
@@ -486,23 +486,23 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	}
 	// SET CONTROL OPTIONS:
 	newtio.c_cflag = (CREAD | CLOCAL);
-	// BAUDRATE:
-	// Set new baudrate:
+	// BAUD RATE:
+	// Set new baud rate:
 	if (baudrate <= 0)
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
 		if (baudrate == 0)
-			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - 0 baud not possible\n";
+			std::cout << "serialCOM::SetPortSettings:   error: illegal baud rate - 0 baud not possible\n";
 		else
-			std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - baudrate must be > 0\n";
+			std::cout << "serialCOM::SetPortSettings:   error: illegal baud rate - baud rate must be > 0\n";
 #endif
 	}
 	else if (ioctl_tiocgserial_supported && (cIOCTL_SD != -1) && (baudrate > new_serdrvinfo.baud_base))
 	{
 		settingsvalid = false;
 #ifdef __SERIALCOM_DEBUG__
-		std::cout << "serialCOM::SetPortSettings:   error: illegal baudrate - the maximum supported baud rate of this device is " << std::dec << new_serdrvinfo.baud_base << " baud\n";
+		std::cout << "serialCOM::SetPortSettings:   error: illegal baud rate - the maximum supported baud rate of this device is " << std::dec << new_serdrvinfo.baud_base << " baud\n";
 #endif
 	}
 	else
@@ -510,8 +510,8 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		isStdBaud = GetStdbaudrateDCBConst(baudrate, &newbaudrate);
 		if (!isStdBaud)
 		{
-			/* NOTE: The "old" method for setting non-standrad baudrates is prefered,
-			*	 because we know the supported baudrates exactly and can select them
+			/* NOTE: The "old" method for setting non-standrad baud rates is prefered,
+			*	 because we know the supported baud rates exactly and can select them
 			*	 according to our own startegy (=> min. relative deviation)
 			*/
 			if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported && (cIOCTL_SD != -1))	// if we have read+write access to serial driver
@@ -542,7 +542,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 				* - IS THIS BEHAVIOR UNIFIED/GUARANTEED FOR ALL SERIAL PORT DRIVERS ?
 				*/
 				/* NOTE: if the ioctl() fails (later in this function), we will
-				*       retry with the nearest possible standard baudrate
+				*       retry with the nearest possible standard baud rate
 				*/
 			}
 		}
@@ -781,7 +781,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported)
 		{
 			cIOCTL_SD = ioctl(fd, TIOCSSERIAL, &new_serdrvinfo);	// write new driver settings	// -1 on error
-			/* NOTE: always do this ioctl to deactivate the ASYNC_SPD_CUST if we have a standard-baudrate ! */
+			/* NOTE: always do this ioctl to deactivate the ASYNC_SPD_CUST if we have a standard baud rate ! */
 			/* NOTE: some drivers (e.g. for many USB-serial devices) provide the TIOCGSERIAL ioctl, but no TIOCSSERIAL ioctl ! */
 			if (cIOCTL_SD == -1)
 			{
@@ -808,15 +808,15 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 			std::cout << "serialCOM::SetPortSettings():   ioctl(..., TCSETS2, ...) failed with error " << errno << " " << strerror(errno)<< "\n";
 #endif
 		/* NOTE: The following code-block guarantees maximum compatibility:
-		 * In case of non-standard baudrates set with the "BOTHER"-method,
-		 * some serial port drivers might not set the baudrate to the nearest
+		 * In case of non-standard baud rates set with the "BOTHER"-method,
+		 * some serial port drivers might not set the baud rate to the nearest
 		 * supported value IN ANY CASE:
 		 * The ioctl() could fail, if a maximum deviation is exceeded !
-		 * => We try to select the nearest supported baudrate manually in this case
+		 * => We try to select the nearest supported baud rate manually in this case
 		 */
 		if ((cIOCTL == -1) && (!isStdBaud))
 		{
-			// Set baudrate to the nearest standard value:
+			// Set baud rate to the nearest standard value:
 			newbaudrate = GetNearestStdBaudrate(baudrate);
 			newtio.c_cflag &= ~CBAUD;
 			newtio.c_cflag |= newbaudrate;
@@ -829,7 +829,7 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 	}
 	// SUCCESS CONTROL (RETURN VALUE):
 	return (cIOCTL != -1);
-	/* NOTE: we can tolerate a failing TIOCSSERIAL-ioctl() if the baudrate is not set to B38400,
+	/* NOTE: we can tolerate a failing TIOCSSERIAL-ioctl() if the baud rate is not set to B38400,
 	 *       because the ASYNC_SPD_CUST-flag and the custom divisor are always ignored if B38400 is not set !
 	 */
 }
@@ -966,7 +966,7 @@ bool serialCOM::OpenPort(std::string portname)
 			std::cout << "serialCOM::OpenPort():   Warning: couldn't set RTS+DTS control lines to standard values\n";
 #endif
 		/* NOTE: Call SetControlLines AFTER SetPortSettings, because drivers can
-		 * change DTS+RTS when new baudrate/databits/parity/stopbits,
+		 * change DTS+RTS when new baud rate / databits / parity / stopbits,
 		 * especially at the first time after opening the port !		*/
 		return true;
 	}
@@ -1474,7 +1474,7 @@ bool serialCOM::GetStdbaudrateDCBConst(double baudrate, speed_t *DCBbaudconst)
 
 speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 {
-	// Get nearest standard baudrate:
+	// Get nearest standard baud rate:
 	speed_t nearestBaudrate = 0;
 
 	unsigned int stdbaudelements = (sizeof(std_baudrates)/sizeof(std_baudrate));
