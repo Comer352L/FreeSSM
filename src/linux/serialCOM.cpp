@@ -511,9 +511,9 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 		if (!isStdBaud)
 		{
 			/* NOTE: The "old" method for setting non-standrad baud rates is prefered,
-			*	 because we know the supported baud rates exactly and can select them
-			*	 according to our own startegy (=> min. relative deviation)
-			*/
+			 *       because we know the supported baud rates exactly and can select them
+			 *       according to our own startegy (=> min. relative deviation)
+			 */
 			if (ioctl_tiocgserial_supported && ioctl_tiocsserial_supported && (cIOCTL_SD != -1))	// if we have read+write access to serial driver
 			{
 				int customdivisor = 0;
@@ -537,13 +537,13 @@ bool serialCOM::SetPortSettings(double baudrate, unsigned short databits, char p
 				newtio.c_ispeed = round(baudrate);
 				newtio.c_ospeed = round(baudrate);
 				/* TODO:
-				* - DOES ioctl(..., TCSETS2, ...) ALWAYS SET THE NEAREST POSSIBLE BAUD RATE ? HOW IS "NEAREST" DEFINED (ABSOLUTE/RELATIVE ?) ?
-				* - IS THERE A MAXIMUM DEVIATION, WHICH LETS THE ioctl() FAIL IF IT IS EXCEEDED ?
-				* - IS THIS BEHAVIOR UNIFIED/GUARANTEED FOR ALL SERIAL PORT DRIVERS ?
-				*/
+				 * - DOES ioctl(..., TCSETS2, ...) ALWAYS SET THE NEAREST POSSIBLE BAUD RATE ? HOW IS "NEAREST" DEFINED (ABSOLUTE/RELATIVE ?) ?
+				 * - IS THERE A MAXIMUM DEVIATION, WHICH LETS THE ioctl() FAIL IF IT IS EXCEEDED ?
+				 * - IS THIS BEHAVIOR UNIFIED/GUARANTEED FOR ALL SERIAL PORT DRIVERS ?
+				 */
 				/* NOTE: if the ioctl() fails (later in this function), we will
-				*       retry with the nearest possible standard baud rate
-				*/
+				 *       retry with the nearest possible standard baud rate
+				 */
 			}
 		}
 	}
@@ -1498,7 +1498,7 @@ speed_t serialCOM::GetNearestStdBaudrate(double selBaudrate)
 			{
 				// br[b-1] < baudrate < br[b]:
 				q1 = std_baudrates[b-1].value / selBaudrate;
-				// compare relative baudrate deviation, select baudrate:
+				// compare relative baudrate deviation, select baud rate:
 				if ((q2-1) < (1-q1))
 					nearestBaudrate=std_baudrates[b].constant;
 				else
