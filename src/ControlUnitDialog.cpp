@@ -47,8 +47,6 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	setWindowTitle("FreeSSM " + QApplication::applicationVersion() + " - " + title);
 	title_label->setText(title);
 #ifndef SMALL_RESOLUTION
-	// Move window to desired coordinates:
-	move( 30, 30 );
 	// Apply quirk for GTK+-Layout:
 	if (QApplication::style()->objectName().toLower() == "gtk+")
 	{
@@ -892,4 +890,3 @@ void ControlUnitDialog::closeEvent(QCloseEvent *event)
 	}
 	event->accept();
 }
-
