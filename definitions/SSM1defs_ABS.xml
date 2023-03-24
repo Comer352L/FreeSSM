@@ -128,7 +128,7 @@
 		<TITLE lang="tr">BLS</TITLE>
 	</MB>
 	<MB id="MB_GSENS">
-		<UNIT lang="all"></UNIT>
+		<UNIT lang="all">V</UNIT>
 		<FORMULA>*1961/100000</FORMULA>
 		<PRECISION>2</PRECISION>
 		<TITLE lang="en">G-Sensor output voltage</TITLE>
