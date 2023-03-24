@@ -47,16 +47,14 @@ FreeSSM::FreeSSM(QApplication *app)
 	_progtitle_label->setText("FreeSSM " + QApplication::applicationVersion());
 	this->setWindowTitle("FreeSSM " + QApplication::applicationVersion());
 	// PLACE WINDOW IN THE CENTER OF THE SCREEN:
-#if QT_VERSION < 0x051400
-	QDesktopWidget desktop;
-	int x = (desktop.width() - size().width()) / 2;
-	int y = (desktop.height() - size().height()) / 2 - 50;
+	QRect parent_geometry;
+#if QT_VERSION < 0x050000
+	QDesktopWidget *desktop = QApplication::desktop();
+	parent_geometry = desktop->screenGeometry(this);
 #else
-	QScreen *screen = this->screen();
-	int x = (screen->geometry().width() - size().width()) / 2;
-	int y = (screen->geometry().height() - size().height()) / 2 - 50;
+	parent_geometry = QApplication::primaryScreen()->geometry();
 #endif
-	this->move ( x, y );
+	setGeometry( QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), parent_geometry ) );
 #endif
 	// LOAD PREFERENCES FROM FILE:
 	QString savedinterfacefilename = "";
