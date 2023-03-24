@@ -172,8 +172,12 @@ greaterThan(QT_MAJOR_VERSION, 4): DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x0400
 
 # disable gcse-optimization (regressions with gcc-versions >= 4.2)
 QMAKE_CXXFLAGS += -fno-gcse          # disable gcse-optimization (regressions with gcc-versions >= 4.2)
-# language standard; requires c++11: range-for loop, constexpr, auto, initializer list, lambda expression, std::array, ...
-QMAKE_CXXFLAGS += -std=c++11
+# language standard; requires c++11: range-for loop, constexpr, auto, initializer list, lambda expression, std::array, ...; Qt6.2+ requires c++17
+greaterThan(QT_MAJOR_VERSION, 5):greaterThan(QT_MINOR_VERSION, 1) {
+  QMAKE_CXXFLAGS += -std=c++17
+} else {
+  QMAKE_CXXFLAGS += -std=c++11
+}
 
 # Installation
 isEmpty(INSTALLDIR) {
