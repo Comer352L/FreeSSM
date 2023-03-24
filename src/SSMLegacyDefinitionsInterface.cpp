@@ -682,7 +682,7 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 	}
 	if (_defs_for_id_b3_element)
 	{
-		SWblock_elements = getAllMatchingChildElements(_defs_for_id_b3_element, "SWBLOCK");
+		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "SWBLOCK");
 		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
 	}
 	for (unsigned int b=0; b<SWblock_elements.size(); b++)
