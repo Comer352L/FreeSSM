@@ -105,7 +105,11 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	}
 	// CONNECT SIGNALS AND SLOTS:
 	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
-	connect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
+#if QT_VERSION < 0x060000 //
+	connect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) ); // removed with Qt6
+#else
+	connect( guistyle_comboBox, SIGNAL( textActivated(QString) ), this, SLOT( switchGUIstyle(QString) ) ); // since Qt 5.14
+#endif
 	connect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
 	connect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	connect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
@@ -118,7 +122,11 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 Preferences::~Preferences()
 {
 	disconnect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
-	disconnect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) );
+#if QT_VERSION < 0x060000
+	disconnect( guistyle_comboBox, SIGNAL( activated(QString) ), this, SLOT( switchGUIstyle(QString) ) ); // removed with Qt6
+#else
+	disconnect( guistyle_comboBox, SIGNAL( textActivated(QString) ), this, SLOT( switchGUIstyle(QString) ) ); // since Qt 5.14
+#endif
 	disconnect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
 	disconnect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
 	disconnect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
