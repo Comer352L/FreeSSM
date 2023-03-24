@@ -201,9 +201,9 @@ bool SSMP1communication_procedures::getID(unsigned int addr, unsigned char extra
 		}
 #ifdef __FSSM_DEBUG__
 		if (IDconfirmed)
-			std::cout << "SSMP1communication_procedures::getID(...):   the control doesn't send its ID continuously, ID validated by length check.\n";
+			std::cout << "SSMP1communication_procedures::getID(...):   the control unit doesn't send its ID continuously, ID validated by length check.\n";
 		else
-			std::cout << "SSMP1communication_procedures::getID(...):   the control doesn't send its ID continuously, ID length check failed.\n";
+			std::cout << "SSMP1communication_procedures::getID(...):   the control unit doesn't send its ID continuously, ID length check failed.\n";
 #endif
 	}
 	// Extract data:
