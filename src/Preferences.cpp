@@ -32,21 +32,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	_confirmed = false;
 	// SET UP GUI:
 	setupUi(this);
-#ifndef SMALL_RESOLUTION
-	// PLACE WINDOW:
-	// get coordinates of FreeSSM_MainWindow
-	QRect FreeSSM_MW_geometry;
-	int FreeSSM_MW_Xpos, FreeSSM_MW_Ypos;
-	FreeSSM_MW_geometry = parent->geometry();
-	FreeSSM_MW_Xpos = FreeSSM_MW_geometry.x();
-	FreeSSM_MW_Ypos = FreeSSM_MW_geometry.y();
-	// calculate new window coordinates
-	int x, y;
-	x = (FreeSSM_MW_Xpos + 60);
-	y = (FreeSSM_MW_Ypos + 40);
-	// move window to desired coordinates
-	move(x, y);
-#else
+#ifdef SMALL_RESOLUTION
 	// https://bugreports.qt.io/browse/QTBUG-16034
 	// Workaround for window not showing always fullscreen
 	setWindowFlags(Qt::Window);
