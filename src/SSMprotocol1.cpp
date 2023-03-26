@@ -179,11 +179,18 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		}
 		// Check if we have definitions for this control unit:
 		if (!_ssmCUdata.uses_Ax10xx_defs())
+		{
+			resetCUdata();
 			return result_noDefs;
+		}
 		/* Get definitions for this control unit */
 		FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
 		if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
+		{
+			resetCUdata();
+			delete FBdefsIface;
 			return result_noDefs;
+		}
 		FBdefsIface->systemDescription(&_sysDescription);
 		FBdefsIface->hasOBD2system(&_has_OBD2);
 		FBdefsIface->hasImmobilizer(&_has_Immo);
@@ -212,10 +219,18 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 		/* Get definitions for this control unit */
 		SSMLegacyDefinitionsInterface *LegacyDefsIface = new SSMLegacyDefinitionsInterface(_language.toStdString());
 		if (!LegacyDefsIface->selectDefinitionsFile(LegacyDefsFile))
+		{
+			delete LegacyDefsIface;
+			resetCUdata();
 			return result_noOrInvalidDefsFile;
+		}
 		LegacyDefsIface->setLanguage(_language.toStdString());
 		if (!LegacyDefsIface->selectID(_ssmCUdata.SYS_ID))
+		{
+			delete LegacyDefsIface;
+			resetCUdata();
 			return result_noDefs;
+		}
 		std::string sysdescription;
 		LegacyDefsIface->systemDescription(&sysdescription);
 		_sysDescription = QString::fromStdString(sysdescription);
