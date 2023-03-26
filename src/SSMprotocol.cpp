@@ -147,12 +147,8 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 {
 	if (_state == state_needSetup) return false;
-	if (_selectedDCgroups != noDCs_DCgroup)
-	{
-		*DCgroups = _selectedDCgroups;
-		return true;
-	}
-	return false;
+	*DCgroups = _selectedDCgroups;
+	return true;
 }
 
 
