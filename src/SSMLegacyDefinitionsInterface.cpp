@@ -195,35 +195,16 @@ bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 
 bool SSMLegacyDefinitionsInterface::systemDescription(std::string *description)
 {
-	std::vector<XMLElement*> elements;
+	XMLElement* element = NULL;
+	const char *str = NULL;
 
 	if (description == NULL)
 		return false;
 	if (!_id_set)
 		return false;
-	if (_defs_for_id_b3_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "SYSTEMDESCRIPTION");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b2_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "SYSTEMDESCRIPTION");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b1_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "SYSTEMDESCRIPTION");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_root_element)
-		elements = getAllMatchingChildElements(_defs_root_element, "SYSTEMDESCRIPTION");
-	if (elements.size() != 1)
+	if (!getMultilevelElementWithHighestPriority("SYSTEMDESCRIPTION", &element))
 		return false;
-	const char *str = elements.at(0)->GetText();
+	str = element->GetText();
 	if (str == NULL)
 		return false;
 	*description = std::string(str);
@@ -233,35 +214,16 @@ bool SSMLegacyDefinitionsInterface::systemDescription(std::string *description)
 
 bool SSMLegacyDefinitionsInterface::model(std::string *name)
 {
-	std::vector<XMLElement*> elements;
+	XMLElement* element = NULL;
+	const char *str = NULL;
 
 	if (name == NULL)
 		return false;
 	if (!_id_set)
 		return false;
-	if (_defs_for_id_b3_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "MODEL");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b2_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "MODEL");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b1_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "MODEL");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_root_element)
-		elements = getAllMatchingChildElements(_defs_root_element, "MODEL");
-	if (elements.size() != 1)
+	if (!getMultilevelElementWithHighestPriority("MODEL", &element))
 		return false;
-	const char *str = elements.at(0)->GetText();
+	str = element->GetText();
 	if (str == NULL)
 		return false;
 	*name = std::string(str);
@@ -271,35 +233,16 @@ bool SSMLegacyDefinitionsInterface::model(std::string *name)
 
 bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 {
-	std::vector<XMLElement*> elements;
+	XMLElement* element = NULL;
+	const char *str = NULL;
 
 	if (yearstr == NULL)
 		return false;
 	if (!_id_set)
 		return false;
-	if (_defs_for_id_b3_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "YEAR");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b2_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "YEAR");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b1_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "YEAR");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_root_element)
-		elements = getAllMatchingChildElements(_defs_root_element, "YEAR");
-	if (elements.size() != 1)
+	if (!getMultilevelElementWithHighestPriority("YEAR", &element))
 		return false;
-	const char *str = elements.at(0)->GetText();
+	str = element->GetText();
 	if (str == NULL)
 		return false;
 	*yearstr = std::string(str);
@@ -310,37 +253,18 @@ bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char *value)
 {
 	std::vector<XMLElement*> elements;
-	XMLElement *CM_element;
+	XMLElement *CM_element = NULL;
 	XMLElement *addr_element;
 	const char *str = NULL;
+	unsigned long int addr;
+	unsigned long int val;
 
 	if ((address != NULL) && (value != NULL))
 		return false;
 	if (!_id_set)
 		return false;
-	if (_defs_for_id_b3_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b3_element, "CLEARMEMORY");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b2_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b2_element, "CLEARMEMORY");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_for_id_b1_element)
-	{
-		elements = getAllMatchingChildElements(_defs_for_id_b1_element, "CLEARMEMORY");
-		if (elements.size() > 1)
-			return false;
-	}
-	if (!elements.size() && _defs_root_element)
-		elements = getAllMatchingChildElements(_defs_root_element, "CLEARMEMORY");
-	if (elements.size() != 1)
+	if (!getMultilevelElementWithHighestPriority("CLEARMEMORY", &CM_element))
 		return false;
-	CM_element = elements.at(0);
 	elements = getAllMatchingChildElements(CM_element, "ADDRESS");
 	if (elements.size() < 1)
 		return false;
@@ -352,16 +276,17 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 	str = addr_element->GetText();
 	if (str == NULL)
 		return false;
-	unsigned long int addr = strtoul( str, NULL, 0 );
+	addr = strtoul( str, NULL, 0 );
 	str = elements.at(0)->GetText();
 	if (str == NULL)
 		return false;
-	unsigned long int val = strtoul( str, NULL, 0 );
+	val = strtoul( str, NULL, 0 );
 	if ((addr > 0xffff) || (val > 0xff))
 		return false;
 	if (address != NULL)
 		*address = addr;
 	if (value != NULL)
+
 		*value = val;
 	return true;
 }
@@ -892,6 +817,37 @@ std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMultilevelElements
 		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
 	}
 	return DTCblock_elements;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getMultilevelElementWithHighestPriority(std::string name, XMLElement **element)
+{
+	*element = NULL;
+	std::vector<XMLElement*> elements;
+	if (_defs_for_id_b3_element)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b3_element, name);
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b2_element)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b2_element, name);
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_for_id_b1_element)
+	{
+		elements = getAllMatchingChildElements(_defs_for_id_b1_element, name);
+		if (elements.size() > 1)
+			return false;
+	}
+	if (!elements.size() && _defs_root_element)
+		elements = getAllMatchingChildElements(_defs_root_element, name);
+	if (elements.size() != 1)
+		return false;
+	*element = elements.at(0);
+	return true;
 }
 
 
