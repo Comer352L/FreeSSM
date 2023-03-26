@@ -41,7 +41,7 @@ public:
 	~SSMFlagbyteDefinitionsInterface();
 
 	void setLanguage(QString lang);
-	void selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata);
+	bool selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata);
 
 	bool systemDescription(QString *description);
 

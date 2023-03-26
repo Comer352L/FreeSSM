@@ -176,7 +176,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
 	FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
-	FBdefsIface->selectControlUnitID(_CU, _ssmCUdata);
+	if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
+	{
+		delete _SSMP2com;
+		_SSMP2com = NULL;
+		return result_noDefs;
+	}
 	FBdefsIface->systemDescription(&_sysDescription);
 	FBdefsIface->hasOBD2system(&_has_OBD2);
 	FBdefsIface->hasImmobilizer(&_has_Immo);

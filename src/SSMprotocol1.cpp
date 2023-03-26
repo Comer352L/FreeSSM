@@ -182,7 +182,8 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 			return result_noDefs;
 		/* Get definitions for this control unit */
 		FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
-		FBdefsIface->selectControlUnitID(_CU, _ssmCUdata);
+		if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
+			return result_noDefs;
 		FBdefsIface->systemDescription(&_sysDescription);
 		FBdefsIface->hasOBD2system(&_has_OBD2);
 		FBdefsIface->hasImmobilizer(&_has_Immo);
