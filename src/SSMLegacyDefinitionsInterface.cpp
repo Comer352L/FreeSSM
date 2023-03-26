@@ -149,11 +149,9 @@ bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 	std::vector<XMLElement*> elements;
 	std::vector<attributeCondition> attribConditions;
 	attributeCondition attribCondition;
+	XMLElement *defs_for_id_b1_element;
+	XMLElement *defs_for_id_b2_element;
 
-	_id_set = false;
-	_defs_for_id_b1_element = NULL;
-	_defs_for_id_b2_element = NULL;
-	_defs_for_id_b3_element = NULL;
 	if (!_defs_root_element)
 		return false;
 	attribCondition.name = "value";
@@ -162,12 +160,12 @@ bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 	elements = getAllMatchingChildElements(_defs_root_element, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
 	if (elements.size() == 1)
 	{
-		_defs_for_id_b1_element = elements.at(0);
+		defs_for_id_b1_element = elements.at(0);
 		attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(1), 1);
 		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
 		if (elements.size() == 1)
 		{
-			_defs_for_id_b2_element = elements.at(0);
+			defs_for_id_b2_element = elements.at(0);
 			attribCondition.name = "value_start";
 			attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(2), 1);
 			attribCondition.condition = attributeCondition::equalOrSmaller;
@@ -178,9 +176,11 @@ bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
 			if (elements.size() == 1)
 			{
-				_defs_for_id_b3_element = elements.at(0);
 				_ID = id;
 				_id_set = true;
+				_defs_for_id_b1_element = defs_for_id_b1_element;
+				_defs_for_id_b2_element = defs_for_id_b2_element;
+				_defs_for_id_b3_element = elements.at(0);
 				return true;
 			}
 		}
