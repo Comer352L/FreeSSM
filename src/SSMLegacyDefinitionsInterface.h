@@ -58,7 +58,7 @@ public:
 	SSMLegacyDefinitionsInterface(std::string lang = "en");
 	~SSMLegacyDefinitionsInterface();
 	bool selectDefinitionsFile(std::string filename);
-	void getVersionInfos(std::string *defs_version, std::string *format_version);
+	bool getVersionInfos(std::string *defs_version, std::string *format_version);
 	void setLanguage(std::string lang);
 	bool selectID(const std::vector<char>& id);
 
