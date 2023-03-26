@@ -87,6 +87,7 @@ private:
 	XMLElement *_defs_for_id_b3_element;
 
 	std::vector<XMLElement*> getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
+	std::vector<XMLElement*> getAllMultilevelElements(std::string name);
 	bool StrToDouble(std::string mystring, double *d);
 	bool checkDefsFormatVersion(std::string version_str);
 	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);

@@ -370,7 +370,6 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
 {
 	std::vector<XMLElement*> DTCblock_elements;
-	std::vector<XMLElement*> DTCblock_elements2;
 	const char *str = NULL;
 
 	if (dcs == NULL)
@@ -378,23 +377,7 @@ bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs
 	dcs->clear();
 	if (!_id_set)
 		return false;
-	if (_defs_root_element)
-		DTCblock_elements = getAllMatchingChildElements(_defs_root_element, "DTCBLOCK");
-	if (_defs_for_id_b1_element)
-	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "DTCBLOCK");
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
-	}
-	if (_defs_for_id_b2_element)
-	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "DTCBLOCK");
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
-	}
-	if (_defs_for_id_b3_element)
-	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "DTCBLOCK");
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
-	}
+	DTCblock_elements = getAllMultilevelElements("DTCBLOCK");
 	for (unsigned int b=0; b<DTCblock_elements.size(); b++)
 	{
 		unsigned long int addr = MEMORY_ADDRESS_NONE;
@@ -566,7 +549,6 @@ bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs
 bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	std::vector<XMLElement*> MB_elements;
-	std::vector<XMLElement*> MB_elements2;
 	const char *str = NULL;
 
 	if (mbs == NULL)
@@ -574,23 +556,7 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 	mbs->clear();
 	if (!_id_set)
 		return false;
-	if (_defs_root_element)
-		MB_elements = getAllMatchingChildElements(_defs_root_element, "MB");
-	if (_defs_for_id_b1_element)
-	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "MB");
-		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
-	}
-	if (_defs_for_id_b2_element)
-	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "MB");
-		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
-	}
-	if (_defs_for_id_b3_element)
-	{
-		MB_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "MB");
-		MB_elements.insert(MB_elements.end(), MB_elements2.begin(), MB_elements2.end());
-	}
+	MB_elements = getAllMultilevelElements("MB");
 	for (unsigned int k=0; k<MB_elements.size(); k++)
 	{
 		std::vector<XMLElement*> tmp_elements;
@@ -704,7 +670,6 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
 	std::vector<XMLElement*> SWblock_elements;
-	std::vector<XMLElement*> SWblock_elements2;
 	const char *str = NULL;
 
 	if (sws == NULL)
@@ -712,23 +677,7 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 	sws->clear();
 	if (!_id_set)
 		return false;
-	if (_defs_root_element)
-		SWblock_elements = getAllMatchingChildElements(_defs_root_element, "SWBLOCK");
-	if (_defs_for_id_b1_element)
-	{
-		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, "SWBLOCK");
-		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
-	}
-	if (_defs_for_id_b2_element)
-	{
-		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, "SWBLOCK");
-		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
-	}
-	if (_defs_for_id_b3_element)
-	{
-		SWblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, "SWBLOCK");
-		SWblock_elements.insert(SWblock_elements.end(), SWblock_elements2.begin(), SWblock_elements2.end());
-	}
+	SWblock_elements = getAllMultilevelElements("SWBLOCK");
 	for (unsigned int b=0; b<SWblock_elements.size(); b++)
 	{
 		sw_intl_dt sw;
@@ -918,6 +867,31 @@ std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMatchingChildEleme
 			retElements.push_back(pElement);
 	}
 	return retElements;
+}
+
+
+std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMultilevelElements(std::string name)
+{
+	std::vector<XMLElement*> DTCblock_elements;
+	std::vector<XMLElement*> DTCblock_elements2;
+	if (_defs_root_element)
+		DTCblock_elements = getAllMatchingChildElements(_defs_root_element, name);
+	if (_defs_for_id_b1_element)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, name);
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
+	if (_defs_for_id_b2_element)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, name);
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
+	if (_defs_for_id_b3_element)
+	{
+		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, name);
+		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+	}
+	return DTCblock_elements;
 }
 
 
