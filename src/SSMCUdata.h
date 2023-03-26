@@ -24,6 +24,9 @@
 #include <vector>
 
 
+enum class CUtype {Engine, Transmission, CruiseControl, AirCon, FourWheelSteering, ABS, AirSuspension, PowerSteering};
+
+
 /*!
  * \brief Class to manage SYS_ID, ROM_ID and flagbytes.
  *

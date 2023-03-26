@@ -44,9 +44,9 @@ QString AirConDialog::controlUnitName()
 }
 
 
-SSMprotocol::CUtype_dt AirConDialog::controlUnitType()
+CUtype AirConDialog::controlUnitType()
 {
-	return SSMprotocol::CUtype_AirCon;
+	return CUtype::AirCon;
 }
 
 

@@ -49,9 +49,9 @@ QString ABSdialog::controlUnitName()
 }
 
 
-SSMprotocol::CUtype_dt ABSdialog::controlUnitType()
+CUtype ABSdialog::controlUnitType()
 {
-	return SSMprotocol::CUtype_ABS;
+	return CUtype::ABS;
 }
 
 

@@ -19,6 +19,8 @@
 
 #include "CUcontent_DCs_abstract.h"
 
+#include "SSMCUdata.h"
+
 
 CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent) : QWidget(parent)
 {
@@ -168,7 +170,7 @@ void CUcontent_DCs_abstract::setNrOfTableRows(QTableWidget *tablewidget, unsigne
 void CUcontent_DCs_abstract::printDCprotocol()
 {
 	QString datetime;
-	SSMprotocol::CUtype_dt cu_type;
+	CUtype cu_type;
 	QString CU;
 	QString systype;
 	std::string ROM_ID;
@@ -218,7 +220,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 			{
 				switch (cu_type)
 				{
-					case SSMprotocol::CUtype_Engine:
+					case CUtype::Engine:
 						CU = tr("Engine");
 						ok = _SSMPdev->hasVINsupport(&VINsup);
 						if (ok)
@@ -253,16 +255,16 @@ void CUcontent_DCs_abstract::printDCprotocol()
 						else
 							errstr = tr("Couldn't determine if VIN-registration is supported.");
 						break;
-					case SSMprotocol::CUtype_Transmission:
+					case CUtype::Transmission:
 						CU = tr("Transmission");
 						break;
-					case SSMprotocol::CUtype_CruiseControl:
+					case CUtype::CruiseControl:
 						CU = tr("Cruise Control");
 						break;
-					case SSMprotocol::CUtype_AirCon:
+					case CUtype::AirCon:
 						CU = tr("Air Conditioning");
 						break;
-					case SSMprotocol::CUtype_FourWheelSteering:
+					case CUtype::FourWheelSteering:
 						CU = tr("4 Wheel Steering");
 						break;
 					default:
@@ -330,7 +332,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	tableFormat.setColumnWidthConstraints(widthconstraints);
 	tableFormat.setLeftMargin(20);
 	// Create and insert table:
-	if (cu_type == SSMprotocol::CUtype_Engine)
+	if (cu_type == CUtype::Engine)
 		cursor.insertTable(4, 2, tableFormat);
 	else
 		cursor.insertTable(3, 2, tableFormat);
@@ -367,7 +369,7 @@ void CUcontent_DCs_abstract::printDCprotocol()
 	charFormat.setFontWeight(QFont::Normal);
 	cursor.setCharFormat(charFormat);
 	cursor.insertText( QString::fromStdString(ROM_ID) );
-	if (cu_type == SSMprotocol::CUtype_Engine)
+	if (cu_type == CUtype::Engine)
 	{
 		cursor.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,1);
 		// Row 4 - Column 1:

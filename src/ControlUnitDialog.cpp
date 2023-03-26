@@ -591,14 +591,14 @@ void ControlUnitDialog::setContentSelectionButtonChecked(ContentSelection csel, 
 }
 
 
-SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(SSMprotocol::CUtype_dt CUtype)
+SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 {
 	/* NOTE:  probe SSM2-protocol first !
 	   If a serial pass through (K)KL-interface is used, the interface echo could be detected as a SSM1-ROM-ID,
 	   if receive buffer flushing doesn't work reliable with the used serial port driver !
 	*/
 	SSMprotocol::CUsetupResult_dt result = SSMprotocol::result_commError;
-	if ((CUtype == SSMprotocol::CUtype_Engine) || (CUtype == SSMprotocol::CUtype_Transmission))
+	if ((CUtype == CUtype::Engine) || (CUtype == CUtype::Transmission))
 	{
 		// Probe SSM2-protocol:
 		_SSMPdev = new SSMprotocol2(_diagInterface, _language);

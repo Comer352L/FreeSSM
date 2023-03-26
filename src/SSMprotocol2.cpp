@@ -96,20 +96,20 @@ void SSMprotocol2::resetCUdata()
 }
 
 
-SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU)
 {
 	return setupCUdata(CU, false);
 }
 
 
-SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF)
+SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ignoreIgnitionOFF)
 {
 	unsigned int CUaddress = 0x0;
 	SSMFlagbyteDefinitionsInterface *FBdefsIface;
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
-	if (CU == CUtype_Engine)
+	if (CU == CUtype::Engine)
 	{
 		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
@@ -122,7 +122,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 		else
 			return result_invalidInterfaceConfig;
 	}
-	else if (CU == CUtype_Transmission)
+	else if (CU == CUtype::Transmission)
 	{
 		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
 		{
@@ -146,7 +146,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(CUtype_dt CU, bool ignor
 			_SSMP2com->setCUaddress(0x01);
 			if (!_SSMP2com->getCUdata(_ssmCUdata))
 			{
-				if (CU == CUtype_Engine)
+				if (CU == CUtype::Engine)
 				{
 					_SSMP2com->setCUaddress(0x02);
 					if (!_SSMP2com->getCUdata(_ssmCUdata))
@@ -317,7 +317,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	// Setup diagnostic codes addresses list:
 	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
-		if (_CU == CUtype_Engine)
+		if (_CU == CUtype::Engine)
 			DCqueryAddrList.push_back( 0x000061 );
 		for (k=0; k<_DTCdefs.size(); k++)
 			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );

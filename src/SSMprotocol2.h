@@ -24,6 +24,7 @@
 
 #include <vector>
 #include "AbstractDiagInterface.h"
+#include "SSMCUdata.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
 #include "SSMFlagbyteDefinitionsInterface.h"
@@ -39,8 +40,8 @@ public:
 	SSMprotocol2(AbstractDiagInterface *diagInterface, QString language="en");
 	~SSMprotocol2();
 	// NON-COMMUNICATION-FUNCTIONS:
-	CUsetupResult_dt setupCUdata(CUtype_dt CU);
-	CUsetupResult_dt setupCUdata(CUtype_dt CU, bool ignoreIgnitionOFF=false);
+	CUsetupResult_dt setupCUdata(enum CUtype CU);
+	CUsetupResult_dt setupCUdata(enum CUtype CU, bool ignoreIgnitionOFF=false);
 	protocol_dt protocolType() { return SSM2; }
 	bool hasVINsupport(bool *VINsup);
 	bool hasIntegratedCC(bool *CCsup);

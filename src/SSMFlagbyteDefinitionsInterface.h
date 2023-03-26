@@ -25,6 +25,7 @@
 
 #include <QString>
 #include <QStringList>
+#include "SSMCUdata.h"
 #include "SSMprotocol.h"
 #include "SSMFlagbyteDefinitions_SysDescriptions.h"
 #include "SSMFlagbyteDefinitions_en.h"
@@ -41,7 +42,7 @@ public:
 	~SSMFlagbyteDefinitionsInterface();
 
 	void setLanguage(QString lang);
-	bool selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata);
+	bool selectControlUnitID(CUtype cu, const SSMCUdata& ssmCUdata);
 
 	bool systemDescription(QString *description);
 
@@ -67,7 +68,7 @@ public:
 private:
 	QString _language;
 	bool _id_set;
-	SSMprotocol::CUtype_dt _CU;
+	CUtype _CU;
 	SSMCUdata _ssmCUdata;
 
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);

@@ -90,49 +90,49 @@ void SSMprotocol1::resetCUdata()
 }
 
 
-SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
+SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 {
 	std::string LegacyDefsFile;
 	SSM1_CUtype_dt SSM1_CU;
 	// Reset:
 	resetCUdata();
 	// Set control unit type and legacy definitions file:
-	if (CU == CUtype_Engine)
+	if (CU == CUtype::Engine)
 	{
 		SSM1_CU = SSM1_CU_Engine;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Engine.xml";
 	}
-	else if (CU == CUtype_Transmission)
+	else if (CU == CUtype::Transmission)
 	{
 		SSM1_CU = SSM1_CU_Transmission;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_Transmission.xml";
 	}
-	else if (CU == CUtype_CruiseControl)
+	else if (CU == CUtype::CruiseControl)
 	{
 		SSM1_CU = SSM1_CU_CruiseCtrl;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_CruiseControl.xml";
 	}
-	else if (CU == CUtype_AirCon)
+	else if (CU == CUtype::AirCon)
 	{
 		SSM1_CU = SSM1_CU_AirCon;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirConditioning.xml";
 	}
-	else if (CU == CUtype_FourWheelSteering)
+	else if (CU == CUtype::FourWheelSteering)
 	{
 		SSM1_CU = SSM1_CU_FourWS;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_FourWheelSteering.xml";
 	}
-	else if (CU == CUtype_ABS)
+	else if (CU == CUtype::ABS)
 	{
 		SSM1_CU = SSM1_CU_ABS;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_ABS.xml";
 	}
-	else if (CU == CUtype_AirSuspension)
+	else if (CU == CUtype::AirSuspension)
 	{
 		SSM1_CU = SSM1_CU_AirSusp;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_AirSuspension.xml";
 	}
-	else if (CU == CUtype_PowerSteering)
+	else if (CU == CUtype::PowerSteering)
 	{
 		SSM1_CU = SSM1_CU_PwrSteer;
 		LegacyDefsFile = QCoreApplication::applicationDirPath().toStdString() + "/definitions/SSM1defs_PowerSteering.xml";
@@ -143,7 +143,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(CUtype_dt CU)
 	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
 	bool ok = _SSMP1com->getCUdata(0, _ssmCUdata);
-	if (!ok && (CU == CUtype_AirCon))
+	if (!ok && (CU == CUtype::AirCon))
 	{
 		_SSMP1com->selectCU(SSM1_CU_AirCon2);
 		ok = _SSMP1com->getCUdata(0, _ssmCUdata);
@@ -293,7 +293,7 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 	// Setup diagnostic codes addresses list:
 	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
 	{
-		if ((_CU == CUtype_Engine) && _ssmCUdata.uses_Ax10xx_defs())
+		if ((_CU == CUtype::Engine) && _ssmCUdata.uses_Ax10xx_defs())
 			DCqueryAddrList.push_back( 0x000061 );
 		// FIXME: test mode and D-Check status addresses for other SSM1 control units
 		for (unsigned int k=0; k<_DTCdefs.size(); k++)
@@ -667,7 +667,7 @@ bool SSMprotocol1::isEngineRunning(bool *isrunning)
 {
 	char currentdatabyte = 0;
 	if (_state != state_normal) return false;
-	if ((_CU != CUtype_Engine) && (_CU != CUtype_Transmission))
+	if ((_CU != CUtype::Engine) && (_CU != CUtype::Transmission))
 		return false;
 	if (!_ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
 		return false;

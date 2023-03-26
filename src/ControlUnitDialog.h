@@ -30,6 +30,7 @@
 #include "CUcontent_sysTests.h"
 #include "DiagInterfaceStatusBar.h"
 #include "AbstractDiagInterface.h"
+#include "SSMCUdata.h"
 #include "SSMprotocol.h"
 #include "FSSMdialogs.h"
 
@@ -73,7 +74,7 @@ private:
 
 	virtual QString systemName() = 0;
 	virtual QString controlUnitName() = 0;
-	virtual SSMprotocol::CUtype_dt controlUnitType() = 0;
+	virtual CUtype controlUnitType() = 0;
 	virtual bool systemRequiresManualON() = 0;
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	bool displaySystemDescriptionAndID(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget);
@@ -86,7 +87,7 @@ private:
 	bool getModeForContentSelection(ContentSelection csel, Mode *mode);
 	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
 	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
-	SSMprotocol::CUsetupResult_dt probeProtocol(SSMprotocol::CUtype_dt CUtype);
+	SSMprotocol::CUsetupResult_dt probeProtocol(CUtype CUtype);
 	bool startMode(Mode mode);
 	bool startDCsMode();
 	bool startMBsSWsMode();

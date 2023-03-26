@@ -135,7 +135,6 @@ class SSMprotocol : public QObject
 
 public:
 	enum protocol_dt {SSM1, SSM2};
-	enum CUtype_dt {CUtype_Engine, CUtype_Transmission, CUtype_CruiseControl, CUtype_AirCon, CUtype_FourWheelSteering, CUtype_ABS, CUtype_AirSuspension, CUtype_PowerSteering};
 	enum CUsetupResult_dt {result_success, result_invalidCUtype, result_invalidInterfaceConfig, result_commError, result_noOrInvalidDefsFile, result_noDefs};
 	enum state_dt {state_needSetup, state_normal, state_DCreading, state_MBSWreading, state_ActTesting, state_waitingForIgnOff};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
@@ -146,9 +145,9 @@ public:
 	SSMprotocol(AbstractDiagInterface *diagInterface, QString language="en");
 	virtual ~SSMprotocol();
 	// NON-COMMUNICATION-FUNCTIONS:
-	bool CUtype(SSMprotocol::CUtype_dt *CU);
+	bool CUtype(CUtype *CU);
 	state_dt state();
-	virtual CUsetupResult_dt setupCUdata(CUtype_dt CU) = 0;
+	virtual CUsetupResult_dt setupCUdata(enum CUtype CU) = 0;
 	virtual protocol_dt protocolType() = 0;
 	std::string getSysID() const;
 	std::string getROMID() const;
@@ -194,7 +193,7 @@ public:
 
 protected:
 	AbstractDiagInterface *_diagInterface;
-	CUtype_dt _CU;
+	enum CUtype _CU;
 	state_dt _state;
 	QString _language;
 	// *** CONTROL UNIT RAW DATA ***:

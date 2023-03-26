@@ -46,9 +46,9 @@ QString EngineDialog::controlUnitName()
 }
 
 
-SSMprotocol::CUtype_dt EngineDialog::controlUnitType()
+CUtype EngineDialog::controlUnitType()
 {
-	return SSMprotocol::CUtype_Engine;
+	return CUtype::Engine;
 }
 
 

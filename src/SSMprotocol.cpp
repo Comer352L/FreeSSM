@@ -25,7 +25,7 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
 	_diagInterface = diagInterface;
 	_language = language;
-	_CU = CUtype_Engine;
+	_CU = CUtype::Engine;
 	_state = state_needSetup;
 	resetCommonCUdata();
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
@@ -37,7 +37,7 @@ SSMprotocol::~SSMprotocol()
 }
 
 
-bool SSMprotocol::CUtype(SSMprotocol::CUtype_dt *CU)
+bool SSMprotocol::CUtype(enum CUtype *CU)
 {
 	if (_state == state_needSetup) return false;
 	*CU = _CU;
@@ -272,7 +272,7 @@ unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int du
 	unsigned int rawDataIndex = 0;
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
-		if (_CU == CUtype_Engine && _ssmCUdata.uses_Ax10xx_defs())
+		if (_CU == CUtype::Engine && _ssmCUdata.uses_Ax10xx_defs())
 		{
 			rawDataIndex = 1;
 			if (_has_TestMode)

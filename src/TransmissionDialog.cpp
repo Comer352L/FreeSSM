@@ -46,9 +46,9 @@ QString TransmissionDialog::controlUnitName()
 }
 
 
-SSMprotocol::CUtype_dt TransmissionDialog::controlUnitType()
+CUtype TransmissionDialog::controlUnitType()
 {
-	return SSMprotocol::CUtype_Transmission;
+	return CUtype::Transmission;
 }
 
 

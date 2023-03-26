@@ -23,6 +23,7 @@
 
 #include <QtGui>
 #include <string>
+#include "SSMCUdata.h"
 #include "SSMprotocol.h"
 #include "FSSMdialogs.h"
 
@@ -43,10 +44,10 @@ private:
 	SSMprotocol *_SSMPdev;
 	SSMprotocol::CMlevel_dt _level;
 
-	bool confirmClearMemory(SSMprotocol::CUtype_dt cu_type);
+	bool confirmClearMemory(CUtype cu_type);
 	bool confirmAdjustmentValuesRestoration();
 	CMresult_dt restoreAdjustmentValues(std::vector<unsigned int> oldAdjVal);
-	CMresult_dt reconnect(SSMprotocol::CUtype_dt cu, std::string SYS_ID_old, std::string ROM_ID_old);
+	CMresult_dt reconnect(CUtype cu, std::string SYS_ID_old, std::string ROM_ID_old);
 
 };
 

@@ -43,9 +43,9 @@ QString CruiseControlDialog::controlUnitName()
 }
 
 
-SSMprotocol::CUtype_dt CruiseControlDialog::controlUnitType()
+CUtype CruiseControlDialog::controlUnitType()
 {
-	return SSMprotocol::CUtype_CruiseControl;
+	return CUtype::CruiseControl;
 }
 
 

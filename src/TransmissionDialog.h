@@ -32,6 +32,7 @@
 #include "ControlUnitDialog.h"
 #include "CUinfo_Transmission.h"
 #include "AbstractDiagInterface.h"
+#include "SSMCUdata.h"
 #include "SSMprotocol.h"
 
 
@@ -46,7 +47,7 @@ public:
 private:
 	QString systemName();
 	QString controlUnitName();
-	SSMprotocol::CUtype_dt controlUnitType();
+	CUtype controlUnitType();
 	bool systemRequiresManualON();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
 	bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox);

@@ -26,7 +26,7 @@ SSMFlagbyteDefinitionsInterface::SSMFlagbyteDefinitionsInterface(QString languag
 {
 	_language = language;
 	_id_set = false;
-	_CU = SSMprotocol::CUtype_Engine;
+	_CU = CUtype::Engine;
 }
 
 
@@ -41,9 +41,9 @@ void SSMFlagbyteDefinitionsInterface::setLanguage(QString lang)
 }
 
 
-bool SSMFlagbyteDefinitionsInterface::selectControlUnitID(SSMprotocol::CUtype_dt cu, const SSMCUdata& ssmCUdata)
+bool SSMFlagbyteDefinitionsInterface::selectControlUnitID(CUtype cu, const SSMCUdata& ssmCUdata)
 {
-	if ((cu != SSMprotocol::CUtype_Engine) && (cu != SSMprotocol::CUtype_Transmission))
+	if ((cu != CUtype::Engine) && (cu != CUtype::Transmission))
 		return false;
 	_CU = cu;
 	_ssmCUdata = ssmCUdata;
@@ -56,9 +56,9 @@ bool SSMFlagbyteDefinitionsInterface::systemDescription(QString *description)
 {
 	if (!_id_set)
 		return false;
-	if (_CU == SSMprotocol::CUtype_Engine)
+	if (_CU == CUtype::Engine)
 		return getSysDescriptionBySysID( SystemType::ECU, _ssmCUdata.SYS_ID, description );
-	else // SSMprotocol::CUtype_Transmission
+	else // CUtype::Transmission
 		return getSysDescriptionBySysID( SystemType::TCU, _ssmCUdata.SYS_ID, description );
 }
 
@@ -239,8 +239,8 @@ bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *m
 			continue;
 		// Check if MB is intended for this CU type:
 		tmpstr = mbdefline.section(';', 2, 2);
-		if (!((_CU == SSMprotocol::CUtype_Engine) && (tmpstr.toUInt() & 0x01)) &&
-		    !((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
+		if (!((_CU == CUtype::Engine) && (tmpstr.toUInt() & 0x01)) &&
+		    !((_CU == CUtype::Transmission) && (tmpstr.toUInt() & 0x02)))
 			continue;
 		// Get memory address (low) definition:
 		tmpstr = mbdefline.section(';', 3, 3);
@@ -331,8 +331,8 @@ bool SSMFlagbyteDefinitionsInterface::switches(std::vector<sw_intl_dt> *switches
 			continue;
 		// Check if switch is intended for this CU type:
 		tmpstr = swdefline.section(';', 2, 2);
-		if (!((_CU == SSMprotocol::CUtype_Engine) && (tmpstr.toUInt() & 0x01)) &&
-		    !((_CU == SSMprotocol::CUtype_Transmission) && (tmpstr.toUInt() & 0x02)))
+		if (!((_CU == CUtype::Engine) && (tmpstr.toUInt() & 0x01)) &&
+		    !((_CU == CUtype::Transmission) && (tmpstr.toUInt() & 0x02)))
 			continue;
 		// Get memory address definition:
 		tmpstr = swdefline.section(';', 3, 3);
@@ -420,7 +420,7 @@ bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt
 		tmpCU = defline.section(';', 1, 1).toUInt(&ok, 10);
 		if (!ok)
 			continue;
-		if ( !((_CU == SSMprotocol::CUtype_Engine) && (tmpCU == 0)) && !((_CU == SSMprotocol::CUtype_Transmission) && (tmpCU == 1)) )
+		if ( !((_CU == CUtype::Engine) && (tmpCU == 0)) && !((_CU == CUtype::Transmission) && (tmpCU == 1)) )
 			continue;
 		tmpadjustment.AddrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
 		if (!ok || (tmpadjustment.AddrLow == 0))
@@ -535,7 +535,7 @@ bool SSMFlagbyteDefinitionsInterface::hasVINsupport(bool *VINsup)
 {
 	if (!_id_set)
 		return false;
-	*VINsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(36, 0);
+	*VINsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(36, 0);
 	return true;
 }
 
@@ -544,7 +544,7 @@ bool SSMFlagbyteDefinitionsInterface::hasImmobilizer(bool *ImmoSup)
 {
 	if (!_id_set)
 		return false;
-	*ImmoSup = _CU == SSMprotocol::CUtype_Engine
+	*ImmoSup = _CU == CUtype::Engine
 		&& _ssmCUdata.flagbytebit(28, 4);
 	return true;
 }
@@ -565,7 +565,7 @@ bool SSMFlagbyteDefinitionsInterface::hasIntegratedCC(bool *CCsup)
 {
 	if (!_id_set)
 		return false;
-	*CCsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(39, 0);
+	*CCsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(39, 0);
 	return true;
 }
 
@@ -583,7 +583,7 @@ bool SSMFlagbyteDefinitionsInterface::hasClearMemory2(bool *CM2sup)
 {
 	if (!_id_set)
 		return false;
-	*CM2sup = (_CU == SSMprotocol::CUtype_Transmission) && _ssmCUdata.flagbytebit(39, 1);
+	*CM2sup = (_CU == CUtype::Transmission) && _ssmCUdata.flagbytebit(39, 1);
 	return true;
 }
 
@@ -592,7 +592,7 @@ bool SSMFlagbyteDefinitionsInterface::hasTestMode(bool *TMsup)
 {
 	if (!_id_set)
 		return false;
-	*TMsup = (_CU == SSMprotocol::CUtype_Engine) && _ssmCUdata.flagbytebit(11, 5);
+	*TMsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 5);
 	return true;
 }
 
@@ -603,7 +603,7 @@ bool SSMFlagbyteDefinitionsInterface::hasActuatorTests(bool *ATsup)
 	bool EngSpeedMBsup = false;
 	if (!hasTestMode(&TMsup) || !hasMBengineSpeed(&EngSpeedMBsup))
 		return false;
-	*ATsup = (_CU == SSMprotocol::CUtype_Engine)
+	*ATsup = (_CU == CUtype::Engine)
 		  && TMsup
 		  && EngSpeedMBsup
 		  && _ssmCUdata.flagbytebit(28, 6);

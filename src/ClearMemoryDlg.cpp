@@ -34,7 +34,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 	CMresult_dt result = CMresult_success;
 	bool ok = false;
 	bool CMsuccess = false;
-	SSMprotocol::CUtype_dt cu_old;
+	CUtype cu_old;
 	std::string SYS_ID_old;
 	std::string ROM_ID_old;
 	SSMprotocol::state_dt CUstate_old;
@@ -177,7 +177,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::run()
 }
 
 
-bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
+bool ClearMemoryDlg::confirmClearMemory(CUtype cu_type)
 {
 	int uc = 0;
 	// Create dialog
@@ -187,7 +187,7 @@ bool ClearMemoryDlg::confirmClearMemory(SSMprotocol::CUtype_dt cu_type)
 		confirmStr.append( tr(" (level 2)") );
 	confirmStr.append( '\n' + tr(" - clears the Diagnostic Codes") );
 	confirmStr.append( '\n' + tr(" - resets all non-permanent Adjustment Values") );
-	if ( cu_type == SSMprotocol::CUtype_Engine || ((cu_type == SSMprotocol::CUtype_Transmission) && (_level == SSMprotocol::CMlevel_2)) )
+	if ( cu_type == CUtype::Engine || ((cu_type == CUtype::Transmission) && (_level == SSMprotocol::CMlevel_2)) )
 		confirmStr.append( '\n' + tr(" - resets the Control Units' learning values") );
 	confirmStr.append( "\n\n" + tr("Do you really want to clear the Control Units' memory") );
 	if (_level == SSMprotocol::CMlevel_2)
@@ -279,7 +279,7 @@ ClearMemoryDlg::CMresult_dt ClearMemoryDlg::restoreAdjustmentValues(std::vector<
 }
 
 
-ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(SSMprotocol::CUtype_dt cu, std::string SYS_ID_old, std::string ROM_ID_old)
+ClearMemoryDlg::CMresult_dt ClearMemoryDlg::reconnect(CUtype cu, std::string SYS_ID_old, std::string ROM_ID_old)
 {
 	std::string ID_new;
 	int uc = 0;
