@@ -130,10 +130,14 @@ error:
 
 bool SSMLegacyDefinitionsInterface::getVersionInfos(std::string *defs_version, std::string *format_version)
 {
+	if ((defs_version != NULL) && (format_version != NULL))
+		return false;
 	if (!_id_set)
 		return false;
-	*defs_version = _defs_version;
-	*format_version = _defs_format_version;
+	if (defs_version != NULL)
+		*defs_version = _defs_version;
+	if (format_version != NULL)
+		*format_version = _defs_format_version;
 	return true;
 }
 
@@ -193,6 +197,8 @@ bool SSMLegacyDefinitionsInterface::systemDescription(std::string *description)
 {
 	std::vector<XMLElement*> elements;
 
+	if (description == NULL)
+		return false;
 	if (!_id_set)
 		return false;
 	if (_defs_for_id_b3_element)
@@ -229,6 +235,8 @@ bool SSMLegacyDefinitionsInterface::model(std::string *name)
 {
 	std::vector<XMLElement*> elements;
 
+	if (name == NULL)
+		return false;
 	if (!_id_set)
 		return false;
 	if (_defs_for_id_b3_element)
@@ -265,6 +273,8 @@ bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 {
 	std::vector<XMLElement*> elements;
 
+	if (yearstr == NULL)
+		return false;
 	if (!_id_set)
 		return false;
 	if (_defs_for_id_b3_element)
@@ -304,6 +314,8 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 	XMLElement *addr_element;
 	const char *str = NULL;
 
+	if ((address != NULL) && (value != NULL))
+		return false;
 	if (!_id_set)
 		return false;
 	if (_defs_for_id_b3_element)
@@ -347,8 +359,10 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 	unsigned long int val = strtoul( str, NULL, 0 );
 	if ((addr > 0xffff) || (val > 0xff))
 		return false;
-	*address = addr;
-	*value = val;
+	if (address != NULL)
+		*address = addr;
+	if (value != NULL)
+		*value = val;
 	return true;
 }
 
@@ -359,9 +373,11 @@ bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs
 	std::vector<XMLElement*> DTCblock_elements2;
 	const char *str = NULL;
 
-	if (!_id_set)
+	if (dcs == NULL)
 		return false;
 	dcs->clear();
+	if (!_id_set)
+		return false;
 	if (_defs_root_element)
 		DTCblock_elements = getAllMatchingChildElements(_defs_root_element, "DTCBLOCK");
 	if (_defs_for_id_b1_element)
@@ -553,9 +569,11 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 	std::vector<XMLElement*> MB_elements2;
 	const char *str = NULL;
 
-	if (!_id_set)
+	if (mbs == NULL)
 		return false;
 	mbs->clear();
+	if (!_id_set)
+		return false;
 	if (_defs_root_element)
 		MB_elements = getAllMatchingChildElements(_defs_root_element, "MB");
 	if (_defs_for_id_b1_element)
@@ -689,9 +707,11 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 	std::vector<XMLElement*> SWblock_elements2;
 	const char *str = NULL;
 
-	if (!_id_set)
+	if (sws == NULL)
 		return false;
 	sws->clear();
+	if (!_id_set)
+		return false;
 	if (_defs_root_element)
 		SWblock_elements = getAllMatchingChildElements(_defs_root_element, "SWBLOCK");
 	if (_defs_for_id_b1_element)
