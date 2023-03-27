@@ -22,7 +22,7 @@
 
 
 
-#include <string>
+#include <QString>
 #include <vector>
 #include "AbstractDiagInterface.h"
 #include "SSMCUdata.h"
