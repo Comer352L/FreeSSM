@@ -757,11 +757,12 @@ bool ControlUnitDialog::startDCsMode()
 		return false;
 	if (!_SSMPdev->getSupportedDCgroups(&DCgroups))
 		return false;
-	if (DCgroups == SSMprotocol::noDCs_DCgroup)
-		return false;
-	if (!_content_DCs->startDCreading())
-		return false;
-	connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+	if (DCgroups != SSMprotocol::noDCs_DCgroup)
+	{
+		if (!_content_DCs->startDCreading())
+			return false;
+		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
+	}
 	_mode = Mode::DCs;
 	return true;
 }
