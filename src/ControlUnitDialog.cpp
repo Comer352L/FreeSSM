@@ -79,8 +79,7 @@ ControlUnitDialog::~ControlUnitDialog()
 	disconnect( exit_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
 	if (_infoWidget)
 		delete _infoWidget;
-	if (_contentWidget)
-		delete _contentWidget;
+	deleteContentWidgets();
 #ifndef SMALL_RESOLUTION
 	delete _ifstatusbar;
 #endif
@@ -459,12 +458,36 @@ bool ControlUnitDialog::prepareContentWidget(Mode mode)
 
 void ControlUnitDialog::setContentWidget(QString title, QWidget *contentwidget)
 {
-	if (_contentWidget)
-		delete _contentWidget;
 	content_groupBox->setTitle(title);
 	contentwidget->setParent(content_groupBox);
 	content_gridLayout->addWidget(contentwidget);
 	_contentWidget = contentwidget;
+}
+
+
+void ControlUnitDialog::deleteContentWidgets()
+{
+	if (_content_DCs != NULL)
+	{
+		delete(_content_DCs);
+		_content_DCs = NULL;
+	}
+	if (_content_MBsSWs != NULL)
+	{
+		delete(_content_MBsSWs);
+		_content_MBsSWs = NULL;
+	}
+	if (_content_Adjustments != NULL)
+	{
+		delete(_content_Adjustments);
+		_content_Adjustments = NULL;
+	}
+	if (_content_SysTests != NULL)
+	{
+		delete(_content_SysTests);
+		_content_SysTests = NULL;
+	}
+	_contentWidget = NULL;
 }
 
 
@@ -656,6 +679,8 @@ void ControlUnitDialog::switchToDCsMode()
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
+	// Delete current content widget:
+	deleteContentWidgets();
 	// Create and insert new content widget:
 	if (prepareContentWidget(Mode::DCs))
 		// Start DCs mode:
@@ -677,6 +702,8 @@ void ControlUnitDialog::switchToMBsSWsMode()
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
+	// Delete current content widget:
+	deleteContentWidgets();
 	// Create and insert new content widget:
 	if (prepareContentWidget(Mode::MBsSWs))
 		// Start MB/SW mode:
@@ -698,6 +725,8 @@ void ControlUnitDialog::switchToAdjustmentsMode()
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
+	// Delete current content widget:
+	deleteContentWidgets();
 	// Create and insert new content widget:
 	if (prepareContentWidget(Mode::Adjustments))
 		// Start Adjustments mode:
@@ -719,6 +748,8 @@ void ControlUnitDialog::switchToSystemOperationTestsMode()
 	waitmsgbox.show();
 	// Save content settings:
 	saveContentSettings();
+	// Delete current content widget:
+	deleteContentWidgets();
 	// Create and insert new content widget:
 	if (prepareContentWidget(Mode::SysTests))
 		// Start System Operation Tests mode:

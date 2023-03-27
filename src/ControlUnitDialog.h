@@ -80,6 +80,7 @@ private:
 	virtual bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
 	bool prepareContentWidget(Mode mode);
 	void setContentWidget(QString title, QWidget *contentwidget);
+	void deleteContentWidgets();
 	QWidget * contentWidget();
 	bool getParametersFromCmdLine(QStringList *cmdline_args, QString *selection_file, bool *autostart);
 	bool getModeForContentSelection(ContentSelection csel, Mode *mode);
