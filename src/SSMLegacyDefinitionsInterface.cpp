@@ -221,14 +221,16 @@ bool SSMLegacyDefinitionsInterface::model(std::string *name)
 
 	if (name == NULL)
 		return false;
+	name->clear();
 	if (!_id_set)
 		return false;
-	if (!getMultilevelElementWithHighestPriority("MODEL", &element))
-		return false;
-	str = element->GetText();
-	if (str == NULL)
-		return false;
-	*name = std::string(str);
+	if (getMultilevelElementWithHighestPriority("MODEL", &element))
+	{
+		str = element->GetText();
+		if (str != NULL)
+			*name = std::string(str);
+	}
+
 	return true;
 }
 
