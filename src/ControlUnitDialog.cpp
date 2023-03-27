@@ -884,7 +884,7 @@ void ControlUnitDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 
 void ControlUnitDialog::saveContentSettings()
 {
-	if (_mode == Mode::MBsSWs)
+	if ((_mode == Mode::MBsSWs) && (_content_MBsSWs != NULL))
 	{
 		_lastMBSWmetaList = _content_MBsSWs->getMBSWselection();
 		_MBSWsettings = _content_MBsSWs->getSettings();
