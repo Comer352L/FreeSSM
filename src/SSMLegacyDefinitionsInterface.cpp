@@ -242,14 +242,16 @@ bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 
 	if (yearstr == NULL)
 		return false;
+	yearstr->clear();
 	if (!_id_set)
 		return false;
-	if (!getMultilevelElementWithHighestPriority("YEAR", &element))
-		return false;
-	str = element->GetText();
-	if (str == NULL)
-		return false;
-	*yearstr = std::string(str);
+	if (getMultilevelElementWithHighestPriority("YEAR", &element))
+	{
+		str = element->GetText();
+		if (str != NULL)
+			*yearstr = std::string(str);
+	}
+
 	return true;
 }
 
