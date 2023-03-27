@@ -200,14 +200,16 @@ bool SSMLegacyDefinitionsInterface::systemDescription(std::string *description)
 
 	if (description == NULL)
 		return false;
+	description->clear();
 	if (!_id_set)
 		return false;
-	if (!getMultilevelElementWithHighestPriority("SYSTEMDESCRIPTION", &element))
-		return false;
-	str = element->GetText();
-	if (str == NULL)
-		return false;
-	*description = std::string(str);
+	if (getMultilevelElementWithHighestPriority("SYSTEMDESCRIPTION", &element))
+	{
+		str = element->GetText();
+		if (str != NULL)
+			*description = std::string(str);
+	}
+
 	return true;
 }
 
