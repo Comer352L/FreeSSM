@@ -19,6 +19,10 @@
 
 #include <SSMLegacyDefinitionsInterface.h>
 
+#include <sstream>
+
+#include "libFSSM.h"
+
 
 SSMLegacyDefinitionsInterface::SSMLegacyDefinitionsInterface(std::string lang)
 {

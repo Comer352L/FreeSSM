@@ -23,10 +23,8 @@
 
 #include <string>
 #include <vector>
-#include <sstream>
 #include "SSMCUdata.h"
 #include "SSMprotocol.h"
-#include "libFSSM.h"
 #include "tinyxml2/tinyxml2.h"
 
 
