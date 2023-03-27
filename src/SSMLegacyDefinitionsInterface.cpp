@@ -261,33 +261,37 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 
 	if ((address != NULL) && (value != NULL))
 		return false;
+	if (address != NULL)
+		*address = MEMORY_ADDRESS_NONE;
+	if (value != NULL)
+		*value = '\x00';
 	if (!_id_set)
 		return false;
 	if (!getMultilevelElementWithHighestPriority("CLEARMEMORY", &CM_element))
-		return false;
+		return true;
 	elements = getAllMatchingChildElements(CM_element, "ADDRESS");
 	if (elements.size() < 1)
-		return false;
+		return true;
 	addr_element = elements.at(0);
 	// NOTE: multiple CM-addresses may be defined and vaild, but only one of them is needed
 	elements = getAllMatchingChildElements(CM_element, "VALUE");
 	if (elements.size() != 1)
-		return false;
+		return true;
 	str = addr_element->GetText();
 	if (str == NULL)
-		return false;
+		return true;
 	addr = strtoul( str, NULL, 0 );
 	str = elements.at(0)->GetText();
 	if (str == NULL)
-		return false;
+		return true;
 	val = strtoul( str, NULL, 0 );
 	if ((addr > 0xffff) || (val > 0xff))
-		return false;
+		return true;
 	if (address != NULL)
 		*address = addr;
 	if (value != NULL)
-
 		*value = val;
+
 	return true;
 }
 
