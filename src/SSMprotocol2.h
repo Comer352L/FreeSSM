@@ -22,13 +22,13 @@
 
 
 
+#include <QString>
 #include <vector>
 #include "AbstractDiagInterface.h"
 #include "SSMCUdata.h"
 #include "SSMprotocol.h"
 #include "SSMP2communication.h"
 #include "SSMFlagbyteDefinitionsInterface.h"
-#include "libFSSM.h"
 
 
 

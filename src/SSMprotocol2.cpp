@@ -19,6 +19,7 @@
 
 #include "SSMprotocol2.h"
 
+#include "libFSSM.h"
 
 
 SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
