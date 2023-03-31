@@ -179,8 +179,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
 	if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
 	{
-		delete _SSMP2com;
-		_SSMP2com = NULL;
 		// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 		return result_noDefs;
 	}
@@ -207,8 +205,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	return result_success;
 
 commError:
-	delete _SSMP2com;
-	_SSMP2com = NULL;
+	resetCUdata();
 	return result_commError;
 }
 
