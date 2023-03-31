@@ -181,6 +181,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	{
 		delete _SSMP2com;
 		_SSMP2com = NULL;
+		// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 		return result_noDefs;
 	}
 	FBdefsIface->systemDescription(&_sysDescription);
