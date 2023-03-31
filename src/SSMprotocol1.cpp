@@ -180,15 +180,15 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		// Check if we have definitions for this control unit:
 		if (!_ssmCUdata.uses_Ax10xx_defs())
 		{
-			resetCUdata();
+			// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 			return result_noDefs;
 		}
 		/* Get definitions for this control unit */
 		FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
 		if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
 		{
-			resetCUdata();
 			delete FBdefsIface;
+			// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 			return result_noDefs;
 		}
 		FBdefsIface->systemDescription(&_sysDescription);
@@ -221,14 +221,14 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		if (!LegacyDefsIface->selectDefinitionsFile(LegacyDefsFile))
 		{
 			delete LegacyDefsIface;
-			resetCUdata();
+			// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 			return result_noOrInvalidDefsFile;
 		}
 		LegacyDefsIface->setLanguage(_language.toStdString());
 		if (!LegacyDefsIface->selectID(_ssmCUdata.SYS_ID))
 		{
 			delete LegacyDefsIface;
-			resetCUdata();
+			// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 			return result_noDefs;
 		}
 		std::string sysdescription;
