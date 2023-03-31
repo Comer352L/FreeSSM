@@ -162,14 +162,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	}
 
 	_SSMP2com->setRetriesOnError(2);
-	// Ensure that ignition switch is ON:
-	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
-	{
-		unsigned int dataaddr = 0x62;
-		char data = 0x00;
-		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
-			goto commError;
-	}
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
@@ -201,6 +193,15 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	FBdefsIface->adjustments(&_adjustments);
 	FBdefsIface->actuatorTests(&_actuators);
 	delete FBdefsIface;
+	// Ensure that ignition switch is ON:
+	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
+	{
+		unsigned int dataaddr = 0x62;
+		char data = 0x00;
+		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
+			goto commError;
+	}
+	// Prepare some internal data:
 	setupActuatorTestAddrList();
 	return result_success;
 
