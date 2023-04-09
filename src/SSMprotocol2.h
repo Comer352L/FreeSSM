@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.h - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@ public:
 	protocol_dt protocolType() { return SSM2; }
 	bool hasVINsupport(bool *VINsup);
 	bool hasIntegratedCC(bool *CCsup);
-	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
 	bool getSupportedDCgroups(int *DCgroups);
 	// COMMUNICATION BASED FUNCTIONS:
@@ -69,13 +68,13 @@ public:
 private:
 	SSMP2communication *_SSMP2com;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
-	bool _has_CM;
-	bool _has_CM2;
 	bool _has_integratedCC;
 	bool _has_VINsupport;
 	// Cruise Control Cancel Codes:
 	std::vector<dc_defs_dt> _CCCCdefs;
 	bool _memCCs_supported;
+	unsigned int _CM2addr = MEMORY_ADDRESS_NONE;
+	char _CM2value;
 
 	bool validateVIN(char VIN[17]);
 

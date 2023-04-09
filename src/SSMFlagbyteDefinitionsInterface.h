@@ -64,6 +64,7 @@ public:
 	bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	bool actuatorTests(std::vector<actuator_dt> *act);
 	bool clearMemoryData(unsigned int *address, char *value);
+	bool clearMemory2Data(unsigned int *address, char *value);
 
 private:
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);

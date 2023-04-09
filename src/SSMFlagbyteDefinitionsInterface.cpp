@@ -538,6 +538,24 @@ bool SSMFlagbyteDefinitionsInterface::clearMemoryData(unsigned int *address, cha
 }
 
 
+bool SSMFlagbyteDefinitionsInterface::clearMemory2Data(unsigned int *address, char *value)
+{
+	bool cm2_sup = false;
+
+	*address = MEMORY_ADDRESS_NONE;
+	*value = 0x00;
+	if (!hasClearMemory2(&cm2_sup)) // also validates _id_set
+		return false;
+	if (cm2_sup)
+	{
+		*address = 0x60;
+		*value = 0x40;
+	}
+
+	return true;
+}
+
+
 bool SSMFlagbyteDefinitionsInterface::hasOBD2system(bool *OBD2)
 {
 	if (!_id_set)

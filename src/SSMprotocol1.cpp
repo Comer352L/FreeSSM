@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.cpp - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009-2019 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,8 +85,6 @@ void SSMprotocol1::resetCUdata()
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 	// Reset control unit data
 	resetCommonCUdata();
-	_CMaddr = MEMORY_ADDRESS_NONE;
-	_CMvalue = '\x00';
 }
 
 
@@ -197,10 +195,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		bool CMsup = false;
 		FBdefsIface->hasClearMemory(&CMsup);
 		if (CMsup)
-		{
-			_CMaddr = 0x60;
-			_CMvalue = 0x40;
-		}
+			FBdefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
 		FBdefsIface->hasTestMode(&_has_TestMode);
 		FBdefsIface->hasActuatorTests(&_has_ActTest);
 		FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
@@ -239,14 +234,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		delete LegacyDefsIface;
 	}
 	return result_success;
-}
-
-
-bool SSMprotocol1::hasClearMemory(bool *CMsup)
-{
-	if (_state == state_needSetup) return false;
-	*CMsup = (_CMaddr != MEMORY_ADDRESS_NONE);
-	return true;
 }
 
 
@@ -609,17 +596,22 @@ bool SSMprotocol1::stopAllActuators()
 
 bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
-	*success = false;
-	if (_state != state_normal) return false;
-	if (level != CMlevel_1) return false;
-	if (_CMaddr == MEMORY_ADDRESS_NONE) return false;
+	bool CMsup = false;
 	char bytewritten = 0;
+
+	if (success != NULL)
+		*success = false;
+	// NOTE: _state validated by hasClearMemory()
+	if (level != CMlevel_1) return false;
+	if (!hasClearMemory(&CMsup) || !CMsup)
+		return false;
 	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
-	*success = (bytewritten == _CMvalue);
+	if (success != NULL)
+		*success = (bytewritten == _CMvalue);
 	return true;
 }
 

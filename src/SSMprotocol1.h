@@ -1,7 +1,7 @@
 /*
  * SSMprotocol1.h - Application Layer for the old Subaru SSM protocol
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
-	bool hasClearMemory(bool *CMsup);
 	bool getSupportedDCgroups(int *DCgroups);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool startDCreading(int DCgroups);
@@ -64,8 +63,6 @@ public:
 
 private:
 	SSMP1communication *_SSMP1com;
-	unsigned int _CMaddr;
-	char _CMvalue;
 
 	bool readExtendedID(std::vector<char>& ID);
 

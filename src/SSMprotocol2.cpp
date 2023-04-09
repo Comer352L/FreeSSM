@@ -1,7 +1,7 @@
 /*
  * SSMprotocol2.cpp - Application Layer for the new Subaru SSM protocol
  *
- * Copyright (C) 2008-2016 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,12 +88,12 @@ void SSMprotocol2::resetCUdata()
 		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
 	// Reset control unit data
 	resetCommonCUdata();
-	_has_CM = false;
-	_has_CM2 = false;
 	_has_VINsupport = false;
 	_has_integratedCC = false;
 	_CCCCdefs.clear();
 	_memCCs_supported = false;
+	_CM2addr = MEMORY_ADDRESS_NONE;
+	_CM2value = '\x00';
 }
 
 
@@ -107,6 +107,8 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 {
 	unsigned int CUaddress = 0x0;
 	SSMFlagbyteDefinitionsInterface *FBdefsIface;
+	bool supported = false;
+
 	// Reset:
 	resetCUdata();
 	// Create SSMP2communication-object:
@@ -180,8 +182,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	FBdefsIface->hasImmobilizerTest(&_has_ImmoTest);
 	FBdefsIface->hasTestMode(&_has_TestMode);
 	FBdefsIface->hasActuatorTests(&_has_ActTest);
-	FBdefsIface->hasClearMemory(&_has_CM);
-	FBdefsIface->hasClearMemory2(&_has_CM2);
+	if (FBdefsIface->hasClearMemory(&supported) && supported)
+		FBdefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
+	supported = false;
+	if (FBdefsIface->hasClearMemory2(&supported) && supported)
+		FBdefsIface->clearMemory2Data(&_CM2addr, &_CM2value);
 	FBdefsIface->hasVINsupport(&_has_VINsupport);
 	FBdefsIface->hasIntegratedCC(&_has_integratedCC);
 	FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
@@ -227,18 +232,10 @@ bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 }
 
 
-bool SSMprotocol2::hasClearMemory(bool *CMsup)
-{
-	if (_state == state_needSetup) return false;
-	*CMsup = _has_CM;
-	return true;
-}
-
-
 bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
-	*CM2sup = _has_CM2;
+	*CM2sup = (_CM2addr != MEMORY_ADDRESS_NONE);
 	return true;
 }
 
@@ -648,29 +645,41 @@ bool SSMprotocol2::stopAllActuators()
 
 bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
 {
-	*success = false;
+	bool CMsup = false;
+	unsigned int addr = MEMORY_ADDRESS_NONE;
 	char val = 0;
-	char bytewritten = 0;
-	if (_state != state_normal) return false;
+	char bytewritten = '\x00';
+
+	if (success != NULL)
+		*success = false;
+	// NOTE: _state validated by hasClearMemory()
 	if (level == CMlevel_1)
 	{
-		val = 0x40;
+		if (hasClearMemory(&CMsup) && CMsup)
+		{
+			addr = _CMaddr;
+			val = _CMvalue;
+		}
 	}
 	else if (level == CMlevel_2)
 	{
-		if (!_has_CM2) return false;
-		val = 0x20;
+		if (hasClearMemory2(&CMsup) && CMsup)
+		{
+			addr = _CM2addr;
+			val = _CM2value;
+		}
 	}
 	else
 	{
 		return false;
 	}
-	if (!_SSMP2com->writeDatabyte(0x000060, val, &bytewritten))
+	if (!_SSMP2com->writeDatabyte(addr, val, &bytewritten))
 	{
 		resetCUdata();
 		return false;
 	}
-	*success = (bytewritten == val);
+	if (success != NULL)
+		*success = (bytewritten == val);
 	return true;
 }
 

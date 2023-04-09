@@ -120,6 +120,14 @@ bool SSMprotocol::hasIntegratedCC(bool *CCsup)
 }
 
 
+bool SSMprotocol::hasClearMemory(bool *CMsup)
+{
+	if (_state == state_needSetup) return false;
+	*CMsup = (_CMaddr != MEMORY_ADDRESS_NONE);
+	return true;
+}
+
+
 bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
@@ -499,6 +507,9 @@ void SSMprotocol::resetCommonCUdata()
 	// Clear DC data:
 	_DTCdefs.clear();
 	_DTC_fmt_OBD2 = false;
+	// Clear Clear Memory data:
+	_CMaddr = MEMORY_ADDRESS_NONE;
+	_CMvalue = '\x00';
 	// Clear MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();

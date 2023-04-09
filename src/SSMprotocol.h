@@ -80,7 +80,7 @@ public:
 	bool hasImmobilizer(bool *ImmoSup);
 	bool hasImmobilizerTest(bool *ImmoTestSup);
 	virtual bool hasIntegratedCC(bool *CCsup);
-	virtual bool hasClearMemory(bool *CMsup) = 0;
+	virtual bool hasClearMemory(bool *CMsup);
 	virtual bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
@@ -133,6 +133,9 @@ protected:
 	// Diagnostic Trouble Codes:
 	std::vector<dc_defs_dt> _DTCdefs;
 	bool _DTC_fmt_OBD2;
+	// Clear Memory:
+	unsigned int _CMaddr = MEMORY_ADDRESS_NONE;
+	char _CMvalue;
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;
