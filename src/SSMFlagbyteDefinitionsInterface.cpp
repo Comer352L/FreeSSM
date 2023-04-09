@@ -22,22 +22,13 @@
 
 
 
-SSMFlagbyteDefinitionsInterface::SSMFlagbyteDefinitionsInterface(QString language)
+SSMFlagbyteDefinitionsInterface::SSMFlagbyteDefinitionsInterface(QString language) : SSMDefinitionsInterface(language)
 {
-	_language = language;
-	_id_set = false;
-	_CU = CUtype::Engine;
 }
 
 
 SSMFlagbyteDefinitionsInterface::~SSMFlagbyteDefinitionsInterface()
 {
-}
-
-
-void SSMFlagbyteDefinitionsInterface::setLanguage(QString lang)
-{
-	_language = lang;
 }
 
 
@@ -52,14 +43,21 @@ bool SSMFlagbyteDefinitionsInterface::selectControlUnitID(CUtype cu, const SSMCU
 }
 
 
-bool SSMFlagbyteDefinitionsInterface::systemDescription(QString *description)
+bool SSMFlagbyteDefinitionsInterface::systemDescription(std::string *description)
 {
+	QString descr;
+	bool ok = false;
+	if (description == NULL)
+		return false;
 	if (!_id_set)
 		return false;
 	if (_CU == CUtype::Engine)
-		return getSysDescriptionBySysID( SystemType::ECU, _ssmCUdata.SYS_ID, description );
+		ok = getSysDescriptionBySysID( SystemType::ECU, _ssmCUdata.SYS_ID, &descr );
 	else // CUtype::Transmission
-		return getSysDescriptionBySysID( SystemType::TCU, _ssmCUdata.SYS_ID, description );
+		ok = getSysDescriptionBySysID( SystemType::TCU, _ssmCUdata.SYS_ID, &descr );
+	if (ok)
+		*description = descr.toStdString();
+	return ok;
 }
 
 
@@ -518,6 +516,24 @@ bool SSMFlagbyteDefinitionsInterface::actuatorTests(std::vector<actuator_dt> *ac
 		tmpactuator.bitAddr = tmpbitaddr;
 		actuators->push_back( tmpactuator );
 	}
+	return true;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::clearMemoryData(unsigned int *address, char *value)
+{
+	bool cm_sup = false;
+
+	*address = MEMORY_ADDRESS_NONE;
+	*value = 0x00;
+	if (!hasClearMemory(&cm_sup)) // also validates _id_set
+		return false;
+	if (cm_sup)
+	{
+		*address = 0x60;
+		*value = 0x40;
+	}
+
 	return true;
 }
 

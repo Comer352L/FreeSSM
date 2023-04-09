@@ -23,8 +23,8 @@
 
 #include <string>
 #include <vector>
-#include "SSMCUdata.h"
-#include "SSMprotocol.h"
+#include <QString>
+#include "SSMDefinitionsInterface.h"
 #include "tinyxml2/tinyxml2.h"
 
 
@@ -49,15 +49,14 @@ public:
 };
 
 
-
-class SSMLegacyDefinitionsInterface
+class SSMLegacyDefinitionsInterface : public SSMDefinitionsInterface
 {
 public:
-	SSMLegacyDefinitionsInterface(std::string lang = "en");
+	SSMLegacyDefinitionsInterface(QString language = "en");
 	~SSMLegacyDefinitionsInterface();
+
 	bool selectDefinitionsFile(std::string filename);
 	bool getVersionInfos(std::string *defs_version, std::string *format_version);
-	void setLanguage(std::string lang);
 	bool selectID(const std::vector<char>& id);
 
 	bool systemDescription(std::string *description);
@@ -74,9 +73,6 @@ private:
 	std::string _filename;
 	std::string _defs_version;
 	std::string _defs_format_version;
-	std::string _lang;
-	std::vector<char> _ID;
-	bool _id_set;
 	// Shortcuts to important nodes:
 	XMLElement *_defs_root_element;
 	XMLElement *_datacommon_root_element;

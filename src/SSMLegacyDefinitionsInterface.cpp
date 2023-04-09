@@ -20,11 +20,10 @@
 #include <SSMLegacyDefinitionsInterface.h>
 
 #include <sstream>
-
 #include "libFSSM.h"
 
 
-SSMLegacyDefinitionsInterface::SSMLegacyDefinitionsInterface(std::string lang)
+SSMLegacyDefinitionsInterface::SSMLegacyDefinitionsInterface(QString language) : SSMDefinitionsInterface(language)
 {
 	_xmldoc = NULL;
 	_defs_root_element = NULL;
@@ -32,8 +31,6 @@ SSMLegacyDefinitionsInterface::SSMLegacyDefinitionsInterface(std::string lang)
 	_defs_for_id_b1_element = NULL;
 	_defs_for_id_b2_element = NULL;
 	_defs_for_id_b3_element = NULL;
-	_lang = lang;
-	_id_set = false;
 }
 
 
@@ -109,7 +106,7 @@ bool SSMLegacyDefinitionsInterface::selectDefinitionsFile(std::string filename)
 	_datacommon_root_element = elements.at(0);
 	// Find and save definition element for the current ID:
 	if (_id_set)
-		selectID(_ID);
+		selectID(_ssmCUdata.SYS_ID);
 
 	return !restored;
 
@@ -146,12 +143,6 @@ bool SSMLegacyDefinitionsInterface::getVersionInfos(std::string *defs_version, s
 }
 
 
-void SSMLegacyDefinitionsInterface::setLanguage(std::string lang)
-{
-	_lang = lang;
-}
-
-
 bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 {
 	std::vector<XMLElement*> elements;
@@ -184,7 +175,7 @@ bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
 			if (elements.size() == 1)
 			{
-				_ID = id;
+				_ssmCUdata.SYS_ID = id;
 				_id_set = true;
 				_defs_for_id_b1_element = defs_for_id_b1_element;
 				_defs_for_id_b2_element = defs_for_id_b2_element;
@@ -455,12 +446,12 @@ bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs
 			dtcblock.code[bitaddr-1] = QString( str );
 			// Get title:
 			attribCond.name = "lang";
-			attribCond.value = _lang;
+			attribCond.value = _language.toStdString();
 			attribCond.condition = attributeCondition::equal;
 			tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
 			{
-				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
 				{
 					attribCond.value = "en";
 					tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
@@ -543,11 +534,11 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		MBdata_element = tmp_elements.at(0);
 		// Get title:
 		attribCond.name = "lang";
-		attribCond.value = _lang;
+		attribCond.value = _language.toStdString();
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
 		{
-			if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+			if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
 			{
 				attribCond.value = "en";
 				tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
@@ -563,11 +554,11 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 		if (tmp_elements.size() != 1)
 		{
-			attribCond.value = _lang;
+			attribCond.value = _language.toStdString();
 			tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
 			{
-				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
 				{
 					attribCond.value = "en";
 					tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
@@ -680,11 +671,11 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			SWdata_element = tmp_elements.at(0);
 			// Get title:
 			attribCond.name = "lang";
-			attribCond.value = _lang;
+			attribCond.value = _language.toStdString();
 			tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
 			if (tmp_elements.size() != 1)
 			{
-				if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
 				{
 					attribCond.value = "en";
 					tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
@@ -703,7 +694,7 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 				tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
 				if (tmp_elements.size() != 1)
 				{
-					if (tmp_elements.size() < 1 && (_lang != "en")) // fall back to english language:
+					if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
 					{
 						attribCond.value = "en";
 						tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));

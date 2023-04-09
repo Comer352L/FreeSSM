@@ -73,7 +73,7 @@ bool SSMprotocol::getSystemDescription(QString *sysdescription)
 	if (_state == state_needSetup) return false;
 	if (_sysDescription.size())
 	{
-		*sysdescription =_sysDescription;
+		*sysdescription = QString::fromStdString(_sysDescription);
 		return true;
 	}
 	return false;

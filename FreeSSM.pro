@@ -52,6 +52,7 @@ HEADERS += src/FreeSSM.h \
            src/CUcontent_Adjustments.h \
            src/CUcontent_sysTests.h \
            src/DiagInterfaceStatusBar.h \
+           src/SSMDefinitionsInterface.h \
            src/SSMLegacyDefinitionsInterface.h \
            src/SSMFlagbyteDefinitionsInterface.h \
            src/SSMFlagbyteDefinitions_SysDescriptions.h \
@@ -102,6 +103,7 @@ SOURCES += src/main.cpp \
            src/CUcontent_Adjustments.cpp \
            src/CUcontent_sysTests.cpp \
            src/DiagInterfaceStatusBar.cpp \
+           src/SSMDefinitionsInterface.cpp \
            src/SSMLegacyDefinitionsInterface.cpp \
            src/SSMFlagbyteDefinitionsInterface.cpp \
            src/SSMFlagbyteDefinitions_SysDescriptions.cpp \

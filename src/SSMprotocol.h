@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.h - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2016 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,60 +29,14 @@
 #include <QEventLoop>
 #include <string>
 #include <vector>
-#include <limits.h>
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"
 #include "SSMCUdata.h"
+#include "SSMDefinitionsInterface.h"
 
-
-#define		MEMORY_ADDRESS_NONE	UINT_MAX
 
 
 enum class BlockType { MB, SW };
-
-
-class dc_defs_dt
-{
-public:
-	unsigned int byteAddr_currentOrTempOrLatest;
-	unsigned int byteAddr_historicOrMemorized;
-	QString code[8];
-	QString title[8];
-};
-
-
-class  mb_dt
-{
-public:
-	QString title;
-	QString unit;
-	QString scaleformula;
-	char precision;
-};
-
-
-class  sw_dt
-{
-public:
-	QString title;
-	QString unit;
-};
-
-
-class  mb_intl_dt: public mb_dt
-{
-public:
-	unsigned int addr_low;
-	unsigned int addr_high;
-};
-
-
-class sw_intl_dt : public sw_dt
-{
-public:
-	unsigned int  byteAddr;
-	unsigned char bitAddr;
-};
 
 
 class MBSWmetadata_dt
@@ -98,37 +52,6 @@ public:
 };
 
 
-class adjustment_dt
-{
-public:
-	QString title;
-	QString unit;
-	QString formula;
-	unsigned int rawMin;
-	unsigned int rawMax;
-	unsigned int rawDefault;
-	char precision;
-};
-
-
-class adjustment_intl_dt : public adjustment_dt
-{
-public:
-	unsigned int AddrLow;
-	unsigned int AddrHigh;
-};
-
-
-class actuator_dt
-{
-public:
-	QString title;
-	unsigned int byteAddr;
-	unsigned char bitAddr;
-};
-
-
-
 class SSMprotocol : public QObject
 {
 	Q_OBJECT
@@ -138,7 +61,7 @@ public:
 	enum CUsetupResult_dt {result_success, result_invalidCUtype, result_invalidInterfaceConfig, result_commError, result_noOrInvalidDefsFile, result_noDefs};
 	enum state_dt {state_needSetup, state_normal, state_DCreading, state_MBSWreading, state_ActTesting, state_waitingForIgnOff};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
-			  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32};
+	                  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32};
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
@@ -198,7 +121,7 @@ protected:
 	QString _language;
 	// *** CONTROL UNIT RAW DATA ***:
 	SSMCUdata _ssmCUdata;
-	QString _sysDescription;
+	std::string _sysDescription;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_OBD2;
 	bool _has_Immo;
@@ -225,7 +148,7 @@ protected:
 	unsigned char _selectedActuatorTestIndex;
 
 	void evaluateDCdataByte(unsigned int DCbyteaddr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
-				QStringList *DC, QStringList *DCdescription);
+	                        QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);
 	void setupActuatorTestAddrList();

@@ -26,7 +26,7 @@
 #include <QString>
 #include <QStringList>
 #include "SSMCUdata.h"
-#include "SSMprotocol.h"
+#include "SSMDefinitionsInterface.h"
 #include "SSMFlagbyteDefinitions_SysDescriptions.h"
 #include "SSMFlagbyteDefinitions_en.h"
 #include "SSMFlagbyteDefinitions_de.h"
@@ -34,17 +34,16 @@
 
 
 
-class SSMFlagbyteDefinitionsInterface: public SSMFlagbyteDefinitions_SysDescriptions
+class SSMFlagbyteDefinitionsInterface: public SSMDefinitionsInterface, public SSMFlagbyteDefinitions_SysDescriptions
 {
 
 public:
 	SSMFlagbyteDefinitionsInterface(QString language = "en");
 	~SSMFlagbyteDefinitionsInterface();
 
-	void setLanguage(QString lang);
 	bool selectControlUnitID(CUtype cu, const SSMCUdata& ssmCUdata);
 
-	bool systemDescription(QString *description);
+	bool systemDescription(std::string *description);
 
 	bool hasOBD2system(bool *OBD2);
 	bool hasVINsupport(bool *VINsup);
@@ -64,13 +63,9 @@ public:
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	bool actuatorTests(std::vector<actuator_dt> *act);
+	bool clearMemoryData(unsigned int *address, char *value);
 
 private:
-	QString _language;
-	bool _id_set;
-	CUtype _CU;
-	SSMCUdata _ssmCUdata;
-
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
 
 };

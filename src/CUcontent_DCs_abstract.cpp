@@ -19,8 +19,6 @@
 
 #include "CUcontent_DCs_abstract.h"
 
-#include "SSMCUdata.h"
-
 
 CUcontent_DCs_abstract::CUcontent_DCs_abstract(QWidget *parent) : QWidget(parent)
 {

@@ -217,14 +217,13 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 	else
 	{
 		/* Get definitions for this control unit */
-		SSMLegacyDefinitionsInterface *LegacyDefsIface = new SSMLegacyDefinitionsInterface(_language.toStdString());
+		SSMLegacyDefinitionsInterface *LegacyDefsIface = new SSMLegacyDefinitionsInterface(_language);
 		if (!LegacyDefsIface->selectDefinitionsFile(LegacyDefsFile))
 		{
 			delete LegacyDefsIface;
 			// NOTE: do not call resetCUdata(), because this will reset _state to state_needSetup which causes getSysID() + getROMID() to fail
 			return result_noOrInvalidDefsFile;
 		}
-		LegacyDefsIface->setLanguage(_language.toStdString());
 		if (!LegacyDefsIface->selectID(_ssmCUdata.SYS_ID))
 		{
 			delete LegacyDefsIface;
@@ -232,8 +231,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 			return result_noDefs;
 		}
 		std::string sysdescription;
-		LegacyDefsIface->systemDescription(&sysdescription);
-		_sysDescription = QString::fromStdString(sysdescription);
+		LegacyDefsIface->systemDescription(&_sysDescription);
 		LegacyDefsIface->diagnosticCodes(&_DTCdefs);
 		LegacyDefsIface->measuringBlocks(&_supportedMBs);
 		LegacyDefsIface->switches(&_supportedSWs);

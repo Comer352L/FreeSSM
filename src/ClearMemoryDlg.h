@@ -28,7 +28,6 @@
 #include "FSSMdialogs.h"
 
 
-
 class ClearMemoryDlg : public QObject
 {
 	Q_OBJECT
