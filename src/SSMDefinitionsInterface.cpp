@@ -39,6 +39,17 @@ void SSMDefinitionsInterface::setLanguage(QString language)
 }
 
 
+bool SSMDefinitionsInterface::getDCBlockData(std::vector<dc_block_dt> *block_data)
+{
+	if (block_data == NULL)
+		return false;
+	block_data->clear();
+	if (!_id_set)
+		return false;
+	return true;
+}
+
+
 bool SSMDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	if (mbs == NULL)

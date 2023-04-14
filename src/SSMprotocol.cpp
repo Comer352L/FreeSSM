@@ -1,7 +1,7 @@
 /*
  * SSMprotocol.cpp - Abstract application layer for the Subaru SSM protocols
  *
- * Copyright (C) 2009-2016 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 	_language = language;
 	_CU = CUtype::Engine;
 	_state = state_needSetup;
+	_SSMdefsIfce = NULL;
 	resetCommonCUdata();
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
 }
@@ -152,6 +153,14 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 }
 
 
+bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
+{
+	if (_state == state_needSetup) return false;
+	*DCgroups = _supportedDCgroups;
+	return true;
+}
+
+
 bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 {
 	if (_state == state_needSetup) return false;
@@ -268,91 +277,77 @@ bool SSMprotocol::stopAllPermanentOperations()
 
 // PROTECTED / PRIVATE:
 
-unsigned int SSMprotocol::processDTCsRawdata(std::vector<char> DCrawdata, int duration_ms)
+void SSMprotocol::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
 {
 	(void)duration_ms; // to avoid compiler error
-	QStringList DCs;
-	QStringList DCdescriptions;
-	QStringList tmpDTCs;
-	QStringList tmpDTCsDescriptions;
 	bool TestMode = false;
 	bool DCheckActive = false;
-	unsigned int rawDataIndex = 0;
+	QStringList DCs_currentOrTemporary;
+	QStringList DCdescriptions_currentOrTemporary;
+	QStringList DCs_historicOrMemorized;
+	QStringList DCdescriptions_historicOrMemorized;
+	QStringList CCCCs_latest;
+	QStringList CCCCdescriptions_latest;
+	QStringList CCCCs_memorized;
+	QStringList CCCCdescriptions_memorized;
+	unsigned int rd_index = 0;
+
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
 		if (_CU == CUtype::Engine && _ssmCUdata.uses_Ax10xx_defs())
 		{
-			rawDataIndex = 1;
 			if (_has_TestMode)
 				TestMode = DCrawdata.at(0) & 0x20;
 			DCheckActive = DCrawdata.at(0) & 0x80;
+			rd_index++;
 		}
 		// FIXME: support test mode and D-Check status for other SSM1 control units, too
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate current/latest data trouble codes:
-		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
-		{
-			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_currentOrTempOrLatest;
-			if (address == MEMORY_ADDRESS_NONE)
-				continue;
-			evaluateDCdataByte(address, DCrawdata.at(rawDataIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-			rawDataIndex++;
-		}
-		emit currentOrTemporaryDTCs(DCs, DCdescriptions, TestMode, DCheckActive);
 	}
-	if ((_selectedDCgroups & historicDTCs_DCgroup) || (_selectedDCgroups & memorizedDTCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate historic/memorized data trouble codes:
-		for (unsigned int DTCdefs_index=0; DTCdefs_index<_DTCdefs.size(); DTCdefs_index++)
-		{
-			unsigned int address = _DTCdefs.at(DTCdefs_index).byteAddr_historicOrMemorized;
-			if (address == MEMORY_ADDRESS_NONE)
-				continue;
-			evaluateDCdataByte(address, DCrawdata.at(rawDataIndex), _DTCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-			rawDataIndex++;
-		}
-		emit historicOrMemorizedDTCs(DCs, DCdescriptions);
-	}
-	return rawDataIndex;
-}
 
+	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
+	{
+		dc_block_dt block = _DTCblockData.at(b);
+		for (unsigned int a = 0; a < block.addresses.size(); a++)
+		{
+			QString tmpCode;
+			QString tmpDescr;
+			QStringList tmpCodes;
+			QStringList tmpDescriptions;
+			dc_addr_dt addr = block.addresses.at(a);
+			unsigned int address = addr.address;
+			char databyte = DCrawdata.at(rd_index);
 
-void SSMprotocol::evaluateDCdataByte(unsigned int DCbyteaddr, char DCrawdata, std::vector<dc_defs_dt> DCdefs, QStringList *DC, QStringList *DCdescription)
-{
-	DC->clear();
-	DCdescription->clear();
-	if (DCrawdata == 0) return;
-	// Search definitions:
-	dc_defs_dt def;
-	for (size_t k=0; k<DCdefs.size(); k++)
-	{
-		if ((DCdefs.at(k).byteAddr_currentOrTempOrLatest == DCbyteaddr) || (DCdefs.at(k).byteAddr_historicOrMemorized == DCbyteaddr))
-		{
-			def = DCdefs.at(k);
-			break;
-		}
-	}
-	// Assign codes and descriptions:
-	for (unsigned char flagbit=0; flagbit<8; flagbit++)
-	{
-		if (DCrawdata & static_cast<char>(1 << flagbit))
-		{
-			// Check if DC is to be ignored:
-			// NOTE: DCs with existing definition and empty code- and title-fields must be ignored !
-			if (!(def.code[flagbit].isEmpty() && def.title[flagbit].isEmpty()))
+			_SSMdefsIfce->getDCcontent(address, databyte, &tmpCodes, &tmpDescriptions);
+			if (addr.type == dc_addr_dt::Type::currentOrTempOrLatest)
 			{
-				DC->push_back( def.code[flagbit] );		// DC
-				DCdescription->push_back( def.title[flagbit] );	// DC description
+				DCs_currentOrTemporary.append(tmpCodes);
+				DCdescriptions_currentOrTemporary.append(tmpDescriptions);
 			}
+			else if (addr.type == dc_addr_dt::Type::historicOrMemorized)
+			{
+				DCs_historicOrMemorized.append(tmpCodes);
+				DCdescriptions_historicOrMemorized.append(tmpDescriptions);
+			}
+			else if (addr.type == dc_addr_dt::Type::CCCCsLatest)
+			{
+				CCCCs_latest.append(tmpCodes);
+				CCCCdescriptions_latest.append(tmpDescriptions);
+			}
+			else if (addr.type == dc_addr_dt::Type::CCCCsMemorized)
+			{
+				CCCCs_memorized.append(tmpCodes);
+				CCCCdescriptions_memorized.append(tmpDescriptions);
+			}
+			// else: cannot happen
+
+			rd_index++;
 		}
 	}
+
+	emit currentOrTemporaryDTCs(DCs_currentOrTemporary, DCdescriptions_currentOrTemporary, TestMode, DCheckActive);
+	emit historicOrMemorizedDTCs(DCs_historicOrMemorized, DCdescriptions_historicOrMemorized);
+	emit latestCCCCs(CCCCs_latest, CCCCdescriptions_latest);
+	emit memorizedCCCCs(CCCCs_memorized, CCCCdescriptions_memorized);
 }
 
 
@@ -491,6 +486,38 @@ void SSMprotocol::setupActuatorTestAddrList()
 }
 
 
+void SSMprotocol::determineSupportedDCgroups(std::vector<dc_block_dt> DCblockData)
+{
+	_supportedDCgroups = noDCs_DCgroup;
+	for (unsigned int b = 0; b < DCblockData.size(); b++)
+	{
+		dc_block_dt block_data = DCblockData.at(b);
+		for (unsigned int a = 0; a < block_data.addresses.size(); a++)
+		{
+			dc_addr_dt addr_data = block_data.addresses.at(a);
+			if (addr_data.type == dc_addr_dt::Type::currentOrTempOrLatest)
+			{
+				if (addr_data.format == dc_addr_dt::Format::OBD)
+					_supportedDCgroups |= temporaryDTCs_DCgroup;
+				else // dc_addr_dt::Format::simple
+					_supportedDCgroups |= currentDTCs_DCgroup;
+			}
+			if (addr_data.type == dc_addr_dt::Type::historicOrMemorized)
+			{
+				if (addr_data.format == dc_addr_dt::Format::OBD)
+					_supportedDCgroups |= memorizedDTCs_DCgroup;
+				else // dc_addr_dt::Format::simple
+					_supportedDCgroups |= historicDTCs_DCgroup;
+			}
+			if (addr_data.type == dc_addr_dt::Type::CCCCsLatest)
+				_supportedDCgroups |= CClatestCCs_DCgroup;
+			if (addr_data.type == dc_addr_dt::Type::CCCCsMemorized)
+				_supportedDCgroups |= CCmemorizedCCs_DCgroup;
+		}
+	}
+}
+
+
 void SSMprotocol::resetCommonCUdata()
 {
 	// RESET ECU DATA:
@@ -505,8 +532,8 @@ void SSMprotocol::resetCommonCUdata()
 	_has_MB_engineSpeed = false;
 	_has_SW_ignition = false;
 	// Clear DC data:
-	_DTCdefs.clear();
-	_DTC_fmt_OBD2 = false;
+	_DTCblockData.clear();
+	_supportedDCgroups = noDCs_DCgroup;
 	// Clear Clear Memory data:
 	_CMaddr = MEMORY_ADDRESS_NONE;
 	_CMvalue = '\x00';
@@ -523,5 +550,11 @@ void SSMprotocol::resetCommonCUdata()
 	_MBSWmetaList.clear();
 	_selMBsSWsAddr.clear();
 	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
+	// Destruct definitions interface:
+	if (_SSMdefsIfce != NULL)
+	{
+		delete _SSMdefsIfce;
+		_SSMdefsIfce = NULL;
+	}
 }
 

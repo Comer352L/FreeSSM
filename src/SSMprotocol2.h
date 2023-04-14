@@ -46,7 +46,6 @@ public:
 	bool hasVINsupport(bool *VINsup);
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory2(bool *CM2sup);
-	bool getSupportedDCgroups(int *DCgroups);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
 	bool startDCreading(int DCgroups);
@@ -70,16 +69,10 @@ private:
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_integratedCC;
 	bool _has_VINsupport;
-	// Cruise Control Cancel Codes:
-	std::vector<dc_defs_dt> _CCCCdefs;
-	bool _memCCs_supported;
 	unsigned int _CM2addr = MEMORY_ADDRESS_NONE;
 	char _CM2value;
 
 	bool validateVIN(char VIN[17]);
-
-private slots:
-	void processDCsRawdata(const std::vector<char>& dcrawdata, int duration_ms);
 
 public slots:
 	void resetCUdata();

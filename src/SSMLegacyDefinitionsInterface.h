@@ -1,7 +1,7 @@
 /*
  * SSMLegacyDefinitionsInterface.h - Interface to the SSM legacy definitions
  *
- * Copyright (C) 2009-2019 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@
 #include <string>
 #include <vector>
 #include <QString>
+#include <QStringList>
 #include "SSMDefinitionsInterface.h"
 #include "tinyxml2/tinyxml2.h"
 
 
-#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.2.0"
-#define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.1.1"
+#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.3.0"
+#define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.3.0"
 
 
 using namespace tinyxml2;
@@ -63,10 +64,12 @@ public:
 	bool model(std::string *name);
 	bool year(std::string *yearstr);
 
-	bool diagnosticCodes(std::vector<dc_defs_dt> *dcs);
+	bool getDCblockData(std::vector<dc_block_dt> *block_data);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool clearMemoryData(unsigned int *address, char *value);
+
+	void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles);
 
 private:
 	tinyxml2::XMLDocument *_xmldoc; // NOTE: avoid namespace collision with XMLDocument from msxml.h (included by windows.h)
@@ -83,9 +86,31 @@ private:
 	std::vector<XMLElement*> getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribCond=std::vector<attributeCondition>());
 	std::vector<XMLElement*> getAllMultilevelElements(std::string name);
 	bool getMultilevelElementWithHighestPriority(std::string name, XMLElement **element);
-	bool StrToDouble(std::string mystring, double *d);
+	bool getAttributeStr(XMLElement *elem, std::string attr_name, std::string *attr_str);
+
 	bool checkDefsFormatVersion(std::string version_str);
 	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);
+
+	void rawbyteToDirectDC(char databyte, dc_addr_dt::Scaling scaling, XMLElement *DClist_elem, QString *code, QString *title);
+	void rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem, XMLElement *DClist_elem,
+	                                std::string assignment_elem_name, std::string assignment_elem_id_name,
+                                        void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, XMLElement*, unsigned int, char, QStringList*, QStringList*),
+                                        QStringList *codes, QStringList *titles);
+	void rawbyteToBitwiseDCs(XMLElement *bitfield_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
+	void rawbyteToListDC(XMLElement *list_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
+
+	XMLElement *getDCaddressElementForAddress(unsigned int address);
+	XMLElement *getAssignmentListElement(XMLElement *DCblock_elem, std::string assignmentList_name, bool addr_has_assignmentListID, std::string addr_assignmentListID_value);
+	XMLElement *findDClist(XMLElement *parent_elem, bool addr_has_DClistID, std::string addr_dclist_id_value);
+	bool getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element);
+	bool getDCcodeFromDCdataElement(XMLElement* DCdata_element, QString *code);
+	bool getDCtitleFromDCdataElement(XMLElement* DCdata_element, QString *title);
+
+	bool scalingAttribStrToScaling(std::string scaling_str, dc_addr_dt::Scaling *scaling);
+	void rawbyteToSingleSubstitudeDC (char databyte, QStringList *codes, QStringList *titles);
+
+	bool StrToDouble(std::string mystring, double *d);
+
 };
 
 

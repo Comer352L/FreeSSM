@@ -42,7 +42,7 @@ void SSMprotocol1::resetCUdata()
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
 		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		            this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+		            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
 		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
 		            this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
 		// Try to stop active communication processes:
@@ -200,12 +200,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		FBdefsIface->hasActuatorTests(&_has_ActTest);
 		FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
 		FBdefsIface->hasSWignition(&_has_SW_ignition);
-		FBdefsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
+		FBdefsIface->getDCblockData(&_DTCblockData);
 		FBdefsIface->measuringBlocks(&_supportedMBs);
 		FBdefsIface->switches(&_supportedSWs);
 		FBdefsIface->adjustments(&_adjustments);
 		FBdefsIface->actuatorTests(&_actuators);
-		delete FBdefsIface;
+		_SSMdefsIfce = FBdefsIface;
 		setupActuatorTestAddrList();
 		// NOTE: all other SSM2-features (VIN, CC, CM2...) are not be supported by SSM1 Control units
 	}
@@ -226,41 +226,16 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 			return result_noDefs;
 		}
 		std::string sysdescription;
-		LegacyDefsIface->systemDescription(&_sysDescription);
-		LegacyDefsIface->diagnosticCodes(&_DTCdefs);
+		LegacyDefsIface->systemDescription(&sysdescription);
+		_sysDescription = sysdescription;
+		LegacyDefsIface->getDCblockData(&_DTCblockData);
 		LegacyDefsIface->measuringBlocks(&_supportedMBs);
 		LegacyDefsIface->switches(&_supportedSWs);
 		LegacyDefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
-		delete LegacyDefsIface;
+		_SSMdefsIfce = LegacyDefsIface;
 	}
+	determineSupportedDCgroups(_DTCblockData);
 	return result_success;
-}
-
-
-bool SSMprotocol1::getSupportedDCgroups(int *DCgroups)
-{
-	int retDCgroups = 0;
-	if (_state == state_needSetup) return false;
-	if (_DTCdefs.size())
-	{
-		if (_DTC_fmt_OBD2)
-			retDCgroups |= temporaryDTCs_DCgroup;
-		else
-			retDCgroups |= currentDTCs_DCgroup;
-		for (unsigned int k=0; k<_DTCdefs.size(); k++)
-		{
-			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-			{
-				if (_DTC_fmt_OBD2)
-					retDCgroups |= memorizedDTCs_DCgroup;
-				else
-					retDCgroups |= historicDTCs_DCgroup;
-				break;
-			}
-		}
-	}
-	*DCgroups = retDCgroups;
-	return true;
 }
 
 
@@ -268,37 +243,41 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 {
 	std::vector<unsigned int> DCqueryAddrList;
 	bool started;
+
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
+
 	// Check argument:
-	if (DCgroups < 1 || DCgroups > 15)
+	if ((DCgroups & _supportedDCgroups) != DCgroups)
 		return false;
-	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
-		return false;
+
 	// Setup diagnostic codes addresses list:
-	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
+	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
 	{
-		if ((_CU == CUtype::Engine) && _ssmCUdata.uses_Ax10xx_defs())
-			DCqueryAddrList.push_back( 0x000061 );
-		// FIXME: test mode and D-Check status addresses for other SSM1 control units
-		for (unsigned int k=0; k<_DTCdefs.size(); k++)
+		dc_block_dt dc_block = _DTCblockData.at(b);
+		for (unsigned int a = 0; a < dc_block.addresses.size(); a++)
 		{
-			if (_DTCdefs.at(k).byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
-				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
+			if ((dc_block.addresses.at(a).type == dc_addr_dt::Type::currentOrTempOrLatest)
+			    && ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup)))
+				DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			if ((dc_block.addresses.at(a).type == dc_addr_dt::Type::historicOrMemorized)
+			    && ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
+				DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			// FIXME: futher types ?
 		}
 	}
-	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
-	{
-		for (unsigned int k=0; k<_DTCdefs.size(); k++)
-		{
-			if (_DTCdefs.at(k).byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-				DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
-		}
-	}
+
 	// Check if min. 1 address to read:
-	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.size() < 2) && _ssmCUdata.uses_Ax10xx_defs() && (DCqueryAddrList.at(0) == 0x000061)))
+	if ((DCqueryAddrList.size() < 1))
 		return false;
-	// Start diagostic code reading:
+
+	// Add read address for test mode and D-Check status:
+	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+	    && (_CU == CUtype::Engine) && _ssmCUdata.uses_Ax10xx_defs())
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), 0x000061); // NOTE: must be the first address !
+			// FIXME: test mode and D-Check status addresses for other SSM1 control units
+
+	// Start diagnostic code reading:
 	started = _SSMP1com->readAddresses_permanent( DCqueryAddrList );
 	if (started)
 	{
@@ -307,12 +286,13 @@ bool SSMprotocol1::startDCreading(int DCgroups)
 		_selectedDCgroups = DCgroups;
 		// Connect signals and slots:
 		connect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		        this, SLOT( processDTCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
+		        this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
 		// Emit signal:
 		emit startedDCreading();
 	}
 	else
 		resetCUdata();
+
 	return started;
 }
 
@@ -325,7 +305,7 @@ bool SSMprotocol1::stopDCreading()
 		if (_SSMP1com->stopCommunication())
 		{
 			disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-			            this, SLOT( processDTCsRawdata(std::vector<char>, int) ) );
+			            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
 			_state = state_normal;
 			emit stoppedDCreading();
 			return true;
@@ -750,3 +730,4 @@ bool SSMprotocol1::readExtendedID(std::vector<char>& ID)
 		return false;
 	return true;
 }
+

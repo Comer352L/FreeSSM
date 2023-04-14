@@ -31,13 +31,24 @@
 #define		MEMORY_ADDRESS_NONE		UINT_MAX
 
 
-class dc_defs_dt
+class dc_addr_dt
 {
 public:
-	unsigned int byteAddr_currentOrTempOrLatest;
-	unsigned int byteAddr_historicOrMemorized;
-	QString code[8];
-	QString title[8];
+	enum class Type {currentOrTempOrLatest, historicOrMemorized, CCCCsLatest, CCCCsMemorized};
+	enum class Scaling {bitwise, direct_hex, direct_dec, list};
+	enum class Format {simple, OBD};
+
+	Type type;
+	Scaling scaling;
+	Format format;
+	unsigned int address;
+};
+
+
+class dc_block_dt
+{
+public:
+	std::vector<dc_addr_dt> addresses;
 };
 
 
@@ -115,11 +126,14 @@ public:
 
 	virtual bool systemDescription(std::string *description) = 0;
 
+	virtual bool getDCBlockData(std::vector<dc_block_dt> *block_data);
 	virtual bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	virtual bool switches(std::vector<sw_intl_dt> *sws);
 	virtual bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	virtual bool actuatorTests(std::vector<actuator_dt> *act);
 	virtual bool clearMemoryData(unsigned int *address, char *value);
+
+	virtual void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles) = 0;
 
 protected:
 	QString _language;

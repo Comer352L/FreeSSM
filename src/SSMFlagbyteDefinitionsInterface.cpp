@@ -21,14 +21,20 @@
 #include "SSMFlagbyteDefinitionsInterface.h"
 
 
-
 SSMFlagbyteDefinitionsInterface::SSMFlagbyteDefinitionsInterface(QString language) : SSMDefinitionsInterface(language)
 {
+	_dc_defs = NULL;
+	_cccc_defs = NULL;
+	_memCCs_supported = false;
 }
 
 
 SSMFlagbyteDefinitionsInterface::~SSMFlagbyteDefinitionsInterface()
 {
+	if (_dc_defs != NULL)
+		delete _dc_defs;
+	if (_cccc_defs != NULL)
+		delete _cccc_defs;
 }
 
 
@@ -38,6 +44,8 @@ bool SSMFlagbyteDefinitionsInterface::selectControlUnitID(CUtype cu, const SSMCU
 		return false;
 	_CU = cu;
 	_ssmCUdata = ssmCUdata;
+	setupDiagnosticCodes();
+	setupCruiseControlCancelCodes();
 	_id_set = true;
 	return true;
 }
@@ -61,129 +69,53 @@ bool SSMFlagbyteDefinitionsInterface::systemDescription(std::string *description
 }
 
 
-bool SSMFlagbyteDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2)
+bool SSMFlagbyteDefinitionsInterface::getDCblockData(std::vector<dc_block_dt> *block_data)
 {
-	unsigned int addr = 0;
-	QStringList rawDefs;
-
+	if (block_data == NULL)
+		return false;
+	block_data->clear();
 	if (!_id_set)
 		return false;
-	*fmt_OBD2 = !_ssmCUdata.flagbytebit(29, 7);
-	if (_language == "de")
-	{
-		SSMFlagbyteDefinitions_de rawdefs_de;
-		if (*fmt_OBD2)
-			rawDefs = rawdefs_de.OBDDTCrawDefs();
-		else
-			rawDefs = rawdefs_de.SUBDTCrawDefs();
-	}
-	else if (_language == "tr")	// Turkish
-	{
-		SSMFlagbyteDefinitions_tr rawdefs_tr;
-		if (*fmt_OBD2)
-			rawDefs = rawdefs_tr.OBDDTCrawDefs();
-		else
-			rawDefs = rawdefs_tr.SUBDTCrawDefs();
-	}
-	else
-	{
-		SSMFlagbyteDefinitions_en rawdefs_en;
-		if (*fmt_OBD2)
-			rawDefs = rawdefs_en.OBDDTCrawDefs();
-		else
-			rawDefs = rawdefs_en.SUBDTCrawDefs();
-	}
-	// Setup data of the supported DTCs:
-	diagnosticCodes->clear();
-	if (!*fmt_OBD2)
-	{
-		for (addr=0x8E; addr<=0x98; addr++)
-			addDCdefs(addr, addr+22, rawDefs, diagnosticCodes);
-		return true;
-	}
-	else if (_ssmCUdata.flagbytebit(29, 4) || _ssmCUdata.flagbytebit(29, 6))
-	{
-		for (addr=0x8E; addr<=0xAD; addr++)
-			addDCdefs(addr, addr+32, rawDefs, diagnosticCodes);
-	}
-	if (_ssmCUdata.flagbytebit(28, 0))
-	{
-		for (addr=0xF0; addr<=0xF3; addr++)
-			addDCdefs(addr, addr+4, rawDefs, diagnosticCodes);
-	}
-	if (_ssmCUdata.flagbytescount() > 32)
-	{
-		if (_ssmCUdata.flagbytebit(39, 7))
-		{
-			for (addr=0x123; addr<=0x12A; addr++)
-				addDCdefs(addr, addr+8, rawDefs, diagnosticCodes);
-		}
-		if (_ssmCUdata.flagbytebit(39, 6))
-		{
-			for (addr=0x150; addr<=0x154; addr++)
-				addDCdefs(addr, addr+5, rawDefs, diagnosticCodes);
-		}
-		if (_ssmCUdata.flagbytebit(39, 5))
-		{
-			for (addr=0x160; addr<=0x164; addr++)
-				addDCdefs(addr, addr+5, rawDefs, diagnosticCodes);
-		}
-		if (_ssmCUdata.flagbytebit(39, 4))
-		{
-			for (addr=0x174; addr<=0x17A; addr++)
-				addDCdefs(addr, addr+7, rawDefs, diagnosticCodes);
-		}
-		if (_ssmCUdata.flagbytescount() > 48)
-		{
-			if (_ssmCUdata.flagbytebit(50, 6))
-			{
-				for (addr=0x1C1; addr<=0x1C6; addr++)
-					addDCdefs(addr, addr+6, rawDefs, diagnosticCodes);
-				for (addr=0x20A; addr<=0x20D; addr++)
-					addDCdefs(addr, addr+4, rawDefs, diagnosticCodes);
-			}
-			if (_ssmCUdata.flagbytebit(50, 5))
-			{
-				for (addr=0x263; addr<=0x267; addr++)
-					addDCdefs(addr, addr+5, rawDefs, diagnosticCodes);
-			}
-		}
-	}
-	return true;
-}
 
+	for (unsigned int i = 0; i < _dc_defs->size(); i++)
+	{
+		dc_block_dt new_block;
+		dc_addr_dt new_addr;
 
-bool SSMFlagbyteDefinitionsInterface::cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported)
-{
-	unsigned int addr = 0;
-	bool CCsup = false;
-	// Check if CU is equipped with CC:
-	if (!hasIntegratedCC( &CCsup ))
-		return false;
-	cancelCodes->clear();
-	if (!CCsup)
-		return true;
-	// Get raw CCCC-definitions:
-	QStringList CCrawDefs;
-	if (_language == "de")
-	{
-		SSMFlagbyteDefinitions_de rawdefs_de;
-		CCrawDefs = rawdefs_de.CCCCrawDefs();
+		new_addr.scaling = dc_addr_dt::Scaling::bitwise;
+
+		new_addr.address = _dc_defs->at(i).byteAddr_currentOrTempOrLatest;
+		new_addr.type = dc_addr_dt::Type::currentOrTempOrLatest;
+		new_block.addresses.push_back(new_addr);
+
+		new_addr.address = _dc_defs->at(i).byteAddr_historicOrMemorized;
+		new_addr.type = dc_addr_dt::Type::historicOrMemorized;
+		new_block.addresses.push_back(new_addr);
+
+		block_data->push_back(new_block);
 	}
-	else if (_language == "tr")	// Turkish
+
+	for (unsigned int i = 0; i < _cccc_defs->size(); i++)
 	{
-		SSMFlagbyteDefinitions_tr rawdefs_tr;
-		CCrawDefs = rawdefs_tr.CCCCrawDefs();
+		dc_block_dt new_block;
+		dc_addr_dt new_addr;
+
+		new_addr.scaling = dc_addr_dt::Scaling::bitwise;
+
+		new_addr.address = _cccc_defs->at(i).byteAddr_currentOrTempOrLatest;
+		new_addr.type = dc_addr_dt::Type::currentOrTempOrLatest;
+		new_block.addresses.push_back(new_addr);
+
+		if (_memCCs_supported)
+		{
+				new_addr.address = _cccc_defs->at(i).byteAddr_historicOrMemorized;
+				new_addr.type = dc_addr_dt::Type::historicOrMemorized;
+				new_block.addresses.push_back(new_addr);
+		}
+
+		block_data->push_back(new_block);
 	}
-	else
-	{
-		SSMFlagbyteDefinitions_en rawdefs_en;
-		CCrawDefs = rawdefs_en.CCCCrawDefs();
-	}
-	// Setup data of the supported CCCCs:
-	for (addr=0x133; addr<=0x136; addr++)
-		addDCdefs(addr, addr+4, CCrawDefs, cancelCodes);
-	*memCC_supported = _ssmCUdata.flagbytebit(41, 2);
+
 	return true;
 }
 
@@ -556,11 +488,33 @@ bool SSMFlagbyteDefinitionsInterface::clearMemory2Data(unsigned int *address, ch
 }
 
 
+void SSMFlagbyteDefinitionsInterface::getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+{
+	// NOTE: codes OR titles may be NULL !
+	if ((codes == NULL) && (titles == NULL))
+		return;
+	if (codes != NULL)
+		codes->clear();
+	if (titles != NULL)
+		titles->clear();
+	if (!_id_set)
+		return;
+	if (getBitDCcontent(_dc_defs, address, databyte, codes, titles))
+		return;
+	getBitDCcontent(_cccc_defs, address, databyte, codes, titles);
+	/* NOTE: We do not expect this function to be called with an address for which no valid definitions exist,
+	 *       because we didn't report such an address with getDCblockData().
+	 *       We can't assume the value at an invalid address to correspond to (a) DC(s),
+	 *       so we do not report any DCs with generic/substitude code+title string.
+	 */
+}
+
+
 bool SSMFlagbyteDefinitionsInterface::hasOBD2system(bool *OBD2)
 {
 	if (!_id_set)
 		return false;
-	*OBD2 = !_ssmCUdata.flagbytebit(29, 7) && !_ssmCUdata.flagbytebit(28, 1);
+	*OBD2 = (!_ssmCUdata.flagbytebit(29, 7) && !_ssmCUdata.flagbytebit(28, 1));
 	return true;
 }
 
@@ -569,7 +523,7 @@ bool SSMFlagbyteDefinitionsInterface::hasVINsupport(bool *VINsup)
 {
 	if (!_id_set)
 		return false;
-	*VINsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(36, 0);
+	*VINsup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(36, 0));
 	return true;
 }
 
@@ -578,8 +532,7 @@ bool SSMFlagbyteDefinitionsInterface::hasImmobilizer(bool *ImmoSup)
 {
 	if (!_id_set)
 		return false;
-	*ImmoSup = _CU == CUtype::Engine
-		&& _ssmCUdata.flagbytebit(28, 4);
+	*ImmoSup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(28, 4));
 	return true;
 }
 
@@ -590,7 +543,7 @@ bool SSMFlagbyteDefinitionsInterface::hasImmobilizerTest(bool *ImmoTestSup)
 	bool TMsup = false;
 	if (!hasImmobilizer(&ImmoSup) || !hasTestMode(&TMsup))
 		return false;
-	*ImmoTestSup = TMsup && ImmoSup;
+	*ImmoTestSup = (TMsup && ImmoSup);
 	return true;
 }
 
@@ -599,7 +552,7 @@ bool SSMFlagbyteDefinitionsInterface::hasIntegratedCC(bool *CCsup)
 {
 	if (!_id_set)
 		return false;
-	*CCsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(39, 0);
+	*CCsup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(39, 0));
 	return true;
 }
 
@@ -617,7 +570,7 @@ bool SSMFlagbyteDefinitionsInterface::hasClearMemory2(bool *CM2sup)
 {
 	if (!_id_set)
 		return false;
-	*CM2sup = (_CU == CUtype::Transmission) && _ssmCUdata.flagbytebit(39, 1);
+	*CM2sup = ((_CU == CUtype::Transmission) && _ssmCUdata.flagbytebit(39, 1));
 	return true;
 }
 
@@ -626,7 +579,7 @@ bool SSMFlagbyteDefinitionsInterface::hasTestMode(bool *TMsup)
 {
 	if (!_id_set)
 		return false;
-	*TMsup = (_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 5);
+	*TMsup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 5));
 	return true;
 }
 
@@ -637,10 +590,10 @@ bool SSMFlagbyteDefinitionsInterface::hasActuatorTests(bool *ATsup)
 	bool EngSpeedMBsup = false;
 	if (!hasTestMode(&TMsup) || !hasMBengineSpeed(&EngSpeedMBsup))
 		return false;
-	*ATsup = (_CU == CUtype::Engine)
+	*ATsup = ((_CU == CUtype::Engine)
 		  && TMsup
 		  && EngSpeedMBsup
-		  && _ssmCUdata.flagbytebit(28, 6);
+		  && _ssmCUdata.flagbytebit(28, 6));
 	return true;
 }
 
@@ -665,12 +618,143 @@ bool SSMFlagbyteDefinitionsInterface::hasSWignition(bool *IgnSWsup)
 
 // PRIVATE:
 
+void SSMFlagbyteDefinitionsInterface::setupDiagnosticCodes()
+{
+	unsigned int addr = 0;
+	QStringList rawDefs;
+	bool fmt_OBD2 = false;
+
+	if (_dc_defs == NULL)
+		_dc_defs = new std::vector<dc_defs_dt>();
+	else
+		_dc_defs->clear();
+	fmt_OBD2 = !_ssmCUdata.flagbytebit(29, 7);
+	if (_language == "de")
+	{
+		SSMFlagbyteDefinitions_de rawdefs_de;
+		if (fmt_OBD2)
+			rawDefs = rawdefs_de.OBDDTCrawDefs();
+		else
+			rawDefs = rawdefs_de.SUBDTCrawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		if (fmt_OBD2)
+			rawDefs = rawdefs_tr.OBDDTCrawDefs();
+		else
+			rawDefs = rawdefs_tr.SUBDTCrawDefs();
+	}
+	else
+	{
+		SSMFlagbyteDefinitions_en rawdefs_en;
+		if (fmt_OBD2)
+			rawDefs = rawdefs_en.OBDDTCrawDefs();
+		else
+			rawDefs = rawdefs_en.SUBDTCrawDefs();
+	}
+	// Setup data of the supported DCs:
+	if (!fmt_OBD2)
+	{
+		for (addr=0x8E; addr<=0x98; addr++)
+			addDCdefs(addr, addr+22, rawDefs, _dc_defs);
+		return;
+	}
+	else if (_ssmCUdata.flagbytebit(29, 4) || _ssmCUdata.flagbytebit(29, 6))
+	{
+		for (addr=0x8E; addr<=0xAD; addr++)
+			addDCdefs(addr, addr+32, rawDefs, _dc_defs);
+	}
+	if (_ssmCUdata.flagbytebit(28, 0))
+	{
+		for (addr=0xF0; addr<=0xF3; addr++)
+			addDCdefs(addr, addr+4, rawDefs, _dc_defs);
+	}
+	if (_ssmCUdata.flagbytescount() > 32)
+	{
+		if (_ssmCUdata.flagbytebit(39, 7))
+		{
+			for (addr=0x123; addr<=0x12A; addr++)
+				addDCdefs(addr, addr+8, rawDefs, _dc_defs);
+		}
+		if (_ssmCUdata.flagbytebit(39, 6))
+		{
+			for (addr=0x150; addr<=0x154; addr++)
+				addDCdefs(addr, addr+5, rawDefs, _dc_defs);
+		}
+		if (_ssmCUdata.flagbytebit(39, 5))
+		{
+			for (addr=0x160; addr<=0x164; addr++)
+				addDCdefs(addr, addr+5, rawDefs, _dc_defs);
+		}
+		if (_ssmCUdata.flagbytebit(39, 4))
+		{
+			for (addr=0x174; addr<=0x17A; addr++)
+				addDCdefs(addr, addr+7, rawDefs, _dc_defs);
+		}
+		if (_ssmCUdata.flagbytescount() > 48)
+		{
+			if (_ssmCUdata.flagbytebit(50, 6))
+			{
+				for (addr=0x1C1; addr<=0x1C6; addr++)
+					addDCdefs(addr, addr+6, rawDefs, _dc_defs);
+				for (addr=0x20A; addr<=0x20D; addr++)
+					addDCdefs(addr, addr+4, rawDefs, _dc_defs);
+			}
+			if (_ssmCUdata.flagbytebit(50, 5))
+			{
+				for (addr=0x263; addr<=0x267; addr++)
+					addDCdefs(addr, addr+5, rawDefs, _dc_defs);
+			}
+		}
+	}
+}
+
+
+void SSMFlagbyteDefinitionsInterface::setupCruiseControlCancelCodes()
+{
+	unsigned int addr = 0;
+	bool CCsup = false;
+	QStringList CCrawDefs;
+
+	if (_cccc_defs == NULL)
+		_cccc_defs = new std::vector<dc_defs_dt>();
+	else
+		_cccc_defs->clear();
+	// Check if CU is equipped with CC:
+	if (!hasIntegratedCC( &CCsup ))
+		return;
+	if (!CCsup)
+		return;
+	// Get raw CCCC-definitions:
+	if (_language == "de")
+	{
+		SSMFlagbyteDefinitions_de rawdefs_de;
+		CCrawDefs = rawdefs_de.CCCCrawDefs();
+	}
+	else if (_language == "tr")	// Turkish
+	{
+		SSMFlagbyteDefinitions_tr rawdefs_tr;
+		CCrawDefs = rawdefs_tr.CCCCrawDefs();
+	}
+	else
+	{
+		SSMFlagbyteDefinitions_en rawdefs_en;
+		CCrawDefs = rawdefs_en.CCCCrawDefs();
+	}
+	// Setup data of the supported CCCCs:
+	for (addr=0x133; addr<=0x136; addr++)
+		addDCdefs(addr, addr+4, CCrawDefs, _cccc_defs);
+	_memCCs_supported = _ssmCUdata.flagbytebit(41, 2);
+}
+
+
 void SSMFlagbyteDefinitionsInterface::addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs)
 {
 	dc_defs_dt tmpdef;
 	QStringList tmpdefparts;
-	unsigned int tmpdtcaddr_1 = 0;
-	unsigned int tmpdtcaddr_2 = 0;
+	unsigned int tmpdcaddr_1 = 0;
+	unsigned int tmpdcaddr_2 = 0;
 	unsigned int tmpbitaddr = 0;
 	bool ok = false;
 
@@ -686,9 +770,9 @@ void SSMFlagbyteDefinitionsInterface::addDCdefs(unsigned int currOrTempOrLatestD
 		tmpdefparts = rawDefs.at(m).split(';');
 		if (tmpdefparts.size() == 5)
 		{
-			tmpdtcaddr_1 = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary/latest/D-Check DCs memory address
-			tmpdtcaddr_2 = tmpdefparts.at(1).toUInt(&ok, 16);  // historic/memorized DCs memory address
-			if ((ok) && (tmpdtcaddr_1 == currOrTempOrLatestDCsAddr) && (tmpdtcaddr_2 == histOrMemDCsAddr))
+			tmpdcaddr_1 = tmpdefparts.at(0).toUInt(&ok, 16);  // current/temporary/latest/D-Check DCs memory address
+			tmpdcaddr_2 = tmpdefparts.at(1).toUInt(&ok, 16);  // historic/memorized DCs memory address
+			if ((ok) && (tmpdcaddr_1 == currOrTempOrLatestDCsAddr) && (tmpdcaddr_2 == histOrMemDCsAddr))
 			{
 				tmpbitaddr = tmpdefparts.at(2).toUInt(); // flagbit
 				tmpdef.code[ tmpbitaddr-1 ] = tmpdefparts.at(3);
@@ -697,7 +781,36 @@ void SSMFlagbyteDefinitionsInterface::addDCdefs(unsigned int currOrTempOrLatestD
 		}
 	}
 	defs->push_back(tmpdef);
-	/* NOTE:	- DCs with missing definitions are displayed with address byte + bit in the title field
-			- DCs with existing definition and empty code- AND title-fields are ignored */
+	/* NOTE: - DCs with missing definitions are displayed with address byte + bit in the title field
+	         - DCs with existing definitions and empty code- AND title elements are ignored
+	*/
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::getBitDCcontent(std::vector<dc_defs_dt> *defs, unsigned int addr, char databyte, QStringList *codes, QStringList *titles)
+{
+	for (unsigned int i = 0; i < defs->size(); i++)
+	{
+		dc_defs_dt dc_defs = defs->at(i);
+		if ((dc_defs.byteAddr_currentOrTempOrLatest == addr) || (dc_defs.byteAddr_historicOrMemorized == addr))
+		{
+			for (unsigned char bit = 0; bit < 8; bit++)
+			{
+				if (databyte & static_cast<char>(1 << bit))
+				{
+					// NOTE: DCs with existing definition and empty code and title strings shall be ignored
+					if (!(dc_defs.code[bit].isEmpty() && (dc_defs.title[bit].isEmpty())))
+					{
+						if (codes != NULL)
+							codes->push_back(dc_defs.code[bit]);
+						if (titles != NULL)
+							titles->push_back(dc_defs.title[bit]);
+					}
+				}
+			}
+			return true;
+		}
+	}
+	return false;
 }
 

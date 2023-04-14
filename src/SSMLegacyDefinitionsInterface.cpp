@@ -1,7 +1,7 @@
 /*
  * SSMLegacyDefinitionsInterface.cpp - Interface to the SSM legacy definitions
  *
- * Copyright (C) 2009-2019 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <SSMLegacyDefinitionsInterface.h>
+#include "SSMLegacyDefinitionsInterface.h"
 
 #include <sstream>
 #include "libFSSM.h"
@@ -125,6 +125,7 @@ error:
 	_defs_for_id_b2_element = NULL;
 	_defs_for_id_b3_element = NULL;
 	_filename.clear();
+
 	return false;
 }
 
@@ -251,182 +252,131 @@ bool SSMLegacyDefinitionsInterface::year(std::string *yearstr)
 }
 
 
-bool SSMLegacyDefinitionsInterface::diagnosticCodes(std::vector<dc_defs_dt> *dcs)
+bool SSMLegacyDefinitionsInterface::getDCblockData(std::vector<dc_block_dt> *block_data)
 {
-	std::vector<XMLElement*> DTCblock_elements;
-	const char *str = NULL;
+	std::vector<XMLElement*> DCblock_elements;
+	std::vector<unsigned int> _dirty_addr_values;
 
-	if (dcs == NULL)
+	if (block_data == NULL)
 		return false;
-	dcs->clear();
+	block_data->clear();
 	if (!_id_set)
 		return false;
-	DTCblock_elements = getAllMultilevelElements("DTCBLOCK");
-	for (unsigned int b=0; b<DTCblock_elements.size(); b++)
+	DCblock_elements = SSMLegacyDefinitionsInterface::getAllMultilevelElements("DCBLOCK");
+	for (unsigned int b = 0; b < DCblock_elements.size(); b++)
 	{
-		unsigned long int addr = MEMORY_ADDRESS_NONE;
-		dc_defs_dt dtcblock;
-		dtcblock.byteAddr_currentOrTempOrLatest = MEMORY_ADDRESS_NONE;
-		dtcblock.byteAddr_historicOrMemorized = MEMORY_ADDRESS_NONE;
-		std::vector<XMLElement*> tmp_elements;
-		bool duplicate = false;
-		// --- Get address(es) ---:
-		/* NOTE: DTCs with the same address must be defined in the same DTCBLOCK */
-		// Get address for current DTCs:
-		attributeCondition attribCond;
-		attribCond.name = "type";
-		attribCond.value = "current";
-		attribCond.condition = attributeCondition::equal;
-		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() == 1)
+		XMLElement* current_xml_block_element = DCblock_elements.at(b);
+		dc_block_dt new_block_data;
+
+		// for all ADDRESS elements:
+		for (XMLElement *addr_xml_element = current_xml_block_element->FirstChildElement("ADDRESS"); addr_xml_element != NULL; addr_xml_element = addr_xml_element->NextSiblingElement("ADDRESS"))
 		{
-			str = tmp_elements.at(0)->GetText();
+next_addr_elem:
+			dc_addr_dt new_addr;
+			const XMLAttribute *pAttrib = NULL;
+			std::string attrib_value;
+			const char *str = NULL;
+			unsigned long int addr_val;
+
+			// Get and check address value:
+			str = addr_xml_element->GetText();
 			if (str == NULL)
 				continue;
-			addr = strtoul( str, NULL, 0 );
-			if (addr > 0xffff)
+			addr_val = strtoul( str, NULL, 0 );
+			if ((addr_val > 0) && (addr_val <= 0xFFFF))
+				new_addr.address = addr_val;
+			else
 				continue;
-			// Search for duplicate block address:
-			for (unsigned int d=0; d<dcs->size(); d++)
+
+			// Check if address is blacklisted (due to already detected invalid/ambiguous definitions):
+			if (std::find(begin(_dirty_addr_values), end(_dirty_addr_values), addr_val) != std::end(_dirty_addr_values))
+				continue;
+
+			// Check for duplicate address values (invalid/ambiguous definitions):
+			for (unsigned int b2 = 0; b2 < block_data->size(); b2++)
 			{
-				if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
+				dc_block_dt *p_current_bd = &block_data->at(b2);
+				for (unsigned int a2 = 0; a2 < p_current_bd->addresses.size(); a2++)
 				{
-					duplicate = true;
-					dcs->erase( dcs->begin() + d );
-					break;
+					dc_addr_dt *p_current_ad = &p_current_bd->addresses.at(a2);
+					if (p_current_ad->address == addr_val)
+					{
+						// Delete address from block data:
+						p_current_bd->addresses.erase(p_current_bd->addresses.begin() + a2);
+						// Delete block data, if no address remain:
+						if (p_current_bd->addresses.size() < 1)
+							block_data->erase(block_data->begin() + b2);
+						// Blacklist address to avoid adding it again later:
+						_dirty_addr_values.push_back(addr_val);
+						goto next_addr_elem;
+					}
 				}
 			}
-			if (duplicate)
-				continue;
-			dtcblock.byteAddr_currentOrTempOrLatest = addr;
-		}
-		// Get address for historic DTCs:
-		attribCond.value = "historic";
-		tmp_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "ADDRESS", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() == 1)
-		{
-			str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
-				continue;
-			addr = strtoul( str, NULL, 0 );
-			if (addr > 0xffff)
-				continue;
-			// Search for duplicate block address:
-			for (unsigned int d=0; d<dcs->size(); d++)
+
+			// Get and check address type attribute:
+			pAttrib = addr_xml_element->FindAttribute("type");
+			if (pAttrib != NULL)
 			{
-				if ((addr == dcs->at(d).byteAddr_currentOrTempOrLatest) || (addr == dcs->at(d).byteAddr_historicOrMemorized))
-				{
-					duplicate = true;
-					dcs->erase( dcs->begin() + d );
-					break;
-				}
-			}
-			if (duplicate)
-				continue;
-			dtcblock.byteAddr_historicOrMemorized = addr;
-		}
-		if ((dtcblock.byteAddr_currentOrTempOrLatest == MEMORY_ADDRESS_NONE) && (dtcblock.byteAddr_historicOrMemorized == MEMORY_ADDRESS_NONE))
-			continue;
-		for (unsigned char k=0; k<8; k++)
-		{
-			dtcblock.code[k] = "???";
-			dtcblock.title[k] = "     ???     (0x";
-			if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
-				dtcblock.title[k] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
-			if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-			{
-				if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
-					dtcblock.title[k] += "/0x";
-				dtcblock.title[k] += QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper();
-			}
-			dtcblock.title[k] += " Bit " + QString::number(k+1) + ")";
-			/* NOTE: see comments at the end of the function */
-		}
-		std::vector<XMLElement*> DTC_elements;
-		DTC_elements = getAllMatchingChildElements(DTCblock_elements.at(b), "DTC");
-		char assignedBits = 0;
-		for (unsigned int k=0; k<DTC_elements.size(); k++)
-		{
-			// Get ID:
-			std::string id;
-			id = DTC_elements.at(k)->Attribute("id");
-			if (!id.size())
-				continue;
-			// Get bit address:
-			tmp_elements = getAllMatchingChildElements(DTC_elements.at(k), "BIT");
-			if (tmp_elements.size() != 1)
-				continue;
-			str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
-				continue;
-			unsigned long int bitaddr = strtoul( str, NULL, 0 );
-			if ((bitaddr < 1) || (bitaddr > 8))
-				continue;
-			// Search for duplicate DTCs:
-			if (assignedBits == (assignedBits | static_cast<char>(1 << (bitaddr-1))))
-			{
-				// Display DTC as UNKNOWN
-				dtcblock.code[bitaddr-1] = "???";
-				dtcblock.title[bitaddr-1] = "     ???     (0x";
-				if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
-					dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_currentOrTempOrLatest,16).toUpper();
-				if (dtcblock.byteAddr_historicOrMemorized != MEMORY_ADDRESS_NONE)
-				{
-					if (dtcblock.byteAddr_currentOrTempOrLatest != MEMORY_ADDRESS_NONE)
-						dtcblock.title[bitaddr-1] += "/0x";
-					dtcblock.title[bitaddr-1] += QString::number(dtcblock.byteAddr_historicOrMemorized,16).toUpper();
-				}
-				dtcblock.title[k] += " Bit " + QString::number(bitaddr) + ")";
-				/* NOTE: see comments at the end of the function */
-				continue;
-			}
-			// --- Get common data ---
-			// Find DTC data:
-			XMLElement *DTCdata_element = NULL;
-			attribCond.name = "id";
-			attribCond.value = id;
-			attribCond.condition = attributeCondition::equal;
-			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "DTC", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
-				continue;
-			DTCdata_element = tmp_elements.at(0);
-			// Get code:
-			tmp_elements = getAllMatchingChildElements(DTCdata_element, "CODE");
-			if (tmp_elements.size() != 1)
-				continue;
-			str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
-				continue;
-			dtcblock.code[bitaddr-1] = QString( str );
-			// Get title:
-			attribCond.name = "lang";
-			attribCond.value = _language.toStdString();
-			attribCond.condition = attributeCondition::equal;
-			tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
-			{
-				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
-				{
-					attribCond.value = "en";
-					tmp_elements = getAllMatchingChildElements(DTCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-					if (tmp_elements.size() != 1)
-						continue;
-				}
+				attrib_value = pAttrib->Value();
+				if (attrib_value == "currentOrTempOrLatest")
+					new_addr.type = dc_addr_dt::Type::currentOrTempOrLatest;
+				else if (attrib_value == "historicOrMemorized")
+					new_addr.type = dc_addr_dt::Type::historicOrMemorized;
 				else
+				{
+					_dirty_addr_values.push_back(addr_val);
 					continue;
+				}
 			}
-			str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
+			else
+			{
+				_dirty_addr_values.push_back(addr_val);
 				continue;
-			dtcblock.title[bitaddr-1] = QString( str );
-			assignedBits |= static_cast<char>(1 << (bitaddr-1));
+			}
+
+			// Get and check address scaling attribute:
+			pAttrib = addr_xml_element->FindAttribute("scaling");
+			if (pAttrib != NULL)
+			{
+				attrib_value = pAttrib->Value();
+				if (attrib_value == "bitwise")
+					new_addr.scaling = dc_addr_dt::Scaling::bitwise;
+					/* NOTE: Attribute "bitfield_id" may or may not be present.
+					 *       We don't check if a corresponding valid BITFIELD elemement exists.
+					 *       Even if it doesn't exist, we nevertheless want to report active DCs with generic code+title strings.
+					 */
+				else if (attrib_value == "direct_hex")
+					new_addr.scaling = dc_addr_dt::Scaling::direct_hex;
+				else if (attrib_value == "direct_dec")
+					new_addr.scaling = dc_addr_dt::Scaling::direct_dec;
+				else if (attrib_value == "list")
+					new_addr.scaling = dc_addr_dt::Scaling::list;
+					/* NOTE: Attribute "list_id" may or may not be present.
+					 *       We don't check if a corresponding valid LIST elemement exists.
+					 *       Even if it doesn't exist, we nevertheless want to report active DCs with generic code+title strings.
+					 */
+				else
+				{
+					_dirty_addr_values.push_back(addr_val);
+					continue;
+				}
+			}
+			else
+			{
+				_dirty_addr_values.push_back(addr_val);
+				continue;
+			}
+
+			// Add address data to address block data:
+			new_block_data.addresses.push_back(new_addr);
 		}
-		// Add DTC-block to the list:
-		dcs->push_back(dtcblock);
+
+		// Add address block data to list of address blocks:
+		if (new_block_data.addresses.size() > 0)
+			block_data->push_back(new_block_data);
 	}
+
 	return true;
-	/* NOTE: - DCs with missing definitions are displayed with address byte + bit in the title field
-		 - DCs with existing definitions and empty code- and title-fields are ignored */
 }
 
 
@@ -714,6 +664,69 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 }
 
 
+void SSMLegacyDefinitionsInterface::getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+{
+	/* NOTE: This function should actually never be called with an invalid address or address for which
+	 *       no valid+unambiguous definitions exist, because getDCblockData(...) doesn't report such addresses.
+	 */
+	if ((codes == NULL) && (titles == NULL))
+		return;
+	if (codes != NULL)
+		codes->clear();
+	if (titles != NULL)
+		titles->clear();
+	if (!_id_set)
+		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
+
+	// Get address element:
+	XMLElement *DCaddr_elem = NULL;
+	DCaddr_elem = getDCaddressElementForAddress(address);
+	if (DCaddr_elem == NULL)
+		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
+
+	// Get scaling attribute from address data:
+	std::string scaling_str;
+	if (!getAttributeStr(DCaddr_elem, "scaling", &scaling_str))
+		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
+
+	// Convert scaling attribute to scaling type:
+	dc_addr_dt::Scaling scaling;
+	if (!scalingAttribStrToScaling(scaling_str, &scaling))
+		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
+
+	// Get dclist_id attribute from address data
+	bool addr_has_DClistID = false;
+	std::string DClist_id_str;
+	addr_has_DClistID = getAttributeStr(DCaddr_elem, "dclist_id", &DClist_id_str);
+
+	// Find DC list element:
+	XMLElement *DClist_elem = NULL;
+	DClist_elem = findDClist(_datacommon_root_element, addr_has_DClistID, DClist_id_str);
+	// NOTE: We do not check if DClist_elem is NULL. If it is, evaluation fcns below will create proper substitute DCs
+
+	if ((scaling == dc_addr_dt::Scaling::direct_hex) || (scaling == dc_addr_dt::Scaling::direct_dec))
+	{
+		QString code;
+		QString title;
+		rawbyteToDirectDC(databyte, scaling, DClist_elem, &code, &title);
+		if (codes != NULL)
+			codes->push_back(code);
+		if (titles != NULL)
+			titles->push_back(title);
+	}
+	else if (scaling == dc_addr_dt::Scaling::bitwise)
+	{
+		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, DClist_elem,	"BITFIELD", "bitfield_id", &SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs, codes, titles);
+	}
+	else if (scaling == dc_addr_dt::Scaling::list)
+	{
+		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, DClist_elem,	"LIST", "list_id", &SSMLegacyDefinitionsInterface::rawbyteToListDC, codes, titles);
+	}
+	else
+		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
+}
+
+
 // PRIVATE:
 
 std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMatchingChildElements(XMLElement *pParent, std::string elementName, std::vector<attributeCondition> attribConditions)
@@ -803,26 +816,26 @@ std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMatchingChildEleme
 
 std::vector<XMLElement*> SSMLegacyDefinitionsInterface::getAllMultilevelElements(std::string name)
 {
-	std::vector<XMLElement*> DTCblock_elements;
-	std::vector<XMLElement*> DTCblock_elements2;
+	std::vector<XMLElement*> DCblock_elements;
+	std::vector<XMLElement*> DCblock_elements2;
 	if (_defs_root_element)
-		DTCblock_elements = getAllMatchingChildElements(_defs_root_element, name);
+		DCblock_elements = getAllMatchingChildElements(_defs_root_element, name);
 	if (_defs_for_id_b1_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, name);
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+		DCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b1_element, name);
+		DCblock_elements.insert(DCblock_elements.end(), DCblock_elements2.begin(), DCblock_elements2.end());
 	}
 	if (_defs_for_id_b2_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, name);
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+		DCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b2_element, name);
+		DCblock_elements.insert(DCblock_elements.end(), DCblock_elements2.begin(), DCblock_elements2.end());
 	}
 	if (_defs_for_id_b3_element)
 	{
-		DTCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, name);
-		DTCblock_elements.insert(DTCblock_elements.end(), DTCblock_elements2.begin(), DTCblock_elements2.end());
+		DCblock_elements2 = getAllMatchingChildElements(_defs_for_id_b3_element, name);
+		DCblock_elements.insert(DCblock_elements.end(), DCblock_elements2.begin(), DCblock_elements2.end());
 	}
-	return DTCblock_elements;
+	return DCblock_elements;
 }
 
 
@@ -857,29 +870,17 @@ bool SSMLegacyDefinitionsInterface::getMultilevelElementWithHighestPriority(std:
 }
 
 
-bool SSMLegacyDefinitionsInterface::StrToDouble(std::string str, double *d)
+bool SSMLegacyDefinitionsInterface::getAttributeStr(XMLElement *elem, std::string attr_name, std::string *attr_str)
 {
-	double dbl = 0;
-	int i = 0;
-	std::stringstream sstr;
-	while (str.size() && (str.at(0) == ' '))
-		str = str.substr(1);
-	if (!str.size())
-		return false;
-	sstr << str;
-	if (str.find("0x") == 0 || (str.find("-0x") == 0) || (str.find("+0x") == 0))
-	{
-		sstr >> std::hex >> i;
-		dbl = i;
-	}
-	else
-		sstr >> dbl;
-	if (sstr.eof())
-	{
-		*d = dbl;
-		return true;
-	}
-	return false;
+	const XMLAttribute *pAttrib = NULL;
+	bool has_attr = false;
+
+	attr_str->clear();
+	pAttrib = elem->FindAttribute( attr_name.c_str() );
+	has_attr = (pAttrib != NULL);
+	if (has_attr)
+		*attr_str = pAttrib->Value();
+	return has_attr;
 }
 
 
@@ -950,5 +951,540 @@ bool SSMLegacyDefinitionsInterface::versionStrToVersionNum(std::string version_s
 	*version_minor = strtoul(version_str_minor.data(), NULL, 0);
 	*version_bugfix = strtoul(version_str_bugfix.data(), NULL, 0);
 	return true;
+}
+
+
+void SSMLegacyDefinitionsInterface::rawbyteToDirectDC(char databyte, dc_addr_dt::Scaling scaling, XMLElement *DClist_elem, QString *code, QString *title)
+{
+	QString code_str;
+	QString title_str;
+	XMLElement *DCdata_elem = NULL;
+	attributeCondition attribCond;
+	std::vector<XMLElement*> title_elements;
+
+	// Set default (substitude) strings:
+	if (scaling == dc_addr_dt::Scaling::direct_hex)
+		code_str = QString::number(static_cast<unsigned char>(databyte), 16);
+	else // direct_dec
+		code_str = QString::number(static_cast<unsigned char>(databyte), 10);
+	title_str = "     ???     ";
+
+	// Find DC data:
+	if (DClist_elem != NULL)
+	{
+		if (getMatchingDCdataElement(DClist_elem, code_str.toStdString(), &DCdata_elem))
+		{
+			// Get title:
+			getDCtitleFromDCdataElement(DCdata_elem, &title_str);
+		}
+	}
+
+	if (code != NULL)
+		*code = code_str;
+	if (title != NULL)
+		*title = title_str;
+}
+
+
+void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem, XMLElement *DClist_elem,
+                                                               std::string assignment_elem_name, std::string assignment_elem_id_name,
+                                                               void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, XMLElement*, unsigned int, char, QStringList*, QStringList*),
+                                                               QStringList *codes, QStringList *titles)
+{
+	// NOTE: assignment_elem_name: BITFIELD or LIST; assignment_elem_id_name: bitfield_id, list_id
+	bool addr_has_assignment_id = false;
+	std::string assignment_list_id_str;
+	XMLElement *DCblock_elem = NULL;
+	XMLElement *assignment_list_element = NULL;
+
+	// Determine if ADDRESS element has assignment list ID attribute:
+	addr_has_assignment_id = getAttributeStr(DCaddr_elem, assignment_elem_id_name, &assignment_list_id_str);
+
+	// Get DCBLOCK element:
+	if ((DCaddr_elem->Parent() == NULL) || (DCaddr_elem->Parent()->ToElement() == NULL))
+		(this->*rawbyteScalingFcn)(NULL, NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
+	DCblock_elem = DCaddr_elem->Parent()->ToElement();
+
+	// Get assignment list element:
+	assignment_list_element = getAssignmentListElement(DCblock_elem, assignment_elem_name, addr_has_assignment_id, assignment_list_id_str);
+	if (assignment_list_element == NULL)
+		(this->*rawbyteScalingFcn)(NULL, NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
+	else
+		(this->*rawbyteScalingFcn)(assignment_list_element, DClist_elem, address, databyte, codes, titles);
+}
+
+
+void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+{
+	// NOTE: bitfield_element=NULL and/or DClist_element=NULL can be passed/used to assign default/substitude DC codes and descriptions
+	// NOTE: codes OR titles may be NULL !
+	/* NOTE: - for DCs with missing definitions, default strings are assigned (containing address byte + bit in the title)
+	 *       - for DCs with ambiguous definitions (e.g. duplicate or incomplete definitions), default string(s) are assigned for the ambiguous parts (code and/or title)
+	 *       - for DCs with existing unambiguous definitions, defined strings are assigned unconditionally (empty strings are assigned, too)
+	 *         => DCs with empty code string AND empty title string are ignored to be ignored
+	 */
+	QStringList local_codes;
+	QStringList local_titles;
+
+	if (codes != NULL)
+		codes->clear();
+	if (titles != NULL)
+		titles->clear();
+
+	// Set default DC contents for all 8 bits:
+	for (unsigned char b = 0; b < 8; b++)
+	{
+		local_codes.push_back(  "???" );
+		QString title = "     ???     (0x" + QString::number(address, 16).toUpper() + " Bit " + QString::number(b + 1) + ")";
+		local_titles.push_back(title);
+	}
+
+	// Evaluate all "DC" sub-elements and assign DC contents:
+	if ((bitfield_element != NULL) && (DClist_element != NULL))
+	{
+		std::vector<XMLElement*> DC_elements;
+		DC_elements = getAllMatchingChildElements(bitfield_element, "DC");
+		char assignedBits = 0;
+		for (unsigned int d = 0; d < DC_elements.size(); d++)
+		{
+			const char *str = NULL;
+			std::vector<XMLElement*> tmp_elements;
+
+			// --- Get DC data (id and assigned bit) ---
+			// Get ID:
+			str = DC_elements.at(d)->Attribute("code");
+			if (str == NULL)
+				continue;
+			std::string code_attr_str = std::string(str);
+			if (!code_attr_str.size())
+				continue;
+			// Get bit address:
+			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "BIT");
+			if (tmp_elements.size() != 1)
+				continue;
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			unsigned long int bitaddr = strtoul( str, NULL, 0 );
+			if ((bitaddr < 1) || (bitaddr > 8))
+				continue;
+
+			// Check if corresponding bit is set in databyte:
+			if (!(databyte & (1 << (bitaddr - 1))))
+				continue;
+
+			// Search for duplicate DCs:
+			if (assignedBits == (assignedBits | static_cast<char>(1 << (bitaddr-1))))
+			{
+				// Display DC as UNKNOWN
+				QString title = "     ???     (0x" + QString::number(address, 16).toUpper() + " Bit " + QString::number(bitaddr) + ")";
+				local_codes.replace(bitaddr - 1, "???");
+				local_titles.replace(bitaddr - 1, title);
+				continue;
+			}
+
+			// --- Get DC content (code and title) from common data ---
+			// Find DC data:
+			XMLElement *DCdata_element = NULL;
+			if (!getMatchingDCdataElement(DClist_element, code_attr_str, &DCdata_element))
+				continue;
+			// Mark bit as assigned:
+			assignedBits |= static_cast<char>(1 << (bitaddr - 1));
+			// Get code:
+			QString code;
+			if (getDCcodeFromDCdataElement(DCdata_element, &code))
+				local_codes.replace(bitaddr - 1, QString( code ));
+			// Get title:
+			QString title;
+			if (getDCtitleFromDCdataElement(DCdata_element, &title))
+				local_titles.replace(bitaddr - 1, QString( title ));
+		}
+	}
+
+	// Remove all DCs whose bit is not set (DC inactive) or whose code AND title are empty (DC shall be ignored):
+	for (char bit = 7; bit >= 0; bit--)
+	{
+		if (!(databyte & static_cast<char>(1 << bit))
+		    || (local_codes.at(bit).isEmpty() && local_titles.at(bit).isEmpty()))
+		{
+			local_codes.removeAt(bit);
+			local_titles.removeAt(bit);
+		}
+	}
+
+	if (codes != NULL)
+		*codes = local_codes;
+	if (titles != NULL)
+		*titles = local_titles;
+}
+
+
+void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+{
+	// NOTE: list_element=NULL and/or DClist_element=NULL can be passed/used to assign default/substitude DC codes and descriptions
+	// NOTE: codes OR titles may be NULL !
+	/* NOTE: - for DCs with missing definitions, default strings are assigned (containing the address byte in the title)
+	 *       - for DCs with ambiguous definitions (e.g. duplicate or incomplete definitions), default string(s) are assigned for the ambiguous parts (code and/or title)
+	 *       - for DCs with existing unambiguous definitions, defined strings are assigned unconditionally (empty strings are assigned, too)
+	 *         => DCs with empty code string AND empty title string are ignored to be ignored
+	 */
+	QStringList local_codes;
+	QStringList local_titles;
+
+	if (codes != NULL)
+		codes->clear();
+	if (titles != NULL)
+		titles->clear();
+
+	// Set default DC contents:
+	QString title = "     ???     (0x" + QString::number(address, 16).toUpper() + ")";
+	local_codes.push_back(  "???" );
+	local_titles.push_back(title);
+
+	// Evaluate all "DC" sub-elements and assign DC contents:
+	if ((list_element != NULL) && (DClist_element != NULL))
+	{
+		std::vector<XMLElement*> DC_elements;
+		DC_elements = getAllMatchingChildElements(list_element, "DC");
+		bool DC_assigned = false;
+		for (unsigned int d = 0; d < DC_elements.size(); d++)
+		{
+			const char *str = NULL;
+			std::vector<XMLElement*> tmp_elements;
+			unsigned long int index = 0;
+
+			// --- Get DC data (id and assigned bit) ---
+			// Get ID:
+			str = DC_elements.at(d)->Attribute("code");
+			if (str == NULL)
+				continue;
+			std::string code_attr_str = std::string(str);
+			if (!code_attr_str.size())
+				continue;
+			// Get list index:
+			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "INDEX");
+			if (tmp_elements.size() != 1)
+				continue;
+			str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			index = strtoul( str, NULL, 0 );
+			if (index > 255)
+				continue;
+			// Check if list databyte matches the index:
+			if (index != static_cast<unsigned char>(databyte))
+				continue;
+			// Search for duplicate DCs:
+			if (DC_assigned)
+			{
+				// Display DC as UNKNOWN
+				QString title = "     ???     (0x" + QString::number(address, 16).toUpper() + ")";
+				local_codes.replace(0, "???");
+				local_titles.replace(0, title);
+				continue;
+			}
+
+			// --- Get DC content (code and title) from common data ---
+			// Find DC data:
+			XMLElement *DCdata_element = NULL;
+			if (!getMatchingDCdataElement(DClist_element, code_attr_str, &DCdata_element))
+				continue;
+			// Mark DC as assigned:
+			DC_assigned = true;
+			// Get code:
+			QString code;
+			if (getDCcodeFromDCdataElement(DCdata_element, &code))
+				local_codes.replace(0, code);
+			// Get title:
+			QString title;
+			if (getDCtitleFromDCdataElement(DCdata_element, &title))
+				local_titles.replace(0, title);
+		}
+	}
+
+	if (codes != NULL)
+		*codes = local_codes;
+	if (titles != NULL)
+		*titles = local_titles;
+}
+
+
+XMLElement *SSMLegacyDefinitionsInterface::getDCaddressElementForAddress(unsigned int address)
+{
+	std::vector <XMLElement*> DCblock_elements;
+	XMLElement *DCaddr_elem = NULL;
+
+	DCblock_elements = getAllMultilevelElements("DCBLOCK");
+	for (unsigned int b = 0; b < DCblock_elements.size(); b++)
+	{
+		XMLElement* current_DCblock_element = NULL;
+		std::vector<XMLElement*> addr_elements;
+
+		current_DCblock_element = DCblock_elements.at(b);
+
+		// Get all ADDRESS elements in the current DCBLOCK:
+		addr_elements = getAllMatchingChildElements(current_DCblock_element, "ADDRESS");
+
+		// Evaluate all ADDRESS elements in the current DCBLOCK:
+		for (unsigned int a = 0; a < addr_elements.size(); a++)
+		{
+			XMLElement *current_addr_element = NULL;
+			unsigned int addr_val = 0;
+			const char *str = NULL;
+			std::string addr_assignmentListID_value;
+
+			// Get address value of the ADDRESS element and check if it matches:
+			current_addr_element = addr_elements.at(a);
+			str = current_addr_element->GetText();
+			if (str == NULL)
+				continue;
+			addr_val = strtoul( str, NULL, 0 );
+			if (addr_val != address)
+				continue; // go on with next ADDRESS
+			if (DCaddr_elem != NULL) // element already assigned => ambiguous definitions
+				return NULL;
+
+			DCaddr_elem = current_addr_element;
+		}
+	}
+
+	return DCaddr_elem;
+}
+
+
+XMLElement *SSMLegacyDefinitionsInterface::getAssignmentListElement(XMLElement *DCblock_elem, std::string assignmentList_name,
+                                                                    bool addr_has_assignmentListID, std::string addr_assignmentListID_value)
+{
+	XMLElement* assignmentList_elem = NULL;
+
+	std::vector<XMLElement*> assignmentList_elements = getAllMatchingChildElements(DCblock_elem, assignmentList_name);
+		/* NOTE: We want ALL elements here;
+		 *       We could instead retrieve only the element(s) with the assignment list ID specified
+		 *       by the ADDRESS element, but that wouldn't allow us to detect ambiguous definitions.
+		 */
+
+	// Evaluate all assignment list elements in the current DCBLOCK:
+	if (assignmentList_elements.size() > 0)
+	{
+		// Search fo matching assignment list:
+		for (unsigned int al_el_idx = 0; al_el_idx < assignmentList_elements.size(); al_el_idx++)
+		{
+			XMLElement* current_assignmentList_element = NULL;
+			const XMLAttribute *pAttrib_assignmentListID = NULL;
+			bool assignmentList_has_id;
+			std::string assignmentListID_value;
+
+			// Determine the assignment lists ID usage and value:
+			current_assignmentList_element = assignmentList_elements.at(al_el_idx);
+			pAttrib_assignmentListID = current_assignmentList_element->FindAttribute("id");
+			assignmentList_has_id = (pAttrib_assignmentListID != NULL);
+			if (assignmentList_has_id)
+				assignmentListID_value = pAttrib_assignmentListID->Value();
+
+			// Match assignment list element with ADDRESS element:
+			if (assignmentList_has_id == addr_has_assignmentListID)
+			{
+				if (!assignmentList_has_id || ((assignmentList_has_id) && (addr_assignmentListID_value == assignmentListID_value)))
+				{
+					if (assignmentList_elem != NULL)
+						return NULL;
+					assignmentList_elem = current_assignmentList_element;
+					/* NOTE: We nevertheless continue. Further valid+matching definitons may be defined,
+					 *       which would mean that the defintions are invalid / ambiguous.
+					 *       We need to detect this case to avoid delivering potentially wrong (unsafe) DC codes+descriptions.
+					 */
+				}
+			}
+			else // NOTE: we generally consider scaling invalid / ambiguous, if ADDRESS and assignment list elements with and without index are mixed in any way
+				return NULL;
+		}
+	}
+	else // no assignment list defined, so definitions are invalid (incomplete)
+		return NULL;
+
+	return assignmentList_elem;
+}
+
+
+XMLElement *SSMLegacyDefinitionsInterface::findDClist(XMLElement *parent_elem, bool addr_has_DClistID, std::string addr_dclist_id_value)
+{
+	std::vector<XMLElement*> DClist_elements;
+	XMLElement *DClist_element = NULL;
+
+	DClist_elements = getAllMatchingChildElements(parent_elem, "DCLIST");
+	if (DClist_elements.size() < 1)
+		return NULL;
+	for (unsigned int dcl_idx = 0; dcl_idx < DClist_elements.size(); dcl_idx++)
+	{
+		XMLElement *current_DClist_element = NULL;
+		const XMLAttribute *pAttrib_DClistID = NULL;
+		bool DClist_has_id = false;
+		std::string DClistID_value;
+
+		current_DClist_element = DClist_elements.at(dcl_idx);
+		pAttrib_DClistID = current_DClist_element->FindAttribute("id");
+		DClist_has_id = (pAttrib_DClistID != NULL);
+		if (DClist_has_id)
+			DClistID_value = pAttrib_DClistID->Value();
+
+		// Match DCLIST element with dclist_ID from ADDRESS element:
+		if (DClist_has_id == addr_has_DClistID)
+		{
+			// ADDR and DCLIST both have an id (or no id)
+			if (!DClist_has_id || (DClist_has_id && (addr_dclist_id_value == DClistID_value))) // list IDs match
+			{
+				if (DClist_element == NULL)
+					DClist_element = current_DClist_element;
+				else // invalid definitions, duplicate matching DCLIST
+					return NULL;
+			}
+		}
+		else // invalid defintions
+			return NULL;
+		// NOTE we continue even if we've already found a matching DCLIST, because we want to detect invalid definitions
+	}
+
+	return DClist_element;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element)
+{
+	std::vector<XMLElement*> dc_elements;
+	std::vector<XMLElement*> code_elements;
+	const char *str = NULL;
+
+	*DCdata_element = NULL;
+	dc_elements = getAllMatchingChildElements(parent_element, "DC");
+	if (dc_elements.size() < 1)
+		return false;
+	for (unsigned e = 0; e < dc_elements.size(); e++)
+	{
+		// Get code:
+		code_elements = getAllMatchingChildElements(dc_elements.at(e), "CODE");
+		if (code_elements.size() != 1)
+			continue;
+		str = code_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		std::string elem_code = std::string(str);
+		// Check if code matches:
+		if (elem_code == code)
+		{
+			*DCdata_element = dc_elements.at(e);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getDCcodeFromDCdataElement(XMLElement* DCdata_element, QString *code)
+{
+	std::vector<XMLElement*> tmp_elements;
+	attributeCondition attribCond;
+	const char *str = NULL;
+
+	// Get code:
+	tmp_elements = getAllMatchingChildElements(DCdata_element, "CODE");
+	if (tmp_elements.size() == 1)
+	{
+		str = tmp_elements.at(0)->GetText();
+		if (str != NULL)
+		{
+			*code = QString( str );
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getDCtitleFromDCdataElement(XMLElement* DCdata_element, QString *title)
+{
+	std::vector<XMLElement*> tmp_elements;
+	attributeCondition attribCond;
+	const char *str = NULL;
+
+	// NOTE: Do not touch title until extracted successfully
+	// Get title:
+	attribCond.name = "lang";
+	attribCond.value = _language.toStdString();
+	attribCond.condition = attributeCondition::equal;
+	tmp_elements = getAllMatchingChildElements(DCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
+	if ((tmp_elements.size() == 0) && (_language != "en"))
+	{
+		attribCond.value = "en"; // fall back to english language:
+		tmp_elements = getAllMatchingChildElements(DCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
+	}
+	if (tmp_elements.size() == 1)
+	{
+		str = tmp_elements.at(0)->GetText();
+		if (str != NULL)
+		{
+			*title = QString( str );
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::scalingAttribStrToScaling(std::string scaling_str, dc_addr_dt::Scaling *scaling)
+{
+	if (scaling_str == "bitwise")
+		*scaling = dc_addr_dt::Scaling::bitwise;
+	else if (scaling_str == "direct_hex")
+		*scaling = dc_addr_dt::Scaling::direct_hex;
+	else if (scaling_str == "direct_dec")
+		*scaling = dc_addr_dt::Scaling::direct_dec;
+	else if (scaling_str == "list")
+		*scaling = dc_addr_dt::Scaling::list;
+	else
+		return false;
+
+	return true;
+}
+
+
+void SSMLegacyDefinitionsInterface::rawbyteToSingleSubstitudeDC(char databyte, QStringList *codes, QStringList *titles)
+{
+	if (codes != NULL)
+	{
+		codes->clear();
+		codes->push_back( "     ???     " );
+	}
+	if (titles != NULL)
+	{
+		titles->clear();
+		titles->push_back( "0x" + QString::number(static_cast<unsigned char>(databyte), 16) + " [raw]" );
+	}
+}
+
+
+bool SSMLegacyDefinitionsInterface::StrToDouble(std::string str, double *d)
+{
+	double dbl = 0;
+	int i = 0;
+	std::stringstream sstr;
+	while (str.size() && (str.at(0) == ' '))
+		str = str.substr(1);
+	if (!str.size())
+		return false;
+	sstr << str;
+	if (str.find("0x") == 0 || (str.find("-0x") == 0) || (str.find("+0x") == 0))
+	{
+		sstr >> std::hex >> i;
+		dbl = i;
+	}
+	else
+		sstr >> dbl;
+	if (sstr.eof())
+	{
+		*d = dbl;
+		return true;
+	}
+	return false;
 }
 

@@ -1,7 +1,7 @@
 /*
  * SSMFlagbyteDefinitionsInterface.h - Interface to the SSM flagbyte definitions
  *
- * Copyright (C) 2008-2019 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  * Copyright (C) 2019 madanadam (Turkish language support)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,8 +57,7 @@ public:
 	bool hasMBengineSpeed(bool *EngSpeedMBsup);
 	bool hasSWignition(bool *IgnSWsup);
 
-	bool diagnosticCodes(std::vector<dc_defs_dt> *diagnosticCodes, bool *fmt_OBD2);
-	bool cruiseControlCancelCodes(std::vector<dc_defs_dt> *cancelCodes, bool *memCC_supported);
+	bool getDCblockData(std::vector<dc_block_dt> *block_data);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool adjustments(std::vector<adjustment_intl_dt> *adj);
@@ -66,8 +65,26 @@ public:
 	bool clearMemoryData(unsigned int *address, char *value);
 	bool clearMemory2Data(unsigned int *address, char *value);
 
+	void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles);	// virtual function implementation
+
 private:
+	class dc_defs_dt
+	{
+	public:
+		unsigned int byteAddr_currentOrTempOrLatest;
+		unsigned int byteAddr_historicOrMemorized;
+		QString code[8];
+		QString title[8];
+	};
+
+	std::vector<dc_defs_dt> *_dc_defs;
+	std::vector<dc_defs_dt> *_cccc_defs;
+	bool _memCCs_supported;
+
+	void setupDiagnosticCodes();
+	void setupCruiseControlCancelCodes();
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
+	bool getBitDCcontent(std::vector<dc_defs_dt> *defs, unsigned int addr, char databyte, QStringList *codes, QStringList *titles);
 
 };
 

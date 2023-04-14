@@ -84,7 +84,7 @@ public:
 	virtual bool hasClearMemory2(bool *CM2sup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	virtual bool getSupportedDCgroups(int *DCgroups) = 0;
+	bool getSupportedDCgroups(int *DCgroups);
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(std::vector<mb_dt> *supportedMBs);
 	bool getSupportedSWs(std::vector<sw_dt> *supportedSWs);
@@ -122,6 +122,8 @@ protected:
 	// *** CONTROL UNIT RAW DATA ***:
 	SSMCUdata _ssmCUdata;
 	std::string _sysDescription;
+	// *** CONTROL UNIT DEFINITION INTERFACE ***:
+	SSMDefinitionsInterface *_SSMdefsIfce;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_OBD2;
 	bool _has_Immo;
@@ -131,8 +133,8 @@ protected:
 	bool _has_MB_engineSpeed;
 	bool _has_SW_ignition;
 	// Diagnostic Trouble Codes:
-	std::vector<dc_defs_dt> _DTCdefs;
-	bool _DTC_fmt_OBD2;
+	std::vector<dc_block_dt> _DTCblockData;
+	int _supportedDCgroups;
 	// Clear Memory:
 	unsigned int _CMaddr = MEMORY_ADDRESS_NONE;
 	char _CMvalue;
@@ -150,11 +152,10 @@ protected:
 	std::vector<unsigned int> _selMBsSWsAddr;
 	unsigned char _selectedActuatorTestIndex;
 
-	void evaluateDCdataByte(unsigned int DCbyteaddr, char DCrawdata, std::vector<dc_defs_dt> DCdefs,
-	                        QStringList *DC, QStringList *DCdescription);
 	bool setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList);
 	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);
 	void setupActuatorTestAddrList();
+	void determineSupportedDCgroups(std::vector<dc_block_dt> DCblockData);
 	void resetCommonCUdata();
 
 signals:
@@ -173,7 +174,7 @@ signals:
 
 protected slots:
 	void processMBSWrawData(const std::vector<char>& MBSWrawdata, int duration_ms);
-	unsigned int processDTCsRawdata(std::vector<char> dcrawdata, int duration_ms);
+	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:
 	virtual void resetCUdata() = 0;

@@ -43,7 +43,6 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
-	bool getSupportedDCgroups(int *DCgroups);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool startDCreading(int DCgroups);
 	bool stopDCreading();

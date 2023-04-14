@@ -90,8 +90,6 @@ void SSMprotocol2::resetCUdata()
 	resetCommonCUdata();
 	_has_VINsupport = false;
 	_has_integratedCC = false;
-	_CCCCdefs.clear();
-	_memCCs_supported = false;
 	_CM2addr = MEMORY_ADDRESS_NONE;
 	_CM2value = '\x00';
 }
@@ -191,13 +189,12 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	FBdefsIface->hasIntegratedCC(&_has_integratedCC);
 	FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
 	FBdefsIface->hasSWignition(&_has_SW_ignition);
-	FBdefsIface->diagnosticCodes(&_DTCdefs, &_DTC_fmt_OBD2);
-	FBdefsIface->cruiseControlCancelCodes(&_CCCCdefs, &_memCCs_supported);
+	FBdefsIface->getDCblockData(&_DTCblockData);
 	FBdefsIface->measuringBlocks(&_supportedMBs);
 	FBdefsIface->switches(&_supportedSWs);
 	FBdefsIface->adjustments(&_adjustments);
 	FBdefsIface->actuatorTests(&_actuators);
-	delete FBdefsIface;
+	_SSMdefsIfce = FBdefsIface;
 	// Ensure that ignition switch is ON:
 	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
 	{
@@ -207,6 +204,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 			goto commError;
 	}
 	// Prepare some internal data:
+	determineSupportedDCgroups(_DTCblockData);
 	setupActuatorTestAddrList();
 	return result_success;
 
@@ -236,28 +234,6 @@ bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
 	if (_state == state_needSetup) return false;
 	*CM2sup = (_CM2addr != MEMORY_ADDRESS_NONE);
-	return true;
-}
-
-
-bool SSMprotocol2::getSupportedDCgroups(int *DCgroups)
-{
-	int retDCgroups = 0;
-	if (_state == state_needSetup) return false;
-	if (_DTCdefs.size())
-	{
-		if (_DTC_fmt_OBD2)
-			retDCgroups |= temporaryDTCs_DCgroup | memorizedDTCs_DCgroup;
-		else
-			retDCgroups |= currentDTCs_DCgroup | historicDTCs_DCgroup;
-	}
-	if (_has_integratedCC)
-	{
-		retDCgroups += CClatestCCs_DCgroup;
-		if (_memCCs_supported)
-			retDCgroups |= CCmemorizedCCs_DCgroup;
-	}
-	*DCgroups = retDCgroups;
 	return true;
 }
 
@@ -296,50 +272,54 @@ bool SSMprotocol2::getVIN(QString *VIN)
 bool SSMprotocol2::startDCreading(int DCgroups)
 {
 	std::vector <unsigned int> DCqueryAddrList;
-	unsigned char k = 0;
 	bool started;
+
 	// Check if another communication operation is in progress:
 	if (_state != state_normal) return false;
+
 	// Check argument:
-	if (DCgroups < 1 || DCgroups > 63) return false;
-	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & historicDTCs_DCgroup)) && ((DCgroups & temporaryDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
+	if ((DCgroups & _supportedDCgroups) != DCgroups)
 		return false;
-	if (DCgroups > 15)
-	{
-		if (!_has_integratedCC)
-			return false;
-		if ( (DCgroups > 31) && (!_memCCs_supported) )
-			return false;
-	}
+
 	// Setup diagnostic codes addresses list:
-	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))	// current/temporary DTCs
+	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
 	{
-		if (_CU == CUtype::Engine)
-			DCqueryAddrList.push_back( 0x000061 );
-		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_currentOrTempOrLatest );
-	}
-	if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))	// historic/memorized DTCs
-	{
-		for (k=0; k<_DTCdefs.size(); k++)
-			DCqueryAddrList.push_back( _DTCdefs.at(k).byteAddr_historicOrMemorized );
-	}
-	if (_has_integratedCC)
-	{
-		if (DCgroups & CClatestCCs_DCgroup)	// CC latest cancel codes
+		dc_block_dt dc_block = _DTCblockData.at(b);
+		for (unsigned int a = 0; a < dc_block.addresses.size(); a++)
 		{
-			for (k=0; k<_CCCCdefs.size(); k++)
-				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_currentOrTempOrLatest );
-		}
-		if ((DCgroups & CCmemorizedCCs_DCgroup) && _memCCs_supported)	// CC memorized cancel codes
-		{
-			for (k=0; k<_CCCCdefs.size(); k++)
-				DCqueryAddrList.push_back( _CCCCdefs.at(k).byteAddr_historicOrMemorized );
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::currentOrTempOrLatest)
+			{
+				if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::historicOrMemorized)
+			{
+				if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::CCCCsLatest)
+			{
+				if (DCgroups & CClatestCCs_DCgroup)
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::CCCCsMemorized)
+			{
+				if (DCgroups & CCmemorizedCCs_DCgroup)
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			// else: can not happen
 		}
 	}
+
 	// Check if min. 1 address to read:
-	if ((DCqueryAddrList.size() < 1) || ((DCqueryAddrList.at(0) == 0x000061) && (DCqueryAddrList.size() < 2)))
+	if ((DCqueryAddrList.size() < 1))
 		return false;
+
+	// Add read address for test mode and D-Check status:
+	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+	    && (_CU == CUtype::Engine))
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), 0x000061); // NOTE: must be the first address !
+
 	// Start diagostic codes reading:
 	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
 	if (started)
@@ -355,6 +335,7 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 	}
 	else
 		resetCUdata();
+
 	return started;
 }
 
@@ -810,47 +791,4 @@ bool SSMprotocol2::validateVIN(char VIN[17])
 	}
 	return true;
 }
-
-
-void SSMprotocol2::processDCsRawdata(const std::vector<char>& DCrawdata, int duration_ms)
-{
-	QStringList DCs;
-	QStringList DCdescriptions;
-	QStringList tmpDTCs;
-	QStringList tmpDTCsDescriptions;
-	unsigned int rawDataIndex = 0;
-
-	// Process DTCs raw data:
-	rawDataIndex = processDTCsRawdata(DCrawdata, duration_ms);
-	// Process CCCCs raw data:
-	if (_selectedDCgroups == (_selectedDCgroups | CClatestCCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate latest CC cancel codes:
-		for (unsigned int CCCCdefs_index=0; CCCCdefs_index<_CCCCdefs.size(); CCCCdefs_index++)
-		{
-			evaluateDCdataByte(_CCCCdefs.at(CCCCdefs_index).byteAddr_currentOrTempOrLatest, DCrawdata.at(rawDataIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-			rawDataIndex++;
-		}
-		emit latestCCCCs(DCs, DCdescriptions);
-	}
-	if (_selectedDCgroups == (_selectedDCgroups | CCmemorizedCCs_DCgroup))
-	{
-		DCs.clear();
-		DCdescriptions.clear();
-		// Evaluate memorized CC cancel codes:
-		for (unsigned int CCCCdefs_index=0; CCCCdefs_index<_CCCCdefs.size(); CCCCdefs_index++)
-		{
-			evaluateDCdataByte(_CCCCdefs.at(CCCCdefs_index).byteAddr_historicOrMemorized, DCrawdata.at(rawDataIndex), _CCCCdefs, &tmpDTCs, &tmpDTCsDescriptions);
-			DCs += tmpDTCs;
-			DCdescriptions += tmpDTCsDescriptions;
-			rawDataIndex++;
-		}
-		emit memorizedCCCCs(DCs, DCdescriptions);
-	}
-}
-
 
