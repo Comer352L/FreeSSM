@@ -35,7 +35,7 @@ class dc_addr_dt
 {
 public:
 	enum class Type {currentOrTempOrLatest, historicOrMemorized, CCCCsLatest, CCCCsMemorized};
-	enum class Scaling {bitwise, direct_hex, direct_dec, list};
+	enum class Scaling {bitwise, list};
 	enum class Format {simple, OBD};
 
 	Type type;

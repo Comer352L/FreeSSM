@@ -328,10 +328,6 @@ next_addr_elem:
 					 *       We don't check if a corresponding valid BITFIELD elemement exists.
 					 *       Even if it doesn't exist, we nevertheless want to report active DCs with generic code+title strings.
 					 */
-				else if (attrib_value == "direct_hex")
-					new_addr.scaling = dc_addr_dt::Scaling::direct_hex;
-				else if (attrib_value == "direct_dec")
-					new_addr.scaling = dc_addr_dt::Scaling::direct_dec;
 				else if (attrib_value == "list")
 					new_addr.scaling = dc_addr_dt::Scaling::list;
 					/* NOTE: Attribute "list_id" may or may not be present.
@@ -614,33 +610,14 @@ void SSMLegacyDefinitionsInterface::getDCcontent(unsigned int address, char data
 	if (!scalingAttribStrToScaling(scaling_str, &scaling))
 		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
 
-	// Get dclist_id attribute from address data
-	bool addr_has_DClistID = false;
-	std::string DClist_id_str;
-	addr_has_DClistID = getAttributeStr(DCaddr_elem, "dclist_id", &DClist_id_str);
-
-	// Find DC list element:
-	XMLElement *DClist_elem = NULL;
-	DClist_elem = findDClist(_datacommon_root_element, addr_has_DClistID, DClist_id_str);
-	// NOTE: We do not check if DClist_elem is NULL. If it is, evaluation fcns below will create proper substitute DCs
-
-	if ((scaling == dc_addr_dt::Scaling::direct_hex) || (scaling == dc_addr_dt::Scaling::direct_dec))
+	// Get DC code(s) + title(s):
+	if (scaling == dc_addr_dt::Scaling::bitwise)
 	{
-		QString code;
-		QString title;
-		rawbyteToDirectDC(databyte, scaling, DClist_elem, &code, &title);
-		if (codes != NULL)
-			codes->push_back(code);
-		if (titles != NULL)
-			titles->push_back(title);
-	}
-	else if (scaling == dc_addr_dt::Scaling::bitwise)
-	{
-		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, DClist_elem,	"BITFIELD", "bitfield_id", &SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs, codes, titles);
+		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, "BITFIELD", "bitfield_id", &SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs, codes, titles);
 	}
 	else if (scaling == dc_addr_dt::Scaling::list)
 	{
-		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, DClist_elem,	"LIST", "list_id", &SSMLegacyDefinitionsInterface::rawbyteToListDC, codes, titles);
+		rawbyteToAssignmentListDCs(address, databyte, DCaddr_elem, "LIST", "list_id", &SSMLegacyDefinitionsInterface::rawbyteToListDC, codes, titles);
 	}
 	else
 		return rawbyteToSingleSubstitudeDC (databyte, codes, titles);
@@ -965,41 +942,9 @@ bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement
 }
 
 
-void SSMLegacyDefinitionsInterface::rawbyteToDirectDC(char databyte, dc_addr_dt::Scaling scaling, XMLElement *DClist_elem, QString *code, QString *title)
-{
-	QString code_str;
-	QString title_str;
-	XMLElement *DCdata_elem = NULL;
-	attributeCondition attribCond;
-	std::vector<XMLElement*> title_elements;
-
-	// Set default (substitude) strings:
-	if (scaling == dc_addr_dt::Scaling::direct_hex)
-		code_str = QString::number(static_cast<unsigned char>(databyte), 16);
-	else // direct_dec
-		code_str = QString::number(static_cast<unsigned char>(databyte), 10);
-	title_str = "     ???     ";
-
-	// Find DC data:
-	if (DClist_elem != NULL)
-	{
-		if (getMatchingDCdataElement(DClist_elem, code_str.toStdString(), &DCdata_elem))
-		{
-			// Get title:
-			getDCtitleFromDCdataElement(DCdata_elem, &title_str);
-		}
-	}
-
-	if (code != NULL)
-		*code = code_str;
-	if (title != NULL)
-		*title = title_str;
-}
-
-
-void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem, XMLElement *DClist_elem,
+void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem,
                                                                std::string assignment_elem_name, std::string assignment_elem_id_name,
-                                                               void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, XMLElement*, unsigned int, char, QStringList*, QStringList*),
+                                                               void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, unsigned int, char, QStringList*, QStringList*),
                                                                QStringList *codes, QStringList *titles)
 {
 	// NOTE: assignment_elem_name: BITFIELD or LIST; assignment_elem_id_name: bitfield_id, list_id
@@ -1013,19 +958,19 @@ void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned char add
 
 	// Get DCBLOCK element:
 	if ((DCaddr_elem->Parent() == NULL) || (DCaddr_elem->Parent()->ToElement() == NULL))
-		(this->*rawbyteScalingFcn)(NULL, NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
+		(this->*rawbyteScalingFcn)(NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
 	DCblock_elem = DCaddr_elem->Parent()->ToElement();
 
 	// Get assignment list element:
 	assignment_list_element = getAssignmentListElement(DCblock_elem, assignment_elem_name, addr_has_assignment_id, assignment_list_id_str);
 	if (assignment_list_element == NULL)
-		(this->*rawbyteScalingFcn)(NULL, NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
+		(this->*rawbyteScalingFcn)(NULL, address, databyte, codes, titles); // set codes and titles of active DCs to generic/default strings
 	else
-		(this->*rawbyteScalingFcn)(assignment_list_element, DClist_elem, address, databyte, codes, titles);
+		(this->*rawbyteScalingFcn)(assignment_list_element, address, databyte, codes, titles);
 }
 
 
-void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
 {
 	// NOTE: bitfield_element=NULL and/or DClist_element=NULL can be passed/used to assign default/substitude DC codes and descriptions
 	// NOTE: codes OR titles may be NULL !
@@ -1051,7 +996,7 @@ void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_ele
 	}
 
 	// Evaluate all "DC" sub-elements and assign DC contents:
-	if ((bitfield_element != NULL) && (DClist_element != NULL))
+	if (bitfield_element != NULL)
 	{
 		std::vector<XMLElement*> DC_elements;
 		DC_elements = getAllMatchingChildElements(bitfield_element, "DC");
@@ -1063,11 +1008,11 @@ void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_ele
 
 			// --- Get DC data (id and assigned bit) ---
 			// Get ID:
-			str = DC_elements.at(d)->Attribute("code");
+			str = DC_elements.at(d)->Attribute("id");
 			if (str == NULL)
 				continue;
-			std::string code_attr_str = std::string(str);
-			if (!code_attr_str.size())
+			std::string id_attr_str = std::string(str);
+			if (!id_attr_str.size())
 				continue;
 			// Get bit address:
 			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "BIT");
@@ -1097,8 +1042,14 @@ void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_ele
 			// --- Get DC content (code and title) from common data ---
 			// Find DC data:
 			XMLElement *DCdata_element = NULL;
-			if (!getMatchingDCdataElement(DClist_element, code_attr_str, &DCdata_element))
+			attributeCondition attribCond;
+			attribCond.name = "id";
+			attribCond.value = id_attr_str;
+			attribCond.condition = attributeCondition::equal;
+			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "DC", std::vector<attributeCondition>(1, attribCond));
+			if (tmp_elements.size() != 1)
 				continue;
+			DCdata_element = tmp_elements.at(0);
 			// Mark bit as assigned:
 			assignedBits |= static_cast<char>(1 << (bitaddr - 1));
 			// Get code:
@@ -1130,7 +1081,7 @@ void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_ele
 }
 
 
-void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
+void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles)
 {
 	// NOTE: list_element=NULL and/or DClist_element=NULL can be passed/used to assign default/substitude DC codes and descriptions
 	// NOTE: codes OR titles may be NULL !
@@ -1153,7 +1104,7 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, XM
 	local_titles.push_back(title);
 
 	// Evaluate all "DC" sub-elements and assign DC contents:
-	if ((list_element != NULL) && (DClist_element != NULL))
+	if (list_element != NULL)
 	{
 		std::vector<XMLElement*> DC_elements;
 		DC_elements = getAllMatchingChildElements(list_element, "DC");
@@ -1166,14 +1117,14 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, XM
 
 			// --- Get DC data (id and assigned bit) ---
 			// Get ID:
-			str = DC_elements.at(d)->Attribute("code");
+			str = DC_elements.at(d)->Attribute("id");
 			if (str == NULL)
 				continue;
-			std::string code_attr_str = std::string(str);
-			if (!code_attr_str.size())
+			std::string id_attr_str = std::string(str);
+			if (!id_attr_str.size())
 				continue;
 			// Get list index:
-			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "INDEX");
+			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "VALUE");
 			if (tmp_elements.size() != 1)
 				continue;
 			str = tmp_elements.at(0)->GetText();
@@ -1198,8 +1149,14 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, XM
 			// --- Get DC content (code and title) from common data ---
 			// Find DC data:
 			XMLElement *DCdata_element = NULL;
-			if (!getMatchingDCdataElement(DClist_element, code_attr_str, &DCdata_element))
+			attributeCondition attribCond;
+			attribCond.name = "id";
+			attribCond.value = id_attr_str;
+			attribCond.condition = attributeCondition::equal;
+			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "DC", std::vector<attributeCondition>(1, attribCond));
+			if (tmp_elements.size() != 1)
 				continue;
+			DCdata_element = tmp_elements.at(0);
 			// Mark DC as assigned:
 			DC_assigned = true;
 			// Get code:
@@ -1317,48 +1274,6 @@ XMLElement *SSMLegacyDefinitionsInterface::getAssignmentListElement(XMLElement *
 }
 
 
-XMLElement *SSMLegacyDefinitionsInterface::findDClist(XMLElement *parent_elem, bool addr_has_DClistID, std::string addr_dclist_id_value)
-{
-	std::vector<XMLElement*> DClist_elements;
-	XMLElement *DClist_element = NULL;
-
-	DClist_elements = getAllMatchingChildElements(parent_elem, "DCLIST");
-	if (DClist_elements.size() < 1)
-		return NULL;
-	for (unsigned int dcl_idx = 0; dcl_idx < DClist_elements.size(); dcl_idx++)
-	{
-		XMLElement *current_DClist_element = NULL;
-		const XMLAttribute *pAttrib_DClistID = NULL;
-		bool DClist_has_id = false;
-		std::string DClistID_value;
-
-		current_DClist_element = DClist_elements.at(dcl_idx);
-		pAttrib_DClistID = current_DClist_element->FindAttribute("id");
-		DClist_has_id = (pAttrib_DClistID != NULL);
-		if (DClist_has_id)
-			DClistID_value = pAttrib_DClistID->Value();
-
-		// Match DCLIST element with dclist_ID from ADDRESS element:
-		if (DClist_has_id == addr_has_DClistID)
-		{
-			// ADDR and DCLIST both have an id (or no id)
-			if (!DClist_has_id || (DClist_has_id && (addr_dclist_id_value == DClistID_value))) // list IDs match
-			{
-				if (DClist_element == NULL)
-					DClist_element = current_DClist_element;
-				else // invalid definitions, duplicate matching DCLIST
-					return NULL;
-			}
-		}
-		else // invalid defintions
-			return NULL;
-		// NOTE we continue even if we've already found a matching DCLIST, because we want to detect invalid definitions
-	}
-
-	return DClist_element;
-}
-
-
 bool SSMLegacyDefinitionsInterface::getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element)
 {
 	std::vector<XMLElement*> dc_elements;
@@ -1422,10 +1337,6 @@ bool SSMLegacyDefinitionsInterface::scalingAttribStrToScaling(std::string scalin
 {
 	if (scaling_str == "bitwise")
 		*scaling = dc_addr_dt::Scaling::bitwise;
-	else if (scaling_str == "direct_hex")
-		*scaling = dc_addr_dt::Scaling::direct_hex;
-	else if (scaling_str == "direct_dec")
-		*scaling = dc_addr_dt::Scaling::direct_dec;
 	else if (scaling_str == "list")
 		*scaling = dc_addr_dt::Scaling::list;
 	else

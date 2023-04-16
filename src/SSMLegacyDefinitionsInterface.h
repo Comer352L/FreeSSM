@@ -29,8 +29,8 @@
 #include "tinyxml2/tinyxml2.h"
 
 
-#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.3.2"
-#define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.3.0"
+#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.4.0"
+#define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.4.0"
 
 
 using namespace tinyxml2;
@@ -94,17 +94,15 @@ private:
 	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
 
-	void rawbyteToDirectDC(char databyte, dc_addr_dt::Scaling scaling, XMLElement *DClist_elem, QString *code, QString *title);
-	void rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem, XMLElement *DClist_elem,
+	void rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem,
 	                                std::string assignment_elem_name, std::string assignment_elem_id_name,
-                                        void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, XMLElement*, unsigned int, char, QStringList*, QStringList*),
+                                        void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, unsigned int, char, QStringList*, QStringList*),
                                         QStringList *codes, QStringList *titles);
-	void rawbyteToBitwiseDCs(XMLElement *bitfield_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
-	void rawbyteToListDC(XMLElement *list_element, XMLElement *DClist_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
+	void rawbyteToBitwiseDCs(XMLElement *bitfield_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
+	void rawbyteToListDC(XMLElement *list_element, unsigned int address, char databyte, QStringList *codes, QStringList *titles);
 
 	XMLElement *getDCaddressElementForAddress(unsigned int address);
 	XMLElement *getAssignmentListElement(XMLElement *DCblock_elem, std::string assignmentList_name, bool addr_has_assignmentListID, std::string addr_assignmentListID_value);
-	XMLElement *findDClist(XMLElement *parent_elem, bool addr_has_DClistID, std::string addr_dclist_id_value);
 	bool getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element);
 	bool getDCcodeFromDCdataElement(XMLElement* DCdata_element, QString *code);
 	bool getDCtitleFromDCdataElement(XMLElement* DCdata_element, QString *title);
