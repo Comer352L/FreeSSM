@@ -1121,7 +1121,7 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, un
 		{
 			const char *str = NULL;
 			std::vector<XMLElement*> tmp_elements;
-			unsigned long int index = 0;
+			unsigned long int value = 0;
 
 			// --- Get DC data (id and assigned bit) ---
 			// Get ID:
@@ -1131,18 +1131,18 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, un
 			std::string id_attr_str = std::string(str);
 			if (!id_attr_str.size())
 				continue;
-			// Get list index:
+			// Get list value:
 			tmp_elements = getAllMatchingChildElements(DC_elements.at(d), "VALUE");
 			if (tmp_elements.size() != 1)
 				continue;
 			str = tmp_elements.at(0)->GetText();
 			if (str == NULL)
 				continue;
-			index = strtoul( str, NULL, 0 );
-			if (index > 255)
+			value = strtoul( str, NULL, 0 );
+			if (value > 255)
 				continue;
-			// Check if list databyte matches the index:
-			if (index != static_cast<unsigned char>(databyte))
+			// Check if list databyte matches the value:
+			if (value != static_cast<unsigned char>(databyte))
 				continue;
 			// Search for duplicate DCs:
 			if (DC_assigned)
