@@ -9,7 +9,7 @@
 
 
 //-->
-<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.3.0">
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.4.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0x00">
 		<ID_BYTE2 value="0x17">
@@ -17,6 +17,7 @@
 				<YEAR>1990</YEAR>
 				<SYSTEMDESCRIPTION>AUTO AIR</SYSTEMDESCRIPTION>
 				<MODELNAME>Legacy</MODELNAME><!-- NOTE not everything implemented yet //-->
+
 				<MB id="MB_Tset">
 					<ADDRESS>0x0017</ADDRESS>
 				</MB>
@@ -60,6 +61,7 @@
 		<ID_BYTE2 value="0x89">
 			<YEAR>1990</YEAR>
 			<SYSTEMDESCRIPTION>AUTO AIR</SYSTEMDESCRIPTION>
+
 			<ID_BYTE3 value_start="0x00" value_end="0xff">
 				<MODELNAME>Legacy</MODELNAME><!-- NOTE not everything implemented yet //-->
 				<MB id="MB_To">
@@ -106,7 +108,8 @@
 				</MB>
 
 				<DCBLOCK>
-					<ADDRESS type="currentOrTempOrLatest" scaling="direct_hex">0x000F</ADDRESS>
+					<ADDRESS type="currentOrTempOrLatest" scaling="list">0x000F</ADDRESS>
+					<!-- TODO: add DC LIST //-->
 				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
@@ -314,8 +317,6 @@
 		<TITLE lang="tr">VSP</TITLE>
 	</MB>
 
-	<DCLIST>
-		<!-- TODO //-->
-	</DCLIST>
+	<!-- TODO: add DCs //-->
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
