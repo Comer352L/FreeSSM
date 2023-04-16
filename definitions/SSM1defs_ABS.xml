@@ -9,7 +9,7 @@
 
 
 //-->
-<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.3.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0x76">
 		<YEAR>SEP 1997</YEAR><!-- TODO on Impreza: "1996" //-->
@@ -68,8 +68,7 @@
 					<BIT>4</BIT>
 				</SW>
 			</SWBLOCK>
-			
-			
+
 			<MODEL>Legacy</MODEL>
 			<ID_BYTE3 value_start="0x20" value_end="0x2f">
 				<SYSTEMDESCRIPTION>FWD MT</SYSTEMDESCRIPTION>
@@ -135,7 +134,7 @@
 		<TITLE lang="de">GSENS</TITLE>
 		<TITLE lang="tr">G-Sensörü çıkış voltajı</TITLE>
 	</MB>
-	
+
 	<SW id="SW_B1">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
