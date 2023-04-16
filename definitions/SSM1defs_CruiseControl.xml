@@ -9,7 +9,7 @@
 
 
 //-->
-<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.3.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0x74">
 		<ID_BYTE2 value="0xB4">
@@ -42,13 +42,10 @@
 						<BIT>3</BIT>
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x009D</ADDRESS>
-					<DTC id="DTC_0">
-						<BIT>0</BIT><!-- TODO Hex value necessary //-->
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="direct_hex">0x009D</ADDRESS>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -71,7 +68,7 @@
 		<TITLE lang="de">gespeicherte Geschwindigkeit</TITLE>
 		<TITLE lang="tr">Hafızadaki sabit hız</TITLE>
 	</MB>
-	
+
 	<SW id="SW_SE">
 		<UNIT lang="en">Off/On</UNIT>
 		<UNIT lang="de">Aus/Ein</UNIT>
@@ -112,5 +109,9 @@
 		<TITLE lang="de">Sperrschalter (AT)</TITLE>
 		<TITLE lang="tr">Inhibitör düğme (AT)</TITLE>
 	</SW>
+
+	<DCLIST>
+		<!-- TODO //-->
+	</DCLIST>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
