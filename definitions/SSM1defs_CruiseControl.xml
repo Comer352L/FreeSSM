@@ -18,6 +18,7 @@
 			<ID_BYTE3 value_start="0x00" value_end="0xff">
 				<YEAR>1996</YEAR><!-- lt. Kassette //-->
 				<SYSTEMDESCRIPTION>YEAR 1995</SYSTEMDESCRIPTION>
+
 				<MB id="MB_VSP">
 					<ADDRESS>0x00A6</ADDRESS>
 				</MB>
@@ -48,49 +49,49 @@
 					<ADDRESS type="currentOrTempOrLatest" scaling="list">0x009D</ADDRESS>
 					<LIST>
 						<DC id="10">
-							<VALUE>16</VALUE>
+							<VALUE>0x10</VALUE>
 						</DC>
 						<DC id="11">
-							<VALUE>17</VALUE>
+							<VALUE>0x11</VALUE>
 						</DC>
 						<DC id="13">
-							<VALUE>19</VALUE>
+							<VALUE>0x13</VALUE>
 						</DC>
 						<DC id="14">
-							<VALUE>20</VALUE>
+							<VALUE>0x14</VALUE>
 						</DC>
 						<DC id="22">
-							<VALUE>21</VALUE>
+							<VALUE>0x15</VALUE>
 						</DC>
 						<DC id="23">
-							<VALUE>33</VALUE>
+							<VALUE>0x21</VALUE>
 						</DC>
 						<DC id="21">
-							<VALUE>34</VALUE>
+							<VALUE>0x22</VALUE>
 						</DC>
 						<DC id="24">
-							<VALUE>36</VALUE>
+							<VALUE>0x24</VALUE>
 						</DC>
 						<DC id="24">
-							<VALUE>37</VALUE>
+							<VALUE>0x25</VALUE>
 						</DC>
 						<DC id="12">
-							<VALUE>38</VALUE>
+							<VALUE>0x26</VALUE>
 						</DC>
 						<DC id="15">
-							<VALUE>39</VALUE>
+							<VALUE>0x27</VALUE>
 						</DC>
 						<DC id="31">
-							<VALUE>49</VALUE>
+							<VALUE>0x31</VALUE>
 						</DC>
 						<DC id="32">
-							<VALUE>50</VALUE>
+							<VALUE>0x32</VALUE>
 						</DC>
 						<DC id="33">
-							<VALUE>51</VALUE>
+							<VALUE>0x33</VALUE>
 						</DC>
 						<DC id="FF">
-							<VALUE>255</VALUE>
+							<VALUE>0xFF</VALUE>
 						</DC>
 					</LIST>
 				</DCBLOCK>
@@ -129,34 +130,37 @@
 					<ADDRESS type="currentOrTempOrLatest" scaling="list">0x007A</ADDRESS>
 					<LIST>
 						<DC id="10">
-							<VALUE>16</VALUE>
+							<VALUE>0x10</VALUE>
 						</DC>
 						<DC id="11_B">
-							<VALUE>17</VALUE>
+							<VALUE>0x11</VALUE>
 						</DC>
 						<DC id="12_B">
-							<VALUE>18</VALUE>
+							<VALUE>0x12</VALUE>
 						</DC>
 						<DC id="13_B">
-							<VALUE>19</VALUE>
+							<VALUE>0x13</VALUE>
 						</DC>
 						<DC id="14_B">
-							<VALUE>20</VALUE>
+							<VALUE>0x14</VALUE>
 						</DC>
 						<DC id="21_B">
-							<VALUE>33</VALUE>
+							<VALUE>0x21</VALUE>
 						</DC>
 						<DC id="22_B">
-							<VALUE>34</VALUE>
+							<VALUE>0x22</VALUE>
 						</DC>
 						<DC id="23_B">
-							<VALUE>35</VALUE>
+							<VALUE>0x23</VALUE>
 						</DC>
 						<DC id="24_B">
-							<VALUE>36</VALUE>
+							<VALUE>0x24</VALUE>
 						</DC>
 						<DC id="25">
-							<VALUE>37</VALUE>
+							<VALUE>0x25</VALUE>
+						</DC>
+						<DC id="FF">
+							<VALUE>0xFF</VALUE>
 						</DC>
 					</LIST>
 				</DCBLOCK>
