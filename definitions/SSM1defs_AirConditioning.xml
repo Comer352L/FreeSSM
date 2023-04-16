@@ -9,7 +9,7 @@
 
 
 //-->
-<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
+<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.3.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0x00">
 		<ID_BYTE2 value="0x17">
@@ -104,40 +104,10 @@
 				<MB id="MB_VSP">
 					<ADDRESS>0x000B</ADDRESS>
 				</MB>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x000F</ADDRESS>
-					<DTC id="DTC_1">
-						<BIT></BIT><!-- TODO Hex value necessary //-->
-					</DTC>
-					<DTC id="DTC_2">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_3">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_4">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_5">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_6">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_7">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_8">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_9">
-						<BIT></BIT>
-					</DTC>
-					<DTC id="DTC_10">
-						<BIT></BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="direct_hex">0x000F</ADDRESS>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -343,66 +313,9 @@
 		<TITLE lang="de">VSP</TITLE>
 		<TITLE lang="tr">VSP</TITLE>
 	</MB>
-	
-	<DTC id="DTC_1">
-		<CODE>1</CODE>
-		<TITLE lang="en">1</TITLE>
-		<TITLE lang="de">1</TITLE>
-		<TITLE lang="tr">1</TITLE>
-	</DTC>
-	<DTC id="DTC_2">
-		<CODE>2</CODE>
-		<TITLE lang="en">2</TITLE>
-		<TITLE lang="de">2</TITLE>
-		<TITLE lang="tr">2</TITLE>
-	</DTC>
-	<DTC id="DTC_3">
-		<CODE>3</CODE>
-		<TITLE lang="en">3</TITLE>
-		<TITLE lang="de">3</TITLE>
-		<TITLE lang="tr">3</TITLE>
-	</DTC>
-	<DTC id="DTC_4">
-		<CODE>4</CODE>
-		<TITLE lang="en">4</TITLE>
-		<TITLE lang="de">4</TITLE>
-		<TITLE lang="tr">4</TITLE>
-	</DTC>
-	<DTC id="DTC_5">
-		<CODE>5</CODE>
-		<TITLE lang="en">5</TITLE>
-		<TITLE lang="de">5</TITLE>
-		<TITLE lang="tr">5</TITLE>
-	</DTC>
-	<DTC id="DTC_6">
-		<CODE>6</CODE>
-		<TITLE lang="en">6</TITLE>
-		<TITLE lang="de">6</TITLE>
-		<TITLE lang="tr">6</TITLE>
-	</DTC>
-	<DTC id="DTC_7">
-		<CODE>7</CODE>
-		<TITLE lang="en">7</TITLE>
-		<TITLE lang="de">7</TITLE>
-		<TITLE lang="tr">7</TITLE>
-	</DTC>
-	<DTC id="DTC_8">
-		<CODE>8</CODE>
-		<TITLE lang="en">8</TITLE>
-		<TITLE lang="de">8</TITLE>
-		<TITLE lang="tr">8</TITLE>
-	</DTC>
-	<DTC id="DTC_9">
-		<CODE>9</CODE>
-		<TITLE lang="en">9</TITLE>
-		<TITLE lang="de">9</TITLE>
-		<TITLE lang="tr">9</TITLE>
-	</DTC>
-	<DTC id="DTC_10">
-		<CODE>10</CODE>
-		<TITLE lang="en">10</TITLE>
-		<TITLE lang="de">10</TITLE>
-		<TITLE lang="tr">10</TITLE>
-	</DTC>
+
+	<DCLIST>
+		<!-- TODO //-->
+	</DCLIST>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
