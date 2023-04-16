@@ -1290,38 +1290,6 @@ XMLElement *SSMLegacyDefinitionsInterface::getAssignmentListElement(XMLElement *
 }
 
 
-bool SSMLegacyDefinitionsInterface::getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element)
-{
-	std::vector<XMLElement*> dc_elements;
-	std::vector<XMLElement*> code_elements;
-	const char *str = NULL;
-
-	*DCdata_element = NULL;
-	dc_elements = getAllMatchingChildElements(parent_element, "DC");
-	if (dc_elements.size() < 1)
-		return false;
-	for (unsigned e = 0; e < dc_elements.size(); e++)
-	{
-		// Get code:
-		code_elements = getAllMatchingChildElements(dc_elements.at(e), "CODE");
-		if (code_elements.size() != 1)
-			continue;
-		str = code_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		std::string elem_code = std::string(str);
-		// Check if code matches:
-		if (elem_code == code)
-		{
-			*DCdata_element = dc_elements.at(e);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
 bool SSMLegacyDefinitionsInterface::getDCcodeFromDCdataElement(XMLElement* DCdata_element, QString *code)
 {
 	std::vector<XMLElement*> tmp_elements;

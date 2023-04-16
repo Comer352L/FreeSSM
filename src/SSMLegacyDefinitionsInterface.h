@@ -103,7 +103,6 @@ private:
 
 	XMLElement *getDCaddressElementForAddress(unsigned int address);
 	XMLElement *getAssignmentListElement(XMLElement *DCblock_elem, std::string assignmentList_name, bool addr_has_assignmentListID, std::string addr_assignmentListID_value);
-	bool getMatchingDCdataElement(XMLElement *parent_element, std::string code, XMLElement **DCdata_element);
 	bool getDCcodeFromDCdataElement(XMLElement* DCdata_element, QString *code);
 	bool getDCtitleFromDCdataElement(XMLElement* DCdata_element, QString *title);
 
