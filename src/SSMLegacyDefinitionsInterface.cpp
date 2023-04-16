@@ -942,7 +942,7 @@ bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement
 }
 
 
-void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem,
+void SSMLegacyDefinitionsInterface::rawbyteToAssignmentListDCs(unsigned int address, char databyte, XMLElement *DCaddr_elem,
                                                                std::string assignment_elem_name, std::string assignment_elem_id_name,
                                                                void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, unsigned int, char, QStringList*, QStringList*),
                                                                QStringList *codes, QStringList *titles)

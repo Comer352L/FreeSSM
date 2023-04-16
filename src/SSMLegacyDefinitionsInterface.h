@@ -94,7 +94,7 @@ private:
 	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
 
-	void rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem,
+	void rawbyteToAssignmentListDCs(unsigned int address, char databyte, XMLElement *DCaddr_elem,
 	                                std::string assignment_elem_name, std::string assignment_elem_id_name,
                                         void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, unsigned int, char, QStringList*, QStringList*),
                                         QStringList *codes, QStringList *titles);
