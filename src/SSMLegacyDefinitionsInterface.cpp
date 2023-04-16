@@ -146,46 +146,29 @@ bool SSMLegacyDefinitionsInterface::getVersionInfos(std::string *defs_version, s
 
 bool SSMLegacyDefinitionsInterface::selectID(const std::vector<char>& id)
 {
-	std::vector<XMLElement*> elements;
-	std::vector<attributeCondition> attribConditions;
-	attributeCondition attribCondition;
-	XMLElement *defs_for_id_b1_element;
-	XMLElement *defs_for_id_b2_element;
+	XMLElement *defs_for_id_b1_element = NULL;
+	XMLElement *defs_for_id_b2_element = NULL;
+	XMLElement *defs_for_id_b3_element = NULL;
 
 	if (!_defs_root_element)
 		return false;
-	attribCondition.name = "value";
-	attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(0), 1);
-	attribCondition.condition = attributeCondition::equal;
-	elements = getAllMatchingChildElements(_defs_root_element, "ID_BYTE1", std::vector<attributeCondition>(1, attribCondition));
-	if (elements.size() == 1)
-	{
-		defs_for_id_b1_element = elements.at(0);
-		attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(1), 1);
-		elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE2", std::vector<attributeCondition>(1, attribCondition));
-		if (elements.size() == 1)
-		{
-			defs_for_id_b2_element = elements.at(0);
-			attribCondition.name = "value_start";
-			attribCondition.value = "0x" + libFSSM::StrToHexstr(&id.at(2), 1);
-			attribCondition.condition = attributeCondition::equalOrSmaller;
-			attribConditions.push_back(attribCondition);
-			attribCondition.name = "value_end";
-			attribCondition.condition = attributeCondition::equalOrLarger;
-			attribConditions.push_back(attribCondition);
-			elements = getAllMatchingChildElements(elements.at(0), "ID_BYTE3", attribConditions);
-			if (elements.size() == 1)
-			{
-				_ssmCUdata.SYS_ID = id;
-				_id_set = true;
-				_defs_for_id_b1_element = defs_for_id_b1_element;
-				_defs_for_id_b2_element = defs_for_id_b2_element;
-				_defs_for_id_b3_element = elements.at(0);
-				return true;
-			}
-		}
-	}
-	return false;
+
+	defs_for_id_b1_element = SSMLegacyDefinitionsInterface::searchForMatchingIDelement(_defs_root_element, 1, id.at(0));
+	if (defs_for_id_b1_element == NULL)
+		return false;
+	defs_for_id_b2_element = SSMLegacyDefinitionsInterface::searchForMatchingIDelement(defs_for_id_b1_element, 2, id.at(1));
+	if (defs_for_id_b2_element == NULL)
+		return false;
+	defs_for_id_b3_element = SSMLegacyDefinitionsInterface::searchForMatchingIDelement(defs_for_id_b2_element, 3, id.at(2));
+	if (defs_for_id_b3_element == NULL)
+		return false;
+
+	_ssmCUdata.SYS_ID = id;
+	_defs_for_id_b1_element = defs_for_id_b1_element;
+	_defs_for_id_b2_element = defs_for_id_b2_element;
+	_defs_for_id_b3_element = defs_for_id_b3_element;
+	_id_set = true;
+	return true;
 }
 
 
@@ -951,6 +934,61 @@ bool SSMLegacyDefinitionsInterface::versionStrToVersionNum(std::string version_s
 	*version_minor = strtoul(version_str_minor.data(), NULL, 0);
 	*version_bugfix = strtoul(version_str_bugfix.data(), NULL, 0);
 	return true;
+}
+
+
+XMLElement* SSMLegacyDefinitionsInterface::searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value)
+{
+	std::string IDelement_name;
+	attributeCondition attribCondition;
+	std::vector<attributeCondition> attribConditions;
+	std::vector<XMLElement*> value_elements;
+	std::vector<XMLElement*> value_range_elements;
+
+	IDelement_name = "ID_BYTE" + std::to_string(IDbyte_number);
+
+	// Search for elements with attribute "value":
+	attribCondition.name = "value";
+	attribCondition.value = "0x" + libFSSM::StrToHexstr(&IDbyte_value, 1);
+	attribCondition.condition = attributeCondition::equal;
+	value_elements = getAllMatchingChildElements(parentElement, IDelement_name, std::vector<attributeCondition>(1, attribCondition));
+	if (value_elements.size() > 1)
+		return NULL;
+	else if (value_elements.size() == 1)
+	{
+		// Check if matching element it also contains value_start and/or value_end attributes:
+		if ((value_elements.at(0)->FindAttribute("value_start") != NULL) || (value_elements.at(0)->FindAttribute("value_end") != NULL))
+			return NULL;
+	}
+
+	// Search for elements with attributes "value_start" AND "value_range":
+	attribConditions.clear();
+	attribCondition.name = "value_start";
+	attribCondition.value = "0x" + libFSSM::StrToHexstr(&IDbyte_value, 1);
+	attribCondition.condition = attributeCondition::equalOrSmaller;
+	attribConditions.push_back(attribCondition);
+	attribCondition.name = "value_end";
+	attribCondition.condition = attributeCondition::equalOrLarger;
+	attribConditions.push_back(attribCondition);
+	value_range_elements = getAllMatchingChildElements(parentElement, IDelement_name, attribConditions);
+	if (value_range_elements.size() > 1)
+		return NULL;
+	else if (value_range_elements.size() == 1)
+	{
+		// Check if matching element it also contains value attribute:
+		if (value_range_elements.at(0)->FindAttribute("value") != NULL)
+			return NULL;
+	}
+
+	// Check if we have separate matching elements (1 element matching with value and 1 element matching with value_start/value_end):
+	if (value_elements.size() == value_range_elements.size())
+		return NULL;
+
+	// Return matching element:
+	if (value_elements.size())
+		return value_elements.at(0);
+	else
+		return value_range_elements.at(0);
 }
 
 

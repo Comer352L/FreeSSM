@@ -29,7 +29,7 @@
 #include "tinyxml2/tinyxml2.h"
 
 
-#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.3.0"
+#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.3.1"
 #define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.3.0"
 
 
@@ -90,6 +90,8 @@ private:
 
 	bool checkDefsFormatVersion(std::string version_str);
 	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);
+
+	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
 
 	void rawbyteToDirectDC(char databyte, dc_addr_dt::Scaling scaling, XMLElement *DClist_elem, QString *code, QString *title);
 	void rawbyteToAssignmentListDCs(unsigned char address, char databyte, XMLElement *DCaddr_elem, XMLElement *DClist_elem,
