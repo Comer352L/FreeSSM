@@ -1052,6 +1052,14 @@ void SSMLegacyDefinitionsInterface::rawbyteToBitwiseDCs(XMLElement *bitfield_ele
 			DCdata_element = tmp_elements.at(0);
 			// Mark bit as assigned:
 			assignedBits |= static_cast<char>(1 << (bitaddr - 1));
+			// Check if DC is supposed to be ignored:
+			tmp_elements = getAllMatchingChildElements(DCdata_element, "IGNORE");
+			if (tmp_elements.size() > 0)
+			{
+				local_codes.replace(bitaddr - 1, "");
+				local_titles.replace(bitaddr - 1, "");
+				continue;
+			}
 			// Get code:
 			QString code;
 			if (getDCcodeFromDCdataElement(DCdata_element, &code))
@@ -1159,6 +1167,14 @@ void SSMLegacyDefinitionsInterface::rawbyteToListDC(XMLElement *list_element, un
 			DCdata_element = tmp_elements.at(0);
 			// Mark DC as assigned:
 			DC_assigned = true;
+			// Check if DC is supposed to be ignored:
+			tmp_elements = getAllMatchingChildElements(DCdata_element, "IGNORE");
+			if (tmp_elements.size() > 0)
+			{
+				local_codes.clear();
+				local_titles.clear();
+				continue;
+			}
 			// Get code:
 			QString code;
 			if (getDCcodeFromDCdataElement(DCdata_element, &code))
