@@ -8,11 +8,12 @@
 	0.1.1  First example version for testing:
 		- MPI87.5+XT, missing: TIM & O2 as switch, special routines needed
 		- SVX'92, missing: clean DTCs complete, "IN PROCESS" switch
-	0.1.2  - Additional RomIDs 723420, 7234A0, 733420, 7334A0 Legacy Turbo (incomplete)
+	0.1.2  Additional RomIDs 723420, 7234A0, 733420, 7334A0 Legacy Turbo (incomplete)
+	0.2.0  Conversion to format version 0.3.0
 
 
 //-->
-<FSSM_SSM1_DEFINITIONS version="0.1.1" format_version="0.2.0">
+<FSSM_SSM1_DEFINITIONS version="0.2.0" format_version="0.3.0">
 <DEFINITIONS>
 	<ID_BYTE1 value="0xBE">
 		<ID_BYTE2 value="0x00">
@@ -60,7 +61,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -100,67 +101,73 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -210,7 +217,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -250,67 +257,73 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 		<ID_BYTE2 value="0x14">
@@ -355,7 +368,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -398,64 +411,70 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_26">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23_QA">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="26">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 		<ID_BYTE2 value="0x16">
@@ -463,7 +482,7 @@
 			<ID_BYTE3 value_start="0x00" value_end="0xFF">
 				<YEAR>1988-89</YEAR>
 				<SYSTEMDESCRIPTION>YEAR 1988-89</SYSTEMDESCRIPTION>
-				
+
 				<MB id="MB_VSP">
 					<ADDRESS>0x091B</ADDRESS>
 				</MB>
@@ -536,70 +555,73 @@
 						<BIT></BIT><!-- TODO CHECK //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0003</ADDRESS>
-					<ADDRESS type="historic">0x0015</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_XT6">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_XT6">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0004</ADDRESS>
-					<ADDRESS type="historic">0x0016</ADDRESS>
-					<DTC id="DTC_25_XT6">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_24">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0005</ADDRESS>
-					<ADDRESS type="historic">0x0017</ADDRESS>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="2">0x0003</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="2">0x0015</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="2">0x0004</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="2">0x0016</ADDRESS>
+					<BITFIELD>
+						<DC code="25">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="2">0x0005</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="2">0x0017</ADDRESS>
+					<BITFIELD>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="52">
+							<BIT>4</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -609,7 +631,7 @@
 			<ID_BYTE3 value_start="0x00" value_end="0xFF">
 				<YEAR>1989</YEAR>
 				<SYSTEMDESCRIPTION>YEAR 1989</SYSTEMDESCRIPTION>
-				
+
 				<MB id="MB_VSP">
 					<ADDRESS>0x091B</ADDRESS>
 				</MB>
@@ -646,7 +668,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -689,64 +711,70 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_26">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="26">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -754,6 +782,7 @@
 		<YEAR>1989</YEAR>
 		<SYSTEMDESCRIPTION>YEAR 1989</SYSTEMDESCRIPTION>
 		<MODELNAME>L series and XT</MODELNAME>
+
 		<ID_BYTE2 value="0x13">
 			<ID_BYTE3 value_start="0x00" value_end="0xFF">
 				<MB id="MB_VSP">
@@ -795,7 +824,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -835,67 +864,73 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 		<ID_BYTE2 value="0x15">
@@ -936,7 +971,7 @@
 				<MB id="MB_FPDY_Lseries">
 					<ADDRESS>0x0916</ADDRESS>
 				</MB>
-				
+
 				<SWBLOCK>
 					<ADDRESS>0x091A</ADDRESS>
 					<SW id="SW_FP">
@@ -979,64 +1014,70 @@
 						<BIT>5</BIT><!-- invers //-->
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B86</ADDRESS>
-					<ADDRESS type="historic">0x0B82</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CRANK">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_14_Lseries">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_15_Lseries">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B87</ADDRESS>
-					<ADDRESS type="historic">0x0B83</ADDRESS>
-					<DTC id="DTC_26">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_34">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_41_Lseries">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x0B88</ADDRESS>
-					<ADDRESS type="historic">0x0B84</ADDRESS>
-					<DTC id="DTC_44">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B86</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B82</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B87</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B83</ADDRESS>
+					<BITFIELD>
+						<DC code="26">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="34">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="1">0x0B88</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="1">0x0B84</ADDRESS>
+					<BITFIELD>
+						<DC code="44">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -1045,10 +1086,12 @@
 		<ID_BYTE2 value="0x25">
 			<SYSTEMDESCRIPTION>3.3 MPFI</SYSTEMDESCRIPTION>
 			<MODEL>SVX</MODEL>
+
 			<CLEARMEMORY>
 				<ADDRESS>0x1496</ADDRESS><!-- TODO 0x1497 must also be cleaned //-->
 				<VALUE>0x0000</VALUE>
 			</CLEARMEMORY>
+
 			<ID_BYTE3 value_start="0x10" value_end="0x1F">
 				<MB id="MB_VB">
 					<ADDRESS>0x102F</ADDRESS>
@@ -1182,94 +1225,103 @@
 						<BIT>3</BIT>
 					</SW>
 				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1026</ADDRESS>
-					<ADDRESS type="historic">0x12B9</ADDRESS>
-					<DTC id="DTC_11_SVX">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22_SVX">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32_SVX">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1027</ADDRESS>
-					<ADDRESS type="historic">0x12BA</ADDRESS>
-					<DTC id="DTC_24">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_28_SVX">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_37">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_41">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1028</ADDRESS>
-					<ADDRESS type="historic">0x12BB</ADDRESS>
-					<DTC id="DTC_14">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_18">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_19">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1029</ADDRESS>
-					<ADDRESS type="historic">0x12BC</ADDRESS>
-					<DTC id="DTC_29">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_38">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1026</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12B9</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1027</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BA</ADDRESS>
+					<BITFIELD>
+						<DC code="28">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="37">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1028</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BB</ADDRESS>
+					<BITFIELD>
+						<DC code="18">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="52">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="19">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="17">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1029</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12Bc</ADDRESS>
+					<BITFIELD>
+						<DC code="38">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="29">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 			<ID_BYTE3 value_start="0x20" value_end="0x2F">
 				<MB id="MB_VB">
@@ -1335,6 +1387,7 @@
 				<MB id="MB_BARO.P_SVX">
 					<ADDRESS>0x125F</ADDRESS>
 				</MB>
+
 				<SWBLOCK>
 					<ADDRESS>0x105A</ADDRESS>
 					<SW id="SW_IG">
@@ -1413,104 +1466,112 @@
 						<BIT>3</BIT>
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1026</ADDRESS>
-					<ADDRESS type="historic">0x12B9</ADDRESS>
-					<DTC id="DTC_11_SVX">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22_SVX">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32_SVX">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1027</ADDRESS>
-					<ADDRESS type="historic">0x12BA</ADDRESS>
-					<DTC id="DTC_24">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_28_SVX">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_37">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_41">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_45">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1028</ADDRESS>
-					<ADDRESS type="historic">0x12BB</ADDRESS>
-					<DTC id="DTC_14">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_18">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_19">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1029</ADDRESS>
-					<ADDRESS type="historic">0x12BC</ADDRESS>
-					<DTC id="DTC_29">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_38">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_55">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_56">
-						<BIT>3</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1026</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12B9</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1027</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BA</ADDRESS>
+					<BITFIELD>
+						<DC code="45">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="28">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="37">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1028</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BB</ADDRESS>
+					<BITFIELD>
+						<DC code="18">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="52">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="19">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="17">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1029</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BC</ADDRESS>
+					<BITFIELD>
+						<DC code="38">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="56">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="29">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="55">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 			<ID_BYTE3 value_start="0x30" value_end="0x3F"><!-- NOTE must be the same as RomID[3]=10 //-->
 				<MB id="MB_VB">
@@ -1573,6 +1634,7 @@
 				<MB id="MB_CPCP">
 					<ADDRESS>0x12A5</ADDRESS>
 				</MB>
+
 				<SWBLOCK>
 					<ADDRESS>0x105A</ADDRESS>
 					<SW id="SW_IG">
@@ -1645,95 +1707,103 @@
 						<BIT>3</BIT>
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1026</ADDRESS>
-					<ADDRESS type="historic">0x12B9</ADDRESS>
-					<DTC id="DTC_11_SVX">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22_SVX">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32_SVX">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1027</ADDRESS>
-					<ADDRESS type="historic">0x12BA</ADDRESS>
-					<DTC id="DTC_24">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_28_SVX">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_37">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_41">
-						<BIT>1</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1028</ADDRESS>
-					<ADDRESS type="historic">0x12BB</ADDRESS>
-					<DTC id="DTC_14">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_18">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_19">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1029</ADDRESS>
-					<ADDRESS type="historic">0x12BC</ADDRESS>
-					<DTC id="DTC_29">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_38">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1026</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12B9</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1027</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BA</ADDRESS>
+					<BITFIELD>
+						<DC code="28">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="37">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="41">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1028</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BB</ADDRESS>
+					<BITFIELD>
+						<DC code="18">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="52">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="19">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="17">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1029</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BC</ADDRESS>
+					<BITFIELD>
+						<DC code="38">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="29">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 			<ID_BYTE3 value_start="0x40" value_end="0x4F">
 				<MB id="MB_VB">
@@ -1775,6 +1845,7 @@
 				<MB id="MB_COADJ">
 					<ADDRESS>0x12B6</ADDRESS>
 				</MB>
+
 				<SWBLOCK>
 					<ADDRESS>0x105A</ADDRESS>
 					<SW id="SW_IG">
@@ -1838,95 +1909,105 @@
 						<BIT>5</BIT>
 					</SW>
 				</SWBLOCK>
-				
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1026</ADDRESS>
-					<ADDRESS type="historic">0x12B9</ADDRESS>
-					<DTC id="DTC_11_SVX">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_21">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_22_SVX">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1027</ADDRESS>
-					<ADDRESS type="historic">0x12BA</ADDRESS>
-					<DTC id="DTC_24">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_28_SVX">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>2</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1028</ADDRESS>
-					<ADDRESS type="historic">0x12BB</ADDRESS>
-					<DTC id="DTC_14">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_18">
-						<BIT>8</BIT>
-					</DTC>
-					<DTC id="DTC_19">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1029</ADDRESS>
-					<ADDRESS type="historic">0x12BC</ADDRESS>
-					<DTC id="DTC_29">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_38">
-						<BIT>4</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1026</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12B9</ADDRESS>
+					<BITFIELD>
+						<DC code="11">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1027</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x12BA</ADDRESS>
+					<BITFIELD>
+						<DC code="28">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="35">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="3">0x1028</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="3">0x1229</ADDRESS>
+					<BITFIELD>
+						<DC code="18">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="52">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="19">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="17">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise">0x1029</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise">0x12BC</ADDRESS>
+					<BITFIELD>
+						<DC code="38">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="29">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 		<ID_BYTE2 value="0x34">
 			<SYSTEMDESCRIPTION>2.0 TURBO</SYSTEMDESCRIPTION>
 			<MODEL>LEGACY</MODEL>
+
 			<CLEARMEMORY>
 				<ADDRESS>0x135E</ADDRESS>
 				<VALUE>0x0000</VALUE>
 			</CLEARMEMORY>
+
 			<ID_BYTE3 value_start="0x20" value_end="0x2F">
 				<MB id="MB_VB">
 					<ADDRESS>0x1335</ADDRESS>
@@ -1985,6 +2066,7 @@
 				<MB id="MB_ALT_CUT">
 					<ADDRESS>0x1342</ADDRESS>
 				</MB>
+
 				<SWBLOCK>
 					<ADDRESS>0x1343</ADDRESS>
 					<SW id="SW_IG">
@@ -2042,84 +2124,91 @@
 						<BIT>1</BIT>
 					</SW>
 				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1346</ADDRESS>
-					<ADDRESS type="historic">0x1349</ADDRESS>
-					<DTC id="DTC_57">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_42">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_43_ACCSW">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_44">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_45">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_49_SYS_ERR">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1347</ADDRESS>
-					<ADDRESS type="historic">0x134A</ADDRESS>
-					<DTC id="DTC_21">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_24">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1348</ADDRESS>
-					<ADDRESS type="historic">0x134B</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_14">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1346</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x1349</ADDRESS>
+					<BITFIELD>
+						<DC code="52">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="49">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="45">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="44">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="43">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="42">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="57">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1347</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134A</ADDRESS>
+					<BITFIELD>
+						<DC code="33">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1348</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134B</ADDRESS>
+					<BITFIELD>
+						<DC code="17">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="11">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 			<ID_BYTE3 value_start="0xA0" value_end="0xAF">
 				<MB id="MB_VB">
@@ -2176,6 +2265,7 @@
 				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
 					<ADDRESS>0x1340 und 0x1341</ADDRESS>
 				</MB>//-->
+
 				<SWBLOCK>
 					<ADDRESS>0x1343</ADDRESS>
 					<SW id="SW_IG">
@@ -2227,81 +2317,88 @@
 						<BIT>1</BIT>
 					</SW>
 				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1346</ADDRESS>
-					<ADDRESS type="historic">0x1349</ADDRESS>
-					<DTC id="DTC_42">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_44">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_45">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_49_SYS_ERR">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1347</ADDRESS>
-					<ADDRESS type="historic">0x134A</ADDRESS>
-					<DTC id="DTC_21">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_24">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1348</ADDRESS>
-					<ADDRESS type="historic">0x134B</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_14">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1346</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x1349</ADDRESS>
+					<BITFIELD>
+						<DC code="52">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="49">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="45">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="44">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="42">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1347</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134A</ADDRESS>
+					<BITFIELD>
+						<DC code="35">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1348</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134B</ADDRESS>
+					<BITFIELD>
+						<DC code="17">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="11">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -2310,10 +2407,12 @@
 		<ID_BYTE2 value="0x34">
 			<SYSTEMDESCRIPTION>2.0 TURBO</SYSTEMDESCRIPTION>
 			<MODEL>LEGACY</MODEL>
+
 			<CLEARMEMORY>
 				<ADDRESS>0x135E</ADDRESS>
 				<VALUE>0x0000</VALUE>
 			</CLEARMEMORY>
+
 			<ID_BYTE3 value_start="0x20" value_end="0x2F">
 				<MB id="MB_VB">
 					<ADDRESS>0x1335</ADDRESS>
@@ -2372,6 +2471,7 @@
 				<MB id="MB_ALT_CUT">
 					<ADDRESS>0x1342</ADDRESS>
 				</MB>
+
 				<SWBLOCK>
 					<ADDRESS>0x1343</ADDRESS>
 					<SW id="SW_IG">
@@ -2429,84 +2529,91 @@
 						<BIT>1</BIT>
 					</SW>
 				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1346</ADDRESS>
-					<ADDRESS type="historic">0x1349</ADDRESS>
-					<DTC id="DTC_57">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_42">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_43_ACCSW">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_44">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_45">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_49_SYS_ERR">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1347</ADDRESS>
-					<ADDRESS type="historic">0x134A</ADDRESS>
-					<DTC id="DTC_21">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_24">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1348</ADDRESS>
-					<ADDRESS type="historic">0x134B</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_14">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1346</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x1349</ADDRESS>
+					<BITFIELD>
+						<DC code="52">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="49">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="45">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="44">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="43">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="42">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="57">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1347</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134A</ADDRESS>
+					<BITFIELD>
+						<DC code="33">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1348</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134B</ADDRESS>
+					<BITFIELD>
+						<DC code="17">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="11">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 			<ID_BYTE3 value_start="0xA0" value_end="0xAF">
 				<MB id="MB_VB">
@@ -2563,6 +2670,7 @@
 				<!--<MB id="MB_MANI_P"> TODO: Read 2 addresses
 					<ADDRESS>0x1340 und 0x1341</ADDRESS>
 				</MB>//-->
+
 				<SWBLOCK>
 					<ADDRESS>0x1343</ADDRESS>
 					<SW id="SW_IG">
@@ -2614,81 +2722,88 @@
 						<BIT>1</BIT>
 					</SW>
 				</SWBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1346</ADDRESS>
-					<ADDRESS type="historic">0x1349</ADDRESS>
-					<DTC id="DTC_42">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_44">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_45">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_49_SYS_ERR">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_51">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_52">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1347</ADDRESS>
-					<ADDRESS type="historic">0x134A</ADDRESS>
-					<DTC id="DTC_21">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_22">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_23_QA">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_24">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_31">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_32">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_33">
-						<BIT>7</BIT>
-					</DTC>
-					<DTC id="DTC_35">
-						<BIT>8</BIT>
-					</DTC>
-				</DTCBLOCK>
-				<DTCBLOCK>
-					<ADDRESS type="current">0x1348</ADDRESS>
-					<ADDRESS type="historic">0x134B</ADDRESS>
-					<DTC id="DTC_11">
-						<BIT>1</BIT>
-					</DTC>
-					<DTC id="DTC_12">
-						<BIT>2</BIT>
-					</DTC>
-					<DTC id="DTC_13_CAM">
-						<BIT>3</BIT>
-					</DTC>
-					<DTC id="DTC_14">
-						<BIT>4</BIT>
-					</DTC>
-					<DTC id="DTC_15">
-						<BIT>5</BIT>
-					</DTC>
-					<DTC id="DTC_16">
-						<BIT>6</BIT>
-					</DTC>
-					<DTC id="DTC_17">
-						<BIT>7</BIT>
-					</DTC>
-				</DTCBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1346</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x1349</ADDRESS>
+					<BITFIELD>
+						<DC code="52">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="51">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="49">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="45">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="44">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="42">
+							<BIT>2</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1347</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134A</ADDRESS>
+					<BITFIELD>
+						<DC code="35">
+							<BIT>8</BIT>
+						</DC>
+						<DC code="33">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="32">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="31">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="24">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="23">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="22">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="21">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="bitwise" dclist_id="4">0x1348</ADDRESS>
+					<ADDRESS type="historicOrMemorized" scaling="bitwise" dclist_id="4">0x134B</ADDRESS>
+					<BITFIELD>
+						<DC code="17">
+							<BIT>7</BIT>
+						</DC>
+						<DC code="16">
+							<BIT>6</BIT>
+						</DC>
+						<DC code="15">
+							<BIT>5</BIT>
+						</DC>
+						<DC code="14">
+							<BIT>4</BIT>
+						</DC>
+						<DC code="13">
+							<BIT>3</BIT>
+						</DC>
+						<DC code="12">
+							<BIT>2</BIT>
+						</DC>
+						<DC code="11">
+							<BIT>1</BIT>
+						</DC>
+					</BITFIELD>
+				</DCBLOCK>
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
@@ -3273,275 +3388,551 @@
 		<TITLE lang="de">RF</TITLE><!-- TODO //-->
 		<TITLE lang="tr">RF</TITLE>
 	</SW>
-	
-	
-	
-	
+
 	<!-- ###################################          F A U L T   C O D E S         ###################################  //-->
-	
-	<DTC id="DTC_11">
-		<CODE>11</CODE>
-		<TITLE lang="en">Crank angle sensor (No reference pulse)</TITLE>
-		<TITLE lang="de">Kurbelwinkelsensor (kein Referenzimpuls)</TITLE>
-		<TITLE lang="tr">Krank açısı sensörü (Referans sinyali yok)</TITLE>
-	</DTC>
-	<DTC id="DTC_11_SVX">
-		<CODE>11</CODE>
-		<TITLE lang="en">Crank angle sensor 1</TITLE>
-		<TITLE lang="de">Kurbelwinkelsensor 1</TITLE>
-		<TITLE lang="tr">Krank açısı sensörü 1</TITLE>
-	</DTC>
-	<DTC id="DTC_12">
-		<CODE>12</CODE>
-		<TITLE lang="en">Starter switch</TITLE>
-		<TITLE lang="de">Anlasserschalter</TITLE>
-		<TITLE lang="tr">Marş düğmesi</TITLE>
-	</DTC>
-	<DTC id="DTC_13_CRANK">
-		<CODE>13</CODE>
-		<TITLE lang="en">Crank angle sensor (No position pulse)</TITLE>
-		<TITLE lang="de">Kurbelwinkelsensor (kein Positionsimpuls)</TITLE>
-		<TITLE lang="tr">Krank açısı sensörü (Konum sinyali yok)</TITLE>
-	</DTC>
-	<DTC id="DTC_13_CAM">
-		<CODE>13</CODE>
-		<TITLE lang="en">Cam angle sensor</TITLE>
-		<TITLE lang="de">Nockenwellensensor</TITLE>
-		<TITLE lang="tr">KAM açısı sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_14">
-		<CODE>14</CODE>
-		<TITLE lang="en">Fuel injector #1</TITLE>
-		<TITLE lang="de">Einspritzdüse #1</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü # 1</TITLE>
-	</DTC>
-	<DTC id="DTC_14_Lseries">
-		<CODE>14</CODE>
-		<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
-		<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
-	</DTC>
-	<DTC id="DTC_14_XT6">
-		<CODE>14</CODE>
-		<TITLE lang="en">Fuel injector #5 and/or #6</TITLE>
-		<TITLE lang="de">Einspritzdüse #5 und/oder #6</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #5 ve/veya #6</TITLE>
-	</DTC>
-	<DTC id="DTC_15">
-		<CODE>15</CODE>
-		<TITLE lang="en">Fuel injector #2</TITLE>
-		<TITLE lang="de">Einspritzdüse #2</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #2</TITLE>
-	</DTC>
-	<DTC id="DTC_15_Lseries">
-		<CODE>15</CODE>
-		<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
-		<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
-	</DTC>
-	<DTC id="DTC_15_XT6">
-		<CODE>15</CODE>
-		<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
-		<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
-	</DTC>
-	<DTC id="DTC_16">
-		<CODE>16</CODE>
-		<TITLE lang="en">Fuel injector #3</TITLE>
-		<TITLE lang="de">Einspritzdüse #3</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #3</TITLE>
-	</DTC>
-	<DTC id="DTC_17">
-		<CODE>17</CODE>
-		<TITLE lang="en">Fuel injector #4</TITLE>
-		<TITLE lang="de">Einspritzdüse #4</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #4</TITLE>
-	</DTC>
-	<DTC id="DTC_18">
-		<CODE>18</CODE>
-		<TITLE lang="en">Fuel injector #5</TITLE>
-		<TITLE lang="de">Einspritzdüse #5</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #5</TITLE>
-	</DTC>
-	<DTC id="DTC_19">
-		<CODE>19</CODE>
-		<TITLE lang="en">Fuel injector #6</TITLE>
-		<TITLE lang="de">Einspritzdüse #6</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #6</TITLE>
-	</DTC>
-	<DTC id="DTC_21">
-		<CODE>21</CODE>
-		<TITLE lang="en">Water temperature sensor</TITLE>
-		<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
-		<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_22">
-		<CODE>22</CODE>
-		<TITLE lang="en">Knock sensor</TITLE>
-		<TITLE lang="de">Klopfsensor</TITLE>
-		<TITLE lang="tr">Vuruntu sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_22_SVX">
-		<CODE>22</CODE>
-		<TITLE lang="en">Knock sensor 1</TITLE>
-		<TITLE lang="de">Klopfsensor 1</TITLE>
-		<TITLE lang="tr">Vuruntu sensörü 1</TITLE>
-	</DTC>
-	<DTC id="DTC_23_QA">
-		<CODE>23</CODE>
-		<TITLE lang="en">Air flow meter</TITLE>
-		<TITLE lang="de">Luftmassenmesser</TITLE>
-		<TITLE lang="tr">Hava akışmetre</TITLE>
-	</DTC>
-	<DTC id="DTC_24">
-		<CODE>24</CODE>
-		<TITLE lang="en">By-pass air control valve</TITLE>
-		<TITLE lang="de">Leerlaufregelventil</TITLE>
-		<TITLE lang="tr">Baypas hava kontrol valfi</TITLE>
-	</DTC>
-	<DTC id="DTC_25_XT6">
-		<CODE>25</CODE>
-		<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
-		<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
-		<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
-	</DTC>
-	<DTC id="DTC_26">
-		<CODE>26</CODE>
-		<TITLE lang="en">Auxiliary air valve</TITLE>
-		<TITLE lang="de">Zusatzluftventil</TITLE>
-		<TITLE lang="tr">İkincil hava valfi</TITLE>
-	</DTC>
-	<DTC id="DTC_28_SVX">
-		<CODE>28</CODE>
-		<TITLE lang="en">Knock sensor 2</TITLE>
-		<TITLE lang="de">Klopfsensor 2</TITLE>
-		<TITLE lang="tr">Vuruntu sensörü 2</TITLE>
-	</DTC>
-	<DTC id="DTC_29">
-		<CODE>29</CODE>
-		<TITLE lang="en">Crank angle sensor 2</TITLE>
-		<TITLE lang="de">Kurbelwinkelsensor 2</TITLE>
-		<TITLE lang="tr">Krank açısı sensörü 2</TITLE>
-	</DTC>
-	<DTC id="DTC_31"><!-- THV //-->
-		<CODE>31</CODE>
-		<TITLE lang="en">Throttle sensor</TITLE>
-		<TITLE lang="de">Drosselklappensensor</TITLE>
-		<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_32"><!-- O2 //-->
-		<CODE>32</CODE>
-		<TITLE lang="en">O2 sensor</TITLE>
-		<TITLE lang="de">Lambdasonde</TITLE>
-		<TITLE lang="tr">O2 sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_32_SVX"><!-- O2 R //-->
-		<CODE>32</CODE>
-		<TITLE lang="en">O2 sensor right</TITLE>
-		<TITLE lang="de">Lambdasonde rechts</TITLE>
-		<TITLE lang="tr">O2 sensörü sağ</TITLE>
-	</DTC>
-	<DTC id="DTC_33"><!-- VSP //-->
-		<CODE>33</CODE>
-		<TITLE lang="en">Vehicle speed sensor</TITLE>
-		<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
-		<TITLE lang="tr">Araç hız sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_34">
-		<CODE>34</CODE>
-		<TITLE lang="en">EGR valve</TITLE>
-		<TITLE lang="de">AGR-Magnetventil</TITLE>
-		<TITLE lang="tr">EGR valfi</TITLE>
-	</DTC>
-	<DTC id="DTC_35"><!-- CPC //-->
-		<CODE>35</CODE>
-		<TITLE lang="en">Purge control solenoid valve</TITLE>
-		<TITLE lang="de">Absaug-Magnetventil</TITLE>
-		<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
-	</DTC>
-	<DTC id="DTC_37"><!-- O2 L //-->
-		<CODE>37</CODE>
-		<TITLE lang="en">O2 sensor left</TITLE>
-		<TITLE lang="de">Lambdasonde links</TITLE>
-		<TITLE lang="tr">O2 sensörü sol</TITLE>
-	</DTC>
-	<DTC id="DTC_38">
-		<CODE>38</CODE>
-		<TITLE lang="en">Torque signal</TITLE>
-		<TITLE lang="de">Drehmomentsignal</TITLE>
-		<TITLE lang="tr">Tork sinyali</TITLE>
-	</DTC>
-	<DTC id="DTC_41">
-		<CODE>41</CODE>
-		<TITLE lang="en">Mixture too lean</TITLE>
-		<TITLE lang="de">Kraftstoffgemisch zu mager</TITLE>
-		<TITLE lang="tr">Karışım çok zayıf</TITLE>
-	</DTC>
-	<DTC id="DTC_41_Lseries">
-		<CODE>41</CODE>
-		<TITLE lang="en">Mixture too lean or system error</TITLE>
-		<TITLE lang="de">Gemisch zu mager oder Systemfehler</TITLE>
-		<TITLE lang="tr">Karışım çok zayıf veya sistem hatası</TITLE>
-	</DTC>
-	<DTC id="DTC_42"><!-- ID_SW //-->
-		<CODE>42</CODE>
-		<TITLE lang="en">Idle switch</TITLE>
-		<TITLE lang="de">Leerlaufschalter</TITLE>
-		<TITLE lang="tr">Boşta düğmesi</TITLE>
-	</DTC>
-	<DTC id="DTC_43_ACCSW"><!-- ACCSW //-->
-		<CODE>43</CODE>
-		<TITLE lang="en">ACCSW</TITLE><!-- TODO //-->
-		<TITLE lang="de">ACCSW</TITLE><!-- TODO //-->
-		<TITLE lang="tr">ACCSW</TITLE>
-	</DTC>
-	<DTC id="DTC_44"><!-- WGC //-->
-		<CODE>44</CODE>
-		<TITLE lang="en">By-pass valve (TURBO)</TITLE>
-		<TITLE lang="de">Bypass-Ventil (TURBO)</TITLE>
-		<TITLE lang="tr">Baypas valfi (TURBO)</TITLE>
-	</DTC>
-	<DTC id="DTC_45"><!-- P.S //-->
-		<CODE>45</CODE>
-		<TITLE lang="en">Atmospheric pressure sensor</TITLE>
-		<TITLE lang="de">Umgebungsdruck-Sensor</TITLE>
-		<TITLE lang="tr">Atmosferik basınç sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_49"><!-- SYS.ERR //-->
-		<CODE>49</CODE>
-		<TITLE lang="en">Internal System Error</TITLE>
-		<TITLE lang="de">interner Systemfehler</TITLE>
-		<TITLE lang="tr">İç Sistem Hatası</TITLE>
-	</DTC>
-	<DTC id="DTC_51"><!-- N_SW //-->
-		<CODE>51</CODE>
-		<TITLE lang="en">Neutral switch (MT)</TITLE>
-		<TITLE lang="de">Neutralschalter (MT)</TITLE>
-		<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
-	</DTC>
-	<DTC id="DTC_52"><!-- P_SW //--><!-- not documented in US XT FSM '88 but possible //-->
-		<CODE>52</CODE>
-		<TITLE lang="en">Parking switch</TITLE>
-		<TITLE lang="de">Parkschalter</TITLE>
-		<TITLE lang="tr">Park düğmesi</TITLE>
-	</DTC>
-	<DTC id="DTC_55">
-		<CODE>55</CODE>
-		<TITLE lang="en">EGR temperature sensor</TITLE>
-		<TITLE lang="de">AGR-Temperatur-Sensor</TITLE>
-		<TITLE lang="tr">EGR sıcaklık sensörü</TITLE>
-	</DTC>
-	<DTC id="DTC_56">
-		<CODE>56</CODE>
-		<TITLE lang="en">EGR_SYS</TITLE><!-- TODO //-->
-		<TITLE lang="de">EGR_SYS</TITLE><!-- TODO //-->
-		<TITLE lang="tr">EGR_SYS</TITLE>
-	</DTC>
-	<DTC id="DTC_57"><!-- ALT.SYS //-->
-		<CODE>57</CODE>
-		<TITLE lang="en">ALT.SYS</TITLE><!-- TODO //-->
-		<TITLE lang="de">ALT.SYS</TITLE><!-- TODO //-->
-		<TITLE lang="tr">ALT.SYS</TITLE>
-	</DTC>
+
+	<DCLIST id="1">
+		<!-- 0x0B86 / 0x0B82 //-->
+		<DC>
+			<CODE>11</CODE>
+			<TITLE lang="en">Crank angle sensor (No reference pulse)</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor (kein Referenzimpuls)</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü (Referans sinyali yok)</TITLE>
+		</DC>
+		<DC>
+			<CODE>12</CODE>
+			<TITLE lang="en">Starter switch</TITLE>
+			<TITLE lang="de">Anlasserschalter</TITLE>
+			<TITLE lang="tr">Marş düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>13</CODE>
+			<TITLE lang="en">Crank angle sensor (No position pulse)</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor (kein Positionsimpuls)</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü (Konum sinyali yok)</TITLE>
+		</DC>
+		<DC>
+			<CODE>14</CODE>
+			<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
+			<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
+		</DC>
+		<DC>
+			<CODE>15</CODE>
+			<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
+			<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
+		</DC>
+		<DC>
+			<CODE>21</CODE>
+			<TITLE lang="en">Water temperature sensor</TITLE>
+			<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
+			<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>22</CODE>
+			<TITLE lang="en">Knock sensor</TITLE>
+			<TITLE lang="de">Klopfsensor</TITLE>
+			<TITLE lang="tr">Vuruntu sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>23</CODE>
+			<TITLE lang="en">Air flow meter</TITLE>
+			<TITLE lang="de">Luftmassenmesser</TITLE>
+			<TITLE lang="tr">Hava akışmetre</TITLE>
+		</DC>
+		<!-- 0x0B87 / 0x0B83 //-->
+		<DC>
+			<CODE>26</CODE>
+			<TITLE lang="en">Auxiliary air valve</TITLE>
+			<TITLE lang="de">Zusatzluftventil</TITLE>
+			<TITLE lang="tr">İkincil hava valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>31</CODE>
+			<TITLE lang="en">Throttle sensor</TITLE><!-- THV //-->
+			<TITLE lang="de">Drosselklappensensor</TITLE>
+			<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor</TITLE><!-- O2 //-->
+			<TITLE lang="de">Lambdasonde</TITLE>
+			<TITLE lang="tr">O2 sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor right</TITLE><!-- O2 R //-->
+			<TITLE lang="de">Lambdasonde rechts</TITLE>
+			<TITLE lang="tr">O2 sensörü sağ</TITLE>
+		</DC>
+		<DC>
+			<CODE>33</CODE>
+			<TITLE lang="en">Vehicle speed sensor</TITLE><!-- VSP //-->
+			<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
+			<TITLE lang="tr">Araç hız sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>34</CODE>
+			<TITLE lang="en">EGR valve</TITLE>
+			<TITLE lang="de">AGR-Magnetventil</TITLE>
+			<TITLE lang="tr">EGR valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>35</CODE>
+			<TITLE lang="en">Purge control solenoid valve</TITLE><!-- CPC //-->
+			<TITLE lang="de">Absaug-Magnetventil</TITLE>
+			<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>41</CODE>
+			<TITLE lang="en">Mixture too lean or system error</TITLE>
+			<TITLE lang="de">Gemisch zu mager oder Systemfehler</TITLE>
+			<TITLE lang="tr">Karışım çok zayıf veya sistem hatası</TITLE>
+		</DC>
+		<!-- 0x0B87 / 0x0B83 //-->
+		<DC>
+			<CODE>44</CODE>
+			<TITLE lang="en">By-pass valve (TURBO)</TITLE><!-- WGC //-->
+			<TITLE lang="de">Bypass-Ventil (TURBO)</TITLE>
+			<TITLE lang="tr">Baypas valfi (TURBO)</TITLE>
+		</DC>
+		<DC>
+			<CODE>51</CODE>
+			<TITLE lang="en">Neutral switch (MT)</TITLE><!-- N_SW //-->
+			<TITLE lang="de">Neutralschalter (MT)</TITLE>
+			<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
+		</DC>
+	</DCLIST>
+	<DCLIST id="2">
+		<!-- 0x0003 / 0x0015 //-->
+		<DC>
+			<CODE>11</CODE>
+			<TITLE lang="en">Crank angle sensor (No reference pulse)</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor (kein Referenzimpuls)</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü (Referans sinyali yok)</TITLE>
+		</DC>
+		<DC>
+			<CODE>12</CODE>
+			<TITLE lang="en">Starter switch</TITLE>
+			<TITLE lang="de">Anlasserschalter</TITLE>
+			<TITLE lang="tr">Marş düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>13</CODE>
+			<TITLE lang="en">Crank angle sensor (No position pulse)</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor (kein Positionsimpuls)</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü (Konum sinyali yok)</TITLE>
+		</DC>
+		<DC>
+			<CODE>14</CODE>
+			<TITLE lang="en">Fuel injector #5 and/or #6</TITLE>
+			<TITLE lang="de">Einspritzdüse #5 und/oder #6</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #5 ve/veya #6</TITLE>
+		</DC>
+		<DC>
+			<CODE>15</CODE>
+			<TITLE lang="en">Fuel injector #1 and/or #2</TITLE>
+			<TITLE lang="de">Einspritzdüse #1 und/oder #2</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #1 ve/veya #2</TITLE>
+		</DC>
+		<DC>
+			<CODE>21</CODE>
+			<TITLE lang="en">Water temperature sensor</TITLE>
+			<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
+			<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>22</CODE>
+			<TITLE lang="en">Knock sensor</TITLE>
+			<TITLE lang="de">Klopfsensor</TITLE>
+			<TITLE lang="tr">Vuruntu sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>23</CODE>
+			<TITLE lang="en">Air flow meter</TITLE>
+			<TITLE lang="de">Luftmassenmesser</TITLE>
+			<TITLE lang="tr">Hava akışmetre</TITLE>
+		</DC>
+		<!-- 0x0004 / 0x0016 //-->
+		<DC>
+			<CODE>24</CODE>
+			<TITLE lang="en">By-pass air control valve</TITLE>
+			<TITLE lang="de">Leerlaufregelventil</TITLE>
+			<TITLE lang="tr">Baypas hava kontrol valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>25</CODE>
+			<TITLE lang="en">Fuel injector #3 and/or #4</TITLE>
+			<TITLE lang="de">Einspritzdüse #3 und/oder #4</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #3 ve/veya #4</TITLE>
+		</DC>
+		<DC>
+			<CODE>31</CODE>
+			<TITLE lang="en">Throttle sensor</TITLE><!-- THV //-->
+			<TITLE lang="de">Drosselklappensensor</TITLE>
+			<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor</TITLE><!-- O2 //-->
+			<TITLE lang="de">Lambdasonde</TITLE>
+			<TITLE lang="tr">O2 sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor right</TITLE><!-- O2 R //-->
+			<TITLE lang="de">Lambdasonde rechts</TITLE>
+			<TITLE lang="tr">O2 sensörü sağ</TITLE>
+		</DC>
+		<DC>
+			<CODE>33</CODE>
+			<TITLE lang="en">Vehicle speed sensor</TITLE><!-- VSP //-->
+			<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
+			<TITLE lang="tr">Araç hız sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>34</CODE>
+			<TITLE lang="en">EGR valve</TITLE>
+			<TITLE lang="de">AGR-Magnetventil</TITLE>
+			<TITLE lang="tr">EGR valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>35</CODE>
+			<TITLE lang="en">Purge control solenoid valve</TITLE><!-- CPC //-->
+			<TITLE lang="de">Absaug-Magnetventil</TITLE>
+			<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>41</CODE>
+			<TITLE lang="en">Mixture too lean or system error</TITLE>
+			<TITLE lang="de">Gemisch zu mager oder Systemfehler</TITLE>
+			<TITLE lang="tr">Karışım çok zayıf veya sistem hatası</TITLE>
+		</DC>
+		<!-- 0x0005 / 0x0017 //-->
+		<DC>
+			<CODE>51</CODE>
+			<TITLE lang="en">Neutral switch (MT)</TITLE><!-- N_SW //-->
+			<TITLE lang="de">Neutralschalter (MT)</TITLE>
+			<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
+		</DC>
+		<DC>
+			<CODE>52</CODE><!-- not documented in US XT FSM '88 but possible //-->
+			<TITLE lang="en">Parking switch</TITLE><!-- P_SW //-->
+			<TITLE lang="de">Parkschalter</TITLE>
+			<TITLE lang="tr">Park düğmesi</TITLE>
+		</DC>
+	</DCLIST>
+	<DCLIST id="3">
+		<!-- 0x1026 / 0x12B9 //-->
+		<DC>
+			<CODE>11</CODE>
+			<TITLE lang="en">Crank angle sensor 1</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor 1</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü 1</TITLE>
+		</DC>
+		<DC>
+			<CODE>12</CODE>
+			<TITLE lang="en">Starter switch</TITLE>
+			<TITLE lang="de">Anlasserschalter</TITLE>
+			<TITLE lang="tr">Marş düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>13</CODE>
+			<TITLE lang="en">Cam angle sensor</TITLE>
+			<TITLE lang="de">Nockenwellensensor</TITLE>
+			<TITLE lang="tr">KAM açısı sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>31</CODE>
+			<TITLE lang="en">Throttle sensor</TITLE><!-- THV //-->
+			<TITLE lang="de">Drosselklappensensor</TITLE>
+			<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor right</TITLE><!-- O2 R //-->
+			<TITLE lang="de">Lambdasonde rechts</TITLE>
+			<TITLE lang="tr">O2 sensörü sağ</TITLE>
+		</DC>
+		<DC>
+			<CODE>21</CODE>
+			<TITLE lang="en">Water temperature sensor</TITLE>
+			<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
+			<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>22</CODE>
+			<TITLE lang="en">Knock sensor 1</TITLE>
+			<TITLE lang="de">Klopfsensor 1</TITLE>
+			<TITLE lang="tr">Vuruntu sensörü 1</TITLE>
+		</DC>
+		<DC>
+			<CODE>23</CODE>
+			<TITLE lang="en">Air flow meter</TITLE>
+			<TITLE lang="de">Luftmassenmesser</TITLE>
+			<TITLE lang="tr">Hava akışmetre</TITLE>
+		</DC>
+		<!-- 0x1027 / 0x12BA //-->
+		<DC>
+			<CODE>45</CODE>
+			<TITLE lang="en">Atmospheric pressure sensor</TITLE><!-- P.S //-->
+			<TITLE lang="de">Umgebungsdruck-Sensor</TITLE>
+			<TITLE lang="tr">Atmosferik basınç sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>28</CODE>
+			<TITLE lang="en">Knock sensor 2</TITLE>
+			<TITLE lang="de">Klopfsensor 2</TITLE>
+			<TITLE lang="tr">Vuruntu sensörü 2</TITLE>
+		</DC>
+		<DC>
+			<CODE>24</CODE>
+			<TITLE lang="en">By-pass air control valve</TITLE>
+			<TITLE lang="de">Leerlaufregelventil</TITLE>
+			<TITLE lang="tr">Baypas hava kontrol valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>33</CODE>
+			<TITLE lang="en">Vehicle speed sensor</TITLE><!-- VSP //-->
+			<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
+			<TITLE lang="tr">Araç hız sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>37</CODE>
+			<TITLE lang="en">O2 sensor left</TITLE><!-- O2 L //-->
+			<TITLE lang="de">Lambdasonde links</TITLE>
+			<TITLE lang="tr">O2 sensörü sol</TITLE>
+		</DC>
+		<DC>
+			<CODE>35</CODE>
+			<TITLE lang="en">Purge control solenoid valve</TITLE><!-- CPC //-->
+			<TITLE lang="de">Absaug-Magnetventil</TITLE>
+			<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>41</CODE>
+			<TITLE lang="en">Mixture too lean</TITLE>
+			<TITLE lang="de">Kraftstoffgemisch zu mager</TITLE>
+			<TITLE lang="tr">Karışım çok zayıf</TITLE>
+		</DC>
+		<!-- 0x1028 / 0x12BB //-->
+		<DC>
+			<CODE>18</CODE>
+			<TITLE lang="en">Fuel injector #5</TITLE>
+			<TITLE lang="de">Einspritzdüse #5</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #5</TITLE>
+		</DC>
+		<DC>
+			<CODE>52</CODE><!-- not documented in US XT FSM '88 but possible //-->
+			<TITLE lang="en">Parking switch</TITLE><!-- P_SW //-->
+			<TITLE lang="de">Parkschalter</TITLE>
+			<TITLE lang="tr">Park düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>19</CODE>
+			<TITLE lang="en">Fuel injector #6</TITLE>
+			<TITLE lang="de">Einspritzdüse #6</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #6</TITLE>
+		</DC>
+		<DC>
+			<CODE>51</CODE>
+			<TITLE lang="en">Neutral switch (MT)</TITLE><!-- N_SW //-->
+			<TITLE lang="de">Neutralschalter (MT)</TITLE>
+			<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
+		</DC>
+		<DC>
+			<CODE>17</CODE>
+			<TITLE lang="en">Fuel injector #4</TITLE>
+			<TITLE lang="de">Einspritzdüse #4</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #4</TITLE>
+		</DC>
+		<DC>
+			<CODE>16</CODE>
+			<TITLE lang="en">Fuel injector #3</TITLE>
+			<TITLE lang="de">Einspritzdüse #3</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #3</TITLE>
+		</DC>
+		<DC>
+			<CODE>15</CODE>
+			<TITLE lang="en">Fuel injector #2</TITLE>
+			<TITLE lang="de">Einspritzdüse #2</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #2</TITLE>
+		</DC>
+		<DC>
+			<CODE>14</CODE>
+			<TITLE lang="en">Fuel injector #1</TITLE>
+			<TITLE lang="de">Einspritzdüse #1</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü # 1</TITLE>
+		</DC>
+		<!-- 0x1029 / 0x12BB //-->
+		<DC>
+			<CODE>38</CODE>
+			<TITLE lang="en">Torque signal</TITLE>
+			<TITLE lang="de">Drehmomentsignal</TITLE>
+			<TITLE lang="tr">Tork sinyali</TITLE>
+		</DC>
+		<DC>
+			<CODE>56</CODE>
+			<TITLE lang="en">EGR_SYS</TITLE><!-- TODO //-->
+			<TITLE lang="de">EGR_SYS</TITLE><!-- TODO //-->
+			<TITLE lang="tr">EGR_SYS</TITLE>
+		</DC>
+		<DC>
+			<CODE>29</CODE>
+			<TITLE lang="en">Crank angle sensor 2</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor 2</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü 2</TITLE>
+		</DC>
+		<DC>
+			<CODE>55</CODE>
+			<TITLE lang="en">EGR temperature sensor</TITLE>
+			<TITLE lang="de">AGR-Temperatur-Sensor</TITLE>
+			<TITLE lang="tr">EGR sıcaklık sensörü</TITLE>
+		</DC>
+	</DCLIST>
+	<DCLIST id="4">
+		<!-- 0x1346 / 0x1349 //-->
+		<DC>
+			<CODE>52</CODE><!-- not documented in US XT FSM '88 but possible //-->
+			<TITLE lang="en">Parking switch</TITLE><!-- P_SW //-->
+			<TITLE lang="de">Parkschalter</TITLE>
+			<TITLE lang="tr">Park düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>51</CODE>
+			<TITLE lang="en">Neutral switch (MT)</TITLE><!-- N_SW //-->
+			<TITLE lang="de">Neutralschalter (MT)</TITLE>
+			<TITLE lang="tr">Nötr düğmesi (MT)</TITLE>
+		</DC>
+		<DC>
+			<CODE>49</CODE>
+			<TITLE lang="en">Internal System Error</TITLE><!-- SYS.ERR //-->
+			<TITLE lang="de">interner Systemfehler</TITLE>
+			<TITLE lang="tr">İç Sistem Hatası</TITLE>
+		</DC>
+		<DC>
+			<CODE>45</CODE>
+			<TITLE lang="en">Atmospheric pressure sensor</TITLE><!-- P.S //-->
+			<TITLE lang="de">Umgebungsdruck-Sensor</TITLE>
+			<TITLE lang="tr">Atmosferik basınç sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>44</CODE>
+			<TITLE lang="en">By-pass valve (TURBO)</TITLE><!-- WGC //-->
+			<TITLE lang="de">Bypass-Ventil (TURBO)</TITLE>
+			<TITLE lang="tr">Baypas valfi (TURBO)</TITLE>
+		</DC>
+		<DC>
+			<CODE>43</CODE>
+			<TITLE lang="en">ACCSW</TITLE><!-- TODO //--><!-- ACCSW //-->
+			<TITLE lang="de">ACCSW</TITLE><!-- TODO //-->
+			<TITLE lang="tr">ACCSW</TITLE>
+		</DC>
+		<DC>
+			<CODE>42</CODE>
+			<TITLE lang="en">Idle switch</TITLE><!-- ID_SW //-->
+			<TITLE lang="de">Leerlaufschalter</TITLE>
+			<TITLE lang="tr">Boşta düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>57</CODE>
+			<TITLE lang="en">ALT.SYS</TITLE><!-- TODO //--><!-- ALT.SYS //-->
+			<TITLE lang="de">ALT.SYS</TITLE><!-- TODO //-->
+			<TITLE lang="tr">ALT.SYS</TITLE>
+		</DC>
+		<!-- 0x1347 / 0x134A //-->
+		<DC>
+			<CODE>35</CODE>
+			<TITLE lang="en">Purge control solenoid valve</TITLE><!-- CPC //-->
+			<TITLE lang="de">Absaug-Magnetventil</TITLE>
+			<TITLE lang="tr">Tahliye kontrolü solenoid valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>33</CODE>
+			<TITLE lang="en">Vehicle speed sensor</TITLE><!-- VSP //-->
+			<TITLE lang="de">Fahrgeschwindigkeitssensor</TITLE>
+			<TITLE lang="tr">Araç hız sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>32</CODE>
+			<TITLE lang="en">O2 sensor</TITLE><!-- O2 //-->
+			<TITLE lang="de">Lambdasonde</TITLE>
+			<TITLE lang="tr">O2 sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>31</CODE>
+			<TITLE lang="en">Throttle sensor</TITLE><!-- THV //-->
+			<TITLE lang="de">Drosselklappensensor</TITLE>
+			<TITLE lang="tr">Gaz kelebeği sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>24</CODE>
+			<TITLE lang="en">By-pass air control valve</TITLE>
+			<TITLE lang="de">Leerlaufregelventil</TITLE>
+			<TITLE lang="tr">Baypas hava kontrol valfi</TITLE>
+		</DC>
+		<DC>
+			<CODE>23</CODE>
+			<TITLE lang="en">Air flow meter</TITLE>
+			<TITLE lang="de">Luftmassenmesser</TITLE>
+			<TITLE lang="tr">Hava akışmetre</TITLE>
+		</DC>
+		<DC>
+			<CODE>22</CODE>
+			<TITLE lang="en">Knock sensor</TITLE>
+			<TITLE lang="de">Klopfsensor</TITLE>
+			<TITLE lang="tr">Vuruntu sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>21</CODE>
+			<TITLE lang="en">Water temperature sensor</TITLE>
+			<TITLE lang="de">Kühlmitteltemperatur-Sensor</TITLE>
+			<TITLE lang="tr">Su sıcaklık sensörü</TITLE>
+		</DC>
+		<!-- 0x1348 / 0x134B //-->
+		<DC>
+			<CODE>17</CODE>
+			<TITLE lang="en">Fuel injector #4</TITLE>
+			<TITLE lang="de">Einspritzdüse #4</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #4</TITLE>
+		</DC>
+		<DC>
+			<CODE>16</CODE>
+			<TITLE lang="en">Fuel injector #3</TITLE>
+			<TITLE lang="de">Einspritzdüse #3</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #3</TITLE>
+		</DC>
+		<DC>
+			<CODE>15</CODE>
+			<TITLE lang="en">Fuel injector #2</TITLE>
+			<TITLE lang="de">Einspritzdüse #2</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü #2</TITLE>
+		</DC>
+		<DC>
+			<CODE>14</CODE>
+			<TITLE lang="en">Fuel injector #1</TITLE>
+			<TITLE lang="de">Einspritzdüse #1</TITLE>
+			<TITLE lang="tr">Yakıt enjektörü # 1</TITLE>
+		</DC>
+		<DC>
+			<CODE>13</CODE>
+			<TITLE lang="en">Cam angle sensor</TITLE>
+			<TITLE lang="de">Nockenwellensensor</TITLE>
+			<TITLE lang="tr">KAM açısı sensörü</TITLE>
+		</DC>
+		<DC>
+			<CODE>12</CODE>
+			<TITLE lang="en">Starter switch</TITLE>
+			<TITLE lang="de">Anlasserschalter</TITLE>
+			<TITLE lang="tr">Marş düğmesi</TITLE>
+		</DC>
+		<DC>
+			<CODE>11</CODE>
+			<TITLE lang="en">Crank angle sensor (No reference pulse)</TITLE>
+			<TITLE lang="de">Kurbelwinkelsensor (kein Referenzimpuls)</TITLE>
+			<TITLE lang="tr">Krank açısı sensörü (Referans sinyali yok)</TITLE>
+		</DC>
+	</DCLIST>
 </DATA_COMMON>
 </FSSM_SSM1_DEFINITIONS>
