@@ -420,43 +420,11 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 			continue;
 		MBdata_element = tmp_elements.at(0);
 		// Get title:
-		attribCond.name = "lang";
-		attribCond.value = _language.toStdString();
-		tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() != 1)
-		{
-			if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
-			{
-				attribCond.value = "en";
-				tmp_elements = getAllMatchingChildElements(MBdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-				if (tmp_elements.size() != 1)
-					continue;
-			}
-			else
-				continue;
-		}
-		mb.title = QString( tmp_elements.at(0)->GetText() );
+		if (!getLanguageDependentElementString(MBdata_element, "TITLE", &mb.title))
+			continue;
 		// Get unit:
-		attribCond.value = "all";
-		tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() != 1)
-		{
-			attribCond.value = _language.toStdString();
-			tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
-			{
-				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
-				{
-					attribCond.value = "en";
-					tmp_elements = getAllMatchingChildElements(MBdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-					if (tmp_elements.size() != 1)
-						continue;
-				}
-				else
-					continue;
-			}
-		}
-		mb.unit = QString( tmp_elements.at(0)->GetText() );
+		if (!getLanguageDependentElementString(MBdata_element, "UNIT", &mb.unit))
+			continue;
 		// Get formula:
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "FORMULA");
 		if (tmp_elements.size() != 1)
@@ -557,42 +525,11 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 				continue;
 			SWdata_element = tmp_elements.at(0);
 			// Get title:
-			attribCond.name = "lang";
-			attribCond.value = _language.toStdString();
-			tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
-			{
-				if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
-				{
-					attribCond.value = "en";
-					tmp_elements = getAllMatchingChildElements(SWdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-					if (tmp_elements.size() != 1)
-						continue;
-				}
-				else
-					continue;
-			}
-			sw.title = QString( tmp_elements.at(0)->GetText() );
+			if (!getLanguageDependentElementString(SWdata_element, "TITLE", &sw.title))
+				continue;
 			// Get unit:
-			tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
-			{
-				attribCond.value = "all";
-				tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-				if (tmp_elements.size() != 1)
-				{
-					if (tmp_elements.size() < 1 && (_language != "en")) // fall back to english language:
-					{
-						attribCond.value = "en";
-						tmp_elements = getAllMatchingChildElements(SWdata_element, "UNIT", std::vector<attributeCondition>(1, attribCond));
-						if (tmp_elements.size() != 1)
-							continue;
-					}
-					else
-						continue;
-				}
-			}
-			sw.unit = QString( tmp_elements.at(0)->GetText() );
+			if (!getLanguageDependentElementString(SWdata_element, "UNIT", &sw.unit))
+				continue;
 			// Add SW to the list:
 			sws->push_back(sw);
 		}
@@ -989,6 +926,42 @@ XMLElement* SSMLegacyDefinitionsInterface::searchForMatchingIDelement(XMLElement
 		return value_elements.at(0);
 	else
 		return value_range_elements.at(0);
+}
+
+
+bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str)
+{
+	std::vector<XMLElement*> tmp_elements;
+	attributeCondition attribCond;
+	const char *str = NULL;
+
+	// WARNING: do not overwrite elem_str until element found !
+	attribCond.name = "lang";
+	attribCond.value = "all";
+	attribCond.condition = attributeCondition::equal;
+	tmp_elements = getAllMatchingChildElements(parent_elem, elem_name, std::vector<attributeCondition>(1, attribCond));
+	if (tmp_elements.size() != 1)
+	{
+		attribCond.value = _language.toStdString();
+		tmp_elements = getAllMatchingChildElements(parent_elem, elem_name, std::vector<attributeCondition>(1, attribCond));
+		if ((tmp_elements.size() == 0) && (_language != "en")) // fall back to english language:
+		{
+			attribCond.value = "en";
+			tmp_elements = getAllMatchingChildElements(parent_elem, elem_name, std::vector<attributeCondition>(1, attribCond));
+		}
+	}
+
+	if (tmp_elements.size() == 1)
+	{
+		str = tmp_elements.at(0)->GetText();
+		if (str != NULL)
+			*elem_str = QString( str );
+		else
+			elem_str->clear();
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -1441,31 +1414,7 @@ bool SSMLegacyDefinitionsInterface::getDCcodeFromDCdataElement(XMLElement* DCdat
 
 bool SSMLegacyDefinitionsInterface::getDCtitleFromDCdataElement(XMLElement* DCdata_element, QString *title)
 {
-	std::vector<XMLElement*> tmp_elements;
-	attributeCondition attribCond;
-	const char *str = NULL;
-
-	// NOTE: Do not touch title until extracted successfully
-	// Get title:
-	attribCond.name = "lang";
-	attribCond.value = _language.toStdString();
-	attribCond.condition = attributeCondition::equal;
-	tmp_elements = getAllMatchingChildElements(DCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-	if ((tmp_elements.size() == 0) && (_language != "en"))
-	{
-		attribCond.value = "en"; // fall back to english language:
-		tmp_elements = getAllMatchingChildElements(DCdata_element, "TITLE", std::vector<attributeCondition>(1, attribCond));
-	}
-	if (tmp_elements.size() == 1)
-	{
-		str = tmp_elements.at(0)->GetText();
-		if (str != NULL)
-		{
-			*title = QString( str );
-			return true;
-		}
-	}
-	return false;
+	return getLanguageDependentElementString(DCdata_element, "TITLE", title);
 }
 
 
