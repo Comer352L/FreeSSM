@@ -97,6 +97,40 @@
 			</ID_BYTE3>
 		</ID_BYTE2>
 	</ID_BYTE1>
+	<ID_BYTE1 value="0x73">
+		<ID_BYTE2 value="0xCC">
+			<MODEL>Impreza</MODEL>
+			<ID_BYTE3 value_start="0x00" value_end="0xff">
+				<SYSTEMDESCRIPTION>CRUISE CONTROL</SYSTEMDESCRIPTION>
+				<MB id="MB_VSP">
+					<ADDRESS>0x00A6</ADDRESS>
+				</MB>
+
+				<SWBLOCK>
+					<ADDRESS>0x00A7</ADDRESS>
+					<SW id="SW_ST">
+						<BIT>8</BIT>
+					</SW>
+					<SW id="SW_BR">
+						<BIT>7</BIT>
+					</SW>
+					<SW id="SW_SE">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_SE">
+						<BIT>6</BIT>
+					</SW>
+					<SW id="SW_IH">
+						<BIT>4</BIT>
+					</SW>
+				</SWBLOCK>
+
+				<DCBLOCK>
+					<ADDRESS type="currentOrTempOrLatest" scaling="direct_hex" dclist_id="2">0x007A</ADDRESS>
+				</DCBLOCK>
+			</ID_BYTE3>
+		</ID_BYTE2>
+	</ID_BYTE1>
 </DEFINITIONS>
 <DATA_COMMON>
 	<MB id="MB_VSP">
@@ -156,6 +190,14 @@
 		<TITLE lang="en">Inhibitor switch (AT)</TITLE>
 		<TITLE lang="de">Sperrschalter (AT)</TITLE>
 		<TITLE lang="tr">Inhibitör düğme (AT)</TITLE>
+	</SW>
+	<SW id="SW_IH">
+		<UNIT lang="en">Off/On</UNIT>
+		<UNIT lang="de">Aus/Ein</UNIT>
+		<UNIT lang="tr">Kapalı/Açık</UNIT>
+		<TITLE lang="en">Inhibitor</TITLE><!-- ??? SSM: IH //-->
+		<TITLE lang="de">Sperrschalter</TITLE>
+		<TITLE lang="tr">Inhibitör düğme</TITLE>
 	</SW>
 
 	<DCLIST id="1">
@@ -235,6 +277,72 @@
 			<TITLE lang="en">REL VAL NG</TITLE>
 			<TITLE lang="de">REL VAL NG</TITLE>
 			<TITLE lang="tr">REL VAL NG</TITLE>
+		</DC>
+		<DC>
+			<CODE>FF</CODE>
+			<TITLE lang="all">NOT FOUND</TITLE>
+			<IGNORE/>
+		</DC>
+	</DCLIST>
+	<DCLIST id="2">
+		<DC>
+			<CODE>10</CODE>
+			<TITLE lang="all">OK</TITLE>
+			<IGNORE/>
+		</DC>
+		<DC>
+			<CODE>11</CODE>
+			<TITLE lang="en">BRAKE/STOP</TITLE>
+			<TITLE lang="de">BRAKE/STOP</TITLE>
+			<TITLE lang="tr">BRAKE/STOP</TITLE>
+		</DC>
+		<DC>
+			<CODE>12</CODE>
+			<TITLE lang="en">CLU or N</TITLE>
+			<TITLE lang="de">CLU or N</TITLE>
+			<TITLE lang="tr">CLU or N</TITLE>
+		</DC>
+		<DC>
+			<CODE>13</CODE>
+			<TITLE lang="en">SPEED LIM</TITLE>
+			<TITLE lang="de">SPEED LIM</TITLE>
+			<TITLE lang="tr">SPEED LIM</TITLE>
+		</DC>
+		<DC>
+			<CODE>14</CODE>
+			<TITLE lang="en">SET + RESUME</TITLE>
+			<TITLE lang="de">SET + RESUME</TITLE>
+			<TITLE lang="tr">SET + RESUME</TITLE>
+		</DC>
+		<DC>
+			<CODE>21</CODE>
+			<TITLE lang="en">VAC VALVE</TITLE>
+			<TITLE lang="de">VAC VALVE</TITLE>
+			<TITLE lang="tr">VAC VALVE</TITLE>
+		</DC>
+		<DC>
+			<CODE>22</CODE>
+			<TITLE lang="en">VENT2 VALVE</TITLE>
+			<TITLE lang="de">VENT2 VALVE</TITLE>
+			<TITLE lang="tr">VENT2 VALVE</TITLE>
+		</DC>
+		<DC>
+			<CODE>23</CODE>
+			<TITLE lang="en">VENT1 VALVE</TITLE>
+			<TITLE lang="de">VENT1 VALVE</TITLE>
+			<TITLE lang="tr">VENT1 VALVE</TITLE>
+		</DC>
+		<DC>
+			<CODE>24</CODE>
+			<TITLE lang="en">SP SENSOR</TITLE>
+			<TITLE lang="de">SP SENSOR</TITLE>
+			<TITLE lang="tr">SP SENSOR</TITLE>
+		</DC>
+		<DC>
+			<CODE>25</CODE>
+			<TITLE lang="en">CONTROL UNIT</TITLE>
+			<TITLE lang="de">CONTROL UNIT</TITLE>
+			<TITLE lang="tr">CONTROL UNIT</TITLE>
 		</DC>
 		<DC>
 			<CODE>FF</CODE>
