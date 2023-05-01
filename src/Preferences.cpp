@@ -313,6 +313,7 @@ void Preferences::interfacetest()
 			waitmsgbox->show();
 			// SSM2:
 			SSMP2communication *SSMP2com = new SSMP2communication(diagInterface);
+			SSMP2com->setRetriesOnError(0);
 			SSM2viaISO14230configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
 			if (SSM2viaISO14230configOK)
 			{
@@ -356,6 +357,7 @@ void Preferences::interfacetest()
 			{
 				int ssm1_cu = SSM1_CU_Engine;
 				SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
+				SSMP1com->setRetriesOnError(0);
 				while (!icresult && (ssm1_cu < END_OF_CU_LIST))
 				{
 					SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
