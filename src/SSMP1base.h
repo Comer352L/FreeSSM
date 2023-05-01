@@ -46,7 +46,7 @@
 
 
 
-enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_AirCon2, SSM1_CU_FourWS, SSM1_CU_ABS, SSM1_CU_AirSusp, SSM1_CU_PwrSteer};
+enum SSM1_CUtype_dt {SSM1_CU_Engine, SSM1_CU_Transmission, SSM1_CU_CruiseCtrl, SSM1_CU_AirCon, SSM1_CU_AirCon2, SSM1_CU_FourWS, SSM1_CU_ABS, SSM1_CU_AirSusp, SSM1_CU_PwrSteer, END_OF_CU_LIST};
 
 
 class SSMP1commands

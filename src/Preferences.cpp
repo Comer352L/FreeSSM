@@ -356,7 +356,7 @@ void Preferences::interfacetest()
 			{
 				int ssm1_cu = SSM1_CU_Engine;
 				SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
-				while (!icresult && (ssm1_cu <= SSM1_CU_PwrSteer))
+				while (!icresult && (ssm1_cu < END_OF_CU_LIST))
 				{
 					SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
 					icresult = SSMP1com->readAddress(0x00, &data);
