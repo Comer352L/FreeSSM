@@ -327,38 +327,43 @@ void Preferences::interfacetest()
 					{
 						SSMP2com->setCUaddress(0x02);
 						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+						if (!icresult)
+						{
+							SSMP2com->setCUaddress(0x18);
+							icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+						}
 					}
 				}
 				diagInterface->disconnect();
 			}
-			if (!icresult)
+			SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
+			if (SSM2viaISO15765configOK && !icresult)
 			{
-				SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
-				if (SSM2viaISO15765configOK)
+				SSMP2com->setCUaddress(0x7E0);
+				unsigned int addr = 0x61;
+				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+				if (!icresult)
 				{
-					SSMP2com->setCUaddress(0x7E0);
-					unsigned int addr = 0x61;
+					SSMP2com->setCUaddress(0x7E1);
 					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
-					diagInterface->disconnect();
 				}
+				diagInterface->disconnect();
 			}
 			delete SSMP2com;
 			// SSM1:
-			if (!icresult)
+			SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
+			if (SSM1configOK && !icresult)
 			{
-				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
-				if (SSM1configOK)
+				int ssm1_cu = SSM1_CU_Engine;
+				SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
+				while (!icresult && (ssm1_cu <= SSM1_CU_PwrSteer))
 				{
-					SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CU_Engine);
+					SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
 					icresult = SSMP1com->readAddress(0x00, &data);
-					if (!icresult)
-					{
-						SSMP1com->selectCU(SSM1_CU_Transmission);
-						icresult = SSMP1com->readAddress(0x00, &data);
-						delete SSMP1com;
-					}
-					diagInterface->disconnect();
+					ssm1_cu++;
 				}
+				delete SSMP1com;
+				diagInterface->disconnect();
 			}
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();
