@@ -255,7 +255,7 @@ void Preferences::selectInterfaceName(int index)
 void Preferences::interfacetest()
 {
 	QMessageBox *msgbox;
-	FSSM_WaitMsgBox *waitmsgbox = NULL;
+	FSSM_ProgressDialog *progressMsgBox = NULL;
 	QFont msgboxfont;
 	// PREPARE INTERFACE:
 	AbstractDiagInterface *diagInterface = NULL;
@@ -309,8 +309,10 @@ void Preferences::interfacetest()
 			bool SSM2viaISO15765configOK = false;
 			char data = 0;
 			// OUTPUT WAIT MESSAGE:
-			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
-			waitmsgbox->show();
+			progressMsgBox = new FSSM_ProgressDialog((tr("Testing interface for SSM2 via ISO-14230 support... Please wait !") + "     "), 0, 0, 100, this);
+			progressMsgBox->setWindowTitle(tr("Testing interface..."));
+			progressMsgBox->setValue(0);
+			progressMsgBox->show();
 			// SSM2:
 			SSMP2communication *SSMP2com = new SSMP2communication(diagInterface);
 			SSMP2com->setRetriesOnError(0);
@@ -322,14 +324,17 @@ void Preferences::interfacetest()
 				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 				if (!icresult)
 				{
+					progressMsgBox->setValue(5);
 					SSMP2com->setCUaddress(0x01);
 					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 					if (!icresult)
 					{
+						progressMsgBox->setValue(10);
 						SSMP2com->setCUaddress(0x02);
 						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 						if (!icresult)
 						{
+							progressMsgBox->setValue(15);
 							SSMP2com->setCUaddress(0x18);
 							icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 						}
@@ -337,6 +342,8 @@ void Preferences::interfacetest()
 				}
 				diagInterface->disconnect();
 			}
+			progressMsgBox->setValue(20);
+			progressMsgBox->setLabelText(tr("Testing interface for SSM2 via ISO-15765 support... Please wait !") + "     ");
 			SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
 			if (SSM2viaISO15765configOK && !icresult)
 			{
@@ -345,6 +352,7 @@ void Preferences::interfacetest()
 				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 				if (!icresult)
 				{
+					progressMsgBox->setValue(27);
 					SSMP2com->setCUaddress(0x7E1);
 					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
 				}
@@ -352,27 +360,36 @@ void Preferences::interfacetest()
 			}
 			delete SSMP2com;
 			// SSM1:
+			progressMsgBox->setValue(35);
+			progressMsgBox->setLabelText(tr("Testing interface for SSM1 support... Please wait !") + "     ");
 			if (!((diagInterface->interfaceType() == AbstractDiagInterface::interface_serialPassThrough) && icresult)) // NOTE: if a serial PT interface works with ISO-9141/ISO-14230 (=> SSM2), it cannot support SSM1
 			{
+				int pVal_start = progressMsgBox->value();
+				int pVal_remaining = 100 - progressMsgBox->value();
 				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
 				if (SSM1configOK && !icresult)
 				{
 					int ssm1_cu = SSM1_CU_Engine;
 					SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
 					SSMP1com->setRetriesOnError(0);
-					while (!icresult && (ssm1_cu < END_OF_CU_LIST))
+					while (ssm1_cu < END_OF_CU_LIST)
 					{
 						SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
 						icresult = SSMP1com->readAddress(0x00, &data);
+						if (icresult)
+							break;
 						ssm1_cu++;
+						progressMsgBox->setValue(pVal_start + pVal_remaining * ssm1_cu / END_OF_CU_LIST);
 					}
 					delete SSMP1com;
 					diagInterface->disconnect();
 				}
 			}
+			progressMsgBox->setValue(100);
+			QTimer::singleShot(800, progressMsgBox, SLOT(accept()));
 			// CLOSE WAIT MESSAGE:
-			waitmsgbox->close();
-			delete waitmsgbox;
+			progressMsgBox->close();
+			delete progressMsgBox;
 			// DISPLAY TEST RESULT:
 			QString resultText;
 			if (icresult)

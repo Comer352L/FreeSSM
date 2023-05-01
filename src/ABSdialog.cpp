@@ -67,7 +67,7 @@ CUcontent_DCs_abstract * ABSdialog::allocate_DCsContentWidget()
 }
 
 
-bool ABSdialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox*)
+bool ABSdialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog*)
 {
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;

@@ -78,7 +78,7 @@ private:
 	virtual bool systemRequiresManualON() = 0;
 	virtual CUcontent_DCs_abstract * allocate_DCsContentWidget() = 0;
 	bool displaySystemDescriptionAndID(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget);
-	virtual bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox = NULL) = 0;
+	virtual bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog *initstatusmsgbox = NULL) = 0;
 	bool prepareContentWidget(Mode mode);
 	void setContentWidget(QString title, QWidget *contentwidget);
 	void deleteContentWidgets();

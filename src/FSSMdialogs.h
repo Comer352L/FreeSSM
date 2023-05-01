@@ -29,11 +29,11 @@
 #endif
 
 
-class FSSM_InitStatusMsgBox : public QProgressDialog
+class FSSM_ProgressDialog : public QProgressDialog
 {
 public:
-	FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText, int minimum, int maximum, QWidget * parent = 0, Qt::WindowFlags f = Qt::Widget);
-	~FSSM_InitStatusMsgBox();
+	FSSM_ProgressDialog(const QString & labelText, const QString & cancelButtonText, int minimum, int maximum, QWidget * parent = 0, Qt::WindowFlags f = Qt::Widget);
+	~FSSM_ProgressDialog();
 	void show();
 	void hide();
 	bool close();

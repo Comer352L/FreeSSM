@@ -50,7 +50,7 @@ private:
 	CUtype controlUnitType();
 	bool systemRequiresManualON();
 	CUcontent_DCs_abstract * allocate_DCsContentWidget();
-	bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox);
+	bool displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog *initstatusmsgbox);
 
 };
 

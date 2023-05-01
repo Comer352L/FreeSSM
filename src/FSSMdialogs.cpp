@@ -1,7 +1,7 @@
 /*
  * FSSMdialogs.cpp - Dialogs and Messagboxes for FreeSSM
  *
- * Copyright (C) 2008-20018 Comer352L
+ * Copyright (C) 2008-2018 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include "FSSMdialogs.h"
 
 
-FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QString & cancelButtonText,
+FSSM_ProgressDialog::FSSM_ProgressDialog(const QString & labelText, const QString & cancelButtonText,
                                              int minimum, int maximum, QWidget * parent, Qt::WindowFlags f)
                                               : QProgressDialog(labelText, cancelButtonText, minimum, maximum, parent, f)
 {
@@ -36,14 +36,14 @@ FSSM_InitStatusMsgBox::FSSM_InitStatusMsgBox(const QString & labelText, const QS
 }
 
 
-FSSM_InitStatusMsgBox::~FSSM_InitStatusMsgBox()
+FSSM_ProgressDialog::~FSSM_ProgressDialog()
 {
 	_parent->setCursor(Qt::ArrowCursor);
 	setCursor(Qt::ArrowCursor);
 }
 
 
-void FSSM_InitStatusMsgBox::show()
+void FSSM_ProgressDialog::show()
 {
 	QProgressDialog::show();
 	_parent->setCursor(Qt::WaitCursor);
@@ -51,7 +51,7 @@ void FSSM_InitStatusMsgBox::show()
 }
 
 
-void FSSM_InitStatusMsgBox::hide()
+void FSSM_ProgressDialog::hide()
 {
 	_parent->setCursor(Qt::ArrowCursor);
 	setCursor(Qt::ArrowCursor);
@@ -59,14 +59,14 @@ void FSSM_InitStatusMsgBox::hide()
 }
 
 
-bool FSSM_InitStatusMsgBox::close()
+bool FSSM_ProgressDialog::close()
 {
 	_allow_close = true;
 	return QProgressDialog::close();
 }
 
 
-void FSSM_InitStatusMsgBox::closeEvent(QCloseEvent *event)
+void FSSM_ProgressDialog::closeEvent(QCloseEvent *event)
 {
 	if (_allow_close)
 		event->accept();

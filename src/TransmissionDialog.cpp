@@ -64,7 +64,7 @@ CUcontent_DCs_abstract * TransmissionDialog::allocate_DCsContentWidget()
 }
 
 
-bool TransmissionDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox*)
+bool TransmissionDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog*)
 {
 	bool supported = false;
 	std::vector<mb_dt> supportedMBs;

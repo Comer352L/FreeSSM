@@ -64,7 +64,7 @@ CUcontent_DCs_abstract * EngineDialog::allocate_DCsContentWidget()
 }
 
 
-bool EngineDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox *initstatusmsgbox)
+bool EngineDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog *initstatusmsgbox)
 {
 	QString VIN = "";
 	bool supported = false;

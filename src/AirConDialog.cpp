@@ -62,7 +62,7 @@ CUcontent_DCs_abstract * AirConDialog::allocate_DCsContentWidget()
 }
 
 
-bool AirConDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_InitStatusMsgBox*)
+bool AirConDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *abstractInfoWidget, FSSM_ProgressDialog*)
 {
 	std::vector<mb_dt> supportedMBs;
 	std::vector<sw_dt> supportedSWs;
