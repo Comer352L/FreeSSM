@@ -302,11 +302,11 @@ void Preferences::interfacetest()
 		bool icresult = false;
 		bool retry = true;
 		choice = 0;
-		bool SSM1configOK = false;
-		bool SSM2viaISO14230configOK = false;
-		bool SSM2viaISO15765configOK = false;
 		while (retry && !icresult)
 		{
+			bool SSM1configOK = false;
+			bool SSM2viaISO14230configOK = false;
+			bool SSM2viaISO15765configOK = false;
 			char data = 0;
 			// OUTPUT WAIT MESSAGE:
 			waitmsgbox = new FSSM_WaitMsgBox(this, tr("Testing interface... Please wait !     "));
@@ -352,20 +352,23 @@ void Preferences::interfacetest()
 			}
 			delete SSMP2com;
 			// SSM1:
-			SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
-			if (SSM1configOK && !icresult)
+			if (!((diagInterface->interfaceType() == AbstractDiagInterface::interface_serialPassThrough) && icresult)) // NOTE: if a serial PT interface works with ISO-9141/ISO-14230 (=> SSM2), it cannot support SSM1
 			{
-				int ssm1_cu = SSM1_CU_Engine;
-				SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
-				SSMP1com->setRetriesOnError(0);
-				while (!icresult && (ssm1_cu < END_OF_CU_LIST))
+				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
+				if (SSM1configOK && !icresult)
 				{
-					SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
-					icresult = SSMP1com->readAddress(0x00, &data);
-					ssm1_cu++;
+					int ssm1_cu = SSM1_CU_Engine;
+					SSMP1communication *SSMP1com = new SSMP1communication(diagInterface, SSM1_CUtype_dt(ssm1_cu));
+					SSMP1com->setRetriesOnError(0);
+					while (!icresult && (ssm1_cu < END_OF_CU_LIST))
+					{
+						SSMP1com->selectCU( SSM1_CUtype_dt(ssm1_cu) );
+						icresult = SSMP1com->readAddress(0x00, &data);
+						ssm1_cu++;
+					}
+					delete SSMP1com;
+					diagInterface->disconnect();
 				}
-				delete SSMP1com;
-				diagInterface->disconnect();
 			}
 			// CLOSE WAIT MESSAGE:
 			waitmsgbox->close();
