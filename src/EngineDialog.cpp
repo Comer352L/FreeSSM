@@ -102,8 +102,13 @@ bool EngineDialog::displayExtendedCUinfo(SSMprotocol *SSMPdev, CUinfo_abstract *
 		return false;	// commError
 	if (supported)
 	{
-		if (!SSMPdev->getVIN(&VIN))
-			return false;	// commError
+		if (SSMPdev->ifceProtocolType() != AbstractDiagInterface::protocol_type::protocol_SSM2_ISO15765)
+		{
+				if (!SSMPdev->getVIN(&VIN))
+					return false;	// commError
+		}
+		else // FIXME: at least some ISO-15765 ECUs fail to read the VIN
+			VIN = " "; // avoid reporting as "not programmed yet"
 	}
 	infoWidget->setVINinfo(supported, VIN);
 	return true;
