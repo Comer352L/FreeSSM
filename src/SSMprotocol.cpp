@@ -24,6 +24,7 @@
 SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
 	_diagInterface = diagInterface;
+	_ifceProtocol = diagInterface->protocolType();
 	_language = language;
 	_CU = CUtype::Engine;
 	_state = state_needSetup;
@@ -49,6 +50,12 @@ bool SSMprotocol::CUtype(enum CUtype *CU)
 SSMprotocol::state_dt SSMprotocol::state()
 {
 	return _state;
+}
+
+
+AbstractDiagInterface::protocol_type SSMprotocol::ifceProtocolType()
+{
+	return _ifceProtocol;
 }
 
 

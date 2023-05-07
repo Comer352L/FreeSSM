@@ -72,6 +72,7 @@ public:
 	state_dt state();
 	virtual CUsetupResult_dt setupCUdata(enum CUtype CU) = 0;
 	virtual protocol_dt protocolType() = 0;
+	AbstractDiagInterface::protocol_type ifceProtocolType();
 	std::string getSysID() const;
 	std::string getROMID() const;
 	bool getSystemDescription(QString *sysdescription);
@@ -116,6 +117,7 @@ public:
 
 protected:
 	AbstractDiagInterface *_diagInterface;
+	AbstractDiagInterface::protocol_type _ifceProtocol;
 	enum CUtype _CU;
 	state_dt _state;
 	QString _language;
