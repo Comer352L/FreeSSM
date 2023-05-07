@@ -52,7 +52,7 @@ SerialPassThroughDiagInterface::~SerialPassThroughDiagInterface()
 
 AbstractDiagInterface::interface_type SerialPassThroughDiagInterface::interfaceType()
 {
-	return interface_serialPassThrough;
+	return interface_type::serialPassThrough;
 }
 
 

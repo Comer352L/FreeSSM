@@ -26,7 +26,7 @@ FreeSSM::FreeSSM(QApplication *app)
 {
 	_qt_translator = NULL;
 	_translator = NULL;
-	_iface_type = AbstractDiagInterface::interface_serialPassThrough;
+	_iface_type = AbstractDiagInterface::interface_type::serialPassThrough;
 	_iface_filename = "";
 	_language = "en";	// default language
 	_dumping = false;
@@ -160,9 +160,9 @@ FreeSSM::FreeSSM(QApplication *app)
 		}
 	}
 	// CHECK THE SAVED INTERFACE SETTINGS AND CORRECT IF NECESSARY:
-	if (savedinterfacetype == QString::number(AbstractDiagInterface::interface_J2534))	// J2534-Pass-Through
+	if (savedinterfacetype == QString::number(static_cast<int>(AbstractDiagInterface::interface_type::J2534)))	// J2534-Pass-Through
 	{
-		_iface_type = AbstractDiagInterface::interface_J2534;
+		_iface_type = AbstractDiagInterface::interface_type::J2534;
 		const std::vector<J2534Library> J2534libs = J2534_API::getAvailableJ2534Libs();
 		if (J2534libs.size())
 		{
@@ -184,10 +184,10 @@ FreeSSM::FreeSSM(QApplication *app)
 	}
 	else	// Serial Pass-Through, AT-comand controlled (e.g. ELM, AGV, Diamex) or invalid
 	{
-		if (savedinterfacetype == QString::number(AbstractDiagInterface::interface_ATcommandControlled))
-			_iface_type = AbstractDiagInterface::interface_ATcommandControlled;
+		if (savedinterfacetype == QString::number(static_cast<int>(AbstractDiagInterface::interface_type::ATcommandControlled)))
+			_iface_type = AbstractDiagInterface::interface_type::ATcommandControlled;
 		else
-			_iface_type = AbstractDiagInterface::interface_serialPassThrough;
+			_iface_type = AbstractDiagInterface::interface_type::serialPassThrough;
 		std::vector<std::string> portlist;
 		portlist = serialCOM::GetAvailablePorts();
 		if (portlist.size())
@@ -418,15 +418,15 @@ AbstractDiagInterface * FreeSSM::initInterface()
 	}
 	// Open interface:
 	AbstractDiagInterface *diagInterface = NULL;
-	if (_iface_type == AbstractDiagInterface::interface_serialPassThrough)
+	if (_iface_type == AbstractDiagInterface::interface_type::serialPassThrough)
 	{
 		diagInterface = new SerialPassThroughDiagInterface;
 	}
-	else if (_iface_type == AbstractDiagInterface::interface_J2534)
+	else if (_iface_type == AbstractDiagInterface::interface_type::J2534)
 	{
 		diagInterface = new J2534DiagInterface;
 	}
-	else if (_iface_type == AbstractDiagInterface::interface_ATcommandControlled)
+	else if (_iface_type == AbstractDiagInterface::interface_type::ATcommandControlled)
 	{
 		diagInterface = new ATcommandControlledDiagInterface;
 	}

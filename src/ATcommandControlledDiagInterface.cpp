@@ -51,7 +51,7 @@ ATcommandControlledDiagInterface::~ATcommandControlledDiagInterface()
 
 AbstractDiagInterface::interface_type ATcommandControlledDiagInterface::interfaceType()
 {
-	return interface_ATcommandControlled;
+	return interface_type::ATcommandControlled;
 }
 
 

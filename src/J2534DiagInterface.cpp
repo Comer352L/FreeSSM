@@ -43,7 +43,7 @@ J2534DiagInterface::~J2534DiagInterface()
 
 AbstractDiagInterface::interface_type J2534DiagInterface::interfaceType()
 {
-	return interface_J2534;
+	return interface_type::J2534;
 }
 
 

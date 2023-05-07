@@ -66,13 +66,13 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 		guistyle_comboBox->setEnabled( false );
 	// INTERFACES:
 	int if_name_index = -1;
-	if (_newinterfacetype == AbstractDiagInterface::interface_J2534) // J2534-Pass-Through
+	if (_newinterfacetype == AbstractDiagInterface::interface_type::J2534) // J2534-Pass-Through
 	{
 		interfaceType_comboBox->setCurrentIndex(1);
 		selectInterfaceType(1); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
 		if_name_index = _J2534libraryPaths.indexOf(*_r_interfacefilename);
 	}
-	else if (_newinterfacetype == AbstractDiagInterface::interface_ATcommandControlled) // AT-comand controlled (e.g. ELM, AGV, Diamex)
+	else if (_newinterfacetype == AbstractDiagInterface::interface_type::ATcommandControlled) // AT-comand controlled (e.g. ELM, AGV, Diamex)
 	{
 		interfaceType_comboBox->setCurrentIndex(2);
 		selectInterfaceType(2);
@@ -198,7 +198,7 @@ void Preferences::selectInterfaceType(int index)
 	QStringList deviceNames;
 	if (index == 1)	// J2534-Pass-Through
 	{
-		_newinterfacetype = AbstractDiagInterface::interface_J2534;
+		_newinterfacetype = AbstractDiagInterface::interface_type::J2534;
 		interfaceName_label->setText(tr("Interface-Name:"));
 		for (const J2534Library& lib : J2534_API::getAvailableJ2534Libs())
 		{
@@ -213,9 +213,9 @@ void Preferences::selectInterfaceType(int index)
 	else if ((index == 0) || (index == 2))	// Serial Pass-Through or AT-comand controlled (e.g. ELM, AGV, Diamex)
 	{
 		if (index == 2)
-			_newinterfacetype = AbstractDiagInterface::interface_ATcommandControlled;
+			_newinterfacetype = AbstractDiagInterface::interface_type::ATcommandControlled;
 		else	// index == 0
-			_newinterfacetype = AbstractDiagInterface::interface_serialPassThrough;
+			_newinterfacetype = AbstractDiagInterface::interface_type::serialPassThrough;
 		interfaceName_label->setText(tr("Serial Port:"));
 		std::vector<std::string> portlist = serialCOM::GetAvailablePorts();
 		for (unsigned int k=0; k<portlist.size(); k++)
@@ -239,7 +239,7 @@ void Preferences::selectInterfaceName(int index)
 		_newinterfacefilename = "";
 	else
 	{
-		if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
+		if (_newinterfacetype == AbstractDiagInterface::interface_type::J2534)
 		{
 			if (index < _J2534libraryPaths.size())
 				_newinterfacefilename = _J2534libraryPaths.at(index);
@@ -259,15 +259,15 @@ void Preferences::interfacetest()
 	QFont msgboxfont;
 	// PREPARE INTERFACE:
 	AbstractDiagInterface *diagInterface = NULL;
-	if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+	if (_newinterfacetype == AbstractDiagInterface::interface_type::serialPassThrough)
 	{
 		diagInterface = new SerialPassThroughDiagInterface;
 	}
-	else if (_newinterfacetype == AbstractDiagInterface::interface_J2534)
+	else if (_newinterfacetype == AbstractDiagInterface::interface_type::J2534)
 	{
 		diagInterface = new J2534DiagInterface;
 	}
-	else if (_newinterfacetype == AbstractDiagInterface::interface_ATcommandControlled)
+	else if (_newinterfacetype == AbstractDiagInterface::interface_type::ATcommandControlled)
 	{
 		diagInterface = new ATcommandControlledDiagInterface;
 	}
@@ -362,7 +362,7 @@ void Preferences::interfacetest()
 			// SSM1:
 			progressMsgBox->setValue(35);
 			progressMsgBox->setLabelText(tr("Testing interface for SSM1 support... Please wait !") + "     ");
-			if (!((diagInterface->interfaceType() == AbstractDiagInterface::interface_serialPassThrough) && icresult)) // NOTE: if a serial PT interface works with ISO-9141/ISO-14230 (=> SSM2), it cannot support SSM1
+			if (!((diagInterface->interfaceType() == AbstractDiagInterface::interface_type::serialPassThrough) && icresult)) // NOTE: if a serial PT interface works with ISO-9141/ISO-14230 (=> SSM2), it cannot support SSM1
 			{
 				int pVal_start = progressMsgBox->value();
 				int pVal_remaining = 100 - progressMsgBox->value();
@@ -398,7 +398,7 @@ void Preferences::interfacetest()
 				resultText = tr("Interface test failed !");
 			if (!SSM1configOK && !SSM2viaISO14230configOK && !SSM2viaISO15765configOK)	// => test must have failed
 			{
-				if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+				if (_newinterfacetype == AbstractDiagInterface::interface_type::serialPassThrough)
 					resultText += "\n\n" + tr("The selected serial port can not be configured for the SSM1- and SSM2-protocol.");
 				else
 					resultText += "\n\n" + tr("The selected interface does not support the SSM1- and SSM2-protocol.");
@@ -412,21 +412,21 @@ void Preferences::interfacetest()
 				resultText += "\n\n" + tr("WARNING:");
 				if (!SSM1configOK)
 				{
-					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+					if (_newinterfacetype == AbstractDiagInterface::interface_type::serialPassThrough)
 						resultText += '\n' + tr("The selected serial port can not be configured for the SSM1-protocol.");
 					else
 						resultText += '\n' + tr("The selected interface does not support the SSM1-protocol.");
 				}
 				if (!SSM2viaISO14230configOK)
 				{
-					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+					if (_newinterfacetype == AbstractDiagInterface::interface_type::serialPassThrough)
 						resultText += '\n' + tr("The selected serial port can not be configured for the SSM2-protocol via ISO-14230.");
 					else
 						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol via ISO-14230.");
 				}
 				if (!SSM2viaISO15765configOK)
 				{
-					if (_newinterfacetype == AbstractDiagInterface::interface_serialPassThrough)
+					if (_newinterfacetype == AbstractDiagInterface::interface_type::serialPassThrough)
 						resultText += '\n' + tr("Serial Pass-Through interfaces do not support the SSM2-protocol via ISO-15765.");
 					else
 						resultText += '\n' + tr("The selected interface does not support the SSM2-protocol via ISO-15765.");
@@ -472,7 +472,7 @@ void Preferences::ok()
 		prefsfile.write(_newinterfacefilename.toUtf8() + "\n");	// save interface name
 		prefsfile.write(_language_current.toUtf8() + "\n");	// save language
 		prefsfile.write(stylename.toUtf8() + "\n");		// save preferred GUI-style
-		prefsfile.write(QString::number(_newinterfacetype).toUtf8() + "\n"); // save interface type
+		prefsfile.write(QString::number(static_cast<int>(_newinterfacetype)).toUtf8() + "\n"); // save interface type
 		prefsfile.close();
 	}
 	else
