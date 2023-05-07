@@ -198,14 +198,14 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 	{
 		if ((_if_model == if_none) || (_if_model == if_unsupported))
 			return false;
-		if (protocol == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 		{
 #ifdef __FSSM_DEBUG__
 			std::cout << "ATcommandControlledDiagInterface::connect():   configuring interface for SSM2 via ISO-15765...\n";
 #endif
 		}
 #ifdef __ENABLE_SSM2_ISO14230_EXPERIMENTAL_SUPPORT__
-		else if ((protocol == AbstractDiagInterface::protocol_SSM2_ISO14230) && (_if_model == if_model_ELM327))
+		else if ((protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (_if_model == if_model_ELM327))
 		{
 			/* NOTE: The ELM327 v1.4b is currently the only known interface which is configurable for the SSM2-over-ISO14230-protocol.
 			 * BUT: the communication is extremely unstable ! It turned out that the reason is the inter-byte timing value used by the ELM327.
@@ -245,7 +245,7 @@ bool ATcommandControlledDiagInterface::connect(protocol_type protocol)
 #endif
 		}
 		// <<< Protocol specific setup >>>
-		if (protocol == protocol_SSM2_ISO15765)
+		if (protocol == protocol_type::SSM2_ISO15765)
 		{
 			// Enable message padding
 			if ((_if_model == if_model_AGV) || (_if_model == if_model_AGV4000B)) // AGV4000(B)+DX35+DX60/61
@@ -440,7 +440,7 @@ bool ATcommandControlledDiagInterface::disconnect()
 		if ((_if_model == if_model_ELM327) || (_if_model == if_model_ELM329))
 			writeRead("ATPC");	// ELM327/ELM329 only
 		_connected = false;
-		setProtocolType( protocol_NONE );
+		setProtocolType( protocol_type::NONE );
 		setProtocolBaudrate( 0 );
 		return true;
 	}
@@ -518,7 +518,7 @@ bool ATcommandControlledDiagInterface::write(std::vector<char> buffer)
 		// Strip CAN-ID / ISO-14230-Header (automatically prepended by interface):
 		buffer.erase(buffer.begin(), buffer.begin() + 4);
 		// Remove ISO-14230 checksum byte (automatically appended by interface):
-		if (protocolType() == protocol_SSM2_ISO14230)
+		if (protocolType() == protocol_type::SSM2_ISO14230)
 			buffer.pop_back();
 		// Convert data to hex-string:
 		std::string msg = dataToHexStr(buffer);
@@ -862,7 +862,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 		else
 			std::cout << "ATcommandControlledDiagInterface::probeInterface():   warning: interface seems to be of type AGV/Diamex, but command AT!01 is not supported !\n";
 #endif
-		supportedProtocols.push_back(protocol_SSM2_ISO15765);
+		supportedProtocols.push_back(protocol_type::SSM2_ISO15765);
 	}
 	else if (reply.find("ELM") != std::string::npos)
 	{
@@ -898,7 +898,7 @@ ATcommandControlledDiagInterface::if_model_dt ATcommandControlledDiagInterface::
 #endif
 			if_model = if_model_ELM327;
 		}
-		supportedProtocols.push_back(protocol_SSM2_ISO15765);
+		supportedProtocols.push_back(protocol_type::SSM2_ISO15765);
 		// Get interface name and version
 		size_t pos_v = reply.rfind(" v");
 		size_t pos_dot = reply.rfind(".");
@@ -1338,7 +1338,7 @@ bool ATcommandControlledDiagInterface::changeDeviceAddresses(unsigned int source
 #ifdef __FSSM_DEBUG__
 	std::cout << "ATcommandControlledDiagInterface::changeDeviceAddresses():   changing device addresses to 0x" << std::hex << source_addr << " (source) and 0x" << target_addr << " (target)\n";
 #endif
-	if (protocol == protocol_SSM2_ISO15765)
+	if (protocol == protocol_type::SSM2_ISO15765)
 	{
 		// Check address range (currently supported: OBD2 address range for 11bit CAN-ID)
 		if ((target_addr < 0x7E0) || (target_addr > 0x7E7))

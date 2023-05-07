@@ -112,11 +112,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	// Create SSMP2communication-object:
 	if (CU == CUtype::Engine)
 	{
-		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
 			CUaddress = 0x10;
 		}
-		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 		{
 			CUaddress = 0x7E0;
 		}
@@ -125,11 +125,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	}
 	else if (CU == CUtype::Transmission)
 	{
-		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
 			CUaddress = 0x18;
 		}
-		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
+		else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 		{
 			CUaddress = 0x7E1;
 		}
@@ -142,7 +142,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	// Get control unit data:
 	if (!_SSMP2com->getCUdata(_ssmCUdata))
 	{
-		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
 			_SSMP2com->setCUaddress(0x01);
 			if (!_SSMP2com->getCUdata(_ssmCUdata))

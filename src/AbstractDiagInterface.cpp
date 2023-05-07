@@ -22,7 +22,7 @@
 
 AbstractDiagInterface::AbstractDiagInterface()
 {
-	_protocoltype = protocol_NONE;
+	_protocoltype = protocol_type::NONE;
 	_protocol_baudrate = 0;
 }
 
@@ -117,13 +117,13 @@ std::string AbstractDiagInterface::protocolDescription(protocol_type protocol)
 {
 	switch (protocol)
 	{
-		case protocol_NONE:
+		case protocol_type::NONE:
 			return "";
-		case protocol_SSM1:
+		case protocol_type::SSM1:
 			return "SSM1 (type 1)";
-		case protocol_SSM2_ISO14230:
+		case protocol_type::SSM2_ISO14230:
 			return "SSM2 / ISO-14230";
-		case protocol_SSM2_ISO15765:
+		case protocol_type::SSM2_ISO15765:
 			return "SSM2 / ISO-15765";
 		default:	// BUG
 			return "UNKNOWN";

@@ -530,7 +530,7 @@ void FreeSSM::dumpCUdata()
 	// ######## SSM2-Control-Units ########
 	// **************** ECU ***************
 	// Read ECU data:
-	if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
+	if (diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO14230))
 	{
 		cu_resp = true;
 		if (!SSMP2com.getCUdata(ssmCUdata))
@@ -546,7 +546,7 @@ void FreeSSM::dumpCUdata()
 	if (!cu_resp)
 	{
 		diagInterface->disconnect();
-		if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
+		if (diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO15765))
 		{
 			SSMP2com.setCUaddress(0x7E0);
 			cu_resp = SSMP2com.getCUdata(ssmCUdata);
@@ -589,7 +589,7 @@ void FreeSSM::dumpCUdata()
 	// Read TCU data:
 	cu_resp = false;
 	diagInterface->disconnect();
-	if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230))
+	if (diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO14230))
 	{
 		SSMP2com.setCUaddress(0x18);
 		cu_resp = true;
@@ -602,7 +602,7 @@ void FreeSSM::dumpCUdata()
 	if (!cu_resp)
 	{
 		diagInterface->disconnect();
-		if (diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765))
+		if (diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO15765))
 		{
 			SSMP2com.setCUaddress(0x7E1);
 			// Read TCU data:
@@ -621,7 +621,7 @@ void FreeSSM::dumpCUdata()
 
 	// ######## SSM1-Control-Units ########
 	// Configure interface:
-	if (!diagInterface->connect(AbstractDiagInterface::protocol_SSM1))
+	if (!diagInterface->connect(AbstractDiagInterface::protocol_type::SSM1))
 		goto end;
 	// Dump all SSM1-CUs:
 	for (ssm1_cu_index = SSM1_CU_Engine; ssm1_cu_index < END_OF_CU_LIST; ssm1_cu_index++)

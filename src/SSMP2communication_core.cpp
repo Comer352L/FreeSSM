@@ -31,11 +31,11 @@ bool SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const ch
 {
 	if ((dataaddr > 0xffffff) || (nrofbytes == 0))
 		return false;
-	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
 	{
 		return false;
 	}
-	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
 	{
 		return false;
 	}
@@ -74,7 +74,7 @@ bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, 
 {
 	if (datalen == 0)
 		return false;
-	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 84)) // ISO14230 protocol limit: length byte in header => max. (255-2)/3 = 84 addresses per request message possible
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (datalen > 84)) // ISO14230 protocol limit: length byte in header => max. (255-2)/3 = 84 addresses per request message possible
 		return false;
 	// NOTE: Control unit have (different) limits which are lower than the theoretical max. number of addresses per request !
 	char indata[255] = {0,};
@@ -104,7 +104,7 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 {
 	if ((dataaddr > 0xffffff) || (datalen == 0))
 		return false;
-	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
+	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
 		return false;
 	char indata[252] = {0,};
 	unsigned char indatalen = 0;
@@ -186,8 +186,8 @@ bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, char *cuData
 	char reqmsg = 0;
 	// Request command byte
 	switch(_diagInterface->protocolType()) {
-	case AbstractDiagInterface::protocol_SSM2_ISO14230: reqmsg = '\xBF'; break;
-	case AbstractDiagInterface::protocol_SSM2_ISO15765:	reqmsg = '\xAA'; break;
+	case AbstractDiagInterface::protocol_type::SSM2_ISO14230: reqmsg = '\xBF'; break;
+	case AbstractDiagInterface::protocol_type::SSM2_ISO15765:	reqmsg = '\xAA'; break;
 	default: return false;
 	}
 
@@ -202,8 +202,8 @@ bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, char *cuData
 		if ((indatalen == 41) || (indatalen == 57) || (indatalen == 105))
 		{
 			// CHECK DATA:
-			if (((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230) && (indata[0] == '\xFF'))
-				|| ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765) && (indata[0] == '\xEA')))
+			if (((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (indata[0] == '\xFF'))
+				|| ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765) && (indata[0] == '\xEA')))
 			{
 				std::copy(indata + 1, indata + indatalen, cuData);
 				*cuDataSize = indatalen - 1;
@@ -224,7 +224,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 	// SETUP COMPLETE MESSAGE:
 	// Protocol-header
 	switch(_diagInterface->protocolType()) {
-	case AbstractDiagInterface::protocol_SSM2_ISO14230:
+	case AbstractDiagInterface::protocol_type::SSM2_ISO14230:
 		if (ecuaddr > 0xff) return false;
 		// header, 4 bytes
 		msg_buffer.push_back('\x80');
@@ -232,7 +232,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 		msg_buffer.push_back('\xF0');
 		msg_buffer.push_back(static_cast<char>(outdatalen));
 		break;
-	case AbstractDiagInterface::protocol_SSM2_ISO15765:
+	case AbstractDiagInterface::protocol_type::SSM2_ISO15765:
 		// CAN-ID, 4 bytes
 		libFSSM::push_back_UInt32BigEndian(msg_buffer, ecuaddr);
 		break;
@@ -242,7 +242,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 	// Message:
 	msg_buffer.insert(msg_buffer.end(), outdata, outdata + outdatalen);
 	// Checksum (SSM2 over ISO-14230 only):
-	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		msg_buffer.push_back( libFSSM::calcchecksum(msg_buffer.data(), msg_buffer.size()) );
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
@@ -270,12 +270,12 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 	}
 	msg_buffer.clear();
 	/* RECEIVE REPLY MESSAGE: */
-	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
 		if (!receiveReplyISO14230(ecuaddr, 4+outdatalen+1, &msg_buffer))
 			return false;
 	}
-	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_SSM2_ISO15765)
+	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
 		if (!receiveReplyISO15765(ecuaddr, &msg_buffer))
 			return false;
@@ -287,12 +287,12 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const ch
 #endif
 	// MESSAGE LENGTH:
 	switch(_diagInterface->protocolType()) {
-	case AbstractDiagInterface::protocol_SSM2_ISO14230:
+	case AbstractDiagInterface::protocol_type::SSM2_ISO14230:
 		// ignore SSM2_header[4] and checksum[1]
 		std::copy(msg_buffer.begin() + 4, msg_buffer.end() - 1, indata);
 		*indatalen = msg_buffer.size() - 4 - 1;
 		break;
-	case AbstractDiagInterface::protocol_SSM2_ISO15765:
+	case AbstractDiagInterface::protocol_type::SSM2_ISO15765:
 		// ignore CAN-ID[4]
 		std::copy(msg_buffer.begin() + 4, msg_buffer.end(), indata);
 		*indatalen = msg_buffer.size() - 4;

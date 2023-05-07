@@ -316,7 +316,7 @@ void Preferences::interfacetest()
 			// SSM2:
 			SSMP2communication *SSMP2com = new SSMP2communication(diagInterface);
 			SSMP2com->setRetriesOnError(0);
-			SSM2viaISO14230configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO14230);
+			SSM2viaISO14230configOK = diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO14230);
 			if (SSM2viaISO14230configOK)
 			{
 				SSMP2com->setCUaddress(0x10);
@@ -344,7 +344,7 @@ void Preferences::interfacetest()
 			}
 			progressMsgBox->setValue(20);
 			progressMsgBox->setLabelText(tr("Testing interface for SSM2 via ISO-15765 support... Please wait !") + "     ");
-			SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM2_ISO15765);
+			SSM2viaISO15765configOK = diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO15765);
 			if (SSM2viaISO15765configOK && !icresult)
 			{
 				SSMP2com->setCUaddress(0x7E0);
@@ -366,7 +366,7 @@ void Preferences::interfacetest()
 			{
 				int pVal_start = progressMsgBox->value();
 				int pVal_remaining = 100 - progressMsgBox->value();
-				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_SSM1);
+				SSM1configOK = diagInterface->connect(AbstractDiagInterface::protocol_type::SSM1);
 				if (SSM1configOK && !icresult)
 				{
 					int ssm1_cu = SSM1_CU_Engine;

@@ -28,8 +28,8 @@ SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
 	_connected = false;
 	setName("Serial Port Pass-Through");
 	setVersion("1.0");
-	supportedProtocols.push_back(protocol_SSM1);
-	supportedProtocols.push_back(protocol_SSM2_ISO14230);
+	supportedProtocols.push_back(protocol_type::SSM1);
+	supportedProtocols.push_back(protocol_type::SSM2_ISO14230);
 	setSupportedProtocols(supportedProtocols);
 	/* NOTE: due to the interfaces construction, we can not know which protocol it actually supports !
 	 * One possibility would be to check for an data echo:
@@ -103,7 +103,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 {
 	if (_port && !_connected)
 	{
-		if (protocol == AbstractDiagInterface::protocol_SSM1)
+		if (protocol == AbstractDiagInterface::protocol_type::SSM1)
 		{
 			if (_port->SetPortSettings(1953, 8, 'E', 1))
 			{
@@ -123,7 +123,7 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 				return true;
 			}
 		}
-		else if (protocol == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		else if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
 			if (_port->SetPortSettings(4800, 8, 'N', 1))
 			{
@@ -149,7 +149,7 @@ bool SerialPassThroughDiagInterface::disconnect()
 	if (_port)
 	{
 		_connected = false;
-		setProtocolType( protocol_NONE );
+		setProtocolType( protocol_type::NONE );
 		setProtocolBaudrate( 0 );
 		return true;
 	}
@@ -185,11 +185,11 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		TimeM time;
 		unsigned int t_el = 0;
 		unsigned int T_Tx_min = 0;
-		if (protocolType() == AbstractDiagInterface::protocol_SSM1)
+		if (protocolType() == AbstractDiagInterface::protocol_type::SSM1)
 		{
 			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 11 / 1953.0);
 		}
-		else if (protocolType() == AbstractDiagInterface::protocol_SSM2_ISO14230)
+		else if (protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
 			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 10 / 4800.0);
 		}
