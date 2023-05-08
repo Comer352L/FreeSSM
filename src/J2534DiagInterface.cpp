@@ -586,8 +586,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 					}
 					else if (rx_msgs[i].ExtraDataIndex < rx_msgs[i].DataSize)
 					{
-						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_SSM2_ISO14230) ||
-							((protocolType() == protocol_SSM2_ISO14230) && (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
+						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_type::SSM2_ISO14230) ||
+							((protocolType() == protocol_type::SSM2_ISO14230) && (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
 							std::cout << "  WARNING: ExtraDataIndex is smaller than expected !\n";
 						/* NOTE:
 						* - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
