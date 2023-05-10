@@ -109,6 +109,8 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 
 	// Reset:
 	resetCUdata();
+	// Update cached value of the active interface protocol:
+	_ifceProtocol = _diagInterface->protocolType(); // NOTE: can't change until resetCUdata() has been called, because _SSMP2com has exclusive access to _diagInterface and doesn't change the protocol
 	// Create SSMP2communication-object:
 	if (CU == CUtype::Engine)
 	{

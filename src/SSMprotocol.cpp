@@ -24,7 +24,7 @@
 SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 {
 	_diagInterface = diagInterface;
-	_ifceProtocol = diagInterface->protocolType();
+	_ifceProtocol = diagInterface->protocolType(); // NOTE: may change later
 	_language = language;
 	_CU = CUtype::Engine;
 	_state = state_needSetup;
@@ -55,6 +55,9 @@ SSMprotocol::state_dt SSMprotocol::state()
 
 AbstractDiagInterface::protocol_type SSMprotocol::ifceProtocolType()
 {
+	if (_state == state_needSetup)
+		_ifceProtocol = _diagInterface->protocolType();
+	// else: NOTE: we must not access _diagInterface, because SSMP[1/2]communication has exclusive access, which also means the protocol can't change
 	return _ifceProtocol;
 }
 
