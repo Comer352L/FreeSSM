@@ -102,8 +102,8 @@ public:
 class adjustment_intl_dt : public adjustment_dt
 {
 public:
-	unsigned int AddrLow;
-	unsigned int AddrHigh;
+	unsigned int addrLow;
+	unsigned int addrHigh;
 };
 
 

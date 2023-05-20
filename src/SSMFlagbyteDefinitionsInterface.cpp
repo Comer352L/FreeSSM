@@ -352,12 +352,12 @@ bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt
 			continue;
 		if ( !((_CU == CUtype::Engine) && (tmpCU == 0)) && !((_CU == CUtype::Transmission) && (tmpCU == 1)) )
 			continue;
-		tmpadjustment.AddrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
-		if (!ok || (tmpadjustment.AddrLow == 0))
+		tmpadjustment.addrLow = defline.section(';', 2, 2).toUInt(&ok, 16);
+		if (!ok || (tmpadjustment.addrLow == 0))
 			continue;
-		tmpadjustment.AddrHigh = defline.section(';', 3, 3).toUInt(&ok, 16);
-		if (!ok || (tmpadjustment.AddrHigh < 1))
-			tmpadjustment.AddrHigh = 0;
+		tmpadjustment.addrHigh = defline.section(';', 3, 3).toUInt(&ok, 16);
+		if (!ok || (tmpadjustment.addrHigh < 1))
+			tmpadjustment.addrHigh = 0;
 		tmpadjustment.title = defline.section(';', 4, 4);
 		if (!tmpadjustment.title.length())
 			continue;

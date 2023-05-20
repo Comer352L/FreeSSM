@@ -373,9 +373,9 @@ bool SSMprotocol1::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 	// Validate adjustment value selection:
 	if (_adjustments.empty() || (index >= _adjustments.size())) return false;
 	// Convert memory address into two byte addresses:
-	dataaddr.push_back( _adjustments.at(index).AddrLow );
-	if (_adjustments.at(index).AddrHigh > 0)
-		dataaddr.push_back( _adjustments.at(index).AddrHigh );
+	dataaddr.push_back( _adjustments.at(index).addrLow );
+	if (_adjustments.at(index).addrHigh > 0)
+		dataaddr.push_back( _adjustments.at(index).addrHigh );
 	// Read data from control unit:
 	if (!_SSMP1com->readAddresses(dataaddr, &data))
 	{
@@ -384,7 +384,7 @@ bool SSMprotocol1::getAdjustmentValue(unsigned char index, unsigned int *rawValu
 	}
 	// Calculate raw value:
 	*rawValue = static_cast<unsigned char>(data.at(0));
-	if (_adjustments.at(index).AddrHigh > 0)
+	if (_adjustments.at(index).addrHigh > 0)
 		*rawValue += 256*static_cast<unsigned char>(data.at(1));
 	return true;
 }
@@ -400,9 +400,9 @@ bool SSMprotocol1::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 	// Setup address list:
 	for (k=0; k<_adjustments.size(); k++)
 	{
-		dataaddr.push_back( _adjustments.at(k).AddrLow );
-		if (_adjustments.at(k).AddrHigh > 0)
-			dataaddr.push_back( _adjustments.at(k).AddrHigh );
+		dataaddr.push_back( _adjustments.at(k).addrLow );
+		if (_adjustments.at(k).addrHigh > 0)
+			dataaddr.push_back( _adjustments.at(k).addrHigh );
 	}
 	// Read data from control unit:
 	data.resize( dataaddr.size() );
@@ -417,7 +417,7 @@ bool SSMprotocol1::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 	{
 		rawValues->push_back( static_cast<unsigned char>(data.at(addrindex)) );
 		addrindex++;
-		if (_adjustments.at(k).AddrHigh > 0)
+		if (_adjustments.at(k).addrHigh > 0)
 		{
 			rawValues->at(k) += 256*static_cast<unsigned char>(data.at(addrindex));
 			addrindex++;
@@ -438,7 +438,7 @@ bool SSMprotocol1::setAdjustmentValue(unsigned char index, unsigned int rawValue
 		return false;
 	if ((_adjustments.at(index).rawMin > _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin) && (rawValue > _adjustments.at(index).rawMax))
 		return false;
-	if ((_adjustments.at(index).AddrHigh > 0) && (rawValue > 65535))
+	if ((_adjustments.at(index).addrHigh > 0) && (rawValue > 65535))
 	{
 		return false;
 	}
@@ -447,11 +447,11 @@ bool SSMprotocol1::setAdjustmentValue(unsigned char index, unsigned int rawValue
 		return false;
 	}
 	// Setup addresses and convert raw value to 2 byte values:
-	addresses.push_back( _adjustments.at(index).AddrLow );
+	addresses.push_back( _adjustments.at(index).addrLow );
 	data.push_back( static_cast<char>(rawValue & 0xff) );
-	if (_adjustments.at(index).AddrHigh > 0)
+	if (_adjustments.at(index).addrHigh > 0)
 	{
-		addresses.push_back( _adjustments.at(index).AddrHigh );
+		addresses.push_back( _adjustments.at(index).addrHigh );
 		data.push_back( static_cast<char>((rawValue & 0xffff) >> 8) );
 	}
 	// Write value to control unit:
