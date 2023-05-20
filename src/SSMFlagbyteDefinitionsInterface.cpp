@@ -174,16 +174,16 @@ bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *m
 			continue;
 		// Get memory address (low) definition:
 		tmpstr = mbdefline.section(';', 3, 3);
-		tmpMB.addr_low = tmpstr.toUInt(&ok, 16);
+		tmpMB.addrLow = tmpstr.toUInt(&ok, 16);
 		// Check if memory address (low) is valid:
-		if (!ok || (tmpMB.addr_low == 0))
+		if (!ok || (tmpMB.addrLow == 0))
 			continue;
 		// Get memory address (high) definition:
 		tmpstr = mbdefline.section(';', 4, 4);
 		if (tmpstr.isEmpty())
-			tmpMB.addr_high = MEMORY_ADDRESS_NONE;
+			tmpMB.addrHigh = MEMORY_ADDRESS_NONE;
 		else
-			tmpMB.addr_high = tmpstr.toUInt(&ok, 16);
+			tmpMB.addrHigh = tmpstr.toUInt(&ok, 16);
 		if (!ok)
 			continue;
 		// Get title definition:

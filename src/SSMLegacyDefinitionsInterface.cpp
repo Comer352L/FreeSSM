@@ -393,7 +393,7 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		bool duplicate = false;
 		for (unsigned int m=0; m<mbs->size(); m++)
 		{
-			if ((addr == mbs->at(m).addr_low) || (addr == mbs->at(m).addr_high))
+			if ((addr == mbs->at(m).addrLow) || (addr == mbs->at(m).addrHigh))
 			{
 				duplicate = true;
 				mbs->erase(mbs->begin() + m);
@@ -402,8 +402,8 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		}
 		if (duplicate)
 			continue;
-		mb.addr_low = addr;
-		mb.addr_high = MEMORY_ADDRESS_NONE;
+		mb.addrLow = addr;
+		mb.addrHigh = MEMORY_ADDRESS_NONE;
 		// --- Get common data ---
 		// Find MB data:
 		XMLElement *MBdata_element = NULL;

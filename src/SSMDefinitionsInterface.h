@@ -73,8 +73,8 @@ public:
 class  mb_intl_dt : public mb_dt
 {
 public:
-	unsigned int addr_low;
-	unsigned int addr_high;
+	unsigned int addrLow;
+	unsigned int addrHigh;
 };
 
 
