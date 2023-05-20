@@ -67,6 +67,7 @@ public:
 	bool getDCblockData(std::vector<dc_block_dt> *block_data);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
+	bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	bool clearMemoryData(unsigned int *address, char *value);
 
 	void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles);
@@ -93,6 +94,7 @@ private:
 
 	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
+	bool getRawValueElementValue(XMLElement *parent_elem, std::string elem_name, unsigned int *rawValue);
 
 	void rawbyteToAssignmentListDCs(unsigned int address, char databyte, XMLElement *DCaddr_elem,
 	                                std::string assignment_elem_name, std::string assignment_elem_id_name,

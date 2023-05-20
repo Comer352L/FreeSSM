@@ -233,6 +233,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		LegacyDefsIface->getDCblockData(&_DTCblockData);
 		LegacyDefsIface->measuringBlocks(&_supportedMBs);
 		LegacyDefsIface->switches(&_supportedSWs);
+		LegacyDefsIface->adjustments(&_adjustments);
 		LegacyDefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
 		_SSMdefsIfce = LegacyDefsIface;
 	}

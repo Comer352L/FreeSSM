@@ -534,6 +534,107 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 }
 
 
+bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adjustments)
+{
+	std::vector<XMLElement*> ADJ_elements;
+	const char *str = NULL;
+
+	if (adjustments == NULL)
+		return false;
+	adjustments->clear();
+	if (!_id_set)
+		return false;
+	ADJ_elements = getAllMultilevelElements("ADJ");
+	for (unsigned int k=0; k<ADJ_elements.size(); k++)
+	{
+		std::vector<XMLElement*> tmp_elements;
+		adjustment_intl_dt adj;
+		// Get ID:
+		std::string id;
+		id = ADJ_elements.at(k)->Attribute("id");
+		if (!id.size())
+			continue;
+		// Get address:
+		tmp_elements = getAllMatchingChildElements(ADJ_elements.at(k), "ADDRESS");
+		if (tmp_elements.size() != 1)
+			continue;
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		unsigned long int addr = strtoul( str, NULL, 0 );
+		if (addr > 0xffff)
+			continue;
+		// Check for duplicate definitions (addresses):
+		bool duplicate = false;
+		for (unsigned int a=0; a<adjustments->size(); a++)
+		{
+			if ((addr == adjustments->at(a).addrLow) || (addr == adjustments->at(a).addrHigh))
+			{
+				duplicate = true;
+				adjustments->erase(adjustments->begin() + a);
+				break;
+			}
+		}
+		if (duplicate)
+			continue;
+		adj.addrLow = addr;
+		adj.addrHigh = MEMORY_ADDRESS_NONE;
+		// --- Get common data ---
+		// Find ADJ data:
+		XMLElement *ADJdata_element = NULL;
+		attributeCondition attribCond;
+		attribCond.name = "id";
+		attribCond.value = id;
+		attribCond.condition = attributeCondition::equal;
+		tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "ADJ", std::vector<attributeCondition>(1, attribCond));
+		if (tmp_elements.size() != 1)
+			continue;
+		ADJdata_element = tmp_elements.at(0);
+		// Get title:
+		if (!getLanguageDependentElementString(ADJdata_element, "TITLE", &adj.title))
+			continue;
+		// Get unit:
+		if (!getLanguageDependentElementString(ADJdata_element, "UNIT", &adj.unit))
+			continue;
+		// Get formula:
+		tmp_elements = getAllMatchingChildElements(ADJdata_element, "FORMULA");
+		if (tmp_elements.size() != 1)
+			continue;
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		adj.formula = QString( str );
+		// Get default raw value:
+		if (!getRawValueElementValue(ADJdata_element, "DEFAULT_RAW_VALUE", &adj.rawDefault))
+			continue;
+		// Get lower raw value limit:
+		if (!getRawValueElementValue(ADJdata_element, "MIN_RAW_VALUE", &adj.rawMin))
+			continue;
+		// Get upper raw value limit:
+		if (!getRawValueElementValue(ADJdata_element, "MAX_RAW_VALUE", &adj.rawMax))
+			continue;
+		// Check if min/max/default raw values are consistent/valid:
+		if ((adj.rawDefault < adj.rawMin) || (adj.rawMax < adj.rawDefault))
+			continue;
+		// Get precision:
+		tmp_elements = getAllMatchingChildElements(ADJdata_element, "PRECISION");
+		if (tmp_elements.size() != 1)
+			continue;
+		str = tmp_elements.at(0)->GetText();
+		if (str == NULL)
+			continue;
+		long int precision = strtol( str, NULL, 0 );
+		if ((precision >= -128) && (precision <= 127))
+			adj.precision = precision;
+		else
+			continue;
+		// Add Adjustment Value to the list:
+		adjustments->push_back(adj);
+	}
+	return true;
+}
+
+
 bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char *value)
 {
 	std::vector<XMLElement*> elements;
@@ -939,6 +1040,25 @@ bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement
 	}
 
 	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getRawValueElementValue(XMLElement *parent_elem, std::string elem_name, unsigned int *rawValue)
+{
+	std::vector<XMLElement*> tmp_elements;
+	const char *str = NULL;
+
+	tmp_elements = getAllMatchingChildElements(parent_elem, elem_name);
+	if (tmp_elements.size() != 1)
+		return false;
+	str = parent_elem->GetText();
+	if (str == NULL)
+		return false;
+	unsigned long int raw_value = strtoul( str, NULL, 0 );
+	if (raw_value > 0xff)
+		return false;
+	*rawValue = raw_value;
+	return true;
 }
 
 
