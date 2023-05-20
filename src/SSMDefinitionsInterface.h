@@ -57,7 +57,7 @@ class  mb_dt
 public:
 	QString title;
 	QString unit;
-	QString scaleformula;
+	QString formula;
 	char precision;
 };
 

@@ -465,7 +465,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 		if (_MBSWmetaList.at(k).blockType == BlockType::MB)
 		{
 			const mb_dt& mb = _supportedMBs.at(nativeIndex);
-			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.scaleformula, mb.precision, &scaledValueStr);
+			scalingSuccessful = libFSSM::raw2scaled(rawValues.at(k), mb.formula, mb.precision, &scaledValueStr);
 			unitStrList.at(tablePosIndex) = scalingSuccessful ? mb.unit : "[RAW]";
 		}
 		else	// it is a SW

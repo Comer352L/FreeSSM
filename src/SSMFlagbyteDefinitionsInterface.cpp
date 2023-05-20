@@ -192,9 +192,9 @@ bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *m
 		if (tmpMB.title.isEmpty())
 			continue;
 		// Get scaling formula definition:
-		tmpMB.scaleformula = mbdefline.section(';', 7, 7);
+		tmpMB.formula = mbdefline.section(';', 7, 7);
 		// Check if scaling formula is available:
-		if (tmpMB.scaleformula.isEmpty())
+		if (tmpMB.formula.isEmpty())
 			continue;
 		// Get precision and correct if necessary:
 		tmpstr = mbdefline.section(';', 8, 8);

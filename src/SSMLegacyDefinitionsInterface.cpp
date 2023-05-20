@@ -428,7 +428,7 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		str = tmp_elements.at(0)->GetText();
 		if (str == NULL)
 			continue;
-		mb.scaleformula = QString( str );
+		mb.formula = QString( str );
 		// Get precision:
 		tmp_elements = getAllMatchingChildElements(MBdata_element, "PRECISION");
 		if (tmp_elements.size() != 1)
