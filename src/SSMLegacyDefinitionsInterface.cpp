@@ -430,16 +430,7 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 			continue;
 		mb.formula = QString( str );
 		// Get precision:
-		tmp_elements = getAllMatchingChildElements(MBdata_element, "PRECISION");
-		if (tmp_elements.size() != 1)
-			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		long int precision = strtol( str, NULL, 0 );
-		if ((precision >= -128) && (precision <= 127))
-			mb.precision = precision;
-		else
+		if (!getPrecisionElementValue(MBdata_element, &mb.precision))
 			continue;
 		// Add MB to the list:
 		mbs->push_back(mb);
@@ -617,16 +608,7 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 		if ((adj.rawDefault < adj.rawMin) || (adj.rawMax < adj.rawDefault))
 			continue;
 		// Get precision:
-		tmp_elements = getAllMatchingChildElements(ADJdata_element, "PRECISION");
-		if (tmp_elements.size() != 1)
-			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		long int precision = strtol( str, NULL, 0 );
-		if ((precision >= -128) && (precision <= 127))
-			adj.precision = precision;
-		else
+		if (!getPrecisionElementValue(ADJdata_element, &adj.precision))
 			continue;
 		// Add Adjustment Value to the list:
 		adjustments->push_back(adj);
@@ -1040,6 +1022,25 @@ bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement
 	}
 
 	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getPrecisionElementValue(XMLElement *parent_elem, char *precision)
+{
+	std::vector<XMLElement*> tmp_elements;
+	const char *str = NULL;
+
+	tmp_elements = getAllMatchingChildElements(parent_elem, "PRECISION");
+	if (tmp_elements.size() != 1)
+		return false;
+	str = tmp_elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	long int prec = strtol( str, NULL, 0 );
+	if ((prec < -128) || (prec > 127))
+		return false;
+	*precision = prec;
+	return true;
 }
 
 
