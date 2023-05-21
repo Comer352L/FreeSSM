@@ -94,6 +94,7 @@ private:
 
 	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
+	bool getFormulaElementString(XMLElement *parent_elem, QString *formula);
 	bool getPrecisionElementValue(XMLElement *parent_elems, char *precision);
 	bool getRawValueElementValue(XMLElement *parent_elem, std::string elem_name, unsigned int *rawValue);
 

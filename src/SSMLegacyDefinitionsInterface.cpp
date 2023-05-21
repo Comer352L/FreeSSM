@@ -422,13 +422,8 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		if (!getLanguageDependentElementString(MBdata_element, "UNIT", &mb.unit))
 			continue;
 		// Get formula:
-		tmp_elements = getAllMatchingChildElements(MBdata_element, "FORMULA");
-		if (tmp_elements.size() != 1)
+		if (!getFormulaElementString(MBdata_element, &mb.formula))
 			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		mb.formula = QString( str );
 		// Get precision:
 		if (!getPrecisionElementValue(MBdata_element, &mb.precision))
 			continue;
@@ -588,13 +583,8 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 		if (!getLanguageDependentElementString(ADJdata_element, "UNIT", &adj.unit))
 			continue;
 		// Get formula:
-		tmp_elements = getAllMatchingChildElements(ADJdata_element, "FORMULA");
-		if (tmp_elements.size() != 1)
+		if (!getFormulaElementString(ADJdata_element, &adj.formula))
 			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		adj.formula = QString( str );
 		// Get default raw value:
 		if (!getRawValueElementValue(ADJdata_element, "DEFAULT_RAW_VALUE", &adj.rawDefault))
 			continue;
@@ -1022,6 +1012,22 @@ bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement
 	}
 
 	return false;
+}
+
+
+bool SSMLegacyDefinitionsInterface::getFormulaElementString(XMLElement *parent_elem, QString *formula)
+{
+	std::vector<XMLElement*> tmp_elements;
+	const char *str = NULL;
+
+	tmp_elements = getAllMatchingChildElements(parent_elem, "FORMULA");
+	if (tmp_elements.size() != 1)
+		return false;
+	str = tmp_elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	*formula = QString( str );
+	return true;
 }
 
 
