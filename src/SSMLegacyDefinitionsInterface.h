@@ -93,6 +93,7 @@ private:
 	bool versionStrToVersionNum(std::string version_str, unsigned long int *version_major, unsigned long int *version_minor, unsigned long int *version_bugfix);
 
 	XMLElement* searchForMatchingIDelement(XMLElement *parentElement, unsigned char IDbyte_number, char IDbyte_value);
+	bool getAddressElementValue(XMLElement *parentElement, unsigned int *address);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
 	bool getFormulaElementString(XMLElement *parent_elem, QString *formula);
 	bool getPrecisionElementValue(XMLElement *parent_elems, char *precision);

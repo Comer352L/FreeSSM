@@ -362,7 +362,6 @@ next_addr_elem:
 bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
 	std::vector<XMLElement*> MB_elements;
-	const char *str = NULL;
 
 	if (mbs == NULL)
 		return false;
@@ -380,14 +379,8 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		if (!id.size())
 			continue;
 		// Get address:
-		tmp_elements = getAllMatchingChildElements(MB_elements.at(k), "ADDRESS");
-		if (tmp_elements.size() != 1)
-			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		unsigned long int addr = strtoul( str, NULL, 0 );
-		if (addr > 0xffff)
+		unsigned int addr;
+		if (!getAddressElementValue(MB_elements.at(k), &addr))
 			continue;
 		// Check for duplicate definitions (addresses):
 		bool duplicate = false;
@@ -450,16 +443,9 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 		sw_intl_dt sw;
 		std::vector<XMLElement*> tmp_elements;
 		// Get block address:
-		tmp_elements = getAllMatchingChildElements(SWblock_elements.at(b), "ADDRESS");
-		if (tmp_elements.size() != 1)
+		unsigned int byteaddr;
+		if (!getAddressElementValue(SWblock_elements.at(b), &byteaddr))
 			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		unsigned long int byteaddr = strtoul( str, NULL, 0 );
-		if (byteaddr > 0xffff)
-			continue;
-		sw.byteAddr = byteaddr;
 		// Get switches:
 		std::vector<XMLElement*> SW_elements;
 		SW_elements = getAllMatchingChildElements(SWblock_elements.at(b), "SW");
@@ -494,6 +480,7 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			if (duplicate)
 				continue;
 			/* NOTE: switches with the same address can be defined across multiple SWBLOCKs */
+			sw.byteAddr = byteaddr;
 			sw.bitAddr = bitaddr;
 			// --- Get common data ---:
 			// Find SW data:
@@ -523,7 +510,6 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> *adjustments)
 {
 	std::vector<XMLElement*> ADJ_elements;
-	const char *str = NULL;
 
 	if (adjustments == NULL)
 		return false;
@@ -541,14 +527,8 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 		if (!id.size())
 			continue;
 		// Get address:
-		tmp_elements = getAllMatchingChildElements(ADJ_elements.at(k), "ADDRESS");
-		if (tmp_elements.size() != 1)
-			continue;
-		str = tmp_elements.at(0)->GetText();
-		if (str == NULL)
-			continue;
-		unsigned long int addr = strtoul( str, NULL, 0 );
-		if (addr > 0xffff)
+		unsigned int addr;
+		if (!getAddressElementValue(ADJ_elements.at(k), &addr))
 			continue;
 		// Check for duplicate definitions (addresses):
 		bool duplicate = false;
@@ -611,9 +591,8 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 {
 	std::vector<XMLElement*> elements;
 	XMLElement *CM_element = NULL;
-	XMLElement *addr_element;
 	const char *str = NULL;
-	unsigned long int addr;
+	unsigned int addr;
 	unsigned long int val;
 
 	if ((address != NULL) && (value != NULL))
@@ -626,29 +605,21 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 		return false;
 	if (!getMultilevelElementWithHighestPriority("CLEARMEMORY", &CM_element))
 		return true;
-	elements = getAllMatchingChildElements(CM_element, "ADDRESS");
-	if (elements.size() < 1)
+	if (!getAddressElementValue(CM_element, &addr))
 		return true;
-	addr_element = elements.at(0);
-	// NOTE: multiple CM-addresses may be defined and vaild, but only one of them is needed
 	elements = getAllMatchingChildElements(CM_element, "VALUE");
 	if (elements.size() != 1)
 		return true;
-	str = addr_element->GetText();
-	if (str == NULL)
-		return true;
-	addr = strtoul( str, NULL, 0 );
 	str = elements.at(0)->GetText();
 	if (str == NULL)
 		return true;
 	val = strtoul( str, NULL, 0 );
-	if ((addr > 0xffff) || (val > 0xff))
+	if (val > 0xff)
 		return true;
 	if (address != NULL)
 		*address = addr;
 	if (value != NULL)
 		*value = val;
-
 	return true;
 }
 
@@ -976,6 +947,25 @@ XMLElement* SSMLegacyDefinitionsInterface::searchForMatchingIDelement(XMLElement
 		return value_elements.at(0);
 	else
 		return value_range_elements.at(0);
+}
+
+
+bool SSMLegacyDefinitionsInterface::getAddressElementValue(XMLElement *parentElement, unsigned int *address)
+{
+	std::vector<XMLElement*> tmp_elements;
+	const char *str = NULL;
+
+	tmp_elements = getAllMatchingChildElements(parentElement, "ADDRESS");
+	if (tmp_elements.size() != 1)
+		return false;
+	str = tmp_elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	unsigned long int addr = strtoul( str, NULL, 0 );
+	if (addr > 0xffff)
+		return false;
+	*address = addr;
+	return true;
 }
 
 
