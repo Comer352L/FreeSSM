@@ -400,14 +400,8 @@ bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs
 		// --- Get common data ---
 		// Find MB data:
 		XMLElement *MBdata_element = NULL;
-		attributeCondition attribCond;
-		attribCond.name = "id";
-		attribCond.value = id;
-		attribCond.condition = attributeCondition::equal;
-		tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "MB", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() != 1)
+		if (!getCommonDataElementWithMatchingID("MB", id, &MBdata_element))
 			continue;
-		MBdata_element = tmp_elements.at(0);
 		// Get title:
 		if (!getLanguageDependentElementString(MBdata_element, "TITLE", &mb.title))
 			continue;
@@ -485,14 +479,8 @@ bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 			// --- Get common data ---:
 			// Find SW data:
 			XMLElement *SWdata_element = NULL;
-			attributeCondition attribCond;
-			attribCond.name = "id";
-			attribCond.value = id;
-			attribCond.condition = attributeCondition::equal;
-			tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "SW", std::vector<attributeCondition>(1, attribCond));
-			if (tmp_elements.size() != 1)
+			if (!getCommonDataElementWithMatchingID("SW", id, &SWdata_element))
 				continue;
-			SWdata_element = tmp_elements.at(0);
 			// Get title:
 			if (!getLanguageDependentElementString(SWdata_element, "TITLE", &sw.title))
 				continue;
@@ -548,14 +536,8 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 		// --- Get common data ---
 		// Find ADJ data:
 		XMLElement *ADJdata_element = NULL;
-		attributeCondition attribCond;
-		attribCond.name = "id";
-		attribCond.value = id;
-		attribCond.condition = attributeCondition::equal;
-		tmp_elements = getAllMatchingChildElements(_datacommon_root_element, "ADJ", std::vector<attributeCondition>(1, attribCond));
-		if (tmp_elements.size() != 1)
+		if (!getCommonDataElementWithMatchingID("ADJ", id, &ADJdata_element))
 			continue;
-		ADJdata_element = tmp_elements.at(0);
 		// Get title:
 		if (!getLanguageDependentElementString(ADJdata_element, "TITLE", &adj.title))
 			continue;
@@ -947,6 +929,22 @@ XMLElement* SSMLegacyDefinitionsInterface::searchForMatchingIDelement(XMLElement
 		return value_elements.at(0);
 	else
 		return value_range_elements.at(0);
+}
+
+
+bool SSMLegacyDefinitionsInterface::getCommonDataElementWithMatchingID(std::string elementName, std::string id, XMLElement **element)
+{
+	std::vector<XMLElement*> tmp_elements;
+	attributeCondition attribCond;
+
+	attribCond.name = "id";
+	attribCond.value = id;
+	attribCond.condition = attributeCondition::equal;
+	tmp_elements = getAllMatchingChildElements(_datacommon_root_element, elementName, std::vector<attributeCondition>(1, attribCond));
+	if (tmp_elements.size() != 1)
+		return false;
+	*element = tmp_elements.at(0);
+	return true;
 }
 
 
