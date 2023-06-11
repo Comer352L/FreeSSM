@@ -55,7 +55,6 @@ public:
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
 	bool hasMBengineSpeed(bool *EngSpeedMBsup);
-	bool hasSWignition(bool *IgnSWsup);
 
 	bool getDCblockData(std::vector<dc_block_dt> *block_data);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);

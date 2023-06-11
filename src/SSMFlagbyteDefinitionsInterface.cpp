@@ -698,16 +698,6 @@ bool SSMFlagbyteDefinitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
 	return true;
 }
 
-
-bool SSMFlagbyteDefinitionsInterface::hasSWignition(bool *IgnSWsup)
-{
-	if (!_id_set)
-		return false;
-	*IgnSWsup = _ssmCUdata.flagbytebit(12, 3);
-	return true;
-}
-
-
 // PRIVATE:
 
 void SSMFlagbyteDefinitionsInterface::setupDiagnosticCodes()
