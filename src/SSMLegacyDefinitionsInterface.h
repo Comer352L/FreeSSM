@@ -100,6 +100,9 @@ private:
 	bool getPrecisionElementValue(XMLElement *parent_elems, char *precision);
 	bool getRawValueElementValue(XMLElement *parent_elem, std::string elem_name, unsigned int *rawValue);
 
+	bool taggedMeasuringBlocks(std::vector<mb_intl_dt> *mbs, std::string tag_str = "");
+	bool taggedSwitches(std::vector<sw_intl_dt> *sws, std::string tag_str = "");
+
 	void rawbyteToAssignmentListDCs(unsigned int address, char databyte, XMLElement *DCaddr_elem,
 	                                std::string assignment_elem_name, std::string assignment_elem_id_name,
                                         void(SSMLegacyDefinitionsInterface::*rawbyteScalingFcn)(XMLElement*, unsigned int, char, QStringList*, QStringList*),

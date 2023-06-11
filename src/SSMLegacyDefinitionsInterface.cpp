@@ -361,137 +361,13 @@ next_addr_elem:
 
 bool SSMLegacyDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *mbs)
 {
-	std::vector<XMLElement*> MB_elements;
-
-	if (mbs == NULL)
-		return false;
-	mbs->clear();
-	if (!_id_set)
-		return false;
-	MB_elements = getAllMultilevelElements("MB");
-	for (unsigned int k=0; k<MB_elements.size(); k++)
-	{
-		std::vector<XMLElement*> tmp_elements;
-		mb_intl_dt mb;
-		// Get ID:
-		std::string id;
-		id = MB_elements.at(k)->Attribute("id");
-		if (!id.size())
-			continue;
-		// Get address:
-		unsigned int addr;
-		if (!getAddressElementValue(MB_elements.at(k), &addr))
-			continue;
-		// Check for duplicate definitions (addresses):
-		bool duplicate = false;
-		for (unsigned int m=0; m<mbs->size(); m++)
-		{
-			if ((addr == mbs->at(m).addrLow) || (addr == mbs->at(m).addrHigh))
-			{
-				duplicate = true;
-				mbs->erase(mbs->begin() + m);
-				break;
-			}
-		}
-		if (duplicate)
-			continue;
-		mb.addrLow = addr;
-		mb.addrHigh = MEMORY_ADDRESS_NONE;
-		// --- Get common data ---
-		// Find MB data:
-		XMLElement *MBdata_element = NULL;
-		if (!getCommonDataElementWithMatchingID("MB", id, &MBdata_element))
-			continue;
-		// Get title:
-		if (!getLanguageDependentElementString(MBdata_element, "TITLE", &mb.title))
-			continue;
-		// Get unit:
-		if (!getLanguageDependentElementString(MBdata_element, "UNIT", &mb.unit))
-			continue;
-		// Get formula:
-		if (!getElementString(MBdata_element, "FORMULA", &mb.formula))
-			continue;
-		// Get precision:
-		if (!getPrecisionElementValue(MBdata_element, &mb.precision))
-			continue;
-		// Add MB to the list:
-		mbs->push_back(mb);
-	}
-	return true;
+	return taggedMeasuringBlocks(mbs);
 }
 
 
 bool SSMLegacyDefinitionsInterface::switches(std::vector<sw_intl_dt> *sws)
 {
-	std::vector<XMLElement*> SWblock_elements;
-	const char *str = NULL;
-
-	if (sws == NULL)
-		return false;
-	sws->clear();
-	if (!_id_set)
-		return false;
-	SWblock_elements = getAllMultilevelElements("SWBLOCK");
-	for (unsigned int b=0; b<SWblock_elements.size(); b++)
-	{
-		sw_intl_dt sw;
-		std::vector<XMLElement*> tmp_elements;
-		// Get block address:
-		unsigned int byteaddr;
-		if (!getAddressElementValue(SWblock_elements.at(b), &byteaddr))
-			continue;
-		// Get switches:
-		std::vector<XMLElement*> SW_elements;
-		SW_elements = getAllMatchingChildElements(SWblock_elements.at(b), "SW");
-		for (unsigned int k=0; k<SW_elements.size(); k++)
-		{
-			// Get ID:
-			std::string id;
-			id = SW_elements.at(k)->Attribute("id");
-			if (!id.size())
-				continue;
-			// Get bit address:
-			tmp_elements = getAllMatchingChildElements(SW_elements.at(k), "BIT");
-			if (tmp_elements.size() != 1)
-				continue;
-			str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
-				continue;
-			unsigned long int bitaddr = strtoul( str, NULL, 0 );
-			if ((bitaddr < 1) || (bitaddr > 8))
-				continue;
-			// Check for duplicate definitions (address + bit):
-			bool duplicate = false;
-			for (unsigned int s=0; s<sws->size(); s++)
-			{
-				if ((byteaddr == sws->at(s).byteAddr) && (bitaddr == sws->at(s).bitAddr))
-				{
-					duplicate = true;
-					sws->erase(sws->begin() + s);
-					break;
-				}
-			}
-			if (duplicate)
-				continue;
-			/* NOTE: switches with the same address can be defined across multiple SWBLOCKs */
-			sw.byteAddr = byteaddr;
-			sw.bitAddr = bitaddr;
-			// --- Get common data ---:
-			// Find SW data:
-			XMLElement *SWdata_element = NULL;
-			if (!getCommonDataElementWithMatchingID("SW", id, &SWdata_element))
-				continue;
-			// Get title:
-			if (!getLanguageDependentElementString(SWdata_element, "TITLE", &sw.title))
-				continue;
-			// Get unit:
-			if (!getLanguageDependentElementString(SWdata_element, "UNIT", &sw.unit))
-				continue;
-			// Add SW to the list:
-			sws->push_back(sw);
-		}
-	}
-	return true;
+	return taggedSwitches(sws);
 }
 
 
@@ -1053,6 +929,159 @@ bool SSMLegacyDefinitionsInterface::getRawValueElementValue(XMLElement *parent_e
 	if (raw_value > 0xff)
 		return false;
 	*rawValue = raw_value;
+	return true;
+}
+
+
+bool SSMLegacyDefinitionsInterface::taggedMeasuringBlocks(std::vector<mb_intl_dt> *mbs, std::string tag_str)
+{
+	std::vector<XMLElement*> MB_elements;
+
+	if (mbs == NULL)
+		return false;
+	mbs->clear();
+	if (!_id_set)
+		return false;
+	MB_elements = getAllMultilevelElements("MB");
+	for (unsigned int k=0; k<MB_elements.size(); k++)
+	{
+		std::vector<XMLElement*> tmp_elements;
+		mb_intl_dt mb;
+		// Get ID:
+		std::string id;
+		id = MB_elements.at(k)->Attribute("id");
+		if (!id.size())
+			continue;
+		// Get address:
+		unsigned int addr;
+		if (!getAddressElementValue(MB_elements.at(k), &addr))
+			continue;
+		// Check for duplicate definitions (addresses):
+		bool duplicate = false;
+		for (unsigned int m=0; m<mbs->size(); m++)
+		{
+			if ((addr == mbs->at(m).addrLow) || (addr == mbs->at(m).addrHigh))
+			{
+				duplicate = true;
+				mbs->erase(mbs->begin() + m);
+				break;
+			}
+		}
+		if (duplicate)
+			continue;
+		mb.addrLow = addr;
+		mb.addrHigh = MEMORY_ADDRESS_NONE;
+		// --- Get common data ---
+		// Find MB data:
+		XMLElement *MBdata_element = NULL;
+		if (!getCommonDataElementWithMatchingID("MB", id, &MBdata_element))
+			continue;
+		// Check if tag string matches (if passed):
+		if (tag_str.size())
+		{
+			QString str;
+			if (!getElementString(MBdata_element, "TAG", &str))
+				continue;
+			if (tag_str != str.toStdString())
+				continue;
+		}
+		// Get title:
+		if (!getLanguageDependentElementString(MBdata_element, "TITLE", &mb.title))
+			continue;
+		// Get unit:
+		if (!getLanguageDependentElementString(MBdata_element, "UNIT", &mb.unit))
+			continue;
+		// Get formula:
+		if (!getElementString(MBdata_element, "FORMULA", &mb.formula))
+			continue;
+		// Get precision:
+		if (!getPrecisionElementValue(MBdata_element, &mb.precision))
+			continue;
+		// Add MB to the list:
+		mbs->push_back(mb);
+	}
+	return true;
+}
+
+
+bool SSMLegacyDefinitionsInterface::taggedSwitches(std::vector<sw_intl_dt> *sws, std::string tag_str)
+{
+	std::vector<XMLElement*> SWblock_elements;
+
+	if (sws == NULL)
+		return false;
+	sws->clear();
+	if (!_id_set)
+		return false;
+	SWblock_elements = getAllMultilevelElements("SWBLOCK");
+	for (unsigned int b=0; b<SWblock_elements.size(); b++)
+	{
+		sw_intl_dt sw;
+		std::vector<XMLElement*> tmp_elements;
+		// Get block address:
+		unsigned int byteaddr;
+		if (!getAddressElementValue(SWblock_elements.at(b), &byteaddr))
+			continue;
+		// Get switches:
+		std::vector<XMLElement*> SW_elements;
+		SW_elements = getAllMatchingChildElements(SWblock_elements.at(b), "SW");
+		for (unsigned int k=0; k<SW_elements.size(); k++)
+		{
+			// Get ID:
+			std::string id;
+			id = SW_elements.at(k)->Attribute("id");
+			if (!id.size())
+				continue;
+			// Get bit address:
+			tmp_elements = getAllMatchingChildElements(SW_elements.at(k), "BIT");
+			if (tmp_elements.size() != 1)
+				continue;
+			const char *str = tmp_elements.at(0)->GetText();
+			if (str == NULL)
+				continue;
+			unsigned long int bitaddr = strtoul( str, NULL, 0 );
+			if ((bitaddr < 1) || (bitaddr > 8))
+				continue;
+			// Check for duplicate definitions (address + bit):
+			bool duplicate = false;
+			for (unsigned int s=0; s<sws->size(); s++)
+			{
+				if ((byteaddr == sws->at(s).byteAddr) && (bitaddr == sws->at(s).bitAddr))
+				{
+					duplicate = true;
+					sws->erase(sws->begin() + s);
+					break;
+				}
+			}
+			if (duplicate)
+				continue;
+			// NOTE: switches with the same address can be defined across multiple SWBLOCKs
+			sw.byteAddr = byteaddr;
+			sw.bitAddr = bitaddr;
+			// --- Get common data ---:
+			// Find SW data:
+			XMLElement *SWdata_element = NULL;
+			if (!getCommonDataElementWithMatchingID("SW", id, &SWdata_element))
+				continue;
+			// Check if tag string matches (if passed):
+			if (tag_str.size())
+			{
+				QString str;
+				if (!getElementString(SWdata_element, "TAG", &str))
+					continue;
+				if (tag_str != str.toStdString())
+					continue;
+			}
+			// Get title:
+			if (!getLanguageDependentElementString(SWdata_element, "TITLE", &sw.title))
+				continue;
+			// Get unit:
+			if (!getLanguageDependentElementString(SWdata_element, "UNIT", &sw.unit))
+				continue;
+			// Add SW to the list:
+			sws->push_back(sw);
+		}
+	}
 	return true;
 }
 
