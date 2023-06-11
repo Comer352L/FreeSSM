@@ -86,6 +86,24 @@ public:
 };
 
 
+class mb_enginespeed_data_dt
+{
+public:
+	unsigned int addr_low = MEMORY_ADDRESS_NONE;
+	unsigned int addr_high = MEMORY_ADDRESS_NONE;
+	QString scaling_formula;
+};
+
+
+class sw_stateindication_data_dt
+{
+public:
+	unsigned int addr = MEMORY_ADDRESS_NONE;
+	unsigned char bit = 0;
+	bool inverted = false;;
+};
+
+
 class adjustment_dt
 {
 public:
@@ -132,6 +150,10 @@ public:
 	virtual bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	virtual bool actuatorTests(std::vector<actuator_dt> *act);
 	virtual bool clearMemoryData(unsigned int *address, char *value);
+	virtual bool MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data);
+	virtual bool SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data);
+	virtual bool SWdata_DCheckState(sw_stateindication_data_dt *sw_dcheckactive_data);
+	virtual bool SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data);
 
 	virtual void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles) = 0;
 
@@ -140,6 +162,10 @@ protected:
 	bool _id_set;
 	CUtype _CU;
 	SSMCUdata _ssmCUdata;
+
+private:
+	bool SWdata_xxxState_unsupported(sw_stateindication_data_dt *sw_state_data);
+
 };
 
 

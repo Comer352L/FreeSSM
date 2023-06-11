@@ -103,3 +103,50 @@ bool SSMDefinitionsInterface::clearMemoryData(unsigned int *address, char *value
 	return true;
 }
 
+
+bool SSMDefinitionsInterface::MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data)
+{
+	if (mb_enginespeed_data == NULL)
+		return false;
+	mb_enginespeed_data->addr_low = MEMORY_ADDRESS_NONE;
+	mb_enginespeed_data->addr_high = MEMORY_ADDRESS_NONE;
+	mb_enginespeed_data->scaling_formula = "";
+	if (!_id_set)
+		return false;
+	return true;
+}
+
+
+bool SSMDefinitionsInterface::SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data)
+{
+	return SWdata_xxxState_unsupported(sw_testmode_data);
+}
+
+
+bool SSMDefinitionsInterface::SWdata_DCheckState(sw_stateindication_data_dt *sw_testmode_data)
+{
+	return SWdata_xxxState_unsupported(sw_testmode_data);
+}
+
+
+bool SSMDefinitionsInterface::SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data)
+{
+	return SWdata_xxxState_unsupported(sw_ignitionstate_data);
+}
+
+
+// PRIVATE
+
+
+bool SSMDefinitionsInterface::SWdata_xxxState_unsupported(sw_stateindication_data_dt *sw_state_data)
+{
+	if (sw_state_data == NULL)
+		return false;
+	sw_state_data->addr = MEMORY_ADDRESS_NONE;
+	sw_state_data->bit = 0;
+	sw_state_data->inverted = false;
+	if (!_id_set)
+		return false;
+	return true;
+}
+
