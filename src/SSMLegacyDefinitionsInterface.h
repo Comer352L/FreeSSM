@@ -96,7 +96,7 @@ private:
 	bool getCommonDataElementWithMatchingID(std::string elementName, std::string id, XMLElement **element);
 	bool getAddressElementValue(XMLElement *parentElement, unsigned int *address);
 	bool getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str);
-	bool getFormulaElementString(XMLElement *parent_elem, QString *formula);
+	bool getElementString(XMLElement *parent_elem, std::string elem_name, QString *str);
 	bool getPrecisionElementValue(XMLElement *parent_elems, char *precision);
 	bool getRawValueElementValue(XMLElement *parent_elem, std::string elem_name, unsigned int *rawValue);
 
