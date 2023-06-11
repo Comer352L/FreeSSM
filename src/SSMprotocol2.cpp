@@ -170,7 +170,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	FBdefsIface->hasOBD2system(&_has_OBD2);
 	FBdefsIface->hasImmobilizer(&_has_Immo);
 	FBdefsIface->hasImmobilizerTest(&_has_ImmoTest);
-	FBdefsIface->hasTestMode(&_has_TestMode);
 	FBdefsIface->hasActuatorTests(&_has_ActTest);
 	if (FBdefsIface->hasClearMemory(&supported) && supported)
 		FBdefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
@@ -179,20 +178,23 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 		FBdefsIface->clearMemory2Data(&_CM2addr, &_CM2value);
 	FBdefsIface->hasVINsupport(&_has_VINsupport);
 	FBdefsIface->hasIntegratedCC(&_has_integratedCC);
-	FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
-	FBdefsIface->hasSWignition(&_has_SW_ignition);
 	FBdefsIface->getDCblockData(&_DTCblockData);
 	FBdefsIface->measuringBlocks(&_supportedMBs);
+	FBdefsIface->MBdata_engineRunning(&_mb_enginespeed_data);
 	FBdefsIface->switches(&_supportedSWs);
+	FBdefsIface->SWdata_testModeState(&_sw_testmodestate_data);
+	FBdefsIface->SWdata_DCheckState(&_sw_dcheckstate_data);
+	FBdefsIface->SWdata_ignitionState(&_sw_ignitionstate_data);
 	FBdefsIface->adjustments(&_adjustments);
 	FBdefsIface->actuatorTests(&_actuators);
 	_SSMdefsIfce = FBdefsIface;
 	// Ensure that ignition switch is ON:
-	if ((_has_SW_ignition) && !ignoreIgnitionOFF)
+	if ((_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE) && !ignoreIgnitionOFF)
 	{
-		unsigned int dataaddr = 0x62;
 		char data = 0x00;
-		if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data) || !(data & 0x08))
+		if (!_SSMP2com->readMultipleDatabytes('\x0', &_sw_ignitionstate_data.addr, 1, &data))
+			goto commError;
+		if (!((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted))
 			goto commError;
 	}
 	// Prepare some internal data:
@@ -308,9 +310,13 @@ bool SSMprotocol2::startDCreading(int DCgroups)
 		return false;
 
 	// Add read address for test mode and D-Check status:
-	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
-	    && (_CU == CUtype::Engine))
-			DCqueryAddrList.insert(DCqueryAddrList.begin(), 0x000061); // NOTE: must be the first address !
+	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+	{
+		if (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE)
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), _sw_testmodestate_data.addr);   // NOTE: must be the first address !
+		if ((_sw_dcheckstate_data.addr != MEMORY_ADDRESS_NONE) && (_sw_dcheckstate_data.addr != _sw_testmodestate_data.addr))
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), _sw_dcheckstate_data.addr);     // NOTE: must be the second address !
+	}
 
 	// Start diagostic codes reading:
 	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &DCqueryAddrList.at(0), DCqueryAddrList.size());
@@ -693,16 +699,45 @@ bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
 
 bool SSMprotocol2::isEngineRunning(bool *isrunning)
 {
-	unsigned int dataaddr = 0x0e;
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if (!_has_MB_engineSpeed) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataaddr, 1, &currentdatabyte))
+	unsigned int addresses[2];
+	char data[2];
+	unsigned char num_addr = 0;
+	unsigned int raw_value = 0;
+	QString scaledValueStr;
+	bool ok = false;
+	long int rpm = 0;
+
+	if (_state != state_normal)
+		return false;
+	if (_mb_enginespeed_data.addr_low == MEMORY_ADDRESS_NONE)
+		return false;
+	addresses[0] = _mb_enginespeed_data.addr_low;
+	num_addr = 1;
+	if (_mb_enginespeed_data.addr_high != MEMORY_ADDRESS_NONE)
+	{
+		addresses[1] = _mb_enginespeed_data.addr_high;
+		num_addr++;
+	}
+	if (!_SSMP2com->readMultipleDatabytes(0x0, addresses, num_addr, data))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (currentdatabyte > 3)
+	raw_value = data[0];
+	if (num_addr > 1)
+		raw_value |= (data[1] << 8);
+	if (!libFSSM::raw2scaled(raw_value, _mb_enginespeed_data.scaling_formula, 0, &scaledValueStr))
+	{
+		resetCUdata();
+		return false;
+	}
+	rpm = scaledValueStr.toLong(&ok);
+	if (!ok)
+	{
+		resetCUdata();
+		return false;
+	}
+	if (rpm > 100) // NOTE: some MBs do not report 0 if the engine is off
 		*isrunning = true;
 	else
 		*isrunning = false;
@@ -712,16 +747,18 @@ bool SSMprotocol2::isEngineRunning(bool *isrunning)
 
 bool SSMprotocol2::isInTestMode(bool *testmode)
 {
-	unsigned int dataaddr = 0x61;
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if (!_has_TestMode) return false;
-	if (!_SSMP2com->readMultipleDatabytes(0x0, &dataaddr, 1, &currentdatabyte))
+	char byte = 0;
+
+	if (_state != state_normal)
+		return false;
+	if (_sw_testmodestate_data.addr == MEMORY_ADDRESS_NONE)
+		return false;
+	if (!_SSMP2com->readMultipleDatabytes(0x0, &_sw_testmodestate_data.addr, 1, &byte))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (currentdatabyte & 0x20)
+	if ((byte & (1 << _sw_testmodestate_data.bit)) ^ _sw_testmodestate_data.inverted)
 		*testmode = true;
 	else
 		*testmode = false;
@@ -736,16 +773,16 @@ bool SSMprotocol2::waitForIgnitionOff()
 	unsigned int dataaddr = 0x62;
 	_state = state_waitingForIgnOff;
 	_SSMP2com->setRetriesOnError(1);
-	if (_has_SW_ignition)
+	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
 	{
 		bool ignstate = true;
 		char data = 0x00;
 		do
 		{
-			if (!_SSMP2com->readMultipleDatabytes('\x0', &dataaddr, 1, &data))
+			if (!_SSMP2com->readMultipleDatabytes('\x0', &_sw_ignitionstate_data.addr, 1, &data))
 				ignstate = false;
 			else
-				ignstate = (data & 0x08);
+				ignstate = ((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted);
 		} while (ignstate);
 	}
 	else

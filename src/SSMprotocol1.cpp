@@ -19,6 +19,8 @@
 
 #include "SSMprotocol1.h"
 
+#include "libFSSM.h"
+
 
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
@@ -189,18 +191,19 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		FBdefsIface->hasClearMemory(&CMsup);
 		if (CMsup)
 			FBdefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
-		FBdefsIface->hasTestMode(&_has_TestMode);
 		FBdefsIface->hasActuatorTests(&_has_ActTest);
-		FBdefsIface->hasMBengineSpeed(&_has_MB_engineSpeed);
-		FBdefsIface->hasSWignition(&_has_SW_ignition);
 		FBdefsIface->getDCblockData(&_DTCblockData);
 		FBdefsIface->measuringBlocks(&_supportedMBs);
+		FBdefsIface->MBdata_engineRunning(&_mb_enginespeed_data);
 		FBdefsIface->switches(&_supportedSWs);
+		FBdefsIface->SWdata_testModeState(&_sw_testmodestate_data);
+		FBdefsIface->SWdata_DCheckState(&_sw_dcheckstate_data);
+		FBdefsIface->SWdata_ignitionState(&_sw_ignitionstate_data);
 		FBdefsIface->adjustments(&_adjustments);
 		FBdefsIface->actuatorTests(&_actuators);
 		_SSMdefsIfce = FBdefsIface;
 		setupActuatorTestAddrList();
-		// NOTE: all other SSM2-features (VIN, CC, CM2...) are not be supported by SSM1 Control units
+		// NOTE: all other SSM2-features (VIN, CC, CM2...) are not supported by SSM1 Control units or not required
 	}
 	else
 	{
@@ -223,7 +226,11 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		_sysDescription = sysdescription;
 		LegacyDefsIface->getDCblockData(&_DTCblockData);
 		LegacyDefsIface->measuringBlocks(&_supportedMBs);
+		LegacyDefsIface->MBdata_engineRunning(&_mb_enginespeed_data);
 		LegacyDefsIface->switches(&_supportedSWs);
+		LegacyDefsIface->SWdata_testModeState(&_sw_testmodestate_data);
+		LegacyDefsIface->SWdata_DCheckState(&_sw_dcheckstate_data);
+		LegacyDefsIface->SWdata_ignitionState(&_sw_ignitionstate_data);
 		LegacyDefsIface->adjustments(&_adjustments);
 		LegacyDefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
 		_SSMdefsIfce = LegacyDefsIface;
@@ -629,42 +636,61 @@ bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 
 bool SSMprotocol1::isEngineRunning(bool *isrunning)
 {
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if ((_CU != CUtype::Engine) && (_CU != CUtype::Transmission))
-		return false;
-	if (!_ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
-		return false;
-	if (!_has_MB_engineSpeed) return false;
+	std::vector<unsigned int> addresses;
+	std::vector<char> data;
+	unsigned int raw_value = 0;
+	QString scaledValueStr;
+	bool ok = false;
+	long int rpm = 0;
 
-	if (!_SSMP1com->readAddress(0x0e, &currentdatabyte))
+	if (_state != state_normal)
+		return false;
+	if (_mb_enginespeed_data.addr_low == MEMORY_ADDRESS_NONE)
+		return false;
+	addresses.push_back(_mb_enginespeed_data.addr_low);
+	if (_mb_enginespeed_data.addr_high != MEMORY_ADDRESS_NONE)
+		addresses.push_back(_mb_enginespeed_data.addr_high);
+	if (!_SSMP1com->readAddresses(addresses, &data))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (currentdatabyte > 3)
+	raw_value = data.at(0);
+	if (data.size() > 1)
+		raw_value |= (data.at(1) << 8);
+	if (!libFSSM::raw2scaled(raw_value, _mb_enginespeed_data.scaling_formula, 0, &scaledValueStr))
+	{
+		resetCUdata();
+		return false;
+	}
+	rpm = scaledValueStr.toLong(&ok);
+	if (!ok)
+	{
+		resetCUdata();
+		return false;
+	}
+	if (rpm > 100) // NOTE: some MBs do not report 0 if the engine is off
 		*isrunning = true;
 	else
 		*isrunning = false;
 	return true;
-	// FIXME: this is a dirty hack !
 }
 
 
 bool SSMprotocol1::isInTestMode(bool *testmode)
 {
-	unsigned int dataaddr = 0x61;
-	char currentdatabyte = 0;
-	if (_state != state_normal) return false;
-	if (!_ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
+	char byte = 0;
+
+	if (_state != state_normal)
 		return false;
-	if (!_has_TestMode) return false;
-	if (!_SSMP1com->readAddress(dataaddr, &currentdatabyte))
+	if (_sw_testmodestate_data.addr == MEMORY_ADDRESS_NONE)
+		return false;
+	if (!_SSMP1com->readAddress(_sw_testmodestate_data.addr, &byte))
 	{
 		resetCUdata();
 		return false;
 	}
-	if (currentdatabyte & 0x20)
+	if ((byte & (1 << _sw_testmodestate_data.bit)) ^ _sw_testmodestate_data.inverted)
 		*testmode = true;
 	else
 		*testmode = false;
@@ -679,17 +705,17 @@ bool SSMprotocol1::waitForIgnitionOff()
 	unsigned int dataaddr;
 	_state = state_waitingForIgnOff;
 	_SSMP1com->setRetriesOnError(1);
-	if (_has_SW_ignition && _ssmCUdata.uses_Ax10xx_defs())	// FIXME: other defintion types
+	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
 	{
 		bool ignstate = true;
 		char data = 0x00;
-		dataaddr = 0x62;
 		do
 		{
-			if (!_SSMP1com->readAddress(dataaddr, &data))
+			if (!_SSMP1com->readAddress(_sw_ignitionstate_data.addr, &data))
+
 				ignstate = false;
 			else
-				ignstate = (data & 0x08);
+				ignstate = ((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted);
 		} while (ignstate);
 	}
 	else

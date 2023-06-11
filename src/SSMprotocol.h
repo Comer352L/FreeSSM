@@ -130,9 +130,7 @@ protected:
 	bool _has_OBD2;
 	bool _has_Immo;
 	bool _has_ImmoTest;
-	bool _has_TestMode;
 	bool _has_ActTest;
-	bool _has_MB_engineSpeed;
 	bool _has_SW_ignition;
 	// Diagnostic Trouble Codes:
 	std::vector<dc_block_dt> _DTCblockData;
@@ -143,6 +141,10 @@ protected:
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;
+	mb_enginespeed_data_dt _mb_enginespeed_data;
+	sw_stateindication_data_dt _sw_testmodestate_data;
+	sw_stateindication_data_dt _sw_dcheckstate_data;
+	sw_stateindication_data_dt _sw_ignitionstate_data;
 	// Adjustment Values:
 	std::vector<adjustment_intl_dt> _adjustments;
 	// Actuator Tests:

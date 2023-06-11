@@ -150,7 +150,7 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 bool SSMprotocol::hasTestMode(bool *TMsup)
 {
 	if (_state == state_needSetup) return false;
-	*TMsup = _has_TestMode;
+	*TMsup = (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE);
 	return true;
 }
 
@@ -304,14 +304,21 @@ void SSMprotocol::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms
 
 	if ((_selectedDCgroups & currentDTCs_DCgroup) || (_selectedDCgroups & temporaryDTCs_DCgroup))
 	{
-		if (_CU == CUtype::Engine && _ssmCUdata.uses_Ax10xx_defs())
+		if (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE)
 		{
-			if (_has_TestMode)
-				TestMode = DCrawdata.at(0) & 0x20;
-			DCheckActive = DCrawdata.at(0) & 0x80;
+			TestMode = ((DCrawdata.at(0) & (1 << _sw_testmodestate_data.bit)) ^ _sw_testmodestate_data.inverted);
 			rd_index++;
 		}
-		// FIXME: support test mode and D-Check status for other SSM1 control units, too
+		if (_sw_dcheckstate_data.addr != MEMORY_ADDRESS_NONE)
+		{
+			if ((rd_index > 0) && (_sw_dcheckstate_data.addr != _sw_testmodestate_data.addr))
+			{
+				DCheckActive = ((DCrawdata.at(rd_index) & (1 << _sw_dcheckstate_data.bit)) ^ _sw_dcheckstate_data.inverted);
+				rd_index++;
+			}
+			else
+				DCheckActive = ((DCrawdata.at(0) & (1 << _sw_dcheckstate_data.bit)) ^ _sw_dcheckstate_data.inverted);
+		}
 	}
 
 	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
@@ -537,9 +544,7 @@ void SSMprotocol::resetCommonCUdata()
 	_has_OBD2 = false;
 	_has_Immo = false;
 	_has_ImmoTest = false;
-	_has_TestMode = false;
 	_has_ActTest = false;
-	_has_MB_engineSpeed = false;
 	_has_SW_ignition = false;
 	// Clear DC data:
 	_DTCblockData.clear();
@@ -550,6 +555,10 @@ void SSMprotocol::resetCommonCUdata()
 	// Clear MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();
+	_mb_enginespeed_data = mb_enginespeed_data_dt();
+	_sw_testmodestate_data = sw_stateindication_data_dt();
+	_sw_dcheckstate_data = sw_stateindication_data_dt();
+	_sw_ignitionstate_data = sw_stateindication_data_dt();
 	// Clear adjustment values data:
 	_adjustments.clear();
 	// Clear actuator tests data:
