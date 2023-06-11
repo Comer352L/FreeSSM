@@ -667,15 +667,6 @@ bool SSMFlagbyteDefinitionsInterface::hasClearMemory2(bool *CM2sup)
 }
 
 
-bool SSMFlagbyteDefinitionsInterface::hasTestMode(bool *TMsup)
-{
-	if (!_id_set)
-		return false;
-	*TMsup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 5));
-	return true;
-}
-
-
 bool SSMFlagbyteDefinitionsInterface::hasActuatorTests(bool *ATsup)
 {
 	bool TMsup = false;
@@ -689,14 +680,6 @@ bool SSMFlagbyteDefinitionsInterface::hasActuatorTests(bool *ATsup)
 	return true;
 }
 
-
-bool SSMFlagbyteDefinitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
-{
-	if (!_id_set)
-		return false;
-	*EngSpeedMBsup = _ssmCUdata.flagbytebit(0, 0);
-	return true;
-}
 
 // PRIVATE:
 
@@ -894,5 +877,23 @@ bool SSMFlagbyteDefinitionsInterface::getBitDCcontent(std::vector<dc_defs_dt> *d
 		}
 	}
 	return false;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::hasTestMode(bool *TMsup)
+{
+	if (!_id_set)
+		return false;
+	*TMsup = ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 5));
+	return true;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::hasMBengineSpeed(bool *EngSpeedMBsup)
+{
+	if (!_id_set)
+		return false;
+	*EngSpeedMBsup = _ssmCUdata.flagbytebit(0, 0);
+	return true;
 }
 

@@ -52,9 +52,7 @@ public:
 	bool hasIntegratedCC(bool *CCsup);
 	bool hasClearMemory(bool *CMsup);
 	bool hasClearMemory2(bool *CM2sup);
-	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
-	bool hasMBengineSpeed(bool *EngSpeedMBsup);
 
 	bool getDCblockData(std::vector<dc_block_dt> *block_data);
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
@@ -88,6 +86,8 @@ private:
 	void setupCruiseControlCancelCodes();
 	void addDCdefs(unsigned int currOrTempOrLatestDCsAddr, unsigned int histOrMemDCsAddr, QStringList rawDefs, std::vector<dc_defs_dt> * defs);
 	bool getBitDCcontent(std::vector<dc_defs_dt> *defs, unsigned int addr, char databyte, QStringList *codes, QStringList *titles);
+	bool hasTestMode(bool *TMsup);
+	bool hasMBengineSpeed(bool *EngSpeedMBsup);
 
 };
 
