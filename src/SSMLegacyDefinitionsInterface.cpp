@@ -843,6 +843,25 @@ bool SSMLegacyDefinitionsInterface::getAddressElementValue(XMLElement *parentEle
 }
 
 
+bool SSMLegacyDefinitionsInterface::getBitElementValue(XMLElement *parentElement, unsigned char *bit)
+{
+	std::vector<XMLElement*> tmp_elements;
+	const char *str = NULL;
+
+	tmp_elements = getAllMatchingChildElements(parentElement, "BIT");
+	if (tmp_elements.size() != 1)
+		return false;
+	str = tmp_elements.at(0)->GetText();
+	if (str == NULL)
+		return false;
+	unsigned long int bitval = strtoul( str, NULL, 0 );
+	if ((bitval < 1) || (bitval > 8))
+		return false;
+	*bit = bitval;
+	return true;
+}
+
+
 bool SSMLegacyDefinitionsInterface::getLanguageDependentElementString(XMLElement *parent_elem, std::string elem_name, QString *elem_str)
 {
 	std::vector<XMLElement*> tmp_elements;
@@ -1033,14 +1052,8 @@ bool SSMLegacyDefinitionsInterface::taggedSwitches(std::vector<sw_intl_dt> *sws,
 			if (!id.size())
 				continue;
 			// Get bit address:
-			tmp_elements = getAllMatchingChildElements(SW_elements.at(k), "BIT");
-			if (tmp_elements.size() != 1)
-				continue;
-			const char *str = tmp_elements.at(0)->GetText();
-			if (str == NULL)
-				continue;
-			unsigned long int bitaddr = strtoul( str, NULL, 0 );
-			if ((bitaddr < 1) || (bitaddr > 8))
+			unsigned char bitaddr;
+			if (!getBitElementValue(SW_elements.at(k), &bitaddr))
 				continue;
 			// Check for duplicate definitions (address + bit):
 			bool duplicate = false;
