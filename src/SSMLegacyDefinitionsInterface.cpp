@@ -482,6 +482,43 @@ bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char 
 }
 
 
+bool SSMLegacyDefinitionsInterface::MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data)
+{
+	std::vector<mb_intl_dt> mbs;
+
+	if (mb_enginespeed_data == NULL)
+		return false;
+	*mb_enginespeed_data = mb_enginespeed_data_dt();
+	if (!taggedMeasuringBlocks(&mbs, "ENGINESPEED"))
+		return false;
+	if (mbs.size() == 1)
+	{
+		mb_enginespeed_data->addr_low = mbs.at(0).addrLow;
+		mb_enginespeed_data->addr_high = mbs.at(0).addrHigh;
+		mb_enginespeed_data->scaling_formula = mbs.at(0).formula;
+	}
+	return true;
+}
+
+
+bool SSMLegacyDefinitionsInterface::SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data)
+{
+	return SWdata_xxxState(sw_testmode_data, "TESTMODESTATE");
+}
+
+
+bool SSMLegacyDefinitionsInterface::SWdata_DCheckState(sw_stateindication_data_dt *sw_dcheckactive_data)
+{
+	return SWdata_xxxState(sw_dcheckactive_data, "DCHECKSTATE");
+}
+
+
+bool SSMLegacyDefinitionsInterface::SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data)
+{
+	return SWdata_xxxState(sw_ignitionstate_data, "IGNITIONSTATE");
+}
+
+
 void SSMLegacyDefinitionsInterface::getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles)
 {
 	/* NOTE: This function should actually never be called with an invalid address or address for which
@@ -1094,6 +1131,25 @@ bool SSMLegacyDefinitionsInterface::taggedSwitches(std::vector<sw_intl_dt> *sws,
 			// Add SW to the list:
 			sws->push_back(sw);
 		}
+	}
+	return true;
+}
+
+
+bool SSMLegacyDefinitionsInterface::SWdata_xxxState(sw_stateindication_data_dt *sw_state_data, std::string tag_str)
+{
+	std::vector<sw_intl_dt> sws;
+
+	if (sw_state_data == NULL)
+		return false;
+	*sw_state_data = sw_stateindication_data_dt();
+	if (!taggedSwitches(&sws, tag_str))
+		return false;
+	if (sws.size() == 1)
+	{
+		sw_state_data->addr = sws.at(0).byteAddr;
+		sw_state_data->bit = sws.at(0).bitAddr;
+		sw_state_data->inverted = sws.at(0).unit.contains('\\');
 	}
 	return true;
 }

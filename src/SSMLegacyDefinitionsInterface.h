@@ -29,7 +29,7 @@
 #include "tinyxml2/tinyxml2.h"
 
 
-#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.4.0"
+#define		SSM1_DEFS_FORMAT_VERSION_CURRENT	"0.6.0"
 #define		SSM1_DEFS_FORMAT_VERSION_MIN		"0.4.0"
 
 
@@ -69,6 +69,10 @@ public:
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool adjustments(std::vector<adjustment_intl_dt> *adj);
 	bool clearMemoryData(unsigned int *address, char *value);
+	bool MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data);
+	bool SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data);
+	bool SWdata_DCheckState(sw_stateindication_data_dt *sw_dcheckactive_data);
+	bool SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data);
 
 	void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles);
 
@@ -103,6 +107,8 @@ private:
 
 	bool taggedMeasuringBlocks(std::vector<mb_intl_dt> *mbs, std::string tag_str = "");
 	bool taggedSwitches(std::vector<sw_intl_dt> *sws, std::string tag_str = "");
+
+	bool SWdata_xxxState(sw_stateindication_data_dt *sw_state_data, std::string tag_str);
 
 	void rawbyteToAssignmentListDCs(unsigned int address, char databyte, XMLElement *DCaddr_elem,
 	                                std::string assignment_elem_name, std::string assignment_elem_id_name,
