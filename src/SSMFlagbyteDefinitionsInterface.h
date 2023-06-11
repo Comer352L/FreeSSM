@@ -64,6 +64,10 @@ public:
 	bool actuatorTests(std::vector<actuator_dt> *act);
 	bool clearMemoryData(unsigned int *address, char *value);
 	bool clearMemory2Data(unsigned int *address, char *value);
+	bool MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data);
+	bool SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data);
+	bool SWdata_DCheckState(sw_stateindication_data_dt *sw_dcheckactive_data);
+	bool SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data);
 
 	void getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles);	// virtual function implementation
 

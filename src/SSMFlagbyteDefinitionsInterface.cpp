@@ -488,6 +488,98 @@ bool SSMFlagbyteDefinitionsInterface::clearMemory2Data(unsigned int *address, ch
 }
 
 
+bool SSMFlagbyteDefinitionsInterface::MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data)
+{
+	bool EngSpeedMBsup = false;
+
+	if (mb_enginespeed_data == NULL)
+		return false;
+	if (!hasMBengineSpeed(&EngSpeedMBsup))
+		return false;
+	if (EngSpeedMBsup)
+	{
+		mb_enginespeed_data->addr_low = 0x0F;
+		mb_enginespeed_data->addr_high = 0x0E;
+		mb_enginespeed_data->scaling_formula = "/4";
+	}
+	else
+	{
+		mb_enginespeed_data->addr_low = MEMORY_ADDRESS_NONE;
+		mb_enginespeed_data->addr_high = MEMORY_ADDRESS_NONE;
+		mb_enginespeed_data->scaling_formula = "";
+	}
+	return true;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data)
+{
+	bool TMsup = false;
+
+	if (sw_testmode_data == NULL)
+		return false;
+	if (!hasTestMode(&TMsup))
+		return false;
+	if (TMsup)
+	{
+		sw_testmode_data->addr = 0x61;
+		sw_testmode_data->bit = 5;
+		sw_testmode_data->inverted = false;
+	}
+	else
+	{
+		sw_testmode_data->addr = MEMORY_ADDRESS_NONE;
+		sw_testmode_data->bit = 0;
+		sw_testmode_data->inverted = false;
+	}
+	return true;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::SWdata_DCheckState(sw_stateindication_data_dt *sw_dcheckactive_data)
+{
+	if (sw_dcheckactive_data == NULL)
+		return false;
+	if (!_id_set)
+		return false;
+	if ((_CU == CUtype::Engine) && _ssmCUdata.flagbytebit(11, 7))
+	{
+		sw_dcheckactive_data->addr = 0x61;
+		sw_dcheckactive_data->bit = 7;
+		sw_dcheckactive_data->inverted = false;
+	}
+	else
+	{
+		sw_dcheckactive_data->addr = MEMORY_ADDRESS_NONE;
+		sw_dcheckactive_data->bit = 0;
+		sw_dcheckactive_data->inverted = false;
+	}
+	return true;
+}
+
+
+bool SSMFlagbyteDefinitionsInterface::SWdata_ignitionState(sw_stateindication_data_dt *sw_ignitionstate_data)
+{
+	if (sw_ignitionstate_data == NULL)
+		return false;
+	if (!_id_set)
+		return false;
+	if (_ssmCUdata.flagbytebit(12, 3))
+	{
+		sw_ignitionstate_data->addr = 0x62;
+		sw_ignitionstate_data->bit = 3;
+		sw_ignitionstate_data->inverted = false;
+	}
+	else
+	{
+		sw_ignitionstate_data->addr = MEMORY_ADDRESS_NONE;
+		sw_ignitionstate_data->bit = 0;
+		sw_ignitionstate_data->inverted = false;
+	}
+	return true;
+}
+
+
 void SSMFlagbyteDefinitionsInterface::getDCcontent(unsigned int address, char databyte, QStringList *codes, QStringList *titles)
 {
 	// NOTE: codes OR titles may be NULL !
