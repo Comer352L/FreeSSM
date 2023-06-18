@@ -34,6 +34,7 @@ HEADERS += src/FreeSSM.h \
            src/SSMP1base.h \
            src/SSMP2communication.h \
            src/SSMP2communication_core.h \
+           src/AbstractSSMcommunication.h \
            src/SSMprotocol.h \
            src/SSMprotocol1.h \
            src/SSMprotocol2.h \
@@ -86,6 +87,7 @@ SOURCES += src/main.cpp \
            src/SSMP1base.cpp \
            src/SSMP2communication.cpp \
            src/SSMP2communication_core.cpp \
+           src/AbstractSSMcommunication.cpp \
            src/SSMprotocol.cpp \
            src/SSMprotocol1.cpp \
            src/SSMprotocol2.cpp \

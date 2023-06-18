@@ -19,6 +19,7 @@
 
 #include "SSMprotocol1.h"
 
+#include <QCoreApplication>
 #include "libFSSM.h"
 
 

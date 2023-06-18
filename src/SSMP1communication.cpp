@@ -1,7 +1,7 @@
 /*
  * SSMP1communication.cpp - Communication Thread for the old SSM-protocol
  *
- * Copyright (C) 2009-2012 Comer352L
+ * Copyright (C) 2009-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,14 @@
 
 #include "SSMP1communication.h"
 
+#include <QTimer>
 
-SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries) : QThread(), SSMP1communication_procedures(diagInterface)
+
+SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries) : AbstractSSMcommunication(), SSMP1communication_procedures(diagInterface)
 {
 	_cu = cu;
 	_errRetries = errRetries;
 	_CommOperation = comOp_noCom;
-	_delay = 0;
-	_result = false;
-	_abort = false;
 }
 
 
@@ -43,15 +42,39 @@ void SSMP1communication::selectCU(SSM1_CUtype_dt cu)
 }
 
 
-void SSMP1communication::setRetriesOnError(unsigned char retries)
-{
-	_errRetries = retries;
-}
-
-
 SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 {
 	return _CommOperation;
+}
+
+
+bool SSMP1communication::stopCommunication()
+{
+	if (_CommOperation == comOp_noCom)
+		return true;
+	else
+	{
+		bool stopped = false;
+		QTimer timer;
+		connect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
+		connect( &timer, SIGNAL( timeout() ), &_el, SLOT( quit() ) );
+		_mutex.lock();
+		_abort = true;
+		_mutex.unlock();
+		timer.start(5000);
+		_el.exec();
+		disconnect( &timer, SIGNAL( timeout() ), &_el, SLOT( quit() ) );
+		disconnect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
+		stopped = !isRunning();
+		if (!stopped)
+		{
+			terminate();
+			stopped = wait(5000);
+		}
+		if (stopped)
+			_CommOperation = comOp_noCom;
+		return stopped;
+	}
 }
 
 
@@ -179,35 +202,6 @@ bool SSMP1communication::writeAddresses_permanent(std::vector<unsigned int> addr
 	return isRunning();
 }
 
-
-bool SSMP1communication::stopCommunication()
-{
-	if (_CommOperation == comOp_noCom)
-		return true;
-	else
-	{
-		bool stopped = false;
-		QTimer timer;
-		connect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
-		connect( &timer, SIGNAL( timeout() ), &_el, SLOT( quit() ) );
-		_mutex.lock();
-		_abort = true;
-		_mutex.unlock();
-		timer.start(5000);
-		_el.exec();
-		disconnect( &timer, SIGNAL( timeout() ), &_el, SLOT( quit() ) );
-		disconnect( this, SIGNAL( finished() ), &_el, SLOT( quit() ) );
-		stopped = !isRunning();
-		if (!stopped)
-		{
-			terminate();
-			stopped = wait(5000);
-		}
-		if (stopped)
-			_CommOperation = comOp_noCom;
-		return stopped;
-	}
-}
 
 // PRIVATE
 

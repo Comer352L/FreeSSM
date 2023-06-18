@@ -1,7 +1,7 @@
 /*
  * SSMP2communication.h - Communication Thread for the new SSM-protocol
  *
- * Copyright (C) 2008-2012 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,66 +21,92 @@
 #define SSMP2COMMUNICATION_H
 
 
-#include <QtGui>
+#include "AbstractSSMcommunication.h"
 #include "AbstractDiagInterface.h"
 #include "SSMP2communication_core.h"
 #include "SSMCUdata.h"
 
 
-#define SSMP2COM_BUFFER_SIZE	256  // buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
+#define		SSMP2COM_BUFFER_SIZE	256	// buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
+
+//#define		__SSM2_BLOCK_OPS__			// NOTE: currently unused
 
 
 
-class SSMP2communication : public QThread, private SSMP2communication_core
+class SSMP2communication : public AbstractSSMcommunication, private SSMP2communication_core
 {
-	Q_OBJECT
 
 public:
-	enum comOp_dt {comOp_noCom, comOp_readCUdata, comOp_readBlock, comOp_readMulti, comOp_writeBlock, comOp_writeSingle, comOp_readBlock_p, comOp_readMulti_p, comOp_writeBlock_p, comOp_writeSingle_p};
+	enum comOp_dt {
+		comOp_noCom,
+		comOp_readCUdata,
+#ifdef __SSM2_BLOCK_OPS__
+		comOp_readBlock,
+#endif
+		comOp_readMulti,
+#ifdef __SSM2_BLOCK_OPS__
+		comOp_writeBlock,
+#endif
+		comOp_writeSingle,
+		comOp_writeMultiAddr_emul,
+#ifdef __SSM2_BLOCK_OPS__
+		comOp_readBlock_p,
+#endif
+		comOp_readMulti_p,
+#ifdef __SSM2_BLOCK_OPS__
+		comOp_writeBlock_p,
+#endif
+		comOp_writeSingle_p,
+		comOp_writeMultiAddr_emul_p
+	};
 
 	SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress = 0x0, unsigned char errRetries = 2);
 	~SSMP2communication();
 	void setCUaddress(unsigned int cuaddress);
-	void setRetriesOnError(unsigned char retries);
-
-	bool getCUdata(SSMCUdata& cuData);
-	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
-	bool readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
-	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten=NULL);
-	bool writeDatabyte(const unsigned int dataaddr, const char databyte, char *databytewritten=NULL);
-
-	bool readDataBlock_permanent(const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, const int delay=0);
-	bool readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, int delay=0);
-	bool writeDataBlock_permanent(const unsigned int dataaddr, const char *data, const unsigned int datalen, const int delay=0);
-	bool writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay=0);
-
 	comOp_dt getCurrentCommOperation();
-
 	bool stopCommunication();
+
+	// Native communication functions:
+	bool getCUdata(SSMCUdata& cuData);
+#ifdef __SSM2_BLOCK_OPS__
+	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
+	bool readDataBlock_permanent(const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, const int delay=0);
+#endif
+	bool readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
+	bool readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, int delay = 0);
+#ifdef __SSM2_BLOCK_OPS__
+	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten = NULL);
+	bool writeDataBlock_permanent(const unsigned int dataaddr, const char *data, const unsigned int datalen, const int delay = 0);
+#endif
+	bool writeDatabyte(const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
+	bool writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay = 0);
+
+	// Emulated communication functions
+	bool writeMultipleDatabytes(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], char *datawritten);
+	bool writeMultipleDatabytes_permanent(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], const int delay = 0);
+
+	// Abstract communication interface:
+	bool readAddress(unsigned int addr, char * databyte);
+	bool readAddresses(const std::vector<unsigned int>& addr, std::vector<char> * data);
+	bool readAddress_permanent(unsigned int addr, int delay = 0);
+	bool readAddresses_permanent(std::vector<unsigned int> addr, int delay = 0);
+	bool writeAddress(unsigned int addr, char databyte, char *databytewritten = NULL);
+	bool writeAddresses(std::vector<unsigned int> addr, std::vector<char> data, std::vector<char> *databyteswritten = NULL);
+	bool writeAddress_permanent(unsigned int addr, char databyte, int delay = 0);
+	bool writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data, int delay = 0);
 
 private:
 	unsigned int _cuaddress;
 	comOp_dt _CommOperation;
-	QMutex _mutex;
-	QEventLoop _el;
-	bool _result;
-	bool _abort;
-	unsigned char _errRetries;
 	// Buffers for sending/recieving data:
 	char _padaddr;
 	unsigned int _dataaddr[SSMP2COM_BUFFER_SIZE];
 	unsigned int _datalen;
 	char _snd_buf[SSMP2COM_BUFFER_SIZE];
 	char _rec_buf[SSMP2COM_BUFFER_SIZE];
-	int _delay;
 
 	bool doSingleCommOperation();
 	void run();
-
-signals:
-	void receivedData(const std::vector<char>& rawdata, int duration_ms);
-
-	void commError();
 
 };
 
