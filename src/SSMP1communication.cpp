@@ -100,7 +100,7 @@ bool SSMP1communication::readAddress(unsigned int addr, char * databyte)
 {
 	bool ok = false;
 	std::vector<char> data;
-	ok = readAddresses(std::vector<unsigned int>(1,addr), &data);
+	ok = readAddresses(std::vector<unsigned int>(1, addr), &data);
 	if (ok)
 		*databyte = data.at(0);
 	return ok;
@@ -127,11 +127,11 @@ bool SSMP1communication::readAddresses(const std::vector<unsigned int>& addr, st
 bool SSMP1communication::writeAddress(unsigned int addr, char databyte, char *databytewritten)
 {
 	if (databytewritten == NULL)
-		return writeAddresses(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte));
+		return writeAddresses(std::vector<unsigned int>(1, addr), std::vector<char>(1, databyte));
 	else
 	{
 		std::vector<char> databyteswritten;
-		bool ok = writeAddresses(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte), &databyteswritten);
+		bool ok = writeAddresses(std::vector<unsigned int>(1, addr), std::vector<char>(1, databyte), &databyteswritten);
 		*databytewritten = databyteswritten.at(0);
 		return ok;
 	}
@@ -154,7 +154,7 @@ bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 	if (databyteswritten == NULL)
 	{
 		// Check written data:
-		unsigned int k=0;
+		unsigned int k = 0;
 		while (ok && (k < _data.size()))
 		{
 			ok = (_data.at(k) == data.at(k));
@@ -190,7 +190,7 @@ bool SSMP1communication::readAddresses_permanent(std::vector<unsigned int> addr,
 
 bool SSMP1communication::writeAddress_permanent(unsigned int addr, char databyte, int delay)
 {
-	return writeAddresses_permanent(std::vector<unsigned int>(1,addr), std::vector<char>(1,databyte), delay);
+	return writeAddresses_permanent(std::vector<unsigned int>(1, addr), std::vector<char>(1, databyte), delay);
 }
 
 
@@ -317,7 +317,8 @@ void SSMP1communication::run()
 			if ((operation == comOp::read) || (operation == comOp::read_p))
 			{
 				// Read next data:
-				if (k==0) data.clear();
+				if (k == 0)
+					data.clear();
 				op_success = getNextData(&data);
 #ifdef __FSSM_DEBUG__
 				if (!op_success)
@@ -355,21 +356,22 @@ void SSMP1communication::run()
 			// Set next address index:
 			if (addresses.size() > 1)
 			{
-				if (k < (addresses.size()-1))
+				if (k < (addresses.size() - 1))
 					k++;
 				else
-					k=0;
+					k = 0;
 				setAddr = true;
 			}
 			// Send data to main thread:
-			if (permanent && (k==0))
+			if (permanent && (k == 0))
 			{
 				// GET ELAPSED TIME:
 				duration_ms = timer.restart();
 				// SEND DATA TO MAIN THREAD:
 				emit receivedData(data, duration_ms);
 				// Wait for the desired delay time:
-				if (delay > 0) msleep(delay);
+				if (delay > 0)
+					msleep(delay);
 			}
 		}
 		else
@@ -379,13 +381,14 @@ void SSMP1communication::run()
 #endif
 			errcount++;
 			setAddr = true;	// repeat the complete procedure
-			if (errcount < errmax) msleep(100);
+			if (errcount < errmax)
+				msleep(100);
 		}
 		// GET ABORT STATUS::
 		_mutex.lock();
 		abort = _abort;
 		_mutex.unlock();
-	} while (!abort && (errcount < errmax) && (permanent || k>0 || !op_success));
+	} while (!abort && (errcount < errmax) && (permanent || (k > 0) || !op_success));
 	// Try to stop control unit from permanent data sending:
 #ifndef __FSSM_DEBUG__
 	stopCUtalking(true);
