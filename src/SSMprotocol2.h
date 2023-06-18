@@ -48,7 +48,6 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
-	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
 	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool stopActuatorTesting();
 	bool stopAllActuators();

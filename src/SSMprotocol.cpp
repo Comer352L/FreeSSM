@@ -430,6 +430,44 @@ bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue
 }
 
 
+bool SSMprotocol::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
+{
+	std::vector<unsigned int> dataaddr;
+	std::vector<char> data;
+	unsigned char k = 0;
+	unsigned int addrindex = 0;
+	if ((_state != state_normal) || _adjustments.empty())
+		return false;
+	// Setup address list:
+	for (k = 0; k < _adjustments.size(); k++)
+	{
+		dataaddr.push_back( _adjustments.at(k).addrLow );
+		if (_adjustments.at(k).addrHigh > 0)
+			dataaddr.push_back( _adjustments.at(k).addrHigh );
+	}
+	// Read data from control unit:
+	data.resize( dataaddr.size() );
+	if (!_SSMPcom->readAddresses(dataaddr, &data))
+	{
+		resetCUdata();
+		return false;
+	}
+	// Calculate and return raw values:
+	rawValues->clear();
+	for (k = 0; k < _adjustments.size(); k++)
+	{
+		rawValues->push_back( static_cast<unsigned char>(data.at(addrindex)) );
+		addrindex++;
+		if (_adjustments.at(k).addrHigh > 0)
+		{
+			rawValues->at(k) += 256*static_cast<unsigned char>(data.at(addrindex));
+			addrindex++;
+		}
+	}
+	return true;
+}
+
+
 bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 {
 	std::vector<unsigned int> addresses;
