@@ -242,64 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::startDCreading(int DCgroups)
-{
-	std::vector<unsigned int> DCqueryAddrList;
-	bool started;
-
-	// Check if another communication operation is in progress:
-	if (_state != state_normal) return false;
-
-	// Check argument:
-	if ((DCgroups & _supportedDCgroups) != DCgroups)
-		return false;
-
-	// Setup diagnostic codes addresses list:
-	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
-	{
-		dc_block_dt dc_block = _DTCblockData.at(b);
-		for (unsigned int a = 0; a < dc_block.addresses.size(); a++)
-		{
-			if ((dc_block.addresses.at(a).type == dc_addr_dt::Type::currentOrTempOrLatest)
-			    && ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup)))
-				DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
-			if ((dc_block.addresses.at(a).type == dc_addr_dt::Type::historicOrMemorized)
-			    && ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup)))
-				DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
-			// FIXME: futher types ?
-		}
-	}
-
-	// Check if min. 1 address to read:
-	if ((DCqueryAddrList.size() < 1))
-		return false;
-
-	// Add read address for test mode and D-Check status:
-	if (((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
-	    && (_CU == CUtype::Engine) && _ssmCUdata.uses_Ax10xx_defs())
-			DCqueryAddrList.insert(DCqueryAddrList.begin(), 0x000061); // NOTE: must be the first address !
-			// FIXME: test mode and D-Check status addresses for other SSM1 control units
-
-	// Start diagnostic code reading:
-	started = _SSMP1com->readAddresses_permanent( DCqueryAddrList );
-	if (started)
-	{
-		_state = state_DCreading;
-		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
-		_selectedDCgroups = DCgroups;
-		// Connect signals and slots:
-		connect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		        this, SLOT( processDCsRawdata(std::vector<char>, int) ), Qt::BlockingQueuedConnection );
-		// Emit signal:
-		emit startedDCreading();
-	}
-	else
-		resetCUdata();
-
-	return started;
-}
-
-
 bool SSMprotocol1::stopDCreading()
 {
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;

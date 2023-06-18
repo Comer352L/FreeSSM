@@ -246,6 +246,82 @@ bool SSMprotocol::getVIN(QString *VIN)
 }
 
 
+bool SSMprotocol::startDCreading(int DCgroups)
+{
+	std::vector<unsigned int> DCqueryAddrList;
+	bool started;
+
+	// Check if another communication operation is in progress:
+	if (_state != state_normal)
+		return false;
+
+	// Check argument:
+	if ((DCgroups & _supportedDCgroups) != DCgroups)
+		return false;
+
+	// Setup diagnostic codes addresses list:
+	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
+	{
+		dc_block_dt dc_block = _DTCblockData.at(b);
+		for (unsigned int a = 0; a < dc_block.addresses.size(); a++)
+		{
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::currentOrTempOrLatest)
+			{
+				if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::historicOrMemorized)
+			{
+				if ((DCgroups & historicDTCs_DCgroup) || (DCgroups & memorizedDTCs_DCgroup))
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::CCCCsLatest)
+			{
+				if (DCgroups & CClatestCCs_DCgroup)
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			if (dc_block.addresses.at(a).type == dc_addr_dt::Type::CCCCsMemorized)
+			{
+				if (DCgroups & CCmemorizedCCs_DCgroup)
+					DCqueryAddrList.push_back(dc_block.addresses.at(a).address);
+			}
+			// else: can not happen
+		}
+	}
+
+	// Check if min. 1 address to read:
+	if ((DCqueryAddrList.size() < 1))
+		return false;
+
+	// Add read address for test mode and D-Check status:
+	if ((DCgroups & currentDTCs_DCgroup) || (DCgroups & temporaryDTCs_DCgroup))
+	{
+		if (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE)
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), _sw_testmodestate_data.addr);   // NOTE: must be the first address !
+		if ((_sw_dcheckstate_data.addr != MEMORY_ADDRESS_NONE) && (_sw_dcheckstate_data.addr != _sw_testmodestate_data.addr))
+			DCqueryAddrList.insert(DCqueryAddrList.begin(), _sw_dcheckstate_data.addr);     // NOTE: must be the second address !
+	}
+
+	// Start diagostic codes reading:
+	started = _SSMPcom->readAddresses_permanent(DCqueryAddrList);
+	if (started)
+	{
+		_state = state_DCreading;
+		// Save diagnostic codes group selection (for data evaluation and restartDCreading()):
+		_selectedDCgroups = DCgroups;
+		// Connect signals and slots:
+		connect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+			this, SLOT( processDCsRawdata(const std::vector<char>&, int) ), Qt::BlockingQueuedConnection );
+		// Emit signal:
+		emit startedDCreading();
+	}
+	else
+		resetCUdata();
+
+	return started;
+}
+
+
 bool SSMprotocol::restartDCreading()
 {
 	return startDCreading(_selectedDCgroups);

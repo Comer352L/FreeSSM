@@ -96,7 +96,7 @@ public:
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
 	// COMMUNICATION BASED FUNCTIONS:
 	virtual bool getVIN(QString *VIN);
-	virtual bool startDCreading(int DCgroups) = 0;
+	bool startDCreading(int DCgroups);
 	bool restartDCreading();
 	virtual bool stopDCreading() = 0;
 	virtual bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList) = 0;
