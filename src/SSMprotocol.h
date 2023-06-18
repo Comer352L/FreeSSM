@@ -165,7 +165,6 @@ protected:
 	std::vector<unsigned int> assignMBSWRawData(const std::vector<char>& rawdata);
 	void setupActuatorTestAddrList();
 	void determineSupportedDCgroups(std::vector<dc_block_dt> DCblockData);
-	void resetCommonCUdata();
 
 signals:
 	void currentOrTemporaryDTCs(QStringList currentDTCs, QStringList currentDTCsDescriptions, bool testMode, bool DCheckActive);
@@ -186,7 +185,7 @@ protected slots:
 	void processDCsRawdata(std::vector<char> dcrawdata, int duration_ms);
 
 public slots:
-	virtual void resetCUdata() = 0;
+	virtual void resetCUdata();
 
 };
 

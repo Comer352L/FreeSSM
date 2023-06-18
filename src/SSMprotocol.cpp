@@ -30,13 +30,94 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 	_state = state_needSetup;
 	_SSMPcom = NULL;
 	_SSMdefsIfce = NULL;
-	resetCommonCUdata();
+	resetCUdata();
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
 }
 
 
 SSMprotocol::~SSMprotocol()
 {
+}
+
+
+void SSMprotocol::resetCUdata()
+{
+	// RESET COMMUNICATION:
+	if (_SSMPcom != NULL)
+	{
+		// Disconnect communication error and data signals:
+		disconnect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+		disconnect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+		disconnect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+		            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+		disconnect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+		            this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
+		// Try to stop active communication processes:
+		if (_SSMPcom->stopCommunication() && (_state == state_ActTesting))
+		{
+			bool ok = false;
+			// Stop all actuator tests:
+			for (unsigned int k=0; k<_allActByteAddr.size(); k++)
+			{
+				ok =_SSMPcom->writeAddress(_allActByteAddr.at(k), 0x00);
+				if (!ok)
+					break;
+			}
+			_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+			if (ok)
+				emit stoppedActuatorTest();
+		}
+		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+		delete _SSMPcom;
+		_SSMPcom = NULL;
+		// Emit stoppedXXX()-signals (_SSMP1com has been deleted, so we are sure they have finished):
+		if (_state == state_MBSWreading)
+			emit stoppedMBSWreading();
+		else if (_state == state_DCreading)
+			emit stoppedDCreading();
+	}
+	else
+		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
+	// RESET ECU DATA:
+	_ssmCUdata.clear();
+	// Clear system description:
+	_sysDescription.clear();
+	_has_OBD2 = false;
+	_has_Immo = false;
+	_has_ImmoTest = false;
+	_has_ActTest = false;
+	_has_SW_ignition = false;
+	// Clear DC data:
+	_DTCblockData.clear();
+	_supportedDCgroups = noDCs_DCgroup;
+	// Clear Clear Memory data:
+	_CMaddr = MEMORY_ADDRESS_NONE;
+	_CMvalue = '\x00';
+	_CM2addr = MEMORY_ADDRESS_NONE;
+	_CM2value = '\x00';
+	// Clear MB/SW data:
+	_supportedMBs.clear();
+	_supportedSWs.clear();
+	_mb_enginespeed_data = mb_enginespeed_data_dt();
+	_sw_testmodestate_data = sw_stateindication_data_dt();
+	_sw_dcheckstate_data = sw_stateindication_data_dt();
+	_sw_ignitionstate_data = sw_stateindication_data_dt();
+	// Clear adjustment values data:
+	_adjustments.clear();
+	// Clear actuator tests data:
+	_actuators.clear();
+	_allActByteAddr.clear();
+	// Clear selection data:
+	_selectedDCgroups = noDCs_DCgroup;
+	_MBSWmetaList.clear();
+	_selMBsSWsAddr.clear();
+	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
+	// Destruct definitions interface:
+	if (_SSMdefsIfce != NULL)
+	{
+		delete _SSMdefsIfce;
+		_SSMdefsIfce = NULL;
+	}
 }
 
 
@@ -1080,53 +1161,5 @@ void SSMprotocol::determineSupportedDCgroups(std::vector<dc_block_dt> DCblockDat
 				_supportedDCgroups |= CCmemorizedCCs_DCgroup;
 		}
 	}
-}
-
-
-void SSMprotocol::resetCommonCUdata()
-{
-	// RESET ECU DATA:
-	_ssmCUdata.clear();
-	// Clear system description:
-	_sysDescription.clear();
-	_has_OBD2 = false;
-	_has_Immo = false;
-	_has_ImmoTest = false;
-	_has_ActTest = false;
-	_has_SW_ignition = false;
-	// Clear DC data:
-	_DTCblockData.clear();
-	_supportedDCgroups = noDCs_DCgroup;
-	// Clear Clear Memory data:
-	_CMaddr = MEMORY_ADDRESS_NONE;
-	_CMvalue = '\x00';
-	_CM2addr = MEMORY_ADDRESS_NONE;
-	_CM2value = '\x00';
-	// Clear MB/SW data:
-	_supportedMBs.clear();
-	_supportedSWs.clear();
-	_mb_enginespeed_data = mb_enginespeed_data_dt();
-	_sw_testmodestate_data = sw_stateindication_data_dt();
-	_sw_dcheckstate_data = sw_stateindication_data_dt();
-	_sw_ignitionstate_data = sw_stateindication_data_dt();
-	// Clear adjustment values data:
-	_adjustments.clear();
-	// Clear actuator tests data:
-	_actuators.clear();
-	_allActByteAddr.clear();
-	// Clear selection data:
-	_selectedDCgroups = noDCs_DCgroup;
-	_MBSWmetaList.clear();
-	_selMBsSWsAddr.clear();
-	_selectedActuatorTestIndex = 255; // index ! => 0=first actuator !
-	// Destruct definitions interface:
-	if (_SSMdefsIfce != NULL)
-	{
-		delete _SSMdefsIfce;
-		_SSMdefsIfce = NULL;
-	}
-	// Destruct communication object:
-	delete _SSMPcom;
-	_SSMPcom = NULL;
 }
 

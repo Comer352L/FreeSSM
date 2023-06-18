@@ -49,8 +49,6 @@ private:
 
 	bool readExtendedID(std::vector<char>& ID);
 
-public slots:
-	void resetCUdata();
 
 };
 

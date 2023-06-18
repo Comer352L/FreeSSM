@@ -36,52 +36,6 @@ SSMprotocol1::~SSMprotocol1()
 }
 
 
-void SSMprotocol1::resetCUdata()
-{
-	// RESET COMMUNICATION:
-	if (_SSMP1com != NULL)
-	{
-		// Disconnect communication error and data signals:
-		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
-		disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		            this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
-		// Try to stop active communication processes:
-		if (_SSMP1com->stopCommunication() && (_state == state_ActTesting))
-		{
-			bool ok = false;
-			// Stop all actuator tests:
-			for (unsigned int k=0; k<_allActByteAddr.size(); k++)
-			{
-				ok =_SSMP1com->writeAddress(_allActByteAddr.at(k), 0x00);
-				if (!ok) break;
-			}
-			_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-			if (ok)
-				emit stoppedActuatorTest();
-		}
-		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-		delete _SSMP1com;
-		_SSMP1com = NULL;
-		// Emit stoppedXXX()-signals (_SSMP1com has been deleted, so we are sure they have finished):
-		if (_state == state_MBSWreading)
-		{
-			emit stoppedMBSWreading();
-		}
-		else if (_state == state_DCreading)
-		{
-			emit stoppedDCreading();
-		}
-	}
-	else
-		_state = state_needSetup;	// MUST BE DONE AFTER ALL CALLS OF MEMBER-FUNCTIONS AND BEFORE EMITTING SIGNALS
-	// Reset control unit data
-	resetCommonCUdata();
-}
-
-
 SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 {
 	std::string LegacyDefsFile;
