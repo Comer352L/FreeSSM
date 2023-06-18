@@ -105,7 +105,7 @@ public:
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
-	virtual bool startActuatorTest(unsigned char actuatorTestIndex) = 0;
+	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool restartActuatorTest();
 	virtual bool stopActuatorTesting() = 0;
 	virtual bool stopAllActuators() = 0;

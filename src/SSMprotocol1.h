@@ -44,7 +44,6 @@ public:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
 	// COMMUNICATION BASED FUNCTIONS:
-	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool stopActuatorTesting();
 	bool stopAllActuators();
 	bool clearMemory(CMlevel_dt level, bool *success);

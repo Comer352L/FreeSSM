@@ -503,6 +503,57 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 }
 
 
+bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
+{
+	bool ATstarted = false;
+	bool ok = false;
+	bool testmode = false;
+	bool running = false;
+	// Check if another communication operation is in progress:
+	if (_state != state_normal)
+		return false;
+	// Validate selected test:
+	if (!_has_ActTest || (actuatorTestIndex >= _actuators.size()))
+		return false;
+	// Check if control unit is in test mode:
+	ok = isInTestMode(&testmode);
+	if (!ok || !testmode)
+		return false;
+	// Check that engine is not running:
+	ok = isEngineRunning(&running);
+	if (!ok || running)
+		return false;
+	// Change state:
+	_state = state_ActTesting;
+	// Prepare test addresses:
+	const unsigned int dataaddr = _actuators.at(actuatorTestIndex).byteAddr;
+	const char databyte = static_cast<char>(1 << (_actuators.at(actuatorTestIndex).bitAddr - 1));
+	// Stop all actuator tests:
+	for (size_t k = 0; k < _allActByteAddr.size(); k++)
+	{
+		if (!_SSMPcom->writeAddress(_allActByteAddr.at(k), 0x00))
+		{
+			_state = state_normal; // this avoids that resetCUdata() will try to stop all actuators again
+			resetCUdata();
+			return false;
+		}
+	}
+	// Start Actuator Test:
+	ATstarted = _SSMPcom->writeAddress_permanent(dataaddr, databyte, 100);
+	if (ATstarted)
+	{
+		_selectedActuatorTestIndex = actuatorTestIndex;
+		emit startedActuatorTest();
+	}
+	else
+	{
+		_state = state_normal; // this avoids that resetCUdata() will try to stop all actuators again
+		resetCUdata();
+	}
+	return ATstarted;
+}
+
+
 bool SSMprotocol::restartActuatorTest()
 {
 	return startActuatorTest(_selectedActuatorTestIndex);
