@@ -24,7 +24,6 @@
 
 SSMprotocol2::SSMprotocol2(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
-	_SSMP2com = NULL;
 	resetCUdata();
 }
 
@@ -88,19 +87,19 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	}
 	else
 		return result_invalidCUtype;
-	_SSMP2com = new SSMP2communication(_diagInterface, CUaddress, 1);
+	SSMP2communication *SSMP2com = new SSMP2communication(_diagInterface, CUaddress, 1);
 	// Get control unit data:
-	if (!_SSMP2com->getCUdata(_ssmCUdata))
+	if (!SSMP2com->getCUdata(_ssmCUdata))
 	{
 		if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 		{
-			_SSMP2com->setCUaddress(0x01);
-			if (!_SSMP2com->getCUdata(_ssmCUdata))
+			SSMP2com->setCUaddress(0x01);
+			if (!SSMP2com->getCUdata(_ssmCUdata))
 			{
 				if (CU == CUtype::Engine)
 				{
-					_SSMP2com->setCUaddress(0x02);
-					if (!_SSMP2com->getCUdata(_ssmCUdata))
+					SSMP2com->setCUaddress(0x02);
+					if (!SSMP2com->getCUdata(_ssmCUdata))
 						goto commError;
 				}
 				else
@@ -111,13 +110,13 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 			goto commError;
 	}
 
-	_SSMP2com->setRetriesOnError(2);
-	_SSMPcom = _SSMP2com;
+	SSMP2com->setRetriesOnError(2);
+	_SSMPcom = SSMP2com;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
-	connect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-	connect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	connect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+	connect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Get definitions for this control unit */
 	FBdefsIface = new SSMFlagbyteDefinitionsInterface(_language);
 	if (!FBdefsIface->selectControlUnitID(_CU, _ssmCUdata))
@@ -151,7 +150,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	if ((_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE) && !ignoreIgnitionOFF)
 	{
 		char data = 0x00;
-		if (!_SSMP2com->readMultipleDatabytes('\x0', &_sw_ignitionstate_data.addr, 1, &data))
+		if (!_SSMPcom->readAddress(_sw_ignitionstate_data.addr, &data))
 			goto commError;
 		if (!((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted))
 			goto commError;

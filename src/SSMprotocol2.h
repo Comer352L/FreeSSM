@@ -50,7 +50,6 @@ public:
 	bool getVIN(QString *VIN);
 
 private:
-	SSMP2communication *_SSMP2com;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_integratedCC;
 	bool _has_VINsupport;
