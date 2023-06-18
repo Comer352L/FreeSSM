@@ -242,39 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::stopAllActuators()
-{
-	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol
-	// => When switching the cars ignition on (with engine off) while test mode connector is connected,
-	//    some actuator tests are started automatically
-	bool ok = false;
-	bool testmode = false;
-	bool enginerunning = false;
-	if (_state != state_normal) return false;
-	// Check if actuator tests are supported:
-	if (!_has_ActTest)
-		return false;
-	// Check if control unit is in test mode:
-	ok = isInTestMode(&testmode);
-	if (!ok || !testmode)
-		return false;
-	// Check that engine is not running:
-	ok = isEngineRunning(&enginerunning);
-	if (!ok || enginerunning)
-		return false;
-	// Stop all actuator tests:
-	for (unsigned char k=0; k<_allActByteAddr.size(); k++)
-	{
-		if (!_SSMP1com->writeAddress(_allActByteAddr.at(k), 0x00))
-		{
-			resetCUdata();
-			return false;
-		}
-	}
-	return true;
-}
-
-
 bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
 {
 	bool CMsup = false;

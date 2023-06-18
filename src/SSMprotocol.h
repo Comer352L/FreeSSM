@@ -108,7 +108,7 @@ public:
 	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool restartActuatorTest();
 	bool stopActuatorTesting();
-	virtual bool stopAllActuators() = 0;
+	bool stopAllActuators();
 	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
 	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
 	virtual bool isEngineRunning(bool *isrunning) = 0;
