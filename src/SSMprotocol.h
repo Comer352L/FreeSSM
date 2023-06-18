@@ -109,7 +109,7 @@ public:
 	bool restartActuatorTest();
 	bool stopActuatorTesting();
 	bool stopAllActuators();
-	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
+	bool clearMemory(CMlevel_dt level, bool *success);
 	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
@@ -141,6 +141,8 @@ protected:
 	// Clear Memory:
 	unsigned int _CMaddr = MEMORY_ADDRESS_NONE;
 	char _CMvalue;
+	unsigned int _CM2addr = MEMORY_ADDRESS_NONE;
+	char _CM2value;
 	// Measuring Blocks and Switches:
 	std::vector<mb_intl_dt> _supportedMBs;
 	std::vector<sw_intl_dt> _supportedSWs;

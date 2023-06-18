@@ -44,7 +44,6 @@ public:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
 	// COMMUNICATION BASED FUNCTIONS:
-	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
 
 private:

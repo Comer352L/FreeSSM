@@ -80,8 +80,6 @@ void SSMprotocol2::resetCUdata()
 	resetCommonCUdata();
 	_has_VINsupport = false;
 	_has_integratedCC = false;
-	_CM2addr = MEMORY_ADDRESS_NONE;
-	_CM2value = '\x00';
 }
 
 
@@ -261,47 +259,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 	// Communication error:
 	resetCUdata();
 	return false;
-}
-
-
-bool SSMprotocol2::clearMemory(CMlevel_dt level, bool *success)
-{
-	bool CMsup = false;
-	unsigned int addr = MEMORY_ADDRESS_NONE;
-	char val = 0;
-	char bytewritten = '\x00';
-
-	if (success != NULL)
-		*success = false;
-	// NOTE: _state validated by hasClearMemory()
-	if (level == CMlevel_1)
-	{
-		if (hasClearMemory(&CMsup) && CMsup)
-		{
-			addr = _CMaddr;
-			val = _CMvalue;
-		}
-	}
-	else if (level == CMlevel_2)
-	{
-		if (hasClearMemory2(&CMsup) && CMsup)
-		{
-			addr = _CM2addr;
-			val = _CM2value;
-		}
-	}
-	else
-	{
-		return false;
-	}
-	if (!_SSMP2com->writeDatabyte(addr, val, &bytewritten))
-	{
-		resetCUdata();
-		return false;
-	}
-	if (success != NULL)
-		*success = (bytewritten == val);
-	return true;
 }
 
 

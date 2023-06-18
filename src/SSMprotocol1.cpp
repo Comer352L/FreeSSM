@@ -242,28 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::clearMemory(CMlevel_dt level, bool *success)
-{
-	bool CMsup = false;
-	char bytewritten = 0;
-
-	if (success != NULL)
-		*success = false;
-	// NOTE: _state validated by hasClearMemory()
-	if (level != CMlevel_1) return false;
-	if (!hasClearMemory(&CMsup) || !CMsup)
-		return false;
-	if (!_SSMP1com->writeAddress(_CMaddr, _CMvalue, &bytewritten))
-	{
-		resetCUdata();
-		return false;
-	}
-	if (success != NULL)
-		*success = (bytewritten == _CMvalue);
-	return true;
-}
-
-
 bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 {
 	if (_state != state_normal) return false;

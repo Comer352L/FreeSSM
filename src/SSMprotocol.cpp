@@ -622,6 +622,49 @@ bool SSMprotocol::stopAllActuators()
 }
 
 
+bool SSMprotocol::clearMemory(CMlevel_dt level, bool *success)
+{
+	bool CMsup = false;
+	unsigned int addr = MEMORY_ADDRESS_NONE;
+	char val = 0;
+	char bytewritten = '\x00';
+
+	if (success != NULL)
+		*success = false;
+	// NOTE: _state validated by hasClearMemory()
+	if (level == CMlevel_1)
+	{
+		if (hasClearMemory(&CMsup) && CMsup)
+		{
+			addr = _CMaddr;
+			val = _CMvalue;
+		}
+		else
+			return false;
+	}
+	else if (level == CMlevel_2)
+	{
+		if (hasClearMemory2(&CMsup) && CMsup)
+		{
+			addr = _CM2addr;
+			val = _CM2value;
+		}
+		else
+			return false;
+	}
+	else
+		return false;
+	if (!_SSMPcom->writeAddress(addr, val, &bytewritten))
+	{
+		resetCUdata();
+		return false;
+	}
+	if (success != NULL)
+		*success = (bytewritten == val);
+	return true;
+}
+
+
 bool SSMprotocol::isEngineRunning(bool *isrunning)
 {
 	std::vector<unsigned int> addresses;
@@ -1017,6 +1060,8 @@ void SSMprotocol::resetCommonCUdata()
 	// Clear Clear Memory data:
 	_CMaddr = MEMORY_ADDRESS_NONE;
 	_CMvalue = '\x00';
+	_CM2addr = MEMORY_ADDRESS_NONE;
+	_CM2value = '\x00';
 	// Clear MB/SW data:
 	_supportedMBs.clear();
 	_supportedSWs.clear();

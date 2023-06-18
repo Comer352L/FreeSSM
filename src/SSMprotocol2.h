@@ -48,7 +48,6 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
-	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
 
 private:
@@ -56,8 +55,6 @@ private:
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:
 	bool _has_integratedCC;
 	bool _has_VINsupport;
-	unsigned int _CM2addr = MEMORY_ADDRESS_NONE;
-	char _CM2value;
 
 	bool validateVIN(char VIN[17]);
 
