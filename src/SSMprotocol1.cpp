@@ -242,26 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::stopDCreading()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_DCreading)
-	{
-		if (_SSMP1com->stopCommunication())
-		{
-			disconnect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-			            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
-			_state = state_normal;
-			emit stoppedDCreading();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
 bool SSMprotocol1::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
 {
 	bool started = false;

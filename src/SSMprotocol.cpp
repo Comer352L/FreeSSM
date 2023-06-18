@@ -328,6 +328,27 @@ bool SSMprotocol::restartDCreading()
 }
 
 
+bool SSMprotocol::stopDCreading()
+{
+	if ((_state == state_needSetup) || (_state == state_normal))
+		return true;
+	if (_state == state_DCreading)
+	{
+		if (_SSMPcom->stopCommunication())
+		{
+			disconnect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+			            this, SLOT( processDCsRawdata(std::vector<char>, int) ) );
+			_state = state_normal;
+			emit stoppedDCreading();
+			return true;
+		}
+		// Communication error:
+		resetCUdata();
+	}
+	return false;
+}
+
+
 bool SSMprotocol::restartMBSWreading()
 {
 	return startMBSWreading(_MBSWmetaList);

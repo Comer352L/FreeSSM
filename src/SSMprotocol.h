@@ -98,7 +98,7 @@ public:
 	virtual bool getVIN(QString *VIN);
 	bool startDCreading(int DCgroups);
 	bool restartDCreading();
-	virtual bool stopDCreading() = 0;
+	bool stopDCreading();
 	virtual bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList) = 0;
 	bool restartMBSWreading();
 	virtual bool stopMBSWreading() = 0;
