@@ -110,7 +110,7 @@ public:
 	bool stopActuatorTesting();
 	bool stopAllActuators();
 	bool clearMemory(CMlevel_dt level, bool *success);
-	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
+	bool testImmobilizerCommLine(immoTestResult_dt *result);
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
 	bool stopAllPermanentOperations();

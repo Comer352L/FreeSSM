@@ -48,7 +48,6 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
-	bool testImmobilizerCommLine(immoTestResult_dt *result);
 
 private:
 	SSMP2communication *_SSMP2com;

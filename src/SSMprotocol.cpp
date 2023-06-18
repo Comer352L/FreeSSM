@@ -665,6 +665,46 @@ bool SSMprotocol::clearMemory(CMlevel_dt level, bool *success)
 }
 
 
+bool SSMprotocol::testImmobilizerCommLine(immoTestResult_dt *result)
+{
+	if (_state != state_normal)
+		return false;
+	if (!_ssmCUdata.uses_Ax10xx_defs())
+		return false;
+		// NOTE/TODO: immobilizer test might work different for 7xxxxx and Ax01xx controllers (if supported) !
+	if (!_has_ImmoTest)
+		return false;
+
+	char checkvalue = 0;
+	unsigned int readcheckaddr = 0x8B;
+	// Write test-pattern:
+	if (_SSMPcom->writeAddress(0xE0, '\xAA', &checkvalue))
+	{
+		// Read result:
+		if (_SSMPcom->readAddress(readcheckaddr, &checkvalue))
+		{
+			/* NOTE: the actually written data is NOT 0xAA ! */
+			if (checkvalue == '\x01')
+			{
+				*result = immoShortedToGround;
+			}
+			else if  (checkvalue == '\x02')
+			{
+				*result = immoShortedToBattery;
+			}
+			else
+			{
+				*result = immoNotShorted;
+			}
+			return true;
+		}
+	}
+	// Communication error:
+	resetCUdata();
+	return false;
+}
+
+
 bool SSMprotocol::isEngineRunning(bool *isrunning)
 {
 	std::vector<unsigned int> addresses;

@@ -189,6 +189,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		FBdefsIface->systemDescription(&_sysDescription);
 		FBdefsIface->hasOBD2system(&_has_OBD2);
 		FBdefsIface->hasImmobilizer(&_has_Immo);
+		FBdefsIface->hasImmobilizerTest(&_has_ImmoTest);
 		bool CMsup = false;
 		FBdefsIface->hasClearMemory(&CMsup);
 		if (CMsup)
@@ -241,42 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 	return result_success;
 }
 
-
-bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
-{
-	if (_state != state_normal) return false;
-	if (!_ssmCUdata.uses_Ax10xx_defs())
-		return false;
-	if (!_has_Immo) return false;
-	char checkvalue = 0;
-	unsigned int readcheckaddr = 0x8B;
-	// Write test-pattern:
-	if (_SSMP1com->writeAddress(0xE0, '\xAA', &checkvalue))
-	{
-		// Read result:
-		if (_SSMP1com->readAddress(readcheckaddr, &checkvalue))
-		{
-			/* NOTE: the actually written data is NOT 0xAA ! */
-			if (checkvalue == '\x01')
-			{
-				*result = immoShortedToGround;
-			}
-			else if  (checkvalue == '\x02')
-			{
-				*result = immoShortedToBattery;
-			}
-			else
-			{
-				*result = immoNotShorted;
-			}
-			return true;
-		}
-	}
-	// Communication error:
-	resetCUdata();
-	return false;
-	// TODO: Immobilizer test might work different for 7xxxxx and Ax01xx controllers (if supported) !
-}
 
 // PRIVATE
 

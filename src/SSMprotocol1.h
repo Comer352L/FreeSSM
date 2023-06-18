@@ -43,8 +43,6 @@ public:
 	// NON-COMMUNICATION-FUNCTIONS:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
-	// COMMUNICATION BASED FUNCTIONS:
-	bool testImmobilizerCommLine(immoTestResult_dt *result);
 
 private:
 	SSMP1communication *_SSMP1com;

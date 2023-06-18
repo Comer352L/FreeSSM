@@ -261,40 +261,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 	return false;
 }
 
-
-bool SSMprotocol2::testImmobilizerCommLine(immoTestResult_dt *result)
-{
-	if (_state != state_normal) return false;
-	if (!_has_ImmoTest) return false;
-	char checkvalue = 0;
-	unsigned int readcheckaddr = 0x8B;
-	// Write test-pattern:
-	if (_SSMP2com->writeDatabyte(0xE0, '\xAA', &checkvalue))
-	{
-		// Read result:
-		if (_SSMP2com->readMultipleDatabytes('\x0', &readcheckaddr, 1, &checkvalue))
-		{
-			/* NOTE: the actually written data is NOT 0xAA ! */
-			if (checkvalue == '\x01')
-			{
-				*result = immoShortedToGround;
-			}
-			else if  (checkvalue == '\x02')
-			{
-				*result = immoShortedToBattery;
-			}
-			else
-			{
-				*result = immoNotShorted;
-			}
-			return true;
-		}
-	}
-	// Communication error:
-	resetCUdata();
-	return false;
-}
-
 // PRIVATE
 
 bool SSMprotocol2::validateVIN(char VIN[17])
