@@ -665,6 +665,27 @@ bool SSMprotocol::isEngineRunning(bool *isrunning)
 }
 
 
+bool SSMprotocol::isInTestMode(bool *testmode)
+{
+	char byte = 0;
+
+	if (_state != state_normal)
+		return false;
+	if (_sw_testmodestate_data.addr == MEMORY_ADDRESS_NONE)
+		return false;
+	if (!_SSMPcom->readAddress(_sw_testmodestate_data.addr, &byte))
+	{
+		resetCUdata();
+		return false;
+	}
+	if ((byte & (1 << _sw_testmodestate_data.bit)) ^ _sw_testmodestate_data.inverted)
+		*testmode = true;
+	else
+		*testmode = false;
+	return true;
+}
+
+
 bool SSMprotocol::stopAllPermanentOperations()
 {
 	bool result = false;

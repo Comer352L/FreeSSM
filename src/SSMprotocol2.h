@@ -50,7 +50,6 @@ public:
 	bool getVIN(QString *VIN);
 	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
-	bool isInTestMode(bool *testmode);
 
 private:
 	SSMP2communication *_SSMP2com;

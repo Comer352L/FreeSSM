@@ -300,27 +300,6 @@ bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 	// TODO: Immobilizer test might work different for 7xxxxx and Ax01xx controllers (if supported) !
 }
 
-
-bool SSMprotocol1::isInTestMode(bool *testmode)
-{
-	char byte = 0;
-
-	if (_state != state_normal)
-		return false;
-	if (_sw_testmodestate_data.addr == MEMORY_ADDRESS_NONE)
-		return false;
-	if (!_SSMP1com->readAddress(_sw_testmodestate_data.addr, &byte))
-	{
-		resetCUdata();
-		return false;
-	}
-	if ((byte & (1 << _sw_testmodestate_data.bit)) ^ _sw_testmodestate_data.inverted)
-		*testmode = true;
-	else
-		*testmode = false;
-	return true;
-}
-
 // PRIVATE
 
 bool SSMprotocol1::readExtendedID(std::vector<char>& ID)
