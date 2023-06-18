@@ -264,36 +264,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 }
 
 
-bool SSMprotocol2::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
-{
-	unsigned int dataaddr[2] = {0,0};
-	unsigned int datalen = 0;
-	char data[2] = {0,0};
-	if (_state != state_normal) return false;
-	// Validate adjustment value selection:
-	if (_adjustments.empty() || (index >= _adjustments.size())) return false;
-	// Convert memory address into two byte addresses:
-	dataaddr[0] = _adjustments.at(index).addrLow;
-	datalen = 1;
-	if (_adjustments.at(index).addrHigh > 0)
-	{
-		dataaddr[1] = _adjustments.at(index).addrHigh;
-		datalen++;
-	}
-	// Read data from control unit:
-	if (!_SSMP2com->readMultipleDatabytes('\x0', dataaddr, datalen, data))
-	{
-		resetCUdata();
-		return false;
-	}
-	// Calculate raw value:
-	*rawValue = static_cast<unsigned char>(data[0]);
-	if (_adjustments.at(index).addrHigh > 0)
-		*rawValue += 256*static_cast<unsigned char>(data[1]);
-	return true;
-}
-
-
 bool SSMprotocol2::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 {
 	std::vector<unsigned int> dataaddr;

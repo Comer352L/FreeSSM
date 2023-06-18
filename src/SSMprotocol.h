@@ -102,7 +102,7 @@ public:
 	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool restartMBSWreading();
 	bool stopMBSWreading();
-	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;
+	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues) = 0;
 	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue) = 0;
 	virtual bool startActuatorTest(unsigned char actuatorTestIndex) = 0;

@@ -242,31 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
-{
-	std::vector<unsigned int> dataaddr;
-	std::vector<char> data;
-	if (_state != state_normal) return false;
-	// Validate adjustment value selection:
-	if (_adjustments.empty() || (index >= _adjustments.size())) return false;
-	// Convert memory address into two byte addresses:
-	dataaddr.push_back( _adjustments.at(index).addrLow );
-	if (_adjustments.at(index).addrHigh > 0)
-		dataaddr.push_back( _adjustments.at(index).addrHigh );
-	// Read data from control unit:
-	if (!_SSMP1com->readAddresses(dataaddr, &data))
-	{
-		resetCUdata();
-		return false;
-	}
-	// Calculate raw value:
-	*rawValue = static_cast<unsigned char>(data.at(0));
-	if (_adjustments.at(index).addrHigh > 0)
-		*rawValue += 256*static_cast<unsigned char>(data.at(1));
-	return true;
-}
-
-
 bool SSMprotocol1::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 {
 	std::vector<unsigned int> dataaddr;
