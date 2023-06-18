@@ -141,7 +141,8 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 bool SSMP2communication::readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data)
 {
 	bool ok = false;
-	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
+	if (datalen > SSMP2COM_BUFFER_SIZE)
+		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::readMulti;
@@ -166,13 +167,9 @@ bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char*
 {
 	bool ok = false;
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
-	{
 		return false;
-	}
-	else if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
-	{
+	if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
 		return false;
-	}
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeBlock;
@@ -237,7 +234,8 @@ bool SSMP2communication::writeMultipleDatabytes(const unsigned int dataaddr[SSMP
 {
 	// NOTE: emulates multi-address/-data write using multiple signgle address/data writes
 	bool ok = false;
-	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
+	if (datalen > SSMP2COM_BUFFER_SIZE)
+		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeMultiAddr_emul;
@@ -278,18 +276,18 @@ bool SSMP2communication::writeMultipleDatabytes(const unsigned int dataaddr[SSMP
 #ifdef __SSM2_BLOCK_OPS__
 bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, int delay)
 {
-	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (nrofbytes > 254)) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
-		return false;
+		if (nrofbytes > 254) // ISO14230 protocol limit: length byte in header => max. 254 per reply message possible
+			return false;
 	}
-	else if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765) && (nrofbytes > 256)) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
-		return false;
+		if (nrofbytes > 256) // ISO15765 protocol limit: data length byte in request => max. 256 possible
+			return false;
 	}
 	else
-	{
 		return false;
-	}
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::readBlock_p;
@@ -307,7 +305,8 @@ bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int data
 
 bool SSMP2communication::readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, const int delay)
 {
-	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
+	if (datalen > SSMP2COM_BUFFER_SIZE)
+		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::readMulti_p;
@@ -326,13 +325,9 @@ bool SSMP2communication::readMultipleDatabytes_permanent(const char padaddr, con
 bool SSMP2communication::writeDataBlock_permanent(const unsigned int dataaddr, const char* data, const unsigned int datalen, const int delay)
 {
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
-	{
 		return false;
-	}
-	else if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
-	{
+	if (datalen > SSMP2COM_BUFFER_SIZE) // limited by buffer sizes
 		return false;
-	}
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeBlock_p;
@@ -367,7 +362,8 @@ bool SSMP2communication::writeDatabyte_permanent(const unsigned int dataaddr, co
 bool SSMP2communication::writeMultipleDatabytes_permanent(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], const int delay)
 {
 	// NOTE: emulates multi-address/-data write using multiple signgle address/data writes
-	if (datalen > SSMP2COM_BUFFER_SIZE) return false; // limited by buffer sizes
+	if (datalen > SSMP2COM_BUFFER_SIZE)
+		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeMultiAddr_emul_p;
@@ -621,7 +617,8 @@ void SSMP2communication::run()
 				// SEND DATA TO MAIN THREAD:
 				emit receivedData(rawdata, duration_ms);
 				// Wait for the desired delay time:
-				if (delay > 0) msleep(delay);
+				if (delay > 0)
+					msleep(delay);
 			}
 		}
 		else

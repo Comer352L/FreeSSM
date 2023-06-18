@@ -29,7 +29,7 @@
 
 #define		SSMP2COM_BUFFER_SIZE	256	// buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
 
-//#define		__SSM2_BLOCK_OPS__			// NOTE: currently unused
+//#define		__SSM2_BLOCK_OPS__		// NOTE: currently unused
 
 
 
