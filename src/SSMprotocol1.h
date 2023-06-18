@@ -45,10 +45,7 @@ public:
 	protocol_dt protocolType() { return SSM1; }
 
 private:
-	SSMP1communication *_SSMP1com;
-
 	bool readExtendedID(std::vector<char>& ID);
-
 
 };
 

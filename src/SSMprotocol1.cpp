@@ -25,7 +25,6 @@
 
 SSMprotocol1::SSMprotocol1(AbstractDiagInterface *diagInterface, QString language) : SSMprotocol(diagInterface, language)
 {
-	_SSMP1com = NULL;
 	resetCUdata();
 }
 
@@ -88,34 +87,34 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 	else
 		return result_invalidCUtype;
 	// Create SSMP1communication-object:
-	_SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
+	SSMP1communication *SSMP1com = new SSMP1communication(_diagInterface, SSM1_CU);
 	// Get control unit ID:
-	bool ok = _SSMP1com->getCUdata(0, _ssmCUdata);
+	bool ok = SSMP1com->getCUdata(0, _ssmCUdata);
 	if (!ok && (CU == CUtype::AirCon))
 	{
-		_SSMP1com->selectCU(SSM1_CU_AirCon2);
-		ok = _SSMP1com->getCUdata(0, _ssmCUdata);
+		SSMP1com->selectCU(SSM1_CU_AirCon2);
+		ok = SSMP1com->getCUdata(0, _ssmCUdata);
 	}
 	if (!ok)
 	{
-		delete _SSMP1com;
-		_SSMP1com = NULL;
+		delete SSMP1com;
+		SSMP1com = NULL;
 		return result_commError;
 	}
 	/* NOTE: no need to check the state of the ignition switch.
 	 * Power supply of these old control units is immediately cut when ignition is switched off */
-	_SSMPcom = _SSMP1com;
+	_SSMPcom = SSMP1com;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:
-	connect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-	connect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+	connect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+	connect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
 	/* Load control unit definitions */
 	if (_ssmCUdata.uses_Flagbytes())
 	{
 		SSMFlagbyteDefinitionsInterface *FBdefsIface;
 		// Request flag bytes:
-		if (!_SSMP1com->getCUdata(32, _ssmCUdata))
+		if (!SSMP1com->getCUdata(32, _ssmCUdata))
 		{
 			resetCUdata();
 			return result_commError;
@@ -204,7 +203,7 @@ bool SSMprotocol1::readExtendedID(std::vector<char>& ID)
 	std::vector<unsigned int> addresses;
 	for (unsigned int addr=0x01; addr<=0x05; addr++)
 		addresses.push_back(addr);
-	if (!_SSMP1com->readAddresses(addresses, &ID))
+	if (!_SSMPcom->readAddresses(addresses, &ID))
 		return false;
 	return true;
 }
