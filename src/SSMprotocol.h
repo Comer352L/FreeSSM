@@ -104,7 +104,7 @@ public:
 	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues) = 0;
-	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue) = 0;
+	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	virtual bool startActuatorTest(unsigned char actuatorTestIndex) = 0;
 	bool restartActuatorTest();
 	virtual bool stopActuatorTesting() = 0;

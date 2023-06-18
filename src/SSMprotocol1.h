@@ -45,7 +45,6 @@ public:
 	protocol_dt protocolType() { return SSM1; }
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);
-	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool stopActuatorTesting();
 	bool stopAllActuators();

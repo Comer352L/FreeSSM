@@ -49,7 +49,6 @@ public:
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
 	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
-	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool stopActuatorTesting();
 	bool stopAllActuators();

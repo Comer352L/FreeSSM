@@ -430,6 +430,41 @@ bool SSMprotocol::getAdjustmentValue(unsigned char index, unsigned int *rawValue
 }
 
 
+bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
+{
+	std::vector<unsigned int> addresses;
+	std::vector<char> data;
+	if (_state != state_normal)
+		return false;
+	// Validate adjustment value selection:
+	if (index >= _adjustments.size())
+		return false;
+	if ((_adjustments.at(index).rawMin <= _adjustments.at(index).rawMax) && ((rawValue < _adjustments.at(index).rawMin) || ((rawValue > _adjustments.at(index).rawMax))))
+		return false;
+	if ((_adjustments.at(index).rawMin > _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin) && (rawValue > _adjustments.at(index).rawMax))
+		return false;
+	if ((_adjustments.at(index).addrHigh > 0) && (rawValue > 65535))
+		return false;
+	else if (rawValue > 255)
+		return false;
+	// Setup addresses and convert raw value to 2 byte values:
+	addresses.push_back( _adjustments.at(index).addrLow );
+	data.push_back( static_cast<char>(rawValue & 0xff) );
+	if (_adjustments.at(index).addrHigh > 0)
+	{
+		addresses.push_back( _adjustments.at(index).addrHigh );
+		data.push_back( static_cast<char>((rawValue & 0xffff) >> 8) );
+	}
+	// Write value to control unit:
+	if (!_SSMPcom->writeAddresses(addresses, data))
+	{
+		resetCUdata();
+		return false;
+	}
+	return true;
+}
+
+
 bool SSMprotocol::restartActuatorTest()
 {
 	return startActuatorTest(_selectedActuatorTestIndex);

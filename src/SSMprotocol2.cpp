@@ -301,47 +301,6 @@ bool SSMprotocol2::getAllAdjustmentValues(std::vector<unsigned int> * rawValues)
 }
 
 
-bool SSMprotocol2::setAdjustmentValue(unsigned char index, unsigned int rawValue)
-{
-	char lowdatabyte = 0;
-	char highdatabyte = 0;
-	if (_state != state_normal) return false;
-	// Validate adjustment value selection:
-	if (index >= _adjustments.size()) return false;
-	if ((_adjustments.at(index).rawMin <= _adjustments.at(index).rawMax) && ((rawValue < _adjustments.at(index).rawMin) || ((rawValue > _adjustments.at(index).rawMax))))
-		return false;
-	if ((_adjustments.at(index).rawMin > _adjustments.at(index).rawMax) && (rawValue < _adjustments.at(index).rawMin) && (rawValue > _adjustments.at(index).rawMax))
-		return false;
-	if ((_adjustments.at(index).addrHigh > 0) && (rawValue > 65535))
-	{
-		return false;
-	}
-	else if (rawValue > 255)
-	{
-		return false;
-	}
-	// Convert raw value to 2 byte values:
-	lowdatabyte = static_cast<char>(rawValue & 0xff);
-	if (_adjustments.at(index).addrHigh > 0)
-		highdatabyte = static_cast<char>((rawValue & 0xffff) >> 8);
-	// Write value to control unit:
-	if (_adjustments.at(index).addrHigh > 0)
-	{
-		if (!_SSMP2com->writeDatabyte(_adjustments.at(index).addrHigh, highdatabyte))
-		{
-			resetCUdata();
-			return false;
-		}
-	}
-	if (!_SSMP2com->writeDatabyte(_adjustments.at(index).addrLow, lowdatabyte))
-	{
-		resetCUdata();
-		return false;
-	}
-	return true;
-}
-
-
 bool SSMprotocol2::startActuatorTest(unsigned char actuatorTestIndex)
 {
 	bool ATstarted = false;
