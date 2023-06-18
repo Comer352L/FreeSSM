@@ -28,6 +28,7 @@ SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
 	_language = language;
 	_CU = CUtype::Engine;
 	_state = state_needSetup;
+	_SSMPcom = NULL;
 	_SSMdefsIfce = NULL;
 	resetCommonCUdata();
 	qRegisterMetaType< std::vector<char> >("std::vector<char>");
@@ -575,5 +576,8 @@ void SSMprotocol::resetCommonCUdata()
 		delete _SSMdefsIfce;
 		_SSMdefsIfce = NULL;
 	}
+	// Destruct communication object:
+	delete _SSMPcom;
+	_SSMPcom = NULL;
 }
 

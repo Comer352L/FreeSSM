@@ -32,6 +32,7 @@
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"
 #include "SSMCUdata.h"
+#include "AbstractSSMcommunication.h"
 #include "SSMDefinitionsInterface.h"
 
 
@@ -124,6 +125,8 @@ protected:
 	// *** CONTROL UNIT RAW DATA ***:
 	SSMCUdata _ssmCUdata;
 	std::string _sysDescription;
+	// *** COMMUNICATION OBJECT ***
+	AbstractSSMcommunication *_SSMPcom;
 	// *** CONTROL UNIT DEFINITION INTERFACE ***:
 	SSMDefinitionsInterface *_SSMdefsIfce;
 	// *** CONTROL UNIT BASIC DATA (SUPPORTED FEATURES) ***:

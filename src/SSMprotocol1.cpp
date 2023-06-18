@@ -150,6 +150,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 	}
 	/* NOTE: no need to check the state of the ignition switch.
 	 * Power supply of these old control units is immediately cut when ignition is switched off */
+	_SSMPcom = _SSMP1com;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSMP1communication:

@@ -154,6 +154,7 @@ SSMprotocol::CUsetupResult_dt SSMprotocol2::setupCUdata(enum CUtype CU, bool ign
 	}
 
 	_SSMP2com->setRetriesOnError(2);
+	_SSMPcom = _SSMP2com;
 	_CU = CU;
 	_state = state_normal;
 	// Connect communication error signals from SSM2Pcommunication:
