@@ -349,6 +349,33 @@ bool SSMprotocol::stopDCreading()
 }
 
 
+bool SSMprotocol::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
+{
+	bool started = false;
+	if (_state != state_normal)
+		return false;
+	// Setup list of MB/SW-addresses for communication:
+	if (!setupMBSWQueryAddrList(mbswmetaList))
+		return false;
+	// Start MB/SW-reading:
+	started = _SSMPcom->readAddresses_permanent(_selMBsSWsAddr);
+	if (started)
+	{
+		_state = state_MBSWreading;
+		// Save MB/SW-selection (necessary for evaluation of raw data):
+		_MBSWmetaList = mbswmetaList;
+		// Connect signals/slots:
+		connect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+		         this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
+		// Emit signal:
+		emit startedMBSWreading();
+	}
+	else
+		resetCUdata();
+	return started;
+}
+
+
 bool SSMprotocol::restartMBSWreading()
 {
 	return startMBSWreading(_MBSWmetaList);

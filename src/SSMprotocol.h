@@ -99,7 +99,7 @@ public:
 	bool startDCreading(int DCgroups);
 	bool restartDCreading();
 	bool stopDCreading();
-	virtual bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList) = 0;
+	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool restartMBSWreading();
 	virtual bool stopMBSWreading() = 0;
 	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;

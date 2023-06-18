@@ -264,32 +264,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 }
 
 
-bool SSMprotocol2::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
-{
-	bool started = false;
-	if (_state != state_normal) return false;
-	// Setup list of MB/SW-addresses for SSM2Pcommunication:
-	if (!setupMBSWQueryAddrList(mbswmetaList))
-		return false;
-	// Start MB/SW-reading:
-	started = _SSMP2com->readMultipleDatabytes_permanent('\x0', &_selMBsSWsAddr.at(0), _selMBsSWsAddr.size());
-	if (started)
-	{
-		_state = state_MBSWreading;
-		// Save MB/SW-selection (necessary for evaluation of raw data):
-		_MBSWmetaList = mbswmetaList;
-		// Connect signals/slots:
-		connect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-			this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
-		// Emit signal:
-		emit startedMBSWreading();
-	}
-	else
-		resetCUdata();
-	return started;
-}
-
-
 bool SSMprotocol2::stopMBSWreading()
 {
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;

@@ -44,7 +44,6 @@ public:
 	CUsetupResult_dt setupCUdata(enum CUtype CU);
 	protocol_dt protocolType() { return SSM1; }
 	// COMMUNICATION BASED FUNCTIONS:
-	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues);

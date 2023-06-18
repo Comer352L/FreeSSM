@@ -242,32 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList)
-{
-	bool started = false;
-	if (_state != state_normal) return false;
-	// Setup list of MB/SW-addresses for SSM2Pcommunication:
-	if (!setupMBSWQueryAddrList(mbswmetaList))
-		return false;
-	// Start MB/SW-reading:
-	started = _SSMP1com->readAddresses_permanent( _selMBsSWsAddr );
-	if (started)
-	{
-		_state = state_MBSWreading;
-		// Save MB/SW-selection (necessary for evaluation of raw data):
-		_MBSWmetaList = mbswmetaList;
-		// Connect signals/slots:
-		connect( _SSMP1com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-		         this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
-		// Emit signal:
-		emit startedMBSWreading();
-	}
-	else
-		resetCUdata();
-	return started;
-}
-
-
 bool SSMprotocol1::stopMBSWreading()
 {
 	if ((_state == state_needSetup) || (_state == state_normal)) return true;
