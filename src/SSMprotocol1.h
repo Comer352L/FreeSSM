@@ -48,7 +48,6 @@ public:
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
-	bool waitForIgnitionOff();
 
 private:
 	SSMP1communication *_SSMP1com;

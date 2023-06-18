@@ -364,48 +364,6 @@ bool SSMprotocol1::isInTestMode(bool *testmode)
 	return true;
 }
 
-
-bool SSMprotocol1::waitForIgnitionOff()
-{
-	if (_state != state_normal)
-		return false;
-	unsigned int dataaddr;
-	_state = state_waitingForIgnOff;
-	_SSMP1com->setRetriesOnError(1);
-	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
-	{
-		bool ignstate = true;
-		char data = 0x00;
-		do
-		{
-			if (!_SSMP1com->readAddress(_sw_ignitionstate_data.addr, &data))
-
-				ignstate = false;
-			else
-				ignstate = ((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted);
-		} while (ignstate);
-	}
-	else
-	{
-		dataaddr = 0x0000;
-		QEventLoop el;
-		disconnect( _SSMP1com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-		disconnect( _SSMP1com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		if(!_SSMP1com->readAddress_permanent(dataaddr))
-		{
-			resetCUdata();
-			return false;
-		}
-		connect(_SSMP1com, SIGNAL( commError() ), &el, SLOT( quit() ));
-		el.exec();
-		disconnect(_SSMP1com, SIGNAL( commError() ), &el, SLOT( quit() ));
-	}
-	_SSMP1com->setRetriesOnError(2);
-	resetCUdata();
-	return true;
-/* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
-}
-
 // PRIVATE
 
 bool SSMprotocol1::readExtendedID(std::vector<char>& ID)

@@ -407,46 +407,6 @@ bool SSMprotocol2::isInTestMode(bool *testmode)
 	return true;
 }
 
-
-bool SSMprotocol2::waitForIgnitionOff()
-{
-	if (_state != state_normal)
-		return false;
-	unsigned int dataaddr = 0x62;
-	_state = state_waitingForIgnOff;
-	_SSMP2com->setRetriesOnError(1);
-	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
-	{
-		bool ignstate = true;
-		char data = 0x00;
-		do
-		{
-			if (!_SSMP2com->readMultipleDatabytes('\x0', &_sw_ignitionstate_data.addr, 1, &data))
-				ignstate = false;
-			else
-				ignstate = ((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted);
-		} while (ignstate);
-	}
-	else
-	{
-		QEventLoop el;
-		disconnect( _SSMP2com, SIGNAL( commError() ), this, SIGNAL( commError() ) );
-		disconnect( _SSMP2com, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
-		if(!_SSMP2com->readMultipleDatabytes_permanent('\x0', &dataaddr, 1))
-		{
-			resetCUdata();
-			return false;
-		}
-		connect(_SSMP2com, SIGNAL( commError() ), &el, SLOT( quit() ));
-		el.exec();
-		disconnect(_SSMP2com, SIGNAL( commError() ), &el, SLOT( quit() ));
-	}
-	_SSMP2com->setRetriesOnError(2);
-	resetCUdata();
-	return true;
-/* NOTE: temporary solution, will become obsolete with new SSMP2communication */
-}
-
 // PRIVATE
 
 bool SSMprotocol2::validateVIN(char VIN[17])

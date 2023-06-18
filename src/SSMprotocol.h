@@ -114,7 +114,7 @@ public:
 	virtual bool isEngineRunning(bool *isrunning) = 0;
 	virtual bool isInTestMode(bool *testmode) = 0;
 	bool stopAllPermanentOperations();
-	virtual bool waitForIgnitionOff() = 0;
+	bool waitForIgnitionOff();
 
 protected:
 	AbstractDiagInterface *_diagInterface;

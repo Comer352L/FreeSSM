@@ -644,6 +644,48 @@ bool SSMprotocol::stopAllPermanentOperations()
 	return result;
 }
 
+
+bool SSMprotocol::waitForIgnitionOff()
+{
+	if (_state != state_normal)
+		return false;
+	unsigned int dataaddr;
+	_state = state_waitingForIgnOff;
+	_SSMPcom->setRetriesOnError(1);
+	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
+	{
+		bool ignstate = true;
+		char data = 0x00;
+		do
+		{
+			if (!_SSMPcom->readAddress(_sw_ignitionstate_data.addr, &data))
+
+				ignstate = false;
+			else
+				ignstate = ((data & (1 << _sw_ignitionstate_data.bit)) ^ _sw_ignitionstate_data.inverted);
+		} while (ignstate);
+	}
+	else
+	{
+		dataaddr = 0x0000;
+		QEventLoop el;
+		disconnect( _SSMPcom, SIGNAL( commError() ), this, SIGNAL( commError() ) );
+		disconnect( _SSMPcom, SIGNAL( commError() ), this, SLOT( resetCUdata() ) );
+		if(!_SSMPcom->readAddress_permanent(dataaddr))
+		{
+			resetCUdata();
+			return false;
+		}
+		connect(_SSMPcom, SIGNAL( commError() ), &el, SLOT( quit() ));
+		el.exec();
+		disconnect(_SSMPcom, SIGNAL( commError() ), &el, SLOT( quit() ));
+	}
+	_SSMPcom->setRetriesOnError(2);
+	resetCUdata();
+	return true;
+/* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
+}
+
 // PROTECTED / PRIVATE:
 
 void SSMprotocol::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms)
