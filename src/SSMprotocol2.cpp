@@ -168,7 +168,8 @@ commError:
 
 bool SSMprotocol2::hasVINsupport(bool *VINsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*VINsup = _has_VINsupport;
 	return true;
 }
@@ -176,7 +177,8 @@ bool SSMprotocol2::hasVINsupport(bool *VINsup)
 
 bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CCsup = _has_integratedCC;
 	return true;
 }
@@ -184,7 +186,8 @@ bool SSMprotocol2::hasIntegratedCC(bool *CCsup)
 
 bool SSMprotocol2::hasClearMemory2(bool *CM2sup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CM2sup = (_CM2addr != MEMORY_ADDRESS_NONE);
 	return true;
 }
