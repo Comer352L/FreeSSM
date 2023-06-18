@@ -107,7 +107,7 @@ public:
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
 	bool startActuatorTest(unsigned char actuatorTestIndex);
 	bool restartActuatorTest();
-	virtual bool stopActuatorTesting() = 0;
+	bool stopActuatorTesting();
 	virtual bool stopAllActuators() = 0;
 	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
 	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;

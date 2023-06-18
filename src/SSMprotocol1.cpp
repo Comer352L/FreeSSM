@@ -242,34 +242,6 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 }
 
 
-bool SSMprotocol1::stopActuatorTesting()
-{
-	unsigned char k = 0;
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_ActTesting)
-	{
-		if (_SSMP1com->stopCommunication())
-		{
-			// Stop all actuator tests:
-			for (k=0; k<_allActByteAddr.size(); k++)
-			{
-				if (!_SSMP1com->writeAddress(_allActByteAddr.at(k), 0x00))
-				{
-					resetCUdata();
-					return false;
-				}
-			}
-			_state = state_normal;
-			emit stoppedActuatorTest();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
 bool SSMprotocol1::stopAllActuators()
 {
 	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol

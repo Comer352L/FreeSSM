@@ -560,6 +560,34 @@ bool SSMprotocol::restartActuatorTest()
 }
 
 
+bool SSMprotocol::stopActuatorTesting()
+{
+	if ((_state == state_needSetup) || (_state == state_normal))
+		return true;
+	if (_state == state_ActTesting)
+	{
+		if (_SSMPcom->stopCommunication())
+		{
+			// Stop all actuator tests:
+			for (size_t k = 0; k < _allActByteAddr.size(); k++)
+			{
+				if (!_SSMPcom->writeAddress(_allActByteAddr.at(k), 0x00))
+				{
+					resetCUdata();
+					return false;
+				}
+			}
+			_state = state_normal;
+			emit stoppedActuatorTest();
+			return true;
+		}
+		// Communication error:
+		resetCUdata();
+	}
+	return false;
+}
+
+
 bool SSMprotocol::stopAllPermanentOperations()
 {
 	bool result = false;

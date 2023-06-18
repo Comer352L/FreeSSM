@@ -264,33 +264,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 }
 
 
-bool SSMprotocol2::stopActuatorTesting()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_ActTesting)
-	{
-		if (_SSMP2com->stopCommunication())
-		{
-			// Stop all actuator tests:
-			for (size_t k=0; k<_allActByteAddr.size(); k++)
-			{
-				if (!_SSMP2com->writeDatabyte(_allActByteAddr.at(k), 0x00))
-				{
-					resetCUdata();
-					return false;
-				}
-			}
-			_state = state_normal;
-			emit stoppedActuatorTest();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
 bool SSMprotocol2::stopAllActuators()
 {
 	// NOTE: This function can be called even if no actuator test has been started with SSMprotocol
