@@ -264,26 +264,6 @@ bool SSMprotocol2::getVIN(QString *VIN)
 }
 
 
-bool SSMprotocol2::stopMBSWreading()
-{
-	if ((_state == state_needSetup) || (_state == state_normal)) return true;
-	if (_state == state_MBSWreading)
-	{
-		if (_SSMP2com->stopCommunication())
-		{
-			disconnect( _SSMP2com, SIGNAL( receivedData(const std::vector<char>&, int) ),
-					this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
-			_state = state_normal;
-			emit stoppedMBSWreading();
-			return true;
-		}
-		// Communication error:
-		resetCUdata();
-	}
-	return false;
-}
-
-
 bool SSMprotocol2::getAdjustmentValue(unsigned char index, unsigned int *rawValue)
 {
 	unsigned int dataaddr[2] = {0,0};

@@ -382,6 +382,27 @@ bool SSMprotocol::restartMBSWreading()
 }
 
 
+bool SSMprotocol::stopMBSWreading()
+{
+	if ((_state == state_needSetup) || (_state == state_normal))
+		return true;
+	if (_state == state_MBSWreading)
+	{
+		if (_SSMPcom->stopCommunication())
+		{
+			disconnect( _SSMPcom, SIGNAL( receivedData(const std::vector<char>&, int) ),
+			            this, SLOT( processMBSWrawData(const std::vector<char>&, int) ) );
+			_state = state_normal;
+			emit stoppedMBSWreading();
+			return true;
+		}
+		// Communication error:
+		resetCUdata();
+	}
+	return false;
+}
+
+
 bool SSMprotocol::restartActuatorTest()
 {
 	return startActuatorTest(_selectedActuatorTestIndex);

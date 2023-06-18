@@ -101,7 +101,7 @@ public:
 	bool stopDCreading();
 	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool restartMBSWreading();
-	virtual bool stopMBSWreading() = 0;
+	bool stopMBSWreading();
 	virtual bool getAdjustmentValue(unsigned char index, unsigned int *rawValue) = 0;
 	virtual bool getAllAdjustmentValues(std::vector<unsigned int> *rawValues) = 0;
 	virtual bool setAdjustmentValue(unsigned char index, unsigned int rawValue) = 0;

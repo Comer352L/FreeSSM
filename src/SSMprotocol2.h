@@ -48,7 +48,6 @@ public:
 	bool hasClearMemory2(bool *CM2sup);
 	// COMMUNICATION BASED FUNCTIONS:
 	bool getVIN(QString *VIN);
-	bool stopMBSWreading();
 	bool getAdjustmentValue(unsigned char index, unsigned int *rawValue);
 	bool getAllAdjustmentValues(std::vector<unsigned int> * rawValues);
 	bool setAdjustmentValue(unsigned char index, unsigned int rawValue);
