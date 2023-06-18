@@ -37,33 +37,33 @@ class SSMP2communication : public AbstractSSMcommunication, private SSMP2communi
 {
 
 public:
-	enum comOp_dt {
-		comOp_noCom,
-		comOp_readCUdata,
+	enum class comOp {
+		noCom,
+		readCUdata,
 #ifdef __SSM2_BLOCK_OPS__
-		comOp_readBlock,
+		readBlock,
 #endif
-		comOp_readMulti,
+		readMulti,
 #ifdef __SSM2_BLOCK_OPS__
-		comOp_writeBlock,
+		writeBlock,
 #endif
-		comOp_writeSingle,
-		comOp_writeMultiAddr_emul,
+		writeSingle,
+		writeMultiAddr_emul,
 #ifdef __SSM2_BLOCK_OPS__
-		comOp_readBlock_p,
+		readBlock_p,
 #endif
-		comOp_readMulti_p,
+		readMulti_p,
 #ifdef __SSM2_BLOCK_OPS__
-		comOp_writeBlock_p,
+		writeBlock_p,
 #endif
-		comOp_writeSingle_p,
-		comOp_writeMultiAddr_emul_p
+		writeSingle_p,
+		writeMultiAddr_emul_p
 	};
 
 	SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress = 0x0, unsigned char errRetries = 2);
 	~SSMP2communication();
 	void setCUaddress(unsigned int cuaddress);
-	comOp_dt getCurrentCommOperation();
+	comOp getCurrentCommOperation();
 	bool stopCommunication();
 
 	// Native communication functions:
@@ -97,7 +97,7 @@ public:
 
 private:
 	unsigned int _cuaddress;
-	comOp_dt _CommOperation;
+	comOp _CommOperation;
 	// Buffers for sending/recieving data:
 	char _padaddr;
 	unsigned int _dataaddr[SSMP2COM_BUFFER_SIZE];
