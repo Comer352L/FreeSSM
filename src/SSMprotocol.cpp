@@ -57,7 +57,7 @@ void SSMprotocol::resetCUdata()
 		{
 			bool ok = false;
 			// Stop all actuator tests:
-			for (unsigned int k=0; k<_allActByteAddr.size(); k++)
+			for (unsigned int k = 0; k < _allActByteAddr.size(); k++)
 			{
 				ok =_SSMPcom->writeAddress(_allActByteAddr.at(k), 0x00);
 				if (!ok)
@@ -123,7 +123,8 @@ void SSMprotocol::resetCUdata()
 
 bool SSMprotocol::CUtype(enum CUtype *CU)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CU = _CU;
 	return true;
 }
@@ -146,14 +147,16 @@ AbstractDiagInterface::protocol_type SSMprotocol::ifceProtocolType()
 
 std::string SSMprotocol::getSysID() const
 {
-	if (_state == state_needSetup) return "";
+	if (_state == state_needSetup)
+		return "";
 	return libFSSM::StrToHexstr(_ssmCUdata.SYS_ID);
 }
 
 
 std::string SSMprotocol::getROMID() const
 {
-	if (_state == state_needSetup) return "";
+	if (_state == state_needSetup)
+		return "";
 	if (_ssmCUdata.uses_Flagbytes())
 		return libFSSM::StrToHexstr(_ssmCUdata.ROM_ID);
 	else
@@ -163,7 +166,8 @@ std::string SSMprotocol::getROMID() const
 
 bool SSMprotocol::getSystemDescription(QString *sysdescription)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	if (_sysDescription.size())
 	{
 		*sysdescription = QString::fromStdString(_sysDescription);
@@ -175,7 +179,8 @@ bool SSMprotocol::getSystemDescription(QString *sysdescription)
 
 bool SSMprotocol::hasOBD2system(bool *OBD2)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*OBD2 = _has_OBD2;
 	return true;
 }
@@ -183,7 +188,8 @@ bool SSMprotocol::hasOBD2system(bool *OBD2)
 
 bool SSMprotocol::hasVINsupport(bool *VINsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*VINsup = false;
 	return true;
 }
@@ -191,7 +197,8 @@ bool SSMprotocol::hasVINsupport(bool *VINsup)
 
 bool SSMprotocol::hasImmobilizer(bool *ImmoSup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*ImmoSup = _has_Immo;
 	return true;
 }
@@ -199,7 +206,8 @@ bool SSMprotocol::hasImmobilizer(bool *ImmoSup)
 
 bool SSMprotocol::hasImmobilizerTest(bool *ImmoTestSup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*ImmoTestSup = _has_ImmoTest;
 	return true;
 }
@@ -207,7 +215,8 @@ bool SSMprotocol::hasImmobilizerTest(bool *ImmoTestSup)
 
 bool SSMprotocol::hasIntegratedCC(bool *CCsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CCsup = false;
 	return true;
 }
@@ -215,7 +224,8 @@ bool SSMprotocol::hasIntegratedCC(bool *CCsup)
 
 bool SSMprotocol::hasClearMemory(bool *CMsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CMsup = (_CMaddr != MEMORY_ADDRESS_NONE);
 	return true;
 }
@@ -223,7 +233,8 @@ bool SSMprotocol::hasClearMemory(bool *CMsup)
 
 bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*CM2sup = false;
 	return true;
 }
@@ -231,7 +242,8 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 
 bool SSMprotocol::hasTestMode(bool *TMsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*TMsup = (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE);
 	return true;
 }
@@ -239,7 +251,8 @@ bool SSMprotocol::hasTestMode(bool *TMsup)
 
 bool SSMprotocol::hasActuatorTests(bool *ATsup)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*ATsup = _has_ActTest;
 	return true;
 }
@@ -247,7 +260,8 @@ bool SSMprotocol::hasActuatorTests(bool *ATsup)
 
 bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*DCgroups = _supportedDCgroups;
 	return true;
 }
@@ -255,7 +269,8 @@ bool SSMprotocol::getSupportedDCgroups(int *DCgroups)
 
 bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	*DCgroups = _selectedDCgroups;
 	return true;
 }
@@ -263,7 +278,8 @@ bool SSMprotocol::getLastDCgroupsSelection(int *DCgroups)
 
 bool SSMprotocol::getSupportedMBs(std::vector<mb_dt> *supportedMBs)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	supportedMBs->assign(begin(_supportedMBs), end(_supportedMBs));
 	return true;
 }
@@ -271,7 +287,8 @@ bool SSMprotocol::getSupportedMBs(std::vector<mb_dt> *supportedMBs)
 
 bool SSMprotocol::getSupportedSWs(std::vector<sw_dt> *supportedSWs)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	supportedSWs->assign(begin(_supportedSWs), end(_supportedSWs));
 	return true;
 }
@@ -279,7 +296,8 @@ bool SSMprotocol::getSupportedSWs(std::vector<sw_dt> *supportedSWs)
 
 bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	if (!_MBSWmetaList.empty())
 	{
 		*MBSWmetaList = _MBSWmetaList;
@@ -291,7 +309,8 @@ bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaLis
 
 bool SSMprotocol::getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments)
 {
-	if (_state == state_needSetup) return false;
+	if (_state == state_needSetup)
+		return false;
 	supportedAdjustments->assign(begin(_adjustments), end(_adjustments));
 	return true;
 }
@@ -748,6 +767,9 @@ bool SSMprotocol::clearMemory(CMlevel_dt level, bool *success)
 
 bool SSMprotocol::testImmobilizerCommLine(immoTestResult_dt *result)
 {
+	char checkvalue = 0;
+	unsigned int readcheckaddr = 0x8B;
+
 	if (_state != state_normal)
 		return false;
 	if (!_ssmCUdata.uses_Ax10xx_defs())
@@ -755,9 +777,6 @@ bool SSMprotocol::testImmobilizerCommLine(immoTestResult_dt *result)
 		// NOTE/TODO: immobilizer test might work different for 7xxxxx and Ax01xx controllers (if supported) !
 	if (!_has_ImmoTest)
 		return false;
-
-	char checkvalue = 0;
-	unsigned int readcheckaddr = 0x8B;
 	// Write test-pattern:
 	if (_SSMPcom->writeAddress(0xE0, '\xAA', &checkvalue))
 	{
@@ -766,17 +785,11 @@ bool SSMprotocol::testImmobilizerCommLine(immoTestResult_dt *result)
 		{
 			/* NOTE: the actually written data is NOT 0xAA ! */
 			if (checkvalue == '\x01')
-			{
 				*result = immoShortedToGround;
-			}
 			else if  (checkvalue == '\x02')
-			{
 				*result = immoShortedToBattery;
-			}
 			else
-			{
 				*result = immoNotShorted;
-			}
 			return true;
 		}
 	}
@@ -854,30 +867,23 @@ bool SSMprotocol::stopAllPermanentOperations()
 {
 	bool result = false;
 	if ((_state == state_needSetup) || (_state == state_normal))
-	{
 		result = true;
-	}
 	else if (_state == state_DCreading)
-	{
 		result = stopDCreading();
-	}
 	else if (_state == state_MBSWreading)
-	{
 		result = stopMBSWreading();
-	}
 	else if (_state == state_ActTesting)
-	{
 		result = stopActuatorTesting();
-	}
 	return result;
 }
 
 
 bool SSMprotocol::waitForIgnitionOff()
 {
+	unsigned int dataaddr;
+
 	if (_state != state_normal)
 		return false;
-	unsigned int dataaddr;
 	_state = state_waitingForIgnOff;
 	_SSMPcom->setRetriesOnError(1);
 	if (_sw_ignitionstate_data.addr != MEMORY_ADDRESS_NONE)
@@ -911,7 +917,6 @@ bool SSMprotocol::waitForIgnitionOff()
 	_SSMPcom->setRetriesOnError(2);
 	resetCUdata();
 	return true;
-/* NOTE: temporary solution, will become obsolete with extended SSMP1communication */
 }
 
 // PROTECTED / PRIVATE:
@@ -950,10 +955,10 @@ void SSMprotocol::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms
 		}
 	}
 
-	for (unsigned int b = 0; b < _DTCblockData.size(); b++)
+	for (size_t b = 0; b < _DTCblockData.size(); b++)
 	{
 		dc_block_dt block = _DTCblockData.at(b);
-		for (unsigned int a = 0; a < block.addresses.size(); a++)
+		for (size_t a = 0; a < block.addresses.size(); a++)
 		{
 			QString tmpCode;
 			QString tmpDescr;
@@ -1000,23 +1005,24 @@ void SSMprotocol::processDCsRawdata(std::vector<char> DCrawdata, int duration_ms
 bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaList)
 {
 	// ***** SETUP (BYTE-) ADDRESS LIST FOR QUERYS *****
-	unsigned int k = 0, m = 0;
 	bool newaddr = true;
 	_selMBsSWsAddr.clear();
-	if (MBSWmetaList.size() == 0) return false;
-	for (k=0; k<MBSWmetaList.size(); k++)
+	if (MBSWmetaList.size() == 0)
+		return false;
+	for (size_t k = 0; k < MBSWmetaList.size(); k++)
 	{
 		newaddr = true;
 		// CHECK IF ADDRESS IS ALREADY ON THE QUERY-LIST:
 		if (_selMBsSWsAddr.size())
 		{
 			// CHECK IF ADDRESS IS ALREADY ON THE LIST:
-			for (m=0; m<_selMBsSWsAddr.size(); m++)
+			for (size_t m = 0; m < _selMBsSWsAddr.size(); m++)
 			{
 				if (MBSWmetaList.at(k).blockType == BlockType::MB)
 				{
 					// CHECK IF CURRENT MB IS VALID/EXISTS:
-					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size()) return false;
+					if (MBSWmetaList.at(k).nativeIndex > _supportedMBs.size())
+						return false;
 					// COMPARE ADDRESS:
 					if (_selMBsSWsAddr.at(m) == _supportedMBs.at( MBSWmetaList.at(k).nativeIndex ).addrLow)
 					{
@@ -1027,7 +1033,8 @@ bool SSMprotocol::setupMBSWQueryAddrList(std::vector<MBSWmetadata_dt> MBSWmetaLi
 				else
 				{
 					// CHECK IF CURRENT SW IS VALID/EXISTS:
-					if (MBSWmetaList.at(k).nativeIndex > _supportedSWs.size()) return false;
+					if (MBSWmetaList.at(k).nativeIndex > _supportedSWs.size())
+						return false;
 					// COMPARE ADDRESS:
 					if (_selMBsSWsAddr.at(m) == _supportedSWs.at( MBSWmetaList.at(k).nativeIndex ).byteAddr)
 					{
@@ -1067,12 +1074,12 @@ std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>
 {
 	std::vector<unsigned int> mbswrawvalues(_MBSWmetaList.size());
 
-	for (size_t m=0; m<_selMBsSWsAddr.size(); m++)	// ADDRESS LOOP
+	for (size_t m = 0; m < _selMBsSWsAddr.size(); m++)
 	{
 		const unsigned int address = _selMBsSWsAddr.at(m);
 		const unsigned char rawbyte = static_cast<unsigned char>(rawdata.at(m));
 
-		for (size_t k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
+		for (size_t k = 0; k < _MBSWmetaList.size(); k++)
 		{
 			const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
 			unsigned int& rawvalue = mbswrawvalues.at(k);
@@ -1111,11 +1118,12 @@ std::vector<unsigned int> SSMprotocol::assignMBSWRawData(const std::vector<char>
 void SSMprotocol::setupActuatorTestAddrList()
 {
 	bool aol = false;
+
 	_allActByteAddr.clear();
-	for (unsigned int n=0; n<_actuators.size(); n++)
+	for (size_t n = 0; n < _actuators.size(); n++)
 	{
 		// Check if byte address is already on the list:
-		for (unsigned int m=0; m<_allActByteAddr.size(); m++)
+		for (size_t m = 0; m < _allActByteAddr.size(); m++)
 		{
 			if (_allActByteAddr.at(m) == _actuators.at(n).byteAddr)
 			{
@@ -1135,10 +1143,10 @@ void SSMprotocol::setupActuatorTestAddrList()
 void SSMprotocol::determineSupportedDCgroups(std::vector<dc_block_dt> DCblockData)
 {
 	_supportedDCgroups = noDCs_DCgroup;
-	for (unsigned int b = 0; b < DCblockData.size(); b++)
+	for (size_t b = 0; b < DCblockData.size(); b++)
 	{
 		dc_block_dt block_data = DCblockData.at(b);
-		for (unsigned int a = 0; a < block_data.addresses.size(); a++)
+		for (size_t a = 0; a < block_data.addresses.size(); a++)
 		{
 			dc_addr_dt addr_data = block_data.addresses.at(a);
 			if (addr_data.type == dc_addr_dt::Type::currentOrTempOrLatest)
