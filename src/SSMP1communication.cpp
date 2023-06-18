@@ -26,7 +26,7 @@ SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM
 {
 	_cu = cu;
 	_errRetries = errRetries;
-	_CommOperation = comOp_noCom;
+	_CommOperation = comOp::noCom;
 }
 
 
@@ -42,7 +42,7 @@ void SSMP1communication::selectCU(SSM1_CUtype_dt cu)
 }
 
 
-SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
+SSMP1communication::comOp SSMP1communication::getCurrentCommOperation()
 {
 	return _CommOperation;
 }
@@ -50,7 +50,7 @@ SSMP1communication::comOp_dt SSMP1communication::getCurrentCommOperation()
 
 bool SSMP1communication::stopCommunication()
 {
-	if (_CommOperation == comOp_noCom)
+	if (_CommOperation == comOp::noCom)
 		return true;
 	else
 	{
@@ -72,7 +72,7 @@ bool SSMP1communication::stopCommunication()
 			stopped = wait(5000);
 		}
 		if (stopped)
-			_CommOperation = comOp_noCom;
+			_CommOperation = comOp::noCom;
 		return stopped;
 	}
 }
@@ -81,8 +81,9 @@ bool SSMP1communication::stopCommunication()
 bool SSMP1communication::getCUdata(unsigned char extradatareqlen, SSMCUdata& cuData)
 {
 	bool ok = false;
-	if ((_CommOperation != comOp_noCom) || isRunning()) return false;
-	_CommOperation = comOp_readRomId;
+	if ((_CommOperation != comOp::noCom) || isRunning())
+		return false;
+	_CommOperation = comOp::readRomId;
 	_reqsize = extradatareqlen;
 	// Communication-operation:
 	ok = doSingleCommOperation();
@@ -90,7 +91,7 @@ bool SSMP1communication::getCUdata(unsigned char extradatareqlen, SSMCUdata& cuD
 	{
 		cuData.from_SSMP1(&_data.at(0), _data.size());
 	}
-	_CommOperation = comOp_noCom;
+	_CommOperation = comOp::noCom;
 	return ok;
 }
 
@@ -109,15 +110,16 @@ bool SSMP1communication::readAddress(unsigned int addr, char * databyte)
 bool SSMP1communication::readAddresses(const std::vector<unsigned int>& addr, std::vector<char> * data)
 {
 	bool ok = false;
-	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0)) return false;
-	_CommOperation = comOp_read;
+	if ((_CommOperation != comOp::noCom) || isRunning() || (addr.size() == 0))
+		return false;
+	_CommOperation = comOp::read;
 	// Prepare buffers:
 	_addresses = addr;
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
 		*data = _data;
-	_CommOperation = comOp_noCom;
+	_CommOperation = comOp::noCom;
 	return ok;
 }
 
@@ -139,8 +141,10 @@ bool SSMP1communication::writeAddress(unsigned int addr, char databyte, char *da
 bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vector<char> data, std::vector<char> *databyteswritten)
 {
 	bool ok = false;
-	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0) || (data.size()==0) || (addr.size()!=data.size())) return false;
-	_CommOperation = comOp_write;
+	if ((_CommOperation != comOp::noCom) || isRunning()
+	    || (addr.size() == 0) || (data.size() == 0) || (addr.size() != data.size()))
+		return false;
+	_CommOperation = comOp::write;
 	// Prepare buffers:
 	_addresses = addr;
 	_data = data;
@@ -159,7 +163,7 @@ bool SSMP1communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 	}
 	else	// Pass written data:
 		*databyteswritten = _data;
-	_CommOperation = comOp_noCom;
+	_CommOperation = comOp::noCom;
 	return ok;
 }
 
@@ -172,8 +176,9 @@ bool SSMP1communication::readAddress_permanent(unsigned int addr, int delay)
 
 bool SSMP1communication::readAddresses_permanent(std::vector<unsigned int> addr, int delay)
 {
-	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0)) return false;
-	_CommOperation = comOp_read_p;
+	if ((_CommOperation != comOp::noCom) || isRunning() || (addr.size() == 0))
+		return false;
+	_CommOperation = comOp::read_p;
 	// Prepare buffers:
 	_addresses = addr;
 	_delay = delay;
@@ -191,8 +196,10 @@ bool SSMP1communication::writeAddress_permanent(unsigned int addr, char databyte
 
 bool SSMP1communication::writeAddresses_permanent(std::vector<unsigned int> addr, std::vector<char> data, int delay)
 {
-	if ((_CommOperation != comOp_noCom) || isRunning() || (addr.size()==0) || (data.size()==0) || (addr.size()!=data.size())) return false;
-	_CommOperation = comOp_write_p;
+	if ((_CommOperation != comOp::noCom) || isRunning()
+	    || (addr.size() == 0) || (data.size() == 0) || (addr.size() != data.size()))
+		return false;
+	_CommOperation = comOp::write_p;
 	// Prepare buffers:
 	_addresses = addr;
 	_data = data;
@@ -222,7 +229,7 @@ void SSMP1communication::run()
 	bool permanent = false;
 	bool op_success = false;
 	bool abort;
-	comOp_dt operation;
+	comOp operation;
 	SSM1_CUtype_dt cu;
 	unsigned char reqsize = 0;
 	std::vector<unsigned int> addresses;
@@ -251,22 +258,22 @@ void SSMP1communication::run()
 	std::string op_str = "SSMP1communication::run():   operation: ";
 	switch (operation)
 	{
-		case comOp_noCom:
+		case comOp::noCom:
 			op_str += "noCom";
 			break;
-		case comOp_readRomId:
+		case comOp::readRomId:
 			op_str += "readRomId";
 			break;
-		case comOp_read:
+		case comOp::read:
 			op_str += "read";
 			break;
-		case comOp_read_p:
+		case comOp::read_p:
 			op_str += "read_p";
 			break;
-		case comOp_write:
+		case comOp::write:
 			op_str += "write";
 			break;
-		case comOp_write_p:
+		case comOp::write_p:
 			op_str += "write_p";
 			break;
 		default:
@@ -275,14 +282,14 @@ void SSMP1communication::run()
 	std::cout << op_str << '\n';
 #endif
 	// Preparation:
-	if ( operation==comOp_read_p || operation==comOp_write_p )
+	if ( operation == comOp::read_p || operation == comOp::write_p )
 	{
 		permanent = true;
 		timer.start();
 	}
-	if ((operation == comOp_write) || (operation == comOp_write_p))
+	if ((operation == comOp::write) || (operation == comOp::write_p))
 		wcdata = data;
-	if (operation == comOp_readRomId)
+	if (operation == comOp::readRomId)
 	{
 		addresses.clear();
 		if (cu == SSM1_CU_FourWS)
@@ -307,7 +314,7 @@ void SSMP1communication::run()
 		if (!setAddr)	// only if there was no error during address-setting
 		{
 			// Do communication operation for the current address:
-			if ((operation == comOp_read) || (operation == comOp_read_p))
+			if ((operation == comOp::read) || (operation == comOp::read_p))
 			{
 				// Read next data:
 				if (k==0) data.clear();
@@ -317,7 +324,7 @@ void SSMP1communication::run()
 					std::cout << "SSMP1communication::run():   getNextData(...) failed !\n";
 #endif
 			}
-			else if ((operation == comOp_write) || (operation == comOp_write_p))
+			else if ((operation == comOp::write) || (operation == comOp::write_p))
 			{
 				// Write next data:
 				if (writeDatabyte(data.at(k)))
@@ -333,7 +340,7 @@ void SSMP1communication::run()
 #endif
 				}
 			}
-			else if (operation == comOp_readRomId)
+			else if (operation == comOp::readRomId)
 			{
 				// Get ROM-ID:
 				op_success = getID(addresses.at(0), reqsize, &data);
@@ -393,7 +400,7 @@ void SSMP1communication::run()
 	_mutex.lock();
 	if (!permanent && op_success)
 	{
-		if (operation == comOp_write)
+		if (operation == comOp::write)
 			_data = wcdata;
 		else
 			_data = data;
@@ -408,7 +415,7 @@ void SSMP1communication::run()
 			msleep(10);
 	}
 	else
-		_CommOperation = comOp_noCom;
+		_CommOperation = comOp::noCom;
 #ifdef __FSSM_DEBUG__
 	std::cout << "SSMP1communication::run():   communication operation finished.\n";
 #endif

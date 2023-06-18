@@ -32,12 +32,12 @@ class SSMP1communication : public AbstractSSMcommunication, private SSMP1communi
 {
 
 public:
-	enum comOp_dt {comOp_noCom, comOp_readRomId, comOp_read, comOp_write, comOp_read_p, comOp_write_p};
+	enum class comOp {noCom, readRomId, read, write, read_p, write_p};
 
 	SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries = 2);
 	~SSMP1communication();
 	void selectCU(SSM1_CUtype_dt cu);
-	comOp_dt getCurrentCommOperation();
+	comOp getCurrentCommOperation();
 	bool stopCommunication();
 
 	// --- Native communication functions ---
@@ -54,7 +54,7 @@ public:
 
 private:
 	SSM1_CUtype_dt _cu;
-	comOp_dt _CommOperation;
+	comOp _CommOperation;
 	unsigned char _reqsize;			/* size of extra data requested with the getCUdata command */
 	std::vector<unsigned int> _addresses;	/* list of addresses for the read/write operation(s) */
 	std::vector<char> _data;		/* processed data from read/Rom-ID operation(s)      OR
