@@ -111,7 +111,7 @@ public:
 	bool stopAllActuators();
 	virtual bool clearMemory(CMlevel_dt level, bool *success) = 0;
 	virtual bool testImmobilizerCommLine(immoTestResult_dt *result) = 0;
-	virtual bool isEngineRunning(bool *isrunning) = 0;
+	bool isEngineRunning(bool *isrunning);
 	virtual bool isInTestMode(bool *testmode) = 0;
 	bool stopAllPermanentOperations();
 	bool waitForIgnitionOff();

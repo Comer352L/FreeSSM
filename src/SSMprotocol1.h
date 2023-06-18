@@ -46,7 +46,6 @@ public:
 	// COMMUNICATION BASED FUNCTIONS:
 	bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
-	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
 
 private:

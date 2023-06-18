@@ -301,49 +301,6 @@ bool SSMprotocol1::testImmobilizerCommLine(immoTestResult_dt *result)
 }
 
 
-bool SSMprotocol1::isEngineRunning(bool *isrunning)
-{
-	std::vector<unsigned int> addresses;
-	std::vector<char> data;
-	unsigned int raw_value = 0;
-	QString scaledValueStr;
-	bool ok = false;
-	long int rpm = 0;
-
-	if (_state != state_normal)
-		return false;
-	if (_mb_enginespeed_data.addr_low == MEMORY_ADDRESS_NONE)
-		return false;
-	addresses.push_back(_mb_enginespeed_data.addr_low);
-	if (_mb_enginespeed_data.addr_high != MEMORY_ADDRESS_NONE)
-		addresses.push_back(_mb_enginespeed_data.addr_high);
-	if (!_SSMP1com->readAddresses(addresses, &data))
-	{
-		resetCUdata();
-		return false;
-	}
-	raw_value = data.at(0);
-	if (data.size() > 1)
-		raw_value |= (data.at(1) << 8);
-	if (!libFSSM::raw2scaled(raw_value, _mb_enginespeed_data.scaling_formula, 0, &scaledValueStr))
-	{
-		resetCUdata();
-		return false;
-	}
-	rpm = scaledValueStr.toLong(&ok);
-	if (!ok)
-	{
-		resetCUdata();
-		return false;
-	}
-	if (rpm > 100) // NOTE: some MBs do not report 0 if the engine is off
-		*isrunning = true;
-	else
-		*isrunning = false;
-	return true;
-}
-
-
 bool SSMprotocol1::isInTestMode(bool *testmode)
 {
 	char byte = 0;
