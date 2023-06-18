@@ -277,7 +277,7 @@ void SSMP1communication::run()
 			op_str += "write_p";
 			break;
 		default:
-			op_str += "INVALID/UNKNOWN: " + QString::number(operation).toStdString();
+			op_str += "INVALID/UNKNOWN: " + QString::number( static_cast<int>(operation) ).toStdString();
 	}
 	std::cout << op_str << '\n';
 #endif
