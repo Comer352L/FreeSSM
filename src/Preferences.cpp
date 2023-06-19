@@ -321,22 +321,22 @@ void Preferences::interfacetest()
 			{
 				SSMP2com->setCUaddress(0x10);
 				unsigned int addr = 0x61;
-				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+				icresult = SSMP2com->readAddress(addr, &data);
 				if (!icresult)
 				{
 					progressMsgBox->setValue(5);
 					SSMP2com->setCUaddress(0x01);
-					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+					icresult = SSMP2com->readAddress(addr, &data);
 					if (!icresult)
 					{
 						progressMsgBox->setValue(10);
 						SSMP2com->setCUaddress(0x02);
-						icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+						icresult = SSMP2com->readAddress(addr, &data);
 						if (!icresult)
 						{
 							progressMsgBox->setValue(15);
 							SSMP2com->setCUaddress(0x18);
-							icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+							icresult = SSMP2com->readAddress(addr, &data);
 						}
 					}
 				}
@@ -349,12 +349,12 @@ void Preferences::interfacetest()
 			{
 				SSMP2com->setCUaddress(0x7E0);
 				unsigned int addr = 0x61;
-				icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+				icresult = SSMP2com->readAddress(addr, &data);
 				if (!icresult)
 				{
 					progressMsgBox->setValue(27);
 					SSMP2com->setCUaddress(0x7E1);
-					icresult = SSMP2com->readMultipleDatabytes('\x0', &addr, 1, &data);
+					icresult = SSMP2com->readAddress(addr, &data);
 				}
 				diagInterface->disconnect();
 			}
