@@ -491,8 +491,8 @@ void FreeSSM::dumpCUdata()
 	SSMCUdata ssmCUdata;
 	std::string hexstr = "";
 
-	unsigned int dataaddr[VINlength] = {0};
-	char data[VINlength] = {0};
+	std::vector<unsigned int> dataaddr;
+	std::vector<char> data;
 	int ssm1_cu_index = SSM1_CU_Engine;
 	bool cu_resp = false;
 
@@ -561,22 +561,23 @@ void FreeSSM::dumpCUdata()
 		// VIN:
 		if (ssmCUdata.flagbytebit(36, 0))
 		{
-			dataaddr[0] = 0xDA;
-			dataaddr[1] = 0xDB;
-			dataaddr[2] = 0xDC;
-			if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, 3, data))
+			dataaddr.push_back(0xDA);
+			dataaddr.push_back(0xDB);
+			dataaddr.push_back(0xDC);
+			if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, &data))
 			{
-				hexstr = libFSSM::StrToHexstr(data, 3);
+				hexstr = libFSSM::StrToHexstr(data.data(), 3);
 				hexstr.push_back('\n');
 				dumpfile.write(hexstr.data());
 
-				dataaddr[0] = libFSSM::parseUInt24BigEndian(data);
-				for (unsigned char k=1; k<VINlength; k++)
-					dataaddr[k] = dataaddr[0]+k;
-				if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, VINlength, data))
+				dataaddr.clear();
+				dataaddr.push_back( libFSSM::parseUInt24BigEndian(data.data()) );
+				for (unsigned char k = 1; k < VINlength; k++)
+					dataaddr.push_back( dataaddr.at(0) + k);
+				if (SSMP2com.readMultipleDatabytes(0x0, dataaddr, &data))
 				{
-					hexstr = libFSSM::StrToMultiLineHexstr(data, VINlength, VINlength);
-					hexstr.append(data, VINlength);
+					hexstr = libFSSM::StrToMultiLineHexstr(data.data(), VINlength, VINlength);
+					hexstr.append(data.data(), VINlength);
 					hexstr += "\n\n";
 					dumpfile.write(hexstr.data());
 				}

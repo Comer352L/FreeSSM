@@ -69,21 +69,21 @@ public:
 	// Native communication functions:
 	bool getCUdata(SSMCUdata& cuData);
 #ifdef __SSM2_BLOCK_OPS__
-	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data);
+	bool readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, std::vector<char> *data);
 	bool readDataBlock_permanent(const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, const int delay=0);
 #endif
-	bool readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data);
-	bool readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, int delay = 0);
+	bool readMultipleDatabytes(char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data);
+	bool readMultipleDatabytes_permanent(const char padaddr, const std::vector<unsigned int> dataaddr, const int delay = 0);
 #ifdef __SSM2_BLOCK_OPS__
-	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten = NULL);
+	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, std::vector<char> *datawritten = NULL);
 	bool writeDataBlock_permanent(const unsigned int dataaddr, const char *data, const unsigned int datalen, const int delay = 0);
 #endif
 	bool writeDatabyte(const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
 	bool writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay = 0);
 
 	// Emulated communication functions
-	bool writeMultipleDatabytes(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], char *datawritten);
-	bool writeMultipleDatabytes_permanent(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], const int delay = 0);
+	bool writeMultipleDatabytes(const std::vector<unsigned int> dataaddr, std::vector<char> data, std::vector<char> *datawritten);
+	bool writeMultipleDatabytes_permanent(const std::vector<unsigned int> dataaddr, const std::vector<char> data, const int delay = 0);
 
 	// Abstract communication interface:
 	bool readAddress(unsigned int addr, char * databyte);

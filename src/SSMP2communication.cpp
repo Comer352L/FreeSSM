@@ -102,7 +102,7 @@ bool SSMP2communication::getCUdata(SSMCUdata& cuData)
 
 
 #ifdef __SSM2_BLOCK_OPS__
-bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, char *data)
+bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsigned int nrofbytes, std::vector<char> *data)
 {
 	bool ok = false;
 
@@ -130,7 +130,7 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 	if (ok)
 	{
 		// Assign received data:
-		std::copy(_rec_buf, _rec_buf + nrofbytes, data);
+		data->assign(_rec_buf, _rec_buf + _datalen);
 	}
 	_CommOperation = comOp::noCom;
 	return ok;
@@ -138,24 +138,27 @@ bool SSMP2communication::readDataBlock(char padaddr, unsigned int dataaddr, unsi
 #endif
 
 
-bool SSMP2communication::readMultipleDatabytes(char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char *data)
+bool SSMP2communication::readMultipleDatabytes(char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data)
 {
 	bool ok = false;
-	if (datalen > SSMP2COM_BUFFER_SIZE)
+	if (data == NULL)
+		return false;
+	data->clear();
+	if (dataaddr.size() < 1)
 		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::readMulti;
 	// Prepare buffers:
 	_padaddr = padaddr;
-	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
-	_datalen = datalen;
+	std::copy(dataaddr.begin(), dataaddr.end(), _dataaddr);
+	_datalen = dataaddr.size();
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
 	{
 		// Assign received data:
-		std::copy(_rec_buf, _rec_buf + datalen, data);
+		data->assign(_rec_buf, _rec_buf + dataaddr.size());
 	}
 	_CommOperation = comOp::noCom;
 	return ok;
@@ -163,7 +166,7 @@ bool SSMP2communication::readMultipleDatabytes(char padaddr, const unsigned int 
 
 
 #ifdef __SSM2_BLOCK_OPS__
-bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, char* datawritten)
+bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, std::vector<char> *datawritten)
 {
 	bool ok = false;
 	if ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (datalen > 251)) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
@@ -190,7 +193,7 @@ bool SSMP2communication::writeDataBlock(const unsigned int dataaddr, const char*
 		else
 		{
 			// EXTRACT AND RETURN WRITTEN DATA:
-			std::copy(_rec_buf, _rec_buf + _datalen, datawritten);
+			datawritten->assign(_rec_buf, _rec_buf + _datalen);
 		}
 	}
 	_CommOperation = comOp::noCom;
@@ -230,19 +233,21 @@ bool SSMP2communication::writeDatabyte(const unsigned int dataaddr, const char d
 }
 
 
-bool SSMP2communication::writeMultipleDatabytes(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], char *datawritten)
+bool SSMP2communication::writeMultipleDatabytes(const std::vector<unsigned int> dataaddr, std::vector<char> data, std::vector<char> *datawritten)
 {
 	// NOTE: emulates multi-address/-data write using multiple signgle address/data writes
 	bool ok = false;
-	if (datalen > SSMP2COM_BUFFER_SIZE)
+	if (datawritten != NULL)
+		datawritten->clear();
+	if ((dataaddr.size() < 1) || (dataaddr.size() != data.size()))
 		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeMultiAddr_emul;
 	// Prepare buffers:
-	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
-	std::copy(data, data + datalen, _snd_buf);
-	_datalen = datalen;
+	std::copy(dataaddr.begin(), dataaddr.end(), _dataaddr);
+	std::copy(data.begin(), data.end(), _snd_buf);
+	_datalen = dataaddr.size();
 	// Communication-operation:
 	ok = doSingleCommOperation();
 	if (ok)
@@ -250,10 +255,10 @@ bool SSMP2communication::writeMultipleDatabytes(const unsigned int dataaddr[SSMP
 		// Check/assign received data:
 		if (datawritten == NULL)	// do not return actually written data (must be the same as send out !)
 		{
-			for (unsigned int b = 0; b < datalen; b++)
+			for (size_t b = 0; b < dataaddr.size(); b++)
 			{
 				// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-				if (_rec_buf[b] != data[b])
+				if (_rec_buf[b] != data.at(b))
 				{
 					ok = false;
 					break;
@@ -263,9 +268,7 @@ bool SSMP2communication::writeMultipleDatabytes(const unsigned int dataaddr[SSMP
 		else
 		{
 			// EXTRACT AND RETURN WRITTEN DATA:
-			datawritten[0] = _rec_buf[0];
-
-			std::copy(_rec_buf, _rec_buf + datalen, datawritten);
+			datawritten->assign(_rec_buf, _rec_buf + dataaddr.size());
 		}
 	}
 	_CommOperation = comOp::noCom;
@@ -303,17 +306,17 @@ bool SSMP2communication::readDataBlock_permanent(char padaddr, unsigned int data
 #endif
 
 
-bool SSMP2communication::readMultipleDatabytes_permanent(const char padaddr, const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], const unsigned int datalen, const int delay)
+bool SSMP2communication::readMultipleDatabytes_permanent(const char padaddr, const std::vector<unsigned int> dataaddr, const int delay)
 {
-	if (datalen > SSMP2COM_BUFFER_SIZE)
+	if (dataaddr.size() < 1)
 		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::readMulti_p;
 	// Prepare buffers:
 	_padaddr = padaddr;
-	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
-	_datalen = datalen;
+	std::copy(dataaddr.begin(), dataaddr.end(), _dataaddr);
+	_datalen = dataaddr.size();
 	_delay = delay;
 	// Start permanent reading:
 	start();
@@ -359,18 +362,18 @@ bool SSMP2communication::writeDatabyte_permanent(const unsigned int dataaddr, co
 }
 
 
-bool SSMP2communication::writeMultipleDatabytes_permanent(const unsigned int dataaddr[SSMP2COM_BUFFER_SIZE], unsigned int datalen, char data[SSMP2COM_BUFFER_SIZE], const int delay)
+bool SSMP2communication::writeMultipleDatabytes_permanent(const std::vector<unsigned int> dataaddr, const std::vector<char> data, const int delay)
 {
 	// NOTE: emulates multi-address/-data write using multiple signgle address/data writes
-	if (datalen > SSMP2COM_BUFFER_SIZE)
+	if ((dataaddr.size() < 1) || (dataaddr.size() != data.size()))
 		return false; // limited by buffer sizes
 	if ((_CommOperation != comOp::noCom) || (_cuaddress == 0) || isRunning())
 		return false;
 	_CommOperation = comOp::writeMultiAddr_emul_p;
 	// Prepare buffers:
-	std::copy(dataaddr, dataaddr + datalen, _dataaddr);
-	std::copy(data, data + datalen, _snd_buf);
-	_datalen = datalen;
+	std::copy(dataaddr.begin(), dataaddr.end(), _dataaddr);
+	std::copy(data.begin(), data.end(), _snd_buf);
+	_datalen = dataaddr.size();
 	_delay = delay;
 	// Start permanent reading:
 	start();
@@ -382,25 +385,31 @@ bool SSMP2communication::writeMultipleDatabytes_permanent(const unsigned int dat
 
 bool SSMP2communication::readAddress(unsigned int addr, char * databyte)
 {
-	return readMultipleDatabytes('\x00', &addr, 1, databyte);
+	std::vector<char> databytes;
+	if (readMultipleDatabytes('\x00', std::vector<unsigned int>(1, addr), &databytes))
+	{
+		*databyte = databytes.at(0);
+		return true;
+	}
+	return false;
 }
 
 
 bool SSMP2communication::readAddresses(const std::vector<unsigned int>& addr, std::vector<char> * data)
 {
-	return readMultipleDatabytes('\x00', addr.data(), addr.size(), data->data());
+	return readMultipleDatabytes('\x00', addr, data);
 }
 
 
 bool SSMP2communication::readAddress_permanent(unsigned int addr, int delay)
 {
-	return readMultipleDatabytes_permanent('\x00', &addr, 1, delay);
+	return readMultipleDatabytes_permanent('\x00', std::vector<unsigned int>(1, addr), delay);
 }
 
 
 bool SSMP2communication::readAddresses_permanent(std::vector<unsigned int> addr, int delay)
 {
-	return readMultipleDatabytes_permanent('\x00', addr.data(), addr.size(), delay);
+	return readMultipleDatabytes_permanent('\x00', addr, delay);
 }
 
 
@@ -416,7 +425,7 @@ bool SSMP2communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 		databyteswritten->clear();
 	if (addr.size() != data.size())
 		return false;
-	return writeMultipleDatabytes(addr.data(), addr.size(), data.data(), databyteswritten->data());
+	return writeMultipleDatabytes(addr, data, databyteswritten);
 }
 
 
@@ -430,7 +439,7 @@ bool SSMP2communication::writeAddresses_permanent(std::vector<unsigned int> addr
 {
 	if (addr.size() != data.size())
 		return false;
-	return writeMultipleDatabytes_permanent(addr.data(), addr.size(), data.data(), delay);
+	return writeMultipleDatabytes_permanent(addr, data, delay);
 }
 
 
