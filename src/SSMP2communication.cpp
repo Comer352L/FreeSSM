@@ -419,6 +419,20 @@ bool SSMP2communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 		databyteswritten->clear();
 	if (addr.size() != data.size())
 		return false;
+	if (addr.size() > 1)
+		return writeMultipleDatabytes(addr, data, databyteswritten);
+	else
+	{
+		char bw;
+		if (writeDatabyte(addr.at(0), data.at(0), &bw))
+		{
+			if (databyteswritten != NULL)
+				databyteswritten->assign(1, bw);
+			return true;
+		}
+		else
+			return false;
+	}
 	return writeMultipleDatabytes(addr, data, databyteswritten);
 }
 
@@ -433,7 +447,10 @@ bool SSMP2communication::writeAddresses_permanent(std::vector<unsigned int> addr
 {
 	if (addr.size() != data.size())
 		return false;
-	return writeMultipleDatabytes_permanent(addr, data, delay);
+	if (addr.size() > 1)
+		return writeMultipleDatabytes_permanent(addr, data, delay);
+	else
+		return writeDatabyte_permanent(addr.at(0), data.at(0), delay);
 }
 
 
