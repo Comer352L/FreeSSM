@@ -369,11 +369,11 @@ std::string libFSSM::StrToMultiLineHexstr(const std::vector<unsigned char>& data
 }
 
 
-void libFSSM::setUInt24BigEndian(char* data, const unsigned int value)
+void libFSSM::push_backUInt24BigEndian(std::vector<char>& v, const unsigned int value)
 {
-	data[0] = value >> 16;
-	data[1] = value >> 8;
-	data[2] = value;
+	v.push_back(value >> 16);
+	v.push_back(value >> 8);
+	v.push_back(value);
 }
 
 

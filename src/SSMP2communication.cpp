@@ -486,8 +486,6 @@ void SSMP2communication::run()
 	int delay = 0;
 	unsigned char errmax = 3;
 	const unsigned int max_bytes_per_multiread = 33;
-	char tmp_buf[255];
-	unsigned char tmp_len = 0;
 
 	// Synchronise with main-thread:
 	_mutex.lock();
@@ -574,40 +572,43 @@ void SSMP2communication::run()
 		switch (operation)
 		{
 			case comOp::readCUdata:// GetECUData(...)
-				op_success = GetCUdata(cuaddress, tmp_buf, &tmp_len);
-				rec_buf.assign(tmp_buf, tmp_buf + tmp_len);
+				op_success = GetCUdata(cuaddress, &rec_buf);
 				break;
 #ifdef __SSM2_BLOCK_OPS__
 			case comOp::readBlock:
 			case comOp::readBlock_p:// ReadDataBlock_permanent(...)
-				op_success = ReadDataBlock(cuaddress, padaddr, dataaddr.at(0), datalen, tmp_buf);
-				rec_buf.assign(tmp_buf, tmp_buf + datalen);
+				op_success = ReadDataBlock(cuaddress, padaddr, dataaddr.at(0), datalen, &rec_buf);
 				break;
 #endif
 			case comOp::readMulti:
 			case comOp::readMulti_p:// ReadMultipleDatabytes_permanent(...)
+			{
 				// CALCULATE NR OF ADDRESSES FOR NEXT READ:
 				if ((max_bytes_per_multiread * (op_idx + 1)) <= datalen)
 					nrofReadAddr = max_bytes_per_multiread;
 				else
 					nrofReadAddr = datalen % max_bytes_per_multiread;
+
 				// READ NEXT ADDRESSES:
-				op_success = ReadMultipleDatabytes(cuaddress, padaddr, dataaddr.data() + (op_idx * max_bytes_per_multiread), nrofReadAddr, tmp_buf);
-				rec_buf.insert(rec_buf.end(), tmp_buf, tmp_buf + nrofReadAddr);
+				std::vector<unsigned int> rd_addrs( dataaddr.begin() + (op_idx * max_bytes_per_multiread), dataaddr.begin() + (op_idx * max_bytes_per_multiread) + nrofReadAddr );
+				std::vector<char> rd_buf;
+				op_success = ReadMultipleDatabytes(cuaddress, padaddr, rd_addrs, &rd_buf);
+				if (op_success == Result::success)
+					rec_buf.insert(rec_buf.end(), rd_buf.begin(), rd_buf.end());
 				break;
+			}
 #ifdef __SSM2_BLOCK_OPS__
 			case comOp::writeBlock:
 			case comOp::writeBlock_p:// WriteDataBlock_permanent(...)
-				op_success = WriteDataBlock(cuaddress, dataaddr.at(0), snd_buf.data(), datalen, tmp_buf);
-				rec_buf.assign(tmp_buf, tmp_buf + datalen);
+				op_success = WriteDataBlock(cuaddress, dataaddr.at(0), snd_buf, &rec_buf);
 				break;
 #endif
 			case comOp::writeSingle:
 			case comOp::writeSingle_p:// WriteDatabyte_permanent(...)
 			case comOp::writeMultiAddr_emul:
 			case comOp::writeMultiAddr_emul_p:
-				op_success = WriteDatabyte(cuaddress, dataaddr.at(op_idx), snd_buf.at(op_idx), tmp_buf);
-				rec_buf.assign(tmp_buf, tmp_buf + 1);
+				rec_buf.resize(1);
+				op_success = WriteDatabyte(cuaddress, dataaddr.at(op_idx), snd_buf.at(op_idx), &rec_buf[0]);
 				break;
 			default:
 				op_success = false;

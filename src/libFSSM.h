@@ -41,7 +41,7 @@ public:
 	static std::string StrToMultiLineHexstr(const unsigned char* data, size_t nrbytes, size_t bytesperline = 16, const std::string& lineprefix = "");
 	static std::string StrToMultiLineHexstr(const std::vector<char>& data, size_t bytesperline = 16, const std::string& lineprefix = "");
 	static std::string StrToMultiLineHexstr(const std::vector<unsigned char>& data, size_t bytesperline = 16, const std::string& lineprefix = "");
-	static void setUInt24BigEndian(char* data, const unsigned int value);
+	static void push_backUInt24BigEndian(std::vector<char>& v, const unsigned int value);
 	static void push_back_UInt32BigEndian(std::vector<char>& v, const unsigned int value);
 	static unsigned int parseUInt24BigEndian(const unsigned char* const data);
 	static unsigned int parseUInt24BigEndian(const char* const data);

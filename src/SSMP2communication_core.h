@@ -1,7 +1,7 @@
 /*
  * SSMP2communication_core.h - Core functions (services) of the new SSM-protocol
  *
- * Copyright (C) 2008-2019 Comer352L
+ * Copyright (C) 2008-2023 Comer352L
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,17 +49,17 @@ class SSMP2communication_core
 public:
 	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
-	bool ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, char *data);
-	bool ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr[], const unsigned int datalen, char* data);
-	bool WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const char *data, const unsigned int datalen, char *datawritten = NULL);
+	bool GetCUdata(const unsigned int ecuaddr, std::vector<char> *cuData);
+	bool ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, std::vector<char> *data);
+	bool ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data);
+	bool WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten = NULL);
 	bool WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
-	bool GetCUdata(const unsigned int ecuaddr, char *cuData, unsigned char *cuDataSize);
 
 protected:
 	AbstractDiagInterface *_diagInterface;
 
 private:
-	bool SndRcvMessage(const unsigned int ecuaddr, const char *outdata, const unsigned char outdatalen, char *indata, unsigned char *indatalen);
+	bool SndRcvMessage(const unsigned int ecuaddr, const std::vector<char> request, std::vector<char> *response);
 	bool receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer);
 	bool receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer);
 	bool readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer, bool append = false);
