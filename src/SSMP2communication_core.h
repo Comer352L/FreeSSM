@@ -45,23 +45,24 @@
 
 class SSMP2communication_core
 {
-
 public:
+	enum class Result {success, error, rejected};
+
 	SSMP2communication_core(AbstractDiagInterface *diagInterface);
 
-	bool GetCUdata(const unsigned int ecuaddr, std::vector<char> *cuData);
-	bool ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, std::vector<char> *data);
-	bool ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data);
-	bool WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten = NULL);
-	bool WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
+	Result GetCUdata(const unsigned int ecuaddr, std::vector<char> *cuData);
+	Result ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, std::vector<char> *data);
+	Result ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data);
+	Result WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten = NULL);
+	Result WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
 
 protected:
 	AbstractDiagInterface *_diagInterface;
 
 private:
-	bool SndRcvMessage(const unsigned int ecuaddr, const std::vector<char> request, std::vector<char> *response);
-	bool receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer);
-	bool receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer);
+	Result SndRcvMessage(const unsigned int ecuaddr, const std::vector<char> request, std::vector<char> *response);
+	Result receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer);
+	Result receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer);
 	bool readFromInterface(const unsigned int minbytes, const unsigned int timeout, std::vector<char> *buffer, bool append = false);
 };
 

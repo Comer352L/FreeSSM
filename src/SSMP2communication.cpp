@@ -474,7 +474,7 @@ void SSMP2communication::run()
 	unsigned char nrofReadAddr = 0;
 	char errcount = 0;
 	bool permanent = false;
-	bool op_success = false;
+	Result op_success = Result::error;
 	bool abort;
 	comOp operation;
 	unsigned int cuaddress;
@@ -611,10 +611,10 @@ void SSMP2communication::run()
 				op_success = WriteDatabyte(cuaddress, dataaddr.at(op_idx), snd_buf.at(op_idx), &rec_buf[0]);
 				break;
 			default:
-				op_success = false;
+				op_success = Result::error;
 		}
 		// Evaluate result; Prepare for next operation:
-		if (op_success)
+		if (op_success == Result::success)
 		{
 			// Decrease error counter:
 			if (errcount > 0)
@@ -644,7 +644,14 @@ void SSMP2communication::run()
 					msleep(delay);
 			}
 		}
-		else
+		else if (op_success == Result::rejected)
+		{
+			errcount = errmax; // no need to retry
+#ifdef __FSSM_DEBUG__
+			std::cout << "SSMP2communication::run():   communication operation rejected by ECU\n";
+#endif
+		}
+		else // Result::error
 		{
 			errcount++;
 #ifdef __FSSM_DEBUG__
@@ -655,18 +662,18 @@ void SSMP2communication::run()
 		_mutex.lock();
 		abort = _abort;
 		_mutex.unlock();
-	} while (!abort && (errcount < errmax) && (permanent || (op_idx > 0) || !op_success));
+	} while (!abort && (errcount < errmax) && (permanent || (op_idx > 0) || (op_success != Result::success)));
 	// Send error signal:
-	if (permanent && !abort && !op_success)
+	if (permanent && !abort) // implies error
 		emit commError();
 	// Synchronise with main-thread, reset:
 	_mutex.lock();
-	if (!permanent && op_success)
+	if (!permanent && (op_success == Result::success))
 	{
 		_datalen = datalen;	// only necessary for getCUdata
 		_rec_buf = rec_buf;
-		_result = op_success;
 	}
+	_result = (op_success == Result::success);
 	_abort = false;
 	_mutex.unlock();
 	if (!permanent)

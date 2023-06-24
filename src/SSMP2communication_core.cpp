@@ -27,13 +27,14 @@ SSMP2communication_core::SSMP2communication_core(AbstractDiagInterface *diagInte
 }
 
 
-bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, std::vector<char> *cuData)
+SSMP2communication_core::Result SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, std::vector<char> *cuData)
 {
 	std::vector<char> req;
 	std::vector<char> resp;
+	Result res;
 
 	if (cuData == NULL)
-		return false;
+		return Result::error;
 	cuData->clear();
 	// SETUP MESSAGE:
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
@@ -41,9 +42,10 @@ bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, std::vector<
 	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 		req.push_back('\xAA');
 	else
-		return false;
+		return Result::error;
 	// SEND MESSAGE + RECEIVE ANSWER:
-	if (SndRcvMessage(ecuaddr, req, &resp))
+	res = SndRcvMessage(ecuaddr, req, &resp);
+	if (res == Result::success)
 	{
 		// CHECK MESSAGE LENGTH:
 		// usual flagbytes sizes: 32, 48, 96
@@ -55,73 +57,76 @@ bool SSMP2communication_core::GetCUdata(const unsigned int ecuaddr, std::vector<
 			    || ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765) && (resp.at(0) == '\xEA')))
 			{
 				std::copy(resp.begin() + 1, resp.end(), cuData->begin());
-				return true;
+				return Result::success;
 			}
 		}
 	}
-	return false;
+	return Result::error;
 }
 
 
-bool SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, std::vector<char> *data)
+SSMP2communication_core::Result SSMP2communication_core::ReadDataBlock(const unsigned int ecuaddr, const char padaddr, const unsigned int dataaddr, const unsigned int nrofbytes, std::vector<char> *data)
 {
 	std::vector<char> req;
 	std::vector<char> resp;
+	Result res;
 
 	if (data == NULL)
-		return false;
+		return Result::error;
 	data->clear();
 	if ((dataaddr > 0xffffff) || (nrofbytes == 0))
-		return false;
+		return Result::error;
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
 		if (nrofbytes > 254) // ISO14230 protocol limit: data length byte in response => max. 254 possible
-			return false;
+			return Result::error;
 	}
 	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
 		if (nrofbytes > 256) // ISO15765 protocol limit: data length byte in request => max. 256 possible
-			return false;
+			return Result::error;
 	}
 	else
-		return false;
+		return Result::error;
 	// SETUP MESSAGE:
 	req.push_back('\xA0');
 	req.push_back(padaddr);
 	libFSSM::push_backUInt24BigEndian(req, dataaddr);
 	req.push_back(nrofbytes - 1);
 	// SEND MESSAGE + RECEIVE ANSWER:
-	if (SndRcvMessage(ecuaddr, req, &resp))
+	res = SndRcvMessage(ecuaddr, req, &resp);
+	if (res == Result::success)
 	{
 		// CHECK DATA:
 		if ((resp.size() == (nrofbytes + 1)) && (resp.at(0) == '\xE0'))
 		{
 			// EXTRACT DATA:
 			std::copy(resp.begin() + 1, resp.end(), data->begin());
-			return true;
+			return Result::success;
 		}
 	}
-	return false;
+	return Result::error;
 }
 
 
-bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data)
+SSMP2communication_core::Result SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, const char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data)
 {
 	std::vector<char> req;
 	std::vector<char> resp;
+	Result res;
 
 	if (data == NULL)
-		return false;
+		return Result::error;
 	data->clear();
 	if (dataaddr.size() == 0)
-		return false;
+		return Result::error;
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
 		if (dataaddr.size() > 84) // ISO14230 protocol limit: length byte in header => max. (255-2)/3 = 84 addresses per request message possible
-			return false;
+			return Result::error;
 	}
 	else if (_diagInterface->protocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO15765)
-		return false;
+		return Result::error;
 	// NOTE: Control unit have (different) limits which are lower than the theoretical max. number of addresses per request !
 	// SETUP MESSAGE:
 	req.push_back('\xA8');
@@ -129,45 +134,48 @@ bool SSMP2communication_core::ReadMultipleDatabytes(const unsigned int ecuaddr, 
 	for (size_t k = 0; k < dataaddr.size(); k++)
 	{
 		if (dataaddr.at(k) > 0xffffff)
-			return false;
+			return Result::error;
 		libFSSM::push_backUInt24BigEndian(req, dataaddr.at(k));
 	}
 	// SEND MESSAGE + RECEIVE ANSWER:
-	if (SndRcvMessage(ecuaddr, req, &resp))
+	res = SndRcvMessage(ecuaddr, req, &resp);
+	if (res == Result::success)
 	{
 		// CHECK DATA:
 		if ((resp.size() == (dataaddr.size() + 1)) && (resp.at(0) == '\xE8'))
 		{
 			// EXTRACT DATA:
 			std::copy(resp.begin() + 1, resp.end(), data->begin());
-			return true;
+			return Result::success;
 		}
 	}
-	return false;
+	return Result::error;
 }
 
 
-bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten)
+SSMP2communication_core::Result SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten)
 {
 	std::vector<char> req = {'\xB0'};
 	std::vector<char> resp;
+	Result res;
 
 	if (datawritten != NULL)
 		datawritten->clear();
 	if ((dataaddr > 0xffffff) || (data.size() == 0))
-		return false;
+		return Result::error;
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
 		if (data.size() > 251) // ISO14230 protocol limit: length byte => max. 255-4 = 251 data bytes per request message possible
-			return false;
+			return Result::error;
 	}
 	else if (_diagInterface->protocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO15765)
-		return false;
+		return Result::error;
 	// SETUP MESSAGE:
 	libFSSM::push_backUInt24BigEndian(req, dataaddr);
 	req.insert(req.end(), data.begin(), data.end());
 	// SEND MESSAGE + RECEIVE ANSWER:
-	if (SndRcvMessage(ecuaddr, req, &resp))
+	res = SndRcvMessage(ecuaddr, req, &resp);
+	if (res == Result::success)
 	{
 		// CHECK DATA:
 		if ((resp.size() == (data.size() + 1)) && (resp.at(0) == '\xF0'))
@@ -175,37 +183,42 @@ bool SSMP2communication_core::WriteDataBlock(const unsigned int ecuaddr, const u
 			if (datawritten == NULL)
 			{
 				// CHECK IF ACTUALLY WRITTEN DATA IS EQUAL TO THE DATA SENT OUT:
-				return !memcmp(data.data(), resp.data() + 1, data.size());
+				if (!memcmp(data.data(), resp.data() + 1, data.size()))
+					return Result::success;
+				else
+					return Result::error;
 			}
 			else
 			{
 				// EXTRACT AND RETURN WRITTEN DATA:
 				std::copy(resp.begin() + 1, resp.end(), datawritten->begin());
-				return true;
+				return Result::success;
 				// NOTE: NECESSARY FOR SOME OPERATIONS, WHERE THE ACTUALLY WRITTEN DATA IS DIFFERENT TO THE DATA SENT OUT
 			}
 		}
 	}
-	return false;
+	return Result::error;
 }
 
 
-bool SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten)
+SSMP2communication_core::Result SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const unsigned int dataaddr, const char databyte, char *databytewritten)
 {
 	std::vector<char> req;
 	std::vector<char> resp;
+	Result res;
 
 	if (dataaddr > 0xffffff)
-		return false;
+		return Result::error;
 	if (   (_diagInterface->protocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	    && (_diagInterface->protocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO15765))
-		return false;
+		return Result::error;
 	// SETUP MESSAGE:
 	req.push_back('\xB8');
 	libFSSM::push_backUInt24BigEndian(req, dataaddr);
 	req.push_back(databyte);
 	// SEND MESSAGE + RECEIVE ANSWER:
-	if (SndRcvMessage(ecuaddr, req, &resp))
+	res = (SndRcvMessage(ecuaddr, req, &resp));
+	if (res == Result::success)
 	{
 		// CHECK DATA:
 		if ((resp.size() == 2) && (resp.at(0) == '\xF8'))
@@ -214,30 +227,30 @@ bool SSMP2communication_core::WriteDatabyte(const unsigned int ecuaddr, const un
 			{
 				// CHECK IF ACTUALLY WRITTEN DATA IS EQAUL TO THE DATA SENT OUT:
 				if (resp.at(1) == databyte)
-					return true;
+					return Result::success;
 				else
-					return false;
+					return Result::error;
 			}
 			else
 			{
 				// EXTRACT AND RETURN WRITTEN DATA:
 				*databytewritten = resp.at(1);
-				return true;
+				return Result::success;
 				// NOTE: NECESSARY FOR SOME OPERATIONS, WHERE THE ACTUALLY WRITTEN DATA IS DIFFERENT TO THE DATA SENT OUT
 			}
 		}
 	}
-	return false;
+	return Result::error;
 }
 
 
-bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const std::vector<char> request, std::vector<char> *response)
+SSMP2communication_core::Result SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const std::vector<char> request, std::vector<char> *response)
 {
 	response->clear();
 	if (_diagInterface == NULL)
-		return false;
+		return Result::error;
 	if (request.size() < 1)
-		return false;
+		return Result::error;
 	std::vector<char> msg_buffer;
 	// SETUP COMPLETE MESSAGE:
 	// Protocol-header
@@ -245,7 +258,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const st
 	{
 		case AbstractDiagInterface::protocol_type::SSM2_ISO14230:
 			if ((ecuaddr > 0xff) || (request.size() > 255))
-				return false;
+				return Result::error;
 			// header, 4 bytes
 			msg_buffer.push_back('\x80');
 			msg_buffer.push_back(ecuaddr);
@@ -257,7 +270,7 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const st
 			libFSSM::push_back_UInt32BigEndian(msg_buffer, ecuaddr);
 			break;
 		default:
-			return false;
+			return Result::error;
 	}
 	// Message:
 	msg_buffer.insert(msg_buffer.end(), request.begin(), request.end());
@@ -286,19 +299,22 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const st
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: write failed !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	msg_buffer.clear();
 	/* RECEIVE REPLY MESSAGE: */
+	Result res;
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
-		if (!receiveReplyISO14230(ecuaddr, 4 + request.size() + 1, &msg_buffer))
-			return false;
+		res = receiveReplyISO14230(ecuaddr, 4 + request.size() + 1, &msg_buffer);
+		if (res != Result::success)
+			return res;
 	}
 	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
-		if (!receiveReplyISO15765(ecuaddr, &msg_buffer))
-			return false;
+		res = receiveReplyISO15765(ecuaddr, &msg_buffer);
+		if (res != Result::success)
+			return res;
 	}
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
@@ -316,11 +332,11 @@ bool SSMP2communication_core::SndRcvMessage(const unsigned int ecuaddr, const st
 		// ignore CAN-ID[4]
 		std::copy(msg_buffer.begin() + 4, msg_buffer.end(), response->begin());
 	}
-	return true;
+	return Result::success;
 }
 
 
-bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer)
+SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, const unsigned int outmsg_len, std::vector<char> *msg_buffer)
 {
 	std::vector<char> read_buffer;
 	int min_bytes_to_read = 0; // NOTE: must be signed
@@ -331,11 +347,11 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 	unsigned int time_remaining = SSM2_READ_TIMEOUT;
 
 	if ((ecuaddr > 0xff) || (outmsg_len > 260))  // BUG !
-		return false;
+		return Result::error;
 	timer.start();
 	// WAIT FOR HEADER OF ANSWER OR ECHO:
 	if (!readFromInterface(4, time_remaining, &read_buffer, false))
-		return false;
+		return Result::error;
 	// CHECK HEADER OF THE MESSAGE AND DETECT ECHO
 	if ((read_buffer.at(0) == '\x80') &&
 	    (read_buffer.at(1) == static_cast<char>(ecuaddr)) &&
@@ -351,7 +367,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: invalid protocol header (#1) !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	// READ MINIMUM REMAINING BYTES:
 	msglen = 4 + static_cast<unsigned char>(read_buffer.at(3)) + 1;
@@ -364,7 +380,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 		else
 			time_remaining = 0;
 		if (!readFromInterface(min_bytes_to_read, time_remaining, &read_buffer, true))
-			return false;
+			return Result::error;
 	}
 	// CHECK IF REPLY MESSAGE IS TOO LONG:
 	if (!echo && (static_cast<int>(read_buffer.size()) != msglen))	// NOTE: if echo, read_buffer.size() = msglen + 4 + (1 + X) + 1
@@ -372,19 +388,19 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#1) !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	// CHECK MESSAGE CHECKSUM:
-	if (read_buffer.at(msglen-1) != libFSSM::calcchecksum(&read_buffer.at(0), msglen - 1))
+	if (read_buffer.at(msglen - 1) != libFSSM::calcchecksum(&read_buffer.at(0), msglen - 1))
 	{
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#1) !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	// IF THERE IS NO ECHO, WE'RE DONE !
 	if (!echo)
-		return true;
+		return Result::success;
 	// ELIMINATE ECHO:
 	read_buffer.erase(read_buffer.begin(), read_buffer.begin() + outmsg_len);
 	// CHECK IF PROTOCOL HEADER OF REPLY IS CORRECT:
@@ -393,7 +409,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: reply message has invalid protocol header !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	// READ REST OF THE MESSAGE:
 	msglen = 4 + static_cast<unsigned char>(read_buffer.at(3)) + 1;
@@ -406,7 +422,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 		else
 			time_remaining = 0;
 		if (!readFromInterface(min_bytes_to_read, time_remaining, &read_buffer, true))
-			return false;
+			return Result::error;
 	}
 	// CHECK IF REPLY MESSAGE IS TOO LONG
 	if (read_buffer.size() != msglen)
@@ -414,7 +430,7 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#2) !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	// CHECK CHECKSUM:
 	if (read_buffer.back() != libFSSM::calcchecksum(read_buffer.data(), read_buffer.size() - 1))
@@ -422,28 +438,35 @@ bool SSMP2communication_core::receiveReplyISO14230(const unsigned int ecuaddr, c
 #ifdef __FSSM_DEBUG__
 		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#2) !\n";
 #endif
-		return false;
+		return Result::error;
 	}
 	msg_buffer->assign(read_buffer.begin(), read_buffer.end());
-	return true;
+	return Result::success;
 }
 
 
-bool SSMP2communication_core::receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer)
+SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO15765(const unsigned int ecuaddr, std::vector<char> *msg_buffer)
 {
 	msg_buffer->clear();
 	// READ MESSAGE
 	if (!readFromInterface(5, SSM2_READ_TIMEOUT, msg_buffer, false)) // NOTE: we always get complete messages from the interfaces (as long as minbytes is > 0) !
-		return false;
+		return Result::error;
 
 	// CHECK CAN-IDENTIFIER (IF POSSIBLE)
 	if (ecuaddr == (ecuaddr & 0x7EF)) // ISO15765-4 11 bit CAN IDs for physical addressing
 	{
 		unsigned int msgaddr = libFSSM::parseUInt32BigEndian(&msg_buffer->at(0));
 		if (msgaddr != (ecuaddr + 8))
-			return false;
+			return Result::error;
+		if ((msg_buffer->size() == 7) && (msg_buffer->at(4) == '\x7F'))
+		{
+#ifdef __FSSM_DEBUG__
+			std::cout << "SSMP2communication_core::receiveReplyISO15765():   request rejected with response code 0x" << libFSSM::StrToHexstr( &(msg_buffer->at(6)), 1 ) << '\n';
+#endif
+			return Result::rejected;
+		}
 	}
-	return true;
+	return Result::success;
 }
 
 
