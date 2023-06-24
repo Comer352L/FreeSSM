@@ -604,13 +604,10 @@ void SSMP2communication::run()
 #endif
 			case comOp::writeSingle:
 			case comOp::writeSingle_p:// WriteDatabyte_permanent(...)
-				op_success = WriteDatabyte(cuaddress, dataaddr.at(0), snd_buf.at(0), tmp_buf);
-				rec_buf.assign(tmp_buf, tmp_buf + 1);
-				break;
 			case comOp::writeMultiAddr_emul:
 			case comOp::writeMultiAddr_emul_p:
 				op_success = WriteDatabyte(cuaddress, dataaddr.at(op_idx), snd_buf.at(op_idx), tmp_buf);
-				rec_buf.push_back(tmp_buf[0]);
+				rec_buf.assign(tmp_buf, tmp_buf + 1);
 				break;
 			default:
 				op_success = false;
