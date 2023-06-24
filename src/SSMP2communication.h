@@ -27,7 +27,6 @@
 #include "SSMCUdata.h"
 
 
-#define		SSMP2COM_BUFFER_SIZE	256	// buffer size => max. nr. of bytes/addresses for requests; MIN 104 NEEDED !
 
 //#define		__SSM2_BLOCK_OPS__		// NOTE: currently unused
 
@@ -75,8 +74,8 @@ public:
 	bool readMultipleDatabytes(char padaddr, const std::vector<unsigned int> dataaddr, std::vector<char> *data);
 	bool readMultipleDatabytes_permanent(const char padaddr, const std::vector<unsigned int> dataaddr, const int delay = 0);
 #ifdef __SSM2_BLOCK_OPS__
-	bool writeDataBlock(const unsigned int dataaddr, const char* data, const unsigned int datalen, std::vector<char> *datawritten = NULL);
-	bool writeDataBlock_permanent(const unsigned int dataaddr, const char *data, const unsigned int datalen, const int delay = 0);
+	bool writeDataBlock(const unsigned int dataaddr, const std::vector<char> data, std::vector<char> *datawritten = NULL);
+	bool writeDataBlock_permanent(const unsigned int dataaddr, const std::vector<char> data, const int delay = 0);
 #endif
 	bool writeDatabyte(const unsigned int dataaddr, const char databyte, char *databytewritten = NULL);
 	bool writeDatabyte_permanent(const unsigned int dataaddr, const char databyte, const int delay = 0);
@@ -100,10 +99,10 @@ private:
 	comOp _CommOperation;
 	// Buffers for sending/recieving data:
 	char _padaddr;
-	unsigned int _dataaddr[SSMP2COM_BUFFER_SIZE];
+	std::vector<unsigned int> _dataaddr;
 	unsigned int _datalen;
-	char _snd_buf[SSMP2COM_BUFFER_SIZE];
-	char _rec_buf[SSMP2COM_BUFFER_SIZE];
+	std::vector<char> _snd_buf;
+	std::vector<char> _rec_buf;
 
 	bool doSingleCommOperation();
 	void run();
