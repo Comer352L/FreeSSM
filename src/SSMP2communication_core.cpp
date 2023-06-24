@@ -279,16 +279,16 @@ SSMP2communication_core::Result SSMP2communication_core::SndRcvMessage(const uns
 		msg_buffer.push_back( libFSSM::calcchecksum(msg_buffer.data(), msg_buffer.size()) );
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
-	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:\n";
+	std::cout << "SSMP2communication_core::SndRcvMessage(...):   sending message:" << std::endl;
 	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
 	// CLEAR INTERFACE BUFFERS:
 	// NOTE: buffers can contain incomplete messages e.g. due to temporary "ignition off"
 #ifdef __FSSM_DEBUG__
 	if (!_diagInterface->clearSendBuffer())
-		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Tx buffer !\n";
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Tx buffer !" << std::endl;
 	if (!_diagInterface->clearReceiveBuffer())
-		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Rx buffer !\n";
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: failed to clear Rx buffer !" << std::endl;
 #else
 	_diagInterface->clearSendBuffer();
 	_diagInterface->clearReceiveBuffer();
@@ -297,7 +297,7 @@ SSMP2communication_core::Result SSMP2communication_core::SndRcvMessage(const uns
 	if (!_diagInterface->write(msg_buffer))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: write failed !\n";
+		std::cout << "SSMP2communication_core::SndRcvMessage(...):   error: write failed !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -318,7 +318,7 @@ SSMP2communication_core::Result SSMP2communication_core::SndRcvMessage(const uns
 	}
 #ifdef __FSSM_DEBUG__
 	// DEBUG-OUTPUT:
-	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:\n";
+	std::cout << "SSMP2communication_core::SndRcvMessage(...):   received message:" << std::endl;
 	std::cout << libFSSM::StrToMultiLineHexstr(msg_buffer, 16, "   ");
 #endif
 	// MESSAGE LENGTH:
@@ -365,7 +365,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	else
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: invalid protocol header (#1) !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: invalid protocol header (#1) !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -386,7 +386,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	if (!echo && (static_cast<int>(read_buffer.size()) != msglen))	// NOTE: if echo, read_buffer.size() = msglen + 4 + (1 + X) + 1
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#1) !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#1) !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -394,7 +394,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	if (read_buffer.at(msglen - 1) != libFSSM::calcchecksum(&read_buffer.at(0), msglen - 1))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#1) !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#1) !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -407,7 +407,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	if ((read_buffer.at(0) != '\x80') || (read_buffer.at(1) != '\xF0') || (read_buffer.at(2) != static_cast<char>(ecuaddr)))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: reply message has invalid protocol header !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: reply message has invalid protocol header !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -428,7 +428,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	if (read_buffer.size() != msglen)
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#2) !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: received reply message is too long (#2) !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -436,7 +436,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	if (read_buffer.back() != libFSSM::calcchecksum(read_buffer.data(), read_buffer.size() - 1))
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#2) !\n";
+		std::cout << "SSMP2communication_core::receiveReplyISO14230():   error: wrong checksum (#2) !" << std::endl;
 #endif
 		return Result::error;
 	}
@@ -461,7 +461,7 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO15765(co
 		if ((msg_buffer->size() == 7) && (msg_buffer->at(4) == '\x7F'))
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMP2communication_core::receiveReplyISO15765():   request rejected with response code 0x" << libFSSM::StrToHexstr( &(msg_buffer->at(6)), 1 ) << '\n';
+			std::cout << "SSMP2communication_core::receiveReplyISO15765():   request rejected with response code 0x" << libFSSM::StrToHexstr( &(msg_buffer->at(6)), 1 ) << std::endl;
 #endif
 			return Result::rejected;
 		}
@@ -483,7 +483,7 @@ bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, con
 		if (!_diagInterface->read(&temp_buffer))
 		{
 #ifdef __FSSM_DEBUG__
-			std::cout << "SSMP2communication_core::readFromInterface():   error: failed to read from interface !\n";
+			std::cout << "SSMP2communication_core::readFromInterface():   error: failed to read from interface !" << std::endl;
 #endif
 			// NOTE: fail silent
 		}
@@ -495,7 +495,7 @@ bool SSMP2communication_core::readFromInterface(const unsigned int minbytes, con
 	if (recv_buffer.size() < minbytes)
 	{
 #ifdef __FSSM_DEBUG__
-		std::cout << "SSMP2communication_core::readFromInterface():   error: timeout while reading from interface !\n";
+		std::cout << "SSMP2communication_core::readFromInterface():   error: timeout while reading from interface !" << std::endl;
 #endif
 		return false;
 	}
