@@ -84,6 +84,7 @@ public:
 	virtual bool hasIntegratedCC(bool *CCsup);
 	virtual bool hasClearMemory(bool *CMsup);
 	virtual bool hasClearMemory2(bool *CM2sup);
+	bool hasMBengineSpeed(bool *MBsup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
 	bool getSupportedDCgroups(int *DCgroups);

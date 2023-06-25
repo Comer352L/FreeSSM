@@ -240,6 +240,15 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 }
 
 
+bool SSMprotocol::hasMBengineSpeed(bool *MBsup)
+{
+	if (_state == state_needSetup)
+		return false;
+	*MBsup = (_mb_enginespeed_data.addr_low != MEMORY_ADDRESS_NONE);
+	return true;
+}
+
+
 bool SSMprotocol::hasTestMode(bool *TMsup)
 {
 	if (_state == state_needSetup)
