@@ -625,13 +625,19 @@ bool SSMprotocol::startActuatorTest(unsigned char actuatorTestIndex)
 	if (!_has_ActTest || (actuatorTestIndex >= _actuators.size()))
 		return false;
 	// Check if control unit is in test mode:
-	ok = isInTestMode(&testmode);
-	if (!ok || !testmode)
-		return false;
+	if (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE)
+	{
+		ok = isInTestMode(&testmode);
+		if (!ok || !testmode)
+			return false;
+	} // else: assume it is not relevant (otherwise the ECU would provide it)
 	// Check that engine is not running:
-	ok = isEngineRunning(&running);
-	if (!ok || running)
-		return false;
+	if (_mb_enginespeed_data.addr_low != MEMORY_ADDRESS_NONE)
+	{
+		ok = isEngineRunning(&running);
+		if (!ok || running)
+			return false;
+	} // else: assume it is not relevant (otherwise the ECU would provide it)
 	// Change state:
 	_state = state_ActTesting;
 	// Prepare test addresses:
@@ -711,13 +717,19 @@ bool SSMprotocol::stopAllActuators()
 	if (!_has_ActTest)
 		return false;
 	// Check if control unit is in test mode:
-	ok = isInTestMode(&testmode);
-	if (!ok || !testmode)
-		return false;
+	if (_sw_testmodestate_data.addr != MEMORY_ADDRESS_NONE)
+	{
+		ok = isInTestMode(&testmode);
+		if (!ok || !testmode)
+			return false;
+	} // else: assume it is not relevant (otherwise the ECU would provide it)
 	// Check that engine is not running:
-	ok = isEngineRunning(&enginerunning);
-	if (!ok || enginerunning)
-		return false;
+	if (_mb_enginespeed_data.addr_low != MEMORY_ADDRESS_NONE)
+	{
+		ok = isEngineRunning(&enginerunning);
+		if (!ok || enginerunning)
+			return false;
+	} // else: assume it is not relevant (otherwise the ECU would provide it)
 	// Stop all actuator tests:
 	for (size_t k = 0; k < _allActByteAddr.size(); k++)
 	{
