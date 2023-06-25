@@ -188,6 +188,8 @@ SSMprotocol::CUsetupResult_dt SSMprotocol1::setupCUdata(enum CUtype CU)
 		LegacyDefsIface->SWdata_DCheckState(&_sw_dcheckstate_data);
 		LegacyDefsIface->SWdata_ignitionState(&_sw_ignitionstate_data);
 		LegacyDefsIface->adjustments(&_adjustments);
+		LegacyDefsIface->actuatorTests(&_actuators);
+		_has_ActTest = _actuators.size() > 0;
 		LegacyDefsIface->clearMemoryData(&_CMaddr, &_CMvalue);
 		_SSMdefsIfce = LegacyDefsIface;
 	}

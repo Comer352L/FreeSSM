@@ -68,6 +68,7 @@ public:
 	bool measuringBlocks(std::vector<mb_intl_dt> *mbs);
 	bool switches(std::vector<sw_intl_dt> *sws);
 	bool adjustments(std::vector<adjustment_intl_dt> *adj);
+	bool actuatorTests(std::vector<actuator_dt> *act);
 	bool clearMemoryData(unsigned int *address, char *value);
 	bool MBdata_engineRunning(mb_enginespeed_data_dt *mb_enginespeed_data);
 	bool SWdata_testModeState(sw_stateindication_data_dt *sw_testmode_data);

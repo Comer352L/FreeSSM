@@ -445,6 +445,62 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 }
 
 
+bool SSMLegacyDefinitionsInterface::actuatorTests(std::vector<actuator_dt> *actuators)
+{
+	std::vector<XMLElement*> ACT_elements;
+
+	if (actuators == NULL)
+		return false;
+	actuators->clear();
+	if (!_id_set)
+		return false;
+	ACT_elements = getAllMultilevelElements("ACT");
+	for (unsigned int k=0; k<ACT_elements.size(); k++)
+	{
+		std::vector<XMLElement*> tmp_elements;
+		actuator_dt act;
+		// Get ID:
+		std::string id;
+		id = ACT_elements.at(k)->Attribute("id");
+		if (!id.size())
+			continue;
+		// Get address:
+		unsigned int addr;
+		if (!getAddressElementValue(ACT_elements.at(k), &addr))
+			continue;
+		// Get bit:
+		unsigned char bit;
+		if (!getBitElementValue(ACT_elements.at(k), &bit))
+			continue;
+		// Check for duplicate definitions (addresses):
+		bool duplicate = false;
+		for (unsigned int a=0; a<actuators->size(); a++)
+		{
+			if ((addr == actuators->at(a).byteAddr) && (bit == actuators->at(a).bitAddr))
+			{
+				duplicate = true;
+				actuators->erase(actuators->begin() + a);
+				break;
+			}
+		}
+		if (duplicate)
+			continue;
+		act.byteAddr = addr;
+		act.bitAddr = bit;
+		// --- Get common data ---
+		XMLElement *ACTdata_element = NULL;
+		if (!getCommonDataElementWithMatchingID("ACT", id, &ACTdata_element))
+			continue;
+		// Get title:
+		if (!getLanguageDependentElementString(ACTdata_element, "TITLE", &act.title))
+			continue;
+		// Add Actuator Test to the list:
+		actuators->push_back(act);
+	}
+	return true;
+}
+
+
 bool SSMLegacyDefinitionsInterface::clearMemoryData(unsigned int *address, char *value)
 {
 	std::vector<XMLElement*> elements;
