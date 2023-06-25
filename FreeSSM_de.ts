@@ -187,110 +187,110 @@ Stellglied-Test konnte nicht gestartet werden.</translation>
 <context>
     <name>CUcontent_Adjustments</name>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="530"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="541"/>
         <source>Saving adjustment value to Electronic Control Unit... Please wait !</source>
         <oldsource>Saving adjustment value to Electronic Control Unit... Please wait !      </oldsource>
         <translation>Speichere Einstellwert in Steuergerät... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="457"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="468"/>
         <source>Reset all: </source>
         <translation>Alle zurücksetzen: </translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="586"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="597"/>
         <source>Continue ?</source>
         <translation>Fortfahren ?</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="586"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="597"/>
         <source>Do you really want to reset all adjustment values ?</source>
         <translation>Möchten Sie wirklich alle Einstellwerte zurücksetzen ?</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="587"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="598"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="588"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="599"/>
         <source>Cancel</source>
         <translation>Abbruch</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="598"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="609"/>
         <source>Resetting all adjustment values... Please wait !</source>
         <oldsource>Resetting all adjustment values... Please wait !   </oldsource>
         <translation>Einstellwerte werden zurückgesetzt... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="558"/>
-        <location filename="src/CUcontent_Adjustments.cpp" line="605"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="569"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="616"/>
         <source>No or invalid answer from Control Unit.</source>
         <translation>Keine oder fehlerhafte Antwort vom Steuergerät.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="678"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="689"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="677"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="688"/>
         <source>Communication Error:</source>
         <translation>Kommunikationsfehler:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="271"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="282"/>
         <source>One or more current values couldn&apos;t be scaled.</source>
         <translation>Einer oder mehrere aktuelle Einstellwerte konnten nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="469"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="480"/>
         <source>One or more values will not be adjustable to prevent
 wrong data being written to the Control Unit.</source>
         <translation>Einer odere mehrere Einstellwerte werden nicht Veränderbar sein,
 um ein Schreiben falscher Werte in das Steuergerät zu verhindern.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="571"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="582"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="571"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="582"/>
         <source>Error:
 The Control Unit didn&apos;t accept the new value !</source>
         <translation>Fehler:
 Das Steuergerät hat den neuen Wert nicht akzeptiert !</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="574"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="585"/>
         <source>The current value couldn&apos;t be scaled.</source>
         <translation>Der aktuelle Einstellwert konnte nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="621"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="632"/>
         <source>One or more values couldn&apos;t be scaled.</source>
         <translation>Einer oder mehrere Einstellwerte konnten nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="685"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="696"/>
         <source>Calculation Error:</source>
         <translation>Berechnungsfehler:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="686"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="697"/>
         <source>Calculation Error</source>
         <translation>Berechnungsfehler</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="548"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="559"/>
         <source>The new adjustment value couldn&apos;t be scaled.</source>
         <translation>Der neue Einstellwert konnte nicht skaliert werden.</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_Adjustments.cpp" line="260"/>
-        <location filename="src/CUcontent_Adjustments.cpp" line="566"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="271"/>
+        <location filename="src/CUcontent_Adjustments.cpp" line="577"/>
         <source>[RAW]</source>
         <translation>[RAW]</translation>
     </message>
@@ -429,66 +429,66 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_DCs_engine</name>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="368"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="404"/>
         <source>System-Check Diagnostic Trouble Code(s):</source>
         <translation>Systemprüfungs-Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="74"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="372"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="110"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="408"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation>Kurzzeitige Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="376"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="412"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation>Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="75"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="153"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="111"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="189"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation>Gespeicherte Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="155"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="191"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation>Historische Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="226"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="231"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="236"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="241"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="262"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="267"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="272"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="277"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation>----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="159"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="165"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="171"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="177"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="195"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="201"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="207"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="213"/>
         <source>----- Not supported by ECU -----</source>
         <translation>----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="286"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="308"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="417"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="428"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="322"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="344"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="453"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="464"/>
         <source>----- No Trouble Codes -----</source>
         <translation>----- Keine Fehlercodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="330"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="352"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="439"/>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="450"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="366"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="388"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="475"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="486"/>
         <source>----- No Cancel Codes -----</source>
         <translation>----- Keine Abbruchcodes -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_engine.cpp" line="277"/>
+        <location filename="src/CUcontent_DCs_engine.cpp" line="313"/>
         <source>----- SYSTEM CHECK IS NOT YET COMPLETED ! -----</source>
         <translation>----- SYSTEMPRÜFUNG IST NOCH NICHT ABGESCHLOSSEN ! -----</translation>
     </message>
@@ -496,24 +496,24 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_DCs_stopCodes</name>
     <message>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="44"/>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="85"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="53"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="94"/>
         <source>Current Stop Code:</source>
         <translation>Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="90"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="99"/>
         <source>----- Not supported by ECU -----</source>
         <translation>----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="119"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="128"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation>----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="149"/>
-        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="171"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="158"/>
+        <location filename="src/CUcontent_DCs_stopCodes.cpp" line="180"/>
         <source>----- No valid Stop Codes -----</source>
         <translation>----- Keine gültigen Stop-Codes -----</translation>
     </message>
@@ -521,70 +521,70 @@ die Registrierung von Fahrgestellnummern unterstützt.</translation>
 <context>
     <name>CUcontent_DCs_twoMemories</name>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="54"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="115"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="72"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="133"/>
         <source>Temporary Diagnostic Trouble Code(s):</source>
         <translation>Kurzzeitige Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="55"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="120"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="73"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="138"/>
         <source>Memorized Diagnostic Trouble Code(s):</source>
         <translation>Gespeicherte Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="61"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="129"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="79"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="147"/>
         <source>Temporary DTCs</source>
         <oldsource>Temporary</oldsource>
         <translation>Kurzzeitige Fehlercodes</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="62"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="134"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="80"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="152"/>
         <source>Memorized DTCs</source>
         <oldsource>Memorized</oldsource>
         <translation>Gespeicherte Fehlercodes</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="117"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="135"/>
         <source>Current Diagnostic Trouble Code(s):</source>
         <translation>Aktuelle Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="122"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="140"/>
         <source>Historic Diagnostic Trouble Code(s):</source>
         <translation>Historische Fehlercodes:</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="131"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="149"/>
         <source>Current DTCs</source>
         <oldsource>Current</oldsource>
         <translation>Aktuelle Fehlercodes</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="136"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="154"/>
         <source>Historic DTCs</source>
         <oldsource>Historic</oldsource>
         <translation>Historische Fehlercodes</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="143"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="148"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="161"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="166"/>
         <source>----- Not supported by ECU -----</source>
         <translation>----- Nicht Unterstützt -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="176"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="181"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="194"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="199"/>
         <source>----- Reading data... Please wait ! -----</source>
         <translation>----- Daten werden gelesen... Bitte warten ! -----</translation>
     </message>
     <message>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="212"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="235"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="259"/>
-        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="270"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="230"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="253"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="277"/>
+        <location filename="src/CUcontent_DCs_twoMemories.cpp" line="288"/>
         <source>----- No Trouble Codes -----</source>
         <translation>----- Keine Fehlercodes -----</translation>
     </message>
@@ -1087,67 +1087,67 @@ Do you really want to clear the Control Units&apos; memory</oldsource>
 <context>
     <name>ControlUnitDialog</name>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="112"/>
+        <location filename="src/ControlUnitDialog.cpp" line="110"/>
         <source>&amp;Diagnostic Codes</source>
         <translation>&amp;Diagnosecodes</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="118"/>
+        <location filename="src/ControlUnitDialog.cpp" line="116"/>
         <source>&amp;Measuring Blocks</source>
         <translation>&amp;Messwertblöcke</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="124"/>
+        <location filename="src/ControlUnitDialog.cpp" line="122"/>
         <source>&amp;Adjustments</source>
         <translation>&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="130"/>
+        <location filename="src/ControlUnitDialog.cpp" line="128"/>
         <source>System &amp;Tests</source>
         <translation>System-&amp;Tests</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="136"/>
+        <location filename="src/ControlUnitDialog.cpp" line="134"/>
         <source>Clear Memory</source>
         <translation>Speicher Löschen</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="142"/>
+        <location filename="src/ControlUnitDialog.cpp" line="140"/>
         <source>Clear Memory 2</source>
         <translation>Speicher Löschen 2</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="234"/>
+        <location filename="src/ControlUnitDialog.cpp" line="232"/>
         <source>Prepare system</source>
         <translation>System vorbereiten</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="234"/>
+        <location filename="src/ControlUnitDialog.cpp" line="232"/>
         <source>Please switch the %1 system on.</source>
         <translation>Bitte schalten Sie die %1 ein.</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="236"/>
+        <location filename="src/ControlUnitDialog.cpp" line="234"/>
         <source>Continue</source>
         <translation>Weiter</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="251"/>
+        <location filename="src/ControlUnitDialog.cpp" line="249"/>
         <source>Connecting to %1... Please wait !</source>
         <translation>Verbinde mit %1... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="252"/>
+        <location filename="src/ControlUnitDialog.cpp" line="250"/>
         <source>Connecting...</source>
         <translation>Verbindung herstellen...</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="260"/>
+        <location filename="src/ControlUnitDialog.cpp" line="258"/>
         <source>Processing Control Unit data... Please wait !</source>
         <translation>Verarbeite Steuergeräte-Daten... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="274"/>
+        <location filename="src/ControlUnitDialog.cpp" line="272"/>
         <source>Error:
 No valid definitions file found.
 Please make sure that FreeSSM is installed properly.</source>
@@ -1156,7 +1156,7 @@ Definitionendatei nicht gefunden oder fehlerhaft.
 Bitte stellen sie sicher, das FreeSSM korrekt installiert ist.</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="278"/>
+        <location filename="src/ControlUnitDialog.cpp" line="276"/>
         <source>Error:
 This control unit is not yet supported by FreeSSM.
 FreeSSM can communicate with the control unit, but it doesn&apos;t have the necessary data to provide diagnostic operations.
@@ -1167,89 +1167,89 @@ FreeSSM kann zwar mit dem Steuergerät kommunizieren, es fehlen jedoch die notwe
 Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noch nicht unterstützte Steuergeräte hinzuzufügen, kontaktieren Sie bitte die Autoren.</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="282"/>
+        <location filename="src/ControlUnitDialog.cpp" line="280"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="303"/>
+        <location filename="src/ControlUnitDialog.cpp" line="670"/>
         <source>Checking system status... Please wait !</source>
         <translation>Prüfe Systemstatus... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="318"/>
+        <location filename="src/ControlUnitDialog.cpp" line="700"/>
         <source>Stopping actuators... Please wait !</source>
         <translation>Deaktiviere Stellglieder... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="350"/>
+        <location filename="src/ControlUnitDialog.cpp" line="327"/>
         <source>Control Unit initialisation successful !</source>
         <translation>Steuergerät-Initialisierung erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="413"/>
+        <location filename="src/ControlUnitDialog.cpp" line="390"/>
         <source>unknown</source>
         <translation>unbekannt</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="432"/>
+        <location filename="src/ControlUnitDialog.cpp" line="409"/>
         <source>Diagnostic Codes:</source>
         <translation>Diagnosecodes:</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="439"/>
+        <location filename="src/ControlUnitDialog.cpp" line="416"/>
         <source>Measuring Blocks:</source>
         <translation>Messwertblöcke:</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="446"/>
+        <location filename="src/ControlUnitDialog.cpp" line="423"/>
         <source>Adjustments:</source>
         <translation>Einstellungen:</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="453"/>
+        <location filename="src/ControlUnitDialog.cpp" line="430"/>
         <source>System Operation Tests:</source>
         <translation>System-Funktionstests:</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="657"/>
+        <location filename="src/ControlUnitDialog.cpp" line="718"/>
         <source>Switching to Diagnostic Codes... Please wait !</source>
         <translation>Wechsele zu Diagnosecodes... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="678"/>
+        <location filename="src/ControlUnitDialog.cpp" line="741"/>
         <source>Switching to Measuring Blocks... Please wait !</source>
         <translation>Wechsele zu Messwertblöcken... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="699"/>
+        <location filename="src/ControlUnitDialog.cpp" line="764"/>
         <source>Switching to Adjustment Values... Please wait !</source>
         <translation>Wechsele zu Einstellungen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="720"/>
+        <location filename="src/ControlUnitDialog.cpp" line="787"/>
         <source>Switching to System Tests... Please wait !</source>
         <translation>Wechsele zu System-Funktionstests... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="837"/>
+        <location filename="src/ControlUnitDialog.cpp" line="907"/>
         <source>Reading Adjustment Values... Please wait !</source>
         <translation>Einstellungen werden gelesen... Bitte warten !</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="869"/>
+        <location filename="src/ControlUnitDialog.cpp" line="939"/>
         <source>Communication Error</source>
         <translation>Kommunikationsfehler</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="869"/>
+        <location filename="src/ControlUnitDialog.cpp" line="939"/>
         <source>Communication Error:
 - No or invalid answer from Control Unit -</source>
         <translation>Kommunikationsfehler:
 - Keine oder fehlerhafte Antwort vom Steuergerät -</translation>
     </message>
     <message>
-        <location filename="src/ControlUnitDialog.cpp" line="886"/>
+        <location filename="src/ControlUnitDialog.cpp" line="956"/>
         <source>Stopping Communication... Please wait !</source>
         <oldsource>Stopping Communication... Please wait !   </oldsource>
         <translation>Trenne Verbindung zum Steuergerät... Bitte warten !</translation>
@@ -1411,17 +1411,17 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
 <context>
     <name>EngineDialog</name>
     <message>
-        <location filename="src/EngineDialog.cpp" line="39"/>
+        <location filename="src/EngineDialog.cpp" line="40"/>
         <source>Engine</source>
         <translation>Motor</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="45"/>
+        <location filename="src/EngineDialog.cpp" line="46"/>
         <source>Engine Control Unit</source>
         <translation>Motor-Steuergerät</translation>
     </message>
     <message>
-        <location filename="src/EngineDialog.cpp" line="97"/>
+        <location filename="src/EngineDialog.cpp" line="98"/>
         <source>Reading Vehicle Ident. Number... Please wait !</source>
         <translation>Lese Fahrgestellnummer... Bitte warten !</translation>
     </message>
@@ -1429,7 +1429,7 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
 <context>
     <name>FSSM_WaitMsgBox</name>
     <message>
-        <location filename="src/FSSMdialogs.h" line="54"/>
+        <location filename="src/FSSMdialogs.h" line="53"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -1437,20 +1437,20 @@ Falls Sie zum Projekt beitragen wollen bzw. helfen wollen, Definitionen für noc
 <context>
     <name>FreeSSM</name>
     <message>
-        <location filename="src/FreeSSM.cpp" line="125"/>
-        <location filename="src/FreeSSM.cpp" line="733"/>
+        <location filename="src/FreeSSM.cpp" line="137"/>
+        <location filename="src/FreeSSM.cpp" line="742"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="412"/>
+        <location filename="src/FreeSSM.cpp" line="424"/>
         <source>No interface selected !
 =&gt; Please select a dignostic interface in the preferences.</source>
         <translation>Kein Interface gewählt !
 =&gt; Bitte wählen sie ein Diagnose-Interface in den Programm-Einstellungen aus.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="431"/>
+        <location filename="src/FreeSSM.cpp" line="443"/>
         <source>Internal error:
 The selected interface type cannot be initialized !
 =&gt; Please report this as a bug.</source>
@@ -1462,14 +1462,14 @@ Der gewählte Interface-Typ kann nicht initialisiert werden !
 =&gt; Bitte melden Sie dies als Programm-Fehler.</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="437"/>
+        <location filename="src/FreeSSM.cpp" line="449"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Maybe the device is already in use by another application...</source>
         <translation>Das Diagnose-Interface konnte nicht geöffnet werden !
 Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
     </message>
     <message>
-        <location filename="src/FreeSSM.cpp" line="125"/>
+        <location filename="src/FreeSSM.cpp" line="137"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation>Fehler:
@@ -1670,29 +1670,29 @@ Eventuell wird es bereits von einer anderen Anwendung verwendet...</translation>
 <context>
     <name>Preferences</name>
     <message>
-        <location filename="src/Preferences.cpp" line="171"/>
-        <location filename="src/Preferences.cpp" line="455"/>
-        <location filename="src/Preferences.cpp" line="486"/>
+        <location filename="src/Preferences.cpp" line="178"/>
+        <location filename="src/Preferences.cpp" line="497"/>
+        <location filename="src/Preferences.cpp" line="528"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="221"/>
+        <location filename="src/Preferences.cpp" line="228"/>
         <source>Serial Port:</source>
         <translation>Serieller Port:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="204"/>
+        <location filename="src/Preferences.cpp" line="211"/>
         <source>Interface-Name:</source>
         <translation>Interface-Name:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="278"/>
+        <location filename="src/Preferences.cpp" line="291"/>
         <source>The selected interface is not supported !</source>
         <translation>Das ausgewählte Diagnose-Interface wird nicht unterstützt !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="279"/>
+        <location filename="src/Preferences.cpp" line="292"/>
         <source>Internal error:
 The interface test for the selected interface is not yet implemented.
 =&gt; Please report this as a bug.</source>
@@ -1704,121 +1704,136 @@ Der Interface-Test für das gewählte Inteface wurde noch nicht implementiert.
 =&gt; Bitte melden Sie dies als Programm-Fehler.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="292"/>
+        <location filename="src/Preferences.cpp" line="305"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="293"/>
-        <location filename="src/Preferences.cpp" line="416"/>
+        <location filename="src/Preferences.cpp" line="306"/>
+        <location filename="src/Preferences.cpp" line="456"/>
         <source>Cancel</source>
         <translation>Abbruch</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="314"/>
-        <source>Testing interface... Please wait !     </source>
-        <translation>Teste Interface... Bitte warten !     </translation>
-    </message>
-    <message>
-        <location filename="src/Preferences.cpp" line="377"/>
+        <location filename="src/Preferences.cpp" line="417"/>
         <source>The selected serial port can not be configured for the SSM1- and SSM2-protocol.</source>
         <translation>Der gewählte serielle Port kann weder für das SSM1- noch das SSM2-Protokoll konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="379"/>
+        <location filename="src/Preferences.cpp" line="419"/>
         <source>The selected interface does not support the SSM1- and SSM2-protocol.</source>
         <translation>Das gewählte Interface unterstützt weder das SSM1- noch das SSM2-Protokoll.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="383"/>
+        <location filename="src/Preferences.cpp" line="423"/>
         <source>Please make sure that the interface is connected properly and ignition is switched ON.</source>
         <translation>Bitte stellen sie sicher, dass das Interface korrekt angeschlossen ist und die Zündung eigeschaltet ist.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="387"/>
+        <location filename="src/Preferences.cpp" line="427"/>
         <source>WARNING:</source>
         <translation>WARNUNG:</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="391"/>
+        <location filename="src/Preferences.cpp" line="431"/>
         <source>The selected serial port can not be configured for the SSM1-protocol.</source>
         <translation>Der gewählte serielle Port kann nicht für das SSM1-Protokoll konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="393"/>
+        <location filename="src/Preferences.cpp" line="433"/>
         <source>The selected interface does not support the SSM1-protocol.</source>
         <translation>Das gewählte Interface bietet keine Unterstützung für das SSM1-Protokoll.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="415"/>
+        <location filename="src/Preferences.cpp" line="455"/>
         <source>Retry</source>
         <translation>Wiederholen</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="171"/>
+        <location filename="src/Preferences.cpp" line="178"/>
         <source>Error:
 - Language file missing or damaged -</source>
         <translation>Fehler:
 - Sprachdatei konnte nicht gefunden werden oder ist beschädigt -</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="285"/>
+        <location filename="src/Preferences.cpp" line="298"/>
         <source>Couldn&apos;t open the diagnostic interface !
 Please make sure that the device is not in use by another application.</source>
         <translation>Das Diagnose-Interface konnte nicht geöffnet werden !
 Bitte stellen sie sicher, dass das Gerät von keiner anderen Anwendung verwendet wird.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="291"/>
-        <location filename="src/Preferences.cpp" line="411"/>
-        <location filename="src/Preferences.cpp" line="414"/>
+        <location filename="src/Preferences.cpp" line="304"/>
+        <location filename="src/Preferences.cpp" line="451"/>
+        <location filename="src/Preferences.cpp" line="454"/>
         <source>Interface test</source>
         <translation>Interface-Test</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="291"/>
+        <location filename="src/Preferences.cpp" line="304"/>
         <source>Please connect diagnostic interface to the vehicles
 diagnostic connector and switch ignition on.</source>
         <translation>Diagnose-Interface mit der Diagnose-Buchse des Fahrzeugs
 verbinden und Zündung einschalten.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="373"/>
+        <location filename="src/Preferences.cpp" line="413"/>
         <source>Interface test failed !</source>
         <translation>Interface-Test fehlgeschlagen !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="371"/>
+        <location filename="src/Preferences.cpp" line="411"/>
         <source>Interface test successful !</source>
         <translation>Interface-Test erfolgreich !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="398"/>
+        <location filename="src/Preferences.cpp" line="327"/>
+        <source>Testing interface for SSM2 via ISO-14230 support... Please wait !</source>
+        <translation>Teste Interface auf ISO-14230-Unterstützung... Bitte warten !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="328"/>
+        <source>Testing interface...</source>
+        <translation>Teste Interface...</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="361"/>
+        <source>Testing interface for SSM2 via ISO-15765 support... Please wait !</source>
+        <translation>Teste Interface auf ISO-15765-Unterstützung... Bitte warten !</translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="379"/>
+        <source>Testing interface for SSM1 support... Please wait !</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/Preferences.cpp" line="438"/>
         <source>The selected serial port can not be configured for the SSM2-protocol via ISO-14230.</source>
         <translation>Der gewählte serielle Port kann nicht für das SSM2-Protokoll via ISO-14230 konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="400"/>
+        <location filename="src/Preferences.cpp" line="440"/>
         <source>The selected interface does not support the SSM2-protocol via ISO-14230.</source>
         <translation>Das gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll via ISO-14230.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="405"/>
+        <location filename="src/Preferences.cpp" line="445"/>
         <source>Serial Pass-Through interfaces do not support the SSM2-protocol via ISO-15765.</source>
         <translation>Serielle Pass-Through-Interfaces unterstützen nicht das SSM2-Protokoll via ISO-15765. </translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="407"/>
+        <location filename="src/Preferences.cpp" line="447"/>
         <source>The selected interface does not support the SSM2-protocol via ISO-15765.</source>
         <translation>Das gewählte Interface bietet keine Unterstützung für das SSM2-Protokoll via ISO-15765.</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="431"/>
+        <location filename="src/Preferences.cpp" line="471"/>
         <source>Couldn&apos;t close the diagnostic interface !</source>
         <translation>Das Diagnose-Interface konnte nicht geschlossen werden !</translation>
     </message>
     <message>
-        <location filename="src/Preferences.cpp" line="455"/>
+        <location filename="src/Preferences.cpp" line="497"/>
         <source>Couldn&apos;t save preferences to file !
 To prevent this failure in the future, ensure write access
 to your home directory and file &apos;&apos;FreeSSM.prefs&apos;&apos;.</source>
@@ -1892,6 +1907,13 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
         <translation>Interface-Typ:</translation>
     </message>
     <message>
+        <location filename="ui/Preferences.ui" line="332"/>
+        <source>Prefer ISO-14230 (K-Line) over ISO-15765 (CAN), if ECU supports
+both SSM2 protocol variants</source>
+        <translation>Verwende ISO-14230 (K-Line) anstatt ISO-15765 (CAN), wenn das
+Steuergerät beide SSM2-Protokollvarianten unterstützt</translation>
+    </message>
+    <message>
         <location filename="ui/Preferences.ui" line="264"/>
         <location filename="ui/small/Preferences.ui" line="175"/>
         <source>GUI-Style:</source>
@@ -1909,12 +1931,12 @@ Schreib-Zugriff auf ihr &apos;&apos;Home&apos;&apos;-Verzeichnis sowie die Datei
 <context>
     <name>TransmissionDialog</name>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="39"/>
+        <location filename="src/TransmissionDialog.cpp" line="40"/>
         <source>Transmission</source>
         <translation>Getriebe</translation>
     </message>
     <message>
-        <location filename="src/TransmissionDialog.cpp" line="45"/>
+        <location filename="src/TransmissionDialog.cpp" line="46"/>
         <source>Transmission Control Unit</source>
         <translation>Getriebe-Steuergerät</translation>
     </message>
