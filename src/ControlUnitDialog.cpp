@@ -24,11 +24,12 @@
 #include "ClearMemoryDlg.h"
 
 
-ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language)
+ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language, bool preferSSM2protocolVariantISO14230)
 {
 	// *** Initialize global variables:
 	_language = language;
 	_diagInterface = diagInterface;
+	_preferSSM2protocolVariantISO14230 = preferSSM2protocolVariantISO14230;
 	_SSMPdev = NULL;
 	_infoWidget = NULL;
 	_contentWidget = NULL;
@@ -580,8 +581,15 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 	if ((CUtype == CUtype::Engine) || (CUtype == CUtype::Transmission))
 	{
 		// Probe SSM2-protocol:
+		AbstractDiagInterface::protocol_type first_protocol = AbstractDiagInterface::protocol_type::SSM2_ISO15765;
+		AbstractDiagInterface::protocol_type second_protocol = AbstractDiagInterface::protocol_type::SSM2_ISO14230;
+		if (_preferSSM2protocolVariantISO14230)
+		{
+			first_protocol = AbstractDiagInterface::protocol_type::SSM2_ISO14230;
+			second_protocol = AbstractDiagInterface::protocol_type::SSM2_ISO15765;
+		}
 		_SSMPdev = new SSMprotocol2(_diagInterface, _language);
-		if (_diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO15765))
+		if (_diagInterface->connect(first_protocol))
 		{
 			result = _SSMPdev->setupCUdata( CUtype );
 			if ((result != SSMprotocol::result_success) && (result != SSMprotocol::result_noOrInvalidDefsFile) && (result != SSMprotocol::result_noDefs))
@@ -589,7 +597,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 		}
 		if (!_diagInterface->isConnected())
 		{
-			if (_diagInterface->connect(AbstractDiagInterface::protocol_type::SSM2_ISO14230))
+			if (_diagInterface->connect(second_protocol))
 			{
 				result = _SSMPdev->setupCUdata( CUtype );
 				if ((result != SSMprotocol::result_success) && (result != SSMprotocol::result_noOrInvalidDefsFile) && (result != SSMprotocol::result_noDefs))

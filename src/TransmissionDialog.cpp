@@ -21,7 +21,8 @@
 #include "CUcontent_DCs_twoMemories.h"
 
 
-TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
+TransmissionDialog::TransmissionDialog(AbstractDiagInterface *diagInterface, QString language, bool prefereSSM2protocolVariantISO14230)
+	: ControlUnitDialog(controlUnitName(), diagInterface, language, prefereSSM2protocolVariantISO14230)
 {
 	// Add information widget:
 	setInfoWidget( new CUinfo_Transmission() );

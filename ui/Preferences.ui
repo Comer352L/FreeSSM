@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>458</width>
-    <height>270</height>
+    <height>316</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>458</width>
-    <height>270</height>
+    <height>316</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>458</width>
-    <height>270</height>
+    <height>316</height>
    </size>
   </property>
   <property name="font">
@@ -65,7 +65,7 @@
    <property name="geometry">
     <rect>
      <x>25</x>
-     <y>225</y>
+     <y>271</y>
      <width>195</width>
      <height>30</height>
     </rect>
@@ -78,7 +78,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>225</y>
+     <y>271</y>
      <width>195</width>
      <height>30</height>
     </rect>
@@ -91,7 +91,7 @@
    <property name="geometry">
     <rect>
      <x>25</x>
-     <y>177</y>
+     <y>223</y>
      <width>410</width>
      <height>32</height>
     </rect>
@@ -317,6 +317,20 @@
    </property>
    <property name="pixmap">
     <pixmap resource="../resources/FreeSSM.qrc">:/icons/chrystal/22x22/input_devices_settings.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="preferredSSM2protocol_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>25</x>
+     <y>180</y>
+     <width>410</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Prefer ISO-14230 (K-Line) over ISO-15765 (CAN), if ECU supports
+both SSM2 protocol variants</string>
    </property>
   </widget>
  </widget>

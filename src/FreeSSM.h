@@ -51,6 +51,7 @@ private:
 	AbstractDiagInterface::interface_type _iface_type;
 	QString _iface_filename;
 	QString _language;
+	bool _preferSSM2protocolVariantISO14230;
 	QTranslator *_qt_translator;
 	QTranslator *_translator;
 	QLabel *_progtitle_label;

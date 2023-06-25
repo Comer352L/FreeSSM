@@ -42,7 +42,7 @@ class EngineDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	EngineDialog(AbstractDiagInterface *diagInterface, QString language);
+	EngineDialog(AbstractDiagInterface *diagInterface, QString language, bool prefereSSM2protocolVariantISO14230 = false);
 
 private:
 	QString systemName();

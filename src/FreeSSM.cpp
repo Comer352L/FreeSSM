@@ -29,6 +29,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	_iface_type = AbstractDiagInterface::interface_type::serialPassThrough;
 	_iface_filename = "";
 	_language = "en";	// default language
+	_preferSSM2protocolVariantISO14230 = false;
 	_dumping = false;
 	QString appsPath( QCoreApplication::applicationDirPath() );
 	// SETUP GUI:
@@ -67,7 +68,7 @@ FreeSSM::FreeSSM(QApplication *app)
 		QByteArray line;
 		if (!prefsfile.atEnd())
 		{
-			// Load interface type settings:
+			// Load interface file name settings:
 			line = prefsfile.readLine();
 			line.truncate(line.length()-1);	// truncate newline-character
 			savedinterfacefilename = static_cast<QString>(line);
@@ -88,10 +89,17 @@ FreeSSM::FreeSSM(QApplication *app)
 		}
 		if (!prefsfile.atEnd())
 		{
-			// Load interface file name settings:
+			// Load interface file type settings:
 			line = prefsfile.readLine();
 			line.truncate(line.length()-1);
 			savedinterfacetype = static_cast<QString>(line);
+		}
+		if (!prefsfile.atEnd())
+		{
+			// Load SSM2 protocol variant preference:
+			line = prefsfile.readLine();
+			line.truncate(line.length()-1);
+			_preferSSM2protocolVariantISO14230 = static_cast<bool>(line.toInt());
 		}
 		prefsfile.close();
 	}
@@ -265,7 +273,7 @@ void FreeSSM::engine(QStringList cmdline_args)
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
-		EngineDialog *enginedialog = new EngineDialog(diagInterface, _language);
+		EngineDialog *enginedialog = new EngineDialog(diagInterface, _language, _preferSSM2protocolVariantISO14230);
 #ifdef SMALL_RESOLUTION
 		enginedialog->showFullScreen();
 #else
@@ -288,7 +296,7 @@ void FreeSSM::transmission(QStringList cmdline_args)
 	AbstractDiagInterface *diagInterface = initInterface();
 	if (diagInterface)
 	{
-		TransmissionDialog *transmissiondialog = new TransmissionDialog(diagInterface, _language);
+		TransmissionDialog *transmissiondialog = new TransmissionDialog(diagInterface, _language, _preferSSM2protocolVariantISO14230);
 #ifdef SMALL_RESOLUTION
 		transmissiondialog->showFullScreen();
 #else
@@ -374,7 +382,7 @@ void FreeSSM::aircon(QStringList cmdline_args)
 void FreeSSM::preferences()
 {
 	if (_dumping) return;
-	Preferences *preferencesdlg = new Preferences(this, &_iface_type, &_iface_filename, _language);
+	Preferences *preferencesdlg = new Preferences(this, &_iface_type, &_iface_filename, _language, &_preferSSM2protocolVariantISO14230);
 	connect(preferencesdlg, SIGNAL( languageSelChanged(QString, QTranslator*) ),
 					this, SLOT( retranslate(QString, QTranslator*) ));
 #ifdef SMALL_RESOLUTION

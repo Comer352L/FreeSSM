@@ -43,7 +43,7 @@ class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 public:
 	enum class ContentSelection {DCsMode, MBsSWsMode, AdjustmentsMode, SysTestsMode, ClearMemoryFcn, ClearMemory2Fcn};
 
-	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language);
+	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language, bool preferSSM2protocolVariantISO14230 = false);
 	~ControlUnitDialog();
 	bool setup(ContentSelection csel, QStringList cmdline_args = QStringList());
 
@@ -57,6 +57,7 @@ protected:
 private:
 	QString _language;
 	AbstractDiagInterface *_diagInterface;
+	bool _preferSSM2protocolVariantISO14230;
 	SSMprotocol *_SSMPdev;
 	CUinfo_abstract *_infoWidget;
 	QWidget *_contentWidget;

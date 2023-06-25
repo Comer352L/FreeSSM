@@ -21,7 +21,7 @@
 
 
 
-Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_type *ifacetype, QString *ifacefilename, QString language) : QDialog(parent)
+Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_type *ifacetype, QString *ifacefilename, QString language, bool *preferSSM2protocolVariantISO14230) : QDialog(parent)
 {
 	_newinterfacetype = *ifacetype;
 	_r_interfacetype = ifacetype;
@@ -29,6 +29,8 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	_r_interfacefilename = ifacefilename;
 	_language_current = language;
 	_language_old = language;
+	_new_preferSSM2protocolVariantISO14230 = *preferSSM2protocolVariantISO14230;
+	_r_preferSSM2protocolVariantISO14230 = preferSSM2protocolVariantISO14230;
 	_confirmed = false;
 	// SET UP GUI:
 	setupUi(this);
@@ -103,6 +105,11 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 			*_r_interfacefilename = "";
 		}
 	}
+	// SSM2 protocol variant preference:
+	if (*_r_preferSSM2protocolVariantISO14230)
+		preferredSSM2protocol_checkBox->setCheckState(Qt::Checked);
+	else
+		preferredSSM2protocol_checkBox->setCheckState(Qt::Unchecked);
 	// CONNECT SIGNALS AND SLOTS:
 	connect( language_comboBox, SIGNAL( activated(int) ), this, SLOT( switchLanguage(int) ) );
 #if QT_VERSION < 0x060000 //
@@ -112,6 +119,7 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 #endif
 	connect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
 	connect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
+	connect( preferredSSM2protocol_checkBox, SIGNAL( stateChanged(int) ), this, SLOT( selectPreferredSSM2protocolVariant(int) ) );
 	connect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	connect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
 	connect( cancel_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
@@ -129,6 +137,7 @@ Preferences::~Preferences()
 #endif
 	disconnect( interfaceType_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceType(int) ) );
 	disconnect( interfaceName_comboBox, SIGNAL( activated(int) ), this, SLOT( selectInterfaceName(int) ) );
+	disconnect( preferredSSM2protocol_checkBox, SIGNAL( stateChanged(int) ), this, SLOT( selectPreferredSSM2protocolVariant(int) ) );
 	disconnect( testinterface_pushButton, SIGNAL( released() ), this, SLOT( interfacetest() ) );
 	disconnect( ok_pushButton, SIGNAL( released() ), this, SLOT( ok() ) );
 	disconnect( cancel_pushButton, SIGNAL( released() ), this, SLOT( close() ) );
@@ -249,6 +258,12 @@ void Preferences::selectInterfaceName(int index)
 		else
 			_newinterfacefilename = interfaceName_comboBox->currentText();
 	}
+}
+
+
+void Preferences::selectPreferredSSM2protocolVariant(int state)
+{
+	_new_preferSSM2protocolVariantISO14230 = state;
 }
 
 
@@ -463,6 +478,7 @@ void Preferences::ok()
 	// RETURN CURRENT INTERFACE-TYPE AND -NAME:
 	*_r_interfacetype = _newinterfacetype;
 	*_r_interfacefilename = _newinterfacefilename;
+	*_r_preferSSM2protocolVariantISO14230 = _new_preferSSM2protocolVariantISO14230;
 	// SAVE PREFERENCES TO FILE:
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
@@ -473,6 +489,7 @@ void Preferences::ok()
 		prefsfile.write(_language_current.toUtf8() + "\n");	// save language
 		prefsfile.write(stylename.toUtf8() + "\n");		// save preferred GUI-style
 		prefsfile.write(QString::number(static_cast<int>(_newinterfacetype)).toUtf8() + "\n"); // save interface type
+		prefsfile.write(QString::number(_new_preferSSM2protocolVariantISO14230).toUtf8() + "\n"); // save SSM2 protocol variant preference
 		prefsfile.close();
 	}
 	else

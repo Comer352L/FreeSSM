@@ -55,6 +55,8 @@ private:
 	QString _newinterfacefilename;
 	QString _language_old;
 	QString _language_current;
+	bool *_r_preferSSM2protocolVariantISO14230;
+	bool _new_preferSSM2protocolVariantISO14230;
 	QString _style_old;
 	int _lastlangindex;
 	bool _confirmed;
@@ -64,7 +66,7 @@ private:
 	void closeEvent(QCloseEvent *event);
 
 public:
-	Preferences(QMainWindow *parent = NULL, AbstractDiagInterface::interface_type *ifacetype = NULL, QString *ifacefilename = NULL, QString language = "");
+	Preferences(QMainWindow *parent = NULL, AbstractDiagInterface::interface_type *ifacetype = NULL, QString *ifacefilename = NULL, QString language = "", bool *preferSSM2protocolVariantISO14230 = NULL);
 	~Preferences();
 
 public slots:
@@ -72,6 +74,7 @@ public slots:
 	void switchGUIstyle(QString style);
 	void selectInterfaceType(int index);
 	void selectInterfaceName(int index);
+	void selectPreferredSSM2protocolVariant(int state);
 	void interfacetest();
 	void ok();
 

@@ -21,7 +21,8 @@
 #include "CUcontent_DCs_engine.h"
 
 
-EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language) : ControlUnitDialog(controlUnitName(), diagInterface, language)
+EngineDialog::EngineDialog(AbstractDiagInterface *diagInterface, QString language, bool prefereSSM2protocolVariantISO14230)
+	: ControlUnitDialog(controlUnitName(), diagInterface, language, prefereSSM2protocolVariantISO14230)
 {
 	// Add information widget:
 	setInfoWidget( new CUinfo_Engine() );

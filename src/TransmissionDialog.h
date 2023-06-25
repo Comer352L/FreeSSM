@@ -42,7 +42,7 @@ class TransmissionDialog : public ControlUnitDialog
 	Q_OBJECT
 
 public:
-	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language);
+	TransmissionDialog(AbstractDiagInterface *diagInterface, QString language, bool prefereSSM2protocolVariantISO14230 = false);
 
 private:
 	QString systemName();
