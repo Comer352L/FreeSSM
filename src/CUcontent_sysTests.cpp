@@ -79,11 +79,15 @@ bool CUcontent_sysTests::setup(SSMprotocol *SSMPdev)
 	}
 
 	// Enable/Disable GUI-elements:
-	actuatorlistTitle_label->setEnabled( AT_sup );
-	actuators_listWidget->setEnabled( AT_sup );
-	actuatorTest_arrow_label->setEnabled( AT_sup );
-	startActuatorTest_pushButton->setEnabled( AT_sup );
-	actuatorTestInfo_label->setEnabled( AT_sup );
+	if (_SSMPdev->ifceProtocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO15765)
+	// FIXME: enable ISO-15765 again, when SSMprotocol has been fixed
+	{
+		actuatorlistTitle_label->setEnabled( AT_sup );
+		actuators_listWidget->setEnabled( AT_sup );
+		actuatorTest_arrow_label->setEnabled( AT_sup );
+		startActuatorTest_pushButton->setEnabled( AT_sup );
+		actuatorTestInfo_label->setEnabled( AT_sup );
+	}
 	testImmoLine_pushButton->setEnabled(immotest_sup);
 	testImmoLineTitel_label->setEnabled(immotest_sup);
 	// Return result:
