@@ -88,6 +88,7 @@ private:
 	void setContentSelectionButtonEnabled(ContentSelection csel, bool enabled);
 	void setContentSelectionButtonChecked(ContentSelection csel, bool checked);
 	SSMprotocol::CUsetupResult_dt probeProtocol(CUtype CUtype);
+	bool handleActuatorTests(FSSM_ProgressDialog *statusmsgbox);
 	bool startMode(Mode mode);
 	bool startDCsMode();
 	bool startMBsSWsMode();

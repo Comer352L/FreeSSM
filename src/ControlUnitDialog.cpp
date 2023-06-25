@@ -296,29 +296,8 @@ bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 		goto commError;
 	if (supported)
 	{
-		// Update status info message box:
-		initstatusmsgbox.setLabelText(tr("Checking system status... Please wait !"));
-		initstatusmsgbox.setValue(70);
-		// Query test mode connector status:
-		bool testmode = false;
-		if (!_SSMPdev->isInTestMode(&testmode)) // if actuator tests are available, test mode is available, too...
+		if (!handleActuatorTests(&initstatusmsgbox))
 			goto commError;
-		if (testmode)
-		{
-			bool enginerunning = false;
-			// Check that engine is not running:
-			if (!_SSMPdev->isEngineRunning(&enginerunning)) // if actuator tests are available, MB "engine speed" is available, too...
-				goto commError;
-			if (!enginerunning)
-			{
-				// Update status info message box:
-				initstatusmsgbox.setLabelText(tr("Stopping actuators... Please wait !"));
-				initstatusmsgbox.setValue(85);
-				// Stop all actuator tests:
-				if (!_SSMPdev->stopAllActuators())
-					goto commError;
-			}
-		}
 	}
 	// ***** Enable content selection buttons *****:
 	if (contentSupported(ContentSelection::ClearMemoryFcn))
@@ -667,6 +646,59 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 	}
 #endif
 	return result;
+}
+
+
+bool ControlUnitDialog::handleActuatorTests(FSSM_ProgressDialog *statusmsgbox)
+{
+	CUtype ecu_type;
+	if (!_SSMPdev->CUtype(&ecu_type))
+		return false;
+	if (ecu_type == CUtype::Engine)	// NOTE: we restrict actuator test stopping to ECUs for now. Might be required / make sense for other ECUs, too...
+	{
+		bool supported = false;
+
+		// Update status info message box:
+		statusmsgbox->setLabelText(tr("Checking system status... Please wait !"));
+		statusmsgbox->setValue(70);
+
+		// Check test mode state (if provided by ECU):
+		if (!_SSMPdev->hasTestMode(&supported))
+			return false;
+		if (supported)
+		{
+			// Query test mode connector status:
+			bool testmode = false;
+			if (!_SSMPdev->isInTestMode(&testmode))
+				return false;
+			if (!testmode)
+				return true;
+		} // else: assume it is not relevant (otherwise the ECU would provide it)
+
+		// Check engine speed (if provided by ECU):
+		if (!_SSMPdev->hasMBengineSpeed(&supported))
+			return false;
+		if (supported)
+		{
+			bool enginerunning = false;
+			// Check that engine is not running:
+			if (!_SSMPdev->isEngineRunning(&enginerunning))
+				return false;
+			if (enginerunning)
+				return true;
+		} // else: assume it is not relevant (otherwise the ECU would provide it)
+
+		// Update status info message box:
+		statusmsgbox->setLabelText(tr("Stopping actuators... Please wait !"));
+		statusmsgbox->setValue(85);
+
+		// Stop all actuator tests:
+		if (!_SSMPdev->stopAllActuators())
+			return false;
+
+	} // else: FIXME/TODO: maybe we should/must stop actuator tests with other ECU types, too...
+
+	return true;
 }
 
 
