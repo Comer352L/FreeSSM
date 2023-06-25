@@ -61,7 +61,7 @@ SSMP2communication_core::Result SSMP2communication_core::GetCUdata(const unsigne
 			}
 		}
 	}
-	return Result::error;
+	return res;
 }
 
 
@@ -105,7 +105,7 @@ SSMP2communication_core::Result SSMP2communication_core::ReadDataBlock(const uns
 			return Result::success;
 		}
 	}
-	return Result::error;
+	return res;
 }
 
 
@@ -149,7 +149,7 @@ SSMP2communication_core::Result SSMP2communication_core::ReadMultipleDatabytes(c
 			return Result::success;
 		}
 	}
-	return Result::error;
+	return res;
 }
 
 
@@ -197,7 +197,7 @@ SSMP2communication_core::Result SSMP2communication_core::WriteDataBlock(const un
 			}
 		}
 	}
-	return Result::error;
+	return res;
 }
 
 
@@ -240,7 +240,7 @@ SSMP2communication_core::Result SSMP2communication_core::WriteDatabyte(const uns
 			}
 		}
 	}
-	return Result::error;
+	return res;
 }
 
 
