@@ -654,7 +654,9 @@ bool ControlUnitDialog::handleActuatorTests(FSSM_ProgressDialog *statusmsgbox)
 	CUtype ecu_type;
 	if (!_SSMPdev->CUtype(&ecu_type))
 		return false;
-	if (ecu_type == CUtype::Engine)	// NOTE: we restrict actuator test stopping to ECUs for now. Might be required / make sense for other ECUs, too...
+	if ((ecu_type == CUtype::Engine) && (_SSMPdev->ifceProtocolType() != AbstractDiagInterface::protocol_type::SSM2_ISO15765))
+	// NOTE: we restrict actuator test stopping to ECUs for now. Might be required / make sense for other ECUs, too...
+	// FIXME: enable ISO-15765 again, when SSMprotocol has been fixed
 	{
 		bool supported = false;
 
