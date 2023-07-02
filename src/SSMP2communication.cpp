@@ -21,6 +21,7 @@
 #include "SSMP2communication.h"
 
 #include <QTimer>
+#include <QElapsedTimer>
 
 
 SSMP2communication::SSMP2communication(AbstractDiagInterface *diagInterface, unsigned int cuaddress, unsigned char errRetries) : AbstractSSMcommunication(), SSMP2communication_core(diagInterface)
