@@ -20,7 +20,7 @@
 #include "SSMP1communication.h"
 
 #include <QTimer>
-
+#include <QElapsedTimer>
 
 SSMP1communication::SSMP1communication(AbstractDiagInterface *diagInterface, SSM1_CUtype_dt cu, unsigned char errRetries) : AbstractSSMcommunication(), SSMP1communication_procedures(diagInterface)
 {
