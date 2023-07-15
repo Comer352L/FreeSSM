@@ -335,12 +335,12 @@ SSMP2communication_core::Result SSMP2communication_core::SndRcvMessage(const uns
 	if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
 	{
 		// ignore SSM2_header[4] and checksum[1]
-		std::copy(msg_buffer.begin() + 4, msg_buffer.end() - 1, response->begin());
+		response->assign(msg_buffer.begin() + 4, msg_buffer.end() - 1);
 	}
 	else if (_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
 		// ignore CAN-ID[4]
-		std::copy(msg_buffer.begin() + 4, msg_buffer.end(), response->begin());
+		response->assign(msg_buffer.begin() + 4, msg_buffer.end());
 	}
 	return Result::success;
 }
