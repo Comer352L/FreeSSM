@@ -106,6 +106,8 @@ SSMP2communication_core::Result SSMP2communication_core::ReadDataBlock(const uns
 			data->assign(resp.begin() + 1, resp.end());
 			return Result::success;
 		}
+		else
+			return Result::error;
 	}
 	return res;
 }
