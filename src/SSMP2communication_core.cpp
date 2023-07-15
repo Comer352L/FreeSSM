@@ -247,6 +247,8 @@ SSMP2communication_core::Result SSMP2communication_core::WriteDatabyte(const uns
 				// NOTE: NECESSARY FOR SOME OPERATIONS, WHERE THE ACTUALLY WRITTEN DATA IS DIFFERENT TO THE DATA SENT OUT
 			}
 		}
+		else
+			return Result::error;
 	}
 	return res;
 }
