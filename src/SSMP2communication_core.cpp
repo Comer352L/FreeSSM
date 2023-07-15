@@ -56,7 +56,7 @@ SSMP2communication_core::Result SSMP2communication_core::GetCUdata(const unsigne
 			if (   ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) && (resp.at(0) == '\xFF'))
 			    || ((_diagInterface->protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO15765) && (resp.at(0) == '\xEA')))
 			{
-				std::copy(resp.begin() + 1, resp.end(), cuData->begin());
+				cuData->assign(resp.begin() + 1, resp.end());
 				return Result::success;
 			}
 		}
