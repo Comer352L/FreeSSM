@@ -149,7 +149,7 @@ SSMP2communication_core::Result SSMP2communication_core::ReadMultipleDatabytes(c
 		if ((resp.size() == (dataaddr.size() + 1)) && (resp.at(0) == '\xE8'))
 		{
 			// EXTRACT DATA:
-			std::copy(resp.begin() + 1, resp.end(), data->begin());
+			data->assign(resp.begin() + 1, resp.end());
 			return Result::success;
 		}
 	}
