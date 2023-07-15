@@ -103,7 +103,7 @@ SSMP2communication_core::Result SSMP2communication_core::ReadDataBlock(const uns
 		if ((resp.size() == (nrofbytes + 1)) && (resp.at(0) == '\xE0'))
 		{
 			// EXTRACT DATA:
-			std::copy(resp.begin() + 1, resp.end(), data->begin());
+			data->assign(resp.begin() + 1, resp.end());
 			return Result::success;
 		}
 	}
