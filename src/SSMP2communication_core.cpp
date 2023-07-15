@@ -197,7 +197,7 @@ SSMP2communication_core::Result SSMP2communication_core::WriteDataBlock(const un
 			else
 			{
 				// EXTRACT AND RETURN WRITTEN DATA:
-				std::copy(resp.begin() + 1, resp.end(), datawritten->begin());
+				datawritten->assign(resp.begin() + 1, resp.end());
 				return Result::success;
 				// NOTE: NECESSARY FOR SOME OPERATIONS, WHERE THE ACTUALLY WRITTEN DATA IS DIFFERENT TO THE DATA SENT OUT
 			}
