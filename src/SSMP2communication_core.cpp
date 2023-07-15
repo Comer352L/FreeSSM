@@ -60,6 +60,8 @@ SSMP2communication_core::Result SSMP2communication_core::GetCUdata(const unsigne
 				return Result::success;
 			}
 		}
+		else
+			return Result::error;
 	}
 	return res;
 }
