@@ -636,10 +636,11 @@ void SSMP2communication::run()
 			// Send data to main thread:
 			if (permanent && report_recdata)
 			{
-				// GET ELAPSED TIME:
+				// Get elapsed time:
 				duration_ms = timer.restart();
-				// SEND DATA TO MAIN THREAD:
+				// Send data to main thread and clear receive buffer:
 				emit receivedData(rec_buf, duration_ms);
+				rec_buf.clear();
 				// Wait for the desired delay time:
 				if (delay > 0)
 					msleep(delay);
