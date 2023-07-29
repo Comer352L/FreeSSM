@@ -106,13 +106,9 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 		{
 			interfaceName_comboBox->setCurrentIndex(0);
 			selectInterfaceName(0);
-			*_r_interfacefilename = _newinterfacefilename;
 		}
 		else
-		{
 			_newinterfacefilename = "";
-			*_r_interfacefilename = "";
-		}
 	}
 	// SSM2 protocol variant preference:
 	if (*_r_preferSSM2protocolVariantISO14230)
