@@ -23,9 +23,15 @@
 
 Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_type *ifacetype, QString *ifacefilename, QString language, bool *preferSSM2protocolVariantISO14230) : QDialog(parent)
 {
-	_newinterfacetype = *ifacetype;
+	if (ifacetype == NULL)
+		_newinterfacetype = AbstractDiagInterface::interface_type::serialPassThrough;
+	else
+		_newinterfacetype = *ifacetype;
 	_r_interfacetype = ifacetype;
-	_newinterfacefilename = *ifacefilename;
+	if (ifacefilename == NULL)
+		_newinterfacefilename = "";
+	else
+		_newinterfacefilename = *ifacefilename;
 	_r_interfacefilename = ifacefilename;
 	_language_current = language;
 	_language_old = language;
@@ -72,19 +78,22 @@ Preferences::Preferences(QMainWindow *parent, AbstractDiagInterface::interface_t
 	{
 		interfaceType_comboBox->setCurrentIndex(1);
 		selectInterfaceType(1); // NOTE: fills _J2534libraryPaths, changes _newinterfacefilename
-		if_name_index = _J2534libraryPaths.indexOf(*_r_interfacefilename);
+		if (_r_interfacefilename != NULL)
+			if_name_index = _J2534libraryPaths.indexOf(*_r_interfacefilename);
 	}
-	else if (_newinterfacetype == AbstractDiagInterface::interface_type::ATcommandControlled) // AT-comand controlled (e.g. ELM, AGV, Diamex)
+	else if (_newinterfacetype == AbstractDiagInterface::interface_type::ATcommandControlled) // AT-command controlled (e.g. ELM, AGV, Diamex)
 	{
 		interfaceType_comboBox->setCurrentIndex(2);
 		selectInterfaceType(2);
-		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
+		if (_r_interfacefilename != NULL)
+			if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
 	}
 	else	// Serial Pass-Through
 	{
 		interfaceType_comboBox->setCurrentIndex(0);
 		selectInterfaceType(0);
-		if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
+		if (_r_interfacefilename != NULL)
+			if_name_index = interfaceName_comboBox->findText(*_r_interfacefilename);
 	}
 	if (if_name_index >= 0)
 	{
@@ -219,7 +228,7 @@ void Preferences::selectInterfaceType(int index)
 			}
 		}
 	}
-	else if ((index == 0) || (index == 2))	// Serial Pass-Through or AT-comand controlled (e.g. ELM, AGV, Diamex)
+	else if ((index == 0) || (index == 2))	// Serial Pass-Through or AT-command controlled (e.g. ELM, AGV, Diamex)
 	{
 		if (index == 2)
 			_newinterfacetype = AbstractDiagInterface::interface_type::ATcommandControlled;
@@ -476,9 +485,12 @@ void Preferences::interfacetest()
 void Preferences::ok()
 {
 	// RETURN CURRENT INTERFACE-TYPE AND -NAME:
-	*_r_interfacetype = _newinterfacetype;
-	*_r_interfacefilename = _newinterfacefilename;
-	*_r_preferSSM2protocolVariantISO14230 = _new_preferSSM2protocolVariantISO14230;
+	if (_r_interfacetype != NULL)
+		*_r_interfacetype = _newinterfacetype;
+	if (_r_interfacefilename != NULL)
+		*_r_interfacefilename = _newinterfacefilename;
+	if (_r_preferSSM2protocolVariantISO14230 != NULL)
+		*_r_preferSSM2protocolVariantISO14230 = _new_preferSSM2protocolVariantISO14230;
 	// SAVE PREFERENCES TO FILE:
 	QFile prefsfile(QDir::homePath() + "/FreeSSM.prefs");
 	if (prefsfile.open(QIODevice::WriteOnly | QIODevice::Text))	// try to open/built preferences file
