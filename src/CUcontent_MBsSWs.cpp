@@ -1036,10 +1036,10 @@ void CUcontent_MBsSWs::moveUpMBsSWsOnTheTable()
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((nrofSelRows < 1) || (selectedMBSWIndexes.at(0) < 1) || (1 + selectedMBSWIndexes.at(0) > _MBSWmetaList.size()))
 		return;	// Cancel, if moving up is not possible
-	if ((selectedMBSWIndexes.at(0) + nrofSelRows) > _MBSWmetaList.size()) // if selection exceed the end of the list
+	if ((selectedMBSWIndexes.at(0) + nrofSelRows) > _MBSWmetaList.size()) // if selection exceeds the end of the list
 		nrofSelRows = _MBSWmetaList.size() - selectedMBSWIndexes.at(0);
 	// NOTE: IN FACT WE ARE MOVING 1 ROW DOWN...
-	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
+	// GET START AND TARGET INDEX OF THE ROW THAT WILL BE MOVED:
 	rowToMoveDownIndex = selectedMBSWIndexes.at(0) - 1;
 	rowToMoveDownTargetIndex = selectedMBSWIndexes.at(nrofSelRows-1);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
@@ -1071,9 +1071,9 @@ void CUcontent_MBsSWs::moveDownMBsSWsOnTheTable()
 	const std::vector<unsigned int> selectedMBSWIndexes = _valuesTableView->getSelectedTableWidgetRows();
 	// CHECK AND CORRECT SELECTED ROWS:
 	if ((selectedMBSWIndexes.size() < 1) | (selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1 >= _MBSWmetaList.size()))
-		return;	// Cancle if moving is not possible
+		return;	// Cancel, if moving is not possible
 	// NOTE: IN FACT WE ARE MOVING 1 ROW UP...
-	// GET START AND TERGET INDEX OF THE ROW THAT WILL BE MOVED:
+	// GET START AND TARGET INDEX OF THE ROW THAT WILL BE MOVED:
 	rowToMoveUpIndex = selectedMBSWIndexes.at(selectedMBSWIndexes.size()-1)+1;
 	rowToMoveUpTargetIndex = selectedMBSWIndexes.at(0);
 	// MODIFY TABLE-POSITION-INDEXES FOR OUTPUT:
