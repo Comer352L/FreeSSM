@@ -20,11 +20,9 @@
 #include "SSMFlagbyteDefinitions_de.h"
 
 
-SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
-{
-
-	// Messwertbloecke:
-	_MB_defs_de
+// Messwertblöcke:
+const QStringList SSMFlagbyteDefinitions_de::_MB_defs_de =
+	QStringList()
 	<< "1;1;3;00000F;00000E;Motordrehzahl;U/Min;/4;0"
 	<< "1;2;1;00000D;;Absoluter Saugrohrdruck;kPa;*1;0"
 	<< "1;3;1;00000C;;Gemischlernwert 2;%;-128/128*100;1"
@@ -250,8 +248,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "69;8;1;00024F;;Endgültiger Lernwert 5-3 für Mikro-Einspritzmenge;ms;-128/200;3";
 
 
-	// Schalter:
-	_SW_defs_de
+// Schalter:
+const QStringList SSMFlagbyteDefinitions_de::_SW_defs_de =
+	QStringList()
 	<< "12;1;1;000061;Klemme ''Speicher Löschen'';Aus/Ein"
 	<< "12;2;1;000061;Liefermodus-Stecker (Testmodus-Stecker);Aus/Ein"
 	<< "12;3;1;000061;Flag ''D-Prüfung erforderlich'';Aus/Ein"
@@ -426,8 +425,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "62;8;1;0001CE;Abgasrückführung (AGR) Lernprozess;Nicht Abgeschlossen/Abgeschlossen";
 
 
-	// SUBARU-Fehlercodes:
-	_DTC_SUBARU_defs_de
+// SUBARU-Fehlercodes:
+const QStringList SSMFlagbyteDefinitions_de::_DTC_SUBARU_defs_de =
+	QStringList()
 	<< "00008E;0000A4;1;24;Leerlaufregelungssystem Fehlfunktion"
 	<< "00008E;0000A4;2;23;Luftmassenmesser"
 	<< "00008E;0000A4;3;22;Klopfsensor"
@@ -509,8 +509,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "000097;0000AD;8;78;Tiptronic-Magnetventilsystem";
 
 
-	// OBD-Fehlercodes:
-	_DTC_OBD_defs_de
+// OBD-Fehlercodes:
+const QStringList SSMFlagbyteDefinitions_de::_DTC_OBD_defs_de =
+	QStringList()
 	<< "00008E;0000AE;1;P0335;Kurbelwellensensor A Schaltkreis Fehlfunktion"
 	<< "00008E;0000AE;3;P0336;Kurbelwellensensor A Bereich/Funktion Problem"
 	<< "00008E;0000AE;4;P0341;Bereich/Leistung von Nockenwellenpositionssensor A"
@@ -1052,8 +1053,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "000266;00026B;8;P1469;Dieselpartikelfilter (DPF) Notlaufmodus";
 
 
-	// Abbruchcodes der integrierten Geschwindigkeits-Regelanlage:
-	_CC_defs_de
+// Abbruchcodes der integrierten Geschwindigkeits-Regelanlage:
+const QStringList SSMFlagbyteDefinitions_de::_CC_defs_de =
+	QStringList()
 	<< "000133;000137;1;22;Ungewöhnliche Änderung der Fahrzeuggeschwindigkeit"
 	<< "000133;000137;2;21;Schalterstörung beim Einschalten der Zündung"
 	<< "000133;000137;3;16;Zündschalter"
@@ -1088,8 +1090,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "000136;00013A;8;61;Bremsschalter-Fehlfunktion";
 
 
-	// Aktuatoren:
-	_actuator_defs_de
+// Aktuatoren:
+const QStringList SSMFlagbyteDefinitions_de::_actuator_defs_de =
+	QStringList()
 	<< "29;7;000089;8;Kraftstoffpumpenrelais"
 	<< "29;7;000089;7;Tankentlüftung (CPC) Steuerventil"
 	<< "29;7;000089;6;Kühlerlüfterrelais"
@@ -1113,8 +1116,9 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "42;2;00018D;4;Kraftstoffdruck-Schaltmagnetventil";
 
 
-	// Einstellwerte:
-	_adjustment_defs_de
+// Einstellwerte:
+const QStringList SSMFlagbyteDefinitions_de::_adjustment_defs_de =
+	QStringList()
 	<< "26-5;0;6F;;Korrektur des Zündzeitpunkts;Grad;0;5;0;*-1;0"
 	<< "26-4;0;70;;Korrektur der Leerlaufdrehzahl (Klima aus);U/Min;124;140;128;-128*25;0"
 	<< "26-3;0;71;;Korrektur der Leerlaufdrehzahl (Klima ein);U/Min;124;140;128;-128*25;0"
@@ -1136,8 +1140,6 @@ SSMFlagbyteDefinitions_de::SSMFlagbyteDefinitions_de()
 	<< "27-5;1;81;;Bergabfahrt-Regelung;;0;1;0;0=Zugriff erlaubt,1=Kein Zugriff;"
 	<< "27-4;1;82;;Zentral-Differential;%;50;150;100;*1;0"
 	<< "27-3;1;171;170;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0";
-
-}
 
 
 const QStringList SSMFlagbyteDefinitions_de::MBrawDefs()
