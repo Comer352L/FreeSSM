@@ -29,16 +29,15 @@ class SSMFlagbyteDefinitions_en
 {
 
 private:
-	QStringList _MB_defs_en;
-	QStringList _SW_defs_en;
-	QStringList _DTC_SUBARU_defs_en;
-	QStringList _DTC_OBD_defs_en;
-	QStringList _CC_defs_en;
-	QStringList _actuator_defs_en;
-	QStringList _adjustment_defs_en;
+	static const QStringList _MB_defs_en;
+	static const QStringList _SW_defs_en;
+	static const QStringList _DTC_SUBARU_defs_en;
+	static const QStringList _DTC_OBD_defs_en;
+	static const QStringList _CC_defs_en;
+	static const QStringList _actuator_defs_en;
+	static const QStringList _adjustment_defs_en;
 
 public:
-	SSMFlagbyteDefinitions_en();
 	const QStringList MBrawDefs();
 	const QStringList SWrawDefs();
 	const QStringList SUBDTCrawDefs();

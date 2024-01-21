@@ -20,11 +20,9 @@
 #include "SSMFlagbyteDefinitions_en.h"
 
 
-SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
-{
-
-	// Measuring Blocks (data):
-	_MB_defs_en
+// Measuring Blocks (data):
+const QStringList SSMFlagbyteDefinitions_en::_MB_defs_en =
+	QStringList()
 	<< "1;1;3;00000F;00000E;Engine Speed;rpm;/4;0"
 	<< "1;2;1;00000D;;Manifold Absolute Pressure;kPa;*1;0"
 	<< "1;3;1;00000C;;Air/Fuel Learning #2;%;-128/128*100;1"
@@ -250,8 +248,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "69;8;1;00024F;;Micro-Quantity-Injection Final Learning Value 5-3;ms;-128/200;3";
 
 
-	// Switches:
-	_SW_defs_en
+// Switches:
+const QStringList SSMFlagbyteDefinitions_en::_SW_defs_en =
+	QStringList()
 	<< "12;1;1;000061;Clear Memory Terminal;Off/On"
 	<< "12;2;1;000061;Delivery Mode (Test Mode) Connector;Off/On"
 	<< "12;3;1;000061;D-Check Require Flag;Off/On"
@@ -426,8 +425,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "62;8;1;0001CE;Exhaust Gas Recirculation (EGR) Learning;Not Completed/Completed";
 
 
-	// SUBARU-Trouble Codes:
-	_DTC_SUBARU_defs_en
+// SUBARU-Trouble Codes:
+const QStringList SSMFlagbyteDefinitions_en::_DTC_SUBARU_defs_en =
+	QStringList()
 	<< "00008E;0000A4;1;24;Idle Control System Malfunction"
 	<< "00008E;0000A4;2;23;Mass Air Flow Sensor"
 	<< "00008E;0000A4;3;22;Knock Sensor"
@@ -509,8 +509,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "000097;0000AD;8;78;Tiptronic Solenoid Valve System";
 
 
-	// OBD Trouble Codes:
-	_DTC_OBD_defs_en
+// OBD Trouble Codes:
+const QStringList SSMFlagbyteDefinitions_en::_DTC_OBD_defs_en =
+	QStringList()
 	<< "00008E;0000AE;1;P0335;Crankshaft Position Sensor A Circuit Malfunction"
 	<< "00008E;0000AE;3;P0336;Crankshaft Position Sensor A Range/Performance Problem"
 	<< "00008E;0000AE;4;P0341;Camshaft Position Sensor A Circuit Range/Performance"
@@ -1052,8 +1053,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "000266;00026B;8;P1469;Diesel Particulate Filter (DPF) Limp-Home Mode";
 
 
-	// Cancel codes of the integrated Cruise Control:
-	_CC_defs_en
+// Cancel codes of the integrated Cruise Control:
+const QStringList SSMFlagbyteDefinitions_en::_CC_defs_en =
+	QStringList()
 	<< "000133;000137;1;22;Abnormality of Change in Vehicle Speed"
 	<< "000133;000137;2;21;Abnormality of Switches when Ignition Switch ON"
 	<< "000133;000137;3;16;Ignition Switch"
@@ -1088,8 +1090,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "000136;00013A;8;61;Brake Switch Failure";
 
 
-	// Actuators:
-	_actuator_defs_en
+// Actuators:
+const QStringList SSMFlagbyteDefinitions_en::_actuator_defs_en =
+	QStringList()
 	<< "29;7;000089;8;Fuel Pump Relay"
 	<< "29;7;000089;7;Canister Purge Control (CPC) Solenoid Valve"
 	<< "29;7;000089;6;Radiator Fan Relay"
@@ -1113,8 +1116,9 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "42;2;00018D;4;Fuel Pressure Switching Solenoid";
 
 
-	// Adjustments:
-	_adjustment_defs_en
+// Adjustments:
+const QStringList SSMFlagbyteDefinitions_en::_adjustment_defs_en =
+	QStringList()
 	<< "26-5;0;6F;;Ignition Timing Correction;deg;0;5;0;*-1;0"
 	<< "26-4;0;70;;Idle Speed Correction (AC off);rpm;124;140;128;-128*25;0"
 	<< "26-3;0;71;;Idle Speed Correction (AC on);rpm;124;140;128;-128*25;0"
@@ -1136,8 +1140,6 @@ SSMFlagbyteDefinitions_en::SSMFlagbyteDefinitions_en()
 	<< "27-5;1;81;;Slope Control;;0;1;0;0=Allowance,1=No Access;"
 	<< "27-4;1;82;;Center Differential;%;50;150;100;*1;0"
 	<< "27-3;1;171;170;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0";
-
-}
 
 
 const QStringList SSMFlagbyteDefinitions_en::MBrawDefs()
