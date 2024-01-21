@@ -21,11 +21,9 @@
 #include "SSMFlagbyteDefinitions_tr.h"
 
 
-SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
-{
-
-	// Measuring Blocks (data):
-	_MB_defs_tr
+// Measuring Blocks (data):
+const QStringList SSMFlagbyteDefinitions_tr::_MB_defs_tr =
+	QStringList()
 	<< "1;1;3;00000F;00000E;Motor Hızı;rpm;/4;0"
 	<< "1;2;1;00000D;;Manifold Mutlak Basıncı;kPa;*1;0"
 	<< "1;3;1;00000C;;Hava/Yakıt Öğrenme #2;%;-128/128*100;1"
@@ -251,8 +249,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "69;8;1;00024F;;Mikro-Miktar Enjeksiyon Son Öğrenme Değeri 5-3;ms;-128/200;3";
 
 
-	// Switches:
-	_SW_defs_tr
+// Switches:
+const QStringList SSMFlagbyteDefinitions_tr::_SW_defs_tr =
+	QStringList()
 	<< "12;1;1;000061;Bellek Terminalini Temizle;Kapalı/Açık"
 	<< "12;2;1;000061;Dağıtım Modu (Test Modu) Bağlantısı;Kapalı/Açık"
 	<< "12;3;1;000061;D-Kontrol Gerekli Etiketi;Kapalı/Açık"
@@ -427,8 +426,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "62;8;1;0001CE;Egzoz Gazı Devridaimi (EGR) Öğrenmesi;Tamamlanmadı/Tamamlandı";
 
 
-	// SUBARU-Trouble Codes:
-	_DTC_SUBARU_defs_tr
+// SUBARU-Trouble Codes:
+const QStringList SSMFlagbyteDefinitions_tr::_DTC_SUBARU_defs_tr =
+	QStringList()
 	<< "00008E;0000A4;1;24;Rölanti Kontrol Sistemi Arızası"
 	<< "00008E;0000A4;2;23;Kütle Hava Akış Sensörü"
 	<< "00008E;0000A4;3;22;Vuruntu Sensörü"
@@ -510,8 +510,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "000097;0000AD;8;78;Tiptronik Solenoid Valf Sistemi";
 
 
-	// OBD Trouble Codes:
-	_DTC_OBD_defs_tr
+// OBD Trouble Codes:
+const QStringList SSMFlagbyteDefinitions_tr::_DTC_OBD_defs_tr =
+	QStringList()
 	<< "00008E;0000AE;1;P0335;Krank Mili Konum Sensörü A Devresi Arızası"
 	<< "00008E;0000AE;3;P0336;Krank Mili Konum Sensörü A Aralık/Performans Sorunu"
 	<< "00008E;0000AE;4;P0341;Eksantrik (KAM) Mili Konum Sensörü A Devre Aralık/Performans"
@@ -1053,8 +1054,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "000266;00026B;8;P1469;Dizel Partikül Filtresi (DPF) Limp-Home Modu";
 
 
-	// Cancel codes of the integrated Cruise Control:
-	_CC_defs_tr
+// Cancel codes of the integrated Cruise Control:
+const QStringList SSMFlagbyteDefinitions_tr::_CC_defs_tr =
+	QStringList()
 	<< "000133;000137;1;22;Araç Hızındaki Değişim Anormalliği"
 	<< "000133;000137;2;21;Kontak AÇIK Konumdayken Düğmelerin Anormalliği"
 	<< "000133;000137;3;16;Kontak Düğmesi"
@@ -1089,8 +1091,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "000136;00013A;8;61;Fren Düğmesi Arızası";
 
 
-	// Actuators:
-	_actuator_defs_tr
+// Actuators:
+const QStringList SSMFlagbyteDefinitions_tr::_actuator_defs_tr =
+	QStringList()
 	<< "29;7;000089;8;Yakıt Pompası Rölesi"
 	<< "29;7;000089;7;Kanister Boşaltma Kontrolü (CPC) Solenoid Valfi"
 	<< "29;7;000089;6;Radyatör Fanı Rölesi"
@@ -1114,8 +1117,9 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "42;2;00018D;4;Yakıt Basınç Değişimi Solenoidi";
 
 
-	// Adjustments:
-	_adjustment_defs_tr
+// Adjustments:
+const QStringList SSMFlagbyteDefinitions_tr::_adjustment_defs_tr =
+	QStringList()
 	<< "26-5;0;6F;;Ateşleme Zamanlaması Düzeltmesi;deg;0;5;0;*-1;0"
 	<< "26-4;0;70;;Rölanti Hızı Düzeltme (Klima Kapalı);rpm;124;140;128;-128*25;0"
 	<< "26-3;0;71;;Rölanti Hızı Düzeltme (Klima Açık);rpm;124;140;128;-128*25;0"
@@ -1137,8 +1141,6 @@ SSMFlagbyteDefinitions_tr::SSMFlagbyteDefinitions_tr()
 	<< "27-5;1;81;;Meyil Kontrolü;;0;1;0;0=Allowance,1=No Access;"
 	<< "27-4;1;82;;Merkezi Diferansiyel;%;50;150;100;*1;0"
 	<< "27-3;1;171;170;AWD Kavraması Tork Düzeltmesi;Nm;63535;2000;0;s16/50;0";
-
-}
 
 
 const QStringList SSMFlagbyteDefinitions_tr::MBrawDefs()

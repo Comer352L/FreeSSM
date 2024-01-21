@@ -30,16 +30,15 @@ class SSMFlagbyteDefinitions_tr
 {
 
 private:
-	QStringList _MB_defs_tr;
-	QStringList _SW_defs_tr;
-	QStringList _DTC_SUBARU_defs_tr;
-	QStringList _DTC_OBD_defs_tr;
-	QStringList _CC_defs_tr;
-	QStringList _actuator_defs_tr;
-	QStringList _adjustment_defs_tr;
+	static const QStringList _MB_defs_tr;
+	static const QStringList _SW_defs_tr;
+	static const QStringList _DTC_SUBARU_defs_tr;
+	static const QStringList _DTC_OBD_defs_tr;
+	static const QStringList _CC_defs_tr;
+	static const QStringList _actuator_defs_tr;
+	static const QStringList _adjustment_defs_tr;
 
 public:
-	SSMFlagbyteDefinitions_tr();
 	const QStringList MBrawDefs();
 	const QStringList SWrawDefs();
 	const QStringList SUBDTCrawDefs();
