@@ -114,6 +114,7 @@ public:
 	unsigned int rawMax;
 	unsigned int rawDefault;
 	char precision;
+	bool permanent;
 };
 
 

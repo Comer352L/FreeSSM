@@ -1119,27 +1119,27 @@ const QStringList SSMFlagbyteDefinitions_en::_actuator_defs_en =
 // Adjustments:
 const QStringList SSMFlagbyteDefinitions_en::_adjustment_defs_en =
 	QStringList()
-	<< "26-5;0;6F;;Ignition Timing Correction;deg;0;5;0;*-1;0"
-	<< "26-4;0;70;;Idle Speed Correction (AC off);rpm;124;140;128;-128*25;0"
-	<< "26-3;0;71;;Idle Speed Correction (AC on);rpm;124;140;128;-128*25;0"
-	<< "26-1;1;72;;Line Pressure Correction;%;90;110;100;-100;0"
-	<< "A11020;1;73;;Gear Shift Line Pressure Correction - 1st to 2nd;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;74;;Gear Shift Line Pressure Correction - 2nd to 3rd;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;75;;Gear Shift Line Pressure Correction - 3rd to 4th;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;76;;Gear Shift Line Pressure Correction - 4th to 3rd;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;77;;Gear Shift Line Pressure Correction - 4th to 2nd;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;78;;Gear Shift Line Pressure Correction - 3rd to 2nd;kgf;90;110;100;-100/50;2"
-	<< "27-8;1;79;;2-4-Brake Pressure 1 Correction;%;90;110;100;-100;0"
-	<< "27-7;1;7A;;2-4-Brake Pressure 2 Correction - 1st to 2nd;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7B;;2-4-Brake Pressure 2 Correction - 2nd to 3rd;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7C;;2-4-Brake Pressure 2 Correction - 3rd to 4th;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7D;;2-4-Brake Pressure 2 Correction - 4th to 3rd;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7E;;2-4-Brake Pressure 2 Correction - 4th to 2nd;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7F;;2-4-Brake Pressure 2 Correction - 3rd to 2nd;kgf;90;110;100;-100/50;2"
-	<< "27-6;1;80;;Correction of Transfer Duty Ratio;%;90;110;100;-100;0"
-	<< "27-5;1;81;;Slope Control;;0;1;0;0=Allowance,1=No Access;"
-	<< "27-4;1;82;;Center Differential;%;50;150;100;*1;0"
-	<< "27-3;1;171;170;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0";
+	<< "26-5;0;6F;;0;Ignition Timing Correction;deg;0;5;0;*-1;0"
+	<< "26-4;0;70;;0;Idle Speed Correction (AC off);rpm;124;140;128;-128*25;0"
+	<< "26-3;0;71;;0;Idle Speed Correction (AC on);rpm;124;140;128;-128*25;0"
+	<< "26-1;1;72;;0;Line Pressure Correction;%;90;110;100;-100;0"
+	<< "A11020;1;73;;0;Gear Shift Line Pressure Correction - 1st to 2nd;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;74;;0;Gear Shift Line Pressure Correction - 2nd to 3rd;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;75;;0;Gear Shift Line Pressure Correction - 3rd to 4th;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;76;;0;Gear Shift Line Pressure Correction - 4th to 3rd;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;77;;0;Gear Shift Line Pressure Correction - 4th to 2nd;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;78;;0;Gear Shift Line Pressure Correction - 3rd to 2nd;kgf;90;110;100;-100/50;2"
+	<< "27-8;1;79;;0;2-4-Brake Pressure 1 Correction;%;90;110;100;-100;0"
+	<< "27-7;1;7A;;0;2-4-Brake Pressure 2 Correction - 1st to 2nd;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7B;;0;2-4-Brake Pressure 2 Correction - 2nd to 3rd;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7C;;0;2-4-Brake Pressure 2 Correction - 3rd to 4th;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7D;;0;2-4-Brake Pressure 2 Correction - 4th to 3rd;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7E;;0;2-4-Brake Pressure 2 Correction - 4th to 2nd;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7F;;0;2-4-Brake Pressure 2 Correction - 3rd to 2nd;kgf;90;110;100;-100/50;2"
+	<< "27-6;1;80;;0;Correction of Transfer Duty Ratio;%;90;110;100;-100;0"
+	<< "27-5;1;81;;0;Slope Control;;0;1;0;0=Allowance,1=No Access;"
+	<< "27-4;1;82;;0;Center Differential;%;50;150;100;*1;0"
+	<< "27-3;1;171;170;0;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0";
 
 
 const QStringList SSMFlagbyteDefinitions_en::MBrawDefs()

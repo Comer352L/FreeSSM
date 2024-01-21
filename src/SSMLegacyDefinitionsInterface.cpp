@@ -409,6 +409,7 @@ bool SSMLegacyDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt> 
 			continue;
 		adj.addrLow = addr;
 		adj.addrHigh = MEMORY_ADDRESS_NONE;
+		adj.permanent = false;
 		// --- Get common data ---
 		// Find ADJ data:
 		XMLElement *ADJdata_element = NULL;

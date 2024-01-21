@@ -1119,27 +1119,27 @@ const QStringList SSMFlagbyteDefinitions_de::_actuator_defs_de =
 // Einstellwerte:
 const QStringList SSMFlagbyteDefinitions_de::_adjustment_defs_de =
 	QStringList()
-	<< "26-5;0;6F;;Korrektur des Zündzeitpunkts;Grad;0;5;0;*-1;0"
-	<< "26-4;0;70;;Korrektur der Leerlaufdrehzahl (Klima aus);U/Min;124;140;128;-128*25;0"
-	<< "26-3;0;71;;Korrektur der Leerlaufdrehzahl (Klima ein);U/Min;124;140;128;-128*25;0"
-	<< "26-1;1;72;;Leitungsdruck (Hauptdruck);%;90;110;100;-100;0"
-	<< "A11020;1;73;;Leitungs-Schaltdruck-Korrektur - 1ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;74;;Leitungs-Schaltdruck-Korrektur - 2ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;75;;Leitungs-Schaltdruck-Korrektur - 3ter nach 4ter Gang;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;76;;Leitungs-Schaltdruck-Korrektur - 4ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;77;;Leitungs-Schaltdruck-Korrektur - 4ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;78;;Leitungs-Schaltdruck-Korrektur - 3ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-8;1;79;;Korrektur 2-4-Bremse Druck 1;%;90;110;100;-100;0"
-	<< "27-7;1;7A;;Korrektur 2-4-Bremse Druck 2 - 1ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7B;;Korrektur 2-4-Bremse Druck 2 - 2ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7C;;Korrektur 2-4-Bremse Druck 2 - 3ter nach 4ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7D;;Korrektur 2-4-Bremse Druck 2 - 4ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7E;;Korrektur 2-4-Bremse Druck 2 - 4ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7F;;Korrektur 2-4-Bremse Druck 2 - 3ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
-	<< "27-6;1;80;;Korrektur des Allrad-Lastverhältnisses;%;90;110;100;-100;0"
-	<< "27-5;1;81;;Bergabfahrt-Regelung;;0;1;0;0=Zugriff erlaubt,1=Kein Zugriff;"
-	<< "27-4;1;82;;Zentral-Differential;%;50;150;100;*1;0"
-	<< "27-3;1;171;170;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0";
+	<< "26-5;0;6F;;0;Korrektur des Zündzeitpunkts;Grad;0;5;0;*-1;0"
+	<< "26-4;0;70;;0;Korrektur der Leerlaufdrehzahl (Klima aus);U/Min;124;140;128;-128*25;0"
+	<< "26-3;0;71;;0;Korrektur der Leerlaufdrehzahl (Klima ein);U/Min;124;140;128;-128*25;0"
+	<< "26-1;1;72;;0;Leitungsdruck (Hauptdruck);%;90;110;100;-100;0"
+	<< "A11020;1;73;;0;Leitungs-Schaltdruck-Korrektur - 1ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;74;;0;Leitungs-Schaltdruck-Korrektur - 2ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;75;;0;Leitungs-Schaltdruck-Korrektur - 3ter nach 4ter Gang;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;76;;0;Leitungs-Schaltdruck-Korrektur - 4ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;77;;0;Leitungs-Schaltdruck-Korrektur - 4ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;78;;0;Leitungs-Schaltdruck-Korrektur - 3ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-8;1;79;;0;Korrektur 2-4-Bremse Druck 1;%;90;110;100;-100;0"
+	<< "27-7;1;7A;;0;Korrektur 2-4-Bremse Druck 2 - 1ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7B;;0;Korrektur 2-4-Bremse Druck 2 - 2ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7C;;0;Korrektur 2-4-Bremse Druck 2 - 3ter nach 4ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7D;;0;Korrektur 2-4-Bremse Druck 2 - 4ter nach 3ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7E;;0;Korrektur 2-4-Bremse Druck 2 - 4ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7F;;0;Korrektur 2-4-Bremse Druck 2 - 3ter nach 2ter Gang;kgf;90;110;100;-100/50;2"
+	<< "27-6;1;80;;0;Korrektur des Allrad-Lastverhältnisses;%;90;110;100;-100;0"
+	<< "27-5;1;81;;0;Bergabfahrt-Regelung;;0;1;0;0=Zugriff erlaubt,1=Kein Zugriff;"
+	<< "27-4;1;82;;0;Zentral-Differential;%;50;150;100;*1;0"
+	<< "27-3;1;171;170;0;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0";
 
 
 const QStringList SSMFlagbyteDefinitions_de::MBrawDefs()

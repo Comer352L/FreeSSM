@@ -1120,27 +1120,27 @@ const QStringList SSMFlagbyteDefinitions_tr::_actuator_defs_tr =
 // Adjustments:
 const QStringList SSMFlagbyteDefinitions_tr::_adjustment_defs_tr =
 	QStringList()
-	<< "26-5;0;6F;;Ateşleme Zamanlaması Düzeltmesi;deg;0;5;0;*-1;0"
-	<< "26-4;0;70;;Rölanti Hızı Düzeltme (Klima Kapalı);rpm;124;140;128;-128*25;0"
-	<< "26-3;0;71;;Rölanti Hızı Düzeltme (Klima Açık);rpm;124;140;128;-128*25;0"
-	<< "26-1;1;72;;Hat Basıncı Düzeltmesi;%;90;110;100;-100;0"
-	<< "A11020;1;73;;Vites Değiştirme Hattı Basıncı Düzeltme - 1. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;74;;Vites Değiştirme Hattı Basıncı Düzeltme - 2. ila 3.;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;75;;Vites Değiştirme Hattı Basıncı Düzeltme - 3. ila 4.;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;76;;Vites Değiştirme Hattı Basıncı Düzeltme - 4. ila 3.;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;77;;Vites Değiştirme Hattı Basıncı Düzeltme - 4. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "A11020;1;78;;Vites Değiştirme Hattı Basıncı Düzeltme - 3. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "27-8;1;79;;2-4-Fren Basıncı 1 Düzeltme;%;90;110;100;-100;0"
-	<< "27-7;1;7A;;2-4-Fren Basıncı 2 Düzeltme - 1. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7B;;2-4-Fren Basıncı 2 Düzeltme - 2. ila 3.;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7C;;2-4-Fren Basıncı 2 Düzeltme - 3. ila 4.;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7D;;2-4-Fren Basıncı 2 Düzeltme - 4. ila 3.;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7E;;2-4-Fren Basıncı 2 Düzeltme - 4. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "27-7;1;7F;;2-4-Fren Basıncı 2 Düzeltme - 3. ila 2.;kgf;90;110;100;-100/50;2"
-	<< "27-6;1;80;;Transfer Yük Oranının Düzeltilmesi;%;90;110;100;-100;0"
-	<< "27-5;1;81;;Meyil Kontrolü;;0;1;0;0=Allowance,1=No Access;"
-	<< "27-4;1;82;;Merkezi Diferansiyel;%;50;150;100;*1;0"
-	<< "27-3;1;171;170;AWD Kavraması Tork Düzeltmesi;Nm;63535;2000;0;s16/50;0";
+	<< "26-5;0;6F;;0;Ateşleme Zamanlaması Düzeltmesi;deg;0;5;0;*-1;0"
+	<< "26-4;0;70;;0;Rölanti Hızı Düzeltme (Klima Kapalı);rpm;124;140;128;-128*25;0"
+	<< "26-3;0;71;;0;Rölanti Hızı Düzeltme (Klima Açık);rpm;124;140;128;-128*25;0"
+	<< "26-1;1;72;;0;Hat Basıncı Düzeltmesi;%;90;110;100;-100;0"
+	<< "A11020;1;73;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 1. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;74;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 2. ila 3.;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;75;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 3. ila 4.;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;76;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 4. ila 3.;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;77;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 4. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "A11020;1;78;;0;Vites Değiştirme Hattı Basıncı Düzeltme - 3. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "27-8;1;79;;0;2-4-Fren Basıncı 1 Düzeltme;%;90;110;100;-100;0"
+	<< "27-7;1;7A;;0;2-4-Fren Basıncı 2 Düzeltme - 1. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7B;;0;2-4-Fren Basıncı 2 Düzeltme - 2. ila 3.;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7C;;0;2-4-Fren Basıncı 2 Düzeltme - 3. ila 4.;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7D;;0;2-4-Fren Basıncı 2 Düzeltme - 4. ila 3.;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7E;;0;2-4-Fren Basıncı 2 Düzeltme - 4. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "27-7;1;7F;;0;2-4-Fren Basıncı 2 Düzeltme - 3. ila 2.;kgf;90;110;100;-100/50;2"
+	<< "27-6;1;80;;0;Transfer Yük Oranının Düzeltilmesi;%;90;110;100;-100;0"
+	<< "27-5;1;81;;0;Meyil Kontrolü;;0;1;0;0=Allowance,1=No Access;"
+	<< "27-4;1;82;;0;Merkezi Diferansiyel;%;50;150;100;*1;0"
+	<< "27-3;1;171;170;0;AWD Kavraması Tork Düzeltmesi;Nm;63535;2000;0;s16/50;0";
 
 
 const QStringList SSMFlagbyteDefinitions_tr::MBrawDefs()

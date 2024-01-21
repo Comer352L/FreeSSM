@@ -370,26 +370,31 @@ bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt
 		tmpadjustment.addrHigh = defline.section(';', 3, 3).toUInt(&ok, 16);
 		if (!ok || (tmpadjustment.addrHigh < 1))
 			tmpadjustment.addrHigh = 0;
-		tmpadjustment.title = defline.section(';', 4, 4);
+		tmphelpstr = defline.section(';', 4, 4);
+		if (!tmphelpstr.length() || ((tmphelpstr.toInt(&ok, 10) == 0) && ok))
+			tmpadjustment.permanent = false;
+		else
+			tmpadjustment.permanent = true;
+		tmpadjustment.title = defline.section(';', 5, 5);
 		if (!tmpadjustment.title.length())
 			continue;
-		tmpadjustment.unit = defline.section(';', 5, 5);	// may be empty
-		tmphelpstr = defline.section(';', 6, 6);
+		tmpadjustment.unit = defline.section(';', 6, 6);	// may be empty
+		tmphelpstr = defline.section(';', 7, 7);
 		tmpadjustment.rawMin = tmphelpstr.toUInt(&ok, 10);
 		if (!ok)
 			continue;
-		tmphelpstr = defline.section(';', 7, 7);
+		tmphelpstr = defline.section(';', 8, 8);
 		tmpadjustment.rawMax = tmphelpstr.toUInt(&ok, 10);
 		if (!ok)
 			continue;
-		tmphelpstr = defline.section(';', 8, 8);
+		tmphelpstr = defline.section(';', 9, 9);
 		tmpadjustment.rawDefault = tmphelpstr.toUInt(&ok, 10);
 		if (!ok)
 			continue;
-		tmpadjustment.formula = defline.section(';', 9, 9);
+		tmpadjustment.formula = defline.section(';', 10, 10);
 		if (!tmpadjustment.formula.length())
 			continue;
-		tmphelpstr = defline.section(';', 10, 10);
+		tmphelpstr = defline.section(';', 11, 11);
 		if (tmphelpstr.length() == 0)
 			tmphelpstr = "0";
 		tmpadjustment.precision = tmphelpstr.toInt(&ok, 10);
