@@ -581,6 +581,7 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 {
 	std::vector<unsigned int> addresses;
 	std::vector<char> data;
+	char databytewritten;
 	if (_state != state_normal)
 		return false;
 	// Validate adjustment value selection:
@@ -607,6 +608,20 @@ bool SSMprotocol::setAdjustmentValue(unsigned char index, unsigned int rawValue)
 	{
 		resetCUdata();
 		return false;
+	}
+	// Send save command, if required:
+	if (_adjustments.at(index).permanent)
+	{
+		if (!_SSMPcom->writeAddress(0xEC, '\x55', &databytewritten) || (databytewritten != '\x55'))
+		{
+			resetCUdata();
+			return false;
+		}
+		if (!_SSMPcom->writeAddress(0xEC, '\xAA', &databytewritten) || (databytewritten != '\xAA'))
+		{
+			resetCUdata();
+			return false;
+		}
 	}
 	return true;
 }
