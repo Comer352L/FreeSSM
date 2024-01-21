@@ -422,7 +422,7 @@ bool SSMP2communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 		return false;
 	if (addr.size() > 1)
 		return writeMultipleDatabytes(addr, data, databyteswritten);
-	else
+	else if (addr.size() == 1)
 	{
 		char bw;
 		if (writeDatabyte(addr.at(0), data.at(0), &bw))
@@ -434,7 +434,7 @@ bool SSMP2communication::writeAddresses(std::vector<unsigned int> addr, std::vec
 		else
 			return false;
 	}
-	return writeMultipleDatabytes(addr, data, databyteswritten);
+	return false;
 }
 
 
