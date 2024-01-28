@@ -153,7 +153,11 @@ bool SSMFlagbyteDefinitionsInterface::measuringBlocks(std::vector<mb_intl_dt> *m
 	for (k=0; k<mbrawdata.size(); k++)
 	{
 		// Get flagbyte address definition:
+#if QT_VERSION < 0x050000
+		mbdefline = QString::fromUtf8( mbrawdata.at(k).toLatin1() );
+#else
 		mbdefline = mbrawdata.at(k);
+#endif
 		tmpstr = mbdefline.section(';', 0, 0);
 		unsigned int tmpbytenr = tmpstr.toUInt(&ok, 10);
 		// Check if flagbyte is supported by our CU:
@@ -245,7 +249,11 @@ bool SSMFlagbyteDefinitionsInterface::switches(std::vector<sw_intl_dt> *switches
 	for (k=0; k<swrawdata.size(); k++)
 	{
 		// Get flagbyte address definition:
+#if QT_VERSION < 0x050000
+		swdefline = QString::fromUtf8( swrawdata.at(k).toLatin1() );
+#else
 		swdefline = swrawdata.at(k);
+#endif
 		tmpstr = swdefline.section(';', 0, 0);
 		unsigned int tmpbytenr = tmpstr.toUInt(&ok, 10);
 		// Check if flagbyte is supported by our CU:
@@ -320,7 +328,11 @@ bool SSMFlagbyteDefinitionsInterface::adjustments(std::vector<adjustment_intl_dt
 	}
 	for (k=0; k<adjustmentsrawdata.size(); k++)
 	{
+#if QT_VERSION < 0x050000
+		defline = QString::fromUtf8( adjustmentsrawdata.at(k).toLatin1() );
+#else
 		defline = adjustmentsrawdata.at(k);
+#endif
 		tmphelpstr = defline.section(';', 0, 0);
 		if (tmphelpstr.count('-') == 1)
 		{
@@ -422,7 +434,11 @@ bool SSMFlagbyteDefinitionsInterface::actuatorTests(std::vector<actuator_dt> *ac
 	}
 	for (k=0; k<actuatorsrawdata.size(); k++)
 	{
+#if QT_VERSION < 0x050000
+		tmpstr = QString::fromUtf8( actuatorsrawdata.at(k).section(';', 0, 0).toLatin1() );
+#else
 		tmpstr = actuatorsrawdata.at(k).section(';', 0, 0);
+#endif
 		if (!tmpstr.size())
 			continue;
 		tmpflagbyte = tmpstr.toUInt();
