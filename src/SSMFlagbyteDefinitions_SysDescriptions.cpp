@@ -97,7 +97,11 @@ bool SSMFlagbyteDefinitions_SysDescriptions::getSysDescriptionBySysID(SystemType
 		{
 			if (sysDefs->at(k).section(';', 0, 0).toInt(&ok, 16) == sysID[2])
 			{
+#if QT_VERSION < 0x050000
+				*sysDescription = QString::fromUtf8( sysDefs->at(k).section(';', 1, 1).toLatin1() );
+#else
 				*sysDescription = sysDefs->at(k).section(';', 1, 1);
+#endif
 				return true;
 			}
 		}
