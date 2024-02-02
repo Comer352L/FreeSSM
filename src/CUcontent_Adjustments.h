@@ -97,15 +97,29 @@ public:
 	bool setup(SSMprotocol *SSMPdev);
 
 private:
-	SSMprotocol *_SSMPdev;
-	std::vector<adjustment_dt> _supportedAdjustments;
-	std::vector<bool> _newValueSelWidgetType;
-	unsigned int _maxrowsvisible;
+	class AdjustmentData
+	{
+	public:
+		adjustment_dt data;
+		bool non_numeric;
+		int rowIndex;
+	};
 
+	SSMprotocol *_SSMPdev;
+	std::vector<AdjustmentData> _adjustmentData;
+	int _num_rows_used; // index (starting from 0) od the next unused row => equal to the number of used rows
+	size_t _num_volatile_adj;
+	size_t _num_perment_adj;
+
+	void setupAdjustmentData(std::vector<adjustment_dt> supportedAdjustments);
+	bool scaledValueAreNonNumeric(QString formula);
+	void clearTable();
 	void setupAdjustmentsTable();
-	void displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit);
-	void setupNewValueSelWidgetTypes();
+	void addTextToTableRow(QString text, int row, bool underline, bool bold);
+	bool addAdjustmenValueToTable(AdjustmentData, int adj_index, int row);
 	void getSelectableScaledValueStrings(QString formulaStr, QStringList *selectableScaledValueStr);
+	void displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit);
+	void resizeTableToMinimumRows();
 	void resizeEvent(QResizeEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void communicationError(QString errstr);
@@ -113,7 +127,7 @@ private:
 	void errorMsg(QString title, QString errstr);
 
 private slots:
-	void saveAdjustmentValue(unsigned int index);
+	void saveAdjustmentValue(unsigned int adjustment_index);
 	void resetAllAdjustmentValues();
 
 signals:

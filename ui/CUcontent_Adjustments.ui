@@ -109,32 +109,6 @@
      </column>
     </widget>
    </item>
-   <item>
-    <widget class="QLabel" name="nonPermanentInfo_label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>NOTE:   All these settings are NON-PERMANENT !
-=&gt; Clearing the ECU's memory or disconnecting from the power supply will reset all values to default !</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>

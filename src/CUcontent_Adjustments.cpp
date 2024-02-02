@@ -195,9 +195,9 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 {
 	QHeaderView *headerview;
 	_SSMPdev = NULL;
-	_maxrowsvisible = 0; // We don't need to calculate a value here, because we always get a resizeEvent before setting the table content
-	_supportedAdjustments.clear();
-	_newValueSelWidgetType.clear();
+	_num_rows_used = 0;
+	_num_volatile_adj = 0;
+	_num_perment_adj = 0;
 	// Setup GUI:
 	setupUi(this);
 	// Set column widths:
@@ -230,7 +230,6 @@ CUcontent_Adjustments::CUcontent_Adjustments(QWidget *parent) : QWidget(parent)
 	// Disable GUI-elements:
 	title_label->setEnabled(false);
 	adjustments_tableWidget->setEnabled(false);
-	nonPermanentInfo_label->setEnabled(false);
 }
 
 
@@ -240,19 +239,22 @@ bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 	unsigned char k = 0;
 	bool ok = false;
 	bool calcerror = false;
+	std::vector<adjustment_dt> supportedAdjustments;
 
 	_SSMPdev = SSMPdev;
 	// Reset data:
-	_supportedAdjustments.clear();
-	_newValueSelWidgetType.clear();
+	_adjustmentData.clear();
+	_num_perment_adj = 0;
+	_num_volatile_adj = 0;
+	clearTable();
 	// Get supported adjustments:
 	ok = (_SSMPdev != NULL);
 	if (ok)
-		ok = _SSMPdev->getSupportedAdjustments(&_supportedAdjustments);
-	if (ok && !_supportedAdjustments.empty())
+		ok = _SSMPdev->getSupportedAdjustments(&supportedAdjustments);
+	if (ok && !supportedAdjustments.empty())
 	{
-		// Determine the needed selection widget type for new values:
-		setupNewValueSelWidgetTypes();
+		// Setup the adjustment adjustment data:
+		setupAdjustmentData(supportedAdjustments);
 		// Setup adjustments table (without current values):
 		setupAdjustmentsTable();
 		// Query current adjustment values from CU:
@@ -261,10 +263,10 @@ bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 		{
 			// Scale raw values:
 			QString scaledValueString = "";
-			for (k=0; k<_supportedAdjustments.size(); k++)
+			for (k = 0; k < supportedAdjustments.size(); k++)
 			{
-				if (libFSSM::raw2scaled(rawValues.at(k), _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
-					displayCurrentValue(k, scaledValueString, _supportedAdjustments.at(k).unit);
+				if (libFSSM::raw2scaled(rawValues.at(k), supportedAdjustments.at(k).formula, supportedAdjustments.at(k).precision, &scaledValueString))
+					displayCurrentValue(k, scaledValueString, supportedAdjustments.at(k).unit);
 				else
 				{
 					calcerror = true;
@@ -276,7 +278,6 @@ bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 	// Enable/Disable GUI-elements:
 	title_label->setEnabled( ok );
 	adjustments_tableWidget->setEnabled( ok );
-	nonPermanentInfo_label->setEnabled( ok );
 	// Check for calculation error(s):
 	if (calcerror)
 		calculationError(tr("One or more current values couldn't be scaled."));
@@ -285,39 +286,312 @@ bool CUcontent_Adjustments::setup(SSMprotocol *SSMPdev)
 }
 
 
-void CUcontent_Adjustments::setupNewValueSelWidgetTypes()
+void CUcontent_Adjustments::setupAdjustmentData(std::vector<adjustment_dt> supportedAdjustments)
 {
-	bool combobox = false;
-	QString formulaStr = "";
+	AdjustmentData adjData;
+
+	_adjustmentData.clear();
+	_num_volatile_adj = 0;
+	_num_perment_adj = 0;
+	for (size_t i = 0; i < supportedAdjustments.size(); i++)
+	{
+		adjData.data = supportedAdjustments.at(i);
+		adjData.non_numeric = scaledValueAreNonNumeric(supportedAdjustments.at(i).formula);
+		adjData.rowIndex = -1; // not yet displayed
+
+		_adjustmentData.push_back(adjData);
+
+		if (supportedAdjustments.at(i).permanent)
+			_num_perment_adj++;
+		else
+			_num_volatile_adj++;
+	}
+}
+
+
+bool CUcontent_Adjustments::scaledValueAreNonNumeric(QString formula)
+{
+	int m = 0;
 	QString defstr = "";
 	QString svstr = "";
 	bool ok = false;
-	unsigned char k = 0;
-	int m = 0;
-	_newValueSelWidgetType.clear();
-	for (k=0; k<_supportedAdjustments.size(); k++)
+
+	if (formula.contains('='))
 	{
-		combobox = false;
-		formulaStr = _supportedAdjustments.at(k).formula;
-		if (formulaStr.contains('='))
+		for (m = 0; m <= formula.count(','); m++)
 		{
-			for (m=0; m<=formulaStr.count(','); m++)
+			// Get next allocation string:
+			defstr = formula.section(',', m, m);
+			// Get scaled part of the allocation string:
+			svstr = defstr.section('=', 1, 1);
+			// Try to convert scaled part to double:
+			svstr.toDouble(&ok);
+			if (!ok)
+				return true;
+		}
+	}
+	return false;
+}
+
+
+void CUcontent_Adjustments::clearTable()
+{
+	// Clear Table:
+	_num_rows_used = 0;
+	adjustments_tableWidget->clearContents(); // NOTE: table dimensions stay the same
+	adjustments_tableWidget->setRowCount(0);
+	resizeTableToMinimumRows();
+}
+
+
+void CUcontent_Adjustments::setupAdjustmentsTable()
+{
+	bool enable = false;
+	unsigned char k = 0;
+	QTableWidgetItem *tableItem = NULL;
+	QPushButton *resetButton = NULL;
+	QPixmap leftIcon, rightIcon;
+	QPixmap mergedIcon(54, 22);
+	bool calcerror = false;
+
+	// Create "Reset"-icon:
+	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-first.png") );
+	mergedIcon.fill(Qt::transparent);
+	QPainter painter(&mergedIcon);
+	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
+	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
+	QIcon resetButton_icon( mergedIcon );
+
+	// Clear Table:
+	clearTable();
+
+	// Enable/Disable GUI-elements:
+	title_label->setEnabled( enable );
+	adjustments_tableWidget->setEnabled( enable );
+
+	// Add section with all non-permanent adjustments to the table:
+	if (_num_volatile_adj)
+	{
+		// Add title row:
+		addTextToTableRow(tr("Non-Permanent Adjustments:"), _num_rows_used, true, true);
+		_num_rows_used++;
+
+		// Add ajustment value rows:
+		for (k = 0; k < _adjustmentData.size(); k++)
+		{
+			if (!_adjustmentData.at(k).data.permanent)
 			{
-				// Get next allocation string:
-				defstr = formulaStr.section(',', m, m);
-				// Get scaled part of the allocation string:
-				svstr = defstr.section('=', 1, 1);
-				// Try to convert scaled part to double:
-				svstr.toDouble(&ok);
-				if (!ok)
-				{
-					combobox = true;
-					break;
-				}
+				if (!addAdjustmenValueToTable(_adjustmentData.at(k), k, _num_rows_used))
+					calcerror = true; // NOTE: item has nevertheless been added to the table
+				_adjustmentData.at(k).rowIndex = _num_rows_used;
+				_num_rows_used++;
 			}
 		}
-		_newValueSelWidgetType.push_back( combobox );
+
+		// Add information row:
+		addTextToTableRow(tr("=> NOTE:") + "   " +
+		                  tr("Clearing the ECU's memory or disconnecting from the power supply will reset all these adjustments to default values !"),
+				  _num_rows_used, false, true);
+		_num_rows_used++;
 	}
+
+	// Add section with all permanent adjustments to the table:
+	if (_num_perment_adj)
+	{
+		if (_num_volatile_adj)
+		{
+			// Empty line:
+			if (adjustments_tableWidget->rowCount() < (_num_rows_used + 1))
+				adjustments_tableWidget->insertRow(_num_rows_used);
+			_num_rows_used++;
+		}
+
+		// Add title row:
+		addTextToTableRow(tr("Permanent Adjustments:"), _num_rows_used, true, true);
+		_num_rows_used++;
+
+		// Add ajustment value rows:
+		for (k = 0; k < _adjustmentData.size(); k++)
+		{
+			if (_adjustmentData.at(k).data.permanent)
+			{
+				if (!addAdjustmenValueToTable(_adjustmentData.at(k), k, _num_rows_used))
+					calcerror = true; // NOTE: item has nevertheless been added to the table
+				_adjustmentData.at(k).rowIndex = _num_rows_used;
+				_num_rows_used++;
+			}
+		}
+
+		// Add information row:
+		addTextToTableRow(tr("=> NOTE:") + "   " +
+		                  tr("These adjustments will survive clearing the ECU's memory and disconnection from the power supply !"),
+				  _num_rows_used, false, true);
+		_num_rows_used++;
+	}
+
+	// Setup "Reset all"-elements:
+	if (_adjustmentData.size() > 0)
+	{
+		// Empty line:
+		if (adjustments_tableWidget->rowCount() < (_num_rows_used + 1))
+			adjustments_tableWidget->insertRow(_num_rows_used);
+		_num_rows_used++;
+
+		if (adjustments_tableWidget->rowCount() < (_num_rows_used + 1))
+			adjustments_tableWidget->insertRow(_num_rows_used);
+
+		// Title:
+		tableItem = new QTableWidgetItem( tr("Reset all: ") );
+		tableItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
+		adjustments_tableWidget->setItem(_num_rows_used, 2, tableItem);
+
+		// "Reset all"-button:
+		resetButton = new QPushButton(adjustments_tableWidget);
+		resetButton->setIcon( resetButton_icon );
+		resetButton->setIconSize( QSize(54, 22) );
+		connect (resetButton, SIGNAL( released() ), this, SLOT( resetAllAdjustmentValues() ));
+		// NOTE: using released() instead of pressed() for buttons as workaround for a Qt-Bug occurring under MS Windows
+		adjustments_tableWidget->setCellWidget(_num_rows_used, 3, resetButton);
+
+		_num_rows_used++;
+	}
+
+	resizeTableToMinimumRows();
+
+	// Check for calculation error(s):
+	if (calcerror)
+		calculationError(tr("One or more values will not be adjustable to prevent\nwrong data being written to the Control Unit."));
+}
+
+
+void CUcontent_Adjustments::addTextToTableRow(QString text, int row, bool underline, bool bold)
+{
+	if (adjustments_tableWidget->rowCount() < (row + 1))
+		adjustments_tableWidget->insertRow(row);
+
+	QTableWidgetItem *tableItem = new QTableWidgetItem( text );
+	QFont font = tableItem->font();
+	font.setUnderline(underline);
+	font.setBold(bold);
+	tableItem->setFont(font);
+	adjustments_tableWidget->setItem(row, 0, tableItem);
+	adjustments_tableWidget->setSpan(row, 0, 1, adjustments_tableWidget->columnCount());
+}
+
+
+bool CUcontent_Adjustments::addAdjustmenValueToTable(AdjustmentData adjustment, int adj_index, int row)
+{
+	bool ok = false;
+	QPixmap leftIcon, rightIcon;
+	QPixmap mergedIcon(54, 22);
+	QTableWidgetItem *tableItem = NULL;
+	ModQDoubleSpinBox *spinBox = NULL;
+	QComboBox *comboBox = NULL;
+	QIdPushButton *saveButton = NULL;
+
+	QStringList selectableScaledValueStr;
+	QString helpScaledValueStr = 0;
+	double minScaledValue = 0;
+	double maxScaledValue = 0;
+	double defaultScaledValue = 0;
+	double minSingleStepFromPrecision = 0;
+	double minSingleStepFromRaw = 0;
+
+	// Create "Save"-icon:
+	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-next.png") );
+	rightIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/drive-harddisk.png") );
+	mergedIcon.fill(Qt::transparent);
+	QPainter painter(&mergedIcon);
+	painter.drawTiledPixmap(0, 0, 22, 22, leftIcon);
+	painter.drawTiledPixmap(32, 0, 22, 22, rightIcon);
+	QIcon saveButton_icon( mergedIcon );
+
+	// Add table row, if required:
+	if (adjustments_tableWidget->rowCount() < (row + 1))
+		adjustments_tableWidget->insertRow(row);
+
+	// Title:
+	tableItem = new QTableWidgetItem(adjustment.data.title);
+	adjustments_tableWidget->setItem(row, 0, tableItem);
+
+	// Current Value:
+	tableItem = new QTableWidgetItem( "???" );
+	tableItem->setTextAlignment(Qt::AlignCenter);
+	adjustments_tableWidget->setItem(row, 1, tableItem);
+
+	// New Value:
+	if (adjustment.non_numeric)
+	{
+		// Get selectable scaled values:
+		selectableScaledValueStr.clear();
+		getSelectableScaledValueStrings(adjustment.data.formula, &selectableScaledValueStr);
+		// Setup and insert selection-Combobox:
+		comboBox = new QComboBox();
+		comboBox->addItems(selectableScaledValueStr);
+		adjustments_tableWidget->setCellWidget(row, 2, comboBox);
+	}
+	else
+	{
+		// Calculate and set min/max:
+		ok = libFSSM::raw2scaled(adjustment.data.rawMin, adjustment.data.formula, adjustment.data.precision, &helpScaledValueStr);
+		if (ok)
+			minScaledValue = helpScaledValueStr.toDouble(&ok);
+		if (ok)
+			ok = libFSSM::raw2scaled(adjustment.data.rawMax, adjustment.data.formula, adjustment.data.precision, &helpScaledValueStr);
+		if (ok)
+			maxScaledValue = helpScaledValueStr.toDouble(&ok);
+		if (ok)
+			ok = libFSSM::raw2scaled(adjustment.data.rawDefault, adjustment.data.formula, adjustment.data.precision, &helpScaledValueStr);
+		if (ok)
+			defaultScaledValue = helpScaledValueStr.toDouble(&ok);
+		if (!ok)
+			return false; // calculation error
+
+		// Put spinbox into the table:
+		spinBox = new ModQDoubleSpinBox();
+		adjustments_tableWidget->setCellWidget(row, 2, spinBox);
+		/* NOTE: we do this here, because some spinbox functions don't work as expected (Qt-bugs ?) if spinBox is not visible yet */
+
+		// Set adjustable range:
+		if (minScaledValue > maxScaledValue)
+			spinBox->setRange(maxScaledValue, minScaledValue);
+		else
+			spinBox->setRange(minScaledValue, maxScaledValue);
+
+		// Calculate and set step size:
+		minSingleStepFromPrecision = pow(10, (-1 * adjustment.data.precision));
+		minSingleStepFromRaw = (maxScaledValue - minScaledValue) / (adjustment.data.rawMax - adjustment.data.rawMin);
+		/* NOTE: this only works for constant step size ! */
+		if (minSingleStepFromRaw > minSingleStepFromPrecision)
+			spinBox->setSingleStep(minSingleStepFromRaw);
+		else
+			spinBox->setSingleStep(minSingleStepFromPrecision);
+
+		// Set base value for "discrete values mode":
+		spinBox->setDiscreteValuesModeBaseValue(defaultScaledValue);
+
+		// Enable "discrete values mode":
+		spinBox->setDiscreteValuesModeEnabled(true);
+
+		// Set decimals:
+		spinBox->setDecimals(adjustment.data.precision);
+
+		// Set suffix (unit):
+		spinBox->setSuffix(" " + adjustment.data.unit);
+
+		// Set alignement:
+		spinBox->setAlignment(Qt::AlignCenter);
+	}
+
+	// "Save" button:
+	saveButton = new QIdPushButton("", adj_index, adjustments_tableWidget);
+	saveButton->setIcon(saveButton_icon);
+	saveButton->setIconSize(QSize(54,22));
+	connect (saveButton, SIGNAL( released(unsigned int) ), this, SLOT( saveAdjustmentValue(unsigned int) ));
+	adjustments_tableWidget->setCellWidget (row, 3, saveButton);
+
+	// Return success:
+	return true;
 }
 
 
@@ -342,146 +616,6 @@ void CUcontent_Adjustments::getSelectableScaledValueStrings(QString formulaStr, 
 }
 
 
-void CUcontent_Adjustments::setupAdjustmentsTable()
-{
-	bool enable = false;
-	bool ok = false;
-	unsigned char k = 0;
-	QTableWidgetItem *tableItem = NULL;
-	ModQDoubleSpinBox *spinBox = NULL;
-	QComboBox *comboBox = NULL;
-	QIdPushButton *saveButton = NULL;
-	QPushButton *resetButton = NULL;
-	QPixmap leftIcon, rightIcon;
-	QPixmap mergedIcon(54, 22);
-	QStringList selectableScaledValueStr;
-	QString helpScaledValueStr = 0;
-	double minScaledValue = 0;
-	double maxScaledValue = 0;
-	double defaultScaledValue = 0;
-	double minSingleStepFromPrecision = 0;
-	double minSingleStepFromRaw = 0;
-	bool calcerror = false;
-
-	// Create "Save"-icon:
-	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-next.png") );
-	rightIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/drive-harddisk.png") );
-	mergedIcon.fill(Qt::transparent);
-	QPainter painter(&mergedIcon);
-	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
-	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
-	QIcon saveButton_icon( mergedIcon );
-	// Create "Reset"-icon:
-	leftIcon.load( QString::fromUtf8(":/icons/oxygen/22x22/go-first.png") );
-	mergedIcon.fill(Qt::transparent);
-	painter.drawTiledPixmap( 0, 0, 22, 22, leftIcon );
-	painter.drawTiledPixmap( 32, 0, 22, 22, rightIcon );
-	QIcon resetButton_icon( mergedIcon );
-	// Clear Table:
-	adjustments_tableWidget->clearContents();
-	// Enable/Disable GUI-elements:
-	title_label->setEnabled( enable );
-	adjustments_tableWidget->setEnabled( enable );
-	nonPermanentInfo_label->setEnabled( enable );
-	// Increase nr. of table rows if necessary:
-	if (_supportedAdjustments.size() && (static_cast<unsigned int>(adjustments_tableWidget->rowCount()) < _supportedAdjustments.size()))
-		adjustments_tableWidget->setRowCount( _supportedAdjustments.size() + 2 );
-	// Fill Table:
-	for (k=0; k<_supportedAdjustments.size(); k++)
-	{
-		// Title:
-		tableItem = new QTableWidgetItem( _supportedAdjustments.at(k).title );
-		adjustments_tableWidget->setItem(k, 0, tableItem);
-		// Current Value:
-		tableItem = new QTableWidgetItem( "???" );
-		tableItem->setTextAlignment(Qt::AlignCenter);
-		adjustments_tableWidget->setItem(k, 1, tableItem);
-		// New Value:
-		if (_newValueSelWidgetType.at(k))
-		{
-			// Get selectable scaled values:
-			selectableScaledValueStr.clear();
-			getSelectableScaledValueStrings(_supportedAdjustments.at(k).formula, &selectableScaledValueStr);
-			// Setup and insert selection-Combobox:
-			comboBox = new QComboBox();
-			comboBox->addItems( selectableScaledValueStr );
-			adjustments_tableWidget->setCellWidget ( k, 2, comboBox );
-		}
-		else
-		{
-			// Calculate and set min/max:
-			ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawMin, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
-			if (ok)
-				minScaledValue = helpScaledValueStr.toDouble(&ok);
-			if (ok)
-				ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawMax, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
-			if (ok)
-				maxScaledValue = helpScaledValueStr.toDouble(&ok);
-			if (ok)
-				ok = libFSSM::raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &helpScaledValueStr);
-			if (ok)
-				defaultScaledValue = helpScaledValueStr.toDouble(&ok);
-			if (!ok)
-			{
-				calcerror = true;
-				continue; // continue with next adjustment value
-			}
-			spinBox = new ModQDoubleSpinBox();
-			// put spinbox into the table:
-			adjustments_tableWidget->setCellWidget ( k, 2, spinBox );
-			/* NOTE: we do this here, because some spinbox functions don't work as expected (Qt-bugs ?) if spinBox is not visible yet */
-			// Set adjustable range:
-			if (minScaledValue > maxScaledValue)
-				spinBox->setRange(maxScaledValue, minScaledValue);
-			else
-				spinBox->setRange(minScaledValue, maxScaledValue);
-			// Calculate and set step size:
-			minSingleStepFromPrecision = pow(10, (-1*_supportedAdjustments.at(k).precision));
-			minSingleStepFromRaw = (maxScaledValue - minScaledValue) / (_supportedAdjustments.at(k).rawMax - _supportedAdjustments.at(k).rawMin);
-			/* NOTE: this only works for constant step size ! */
-			if (minSingleStepFromRaw > minSingleStepFromPrecision)
-				spinBox->setSingleStep( minSingleStepFromRaw );
-			else
-				spinBox->setSingleStep( minSingleStepFromPrecision );
-			// Set base value for "discrete values mode":
-			spinBox->setDiscreteValuesModeBaseValue(defaultScaledValue);
-			// Enable "discrete values mode":
-			spinBox->setDiscreteValuesModeEnabled(true);
-			// Set decimals:
-			spinBox->setDecimals(_supportedAdjustments.at(k).precision);
-			// Set suffix (unit):
-			spinBox->setSuffix(" " + _supportedAdjustments.at(k).unit);
-			// Set alignement:
-			spinBox->setAlignment(Qt::AlignCenter);
-		}
-		// "Save"-button:
-		saveButton = new QIdPushButton("", k, adjustments_tableWidget);
-		saveButton->setIcon(saveButton_icon);
-		saveButton->setIconSize( QSize(54,22) );
-		connect (saveButton, SIGNAL( released(unsigned int) ), this, SLOT( saveAdjustmentValue(unsigned int) ));
-		adjustments_tableWidget->setCellWidget ( k, 3, saveButton );
-	}
-	// Setup "Reset all"-elements:
-	if (_supportedAdjustments.size() > 0)
-	{
-		// Title:
-		tableItem = new QTableWidgetItem( tr("Reset all: ") );
-		tableItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-		adjustments_tableWidget->setItem(_supportedAdjustments.size()+1, 2, tableItem);
-		// "Reset all"-button:
-		resetButton = new QPushButton(adjustments_tableWidget);
-		resetButton->setIcon( resetButton_icon );
-		resetButton->setIconSize( QSize(54, 22) );
-		connect (resetButton, SIGNAL( released() ), this, SLOT( resetAllAdjustmentValues() ));
-		adjustments_tableWidget->setCellWidget ( _supportedAdjustments.size()+1, 3, resetButton );
-	}
-	// Check for calculation error(s):
-	if (calcerror)
-		calculationError(tr("One or more values will not be adjustable to prevent\nwrong data being written to the Control Unit."));
-	// NOTE: using released() instead of pressed() for buttons as workaround for a Qt-Bug occuring under MS Windows
-}
-
-
 void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, QString currentValueStr, QString unit)
 {
 	QTableWidgetItem *tableItem;
@@ -492,6 +626,8 @@ void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, 
 	double sbvalue = 0;
 	bool ok = false;
 
+	if (_adjustmentData.at(adjustment_index).rowIndex < 0) // should not happen
+		return;
 	if (currentValueStr.isEmpty())
 		outputStr = "???";
 	else
@@ -502,12 +638,12 @@ void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, 
 	// Display value+unit:
 	tableItem = new QTableWidgetItem( outputStr );
 	tableItem->setTextAlignment(Qt::AlignCenter);
-	adjustments_tableWidget->setItem(adjustment_index, 1, tableItem);
+	adjustments_tableWidget->setItem(_adjustmentData.at(adjustment_index).rowIndex, 1, tableItem);
 	// Set value of the selection-elements to the current value:
 	if (!currentValueStr.isEmpty())
 	{
-		cellWidget = adjustments_tableWidget->cellWidget (adjustment_index, 2);
-		if (_newValueSelWidgetType.at(adjustment_index))	// Combobox
+		cellWidget = adjustments_tableWidget->cellWidget(_adjustmentData.at(adjustment_index).rowIndex, 2);
+		if (_adjustmentData.at(adjustment_index).non_numeric)
 		{
 			combobox = dynamic_cast<QComboBox*>(cellWidget);
 			int index = combobox->findText(currentValueStr);
@@ -525,7 +661,7 @@ void CUcontent_Adjustments::displayCurrentValue(unsigned char adjustment_index, 
 }
 
 
-void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
+void CUcontent_Adjustments::saveAdjustmentValue(unsigned int adjustment_index)
 {
 	QWidget *cellWidget = NULL;
 	QDoubleSpinBox *spinbox = NULL;
@@ -536,13 +672,16 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 	unsigned int controlValue_raw = 0;
 	bool ok = false;
 
-	if (!_SSMPdev) return;
+	if (!_SSMPdev)
+		return;
+	if (_adjustmentData.at(adjustment_index).rowIndex < 0) // should not happen
+		return;
 	// Show wait-message:
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Saving adjustment value to Electronic Control Unit... Please wait !"));
 	waitmsgbox.show();
 	// Get selected Value from table:
-	cellWidget = adjustments_tableWidget->cellWidget (index, 2);
-	if (_newValueSelWidgetType.at(index))	// Combobox
+	cellWidget = adjustments_tableWidget->cellWidget(_adjustmentData.at(adjustment_index).rowIndex, 2);
+	if (_adjustmentData.at(adjustment_index).non_numeric)
 	{
 		combobox = dynamic_cast<QComboBox*>(cellWidget);
 		newvalue_scaledStr = combobox->currentText();
@@ -551,30 +690,30 @@ void CUcontent_Adjustments::saveAdjustmentValue(unsigned int index)
 	{
 		spinbox = dynamic_cast<ModQDoubleSpinBox*>(cellWidget);
 		newvalue_scaledDouble = spinbox->value();
-		newvalue_scaledStr = QString::number(newvalue_scaledDouble, 'f', _supportedAdjustments.at(index).precision);
+		newvalue_scaledStr = QString::number(newvalue_scaledDouble, 'f', _adjustmentData.at(adjustment_index).data.precision);
 	}
 	// Convert scaled value string to raw value:
-	if (!libFSSM::scaled2raw(newvalue_scaledStr, _supportedAdjustments.at(index).formula, &newvalue_raw))
+	if (!libFSSM::scaled2raw(newvalue_scaledStr, _adjustmentData.at(adjustment_index).data.formula, &newvalue_raw))
 	{
 		calculationError(tr("The new adjustment value couldn't be scaled."));
 		return;
 	}
 	// Save new ajustment value to control unit:
-	ok = _SSMPdev->setAdjustmentValue(index, newvalue_raw);
+	ok = _SSMPdev->setAdjustmentValue(adjustment_index, newvalue_raw);
 	// To be sure: read and verify value again
 	if (ok)
-		ok = _SSMPdev->getAdjustmentValue(index, &controlValue_raw);
+		ok = _SSMPdev->getAdjustmentValue(adjustment_index, &controlValue_raw);
 	if (!ok)
 	{
 		communicationError(tr("No or invalid answer from Control Unit."));
 		return;
 	}
 	// Scale and display the current value:
-	ok = libFSSM::raw2scaled(controlValue_raw, _supportedAdjustments.at(index).formula, _supportedAdjustments.at(index).precision, &newvalue_scaledStr);
+	ok = libFSSM::raw2scaled(controlValue_raw, _adjustmentData.at(adjustment_index).data.formula, _adjustmentData.at(adjustment_index).data.precision, &newvalue_scaledStr);
 	if (ok)
-		displayCurrentValue(index, newvalue_scaledStr, _supportedAdjustments.at(index).unit);
+		displayCurrentValue(adjustment_index, newvalue_scaledStr, _adjustmentData.at(adjustment_index).data.unit);
 	else
-		displayCurrentValue(index, QString::number(controlValue_raw, 10), tr("[RAW]"));
+		displayCurrentValue(adjustment_index, QString::number(controlValue_raw, 10), tr("[RAW]"));
 	// Close wait-messagebox
 	waitmsgbox.hide();
 	// Check if the CU accepted the new value:
@@ -609,9 +748,9 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	FSSM_WaitMsgBox waitmsgbox(this, tr("Resetting all adjustment values... Please wait !"));
 	waitmsgbox.show();
 	// Reset all adjustment values:
-	for (k=0; k<_supportedAdjustments.size(); k++)
+	for (k = 0; k < _adjustmentData.size(); k++)
 	{
-		if (!_SSMPdev->setAdjustmentValue(k, _supportedAdjustments.at(k).rawDefault))
+		if (!_SSMPdev->setAdjustmentValue(k, _adjustmentData.at(k).data.rawDefault))
 		{
 			communicationError(tr("No or invalid answer from Control Unit."));
 			return;
@@ -619,11 +758,11 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 	}
 	// Scale raw default values and display them:
 	QString scaledValueString = "";
-	for (k=0; k<_supportedAdjustments.size(); k++)
+	for (k = 0; k < _adjustmentData.size(); k++)
 	{
-		if (!libFSSM::raw2scaled(_supportedAdjustments.at(k).rawDefault, _supportedAdjustments.at(k).formula, _supportedAdjustments.at(k).precision, &scaledValueString))
+		if (!libFSSM::raw2scaled(_adjustmentData.at(k).data.rawDefault, _adjustmentData.at(k).data.formula, _adjustmentData.at(k).data.precision, &scaledValueString))
 			calcerror = true;
-		displayCurrentValue(k, scaledValueString, _supportedAdjustments.at(k).unit);
+		displayCurrentValue(k, scaledValueString, _adjustmentData.at(k).data.unit);
 	}
 	// Close wait-messagebox:
 	waitmsgbox.close();
@@ -633,11 +772,12 @@ void CUcontent_Adjustments::resetAllAdjustmentValues()
 }
 
 
-void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
+void CUcontent_Adjustments::resizeTableToMinimumRows()
 {
 	int rowheight = 0;
 	int vspace = 0;
-	unsigned int minnrofrows = 0;
+	int maxrowsvisible = 0;
+	int minnrofrows = 0;
 	// Get available vertical space (for rows) and height per row:
 	if (adjustments_tableWidget->rowCount() < 1)
 		adjustments_tableWidget->setRowCount(1); // temporary create a row to get the row hight
@@ -647,19 +787,25 @@ void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
 	// Temporary switch to "Scroll per Pixel"-mode to ensure auto-scroll (prevent white space between bottom of the last row and the lower table border)
 	adjustments_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 	// Calculate and set nr. of rows:
-	_maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
-	if (_maxrowsvisible < _supportedAdjustments.size())
-		minnrofrows = _supportedAdjustments.size();
+	maxrowsvisible = static_cast<unsigned int>(trunc((vspace-1)/rowheight) + 1);
+	if (maxrowsvisible < _num_rows_used)
+		minnrofrows = _num_rows_used;
 	else
-		minnrofrows = _maxrowsvisible;
+		minnrofrows = maxrowsvisible;
 	adjustments_tableWidget->setRowCount(minnrofrows);
 	// Set vertical scroll bar policy:
-	if (minnrofrows > _supportedAdjustments.size())
+	if (minnrofrows > _num_rows_used)
 		adjustments_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	else
 		adjustments_tableWidget->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
 	// Switch back to "Scroll per Item"-mode:
 	adjustments_tableWidget->setVerticalScrollMode( QAbstractItemView::ScrollPerItem ); // auto-scroll is triggered; Maybe this is a Qt-Bug, we don't want that here...
+}
+
+
+void CUcontent_Adjustments::resizeEvent(QResizeEvent *event)
+{
+	resizeTableToMinimumRows();
 	// Accept event:
 	event->accept();
 }
