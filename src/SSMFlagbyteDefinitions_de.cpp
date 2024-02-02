@@ -1139,7 +1139,15 @@ const QStringList SSMFlagbyteDefinitions_de::_adjustment_defs_de =
 	<< "27-6;1;80;;0;Korrektur des Allrad-Lastverhältnisses;%;90;110;100;-100;0"
 	<< "27-5;1;81;;0;Bergabfahrt-Regelung;;0;1;0;0=Zugriff erlaubt,1=Kein Zugriff;"
 	<< "27-4;1;82;;0;Zentral-Differential;%;50;150;100;*1;0"
-	<< "27-3;1;171;170;0;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0";
+	<< "27-3;1;171;170;0;Korrektur des Allradkupplungs-Drehmoments;Nm;63535;2000;0;s16/50;0"
+	<< "A21022;1;1BE;;1;Leitungsdruckkorrektur;Schritte(e);169;211;189;-189*-1;0"
+	<< "A21022;1;16E;;1;Druckkorrektur 1ter nach 2ter Gang (Direktkupplung);Schritte(e);52;100;75;-75;0"
+	<< "A21022;1;1BC;;1;Druckkorrektur 2ter nach 3ter Gang (Vorwärtsbremse);Schritte(e);165;205;184;-184;0"
+	<< "A21022;1;16D;;1;Druckkorrektur 2ter nach 3ter Gang (Schnell-Langsam Umkehrkupplung);Schritte(e);56;97;75;-75;0"
+	<< "A21022;1;16C;;1;Druckkorrektur 3ter nach 4ter Gang (Eingangskupplung);Schritte(e);56;109;81;-81;0"
+	<< "A21022;1;16F;;1;Druckkorrektur 4ter nach 5ter Gang (Vordere Bremse);Schritte(e);168;221;195;-195;0"
+	<< "A21022;1;1BD;;1;4WD Druckkorrektur;Schritte(e);138;188;170;-170*-1;0"
+	<< "A21022;1;1BF;;1;Basistemperatur für Druckkorrekturen;°C;20;90;50;+50;0";
 
 
 const QStringList SSMFlagbyteDefinitions_de::MBrawDefs()

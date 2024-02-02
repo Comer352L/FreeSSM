@@ -1139,7 +1139,15 @@ const QStringList SSMFlagbyteDefinitions_en::_adjustment_defs_en =
 	<< "27-6;1;80;;0;Correction of Transfer Duty Ratio;%;90;110;100;-100;0"
 	<< "27-5;1;81;;0;Slope Control;;0;1;0;0=Allowance,1=No Access;"
 	<< "27-4;1;82;;0;Center Differential;%;50;150;100;*1;0"
-	<< "27-3;1;171;170;0;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0";
+	<< "27-3;1;171;170;0;Correction of AWD Clutch Torque;Nm;63535;2000;0;s16/50;0"
+	<< "A21022;1;1BE;;1;Line Pressure Correction;step(s);169;211;189;-189*-1;0"
+	<< "A21022;1;16E;;1;1st to 2nd (Direct Clutch) Pressure Correction;step(s);52;100;75;-75;0"
+	<< "A21022;1;1BC;;1;2nd to 3rd (Forward Brake) Pressure Correction;step(s);165;205;184;-184;0"
+	<< "A21022;1;16D;;1;2nd to 3rd (High Low Reverse Clutch) Pressure Correction;step(s);56;97;75;-75;0"
+	<< "A21022;1;16C;;1;3rd to 4th (Input Clutch) Pressure Correction;step(s);56;109;81;-81;0"
+	<< "A21022;1;16F;;1;4th to 5th (Front Brake) Pressure Correction;step(s);168;221;195;-195;0"
+	<< "A21022;1;1BD;;1;4WD Pressure Correction;step(s);138;188;170;-170*-1;0"
+	<< "A21022;1;1BF;;1;Temperature Basis for Pressure Corrections;°C;20;90;50;+50;0";
 
 
 const QStringList SSMFlagbyteDefinitions_en::MBrawDefs()
