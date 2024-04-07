@@ -1789,7 +1789,7 @@ ve kontak anahtarını açık konuma getirin.</translation>
     <message>
         <location filename="src/Preferences.cpp" line="327"/>
         <source>Testing interface for SSM2 via ISO-14230 support... Please wait !</source>
-        <translation type="unfinished"></translation>
+        <translation>Arayüzde ISO-14230 üzerinden SSM2 desteği deneniyor... Lütfen bekleyin !</translation>
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="328"/>
@@ -1799,12 +1799,12 @@ ve kontak anahtarını açık konuma getirin.</translation>
     <message>
         <location filename="src/Preferences.cpp" line="361"/>
         <source>Testing interface for SSM2 via ISO-15765 support... Please wait !</source>
-        <translation type="unfinished"></translation>
+        <translation>Arayüzde ISO-15765 üzerinden SSM2 desteği deneniyor... Lütfen bekleyin !</translation>
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="379"/>
         <source>Testing interface for SSM1 support... Please wait !</source>
-        <translation type="unfinished"></translation>
+        <translation>Arayüzde SSM1 desteği deneniyor... Lütfen bekleyin !</translation>
     </message>
     <message>
         <location filename="src/Preferences.cpp" line="438"/>
@@ -1909,7 +1909,8 @@ dosyasını ve home klasörünü yazılabilir yapın &apos;.</translation>
         <location filename="ui/Preferences.ui" line="332"/>
         <source>Prefer ISO-14230 (K-Line) over ISO-15765 (CAN), if ECU supports
 both SSM2 protocol variants</source>
-        <translation type="unfinished"></translation>
+        <translation>ECU her iki SSM2 protokolünü de destekliyorsa ISO-15765 (CAN)
+yerine ISO-14230 (K-Line) tercih et</translation>
     </message>
     <message>
         <location filename="ui/Preferences.ui" line="264"/>
