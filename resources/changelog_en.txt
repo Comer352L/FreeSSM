@@ -2,6 +2,9 @@ next release (current development snapshot):
   - Added experimental support for J2534 interfaces
   - Added experimental support for AT command controlled interfaces
   - Added experimental support for SSM2 over ISO-15765 (CAN)
+  - Added experimental support for TPMS control units
+  - Added TPMS diagnostic code reading and clear-memory support
+  - Added TPMS transmitter ID and live data displays
   - Added support for the old SSM1 communication protocol
   - Added basic support for additional control units: ABS/VDC, CC, A/C
     (SSM1 only, definitions incomplete)

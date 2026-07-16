@@ -52,6 +52,8 @@ static bool applyCmdLineStartupOptions(FreeSSM *freessm_mainwindow, QStringList 
 		freessm_mainwindow->engine(cmdline_args);
 	else if (cu_str == "transmission")
 		freessm_mainwindow->transmission(cmdline_args);
+	else if (cu_str == "tpms")
+		freessm_mainwindow->tpms(cmdline_args);
 	else if (cu_str == "absvdc")
 		freessm_mainwindow->abs(cmdline_args);
 	else if (cu_str == "cruisectrl")

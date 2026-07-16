@@ -30,6 +30,7 @@ SerialPassThroughDiagInterface::SerialPassThroughDiagInterface()
 	setVersion("1.0");
 	supportedProtocols.push_back(protocol_type::SSM1);
 	supportedProtocols.push_back(protocol_type::SSM2_ISO14230);
+	supportedProtocols.push_back(protocol_type::SSM3_ISO14230);
 	setSupportedProtocols(supportedProtocols);
 	/* NOTE: due to the interfaces construction, we can not know which protocol it actually supports !
 	 * One possibility would be to check for an data echo:
@@ -123,12 +124,20 @@ bool SerialPassThroughDiagInterface::connect(protocol_type protocol)
 				return true;
 			}
 		}
-		else if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+		else if ((protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+		         (protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 		{
-			if (_port->SetPortSettings(4800, 8, 'N', 1))
+			const unsigned int requestedBaudrate =
+				(protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230) ? 10400 : 4800;
+			if (_port->SetPortSettings(requestedBaudrate, 8, 'N', 1))
 			{
+				double actualBaudrate = 0;
+				if (!_port->GetPortSettings(&actualBaudrate))
+					return false;
+				if ((actualBaudrate < (0.97*requestedBaudrate)) || (actualBaudrate > (1.03*requestedBaudrate)))
+					return false;
 				setProtocolType( protocol );
-				setProtocolBaudrate( 4800 );
+				setProtocolBaudrate( requestedBaudrate );
 				_connected = true;
 				return true;
 			}
@@ -189,9 +198,10 @@ bool SerialPassThroughDiagInterface::write(std::vector<char> buffer)
 		{
 			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 11 / 1953.0);
 		}
-		else if (protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+		else if ((protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+		         (protocolType() == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 		{
-			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 10 / 4800.0);
+			T_Tx_min = static_cast<unsigned int>(1000 * buffer.size() * 10 / protocolBaudRate());
 		}
 		time.start();
 		if (!_port->Write( buffer ))

@@ -511,7 +511,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>170</x>
-       <y>320</y>
+       <y>330</y>
        <width>330</width>
        <height>20</height>
       </rect>
@@ -530,7 +530,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>320</y>
+       <y>330</y>
        <width>150</width>
        <height>20</height>
       </rect>
@@ -543,7 +543,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>190</y>
        <width>511</width>
        <height>20</height>
       </rect>
@@ -559,7 +559,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>511</width>
        <height>20</height>
       </rect>
@@ -575,7 +575,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>280</y>
        <width>511</width>
        <height>20</height>
       </rect>
@@ -592,7 +592,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
       <rect>
        <x>10</x>
        <y>50</y>
-       <width>131</width>
+       <width>111</width>
        <height>20</height>
       </rect>
      </property>
@@ -606,14 +606,19 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
     <widget class="QLabel" name="contributorslist_label">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>130</x>
        <y>50</y>
-       <width>380</width>
-       <height>111</height>
+       <width>400</width>
+       <height>120</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 ECU definitions, testing)&lt;br/&gt;MartinX (SSM2 definitions, bugfix)&lt;br/&gt;Antoine Giniès (background picture, Copyright ©)&lt;br/&gt;Honza Šolc (SSM1 ECU investigations, testing)&lt;br/&gt;Nikolay Marinov (UI for small screen resolutions)&lt;br/&gt;madanadam (Turkish translation)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L1800Turbo (SSM1 defs/testing)&lt;br/&gt;MartinX (SSM2 defs/bugfix)&lt;br/&gt;Antoine Giniès (background)&lt;br/&gt;Honza Šolc (SSM1 research/testing)&lt;br/&gt;Nikolay Marinov (small UI)&lt;br/&gt;James Hyatt (TPMS, SSM3)&lt;br/&gt;madanadam (Turkish)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -623,7 +628,7 @@ This program is NOT A PRODUCT OF FUJI HEAVY INDUSTRIES LTD. OR ANY SUBARU®-ASSO
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>200</y>
+       <y>220</y>
        <width>511</width>
        <height>20</height>
       </rect>

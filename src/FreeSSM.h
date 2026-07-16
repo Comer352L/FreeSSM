@@ -32,6 +32,7 @@
 #include "SSMP2communication.h"
 #include "libFSSM.h"
 #include "EngineDialog.h"
+#include "TPMSdialog.h"
 #include "TransmissionDialog.h"
 #include "ABSdialog.h"
 #include "CruiseControlDialog.h"
@@ -71,6 +72,7 @@ public:
 public slots:
 	void engine(QStringList cmdline_args = QStringList());
 	void transmission(QStringList cmdline_args = QStringList());
+	void tpms(QStringList cmdline_args = QStringList());
 	void abs(QStringList cmdline_args = QStringList());
 	void cruisecontrol(QStringList cmdline_args = QStringList());
 	void aircon(QStringList cmdline_args = QStringList());

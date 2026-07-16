@@ -24,7 +24,7 @@
 #include <vector>
 
 
-enum class CUtype {Engine, Transmission, CruiseControl, AirCon, FourWheelSteering, ABS, AirSuspension, PowerSteering};
+enum class CUtype {Engine, Transmission, CruiseControl, AirCon, FourWheelSteering, ABS, AirSuspension, PowerSteering, TPMS};
 
 
 /*!

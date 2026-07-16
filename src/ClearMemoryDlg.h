@@ -43,8 +43,21 @@ private:
 	SSMprotocol *_SSMPdev;
 	SSMprotocol::CMlevel_dt _level;
 
+	class StoppedOperation_dt
+	{
+	public:
+		StoppedOperation_dt();
+		SSMprotocol::state_dt state;
+		int DCgroups;
+		std::vector<MBSWmetadata_dt> MBSWmetaList;
+	};
+
 	bool confirmClearMemory(CUtype cu_type);
 	bool confirmAdjustmentValuesRestoration();
+	CMresult_dt stopCurrentOperation(StoppedOperation_dt *operation);
+	CMresult_dt restoreStoppedOperation(const StoppedOperation_dt& operation);
+	CMresult_dt runDirectClearMemory(const StoppedOperation_dt& operation, FSSM_WaitMsgBox *waitmsgbox);
+	CMresult_dt runIgnitionCycleClearMemory(CUtype cu_old, const StoppedOperation_dt& operation, FSSM_WaitMsgBox *waitmsgbox);
 	CMresult_dt restoreAdjustmentValues(std::vector<unsigned int> oldAdjVal);
 	CMresult_dt reconnect(CUtype cu, std::string SYS_ID_old, std::string ROM_ID_old);
 

@@ -19,6 +19,38 @@
 
 #include "SSMprotocol.h"
 
+#include <QElapsedTimer>
+#include <QThread>
+#include <QTimer>
+#include <iostream>
+
+
+namespace
+{
+unsigned char checksum(const std::vector<char>& data)
+{
+	unsigned int sum = 0;
+	for (std::size_t i = 0; i < data.size(); i++)
+		sum += static_cast<unsigned char>(data.at(i));
+	return static_cast<unsigned char>(sum & 0xFF);
+}
+
+#ifdef __FSSM_DEBUG__
+void printFrame(const char *prefix, const std::vector<char>& data)
+{
+	std::cout << prefix;
+	for (std::size_t i = 0; i < data.size(); i++)
+	{
+		const unsigned int byte = static_cast<unsigned char>(data.at(i));
+		std::cout << (i ? " " : "") << std::hex;
+		if (byte < 0x10)
+			std::cout << '0';
+		std::cout << byte;
+	}
+	std::cout << std::dec << '\n';
+}
+#endif
+}
 
 
 SSMprotocol::SSMprotocol(AbstractDiagInterface *diagInterface, QString language)
@@ -240,6 +272,15 @@ bool SSMprotocol::hasClearMemory2(bool *CM2sup)
 }
 
 
+bool SSMprotocol::clearMemoryProcedure(CMprocedure_dt *procedure)
+{
+	if ((_state == state_needSetup) || (procedure == NULL))
+		return false;
+	*procedure = CMprocedure_ignitionCycle;
+	return true;
+}
+
+
 bool SSMprotocol::hasMBengineSpeed(bool *MBsup)
 {
 	if (_state == state_needSetup)
@@ -303,6 +344,15 @@ bool SSMprotocol::getSupportedSWs(std::vector<sw_dt> *supportedSWs)
 }
 
 
+bool SSMprotocol::hasLocalIdentifierData(bool *LIsup)
+{
+	if ((_state == state_needSetup) || (LIsup == NULL))
+		return false;
+	*LIsup = false;
+	return true;
+}
+
+
 bool SSMprotocol::getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList)
 {
 	if (_state == state_needSetup)
@@ -351,6 +401,13 @@ bool SSMprotocol::getLastActuatorTestSelection(unsigned char *actuatorTestIndex)
 bool SSMprotocol::getVIN(QString *VIN)
 {
 	(void)*VIN;
+	return false;
+}
+
+
+bool SSMprotocol::readLocalIdentifierData(std::vector<local_identifier_section_dt> *sections)
+{
+	(void)sections;
 	return false;
 }
 
@@ -1190,5 +1247,178 @@ void SSMprotocol::determineSupportedDCgroups(std::vector<dc_block_dt> DCblockDat
 				_supportedDCgroups |= CCmemorizedCCs_DCgroup;
 		}
 	}
+}
+
+
+SSMprotocol3::SSMprotocol3(AbstractDiagInterface *diagInterface, QString language)
+	: SSMprotocol(diagInterface, language)
+{
+	_keepAliveTimer = new QTimer(this);
+	_keepAliveTimer->setInterval(2000);
+	connect(_keepAliveTimer, SIGNAL(timeout()), this, SLOT(keepSessionAlive()));
+}
+
+
+SSMprotocol::protocol_dt SSMprotocol3::protocolType()
+{
+	return SSM3;
+}
+
+
+bool SSMprotocol3::clearMemoryProcedure(CMprocedure_dt *procedure)
+{
+	if ((_state == state_needSetup) || (procedure == NULL))
+		return false;
+	*procedure = CMprocedure_direct;
+	return true;
+}
+
+
+void SSMprotocol3::keepSessionAlive()
+{
+	if (_state != state_normal)
+		return;
+
+	std::vector<char> payload;
+	payload.push_back('\x1A');
+	payload.push_back('\x9A');
+	std::vector<char> response;
+	if (!sendRequest(payload, 0x5A, &response))
+	{
+		// If the compact diagnostic session already expired, reopen it silently.
+		startDiagnosticSession();
+	}
+}
+
+
+bool SSMprotocol3::startDiagnosticSession()
+{
+	std::vector<char> startPayload(1, '\x81');
+	std::vector<char> startResponse;
+	return sendRequest(startPayload, 0xC1, &startResponse);
+}
+
+
+void SSMprotocol3::startKeepAlive()
+{
+	if ((_state == state_normal) && (_keepAliveTimer != NULL) && !_keepAliveTimer->isActive())
+		_keepAliveTimer->start();
+}
+
+
+void SSMprotocol3::stopKeepAlive()
+{
+	if ((_keepAliveTimer != NULL) && _keepAliveTimer->isActive())
+		_keepAliveTimer->stop();
+}
+
+
+bool SSMprotocol3::sendRequest(const std::vector<char>& payload,
+                               unsigned char expectedService,
+                               std::vector<char> *responsePayload)
+{
+	if ((payload.size() == 0) || (payload.size() > 0x3F) || (responsePayload == NULL))
+		return false;
+	responsePayload->clear();
+
+	std::vector<char> request;
+	request.push_back(static_cast<char>(0x80 + payload.size()));
+	request.push_back('\x38');
+	request.push_back('\xF0');
+	request.insert(request.end(), payload.begin(), payload.end());
+	request.push_back(static_cast<char>(checksum(request)));
+
+#ifdef __FSSM_DEBUG__
+	printFrame("SSM3 TX: ", request);
+#endif
+
+	_diagInterface->clearSendBuffer();
+	_diagInterface->clearReceiveBuffer();
+	if (!_diagInterface->write(request))
+		return false;
+
+	std::vector<char> received;
+	QElapsedTimer totalTimer;
+	QElapsedTimer interByteTimer;
+	totalTimer.start();
+	interByteTimer.start();
+	while (totalTimer.elapsed() < 2000)
+	{
+		std::vector<char> chunk;
+		if (!_diagInterface->read(&chunk))
+			return false;
+		if (!chunk.empty())
+		{
+			received.insert(received.end(), chunk.begin(), chunk.end());
+			interByteTimer.restart();
+		}
+		else if (!received.empty() && (interByteTimer.elapsed() > 150))
+			break;
+		QThread::msleep(10);
+	}
+
+#ifdef __FSSM_DEBUG__
+	printFrame("SSM3 RX: ", received);
+#endif
+
+	for (std::size_t offset = 0; (offset + 4) <= received.size(); offset++)
+	{
+		const unsigned char header = static_cast<unsigned char>(received.at(offset));
+		if ((header & 0xC0) != 0x80)
+			continue;
+
+		const std::size_t payloadLength = header & 0x3F;
+		const std::size_t frameLength = payloadLength + 4;
+		if ((offset + frameLength) > received.size())
+			continue;
+
+		std::vector<char> frame(received.begin() + offset,
+		                        received.begin() + offset + frameLength);
+		std::vector<char> frameWithoutChecksum(frame.begin(), frame.end() - 1);
+		if (checksum(frameWithoutChecksum) != static_cast<unsigned char>(frame.back()))
+			continue;
+		if ((static_cast<unsigned char>(frame.at(1)) != 0xF0) ||
+		    (static_cast<unsigned char>(frame.at(2)) != 0x38))
+			continue;
+
+		std::vector<char> response(frame.begin() + 3, frame.end() - 1);
+		if (response.empty())
+			continue;
+		if (static_cast<unsigned char>(response.at(0)) == 0x7F)
+			return false;
+		if (static_cast<unsigned char>(response.at(0)) != expectedService)
+			continue;
+
+		responsePayload->assign(response.begin(), response.end());
+		return true;
+	}
+	return false;
+}
+
+
+bool SSMprotocol3::readLocalIdentifier(unsigned char identifier, unsigned int expectedDataSize,
+                                       std::vector<char> *data)
+{
+	if (data == NULL)
+		return false;
+	data->clear();
+
+	std::vector<char> payload;
+	payload.push_back('\x21');
+	payload.push_back(static_cast<char>(identifier));
+	std::vector<char> response;
+	if (!sendRequest(payload, 0x61, &response) ||
+	    (response.size() < (2 + expectedDataSize)) ||
+	    (static_cast<unsigned char>(response.at(1)) != identifier))
+	{
+		if (!startDiagnosticSession() ||
+		    !sendRequest(payload, 0x61, &response) ||
+		    (response.size() < (2 + expectedDataSize)) ||
+		    (static_cast<unsigned char>(response.at(1)) != identifier))
+			return false;
+	}
+
+	data->assign(response.begin() + 2, response.begin() + 2 + expectedDataSize);
+	return true;
 }
 

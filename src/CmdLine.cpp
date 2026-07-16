@@ -32,6 +32,7 @@ Options:\n\
         Supported values for <CONTROLUNIT> are:\n\
         	engine\n\
         	transmission\n\
+        tpms\n\
         	absvdc\n\
         	cruisectrl\n\
         	aircon\n\

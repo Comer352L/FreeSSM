@@ -113,9 +113,16 @@ bool J2534DiagInterface::open( std::string name )
 			const J2534_protocol_flags p = lib.protocols;
 			if (bool(p & J2534_protocol_flags::iso9141) ||
 				bool(p & J2534_protocol_flags::iso14230))
+			{
 				supportedProtocols.push_back(protocol_type::SSM2_ISO14230);
+			}
 			if (bool(p & J2534_protocol_flags::iso15765))
 				supportedProtocols.push_back(protocol_type::SSM2_ISO15765);
+			if (bool(p & J2534_protocol_flags::iso9141) ||
+			    bool(p & J2534_protocol_flags::iso14230))
+			{
+				supportedProtocols.push_back(protocol_type::SSM3_ISO14230);
+			}
 			setSupportedProtocols(supportedProtocols);
 			break;
 		}
@@ -169,11 +176,13 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 	if (_j2534 == NULL)
 		return false;
 	// CHECK PROTOCOL AND SET UP PARAMETERS
-	if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+	if ((protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+	    (protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 	{
 		ProtocolID = ISO9141; // also: ISO14230
 		Flags = ISO9141_NO_CHECKSUM;
-		BaudRate = 4800;
+		BaudRate =
+			(protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230) ? 10400 : 4800;
 	}
 	else if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO15765)
 	{
@@ -205,7 +214,8 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 	SCONFIG CfgItems[1];
 	// Echo (MANDATORY):
 	CfgItems[0].Parameter = LOOPBACK;   // Echo off/on
-	if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+	if ((protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+	    (protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 		CfgItems[0].Value = ON;
 	else
 		CfgItems[0].Value = OFF;
@@ -233,7 +243,8 @@ bool J2534DiagInterface::connect(AbstractDiagInterface::protocol_type protocol)
 		if (_j2534->libraryAPIversion() == J2534_API_version::v0202)
 			goto err_close;
 	}
-	if (protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+	if ((protocol == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+	    (protocol == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 	{
 		/* ----- SET CONFIGURATION (ISO-14230 specific) ----- */
 		// P1_MIN (min. ECU inter-byte time)
@@ -505,7 +516,8 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 	memset(rx_msgs, 0, num_PTMSGS * sizeof(PASSTHRU_MSG));
 	for (unsigned long i=0; i<num_PTMSGS; i++)
 	{
-		if (protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230)
+		if ((protocolType() == AbstractDiagInterface::protocol_type::SSM2_ISO14230) ||
+		    (protocolType() == AbstractDiagInterface::protocol_type::SSM3_ISO14230))
 		{
 			rx_msgs[i].ProtocolID = ISO9141;
 		}
@@ -586,8 +598,12 @@ bool J2534DiagInterface::read(std::vector<char> *buffer)
 					}
 					else if (rx_msgs[i].ExtraDataIndex < rx_msgs[i].DataSize)
 					{
-						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) || (protocolType() != protocol_type::SSM2_ISO14230) ||
-							((protocolType() == protocol_type::SSM2_ISO14230) && (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
+						if ((_j2534->libraryAPIversion() == J2534_API_version::v0404) ||
+							((protocolType() != protocol_type::SSM2_ISO14230) &&
+							 (protocolType() != protocol_type::SSM3_ISO14230)) ||
+							(((protocolType() == protocol_type::SSM2_ISO14230) ||
+							  (protocolType() == protocol_type::SSM3_ISO14230)) &&
+							 (rx_msgs[i].ExtraDataIndex < (rx_msgs[i].DataSize - 1))))
 							std::cout << "  WARNING: ExtraDataIndex is smaller than expected !\n";
 						/* NOTE:
 						* - 04.04-API: (SAE-J2534-1, dec 2004): ExtraDataIndex only used with J1850 PWM
@@ -632,6 +648,7 @@ bool J2534DiagInterface::write(std::vector<char> buffer)
 	switch(protocolType())
 	{
 		case AbstractDiagInterface::protocol_type::SSM2_ISO14230:
+		case AbstractDiagInterface::protocol_type::SSM3_ISO14230:
 			tx_msg.ProtocolID = ISO9141;
 			break;
 		case AbstractDiagInterface::protocol_type::SSM2_ISO15765:

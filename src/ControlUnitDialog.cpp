@@ -36,6 +36,7 @@ ControlUnitDialog::ControlUnitDialog(QString title, AbstractDiagInterface *diagI
 	_setup_done = false;
 	_mode = Mode::None;
 	_content_DCs = NULL;
+	_content_LocalIdentifiers = NULL;
 	_content_MBsSWs = NULL;
 	_content_Adjustments = NULL;
 	_content_SysTests = NULL;
@@ -111,6 +112,12 @@ void ControlUnitDialog::addContent(ContentSelection csel)
 		icon = QIcon(QString::fromUtf8(":/icons/chrystal/22x22/messagebox_warning.png"));
 		checkable = true;
 	}
+	else if (csel == ContentSelection::LocalIdentifiersMode)
+	{
+		title = tr("&Live Data");
+		icon = QIcon(QString::fromUtf8(":/icons/oxygen/22x22/applications-utilities.png"));
+		checkable = true;
+	}
 	else if (csel == ContentSelection::MBsSWsMode)
 	{
 		title = tr("&Measuring Blocks");
@@ -180,6 +187,8 @@ void ControlUnitDialog::addContent(ContentSelection csel)
 	// Connect buttons with slots:
 	if (csel == ContentSelection::DCsMode)
 		connect( button, SIGNAL( clicked() ), this, SLOT( switchToDCsMode() ) );
+	else if (csel == ContentSelection::LocalIdentifiersMode)
+		connect( button, SIGNAL( clicked() ), this, SLOT( switchToLocalIdentifiersMode() ) );
 	else if (csel == ContentSelection::MBsSWsMode)
 		connect( button, SIGNAL( clicked() ), this, SLOT( switchToMBsSWsMode() ) );
 	else if (csel == ContentSelection::AdjustmentsMode)
@@ -315,6 +324,12 @@ bool ControlUnitDialog::setup(ContentSelection csel, QStringList cmdline_args)
 			goto commError;
 		setContentSelectionButtonEnabled(ContentSelection::ClearMemory2Fcn, supported);
 	}
+	if (contentSupported(ContentSelection::LocalIdentifiersMode))
+	{
+		if (!_SSMPdev->hasLocalIdentifierData(&supported))
+			goto commError;
+		setContentSelectionButtonEnabled(ContentSelection::LocalIdentifiersMode, supported);
+	}
 	// NOTE: enable modes unconditionally, UI contents are deactivated if unsupported by the CU
 	setContentSelectionButtonEnabled(ContentSelection::DCsMode, true);
 	setContentSelectionButtonEnabled(ContentSelection::MBsSWsMode, true);
@@ -409,6 +424,13 @@ bool ControlUnitDialog::prepareContentWidget(Mode mode)
 		setContentWidget(tr("Diagnostic Codes:"), _content_DCs);
 		_content_DCs->show();
 	}
+	else if (mode == Mode::LocalIdentifiers)
+	{
+		setContentSelectionButtonChecked(ContentSelection::LocalIdentifiersMode, true);
+		_content_LocalIdentifiers = new CUcontent_LocalIdentifiers();
+		setContentWidget(tr("Live Data:"), _content_LocalIdentifiers);
+		_content_LocalIdentifiers->show();
+	}
 	else if (mode == Mode::MBsSWs)
 	{
 		setContentSelectionButtonChecked(ContentSelection::MBsSWsMode, true);
@@ -451,6 +473,11 @@ void ControlUnitDialog::deleteContentWidgets()
 	{
 		delete(_content_DCs);
 		_content_DCs = NULL;
+	}
+	if (_content_LocalIdentifiers != NULL)
+	{
+		delete(_content_LocalIdentifiers);
+		_content_LocalIdentifiers = NULL;
 	}
 	if (_content_MBsSWs != NULL)
 	{
@@ -545,6 +572,8 @@ bool ControlUnitDialog::getModeForContentSelection(ContentSelection csel, Mode *
 {
 	if ((csel == ContentSelection::DCsMode) || (csel == ContentSelection::ClearMemoryFcn) || (csel == ContentSelection::ClearMemory2Fcn))
 		*mode = Mode::DCs;
+	else if (csel == ContentSelection::LocalIdentifiersMode)
+		*mode = Mode::LocalIdentifiers;
 	else if (csel == ContentSelection::MBsSWsMode)
 		*mode = Mode::MBsSWs;
 	else if (csel == ContentSelection::AdjustmentsMode)
@@ -578,6 +607,24 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 	   if receive buffer flushing doesn't work reliable with the used serial port driver !
 	*/
 	SSMprotocol::CUsetupResult_dt result = SSMprotocol::result_commError;
+	if (CUtype == CUtype::TPMS)
+	{
+		if (_diagInterface->connect(AbstractDiagInterface::protocol_type::SSM3_ISO14230))
+		{
+			_SSMPdev = new SSM3protocolTPMS(_diagInterface, _language);
+			result = _SSMPdev->setupCUdata(CUtype);
+			if (result == SSMprotocol::result_success)
+			{
+				connect(_SSMPdev, SIGNAL(commError()), this, SLOT(communicationError()));
+			}
+			else
+			{
+				delete _SSMPdev;
+				_SSMPdev = NULL;
+				_diagInterface->disconnect();
+			}
+		}
+	}
 	if ((CUtype == CUtype::Engine) || (CUtype == CUtype::Transmission))
 	{
 		// Probe SSM2-protocol:
@@ -612,7 +659,7 @@ SSMprotocol::CUsetupResult_dt ControlUnitDialog::probeProtocol(CUtype CUtype)
 			_SSMPdev = NULL;
 		}
 	}
-	if (_SSMPdev == NULL)
+	if ((_SSMPdev == NULL) && (CUtype != CUtype::TPMS))
 	{
 		// Probe SSM1-protocol:
 		if (_diagInterface->connect(AbstractDiagInterface::protocol_type::SSM1))
@@ -735,6 +782,29 @@ void ControlUnitDialog::switchToDCsMode()
 }
 
 
+void ControlUnitDialog::switchToLocalIdentifiersMode()
+{
+	bool com_err = false;
+	if (_mode == Mode::LocalIdentifiers) return;
+	// Show wait-message:
+	FSSM_WaitMsgBox waitmsgbox(this, tr("Switching to Live Data... Please wait !"));
+	waitmsgbox.show();
+	// Save content settings:
+	saveContentSettings();
+	// Delete current content widget:
+	deleteContentWidgets();
+	// Create and insert new content widget:
+	if (prepareContentWidget(Mode::LocalIdentifiers))
+		// Start Live Data mode:
+		com_err = !startLocalIdentifiersMode();
+	// Close wait-message:
+	waitmsgbox.close();
+	// Check for communication error:
+	if (com_err)
+		communicationError();
+}
+
+
 void ControlUnitDialog::switchToMBsSWsMode()
 {
 	bool com_err = false;
@@ -809,6 +879,8 @@ bool ControlUnitDialog::startMode(Mode mode)
 	bool ok = true;
 	if (mode == Mode::DCs)
 		ok = startDCsMode();
+	else if (mode == Mode::LocalIdentifiers)
+		ok = startLocalIdentifiersMode();
 	else if (mode == Mode::MBsSWs)
 		ok = startMBsSWsMode();
 	else if (mode == Mode::Adjustments)
@@ -837,6 +909,18 @@ bool ControlUnitDialog::startDCsMode()
 		connect(_content_DCs, SIGNAL( error() ), this, SLOT( close() ) );
 	}
 	_mode = Mode::DCs;
+	return true;
+}
+
+
+bool ControlUnitDialog::startLocalIdentifiersMode()
+{
+	if (_content_LocalIdentifiers == NULL)
+		return false;
+	if (!_content_LocalIdentifiers->setup(_SSMPdev))
+		return false;
+	connect(_content_LocalIdentifiers, SIGNAL(error()), this, SLOT(close()));
+	_mode = Mode::LocalIdentifiers;
 	return true;
 }
 
@@ -895,6 +979,7 @@ void ControlUnitDialog::runClearMemory(SSMprotocol::CMlevel_dt level)
 {
 	bool ok = false;
 	ClearMemoryDlg::CMresult_dt result;
+
 	// Create "Clear Memory"-dialog:
 	ClearMemoryDlg cmdlg(this, _SSMPdev, level);
 	// Temporary disconnect from "communication error"-signal:

@@ -30,7 +30,7 @@ class AbstractDiagInterface
 
 public:
 	enum class interface_type { serialPassThrough, J2534, ATcommandControlled };
-	enum class protocol_type { NONE, SSM1, SSM2_ISO14230, SSM2_ISO15765 }; // NOTE: when adding new protocols, also enhance protocolDescription(...) !
+	enum class protocol_type { NONE, SSM1, SSM2_ISO14230, SSM2_ISO15765, SSM3_ISO14230 }; // NOTE: when adding new protocols, also enhance protocolDescription(...) !
 
 	AbstractDiagInterface();
 	virtual ~AbstractDiagInterface();

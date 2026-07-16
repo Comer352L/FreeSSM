@@ -262,6 +262,9 @@ void CUcontent_DCs_abstract::printDCprotocol()
 					case CUtype::AirCon:
 						CU = tr("Air Conditioning");
 						break;
+					case CUtype::TPMS:
+						CU = tr("Tire Pressure Monitoring System");
+						break;
 					case CUtype::FourWheelSteering:
 						CU = tr("4 Wheel Steering");
 						break;

@@ -31,6 +31,7 @@
 #include <vector>
 #include "AbstractDiagInterface.h"
 #include "libFSSM.h"
+#include "LocalIdentifier.h"
 #include "SSMCUdata.h"
 #include "AbstractSSMcommunication.h"
 #include "SSMDefinitionsInterface.h"
@@ -38,6 +39,7 @@
 
 
 enum class BlockType { MB, SW };
+class QTimer;
 
 
 class MBSWmetadata_dt
@@ -58,12 +60,13 @@ class SSMprotocol : public QObject
 	Q_OBJECT
 
 public:
-	enum protocol_dt {SSM1, SSM2};
+	enum protocol_dt {SSM1, SSM2, SSM3};
 	enum CUsetupResult_dt {result_success, result_invalidCUtype, result_invalidInterfaceConfig, result_commError, result_noOrInvalidDefsFile, result_noDefs};
 	enum state_dt {state_needSetup, state_normal, state_DCreading, state_MBSWreading, state_ActTesting, state_waitingForIgnOff};
 	enum DCgroups_dt {noDCs_DCgroup=0, currentDTCs_DCgroup=1, temporaryDTCs_DCgroup=2, historicDTCs_DCgroup=4, memorizedDTCs_DCgroup=8,
 	                  CClatestCCs_DCgroup=16, CCmemorizedCCs_DCgroup=32};
 	enum CMlevel_dt {CMlevel_1=1, CMlevel_2=2};
+	enum CMprocedure_dt {CMprocedure_ignitionCycle, CMprocedure_direct};
 	enum immoTestResult_dt {immoNotShorted, immoShortedToGround, immoShortedToBattery};
 
 	SSMprotocol(AbstractDiagInterface *diagInterface, QString language="en");
@@ -75,7 +78,7 @@ public:
 	virtual protocol_dt protocolType() = 0;
 	AbstractDiagInterface::protocol_type ifceProtocolType();
 	std::string getSysID() const;
-	std::string getROMID() const;
+	virtual std::string getROMID() const;
 	bool getSystemDescription(QString *sysdescription);
 	bool hasOBD2system(bool *OBD2);
 	virtual bool hasVINsupport(bool *VINsup);
@@ -84,6 +87,7 @@ public:
 	virtual bool hasIntegratedCC(bool *CCsup);
 	virtual bool hasClearMemory(bool *CMsup);
 	virtual bool hasClearMemory2(bool *CM2sup);
+	virtual bool clearMemoryProcedure(CMprocedure_dt *procedure);
 	bool hasMBengineSpeed(bool *MBsup);
 	bool hasTestMode(bool *TMsup);
 	bool hasActuatorTests(bool *ATsup);
@@ -91,15 +95,17 @@ public:
 	bool getLastDCgroupsSelection(int *DCgroups);
 	bool getSupportedMBs(std::vector<mb_dt> *supportedMBs);
 	bool getSupportedSWs(std::vector<sw_dt> *supportedSWs);
+	virtual bool hasLocalIdentifierData(bool *LIsup);
 	bool getLastMBSWselection(std::vector<MBSWmetadata_dt> *MBSWmetaList);
 	bool getSupportedAdjustments(std::vector<adjustment_dt> *supportedAdjustments);
 	bool getSupportedActuatorTests(QStringList *actuatorTestTitles);
 	bool getLastActuatorTestSelection(unsigned char *actuatorTestIndex);
 	// COMMUNICATION BASED FUNCTIONS:
 	virtual bool getVIN(QString *VIN);
-	bool startDCreading(int DCgroups);
-	bool restartDCreading();
-	bool stopDCreading();
+	virtual bool startDCreading(int DCgroups);
+	virtual bool readLocalIdentifierData(std::vector<local_identifier_section_dt> *sections);
+	virtual bool restartDCreading();
+	virtual bool stopDCreading();
 	bool startMBSWreading(const std::vector<MBSWmetadata_dt>& mbswmetaList);
 	bool restartMBSWreading();
 	bool stopMBSWreading();
@@ -110,7 +116,7 @@ public:
 	bool restartActuatorTest();
 	bool stopActuatorTesting();
 	bool stopAllActuators();
-	bool clearMemory(CMlevel_dt level, bool *success);
+	virtual bool clearMemory(CMlevel_dt level, bool *success);
 	bool testImmobilizerCommLine(immoTestResult_dt *result);
 	bool isEngineRunning(bool *isrunning);
 	bool isInTestMode(bool *testmode);
@@ -188,6 +194,61 @@ protected slots:
 public slots:
 	virtual void resetCUdata();
 
+};
+
+
+class SSMprotocol3 : public SSMprotocol
+{
+	Q_OBJECT
+
+public:
+	SSMprotocol3(AbstractDiagInterface *diagInterface, QString language="en");
+
+	protocol_dt protocolType() override;
+	bool clearMemoryProcedure(CMprocedure_dt *procedure) override;
+
+protected slots:
+	void keepSessionAlive();
+
+protected:
+	bool startDiagnosticSession();
+	void startKeepAlive();
+	void stopKeepAlive();
+	bool sendRequest(const std::vector<char>& payload, unsigned char expectedService,
+	                 std::vector<char> *responsePayload);
+	bool readLocalIdentifier(unsigned char identifier, unsigned int expectedDataSize,
+	                         std::vector<char> *data);
+
+private:
+	QTimer *_keepAliveTimer;
+};
+
+
+class SSM3protocolTPMS : public SSMprotocol3
+{
+	Q_OBJECT
+
+public:
+	SSM3protocolTPMS(AbstractDiagInterface *diagInterface, QString language="en");
+
+	CUsetupResult_dt setupCUdata(enum CUtype CU) override;
+	std::string getROMID() const override;
+	bool hasClearMemory(bool *CMsup) override;
+	bool startDCreading(int DCgroups) override;
+	bool restartDCreading() override;
+	bool stopDCreading() override;
+	bool clearMemory(CMlevel_dt level, bool *success) override;
+	bool hasLocalIdentifierData(bool *LIsup) override;
+	bool readLocalIdentifierData(std::vector<local_identifier_section_dt> *sections) override;
+	bool readTransmitterIDs(QStringList *registeredIDs, QStringList *runtimeIDs = NULL);
+	bool readLiveDataBlocks(QStringList *block10Values, QStringList *block99Values,
+	                        QString *block10Raw = NULL, QString *block99Raw = NULL);
+
+private slots:
+	void readDiagnosticCodes();
+
+private:
+	QString diagnosticCodeDescription(unsigned int code) const;
 };
 
 

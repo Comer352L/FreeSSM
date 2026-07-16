@@ -51,7 +51,7 @@
      </font>
     </property>
     <property name="text">
-     <string>          E&amp;xit              </string>
+     <string>E&amp;xit</string>
     </property>
     <property name="icon">
      <iconset resource="../resources/FreeSSM.qrc">
@@ -93,7 +93,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>        &amp;Engine         </string>
+      <string>&amp;Engine</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -116,7 +116,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>   &amp;Transmission  </string>
+      <string>&amp;Transmission</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -139,7 +139,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>      A&amp;BS/VDC       </string>
+      <string>A&amp;BS/VDC</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -165,7 +165,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>  &amp;Cruise Control </string>
+      <string>&amp;Cruise Control</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -193,6 +193,29 @@
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
        <normaloff>:/icons/freessm/64x64/AirCon.png</normaloff>:/icons/freessm/64x64/AirCon.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="tpms_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>379</x>
+       <y>24</y>
+       <width>172</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ti&amp;re Pressure</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resources/FreeSSM.qrc">
+       <normaloff>:/icons/freessm/64x64/TirePressure.png</normaloff>:/icons/freessm/64x64/TirePressure.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -231,7 +254,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>         &amp;Help             </string>
+      <string>&amp;Help</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -254,7 +277,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>         &amp;About           </string>
+      <string>&amp;About</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -277,7 +300,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>    &amp;Preferences    </string>
+      <string>&amp;Preferences</string>
      </property>
      <property name="icon">
       <iconset resource="../resources/FreeSSM.qrc">
@@ -313,6 +336,7 @@
  <tabstops>
   <tabstop>engine_pushButton</tabstop>
   <tabstop>transmission_pushButton</tabstop>
+  <tabstop>tpms_pushButton</tabstop>
   <tabstop>absvdc_pushButton</tabstop>
   <tabstop>cruisecontrol_pushButton</tabstop>
   <tabstop>aircon_pushButton</tabstop>

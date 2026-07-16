@@ -25,6 +25,7 @@
 #include "ui_ControlUnitDialog.h"
 #include "CUinfo_abstract.h"
 #include "CUcontent_DCs_abstract.h"
+#include "CUcontent_LocalIdentifiers.h"
 #include "CUcontent_MBsSWs.h"
 #include "CUcontent_Adjustments.h"
 #include "CUcontent_sysTests.h"
@@ -35,20 +36,19 @@
 #include "FSSMdialogs.h"
 
 
-
 class ControlUnitDialog : public QDialog, private Ui::ControlUnit_Dialog
 {
 	Q_OBJECT
 
 public:
-	enum class ContentSelection {DCsMode, MBsSWsMode, AdjustmentsMode, SysTestsMode, ClearMemoryFcn, ClearMemory2Fcn};
+	enum class ContentSelection {DCsMode, LocalIdentifiersMode, MBsSWsMode, AdjustmentsMode, SysTestsMode, ClearMemoryFcn, ClearMemory2Fcn};
 
 	ControlUnitDialog(QString title, AbstractDiagInterface *diagInterface, QString language, bool preferSSM2protocolVariantISO14230 = false);
 	~ControlUnitDialog();
 	bool setup(ContentSelection csel, QStringList cmdline_args = QStringList());
 
 protected:
-	enum class Mode {None, DCs, MBsSWs, Adjustments, SysTests};
+	enum class Mode {None, DCs, LocalIdentifiers, MBsSWs, Adjustments, SysTests};
 
 	void addContent(ContentSelection csel);
 	bool contentSupported(ContentSelection csel);
@@ -62,6 +62,7 @@ private:
 	CUinfo_abstract *_infoWidget;
 	QWidget *_contentWidget;
 	CUcontent_DCs_abstract *_content_DCs;
+	CUcontent_LocalIdentifiers *_content_LocalIdentifiers;
 	CUcontent_MBsSWs *_content_MBsSWs;
 	CUcontent_Adjustments *_content_Adjustments;
 	CUcontent_sysTests *_content_SysTests;
@@ -92,6 +93,7 @@ private:
 	bool handleActuatorTests(FSSM_ProgressDialog *statusmsgbox);
 	bool startMode(Mode mode);
 	bool startDCsMode();
+	bool startLocalIdentifiersMode();
 	bool startMBsSWsMode();
 	bool startAdjustmentsMode();
 	bool startSystemOperationTestsMode();
@@ -101,6 +103,7 @@ private:
 
 private slots:
 	void switchToDCsMode();
+	void switchToLocalIdentifiersMode();
 	void switchToMBsSWsMode();
 	void switchToAdjustmentsMode();
 	void switchToSystemOperationTestsMode();

@@ -223,6 +223,7 @@ FreeSSM::FreeSSM(QApplication *app)
 	// CONNECT SIGNALS/SLOTS:
 	connect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	connect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
+	connect( tpms_pushButton, SIGNAL( released() ), this, SLOT( tpms() ) );
 	connect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	connect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
 	connect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
@@ -240,6 +241,7 @@ FreeSSM::~FreeSSM()
 	disconnect( _dump_action, SIGNAL( triggered() ), this, SLOT( dumpCUdata() ) );
 	disconnect( engine_pushButton, SIGNAL( released() ), this, SLOT( engine() ) );
 	disconnect( transmission_pushButton, SIGNAL( released() ), this, SLOT( transmission() ) );
+	disconnect( tpms_pushButton, SIGNAL( released() ), this, SLOT( tpms() ) );
 	disconnect( absvdc_pushButton, SIGNAL( released() ), this, SLOT( abs() ) );
 	disconnect( cruisecontrol_pushButton, SIGNAL( released() ), this, SLOT( cruisecontrol() ) );
 	disconnect( aircon_pushButton, SIGNAL( released() ), this, SLOT( aircon() ) );
@@ -305,6 +307,29 @@ void FreeSSM::transmission(QStringList cmdline_args)
 		if (transmissiondialog->setup( csel, cmdline_args ))
 			transmissiondialog->exec();
 		delete transmissiondialog;
+		delete diagInterface;
+	}
+}
+
+
+void FreeSSM::tpms(QStringList cmdline_args)
+{
+	if (_dumping) return;
+	ControlUnitDialog::ContentSelection csel = ControlUnitDialog::ContentSelection::DCsMode;
+	if (!getContentSelectionFromCmdLine(&cmdline_args, &csel))
+		exit(ERROR_BADCMDLINEARGS);
+	AbstractDiagInterface *diagInterface = initInterface();
+	if (diagInterface)
+	{
+		TPMSdialog *tpmsdialog = new TPMSdialog(diagInterface, _language);
+#ifdef SMALL_RESOLUTION
+		tpmsdialog->showFullScreen();
+#else
+		tpmsdialog->show();
+#endif
+		if (tpmsdialog->setup(csel, cmdline_args))
+			tpmsdialog->exec();
+		delete tpmsdialog;
 		delete diagInterface;
 	}
 }
@@ -709,6 +734,10 @@ bool FreeSSM::getContentSelectionFromCmdLine(QStringList *cmdline_args, ControlU
 	else if (selstr == "mbssws")
 	{
 		*csel = ControlUnitDialog::ContentSelection::MBsSWsMode;
+	}
+	else if ((selstr == "localidentifiers") || (selstr == "livedata"))
+	{
+		*csel = ControlUnitDialog::ContentSelection::LocalIdentifiersMode;
 	}
 	else if (selstr == "adjustments")
 	{

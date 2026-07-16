@@ -125,6 +125,8 @@ std::string AbstractDiagInterface::protocolDescription(protocol_type protocol)
 			return "SSM2 / ISO-14230";
 		case protocol_type::SSM2_ISO15765:
 			return "SSM2 / ISO-15765";
+		case protocol_type::SSM3_ISO14230:
+			return "SSM3 / ISO-14230";
 		default:	// BUG
 			return "UNKNOWN";
 	}
