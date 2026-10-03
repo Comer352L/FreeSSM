@@ -35,8 +35,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	setupTimeModeUiElements();
 	_valuesTableView = new CUcontent_MBsSWs_tableView(MBSWviews_tabWidget->widget(0), settings.minValuesEnabled, settings.maxValuesEnabled);
 	valuesTableView_gridLayout->addWidget(_valuesTableView);
-	//_curvesTableView = new ...
-	//curvesView_gridLayout->addWidget();
+	_plotView = new CUcontent_MBsSWs_plotView(MBSWviews_tabWidget->widget(1));
+	curvesView_gridLayout->addWidget(_plotView);
 	// Disable all GUI-elements:
 	_MBSWrefreshTimeTitle_label->setEnabled( false );
 	_MBSWrefreshTimeValue_label->setEnabled( false );
@@ -47,8 +47,8 @@ CUcontent_MBsSWs::CUcontent_MBsSWs(MBSWsettings_dt settings, QWidget *parent) : 
 	mbswload_pushButton->setEnabled( false );
 	mbswadd_pushButton->setEnabled( false );
 	mbswdelete_pushButton->setEnabled( false );
-	MBSWviews_tabWidget->setTabEnabled(1, false);
 	_valuesTableView->setEnabled(false);
+	_plotView->setEnabled(false);
 	updateRefreshTimeTitle();
 	clearRefreshTime();
 	// Connect signals and slots:
@@ -92,6 +92,7 @@ CUcontent_MBsSWs::~CUcontent_MBsSWs()
 	delete _MBSWrefreshTimeValue_label;
 	delete _timemode_pushButton;
 	delete _valuesTableView;
+	delete _plotView;
 	disconnect( mbswsave_pushButton , SIGNAL( released() ), this, SLOT( saveMBsSWs() ) );
 	disconnect( mbswload_pushButton , SIGNAL( released() ), this, SLOT( loadMBsSWs() ) );
 }
@@ -117,6 +118,7 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	_tableRowPosIndexes.clear();
 	_lastValues.clear();
 	_minmaxData.clear();
+	_plotView->clearPlotData();
 	// Reset refresh time:
 	_lastrefreshduration_ms = 0;
 	clearRefreshTime();
@@ -139,6 +141,7 @@ bool CUcontent_MBsSWs::setup(SSMprotocol *SSMPdev)
 	_MBSWrefreshTimeTitle_label->setEnabled( ok );
 	_MBSWrefreshTimeValue_label->setEnabled( ok );
 	_valuesTableView->setEnabled( ok );
+	_plotView->setEnabled( ok );
 	// Values table view widget:
 	_timemode_pushButton->setEnabled( ok );
 	// Disable "Add"-button, if all supported MBs/SWs are already selected:
@@ -222,6 +225,7 @@ void CUcontent_MBsSWs::setMBSWselectionUnvalidated(const std::vector<MBSWmetadat
 	// Clear last values:
 	_lastValues.clear();
 	_minmaxData.clear();
+	_plotView->clearPlotData();
 	// Setup table position indexes:
 	_tableRowPosIndexes.clear();
 	for (size_t k=0; k<MBSWmetaList.size(); k++)
@@ -275,6 +279,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 	std::vector<QString> values(itemcount);
 	std::vector<QString> maxvalues(itemcount);
 	std::vector<QString> units(itemcount);
+	std::vector<unsigned int> ids(itemcount, 0);
 
 	// set strings for output:
 	for (size_t k=0; k<_MBSWmetaList.size(); k++)
@@ -282,6 +287,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 		// Get MB/SW-index:
 		const unsigned int listPosIndex = _tableRowPosIndexes.at(k);
 		const MBSWmetadata_dt& metadata = _MBSWmetaList.at(k);
+		ids.at(listPosIndex) = k;
 		// Title:
 		switch(metadata.blockType)
 		{
@@ -320,6 +326,7 @@ void CUcontent_MBsSWs::displayMBsSWs()
 	}
 	// Display MBs/SWs
 	_valuesTableView->setMBSWlistContent(types, titles, values, minvalues, maxvalues, units);
+	_plotView->setMBSWlistContent(types, titles, units, ids);
 }
 
 
@@ -366,6 +373,7 @@ bool CUcontent_MBsSWs::startMBSWreading()
 	// Reset old data:
 	_lastValues.clear();
 	_minmaxData.clear();
+	_plotView->startNewSegment();
 	// Clear values in MB/SW-table:
 	displayMBsSWs();
 	// Clear refresh-time-information:
@@ -454,6 +462,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 	std::vector<QString> minValueStrList(count);
 	std::vector<QString> maxValueStrList(count);
 	std::vector<QString> unitStrList(count);
+	std::vector<double> plotValueList(count, 0);
 	// Process raw values
 	for (k=0; k<_MBSWmetaList.size(); k++)	// MB/SW LOOP
 	{
@@ -539,6 +548,10 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 			valueStrList.at(tablePosIndex) = scaledValueStr;
 		else
 			valueStrList.at(tablePosIndex) = QString::number(rawValues.at(k));
+		bool plotValueNumeric = false;
+		plotValueList.at(tablePosIndex) = valueStrList.at(tablePosIndex).toDouble(&plotValueNumeric);
+		if (!plotValueNumeric)
+			plotValueList.at(tablePosIndex) = rawValues.at(k);
 		// ******** CHECK FOR NEW MIN/MAX VALUE ********:
 		/* NOTE:
 		 * - MB/SW scaled values can be NUMERIC VALUES or STRINGS or even BOTH MIXED (for different raw values)
@@ -709,6 +722,7 @@ void CUcontent_MBsSWs::processMBSWRawValues(const std::vector<unsigned int>& raw
 	}
 	// Display new values:
 	_valuesTableView->updateMBSWvalues(valueStrList, minValueStrList, maxValueStrList, unitStrList);
+	_plotView->updateMBSWvalues(plotValueList, valueStrList, unitStrList);
 	// Output refresh duration:
 	updateTimeInfo(refreshduration_ms);
 }
@@ -764,6 +778,7 @@ void CUcontent_MBsSWs::addMBsSWs()
 		// Clear current values:
 		_lastValues.clear();
 		_minmaxData.clear();
+		_plotView->clearPlotData();
 		// Add new table-position-indexes:
 		for (k=MBSWmetaList_len_old; k<_MBSWmetaList.size(); k++)
 			_tableRowPosIndexes.push_back(k);
@@ -828,6 +843,7 @@ void CUcontent_MBsSWs::deleteMBsSWs()
 			_tableRowPosIndexes[k] -= (endindex - startindex + 1);
 		}
 	}
+	_plotView->clearPlotData();
 	// UPDATE MB/SW TABLE CONTENT:
 	displayMBsSWs();
 	// Clear time information:

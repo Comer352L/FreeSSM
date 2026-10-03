@@ -31,6 +31,7 @@
 #include <vector>
 #include "ui_CUcontent_MBsSWs.h"
 #include "CUcontent_MBsSWs_tableView.h"
+#include "CUcontent_MBsSWs_plotView.h"
 #include "AddMBsSWsDlg.h"
 #include "SSMprotocol.h"
 #include "libFSSM.h"
@@ -96,6 +97,7 @@ private:
 	QLabel *_MBSWrefreshTimeValue_label;
 	QPushButton *_timemode_pushButton;
 	CUcontent_MBsSWs_tableView *_valuesTableView;
+	CUcontent_MBsSWs_plotView *_plotView;
 	std::vector<mb_dt> _supportedMBs;
 	std::vector<sw_dt> _supportedSWs;
 	std::vector<MBSWmetadata_dt> _MBSWmetaList;
