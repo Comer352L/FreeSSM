@@ -410,7 +410,10 @@ SSMP2communication_core::Result SSMP2communication_core::receiveReplyISO14230(co
 	}
 	// IF THERE IS NO ECHO, WE'RE DONE !
 	if (!echo)
+	{
+		msg_buffer->assign(read_buffer.begin(), read_buffer.end());
 		return Result::success;
+	}
 	// ELIMINATE ECHO:
 	read_buffer.erase(read_buffer.begin(), read_buffer.begin() + outmsg_len);
 	// CHECK IF PROTOCOL HEADER OF REPLY IS CORRECT:
